@@ -1,0 +1,41 @@
+{
+  "inspiracao": "Estilo de jogo como o de {lenda}",
+  "archetype": {
+    "matador": "Matador de área",
+    "arrancador": "Arrancador",
+    "magico": "Mágico",
+    "centroavanteForca": "Centroavante de força",
+    "classico10": "10 clássico",
+    "regente": "Regente",
+    "volanteRaiz": "Volante raiz",
+    "motorzinho": "Motorzinho",
+    "xerifao": "Xerifão",
+    "zagueiroTecnico": "Zagueiro técnico",
+    "lateralApoiador": "Lateral apoiador",
+    "lateralFoguete": "Lateral foguete",
+    "lateralConstrutor": "Lateral construtor",
+    "paredao": "Paredão",
+    "goleiroLibero": "Goleiro-líbero",
+    "pegadorPenalti": "Pegador de pênalti"
+  },
+  "trait": {
+    "faroDeGol": "Faro de gol",
+    "arrancada": "Arrancada",
+    "ambidestro": "Ambidestro",
+    "bolaParada": "Bola parada",
+    "bomba": "Bomba",
+    "camisa10": "Camisa 10",
+    "donoDoMeio": "Dono do meio",
+    "carrinhoPreciso": "Carrinho preciso",
+    "pulmao": "Pulmão",
+    "liderDeZaga": "Líder de zaga",
+    "saidaDeBola": "Saída de bola",
+    "alaOfensivo": "Ala ofensivo",
+    "canhao": "Canhão",
+    "lateralPorDentro": "Lateral por dentro",
+    "milagre": "Milagre",
+    "saidaRapida": "Saída rápida",
+    "cobrador": "Cobrador",
+    "pegadorDePenalti": "Pegador de pênalti"
+  }
+}

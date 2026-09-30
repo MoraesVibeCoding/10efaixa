@@ -5,14 +5,15 @@ import weights from '../data/positionWeights.json';
 export const POSITIONS = ['goleiro', 'zagueiro', 'lateral', 'volante', 'meia', 'atacante'] as const;
 export type Position = (typeof POSITIONS)[number];
 
-/** Média ponderada pelos pesos da posição (em dados), arredondada para inteiro 1–99. */
-export function overall(attrs: Attributes, position: Position): number {
-  const w: Record<string, number> = weights[position];
+/** Média ponderada pelos pesos da posição (em dados) + bônus do arquétipo, arredondada para inteiro 1–99. */
+export function overall(attrs: Attributes, position: Position, bonus: Partial<Attributes> = {}): number {
+  const base: Record<string, number> = weights[position];
   let sum = 0;
   let total = 0;
   for (const a of ATTRIBUTES) {
-    sum += attrs[a] * w[a]!;
-    total += w[a]!;
+    const w = base[a]! + (bonus[a] ?? 0);
+    sum += attrs[a] * w;
+    total += w;
   }
   return Math.round(sum / total);
 }
