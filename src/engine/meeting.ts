@@ -1,5 +1,5 @@
 import { ATTRIBUTES, type Attribute } from './attributes';
-import type { Focus } from './evolution';
+import { FOCI, type Focus } from './evolution';
 import cfg from '../data/meeting.json';
 
 // Seção 6.5. Determinística; quem chama garante uma reunião por temporada (máquina de estados, T48).
@@ -21,14 +21,15 @@ export interface MeetingResult {
 }
 
 const EPS = 1e-9;
-const FOCI: readonly string[] = [...ATTRIBUTES, 'bolaParada', 'pernaRuim'];
 const inUnit = (x: unknown) => typeof x === 'number' && Number.isFinite(x) && x >= 0 && x <= 1;
 
 export function validateMeetingConfig(c: typeof cfg): string[] {
   const errors: string[] = [];
   const w = Object.values(c.weights);
   if (!w.every(inUnit) || Math.abs(w.reduce((s, x) => s + x, 0) - 1) > EPS) errors.push('weights devem somar 1');
+  if (![c.hardFloor, c.refuseBelow, c.acceptFrom].every(inUnit)) errors.push('limiares devem estar em 0–1');
   if (!(c.hardFloor <= c.refuseBelow && c.refuseBelow <= c.acceptFrom)) errors.push('limiares fora de ordem');
+  if (!Object.values(c.injuryRisk).every((x) => Number.isFinite(x) && x >= 0)) errors.push('injuryRisk deve ser número ≥ 0');
   if (!c.physical.every((a) => ATTRIBUTES.includes(a as Attribute))) errors.push('physical com atributo desconhecido');
   return errors;
 }

@@ -83,6 +83,10 @@ describe('reunião com a comissão', () => {
     expect(validateMeetingConfig({ ...cfg, weights: { morale: 0.5, coachRelation: 0.5, nationalTeamStatus: 0.5 } })).not.toEqual([]);
     expect(validateMeetingConfig({ ...cfg, refuseBelow: 0.7 })).not.toEqual([]);
     expect(validateMeetingConfig({ ...cfg, physical: ['resistencia'] })).not.toEqual([]);
+    expect(validateMeetingConfig({ ...cfg, injuryRisk: { main: -0.1, secondary: 0.15 } })).not.toEqual([]);
+    expect(validateMeetingConfig({ ...cfg, injuryRisk: { main: NaN, secondary: 0.15 } })).not.toEqual([]);
+    expect(validateMeetingConfig({ ...cfg, hardFloor: -0.1 })).not.toEqual([]);
+    expect(validateMeetingConfig({ ...cfg, acceptFrom: 1.5 })).not.toEqual([]);
   });
 
   it('integração: o foco de qualquer resposta roda na evolução', () => {

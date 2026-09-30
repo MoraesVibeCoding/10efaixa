@@ -6,6 +6,7 @@ import cfg from '../data/evolution.json';
 
 // Seção 6.4. Ordem fixa por semestre: compleição → altura e tetos → atributos → idade.
 export type Focus = Attribute | 'bolaParada' | 'pernaRuim';
+export const FOCI: readonly string[] = [...ATTRIBUTES, 'bolaParada', 'pernaRuim'];
 
 export interface EvoState {
   age: number;
@@ -34,6 +35,9 @@ function validate({ focus, staffQuality, minutes, morale }: SemesterContext) {
   if (!inRange(morale, 0, 1)) throw new RangeError(`morale fora de 0–1: ${morale}`);
   if (!inRange(staffQuality, cfg.staffQuality.min, cfg.staffQuality.max)) {
     throw new RangeError(`staffQuality fora da faixa: ${staffQuality}`);
+  }
+  for (const f of [focus.main, focus.secondary]) {
+    if (f !== undefined && !FOCI.includes(f)) throw new RangeError(`foco inválido: ${f}`);
   }
   if (focus.main && focus.main === focus.secondary) throw new RangeError('foco principal igual ao secundário');
 }

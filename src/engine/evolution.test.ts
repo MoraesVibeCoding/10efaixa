@@ -143,6 +143,8 @@ describe('evolução por semestre', () => {
     ['moral < 0', { morale: -0.1 }],
     ['comissão fora da faixa', { staffQuality: 2 }],
     ['foco principal = secundário', { focus: { main: 'passe' as const, secondary: 'passe' as const } }],
+    ['foco desconhecido', { focus: { main: 'chute' as never } }],
+    ['secundário desconhecido', { focus: { main: 'passe' as const, secondary: 'raça' as never } }],
   ])('recusa contexto inválido: %s', (_, over) => {
     expect(() => evolveSemester(state(), ctx(over), createPrng(1))).toThrow(RangeError);
   });
