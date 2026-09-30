@@ -1,6 +1,6 @@
 # 10eFaixa — Especificação do Produto (SPEC.md)
 
-> Versão 2.1 (módulo "Quem é você" e arte) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
+> Versão 2.2 (domínio .com; T42–T43 antecipadas) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
 > Este documento é a fonte da verdade para o Claude Code. Nenhuma mudança de escopo sem atualizar este arquivo primeiro.
 
 ---
@@ -39,7 +39,7 @@ O objetivo máximo simbólico dá nome ao jogo: **vestir a camisa 10 e usar a fa
 ## 5. Stack e princípios técnicos
 
 - **Stack (T01 concluída):** Vite 8, React 19, TypeScript 7 em modo estrito, Vitest 5 + Testing Library + jsdom, GitHub Actions (typecheck, testes, build). Confirmar versões na documentação oficial antes de atualizar.
-- **Hospedagem:** Vercel, domínio **10efaixa.com.br** (Registro.br, exige CPF/CNPJ do titular).
+- **Hospedagem:** Vercel, domínio **10efaixa.com** (registrador a definir).
 - **Repositório fechado** na Fase 1.
 - **Motor puro:** toda regra em `src/engine`, TypeScript puro, sem React e sem DOM. Funções puras e determinísticas.
 - **Aleatoriedade com semente:** PRNG próprio. Mesma semente + mesmas decisões = mesma carreira. Habilita testes, o código da carreira e o desafio diário.
@@ -431,7 +431,7 @@ A carreira termina no primeiro destes gatilhos:
 
 ## 10. Infraestrutura, observabilidade e privacidade
 
-- **Hospedagem:** Vercel, preview automático por pull request, produção a partir de `main` com CI verde. Domínio **10efaixa.com.br**.
+- **Hospedagem:** Vercel, preview automático por pull request, produção a partir de `main` com CI verde. Domínio **10efaixa.com**.
 - **Rollback:** promover o deploy anterior na Vercel.
 - **Lançamento progressivo:** funcionalidades novas atrás de flags de configuração (ex.: `inspiracaoLendas`, `desafioDiario`).
 - **Analytics:** **Vercel Web Analytics**, sem cookies e sem dados pessoais (LGPD), com eventos do funil da seção 8.
@@ -488,6 +488,8 @@ Não são decisões pendentes: são dados oficiais a conferir e citar (fonte + d
 ## 14. Plano de tarefas para o Claude Code
 
 Cada tarefa é atômica, com teste escrito antes do código e **um commit por tarefa**. Só iniciar a próxima com a anterior verde no CI. ⛳ = ponto de revisão humana (seção 15).
+
+**Ordem de execução:** segue a numeração, com uma exceção: **T42 e T43 são executadas logo após a T13** (fim do Marco 1), para o ilustrador começar cedo com briefing e formato de entrega definidos. Os IDs não mudam.
 
 ### Marco 1 — Motor núcleo
 | ID | Tarefa | Critério de aceitação |
@@ -572,7 +574,7 @@ Cada tarefa é atômica, com teste escrito antes do código e **um commit por ta
 | T58 | Apoio (Apoia.se), aviso legal e página de privacidade | Botão só na tela de resultado |
 | T59 | Vercel Web Analytics + Sentry sem dados pessoais | Eventos do funil; nenhum dado pessoal |
 | T60 | Integração da arte final do ilustrador | Todas as peças finais passam no validador; nenhuma peça provisória restante ⛳ |
-| T61 | PWA, deploy na Vercel, domínio e E2E finais | Instalável; CI verde; 10efaixa.com.br; E2E das jornadas principais ⛳ |
+| T61 | PWA, deploy na Vercel, domínio e E2E finais | Instalável; CI verde; 10efaixa.com; E2E das jornadas principais ⛳ |
 
 ---
 
