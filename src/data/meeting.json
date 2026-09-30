@@ -1,0 +1,9 @@
+{
+  "_nota": "Reunião com a comissão (6.5). Calibrar na T13.",
+  "weights": { "morale": 0.4, "coachRelation": 0.4, "nationalTeamStatus": 0.2 },
+  "hardFloor": 0.2,
+  "refuseBelow": 0.35,
+  "acceptFrom": 0.6,
+  "physical": ["forca", "fisico", "velocidade"],
+  "injuryRisk": { "main": 0.3, "secondary": 0.15 }
+}

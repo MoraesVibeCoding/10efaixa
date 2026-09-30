@@ -629,3 +629,7 @@ Decisões aprovadas durante a implementação. Complementam as seções acima.
 | 2026-09-30 | T10 | Ordem por semestre: compleição → altura e tetos (idade do início do semestre) → atributos → idade +0,5; 2 sorteios fixos por atributo | Determinismo e fronteiras (30 anos, 18 anos) sem ambiguidade |
 | 2026-09-30 | T10 | Teto que cai (compleição/altura) corta o atributo na hora | Invariante "nunca acima do teto"; queda máxima pequena |
 | 2026-09-30 | T10 | Compleição: foco principal em Força empurra para forte; em Velocidade/Drible, para franzino; 4 semestres; contador limitado a ±4 | "Foco longo" da 6.17, calibrável |
+| 2026-09-30 | T11 | Reunião determinística: piso de moral/relação (recusa direta), pontuação ponderada (moral 0,4, relação 0,4, Seleção 0,2) com limiares de recusa e aceite; saída traz `reason` da recusa | Testável; UI escolhe o texto pelo motivo |
+| 2026-09-30 | T11 | Contraproposta: necessidade do clube vira foco principal, desejo principal do jogador vira secundário (o secundário original sai); resposta do jogador à contraproposta fica para a T52 | Simples; registrar a perda do secundário |
+| 2026-09-30 | T11 | `clubNeed` escondido do jogador na UI | Evita estratégia dominante (propor sempre o que o clube quer) |
+| 2026-09-30 | T11 | Uma reunião por temporada é garantida por quem chama (máquina de estados, T48) | Motor puro não guarda histórico de reuniões |

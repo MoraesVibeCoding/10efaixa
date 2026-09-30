@@ -6,11 +6,8 @@ describe('estirão', () => {
   const rolls = Array.from({ length: 100_000 }, () => rollGrowth(rng));
 
   it('variação sempre entre −3 e +10 cm, normal até +6', () => {
-    for (const g of rolls) {
-      expect(g.deltaCm).toBeGreaterThanOrEqual(-3);
-      expect(g.deltaCm).toBeLessThanOrEqual(g.big ? 10 : 6);
-      if (g.big) expect(g.deltaCm).toBeGreaterThan(6);
-    }
+    const bad = rolls.filter((g) => g.deltaCm < -3 || g.deltaCm > (g.big ? 10 : 6) || (g.big && g.deltaCm <= 6));
+    expect(bad).toEqual([]);
     expect(new Set(rolls.map((g) => g.deltaCm))).toEqual(new Set([-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));
   });
 

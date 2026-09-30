@@ -45,6 +45,7 @@ describe('evolução por semestre', () => {
 
   it('invariante: atributos inteiros em 1–99 e nunca acima do teto (carreiras aleatórias)', () => {
     const rng = createPrng(77);
+    const violations: string[] = [];
     for (let run = 0; run < 200; run++) {
       let s = state({ age: 16, attributes: flat(40 + rng.int(0, 30)), baseCaps: flat(55 + rng.int(0, 44)),
         growth: { deltaCm: rng.int(-3, 10), big: false } });
@@ -52,12 +53,12 @@ describe('evolução por semestre', () => {
       while (s.age < 40) {
         s = evolveSemester(s, ctx({ minutes: rng.next(), morale: rng.next(), focus: { main: 'forca', secondary: 'passe' } }), rng);
         for (const a of ATTRIBUTES) {
-          expect(Number.isInteger(s.attributes[a])).toBe(true);
-          expect(s.attributes[a]).toBeGreaterThanOrEqual(1);
-          expect(s.attributes[a]).toBeLessThanOrEqual(s.caps[a]);
+          const v = s.attributes[a];
+          if (!Number.isInteger(v) || v < 1 || v > s.caps[a]) violations.push(`run ${run} idade ${s.age} ${a}=${v} teto=${s.caps[a]}`);
         }
       }
     }
+    expect(violations).toEqual([]); // uma asserção só: ~290 mil expect() estouravam o timeout com a suíte em paralelo
   });
 
   it('invariante: sem minutos e sem foco, 30+ não evolui fisicamente', () => {

@@ -17,6 +17,9 @@ const make = (input: Partial<CreationInput> = {}, seed = 1): Player => {
   return r.player;
 };
 
+// Testes estatísticos (critério da T07: 100 mil sorteios) fazem trabalho pesado de propósito.
+const HEAVY = { timeout: 30_000 };
+
 const many = (n: number, input: Partial<CreationInput> = {}) => {
   const rng = createPrng(2026);
   return Array.from({ length: n }, () => {
@@ -42,7 +45,7 @@ describe('criação do jogador', () => {
     expect(make({}, 7)).toEqual(make({}, 7));
   });
 
-  it.each(Object.entries(data.origins))('%s: overall e teto sorteados dentro da faixa 6.1', (origin, o) => {
+  it.each(Object.entries(data.origins))('%s: overall e teto sorteados dentro da faixa 6.1', HEAVY, (origin, o) => {
     for (const p of many(2_000, { origin })) {
       expect(p.startingOverall).toBeGreaterThanOrEqual(o.overall[0]!);
       expect(p.startingOverall).toBeLessThanOrEqual(o.overall[1]!);
@@ -53,14 +56,18 @@ describe('criação do jogador', () => {
     }
   });
 
-  it('várzea: 3% ±0,5% de diamante bruto em 100 mil sorteios; nunca fora da várzea', () => {
-    const rate = many(100_000).filter((p) => p.isDiamond).length / 100_000;
+  // Um lote só de 100 mil (gerar duas vezes estourava o timeout com a suíte em paralelo).
+  let lot: Player[] | undefined;
+  const lot100k = () => (lot ??= many(100_000));
+
+  it('várzea: 3% ±0,5% de diamante bruto em 100 mil sorteios; nunca fora da várzea', HEAVY, () => {
+    const rate = lot100k().filter((p) => p.isDiamond).length / 100_000;
     expect(Math.abs(rate - 0.03)).toBeLessThanOrEqual(0.005);
     expect(many(5_000, { origin: 'peneira' }).some((p) => p.isDiamond)).toBe(false);
   });
 
-  it('~5% ±0,5% de dupla nacionalidade; Itália/Portugal mais comuns que Espanha/Alemanha', () => {
-    const ps = many(100_000);
+  it('~5% ±0,5% de dupla nacionalidade; Itália/Portugal mais comuns que Espanha/Alemanha', HEAVY, () => {
+    const ps = lot100k();
     const dual = ps.filter((p) => p.dualNationality);
     expect(Math.abs(dual.length / 100_000 - 0.05)).toBeLessThanOrEqual(0.005);
     const count = (c: string) => dual.filter((p) => p.dualNationality === c).length;
@@ -68,14 +75,10 @@ describe('criação do jogador', () => {
   });
 
   it('atributos inteiros em 1–99 e nunca acima do teto', () => {
-    for (const p of many(5_000, { origin: 'baseGrande', biotype: { heightCm: 195, build: 'forte' } })) {
-      for (const a of ATTRIBUTES) {
-        expect(Number.isInteger(p.attributes[a])).toBe(true);
-        expect(p.attributes[a]).toBeGreaterThanOrEqual(1);
-        expect(p.attributes[a]).toBeLessThanOrEqual(p.caps[a]);
-        expect(p.caps[a]).toBeLessThanOrEqual(99);
-      }
-    }
+    const bad = many(5_000, { origin: 'baseGrande', biotype: { heightCm: 195, build: 'forte' } }).flatMap((p) =>
+      ATTRIBUTES.filter((a) => !Number.isInteger(p.attributes[a]) || p.attributes[a] < 1
+        || p.attributes[a] > p.caps[a] || p.caps[a] > 99));
+    expect(bad).toEqual([]);
   });
 
   it('distribuição do arquétipo: destaques do matador acima da média dele', () => {
