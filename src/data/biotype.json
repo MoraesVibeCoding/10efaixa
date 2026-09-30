@@ -1,0 +1,17 @@
+{
+  "heightRangesCm": {
+    "goleiro":  { "min": 182, "max": 200 },
+    "zagueiro": { "min": 178, "max": 198 },
+    "volante":  { "min": 170, "max": 190 },
+    "lateral":  { "min": 165, "max": 185 },
+    "meia":     { "min": 162, "max": 185 },
+    "atacante": { "min": 162, "max": 195 }
+  },
+  "referenceHeightCm": 180,
+  "capPerCmAboveReference": { "jogoAereo": 0.5, "velocidade": -0.25, "drible": -0.3 },
+  "buildCapDelta": {
+    "franzino": { "forca": -6, "velocidade": 3, "drible": 3 },
+    "atletico": {},
+    "forte":    { "forca": 6, "velocidade": -4 }
+  }
+}
