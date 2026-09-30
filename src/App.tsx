@@ -1,8 +1,10 @@
+import { t } from './i18n';
+
 export function App() {
   return (
     <main>
-      <h1>10eFaixa</h1>
-      <p>Da várzea à aposentadoria. Em breve.</p>
+      <h1>{t('app.title')}</h1>
+      <p>{t('app.tagline')}</p>
     </main>
   );
 }

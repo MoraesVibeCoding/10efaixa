@@ -1,0 +1,28 @@
+{
+  "diminutive": { "dropFinal": ["o", "a"], "vowelSuffix": "inho", "otherSuffix": "zinho" },
+  "templates": {
+    "diminutive": ["{dim}"],
+    "demonym": ["{gentilico}", "{first} {gentilico}"],
+    "style": ["{first} {estilo}", "{estilo}"],
+    "origin": {
+      "varzea": ["{first} do Terrão", "{first} da Várzea"],
+      "peneira": ["{first} da Peneira"],
+      "baseGrande": ["{first} da Base"]
+    }
+  },
+  "demonym": {
+    "AC": "Acreano", "AL": "Alagoano", "AP": "Amapaense", "AM": "Amazonense", "BA": "Baiano", "CE": "Cearense",
+    "DF": "Brasiliense", "ES": "Capixaba", "GO": "Goiano", "MA": "Maranhense", "MT": "Mato-Grossense",
+    "MS": "Pantaneiro", "MG": "Mineiro", "PA": "Paraense", "PB": "Paraíba", "PR": "Paranaense",
+    "PE": "Pernambucano", "PI": "Piauiense", "RJ": "Carioca", "RN": "Potiguar", "RS": "Gaúcho",
+    "RO": "Rondoniense", "RR": "Roraimense", "SC": "Catarinense", "SP": "Paulista", "SE": "Sergipano", "TO": "Tocantinense"
+  },
+  "style": {
+    "matador": ["Matador", "Artilheiro"], "arrancador": ["Flecha", "Trem-Bala"], "magico": ["Mágico", "Malabarista"],
+    "centroavanteForca": ["Bomba", "Tanque"], "classico10": ["Maestro", "Craque"], "regente": ["Professor", "Regente"],
+    "volanteRaiz": ["Pitbull", "Carrapato"], "motorzinho": ["Motorzinho", "Pulmão"], "xerifao": ["Xerife", "Muralha"],
+    "zagueiroTecnico": ["Elegante", "Doutor"], "lateralApoiador": ["Expresso", "Ala"], "lateralFoguete": ["Foguete", "Canhão"],
+    "lateralConstrutor": ["Arquiteto", "Engenheiro"], "paredao": ["Paredão", "Muralha"], "goleiroLibero": ["Líbero", "Goleirão"],
+    "pegadorPenalti": ["Santo", "Pegador"]
+  }
+}

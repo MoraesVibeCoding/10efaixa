@@ -1,0 +1,9 @@
+{
+  "_nota": "Pesos dos padrões de apelido por origem (6.17). Textos em src/i18n/pt-BR/nicknames.json.",
+  "patternWeights": {
+    "baseGrande": { "diminutive": 4, "demonym": 1, "style": 3, "origin": 1 },
+    "peneira":    { "diminutive": 3, "demonym": 2, "style": 3, "origin": 1 },
+    "varzea":     { "diminutive": 2, "demonym": 3, "style": 2, "origin": 3 }
+  },
+  "maxAttempts": 8
+}
