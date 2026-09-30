@@ -3,3 +3,8 @@ dist
 *.log
 .DS_Store
 coverage
+
+# ferramentas locais (caminhos da máquina) e pacote original
+.claude/
+.codex/
+files.zip
