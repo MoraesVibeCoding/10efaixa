@@ -1,6 +1,6 @@
 import { ATTRIBUTES, type Attributes } from './attributes';
 import { ARCHETYPES, type Archetype } from './archetypes';
-import { BUILDS, applyBiotype, isHeightAllowed, type Biotype } from './biotype';
+import { BUILDS, applyBiotype, isHeightAllowed, rollGrowth, type Biotype, type Growth } from './biotype';
 import { checkName } from './nameFilter';
 import { overall, type Position } from './overall';
 import { pickWeighted, type Prng } from './prng';
@@ -25,6 +25,7 @@ export interface Player extends CreationInput {
   potential: number;
   isDiamond: boolean;
   dualNationality: string | null;
+  growth: Growth;
   attributes: Attributes;
   caps: Attributes;
 }
@@ -73,6 +74,7 @@ export function createPlayer(input: CreationInput, rng: Prng): CreationResult {
   const potential = roll(isDiamond ? origin.diamond!.potential : origin.potential);
   const { chance, countries } = data.dualNationality;
   const dualNationality = rng.next() < chance ? pickWeighted(rng, countries) : null;
+  const growth = rollGrowth(rng);
 
   const caps = applyBiotype(shape(potential, arch), input.biotype);
   const raw = shape(startingOverall, arch);
@@ -82,6 +84,6 @@ export function createPlayer(input: CreationInput, rng: Prng): CreationResult {
 
   return {
     ok: true,
-    player: { ...input, startingOverall, potential, isDiamond, dualNationality, attributes, caps },
+    player: { ...input, startingOverall, potential, isDiamond, dualNationality, growth, attributes, caps },
   };
 }

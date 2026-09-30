@@ -26,6 +26,12 @@ const many = (n: number, input: Partial<CreationInput> = {}) => {
 };
 
 describe('criação do jogador', () => {
+  it('estirão sorteado na criação e guardado no jogador', () => {
+    const ps = many(2_000);
+    expect(ps.every((p) => p.growth.deltaCm >= -3 && p.growth.deltaCm <= 10)).toBe(true);
+    expect(new Set(ps.map((p) => p.growth.deltaCm)).size).toBeGreaterThan(5);
+  });
+
   it('mesma semente, mesmo jogador', () => {
     expect(make({}, 7)).toEqual(make({}, 7));
   });

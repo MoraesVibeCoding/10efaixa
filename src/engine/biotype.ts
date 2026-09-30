@@ -1,5 +1,6 @@
 import { ATTRIBUTES, type Attributes } from './attributes';
 import type { Position } from './overall';
+import type { Prng } from './prng';
 import data from '../data/biotype.json';
 
 // Seção 6.17. Só altura e compleição afetam o jogo; aparência nunca entra aqui.
@@ -23,4 +24,21 @@ export function applyBiotype(caps: Attributes, { heightCm, build }: Biotype): At
     out[a] = Math.min(99, Math.max(1, Math.round(v)));
   }
   return out;
+}
+
+export interface Growth { deltaCm: number; big: boolean }
+
+/** Variação total da altura até os 18 (6.17), sorteada uma vez na criação. */
+export function rollGrowth(rng: Prng): Growth {
+  const g = data.growth;
+  const big = rng.next() < g.bigChance;
+  const [lo, hi] = big ? g.big : g.normal;
+  return { deltaCm: rng.int(lo!, hi!), big };
+}
+
+/** Altura na idade: prevista aos 16, variação realizada linearmente até os 18. */
+export function heightAt(predictedCm: number, growth: Growth, age: number): number {
+  const { startAge, endAge } = data.growth;
+  const done = Math.min(1, Math.max(0, (age - startAge) / (endAge - startAge)));
+  return predictedCm + Math.round(growth.deltaCm * done);
 }
