@@ -1,4 +1,5 @@
 import { ATTRIBUTES } from './attributes';
+import { applyBiotype } from './biotype';
 import { overall } from './overall';
 import { createPlayer, type CreationInput, type Player } from './player';
 import { createPrng } from './prng';
@@ -30,6 +31,11 @@ describe('criação do jogador', () => {
     const ps = many(2_000);
     expect(ps.every((p) => p.growth.deltaCm >= -3 && p.growth.deltaCm <= 10)).toBe(true);
     expect(new Set(ps.map((p) => p.growth.deltaCm)).size).toBeGreaterThan(5);
+  });
+
+  it('guarda os tetos antes do biotipo (baseCaps) para a evolução recalcular', () => {
+    const p = make({ biotype: { heightCm: 190, build: 'forte' } });
+    expect(applyBiotype(p.baseCaps, p.biotype)).toEqual(p.caps);
   });
 
   it('mesma semente, mesmo jogador', () => {

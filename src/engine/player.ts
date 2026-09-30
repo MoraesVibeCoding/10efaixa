@@ -27,6 +27,7 @@ export interface Player extends CreationInput {
   dualNationality: string | null;
   growth: Growth;
   attributes: Attributes;
+  baseCaps: Attributes;
   caps: Attributes;
 }
 
@@ -76,7 +77,8 @@ export function createPlayer(input: CreationInput, rng: Prng): CreationResult {
   const dualNationality = rng.next() < chance ? pickWeighted(rng, countries) : null;
   const growth = rollGrowth(rng);
 
-  const caps = applyBiotype(shape(potential, arch), input.biotype);
+  const baseCaps = shape(potential, arch);
+  const caps = applyBiotype(baseCaps, input.biotype);
   const raw = shape(startingOverall, arch);
   const shift = startingOverall - overall(raw, input.position, arch.overallWeightBonus);
   const attributes = {} as Attributes;
@@ -84,6 +86,6 @@ export function createPlayer(input: CreationInput, rng: Prng): CreationResult {
 
   return {
     ok: true,
-    player: { ...input, startingOverall, potential, isDiamond, dualNationality, growth, attributes, caps },
+    player: { ...input, startingOverall, potential, isDiamond, dualNationality, growth, attributes, baseCaps, caps },
   };
 }

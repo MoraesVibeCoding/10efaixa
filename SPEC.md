@@ -623,3 +623,9 @@ Decisões aprovadas durante a implementação. Complementam as seções acima.
 | 2026-09-30 | T05 | Schema = tipo TypeScript + validador próprio, checado ao carregar e nos testes; sem biblioteca | Sem dependência nova; reavaliar (ex.: zod) se T15/T25 pedirem |
 | 2026-09-30 | T05 | Flags de configuração em `src/data/flags.json` | Um lugar só para `inspiracaoLendas`, `desafioDiario` etc. |
 | 2026-09-30 | — | Scan HawkScan só a partir da T48 (primeira tela servida) | Antes disso não há aplicação para escanear |
+| 2026-09-30 | T07 | Lista de nomes bloqueados em `src/data/blockedWords.json`, por palavra inteira após normalização; nomes comuns só bloqueados na combinação famosa | Evitar recusar nomes comuns (Ronaldo, Vinícius); lista revisada na T41 |
+| 2026-09-30 | T10 | "Manutenção" sem foco: cresce ×0,8 enquanto a curva sobe; cai inteiro quando desce. Foco amortece a queda (principal ×0,5, secundário ×0,75) | Interpretação de 6.5 ("atributos sem foco em manutenção") |
+| 2026-09-30 | T10 | Ruído multiplica só o crescimento; nunca cria ganho com curva ≤ 0 | Garante o invariante "30+ sem minutos e sem foco não evolui fisicamente" |
+| 2026-09-30 | T10 | Ordem por semestre: compleição → altura e tetos (idade do início do semestre) → atributos → idade +0,5; 2 sorteios fixos por atributo | Determinismo e fronteiras (30 anos, 18 anos) sem ambiguidade |
+| 2026-09-30 | T10 | Teto que cai (compleição/altura) corta o atributo na hora | Invariante "nunca acima do teto"; queda máxima pequena |
+| 2026-09-30 | T10 | Compleição: foco principal em Força empurra para forte; em Velocidade/Drible, para franzino; 4 semestres; contador limitado a ±4 | "Foco longo" da 6.17, calibrável |
