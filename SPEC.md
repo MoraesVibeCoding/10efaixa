@@ -1,6 +1,6 @@
 # 10eFaixa — Especificação do Produto (SPEC.md)
 
-> Versão 2.3 (decisões de implementação, seção 17) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
+> Versão 2.4 (T11b: progressão de traços por foco) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
 > Este documento é a fonte da verdade para o Claude Code. Nenhuma mudança de escopo sem atualizar este arquivo primeiro.
 
 ---
@@ -505,6 +505,7 @@ Cada tarefa é atômica, com teste escrito antes do código e **um commit por ta
 | T09 | Curvas de idade (incluindo Jogo aéreo) | Formas da 6.4 verificadas |
 | T10 | Evolução por semestre + mudança de compleição | Invariantes da 9.2; retorno decrescente; compleição muda no máximo um degrau |
 | T11 | Lógica da reunião com a comissão | Aceita, contrapropõe e recusa conforme moral, relação e status; foco físico aumenta risco de lesão |
+| T11b | Progressão de traços por foco | Foco em Bola parada leva a Cobrador (goleiro; Goleiro-líbero mais rápido) ou Bola parada (linha); foco em Perna ruim leva a Ambidestro; desbloqueio vira evento |
 | T12 | Infraestrutura de textos (i18n pt-BR) + gerador de apelido | Todo texto vem de arquivo; apelido gerado por origem, cidade e estilo, sempre filtrado |
 | T13 | Harness de simulação em massa | Roda 10 mil carreiras e gera relatório, incluindo efeito da altura ⛳ |
 
@@ -633,3 +634,4 @@ Decisões aprovadas durante a implementação. Complementam as seções acima.
 | 2026-09-30 | T11 | Contraproposta: necessidade do clube vira foco principal, desejo principal do jogador vira secundário (o secundário original sai); resposta do jogador à contraproposta fica para a T52 | Simples; registrar a perda do secundário |
 | 2026-09-30 | T11 | `clubNeed` escondido do jogador na UI | Evita estratégia dominante (propor sempre o que o clube quer) |
 | 2026-09-30 | T11 | Uma reunião por temporada é garantida por quem chama (máquina de estados, T48) | Motor puro não guarda histórico de reuniões |
+| 2026-09-30 | T11b | Nova tarefa: progressão de traços por foco (Bola parada → Cobrador/Bola parada; Perna ruim → Ambidestro) | Prometido em 6.1/6.2 sem tarefa no plano; achado da revisão cross-model (Gemini) |
