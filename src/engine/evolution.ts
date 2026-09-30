@@ -18,7 +18,8 @@ export interface EvoState {
   growth: Growth;
   build: Build;
   buildPush: number;
-  buildChanged: boolean;
+  /** Compleição da criação; a atual nunca fica a mais de um degrau dela (6.17). */
+  originalBuild: Build;
 }
 
 export interface SemesterContext {
@@ -44,18 +45,18 @@ function validate({ focus, staffQuality, minutes, morale }: SemesterContext) {
 
 const STEPS: Build[] = ['franzino', 'atletico', 'forte'];
 
-/** Foco principal repetido empurra a compleição; muda um degrau, uma vez na carreira (6.17). */
-function nextBuild(s: EvoState, main: Focus | undefined): Pick<EvoState, 'build' | 'buildPush' | 'buildChanged'> {
+/** Foco principal repetido empurra a compleição um degrau; pode ir e voltar, sempre a ≤ 1 degrau da original (6.17). */
+function nextBuild(s: EvoState, main: Focus | undefined): Pick<EvoState, 'build' | 'buildPush'> {
   const { threshold, noFranzinoFromAge, towardForte, towardFranzino } = cfg.build;
-  if (s.buildChanged) return s;
   const dir = main && towardForte.includes(main) ? 1 : main && towardFranzino.includes(main) ? -1 : 0;
   const buildPush = Math.max(-threshold, Math.min(threshold, s.buildPush + dir));
-  if (Math.abs(buildPush) < threshold) return { build: s.build, buildPush, buildChanged: false };
-  const target = STEPS[STEPS.indexOf(s.build) + Math.sign(buildPush)];
-  if (!target || (target === 'franzino' && s.age >= noFranzinoFromAge)) {
-    return { build: s.build, buildPush, buildChanged: false };
-  }
-  return { build: target, buildPush: 0, buildChanged: true };
+  if (Math.abs(buildPush) < threshold) return { build: s.build, buildPush };
+  const idx = STEPS.indexOf(s.build) + Math.sign(buildPush);
+  const target = STEPS[idx];
+  const blocked = !target
+    || Math.abs(idx - STEPS.indexOf(s.originalBuild)) > 1
+    || (target === 'franzino' && s.age >= noFranzinoFromAge);
+  return blocked ? { build: s.build, buildPush } : { build: target, buildPush: 0 };
 }
 
 /** Um semestre de evolução. Pura: não altera o estado de entrada. Consome 2 sorteios por atributo. */

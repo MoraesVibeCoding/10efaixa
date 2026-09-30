@@ -92,7 +92,7 @@ describe('reunião com a comissão', () => {
   it('integração: o foco de qualquer resposta roda na evolução', () => {
     const flat = Object.fromEntries(ATTRIBUTES.map((a) => [a, 50])) as Attributes;
     const s = { age: 20, attributes: flat, baseCaps: flat, caps: flat, predictedHeightCm: 180,
-      growth: { deltaCm: 0, big: false }, build: 'atletico' as const, buildPush: 0, buildChanged: false };
+      growth: { deltaCm: 0, big: false }, build: 'atletico' as const, buildPush: 0, originalBuild: 'atletico' as const };
     for (const morale of [0, 0.5, 1]) {
       const { focus } = staffMeeting(input({ morale, coachRelation: morale }));
       expect(() => evolveSemester(s, { focus, staffQuality: 1, minutes: 1, morale }, createPrng(1))).not.toThrow();

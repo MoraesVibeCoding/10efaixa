@@ -10,7 +10,7 @@ const state = (over: Partial<EvoState> = {}): EvoState => {
   const s: EvoState = {
     age: 18, attributes: flat(50), baseCaps: flat(85), caps: flat(85),
     predictedHeightCm: 180, growth: { deltaCm: 0, big: false },
-    build: 'atletico', buildPush: 0, buildChanged: false, ...over,
+    build: 'atletico', originalBuild: 'atletico', buildPush: 0, ...over,
   };
   return { ...s, caps: applyBiotype(s.baseCaps, { heightCm: s.predictedHeightCm + s.growth.deltaCm, build: s.build }) };
 };
@@ -113,11 +113,22 @@ describe('evolução por semestre', () => {
       return s;
     };
 
-    it('foco longo em Força: atlético → forte após 4 semestres, e só um degrau na carreira', () => {
+    it('foco longo em Força: atlético → forte após 4 semestres', () => {
       expect(push(state(), 'forca', 3).build).toBe('atletico');
-      const s = push(state(), 'forca', 4);
-      expect(s.build).toBe('forte');
-      expect(push(s, 'velocidade', 20).build).toBe('forte');
+      expect(push(state(), 'forca', 4).build).toBe('forte');
+    });
+
+    it('pode ir e voltar: forte → atlético → franzino, todos a um degrau do atlético original', () => {
+      const forte = push(state(), 'forca', 4);
+      const volta = push(forte, 'velocidade', 4);
+      expect(volta.build).toBe('atletico');
+      expect(push(volta, 'velocidade', 4).build).toBe('franzino');
+    });
+
+    it('nunca a mais de um degrau da compleição original: franzino nunca vira forte', () => {
+      const s = push(state({ build: 'franzino', originalBuild: 'franzino' }), 'forca', 40);
+      expect(s.build).toBe('atletico');
+      expect(s.originalBuild).toBe('franzino');
     });
 
     it('foco em Velocidade leva a franzino antes dos 30, mas nunca a partir dos 30', () => {
@@ -129,6 +140,7 @@ describe('evolução por semestre', () => {
       const s = push(state({ age: 32 }), 'velocidade', 20);
       expect(s.buildPush).toBeGreaterThanOrEqual(-4);
       expect(push(s, 'forca', 4).build).toBe('atletico');
+      expect(push(s, 'forca', 8).build).toBe('forte');
     });
 
     it('troca de compleição recalcula os tetos', () => {
