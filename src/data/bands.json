@@ -1,0 +1,8 @@
+[
+  { "key": "fraco", "min": 1, "max": 39, "stars": 1 },
+  { "key": "regular", "min": 40, "max": 54, "stars": 2 },
+  { "key": "bom", "min": 55, "max": 64, "stars": 3 },
+  { "key": "muitoBom", "min": 65, "max": 74, "stars": 4 },
+  { "key": "excelente", "min": 75, "max": 84, "stars": 4.5 },
+  { "key": "lendario", "min": 85, "max": 99, "stars": 5 }
+]

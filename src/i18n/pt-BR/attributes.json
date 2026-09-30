@@ -1,0 +1,22 @@
+{
+  "attribute": {
+    "finalizacao": "Finalização",
+    "passe": "Passe",
+    "habilidade": "Habilidade",
+    "drible": "Drible",
+    "forca": "Força",
+    "velocidade": "Velocidade",
+    "fisico": "Físico",
+    "marcacao": "Marcação",
+    "mental": "Mental",
+    "jogoAereo": "Jogo aéreo"
+  },
+  "band": {
+    "fraco": "Fraco",
+    "regular": "Regular",
+    "bom": "Bom",
+    "muitoBom": "Muito bom",
+    "excelente": "Excelente",
+    "lendario": "Lendário"
+  }
+}

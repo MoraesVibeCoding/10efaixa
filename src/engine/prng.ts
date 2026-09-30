@@ -1,4 +1,4 @@
-// Única fonte de aleatoriedade do motor (Math.random é proibido).
+// Única fonte de aleatoriedade do motor (o gerador nativo do JS é proibido; ver teste de guarda).
 // mulberry32: estado de 32 bits, período 2^32 — suficiente para uma carreira.
 // Referência: https://gist.github.com/tommyettinger/46a874533244883189143505d203312c
 export interface Prng {
