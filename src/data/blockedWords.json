@@ -1,0 +1,16 @@
+{
+  "_nota": "Lista inicial; revisar na T41. Comparação após normalização (sem acento, minúsculas, leetspeak, letras repetidas colapsadas).",
+  "minLength": 2,
+  "maxLength": 24,
+  "words": [
+    "porra", "caralho", "merda", "puta", "puto", "buceta", "bosta", "cacete", "cuzao", "arrombado",
+    "viado", "vagabundo", "vagabunda", "corno", "otario", "babaca", "fdp", "pqp", "vsf", "foda", "foder",
+    "piranha", "desgracado", "retardado", "macaco", "nazista", "hitler"
+  ],
+  "names": [
+    "pele", "neymar", "romario", "ronaldinho", "zico", "kaka", "rivaldo", "cafu", "garrincha", "socrates",
+    "ronaldo nazario", "ronaldo fenomeno", "vinicius junior", "vini jr", "roberto carlos", "rogerio ceni",
+    "thiago silva", "filipe luis", "bruno guimaraes", "casagrande", "taffarel", "dunga", "falcao", "adriano imperador",
+    "messi", "cristiano ronaldo", "maradona", "mbappe"
+  ]
+}
