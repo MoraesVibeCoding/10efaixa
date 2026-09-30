@@ -1,0 +1,34 @@
+{
+  "state": {
+    "AC": "Acre", "AL": "Alagoas", "AP": "Amapá", "AM": "Amazonas", "BA": "Bahia", "CE": "Ceará",
+    "DF": "Distrito Federal", "ES": "Espírito Santo", "GO": "Goiás", "MA": "Maranhão", "MT": "Mato Grosso",
+    "MS": "Mato Grosso do Sul", "MG": "Minas Gerais", "PA": "Pará", "PB": "Paraíba", "PR": "Paraná",
+    "PE": "Pernambuco", "PI": "Piauí", "RJ": "Rio de Janeiro", "RN": "Rio Grande do Norte",
+    "RS": "Rio Grande do Sul", "RO": "Rondônia", "RR": "Roraima", "SC": "Santa Catarina",
+    "SP": "São Paulo", "SE": "Sergipe", "TO": "Tocantins"
+  },
+  "temperament": { "frio": "Frio", "esquentado": "Esquentado", "lider": "Líder", "resenha": "Resenha" },
+  "celebration": {
+    "aviaozinho": "Aviãozinho", "dancinha": "Dancinha", "punhoCerrado": "Punho cerrado",
+    "coracaoMaos": "Coração com as mãos", "cambalhota": "Cambalhota", "apontaCeu": "Apontar para o céu",
+    "beijaAlianca": "Beijo na aliança", "chuteiraTelefone": "Chuteira no ouvido"
+  },
+  "foot": { "direita": "Direita", "esquerda": "Esquerda" },
+  "origin": { "baseGrande": "Base de clube grande", "peneira": "Peneira", "varzea": "Várzea" },
+  "country": { "italia": "Itália", "portugal": "Portugal", "espanha": "Espanha", "alemanha": "Alemanha" },
+  "error": {
+    "name.empty": "Digite um nome para o seu jogador.",
+    "name.tooShort": "O nome precisa ter pelo menos 2 letras.",
+    "name.tooLong": "O nome pode ter no máximo 24 caracteres.",
+    "name.blocked": "Esse nome não pode ser usado. Escolha outro.",
+    "shirtNumber.invalid": "Escolha um número de 1 a 99.",
+    "state.invalid": "Escolha um estado da lista.",
+    "height.outOfRange": "Essa altura está fora da faixa da posição.",
+    "build.invalid": "Escolha uma compleição da lista.",
+    "archetype.invalid": "Esse estilo não combina com a posição escolhida.",
+    "temperament.invalid": "Escolha um temperamento da lista.",
+    "celebration.invalid": "Escolha uma comemoração da lista.",
+    "foot.invalid": "Escolha a perna boa.",
+    "origin.invalid": "Escolha uma origem da lista."
+  }
+}

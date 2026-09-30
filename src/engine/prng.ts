@@ -25,3 +25,11 @@ export function createPrng(seed: number, state = seed >>> 0): Prng {
     state: () => s,
   };
 }
+
+/** Sorteia uma chave com probabilidade proporcional ao peso. */
+export function pickWeighted<K extends string>(rng: Prng, weights: Record<K, number>): K {
+  const entries = Object.entries(weights) as [K, number][];
+  let roll = rng.next() * entries.reduce((s, [, w]) => s + w, 0);
+  for (const [k, w] of entries) if ((roll -= w) < 0) return k;
+  return entries.at(-1)![0];
+}

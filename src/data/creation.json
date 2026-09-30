@@ -1,0 +1,13 @@
+{
+  "origins": {
+    "baseGrande": { "overall": [45, 55], "potential": [70, 92] },
+    "peneira":    { "overall": [38, 50], "potential": [60, 90] },
+    "varzea":     { "overall": [30, 42], "potential": [55, 85], "diamond": { "chance": 0.03, "potential": [88, 97] } }
+  },
+  "attributeSpread": 12,
+  "dualNationality": { "chance": 0.05, "countries": { "italia": 45, "portugal": 45, "espanha": 5, "alemanha": 5 } },
+  "states": ["AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"],
+  "temperaments": ["frio", "esquentado", "lider", "resenha"],
+  "celebrations": ["aviaozinho", "dancinha", "punhoCerrado", "coracaoMaos", "cambalhota", "apontaCeu", "beijaAlianca", "chuteiraTelefone"],
+  "feet": ["direita", "esquerda"]
+}
