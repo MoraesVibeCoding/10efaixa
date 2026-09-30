@@ -1,6 +1,6 @@
 # 10eFaixa — Especificação do Produto (SPEC.md)
 
-> Versão 2.2 (domínio .com; T42–T43 antecipadas) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
+> Versão 2.3 (decisões de implementação, seção 17) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
 > Este documento é a fonte da verdade para o Claude Code. Nenhuma mudança de escopo sem atualizar este arquivo primeiro.
 
 ---
@@ -606,3 +606,20 @@ O Claude Code **para e pede aprovação** nestes momentos:
 7. **Prova de conclusão:** log do terminal com 100% dos testes, typecheck e build passando.
 8. **Chesterton:** não remover código existente sem entender e documentar por que ele está lá.
 9. **Mudança de escopo ou ponto crítico/irreversível:** parar e pedir validação humana.
+
+---
+
+## 17. Decisões de implementação
+
+Decisões aprovadas durante a implementação. Complementam as seções acima.
+
+| Data | Tarefa | Decisão | Motivo |
+|---|---|---|---|
+| 2026-09-30 | T02 | PRNG `mulberry32` com estado de 32 bits exposto (`state()`) | Simples, determinístico; estado permite save/load (T54) |
+| 2026-09-30 | T03 | Guarda automática: teste falha se `Math.random` aparecer em `src/engine` | Garante a regra de aleatoriedade com semente |
+| 2026-09-30 | T04 | Pesos por posição somam 100; Atacante com Jogo aéreo moderado (10) | "Centroavante" é arquétipo, não posição; não penalizar pontas |
+| 2026-09-30 | T05 | Campo opcional `overallWeightBonus` no arquétipo, somado aos pesos da posição; Centroavante de força: +10 Jogo aéreo | Cumpre "Jogo aéreo pesa muito para centroavante" (6.3) |
+| 2026-09-30 | T05 | Arquétipo pode valer para mais de uma posição (Mágico: atacante/meia; Regente e Motorzinho: volante/meia) | Toda posição com ≥2 arquétipos |
+| 2026-09-30 | T05 | Schema = tipo TypeScript + validador próprio, checado ao carregar e nos testes; sem biblioteca | Sem dependência nova; reavaliar (ex.: zod) se T15/T25 pedirem |
+| 2026-09-30 | T05 | Flags de configuração em `src/data/flags.json` | Um lugar só para `inspiracaoLendas`, `desafioDiario` etc. |
+| 2026-09-30 | — | Scan HawkScan só a partir da T48 (primeira tela servida) | Antes disso não há aplicação para escanear |
