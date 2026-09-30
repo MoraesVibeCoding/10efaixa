@@ -1,0 +1,8 @@
+{
+  "goleiro":  { "finalizacao": 0,  "passe": 8,  "habilidade": 25, "drible": 0,  "forca": 3,  "velocidade": 25, "fisico": 4,  "marcacao": 0,  "mental": 15, "jogoAereo": 20 },
+  "zagueiro": { "finalizacao": 1,  "passe": 7,  "habilidade": 3,  "drible": 1,  "forca": 15, "velocidade": 8,  "fisico": 8,  "marcacao": 25, "mental": 12, "jogoAereo": 20 },
+  "lateral":  { "finalizacao": 2,  "passe": 15, "habilidade": 8,  "drible": 10, "forca": 4,  "velocidade": 20, "fisico": 15, "marcacao": 15, "mental": 8,  "jogoAereo": 3 },
+  "volante":  { "finalizacao": 1,  "passe": 18, "habilidade": 8,  "drible": 2,  "forca": 12, "velocidade": 5,  "fisico": 13, "marcacao": 22, "mental": 15, "jogoAereo": 4 },
+  "meia":     { "finalizacao": 12, "passe": 22, "habilidade": 20, "drible": 15, "forca": 2,  "velocidade": 8,  "fisico": 4,  "marcacao": 3,  "mental": 13, "jogoAereo": 1 },
+  "atacante": { "finalizacao": 28, "passe": 3,  "habilidade": 12, "drible": 14, "forca": 8,  "velocidade": 14, "fisico": 4,  "marcacao": 0,  "mental": 7,  "jogoAereo": 10 }
+}
