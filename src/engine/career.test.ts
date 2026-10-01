@@ -167,4 +167,23 @@ describe('integração da carreira (T24b)', () => {
     }
     expect(all.some((t) => t.tournament === 'copaDoMundo')).toBe(true);
   });
+
+  it('dupla nacionalidade (T38): aceitar é definitivo; quem recusa segue brasileiro', { timeout: 30_000 }, () => {
+    const run = (temperament: string) => Array.from({ length: 80 }, (_, seed) => simulateCareer(input({ temperament, position: 'meia', archetypeId: 'classico10' }), seed));
+    const frio = run('frio');
+    const took = frio.filter((r) => r.selection.dual === 'aceitou');
+    expect(took.length).toBeGreaterThan(0);
+    for (const r of took) {
+      expect(r.selection.nationality).not.toBe('Brasil');
+      const teams = new Set(r.selection.tournaments.filter((t) => t.tournament !== 'olimpiadas').map((t) => t.team));
+      expect([...teams].every((t) => t === r.selection.nationality)).toBe(true);
+    }
+    const lider = run('lider');
+    expect(lider.some((r) => r.selection.dual === 'recusou')).toBe(true);
+    for (const r of lider) {
+      expect(r.selection.nationality).toBe('Brasil');
+      expect(r.selection.oriundoCampeao).toBe(false);
+      if (r.selection.esperouOBrasil) expect(r.selection.caps).toBeGreaterThan(0);
+    }
+  });
 });

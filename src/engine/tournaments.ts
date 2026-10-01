@@ -7,7 +7,11 @@ import cfg from '../data/nationalTournaments.json';
 // T37 (SPEC 6.11): Copa do Mundo, Copa América e Olimpíadas. Só o caminho do Brasil é simulado.
 export type NTournament = keyof typeof cfg.torneios;
 export const TOURNAMENTS = Object.keys(cfg.torneios) as NTournament[];
-export interface TournamentInput { tournament: NTournament; rung: Rung; overall: number; mental: number }
+export interface TournamentInput {
+  tournament: NTournament; rung: Rung; overall: number; mental: number;
+  /** Dupla nacionalidade (T38): força da outra seleção no lugar da do Brasil. */
+  teamStrength?: number;
+}
 export interface TournamentResult {
   /** 'grupos', o nome da fase em que caiu ou 'campeao'. */
   stage: string; champion: boolean; matches: number; hero: boolean; villain: boolean; injured: boolean;
@@ -25,9 +29,10 @@ const POOLS = {
 };
 for (const p of Object.values(POOLS)) p.sort((a, b) => b - a);
 
-/** Copa e Copa América: convocado para a principal. Olimpíadas: degrau Olímpica, ou principal até o limite de idade. */
-export function eligible(t: NTournament, rung: Rung, age: number): boolean {
+/** Copa e Copa América: convocado para a principal (Copa América só para seleções das Américas). Olimpíadas: degrau Olímpica, ou principal até o limite de idade. */
+export function eligible(t: NTournament, rung: Rung, age: number, country?: string): boolean {
   const def = cfg.torneios[t];
+  if (country && def.adversarios === 'americas' && !(country in cfg.selecoes.americas)) return false;
   if (def.degrau === 'principal') return PRINCIPAL.includes(rung);
   return rung === 'olimpica' || (PRINCIPAL.includes(rung) && age <= cfg.torneios.olimpiadas.idadeMaxPrincipal);
 }
@@ -43,7 +48,7 @@ export function playTournament(i: TournamentInput, decide: Decide, rng: Prng): T
   const m = cfg.momentos;
   const share = (b.impacto.porDegrau as Record<string, number>)[PRINCIPAL.includes(i.rung) ? i.rung : 'olimpica'] ?? 0;
   const impact = clamp((i.overall - b.impacto.refOverall) * b.impacto.porPonto, -b.impacto.max, b.impacto.max) * share;
-  const base = b.forca + (rng.next() * 2 - 1) * M.formNoise;
+  const base = (i.teamStrength ?? b.forca) + (rng.next() * 2 - 1) * M.formNoise;
   const opponent = (slice: number) => pool[rng.int(0, slice - 1)]! + (rng.next() * 2 - 1) * M.formNoise;
   const r: TournamentResult = { stage: 'grupos', champion: false, matches: 0, hero: false, villain: false, injured: false, decisions: [] };
   let benched = false;

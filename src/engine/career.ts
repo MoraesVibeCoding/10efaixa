@@ -23,6 +23,8 @@ import { createPrng, type Prng } from './prng';
 import { TOURNAMENTS, eligible, playTournament, type NTournament } from './tournaments';
 import { isEditionYear } from './calendar';
 import tcfg from '../data/nationalTournaments.json';
+import { ancestry, cutOffset, invited, residenceCountry, teamStrength } from './dualNationality';
+import dual from '../data/dualNationality.json';
 import { farewellOffer, retirementCheck, type RetireReason } from './retirement';
 import { simulateSeason, type ClubInfo, type Div, type Divisions, type Row } from './season';
 import { assignNumber, canGetArmband, canGetTen, rosterNumbers } from './shirt';
@@ -44,7 +46,9 @@ export interface CareerResult {
   finalPosition: Position; positionChanges: number;
   /** Seleção: semestres convocado por degrau; caps = convocações para a principal. */
   selection: { callUps: Record<Exclude<Rung, 'nenhum'>, number>; caps: number; ten: number; captain: number;
-    tournaments: { year: number; tournament: NTournament; stage: string; hero: boolean; villain: boolean }[];
+    tournaments: { year: number; tournament: NTournament; team: string; stage: string; hero: boolean; villain: boolean }[];
+    /** Dupla nacionalidade (T38): seleção defendida e a resposta ao convite. */
+    nationality: string; dual: 'aceitou' | 'recusou' | null; oriundoCampeao: boolean; esperouOBrasil: boolean;
   };
   retirement: RetireReason; farewell: 'formador' | 'coracao' | null;
   cards: { yellows: number; reds: number }; finalTemperament: string; houseBought: boolean; discipline: number;
@@ -128,7 +132,9 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let farewellAsked = false;
   let sel: CallUp = { rung: 'nenhum', ten: false, captain: false };
   let prestige = 0;
-  const selection: CareerResult['selection'] = { callUps: { sub17: 0, sub20: 0, olimpica: 0, lista: 0, reserva: 0, titular: 0 }, caps: 0, ten: 0, captain: 0, tournaments: [] };
+  const selection: CareerResult['selection'] = { callUps: { sub17: 0, sub20: 0, olimpica: 0, lista: 0, reserva: 0, titular: 0 }, caps: 0, ten: 0, captain: 0, tournaments: [], nationality: 'Brasil', dual: null, oriundoCampeao: false, esperouOBrasil: false };
+  const heritage = ancestry(createPrng(Math.imul(seed + 13, 0x9e3779b1)));
+  let nation: string | null = null; // null = Brasil
 
   let clubId: string | null = null;
   let inYouth = false;
@@ -316,7 +322,16 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       // Convocação do semestre: segue a nota de visibilidade (sem clube, na várzea, não há convocação).
       if (clubId && varzeaLeft === 0) {
         const vis = visibility({ overall: ov(evo), form, minutes, league: leagueOf(clubId, divOf), reputation: effectiveRep(clubId) }, coachFor(year, seed));
-        const next = callUp({ age: evo.age, visibility: vis, position, caps: selection.caps });
+        const call = () => callUp({ age: evo.age, visibility: vis, position, caps: selection.caps, cutOffset: nation ? cutOffset(nation) : 0 });
+        let next = call();
+        // Dupla nacionalidade (6.11): convite único, só enquanto o Brasil não convocou; aceitar é definitivo.
+        const country = heritage ?? Object.keys(dual.residencia.ligas).map((lg) => residenceCountry(lg, seasons.filter((x) => x.division === lg).length)).find(Boolean) ?? null;
+        if (!nation && !isPrincipal(next.rung) && invited({ age: evo.age, brazilCaps: selection.caps, visibility: vis, country, decided: selection.dual !== null })) {
+          const out = applyOption({ moral: morale, trocarSelecao: false }, 'dupla-nacionalidade', autoChoice('dupla-nacionalidade', temp));
+          morale = out.moral as number;
+          selection.dual = out.trocarSelecao ? 'aceitou' : 'recusou';
+          if (out.trocarSelecao) { nation = country; selection.nationality = country!; next = call(); }
+        }
         morale = clamp(morale + selectionEffect(prestige, next, sel.rung).moraleDelta, 0, 1);
         prestige = updatePrestige(prestige, next);
         sel = next;
@@ -328,16 +343,16 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       // Torneios de seleções no meio do ano (calendário da T14); título com a Seleção é permanente.
       if (sem === 0) {
         for (const t of TOURNAMENTS) {
-          if (!isEditionYear(t, year) || !eligible(t, sel.rung, evo.age)) continue;
+          if (!isEditionYear(t, year) || !eligible(t, sel.rung, evo.age, nation ?? undefined)) continue;
           const tr = createPrng(Math.imul(seed + 7, 0x9e3779b1) ^ Math.imul(year, 0x85ebca6b) ^ TOURNAMENTS.indexOf(t));
-          const res = playTournament({ tournament: t, rung: sel.rung, overall: ov(evo), mental: evo.attributes.mental }, (e) => autoChoice(e, temp), tr);
+          const res = playTournament({ tournament: t, rung: sel.rung, overall: ov(evo), mental: evo.attributes.mental, teamStrength: nation ? teamStrength(nation) : undefined }, (e) => autoChoice(e, temp), tr);
           const fxT = tcfg.efeitos;
           for (const d of res.decisions) morale = applyOption({ moral: morale }, d.event, d.option).moral as number;
           if (res.champion) { titles.push({ year, competition: t, clubId: 'selecao' }); morale = clamp(morale + fxT.titulo.moral, 0, 1); }
           if (res.hero) { prestige = Math.min(1, prestige + fxT.heroi.prestigio); morale = clamp(morale + fxT.heroi.moral, 0, 1); }
           if (res.villain) { prestige *= fxT.vilao.prestigioFator; morale = clamp(morale + fxT.vilao.moral, 0, 1); }
           if (res.injured) outLeft = Math.max(outLeft, fxT.lesaoSemestresFora);
-          selection.tournaments.push({ year, tournament: t, stage: res.stage, hero: res.hero, villain: res.villain });
+          selection.tournaments.push({ year, tournament: t, team: selection.nationality, stage: res.stage, hero: res.hero, villain: res.villain });
         }
       }
       const o = ov(evo);
@@ -463,6 +478,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     cdnGroups = nordesteGroups(yr);
   }
 
+  selection.oriundoCampeao = selection.dual === 'aceitou' && selection.tournaments.some((t) => t.stage === 'campeao' && t.team !== 'Brasil');
+  selection.esperouOBrasil = selection.dual === 'recusou' && selection.caps > 0;
   return {
     player, spells, titles, peakOverall, peakAge, endAge: evo.age, wearsTen, captain, idolatry: idol,
     wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, selection, retirement, farewell, cards, finalTemperament: temp, houseBought, discipline, seasons,

@@ -166,5 +166,12 @@
    "bater": "Pegar a bola e bater",
    "deixar": "Deixar para um companheiro"
   }
+ },
+ "dupla-nacionalidade": {
+  "titulo": "Outra seleção quer você",
+  "opcoes": {
+   "aceitar": "Aceitar (decisão definitiva)",
+   "recusar": "Esperar a Seleção Brasileira"
+  }
  }
 }

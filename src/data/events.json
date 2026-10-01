@@ -43,7 +43,8 @@
   "prestigio": [
    0,
    1
-  ]
+  ],
+  "trocarSelecao": "bool"
  },
  "eventos": [
   {
@@ -1123,6 +1124,51 @@
     "padrao": "bater",
     "temperamento": {
      "resenha": "deixar"
+    }
+   }
+  },
+  {
+   "id": "dupla-nacionalidade",
+   "cena": "convocacao",
+   "peso": 10,
+   "condicoes": [
+    [
+     "conviteOutraSelecao",
+     "==",
+     true
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "aceitar",
+     "efeitos": [
+      [
+       "trocarSelecao",
+       "set",
+       true
+      ],
+      [
+       "moral",
+       "add",
+       0.05
+      ]
+     ]
+    },
+    {
+     "id": "recusar",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "recusar",
+    "temperamento": {
+     "frio": "aceitar"
     }
    }
   }

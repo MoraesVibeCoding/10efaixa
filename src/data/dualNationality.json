@@ -1,0 +1,16 @@
+{
+ "_nota": "Dupla nacionalidade (SPEC 6.11; T38). Simplificação consciente da regra da FIFA: aceitar é definitivo. Números de balanceamento.",
+ "ascendencia": {
+  "chance": 0.12,
+  "paises": { "Itália": 4, "Portugal": 4, "Espanha": 2, "Alemanha": 1, "Japão": 1 }
+ },
+ "residencia": {
+  "temporadas": 5,
+  "ligas": { "ENG": "Inglaterra", "ESP": "Espanha", "ITA": "Itália", "GER": "Alemanha", "FRA": "França", "POR": "Portugal" }
+ },
+ "convite": {
+  "idadeMin": 20,
+  "cortePorPontoDeForca": 1.2,
+  "folga": 4
+ }
+}

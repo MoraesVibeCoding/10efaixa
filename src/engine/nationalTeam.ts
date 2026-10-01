@@ -7,7 +7,11 @@ export type Preference = 'europa' | 'brasileirao' | 'forma';
 export type Rung = 'nenhum' | 'sub17' | 'sub20' | 'olimpica' | 'lista' | 'reserva' | 'titular';
 export interface Coach { cycle: number; preference: Preference }
 export interface VisibilityInput { overall: number; form: number; minutes: number; league: string; reputation: number }
-export interface CallUpInput { age: number; visibility: number; position: Position; caps: number }
+export interface CallUpInput {
+  age: number; visibility: number; position: Position; caps: number;
+  /** Dupla nacionalidade (T38): deslocamento dos cortes da outra seleção (negativo = mais fácil). */
+  cutOffset?: number;
+}
 export interface CallUp { rung: Rung; ten: boolean; captain: boolean }
 
 export const RUNGS: Rung[] = ['nenhum', 'sub17', 'sub20', 'olimpica', 'lista', 'reserva', 'titular'];
@@ -32,16 +36,17 @@ export function visibility(i: VisibilityInput, coach: Coach): number {
 /** Convocação: principal em qualquer idade; abaixo dela, o degrau de base da idade. Segue a nota, sem sorteio. */
 export function callUp(i: CallUpInput): CallUp {
   const p = cfg.principal;
+  const vis = i.visibility - (i.cutOffset ?? 0);
   const none = { ten: false, captain: false };
-  if (i.visibility < p.lista) {
-    const youth = cfg.base.find((b) => i.age <= b.idadeMax);
-    return { rung: youth && i.visibility >= youth.corte ? (youth.degrau as Rung) : 'nenhum', ...none };
+  if (vis < p.lista) {
+    const youth = cfg.base.find((y) => i.age <= y.idadeMax);
+    return { rung: youth && vis >= youth.corte ? (youth.degrau as Rung) : 'nenhum', ...none };
   }
-  const rung: Rung = i.visibility >= p.titular ? 'titular' : i.visibility >= p.reserva ? 'reserva' : 'lista';
+  const rung: Rung = vis >= p.titular ? 'titular' : vis >= p.reserva ? 'reserva' : 'lista';
   return {
     rung,
-    ten: rung === 'titular' && i.visibility >= p.camisa10.corte && p.camisa10.posicoes.includes(i.position),
-    captain: rung === 'titular' && i.visibility >= p.capitao.corte && i.caps >= p.capitao.convocacoesMin && i.age >= p.capitao.idadeMin,
+    ten: rung === 'titular' && vis >= p.camisa10.corte && p.camisa10.posicoes.includes(i.position),
+    captain: rung === 'titular' && vis >= p.capitao.corte && i.caps >= p.capitao.convocacoesMin && i.age >= p.capitao.idadeMin,
   };
 }
 
