@@ -29,7 +29,7 @@ Objetivo: peças **funcionalmente idênticas** às finais (mesmos nomes, grupos,
 2. Desenhe com primitivas (`rect`, `circle`, `ellipse`, `path` simples) no `viewBox` do boneco-base (400 × 800, pés em `y = 780`, centro `x = 200`) ou do cenário.
 3. Pinte áreas personalizáveis **só** com as cores-chave exatas da seção 4.1 (o recolor troca hex exato — uma cor parecida quebra a troca). O resto, só com a paleta do jogo.
 4. Grupos na ordem e com os `id` da seção 5.2; membros com `data-pivo`; cenários com os `slot-*`.
-5. Para lotes grandes, gere por script determinístico (mesma entrada, mesmo SVG) em vez de escrever arquivo por arquivo: fica reprodutível e revisável.
+5. Para lotes grandes, gere por script determinístico (mesma entrada, mesmo SVG) em vez de escrever arquivo por arquivo: fica reprodutível e revisável. O gerador do catálogo inteiro é `src/art/provisional.ts`; `npm run art:generate` recria `src/assets/art/provisoria/` (não edite à mão).
 6. Rode o validador (Função 3) na pasta `provisoria/`. Peça provisória que não passa no validador não serve para nada — o objetivo dela é exercitar o formato.
 
 ## Função 2 — Manter o briefing atualizado

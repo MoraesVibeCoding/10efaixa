@@ -254,5 +254,25 @@
    ],
    "companheiros": 2
   }
- }
+ },
+ "trofeus": [
+  "estadual",
+  "serie-a",
+  "serie-b",
+  "serie-c",
+  "serie-d",
+  "copa-do-brasil",
+  "copa-do-nordeste",
+  "continental-principal",
+  "continental-secundaria",
+  "copa-do-mundo",
+  "copa-america",
+  "olimpiadas-medalha",
+  "liga-europeia",
+  "copa-europeia",
+  "premio-melhor-jogador",
+  "premio-artilheiro",
+  "premio-melhor-goleiro",
+  "premio-revelacao"
+ ]
 }

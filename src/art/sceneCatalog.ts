@@ -23,9 +23,10 @@ export const filesFor = (d: SceneDef, goalkeeper: boolean) => ({
   detalhes: d.detalhes.map((x) => `detalhe__${x}.svg`),
 });
 
-/** Lista de todas as peças de cena do catálogo (cenários, poses e detalhes), sem repetição — a encomenda da T47. */
+/** Lista de todas as peças de cena do catálogo (cenários, poses, detalhes e troféus), sem repetição — a encomenda da T47. */
 export const allFiles = (): string[] => [...new Set([
   ...data.cenas.map((id) => `cenario__${id}.svg`),
   ...data.poses.map((p) => `pose__${p}.svg`),
   ...data.detalhes.map((x) => `detalhe__${x}.svg`),
+  ...data.trofeus.map((x) => `detalhe__trofeu-${x}.svg`),
 ])];
