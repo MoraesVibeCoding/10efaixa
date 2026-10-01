@@ -1,0 +1,24 @@
+{
+ "_nota": "Dinheiro e contratos (SPEC 6.12; T27). Câmbio fixo e configurável, sem inflação; patrimônio sempre em R$.",
+ "cambio": {
+  "EUR": 6.0
+ },
+ "luvas": {
+  "base": 0.3,
+  "porInfluencia": 0.7
+ },
+ "bicho": {
+  "fracaoSalarioMensal": 0.1
+ },
+ "multa": {
+  "nacional": 2,
+  "exterior": 5
+ },
+ "renovacao": {
+  "aumentoPorPonto": 0.03,
+  "aumentoMin": 0,
+  "aumentoMax": 0.6,
+  "anos": 3,
+  "pedirAumentoExtra": 0.1
+ }
+}

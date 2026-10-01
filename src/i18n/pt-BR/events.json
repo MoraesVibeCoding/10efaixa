@@ -74,5 +74,13 @@
    "apoiar-empresario": "Ficar do lado do empresário",
    "ficar-com-o-clube": "Ficar do lado do clube"
   }
+ },
+ "renovacao": {
+  "titulo": "Hora de renovar o contrato",
+  "opcoes": {
+   "renovar": "Renovar",
+   "pedir-aumento": "Renovar pedindo aumento",
+   "nao-renovar": "Não renovar"
+  }
  }
 }

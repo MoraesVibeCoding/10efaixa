@@ -28,7 +28,9 @@
   "pedirSaida": "bool",
   "irParaRival": "bool",
   "aceitarProposta": "bool",
-  "trocarEmpresario": "bool"
+  "trocarEmpresario": "bool",
+  "renovar": "bool",
+  "pedirAumento": "bool"
  },
  "eventos": [
   {
@@ -515,6 +517,72 @@
     "padrao": "ficar-com-o-clube",
     "temperamento": {
      "esquentado": "apoiar-empresario"
+    }
+   }
+  },
+  {
+   "id": "renovacao",
+   "cena": "assinatura-contrato",
+   "peso": 8,
+   "condicoes": [
+    [
+     "contratoAnosRestantes",
+     "<=",
+     1
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "renovar",
+     "efeitos": [
+      [
+       "renovar",
+       "set",
+       true
+      ]
+     ]
+    },
+    {
+     "id": "pedir-aumento",
+     "efeitos": [
+      [
+       "renovar",
+       "set",
+       true
+      ],
+      [
+       "pedirAumento",
+       "set",
+       true
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "nao-renovar",
+     "efeitos": [
+      [
+       "renovar",
+       "set",
+       false
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "renovar",
+    "temperamento": {
+     "frio": "pedir-aumento",
+     "esquentado": "pedir-aumento"
     }
    }
   }
