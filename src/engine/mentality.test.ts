@@ -32,7 +32,7 @@ describe('mentalidade (SPEC 6.17, proposta Fominha · Capitão · Professor · M
   });
 
   it('efeitos moderados (±30%) e sem mexer no teto de potencial', () => {
-    for (const m of MENTALITIES) for (const v of Object.values(cfg[m].crescimento)) expect(Math.abs(v - 1)).toBeLessThanOrEqual(0.3);
+    for (const m of MENTALITIES) for (const v of Object.values(cfg[m].crescimento)) expect(Math.abs(v - 1)).toBeLessThanOrEqual(0.3 + 1e-9);
     const [a, b] = [createPlayer(input(), createPrng(7)), createPlayer(input('professor'), createPrng(7))];
     if (!a.ok || !b.ok) throw new Error('criação');
     expect(b.player.caps).toEqual(a.player.caps);
