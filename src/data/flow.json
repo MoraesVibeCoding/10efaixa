@@ -1,0 +1,22 @@
+{
+ "_nota": "Fluxo de telas (SPEC 6.1, 6.14–6.16; T48). Cada tela lista os eventos que aceita e a tela de destino. A criação é uma tela só, com passos na ordem da 6.1.",
+ "inicial": "abertura",
+ "passosCriacao": ["nome", "numero", "estado", "clubeDeCoracao", "posicao", "arquetipo", "aparencia", "biotipo", "temperamento", "mentalidade", "comemoracao", "origem", "pernaBoa"],
+ "telas": {
+  "abertura": { "NOVA_CARREIRA": "criacao", "CONTINUAR": "temporada", "SAVE_INVALIDO": "saveInvalido" },
+  "saveInvalido": { "RECOMECAR": "criacao", "VOLTAR": "abertura" },
+  "criacao": { "CONCLUIR": "sorteio", "SAIR": "abertura" },
+  "sorteio": { "AVANCAR": "ritmo" },
+  "ritmo": { "ESCOLHER": "inicioDeCarreira", "VOLTAR": "sorteio" },
+  "inicioDeCarreira": { "AVANCAR": "temporada" },
+  "temporada": { "DECISAO": "decisao", "REUNIAO": "reuniao", "TORNEIO": "torneio", "PROXIMA": "temporada", "APOSENTAR": "aposentadoria", "SAIR": "abertura" },
+  "decisao": { "ESCOLHER": "resultadoDaDecisao" },
+  "resultadoDaDecisao": { "AVANCAR": "temporada" },
+  "reuniao": { "PROPOR": "resultadoDaReuniao" },
+  "resultadoDaReuniao": { "AVANCAR": "temporada" },
+  "torneio": { "DECISAO": "decisao", "AVANCAR": "temporada" },
+  "aposentadoria": { "AVANCAR": "veredito" },
+  "veredito": { "AVANCAR": "cartao" },
+  "cartao": { "NOVA_CARREIRA": "criacao", "SAIR": "abertura" }
+ }
+}
