@@ -1,6 +1,6 @@
 # 10eFaixa — Especificação do Produto (SPEC.md)
 
-> Versão 2.9 (T24b: integração da carreira) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
+> Versão 2.10 (decisões do Marco 3; reputação 1–100) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
 > Este documento é a fonte da verdade para o Claude Code. Nenhuma mudança de escopo sem atualizar este arquivo primeiro.
 
 ---
@@ -202,7 +202,7 @@ Aplicada **a cada semestre**, com metade do ganho anual por vez (constantes em c
 - **Vida de clube:** troca de técnicos, **salário atrasado** (dá direito de pedir para sair), empréstimos.
 - **Datas FIFA:** o Brasileirão não para; convocado desfalca o clube e pode gerar atrito.
 
-**Dados de clubes:** nomes reais, **escudos estilizados** (cores e iniciais). Reputação (1–10000) é **dado próprio**, calibrado com referências públicas; bases como a do FM26 são só referência de ordem de grandeza e não devem ser copiadas.
+**Dados de clubes:** nomes reais, **escudos estilizados** (cores e iniciais). Reputação (1–100) é **dado próprio**, calibrado com referências públicas; bases como a do FM26 são só referência de ordem de grandeza e não devem ser copiadas.
 
 ### 6.10 Mundo: Europa (simulação média)
 
@@ -673,10 +673,13 @@ Decisões aprovadas durante a implementação. Complementam as seções acima.
 | 2026-09-30 | T18 | **Não verificado:** Cearense (site da FCF não entrega o conteúdo); usa os clubes cearenses da base, formato genérico e sem acesso até conferir | Revisar na FCF |
 | 2026-09-30 | T19 | Copas com formatos de 2026: Copa do Brasil (126; cotas por federação, Série A na 5ª fase), Copa do Nordeste (20; grupos cruzados), Libertadores (47) e Sul-Americana (44). Estrangeiros: 77 clubes reais participantes de 2026 como pool por país; vagas redistribuídas por força a cada ano | Decisão do usuário (clubes reais); sorteios por pareamento de força ou semente |
 | 2026-09-30 | T19 | **Não verificado:** ordem do Ranking Nacional de Federações (cotas da Copa do Brasil); 2ª vaga da Copa do Brasil na Libertadores (CBF ainda estudava, tratada como Fase 2); Copa Verde não modelada (vaga vai ao clube mais forte fora) | Registrado em cups.json |
-| 2026-09-30 | T15+ | **A confirmar:** reputação de clubes na escala 1–100 (SPEC 6.9 diz 1–10000); mesma ordem de grandeza, mais simples de calibrar | Divergência encontrada no fim do Marco 2 |
+| 2026-09-30 | T15+ | Reputação de clubes na escala 1–100 (6.9 corrigida) | Confirmado pelo usuário |
 | 2026-09-30 | T20–T24 | Início por origem com vizinhos do IBGE; minutos pelo nível do elenco estimado pela reputação; idolatria −100..100 (ídolo ≥ 75, vilão ≤ −50); salário atrasado dá direito de sair a partir do 1º atraso; a 10 é reservada na chegada | Regras em start/minutes/idolatry/clubLife/shirt.json |
 | 2026-09-30 | T24b | Nova tarefa de integração antes do Marco 3; transferências e aposentadoria provisórias até T28 e T34 | Pedido do usuário no fechamento do Marco 2 |
 | 2026-09-30 | T24b | Carreira integrada (18 ms/carreira). Achados para a T40: com minutos reais, 7% terminam abaixo de 80 (peneira 20%), ~13 títulos por carreira, 33% camisa 10, 63% capitão — recalibrar depois do mercado (T28), que muda minutos e trajetória | docs/simulacao-carreira.md (npm run sim:carreira) |
+| 2026-09-30 | Marco 3 | Transfermarkt: consulta manual de poucas páginas de resumo por liga (sem listas de jogadores), com fonte e data | Decisão do usuário (T28) |
+| 2026-09-30 | Marco 3 | UCL/UEL: clubes das 6 ligas + participantes reais de 2025/26 de outras ligas como pool por país (fonte UEFA) | Decisão do usuário (T29/T30) |
+| 2026-09-30 | Marco 3 | Decisões automáticas (simulação e ritmo Rápido) por política de temperamento | Decisão do usuário (T25+) |
 | 2026-09-30 | T42/T47 | Troféus: arte original que evoca o tipo do troféu real (taça com orelhas, globo, salva…), nunca cópia do desenho; lista mínima no briefing 6.7 | Pedido do usuário; desenhos de troféus reais são protegidos (seção 11). Réplicas só com revisão jurídica/licença |
 | 2026-09-30 | T14 | Sedes reais conferidas: Copa 2026 (EUA, Canadá, México), 2030 (Marrocos, Portugal, Espanha + centenário), 2034 (Arábia Saudita) — FIFA; Olimpíadas 2028 LA, 2032 Brisbane — COI. Demais sedes sorteadas por semente | Fontes e data em src/data/calendar.json |
 | 2026-09-30 | T14 | **Não verificado:** a CONMEBOL não anunciou a próxima Copa América masculina; ciclo assumido a cada 4 anos a partir de 2028 ("entre as Copas", 6.11). Sedes futuras repetem as 5 últimas reais em ordem (2015 Chile, 2016 EUA, 2019 Brasil, 2021 Brasil, 2024 EUA), decisão do usuário. Janelas de transferência modeladas por momento do semestre; datas exatas a conferir na T28 | Marcado `verificado: false` no JSON; revisar quando houver anúncio oficial |
