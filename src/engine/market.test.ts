@@ -142,4 +142,10 @@ describe('mercado (T28)', () => {
     expect(chooseOffer(player({ temperament: 'esquentado' }), [o], cur)?.clubId).toBe('vitoria');
     expect(chooseOffer(player({ temperament: 'frio' }), [o], cur)).toBeNull();
   });
+
+  it('efeito Seleção (T36): prestígio multiplica o salário oferecido e traz mais propostas', () => {
+    const sal = (p: MarketPlayer) => generateOffers(p, 'brasil', agent, createPrng(3))[0]!.annualSalary;
+    expect(sal(player({ valueMultiplier: 1.3 }))).toBeGreaterThan(sal(player()) * 1.2);
+    expect(offers(player({ extraOffers: 1.5 }), 'brasil', 300).length).toBeGreaterThan(offers(player(), 'brasil', 300).length);
+  });
 });

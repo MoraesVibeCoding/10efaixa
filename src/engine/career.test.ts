@@ -140,4 +140,18 @@ describe('integração da carreira (T24b)', () => {
     expect(rs.some((r) => r.houseBought)).toBe(true);
     for (const r of rs) { expect(r.discipline).toBeGreaterThanOrEqual(0); expect(r.discipline).toBeLessThanOrEqual(1); }
   });
+
+  it('Seleção (T36): convocações registradas por degrau; camisa 10 e faixa só para quem foi titular', () => {
+    const rs = Array.from({ length: 40 }, (_, seed) => simulateCareer(input({ position: 'meia', archetypeId: 'classico10' }), seed));
+    for (const r of rs) {
+      const c = r.selection.callUps;
+      expect(r.selection.caps).toBe(c.lista + c.reserva + c.titular);
+      expect(r.selection.ten).toBeLessThanOrEqual(c.titular);
+      expect(r.selection.captain).toBeLessThanOrEqual(c.titular);
+    }
+    expect(rs.some((r) => r.selection.caps > 0)).toBe(true);
+    expect(rs.some((r) => r.selection.caps === 0)).toBe(true);
+    const best = [...rs].sort((a, b) => b.peakOverall - a.peakOverall);
+    expect(best[0]!.selection.caps).toBeGreaterThan(best.at(-1)!.selection.caps);
+  });
 });

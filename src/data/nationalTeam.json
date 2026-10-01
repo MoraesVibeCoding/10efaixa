@@ -6,29 +6,105 @@
   "reputacao": 0.05,
   "preferencia": 3,
   "pesoLiga": {
-   "ENG": 6, "ESP": 6, "ITA": 5, "GER": 5, "FRA": 4, "POR": 2, "OUTROS": 1,
-   "BRA-A": 3, "BRA-B": -2, "BRA-C": -6, "BRA-D": -8, "BRA-E": -10,
-   "SAM": 0, "SAU": -1, "USA": -2, "JPN": -3, "QAT": -3, "CHN": -4
+   "ENG": 6,
+   "ESP": 6,
+   "ITA": 5,
+   "GER": 5,
+   "FRA": 4,
+   "POR": 2,
+   "OUTROS": 1,
+   "BRA-A": 3,
+   "BRA-B": -2,
+   "BRA-C": -6,
+   "BRA-D": -8,
+   "BRA-E": -10,
+   "SAM": 0,
+   "SAU": -1,
+   "USA": -2,
+   "JPN": -3,
+   "QAT": -3,
+   "CHN": -4
   },
-  "ligasEuropa": ["ENG", "ESP", "ITA", "GER", "FRA", "POR"],
-  "ligasBrasileirao": ["BRA-A"]
+  "ligasEuropa": [
+   "ENG",
+   "ESP",
+   "ITA",
+   "GER",
+   "FRA",
+   "POR"
+  ],
+  "ligasBrasileirao": [
+   "BRA-A"
+  ]
  },
  "treinador": {
   "_obs": "fictício; troca depois de cada Copa do Mundo",
   "cicloAnos": 4,
   "anoBase": 2027,
-  "preferencias": ["europa", "brasileirao", "forma"]
+  "preferencias": [
+   "europa",
+   "brasileirao",
+   "forma"
+  ]
  },
  "base": [
-  { "degrau": "sub17", "idadeMax": 17, "corte": 68 },
-  { "degrau": "sub20", "idadeMax": 20, "corte": 80 },
-  { "degrau": "olimpica", "idadeMax": 23, "corte": 90 }
+  {
+   "degrau": "sub17",
+   "idadeMax": 17,
+   "corte": 73
+  },
+  {
+   "degrau": "sub20",
+   "idadeMax": 20,
+   "corte": 91
+  },
+  {
+   "degrau": "olimpica",
+   "idadeMax": 23,
+   "corte": 105
+  }
  ],
  "principal": {
-  "lista": 100,
-  "reserva": 103,
-  "titular": 106,
-  "camisa10": { "corte": 110, "posicoes": ["meia", "atacante"] },
-  "capitao": { "corte": 108, "convocacoesMin": 8, "idadeMin": 26 }
+  "lista": 110,
+  "reserva": 112,
+  "titular": 114,
+  "camisa10": {
+   "corte": 118,
+   "posicoes": [
+    "meia",
+    "atacante"
+   ]
+  },
+  "capitao": {
+   "corte": 116,
+   "convocacoesMin": 8,
+   "idadeMin": 26
+  }
+ },
+ "efeito": {
+  "_obs": "prestígio 0–1: sobe ao nível do degrau convocado e decai por semestre sem convocação (T36)",
+  "nivel": {
+   "nenhum": 0,
+   "sub17": 0.1,
+   "sub20": 0.2,
+   "olimpica": 0.3,
+   "lista": 0.5,
+   "reserva": 0.6,
+   "titular": 0.8
+  },
+  "camisa10": 0.1,
+  "capitao": 0.1,
+  "decaimentoPorSemestre": 0.85,
+  "minutosNoClube": 0.08,
+  "mercado": {
+   "valor": 0.3,
+   "propostas": 1.5
+  },
+  "mental": 0.1,
+  "contrapartidas": {
+   "desfalque": 0.03,
+   "riscoLesao": 0.1,
+   "corteMoral": -0.08
+  }
  }
 }

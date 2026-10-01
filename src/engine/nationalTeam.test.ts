@@ -1,4 +1,4 @@
-import { RUNGS, callUp, coachFor, visibility, type CallUpInput, type VisibilityInput } from './nationalTeam';
+import { RUNGS, callUp, coachFor, rungLevel, selectionEffect, updatePrestige, visibility, type CallUp, type CallUpInput, type VisibilityInput } from './nationalTeam';
 import cfg from '../data/nationalTeam.json';
 
 const v = (over: Partial<VisibilityInput> = {}): VisibilityInput => ({ overall: 85, form: 0.6, minutes: 0.8, league: 'BRA-A', reputation: 80, ...over });
@@ -76,5 +76,58 @@ describe('Seleção: treinador, visibilidade e degraus (T35, SPEC 6.11)', () => 
     expect(callUp({ ...ok, caps: k.convocacoesMin - 1 }).captain).toBe(false);
     expect(callUp({ ...ok, age: k.idadeMin - 1 }).captain).toBe(false);
     expect(callUp({ ...ok, visibility: k.corte - 1 }).captain).toBe(false);
+  });
+});
+
+describe('efeito Seleção e decaimento (T36, SPEC 6.11)', () => {
+  const cu = (rung: CallUp['rung'], ten = false, captain = false): CallUp => ({ rung, ten, captain });
+  const e = cfg.efeito;
+
+  it('nível cresce por degrau; camisa 10 e faixa somam; teto 1', () => {
+    const levels = RUNGS.map((r) => rungLevel(cu(r)));
+    for (let i = 1; i < levels.length; i++) expect(levels[i]).toBeGreaterThan(levels[i - 1]!);
+    expect(rungLevel(cu('titular', true))).toBeGreaterThan(rungLevel(cu('titular')));
+    expect(rungLevel(cu('titular', true, true))).toBeCloseTo(1);
+  });
+
+  it('prestígio sobe ao nível da convocação e cai aos poucos sem ela', () => {
+    const up = updatePrestige(0, cu('titular'));
+    expect(up).toBeCloseTo(e.nivel.titular);
+    const d1 = updatePrestige(up, cu('nenhum'));
+    expect(d1).toBeCloseTo(up * e.decaimentoPorSemestre);
+    expect(d1).toBeGreaterThan(0.5 * up);
+    let p = up;
+    for (let i = 0; i < 20; i++) p = updatePrestige(p, cu('nenhum'));
+    expect(p).toBeLessThan(0.05);
+    // degrau menor não derruba de uma vez: vale o maior entre o decaído e o novo nível
+    expect(updatePrestige(up, cu('lista'))).toBeCloseTo(Math.max(up * e.decaimentoPorSemestre, e.nivel.lista));
+  });
+
+  it('bônus proporcionais ao prestígio: minutos no clube, reunião, mercado', () => {
+    const [lo, hi] = [selectionEffect(0.5, cu('lista'), 'lista'), selectionEffect(1, cu('titular', true, true), 'titular')];
+    expect(hi.clubMinutes).toBeGreaterThan(lo.clubMinutes);
+    expect(hi.marketMultiplier).toBeCloseTo(1 + e.mercado.valor);
+    expect(hi.extraOffers).toBeGreaterThan(lo.extraOffers);
+    expect(hi.meetingStatus).toBe(1);
+    const zero = selectionEffect(0, cu('nenhum'), 'nenhum');
+    expect(zero).toEqual({ clubMinutes: 0, meetingStatus: 0, marketMultiplier: 1, extraOffers: 0, mentalBonus: 1, injuryRisk: 1, moraleDelta: 0 });
+  });
+
+  it('contrapartidas só com convocação ativa para a principal: desfalque, desgaste e Mental extra', () => {
+    const active = selectionEffect(0.8, cu('titular'), 'titular');
+    const former = selectionEffect(0.8, cu('nenhum'), 'nenhum');
+    expect(active.injuryRisk).toBeCloseTo(1 + e.contrapartidas.riscoLesao);
+    expect(active.mentalBonus).toBeGreaterThan(1);
+    expect(active.clubMinutes).toBeCloseTo(0.8 * e.minutosNoClube - e.contrapartidas.desfalque);
+    expect(former.injuryRisk).toBe(1);
+    expect(former.mentalBonus).toBe(1);
+    expect(former.clubMinutes).toBeCloseTo(0.8 * e.minutosNoClube);
+    expect(selectionEffect(0.2, cu('sub20'), 'sub20').injuryRisk).toBe(1);
+  });
+
+  it('ser cortado da principal derruba a moral', () => {
+    expect(selectionEffect(0.6, cu('nenhum'), 'reserva').moraleDelta).toBe(e.contrapartidas.corteMoral);
+    expect(selectionEffect(0.6, cu('lista'), 'reserva').moraleDelta).toBe(0);
+    expect(selectionEffect(0.2, cu('nenhum'), 'sub20').moraleDelta).toBe(0);
   });
 });

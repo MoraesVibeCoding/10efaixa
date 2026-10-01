@@ -9,6 +9,7 @@ import { brazilQualifiers, copaDoBrasil, copaDoBrasilEntrants, copaDoNordeste, f
 import { EUROPE, areEuroRivals, effectiveRep } from './europe';
 import { initialEuroTables, simulateEuropeSeason, type EuroTables } from './europeSeason';
 import { applyOption, autoChoice } from './events';
+import { callUp, coachFor, isPrincipal, selectionEffect, updatePrestige, visibility, type CallUp, type Rung } from './nationalTeam';
 import { evolveSemester, type EvoState } from './evolution';
 import { afterClassico, afterSemester, afterTransfer, type Idolatry } from './idolatry';
 import { decayRelapse, graveDecision, semesterInjury } from './injuries';
@@ -38,6 +39,8 @@ export interface CareerResult {
   wealthBRL: number; agentProfile: string; contracts: number;
   injuries: { leve: number; media: number; grave: number };
   finalPosition: Position; positionChanges: number;
+  /** Seleção: semestres convocado por degrau; caps = convocações para a principal. */
+  selection: { callUps: Record<Exclude<Rung, 'nenhum'>, number>; caps: number; ten: number; captain: number };
   retirement: RetireReason; farewell: 'formador' | 'coracao' | null;
   cards: { yellows: number; reds: number }; finalTemperament: string; houseBought: boolean; discipline: number;
   seasons: { year: number; clubId: string; division: string | null; minutes: number; overall: number }[];
@@ -118,6 +121,9 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let retirement: RetireReason = 'idadeLimite';
   let farewell: CareerResult['farewell'] = null;
   let farewellAsked = false;
+  let sel: CallUp = { rung: 'nenhum', ten: false, captain: false };
+  let prestige = 0;
+  const selection: CareerResult['selection'] = { callUps: { sub17: 0, sub20: 0, olimpica: 0, lista: 0, reserva: 0, titular: 0 }, caps: 0, ten: 0, captain: 0 };
 
   let clubId: string | null = null;
   let inYouth = false;
@@ -213,13 +219,16 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         minutes = inYouth ? cfg.minutosBase : minutesShare({ overall: ov(evo), clubRep: rep, role, form }, yr);
         form = updateForm(form, ov(evo), rep, yr);
       }
+      // Efeito Seleção (6.11): prestígio dá minutos, peso na reunião e Mental; convocação ativa desgasta.
+      const fx = selectionEffect(prestige, sel, sel.rung);
+      if (varzeaLeft === 0 && !inYouth) minutes = clamp(minutes + fx.clubMinutes, 0, 1);
       morale = updateMorale(morale, minutes, role, teamResult);
       const clubNeed = ATTRIBUTES[yr.int(0, ATTRIBUTES.length - 1)]!;
-      const { focus, injuryRiskMultiplier } = staffMeeting({ proposal: { main: focusMain!, secondary: focusSecond! }, morale, coachRelation, nationalTeamStatus: 0, clubNeed });
+      const { focus, injuryRiskMultiplier } = staffMeeting({ proposal: { main: focusMain!, secondary: focusSecond! }, morale, coachRelation, nationalTeamStatus: fx.meetingStatus, clubNeed });
       // Lesões: tempo fora de uma grave anterior, depois o sorteio do semestre (só no profissional).
       if (outLeft > 0) { minutes *= 1 - Math.min(1, outLeft); outLeft = Math.max(0, outLeft - 1); }
       else if (!inYouth && varzeaLeft === 0) {
-        const inj = semesterInjury({ age: evo.age, build: evo.build, minutes, riskMultiplier: injuryRiskMultiplier, relapseRisk }, yr);
+        const inj = semesterInjury({ age: evo.age, build: evo.build, minutes, riskMultiplier: injuryRiskMultiplier * fx.injuryRisk, relapseRisk }, yr);
         if (inj.severity !== 'nenhuma') {
           injuries[inj.severity]++;
           minutes *= 1 - inj.minutesLost;
@@ -236,7 +245,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       relapseRisk = decayRelapse(relapseRisk);
       if (suspended > 0) { minutes *= 1 - Math.min(1, suspended); suspended = 0; }
       const leader = leaderEffects(temp, teamResult);
-      evo = { ...evo, growthBonus: { ...player.growthBonus, mental: (player.growthBonus.mental ?? 1) * leader.mentalBonus } };
+      evo = { ...evo, growthBonus: { ...player.growthBonus, mental: (player.growthBonus.mental ?? 1) * leader.mentalBonus * fx.mentalBonus } };
       coachRelation = clamp(coachRelation + leader.relationDelta, 0, 1);
       evo = evolveSemester(evo, { focus, staffQuality, minutes, morale }, yr);
       const tr = progressTraits(traits, focus);
@@ -298,6 +307,18 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
             agent = ch.agent; wealth -= ch.cost; morale = clamp(morale + ch.moraleDelta, 0, 1);
           }
         }
+      }
+      // Convocação do semestre: segue a nota de visibilidade (sem clube, na várzea, não há convocação).
+      if (clubId && varzeaLeft === 0) {
+        const vis = visibility({ overall: ov(evo), form, minutes, league: leagueOf(clubId, divOf), reputation: effectiveRep(clubId) }, coachFor(year, seed));
+        const next = callUp({ age: evo.age, visibility: vis, position, caps: selection.caps });
+        morale = clamp(morale + selectionEffect(prestige, next, sel.rung).moraleDelta, 0, 1);
+        prestige = updatePrestige(prestige, next);
+        sel = next;
+        if (next.rung !== 'nenhum') selection.callUps[next.rung]++;
+        if (isPrincipal(next.rung)) selection.caps++;
+        if (next.ten) selection.ten++;
+        if (next.captain) selection.captain++;
       }
       const o = ov(evo);
       if (o > peakOverall) { peakOverall = o; peakAge = evo.age; }
@@ -367,7 +388,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       loanLeft = cfg.emprestimoTemporadas;
       join(loanTarget, true, yr);
     } else if (clubId && !inYouth && !parent) {
-      const me = { overall: ov(evo), age: evo.age, clubId, heartClub: input.heartClub, temperament: temp };
+      const market = selectionEffect(prestige, sel, sel.rung);
+      const me = { overall: ov(evo), age: evo.age, clubId, heartClub: input.heartClub, temperament: temp, valueMultiplier: market.marketMultiplier, extraOffers: market.extraOffers };
       const offers = [...generateOffers(me, 'brasil', agent, yr, divOf), ...generateOffers(me, 'europa', agent, yr, divOf)];
       const c = contract as Contract | null;
       const current = wantsOut || !c ? null : { annualSalaryBRL: toBRL(c.annualSalary, c.currency), role: roleFor(me.overall, squadLevel(effectiveRep(clubId)), evo.age) };
@@ -423,6 +445,6 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
 
   return {
     player, spells, titles, peakOverall, peakAge, endAge: evo.age, wearsTen, captain, idolatry: idol,
-    wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, retirement, farewell, cards, finalTemperament: temp, houseBought, discipline, seasons,
+    wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, selection, retirement, farewell, cards, finalTemperament: temp, houseBought, discipline, seasons,
   };
 }

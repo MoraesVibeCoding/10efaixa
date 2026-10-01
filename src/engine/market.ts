@@ -15,7 +15,11 @@ export interface Offer {
   role: 'titular' | 'rodizio' | 'aposta'; staffQuality: number;
   heartClub: boolean; rivalOfCurrent: boolean; rivalOfHeart: boolean; offAxis: boolean;
 }
-export interface MarketPlayer { overall: number; age: number; clubId: string | null; heartClub: string | null; temperament: string }
+export interface MarketPlayer {
+  overall: number; age: number; clubId: string | null; heartClub: string | null; temperament: string;
+  /** Efeito Seleção (T36): multiplicador do valor e propostas extras. */
+  valueMultiplier?: number; extraOffers?: number;
+}
 type DivOf = (id: string) => string | null;
 
 const BR = new Map(CLUBS.map((c) => [c.id, c]));
@@ -68,7 +72,7 @@ function makeOffer(p: MarketPlayer, id: string, agent: Agent, rng: Prng, div: Di
   const pr = cfg.propostas;
   return {
     clubId: id, league, currency: LEAGUES[league]!.moeda as 'BRL' | 'EUR',
-    annualSalary: Math.round(salaryFor(marketValue(p.overall, p.age), league) * salaryBoost(agent)),
+    annualSalary: Math.round(salaryFor(marketValue(p.overall, p.age) * (p.valueMultiplier ?? 1), league) * salaryBoost(agent)),
     years: rng.int(pr.anos[0]!, pr.anos[1]!),
     role: rel >= pr.papel.titular ? 'titular' : rel >= pr.papel.rodizio ? 'rodizio' : 'aposta',
     staffQuality: clamp(0.8 + (effectiveRep(id) / 100) * 0.4, 0.8, 1.2),
@@ -87,7 +91,7 @@ export function generateOffers(p: MarketPlayer, window: 'brasil' | 'europa', age
     const rel = p.overall - squadLevel(effectiveRep(id));
     return id !== p.clubId && rel >= lo && rel <= hi;
   });
-  const n = Math.min(pr.max, pool.length, 1 + Math.floor(rng.next() * (1 + agent.influence * pr.porInfluencia)));
+  const n = Math.min(pr.max, pool.length, 1 + Math.floor(rng.next() * (1 + agent.influence * pr.porInfluencia + (p.extraOffers ?? 0))));
   const offers: Offer[] = [];
   for (let i = 0; i < n; i++) {
     let roll = rng.next() * pool.reduce((s, id) => s + effectiveRep(id), 0);

@@ -44,3 +44,33 @@ export function callUp(i: CallUpInput): CallUp {
     captain: rung === 'titular' && i.visibility >= p.capitao.corte && i.caps >= p.capitao.convocacoesMin && i.age >= p.capitao.idadeMin,
   };
 }
+
+// T36 (SPEC 6.11): efeito Seleção por degrau e decaimento do prestígio.
+export interface SelectionEffect { clubMinutes: number; meetingStatus: number; marketMultiplier: number; extraOffers: number; mentalBonus: number; injuryRisk: number; moraleDelta: number }
+const PRINCIPAL: Rung[] = ['lista', 'reserva', 'titular'];
+export const isPrincipal = (r: Rung) => PRINCIPAL.includes(r);
+
+/** Nível do degrau (0–1); camisa 10 e faixa somam. */
+export const rungLevel = (c: CallUp): number => {
+  const e = cfg.efeito;
+  return Math.min(1, e.nivel[c.rung] + (c.ten ? e.camisa10 : 0) + (c.captain ? e.capitao : 0));
+};
+
+/** Prestígio: decai a cada semestre e nunca fica abaixo do nível da convocação atual. */
+export const updatePrestige = (prestige: number, c: CallUp): number =>
+  Math.max(prestige * cfg.efeito.decaimentoPorSemestre, rungLevel(c));
+
+/** Efeitos do semestre: bônus pelo prestígio; contrapartidas só com convocação ativa para a principal; corte derruba a moral. */
+export function selectionEffect(prestige: number, c: CallUp, prev: Rung): SelectionEffect {
+  const e = cfg.efeito;
+  const active = isPrincipal(c.rung);
+  return {
+    clubMinutes: prestige * e.minutosNoClube - (active ? e.contrapartidas.desfalque : 0),
+    meetingStatus: prestige,
+    marketMultiplier: 1 + prestige * e.mercado.valor,
+    extraOffers: prestige * e.mercado.propostas,
+    mentalBonus: active ? 1 + prestige * e.mental : 1,
+    injuryRisk: active ? 1 + e.contrapartidas.riscoLesao : 1,
+    moraleDelta: isPrincipal(prev) && c.rung === 'nenhum' ? e.contrapartidas.corteMoral : 0,
+  };
+}
