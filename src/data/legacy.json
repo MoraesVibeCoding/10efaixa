@@ -1,0 +1,393 @@
+{
+ "_nota": "Nota de legado, veredito e rótulos (SPEC 6.15; T40). Pesos iniciais da SPEC; tetos e cortes calibrados com npm run sim:legado.",
+ "pesos": {
+  "selecao": 35,
+  "titulos": 30,
+  "premios": 15,
+  "numeros": 12,
+  "idolatria": 5,
+  "longevidade": 3
+ },
+ "selecao": {
+  "teto": 110,
+  "convocacao": 1,
+  "titular": 1,
+  "camisa10": 0.5,
+  "capitao": 1.5,
+  "base": {
+   "sub17": 0.5,
+   "sub20": 0.5,
+   "olimpica": 1
+  },
+  "titulos": {
+   "copaDoMundo": 40,
+   "copaAmerica": 12,
+   "olimpiadas": 8
+  }
+ },
+ "titulos": {
+  "teto": 70,
+  "pontos": {
+   "copaDoMundo": 10,
+   "champions": 8,
+   "libertadores": 8,
+   "serieA": 5,
+   "ligaNacional": 5,
+   "copaAmerica": 4,
+   "europaLeague": 4,
+   "olimpiadas": 3,
+   "sulAmericana": 3,
+   "copaDoBrasil": 3,
+   "copaNacional": 3,
+   "copaDoNordeste": 1.5,
+   "serieB": 1.5,
+   "serieC": 1,
+   "serieD": 0.5,
+   "estadual": 1
+  }
+ },
+ "premios": {
+  "teto": 40,
+  "pontos": {
+   "melhorDoMundo": 10,
+   "craqueDaCopa": 8,
+   "craqueDoBrasileirao": 4,
+   "artilheiro": 1,
+   "selecaoDoCampeonato": 1.5,
+   "revelacao": 1.5,
+   "craqueDoEstadual": 1
+  }
+ },
+ "numeros": {
+  "_obs": "ajustados por posição: média de min(1, número / referência) dos números que contam para a posição",
+  "jogos": 1000,
+  "porPosicao": {
+   "atacante": {
+    "gols": 400,
+    "assistencias": 150
+   },
+   "meia": {
+    "gols": 160,
+    "assistencias": 210
+   },
+   "volante": {
+    "desarmes": 2400,
+    "semSofrerGol": 300,
+    "assistencias": 90
+   },
+   "lateral": {
+    "desarmes": 1900,
+    "semSofrerGol": 300,
+    "assistencias": 130
+   },
+   "zagueiro": {
+    "desarmes": 2100,
+    "semSofrerGol": 320
+   },
+   "goleiro": {
+    "semSofrerGol": 340
+   }
+  }
+ },
+ "longevidade": {
+  "anosRef": 24,
+  "patrimonioRefBRL": 1000000000
+ },
+ "elite": {
+  "ligas": [
+   "BRA-A",
+   "ENG",
+   "ESP",
+   "ITA",
+   "GER",
+   "FRA",
+   "POR"
+  ],
+  "minutosMin": 0.5
+ },
+ "veredito": [
+  {
+   "id": "lendaMundial",
+   "notaMin": 92,
+   "condicoes": [
+    [
+     "grandeNoMundo",
+     "==",
+     true
+    ]
+   ]
+  },
+  {
+   "id": "lendaDoFutebolBrasileiro",
+   "notaMin": 62,
+   "condicoes": [
+    [
+     "convocacoes",
+     ">",
+     0
+    ]
+   ]
+  },
+  {
+   "id": "craqueDaSelecao",
+   "notaMin": 42,
+   "condicoes": [
+    [
+     "semestresTitular",
+     ">",
+     0
+    ]
+   ]
+  },
+  {
+   "id": "idoloDeClube",
+   "notaMin": 26,
+   "condicoes": [
+    [
+     "idolatriaMax",
+     ">=",
+     75
+    ]
+   ]
+  },
+  {
+   "id": "titularDeSerieA",
+   "notaMin": 0,
+   "condicoes": [
+    [
+     "temporadasElite",
+     ">=",
+     8
+    ]
+   ]
+  },
+  {
+   "id": "promessaQueNaoVingou",
+   "notaMin": 0,
+   "condicoes": [
+    [
+     "convocacoesBase",
+     ">",
+     0
+    ],
+    [
+     "convocacoes",
+     "==",
+     0
+    ]
+   ]
+  },
+  {
+   "id": "rodadoDoInterior",
+   "notaMin": 0,
+   "condicoes": [
+    [
+     "clubes",
+     ">=",
+     6
+    ]
+   ]
+  },
+  {
+   "id": "jogadorDeSerieB",
+   "notaMin": 0,
+   "condicoes": []
+  }
+ ],
+ "rotulos": [
+  {
+   "id": "dezEFaixa",
+   "raridade": "lendaria",
+   "condicoes": [
+    [
+     "semestresCamisa10Selecao",
+     ">",
+     0
+    ],
+    [
+     "semestresCapitaoSelecao",
+     ">",
+     0
+    ]
+   ]
+  },
+  {
+   "id": "heroiDaCopa",
+   "raridade": "epica",
+   "condicoes": [
+    [
+     "heroiDaCopa",
+     "==",
+     true
+    ]
+   ]
+  },
+  {
+   "id": "oriundoCampeao",
+   "raridade": "epica",
+   "condicoes": [
+    [
+     "oriundoCampeao",
+     "==",
+     true
+    ]
+   ]
+  },
+  {
+   "id": "goleiroArtilheiro",
+   "raridade": "epica",
+   "condicoes": [
+    [
+     "posicao",
+     "==",
+     "goleiro"
+    ],
+    [
+     "gols",
+     ">=",
+     10
+    ]
+   ]
+  },
+  {
+   "id": "torcedorQueVirouIdolo",
+   "raridade": "rara",
+   "condicoes": [
+    [
+     "idoloNoCoracao",
+     "==",
+     true
+    ]
+   ]
+  },
+  {
+   "id": "diamanteDaVarzea",
+   "raridade": "rara",
+   "condicoes": [
+    [
+     "diamante",
+     "==",
+     true
+    ],
+    [
+     "pico",
+     ">=",
+     85
+    ]
+   ]
+  },
+  {
+   "id": "vilaoDaCopa",
+   "raridade": "rara",
+   "condicoes": [
+    [
+     "vilaoDaCopa",
+     "==",
+     true
+    ]
+   ]
+  },
+  {
+   "id": "idoloDeUmClubeSo",
+   "raridade": "rara",
+   "condicoes": [
+    [
+     "clubes",
+     "==",
+     1
+    ],
+    [
+     "idolatriaMax",
+     ">=",
+     75
+    ]
+   ]
+  },
+  {
+   "id": "craqueEsquecido",
+   "raridade": "incomum",
+   "condicoes": [
+    [
+     "pico",
+     ">=",
+     90
+    ],
+    [
+     "convocacoes",
+     "==",
+     0
+    ]
+   ]
+  },
+  {
+   "id": "ganhouMuitoEGastouTudo",
+   "raridade": "incomum",
+   "condicoes": [
+    [
+     "ganhoBRL",
+     ">=",
+     20000000
+    ],
+    [
+     "fracaoGuardada",
+     "<=",
+     0.15
+    ]
+   ]
+  },
+  {
+   "id": "carrascoDeClassico",
+   "raridade": "incomum",
+   "condicoes": [
+    [
+     "classicosDecisivos",
+     ">=",
+     10
+    ]
+   ]
+  },
+  {
+   "id": "reiDoEstadual",
+   "raridade": "incomum",
+   "condicoes": [
+    [
+     "titulo_estadual",
+     ">=",
+     4
+    ]
+   ]
+  },
+  {
+   "id": "aposentadoriaTranquila",
+   "raridade": "comum",
+   "condicoes": [
+    [
+     "casaComprada",
+     "==",
+     true
+    ],
+    [
+     "patrimonioBRL",
+     ">=",
+     400000000
+    ],
+    [
+     "aposentadoria",
+     "==",
+     "decisao"
+    ]
+   ]
+  },
+  {
+   "id": "rodado",
+   "raridade": "comum",
+   "condicoes": [
+    [
+     "clubes",
+     ">=",
+     6
+    ]
+   ]
+  }
+ ]
+}

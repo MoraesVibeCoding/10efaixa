@@ -1,6 +1,7 @@
+import { POSITIONS } from './overall';
 import { ATTRIBUTES, type Attributes } from './attributes';
 import { evolveSemester } from './evolution';
-import { staffMeeting, validateMeetingConfig, type MeetingInput } from './meeting';
+import { autoProposal, staffMeeting, validateMeetingConfig, type MeetingInput } from './meeting';
 import { createPrng } from './prng';
 import cfg from '../data/meeting.json';
 
@@ -96,6 +97,32 @@ describe('reunião com a comissão', () => {
     for (const morale of [0, 0.5, 1]) {
       const { focus } = staffMeeting(input({ morale, coachRelation: morale }));
       expect(() => evolveSemester(s, { focus, staffQuality: 1, minutes: 1, morale }, createPrng(1))).not.toThrow();
+    }
+  });
+});
+
+describe('proposta automática de foco (T40: decisões automáticas da simulação e do ritmo Rápido)', () => {
+  const flat = (v: number) => Object.fromEntries(ATTRIBUTES.map((a) => [a, v])) as Attributes;
+
+  it('foca onde há mais overall a ganhar: peso da posição × espaço até o teto × curva da idade', () => {
+    expect(autoProposal(flat(50), flat(90), 'atacante', 18).main).toBe('finalizacao');
+    const gk = autoProposal(flat(50), flat(90), 'goleiro', 18);
+    expect([gk.main, gk.secondary].sort()).toEqual(['habilidade', 'velocidade']);
+  });
+
+  it('atributo no teto ou que já parou de crescer na idade não é escolhido', () => {
+    expect(autoProposal({ ...flat(50), finalizacao: 90 }, flat(90), 'atacante', 18).main).not.toBe('finalizacao');
+    const gk = autoProposal(flat(50), flat(90), 'goleiro', 26);
+    expect([gk.main, gk.secondary]).not.toContain('velocidade');
+  });
+
+  it('no declínio, protege o que mais pesa e mais cai; principal e secundário sempre diferentes', () => {
+    expect(autoProposal(flat(80), flat(80), 'goleiro', 37).main).toBe('velocidade');
+    for (const position of POSITIONS) {
+      for (const age of [16, 24, 31, 38]) {
+        const p = autoProposal(flat(70), flat(85), position, age);
+        expect(p.main).not.toBe(p.secondary);
+      }
     }
   });
 });

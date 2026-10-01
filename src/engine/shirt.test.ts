@@ -1,3 +1,4 @@
+import cfg from '../data/shirt.json';
 import { assignNumber, canGetArmband, canGetTen, mostUsedNumber, rosterNumbers } from './shirt';
 import { createPrng } from './prng';
 
@@ -32,10 +33,11 @@ describe('número da camisa, a 10 e a faixa (T24)', () => {
   });
 
   it('faixa de capitão por evento; Líder tem caminho mais curto', () => {
-    const p = { overall: 78, squadLevel: 75, idolatry: 25, age: 22, seasonsAtClub: 1 };
+    const f = cfg.faixa;
+    const p = { overall: 78, squadLevel: 75, idolatry: f.lider.idolatriaMin, age: f.lider.idadeMin, seasonsAtClub: f.lider.temporadasNoClube };
     expect(canGetArmband({ ...p, temperament: 'lider' })).toBe(true);
     expect(canGetArmband({ ...p, temperament: 'resenha' })).toBe(false);
-    expect(canGetArmband({ ...p, idolatry: 45, age: 27, seasonsAtClub: 4, temperament: 'resenha' })).toBe(true);
+    expect(canGetArmband({ ...p, idolatry: f.idolatriaMin, age: f.idadeMin, seasonsAtClub: f.temporadasNoClube, temperament: 'resenha' })).toBe(true);
   });
 
   it('cartão: número mais usado na carreira', () => {

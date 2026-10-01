@@ -10,9 +10,9 @@
  "premios": {
   "artilheiro": {
    "golsRef": {
-    "BRA": 33.0,
-    "EUR": 35.0,
-    "padrao": 31.0
+    "BRA": 37,
+    "EUR": 39,
+    "padrao": 35
    },
    "ruidoGols": 5
   },

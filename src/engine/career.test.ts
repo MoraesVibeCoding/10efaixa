@@ -2,6 +2,8 @@ import { CLUBS } from './clubs';
 import { FOREIGN } from './cups';
 import europe from '../data/europe.json';
 import { simulateCareer } from './career';
+import { createPrng } from './prng';
+import { randomInput } from './simulation';
 import { isEditionYear } from './calendar';
 import { AWARDS } from './awards';
 import type { CreationInput } from './player';
@@ -201,5 +203,13 @@ describe('integração da carreira (T24b)', () => {
       expect(r.awards.filter((a) => a.award === 'revelacao').length).toBeLessThanOrEqual(1);
     }
     expect(rs.some((r) => r.awards.length > 0)).toBe(true);
+  });
+
+  it('meta do auge (9.3) na carreira integrada: 5% · 10% · 60% · 25%, com folga de amostra pequena (±6 p.p.)', { timeout: 120_000 }, () => {
+    const n = 500;
+    const peaks = Array.from({ length: n }, (_, k) => simulateCareer(randomInput(createPrng(300_000 + k)), 300_000 + k).peakOverall);
+    const share = (lo: number, hi: number) => (100 * peaks.filter((p) => p >= lo && p <= hi).length) / n;
+    const got = [share(95, 99), share(90, 94), share(85, 89), share(80, 84)];
+    [5, 10, 60, 25].forEach((target, k) => expect(Math.abs(got[k]! - target)).toBeLessThanOrEqual(6));
   });
 });

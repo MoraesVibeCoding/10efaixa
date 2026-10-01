@@ -6,7 +6,7 @@ import cfg from '../data/nationalTeam.json';
 export type Preference = 'europa' | 'brasileirao' | 'forma';
 export type Rung = 'nenhum' | 'sub17' | 'sub20' | 'olimpica' | 'lista' | 'reserva' | 'titular';
 export interface Coach { cycle: number; preference: Preference }
-export interface VisibilityInput { overall: number; form: number; minutes: number; league: string; reputation: number }
+export interface VisibilityInput { overall: number; form: number; minutes: number; league: string; reputation: number; position?: Position }
 export interface CallUpInput {
   age: number; visibility: number; position: Position; caps: number;
   /** Dupla nacionalidade (T38): deslocamento dos cortes da outra seleção (negativo = mais fácil). */
@@ -30,7 +30,8 @@ export function visibility(i: VisibilityInput, coach: Coach): number {
   const liked = (coach.preference === 'europa' && w.ligasEuropa.includes(i.league))
     || (coach.preference === 'brasileirao' && w.ligasBrasileirao.includes(i.league));
   return i.overall + i.form * w.forma * (coach.preference === 'forma' ? 2 : 1) + i.minutes * w.minutos
-    + ((w.pesoLiga as Record<string, number>)[i.league] ?? 0) + i.reputation * w.reputacao + (liked ? w.preferencia : 0);
+    + ((w.pesoLiga as Record<string, number>)[i.league] ?? 0) + i.reputation * w.reputacao + (liked ? w.preferencia : 0)
+    + (i.position ? (w.porPosicao as Record<string, number | string>)[i.position] as number : 0);
 }
 
 /** Convocação: principal em qualquer idade; abaixo dela, o degrau de base da idade. Segue a nota, sem sorteio. */

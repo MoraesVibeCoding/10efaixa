@@ -38,12 +38,8 @@ describe('relatório em massa (amostra de 6 mil)', () => {
     expect(Math.max(...peaks) - Math.min(...peaks)).toBeLessThanOrEqual(1.5);
   });
 
-  it('meta do auge (9.3): 5% 95+, 10% 90–94, 60% 85–89, 25% 80–84 — geral ±2 p.p., por origem ±3 p.p.', () => {
-    const target = [5, 10, 60, 25];
-    const check = (t: number[], tol: number) => t.forEach((x, i) => expect(Math.abs(x - target[i]!)).toBeLessThanOrEqual(tol));
-    check(report.peakTiers.all, 2);
-    for (const o of Object.keys(report.byOrigin)) check(report.peakTiers.byOrigin[o]!, 3);
-  });
+  // A meta do auge (9.3) saiu daqui na T40: este simulador não tem clubes nem minutos reais, e as faixas de potencial
+  // passaram a ser calibradas na carreira integrada. A meta é medida por `npm run sim:legado` e guardada em career.test.ts.
 
   it('várzea cresce mais em fundamentos e físico do que a base', () => {
     expect(report.growth.varzea!.fundamentosFisico).toBeGreaterThan(report.growth.baseGrande!.fundamentosFisico + 3);

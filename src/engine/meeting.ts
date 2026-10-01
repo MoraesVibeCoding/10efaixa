@@ -1,5 +1,9 @@
-import { ATTRIBUTES, type Attribute } from './attributes';
+import { ageCurve } from './ageCurves';
+import { ATTRIBUTES, type Attribute, type Attributes } from './attributes';
+import type { Position } from './overall';
+import weights from '../data/positionWeights.json';
 import { FOCI, type Focus } from './evolution';
+import evo from '../data/evolution.json';
 import cfg from '../data/meeting.json';
 
 // Seção 6.5. Determinística; quem chama garante uma reunião por temporada (máquina de estados, T48).
@@ -67,4 +71,20 @@ export function staffMeeting(i: MeetingInput): MeetingResult {
     return result('contrapropoe', { main: i.clubNeed, secondary: main });
   }
   return result('aceita', { main, secondary });
+}
+
+/**
+ * Proposta automática (simulação e ritmo Rápido): os dois atributos em que o foco rende mais overall no semestre.
+ * Crescendo: peso da posição × curva × ganho do foco × espaço até o teto. Caindo: peso × queda × o que o foco segura.
+ */
+export function autoProposal(attrs: Attributes, caps: Attributes, position: Position, age: number): { main: Attribute; secondary: Attribute } {
+  const w: Record<string, number> = weights[position];
+  const gain = evo.focusGrow.main - evo.focusGrow.none;
+  const saved = 1 - evo.focusDecline.main;
+  const score = (a: Attribute) => {
+    const c = ageCurve(a, age);
+    return w[a]! * (c > 0 ? c * gain * Math.max(0, 1 - (attrs[a] / caps[a]) ** evo.k) : -c * saved);
+  };
+  const [main, secondary] = [...ATTRIBUTES].sort((a, b) => score(b) - score(a));
+  return { main: main!, secondary: secondary! };
 }

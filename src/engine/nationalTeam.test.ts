@@ -26,6 +26,12 @@ describe('Seleção: treinador, visibilidade e degraus (T35, SPEC 6.11)', () => 
     expect(base).toBeGreaterThan(visibility(v({ league: 'BRA-B' }), forma));
   });
 
+  it('concorrência por posição: ajuste em dados, somado à nota', () => {
+    const w = cfg.visibilidade.porPosicao;
+    expect(visibility(v({ position: 'goleiro' }), forma) - visibility(v({ position: 'meia' }), forma)).toBeCloseTo(w.goleiro - w.meia);
+    expect(visibility(v(), forma)).toBe(visibility(v({ position: undefined }), forma));
+  });
+
   it('preferência do treinador: Europa, Brasileirão ou forma recente mudam a nota', () => {
     const eur = { cycle: 0, preference: 'europa' as const };
     const bra = { cycle: 0, preference: 'brasileirao' as const };

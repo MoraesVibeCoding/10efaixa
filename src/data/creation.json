@@ -112,32 +112,32 @@
   "potentialTiers": [
     {
       "range": [
-        96,
+        95,
         99
       ],
-      "weight": 8
+      "weight": 6
     },
     {
       "range": [
         91,
-        95
+        94
       ],
-      "weight": 5
+      "weight": 6
     },
     {
       "range": [
         86,
-        90
+        89
       ],
-      "weight": 61
+      "weight": 60
     },
     {
       "range": [
         81,
         85
       ],
-      "weight": 26
+      "weight": 28
     }
   ],
-  "_notaOrigens": "T13b: teto igual entre origens. potentialTiers mira o AUGE da 9.3 (5/10/60/25%): faixas 1 ponto acima da meta e pesos calibrados com npm run sim para compensar a distância auge→teto e o bônus do diamante. 'profile' soma ao formato de atributos e tetos; 'growthBonus' acelera fundamentos e físico da várzea."
+  "_notaOrigens": "T13b/T40: teto igual entre origens. potentialTiers mira o AUGE da 9.3 (5/10/60/25%) e é calibrado na carreira integrada com npm run sim:legado (o auge fica ~0,5 ponto abaixo do teto). 'profile' soma ao formato de atributos e tetos; 'growthBonus' acelera fundamentos e físico da várzea."
 }

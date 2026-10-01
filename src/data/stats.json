@@ -20,7 +20,7 @@
   "BRA-E": 58,
   "padrao": 74
  },
- "porPontoAcimaDaLiga": 0.035,
+ "porPontoAcimaDaLiga": 0.025,
  "ruido": 0.25,
  "porJogo": {
   "atacante": {
@@ -69,5 +69,6 @@
   "FRA",
   "POR",
   "OUTROS"
- ]
+ ],
+ "goleiroCobradorGolsPorJogo": 0.05
 }

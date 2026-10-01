@@ -11,7 +11,8 @@
     "test:watch": "vitest",
     "sim": "SIM=1 vitest run src/engine/simulation.report",
     "art:check": "node --experimental-strip-types --no-warnings src/art/check.ts",
-    "sim:carreira": "SIM_CARREIRA=1 vitest run src/engine/career.report"
+    "sim:carreira": "SIM_CARREIRA=1 vitest run src/engine/career.report",
+    "sim:legado": "SIM_LEGADO=${SIM_LEGADO:-300} vitest run src/engine/legacy.report"
   },
   "keywords": [],
   "author": "",

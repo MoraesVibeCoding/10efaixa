@@ -5,7 +5,7 @@ import scenes from '../data/scenes.json';
 // T25 (SPEC 6.13, 6.18): eventos com condições, opções e efeitos em dados; toda decisão aponta para uma cena.
 export type Ctx = Record<string, number | string | boolean>;
 type Val = number | string | boolean;
-type Cond = [string, string, Val];
+export type Cond = [string, string, Val];
 type Effect = [string, 'add' | 'set' | 'mul', Val];
 interface EventDef {
   id: string; cena: string; peso: number; condicoes: Cond[];
@@ -52,7 +52,8 @@ const EVENTS = data.eventos as unknown as EventDef[];
 const BY_ID = new Map(EVENTS.map((e) => [e.id, e]));
 const RANGES = data.campos as unknown as Record<string, [number | null, number | null] | "bool">;
 
-const holds = (c: Ctx, [field, op, v]: Cond) => field in c && OPS[op]!(c[field]!, v);
+/** Condição `[campo, operador, valor]` sobre um contexto; campo ausente nunca vale. */
+export const holds = (c: Ctx, [field, op, v]: Cond) => field in c && OPS[op]!(c[field]!, v);
 
 export const eligibleEvents = (c: Ctx): string[] => EVENTS.filter((e) => e.condicoes.every((k) => holds(c, k))).map((e) => e.id);
 

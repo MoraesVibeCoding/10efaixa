@@ -35,7 +35,16 @@
   ],
   "ligasBrasileirao": [
    "BRA-A"
-  ]
+  ],
+  "porPosicao": {
+   "_obs": "concorrência por posição: compensa o auge ~1 ponto menor de goleiros e defensores (curvas de idade), para a convocação ser comparável entre posições (9.3)",
+   "goleiro": 1.5,
+   "zagueiro": 1.2,
+   "lateral": 1.2,
+   "volante": 1.0,
+   "meia": 0,
+   "atacante": -0.3
+  }
  },
  "treinador": {
   "_obs": "fictício; troca depois de cada Copa do Mundo",
@@ -69,14 +78,14 @@
   "reserva": 112,
   "titular": 114,
   "camisa10": {
-   "corte": 118,
+   "corte": 121,
    "posicoes": [
     "meia",
     "atacante"
    ]
   },
   "capitao": {
-   "corte": 116,
+   "corte": 119,
    "convocacoesMin": 8,
    "idadeMin": 26
   }

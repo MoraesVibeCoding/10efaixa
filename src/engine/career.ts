@@ -14,7 +14,7 @@ import { evolveSemester, type EvoState } from './evolution';
 import { afterClassico, afterSemester, afterTransfer, type Idolatry } from './idolatry';
 import { decayRelapse, graveDecision, semesterInjury } from './injuries';
 import { chooseOffer, generateOffers, leagueOf, marketValue, salaryFor, type Offer } from './market';
-import { staffMeeting } from './meeting';
+import { autoProposal, staffMeeting } from './meeting';
 import { minutesShare, squadLevel, updateForm, updateMorale, type Role } from './minutes';
 import { overall, type Position } from './overall';
 import { coachProposal } from './positionChange';
@@ -27,6 +27,7 @@ import { cutOffset, invited, residenceCountry, teamName, teamStrength } from './
 import dual from '../data/dualNationality.json';
 import { seasonAwards, type Award } from './awards';
 import { ZERO_STATS, addStats, seasonStats, type SeasonStats } from './stats';
+import { legacyOf, type Legacy } from './legacy';
 import { farewellOffer, retirementCheck, type RetireReason } from './retirement';
 import { simulateSeason, type ClubInfo, type Div, type Divisions, type Row } from './season';
 import { assignNumber, canGetArmband, canGetTen, rosterNumbers } from './shirt';
@@ -54,6 +55,9 @@ export interface CareerResult {
   };
   /** Números da carreira e prêmios individuais (T39). */
   stats: SeasonStats; awards: { year: number; award: Award }[];
+  /** Tudo o que entrou no bolso (antes de gastos e perdas) e clássicos decisivos — usados pelos rótulos (T40). */
+  earnedBRL: number; decisiveDerbies: number;
+  legacy: Legacy;
   retirement: RetireReason; farewell: 'formador' | 'coracao' | null;
   cards: { yellows: number; reds: number }; finalTemperament: string; houseBought: boolean; discipline: number;
   seasons: { year: number; clubId: string; division: string | null; minutes: number; overall: number }[];
@@ -85,7 +89,6 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let positionChanges = 0;
   // O bônus de peso do arquétipo só vale na posição de origem (6.6: depois vira "estilo de origem").
   const ov = (s: EvoState) => overall(s.attributes, position, position === input.position ? arch.overallWeightBonus : undefined);
-  const [focusMain, focusSecond] = [...ATTRIBUTES].sort((a, b) => arch.distribution[b] - arch.distribution[a]);
 
   // Mundo
   let divs: Divisions = { A: clubsIn('A').map((c) => c.id), B: clubsIn('B').map((c) => c.id), C: clubsIn('C').map((c) => c.id), D: clubsIn('D').map((c) => c.id) };
@@ -140,6 +143,9 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   const heritage = player.dualNationality; // sorteada na criação (6.1); também pode ser descoberta por residência
   let nation: string | null = null; // null = Brasil
   let stats: SeasonStats = ZERO_STATS;
+  let earned = 0;
+  let decisiveDerbies = 0;
+  const earn = (amount: number, currency: Contract['currency']) => { const before = wealth; wealth = addToWealth(wealth, amount, currency, agent); earned += Math.max(0, wealth - before); };
   const awards: CareerResult['awards'] = [];
 
   let clubId: string | null = null;
@@ -155,7 +161,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     contract = makeContract({ clubId: id, annualSalary, years, agent });
     contractOverall = ov(evo);
     contracts++;
-    wealth = addToWealth(wealth, contract.signingBonus, contract.currency, agent);
+    earn(contract.signingBonus, contract.currency);
   };
   const join = (id: string, loan: boolean, r: Prng, offer?: Offer) => {
     const from = clubId;
@@ -174,6 +180,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     inYouth = true;
   } else if (input.origin === 'peneira') {
     join(runPeneira({ state: input.state, startingOverall: player.startingOverall }, rng).clubId, false, rng);
+    inYouth = true; // aprovado na peneira aos 16: entra na base do clube, como na base de clube grande
   } else {
     const v = runVarzea({ state: input.state, startingOverall: player.startingOverall }, rng);
     varzeaLeft = v.semesters;
@@ -242,7 +249,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       if (varzeaLeft === 0 && !inYouth) minutes = clamp(minutes + fx.clubMinutes, 0, 1);
       morale = updateMorale(morale, minutes, role, teamResult);
       const clubNeed = ATTRIBUTES[yr.int(0, ATTRIBUTES.length - 1)]!;
-      const { focus, injuryRiskMultiplier } = staffMeeting({ proposal: { main: focusMain!, secondary: focusSecond! }, morale, coachRelation, nationalTeamStatus: fx.meetingStatus, clubNeed });
+      const { focus, injuryRiskMultiplier } = staffMeeting({ proposal: autoProposal(evo.attributes, evo.caps, position, evo.age), morale, coachRelation, nationalTeamStatus: fx.meetingStatus, clubNeed });
       // Lesões: tempo fora de uma grave anterior, depois o sorteio do semestre (só no profissional).
       if (outLeft > 0) { minutes *= 1 - Math.min(1, outLeft); outLeft = Math.max(0, outLeft - 1); }
       else if (!inYouth && varzeaLeft === 0) {
@@ -276,7 +283,11 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         const perf = clamp(form * 2 - 1, -1, 1);
         idol = afterSemester(idol, clubId, minutes, perf, temp);
         const hasDerby = division ? rivalsOf(clubId).some((r) => divs[division].includes(r)) : table.some((id) => areEuroRivals(clubId!, id));
-        if (hasDerby) idol = afterClassico(idol, clubId, clamp(perf + (yr.next() * 2 - 1) * 0.5, -1, 1), temp, input.heartClub);
+        if (hasDerby) {
+          const derby = clamp(perf + (yr.next() * 2 - 1) * 0.5, -1, 1);
+          idol = afterClassico(idol, clubId, derby, temp, input.heartClub);
+          if (derby >= 0.5) decisiveDerbies++;
+        }
 
         const life = semesterClubLife({ clubId, coachRelation, salaryDelays, age: evo.age, minutes, expectedRank, actualRank }, yr);
         coachRelation = life.coachRelation;
@@ -328,7 +339,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       }
       // Convocação do semestre: segue a nota de visibilidade (sem clube, na várzea, não há convocação).
       if (clubId && varzeaLeft === 0) {
-        const vis = visibility({ overall: ov(evo), form, minutes, league: leagueOf(clubId, divOf), reputation: effectiveRep(clubId) }, coachFor(year, seed));
+        const vis = visibility({ overall: ov(evo), form, minutes, league: leagueOf(clubId, divOf), reputation: effectiveRep(clubId), position }, coachFor(year, seed));
         const call = () => callUp({ age: evo.age, visibility: vis, position, caps: selection.caps, cutOffset: nation ? cutOffset(nation) : 0 });
         let next = call();
         // Dupla nacionalidade (6.11): convite único, só enquanto o Brasil não convocou; aceitar é definitivo.
@@ -395,11 +406,11 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     }
     if (contract && clubId && !inYouth) {
       const c: Contract = contract;
-      wealth = addToWealth(wealth, seasonEarnings(c, Math.round(wins * avgMinutes)), c.currency, agent);
+      earn(seasonEarnings(c, Math.round(wins * avgMinutes)), c.currency);
     }
     // Números e prêmios da temporada (só no profissional).
     if (clubId && !inYouth) {
-      const st = seasonStats({ position, overall: ov(evo), minutes: avgMinutes, league, teamResult }, yr);
+      const st = seasonStats({ position, overall: ov(evo), minutes: avgMinutes, league, teamResult, setPieceTaker: traits.traits.includes('cobrador') }, yr);
       stats = addStats(stats, st);
       const won = seasonAwards({
         age: evo.age - 1, overall: ov(evo), form, minutes: avgMinutes, league, goals: st.goals,
@@ -498,8 +509,9 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
 
   selection.oriundoCampeao = selection.dual === 'aceitou' && selection.tournaments.some((t) => t.stage === 'campeao' && t.team !== 'brasil');
   selection.esperouOBrasil = selection.dual === 'recusou' && selection.caps > 0;
-  return {
+  const result = {
     player, spells, titles, peakOverall, peakAge, endAge: evo.age, wearsTen, captain, idolatry: idol,
-    wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, selection, stats, awards, retirement, farewell, cards, finalTemperament: temp, houseBought, discipline, seasons,
+    wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, selection, stats, awards, retirement, farewell, cards, finalTemperament: temp, houseBought, discipline, seasons, earnedBRL: earned, decisiveDerbies,
   };
+  return { ...result, legacy: legacyOf(result) };
 }

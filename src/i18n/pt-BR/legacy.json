@@ -1,0 +1,29 @@
+{
+ "veredito": {
+  "promessaQueNaoVingou": "Promessa que não vingou",
+  "rodadoDoInterior": "Rodado do interior",
+  "jogadorDeSerieB": "Jogador de Série B",
+  "titularDeSerieA": "Titular de Série A",
+  "idoloDeClube": "Ídolo de clube",
+  "craqueDaSelecao": "Craque da Seleção",
+  "lendaDoFutebolBrasileiro": "Lenda do futebol brasileiro",
+  "lendaMundial": "Lenda mundial"
+ },
+ "rotulo": {
+  "dezEFaixa": "10eFaixa",
+  "heroiDaCopa": "Herói da Copa",
+  "oriundoCampeao": "Oriundo campeão",
+  "goleiroArtilheiro": "Goleiro artilheiro",
+  "torcedorQueVirouIdolo": "Torcedor que virou ídolo",
+  "diamanteDaVarzea": "Diamante da várzea",
+  "vilaoDaCopa": "Vilão da Copa",
+  "idoloDeUmClubeSo": "Ídolo de um clube só",
+  "craqueEsquecido": "Craque esquecido",
+  "ganhouMuitoEGastouTudo": "Ganhou muito e gastou tudo",
+  "carrascoDeClassico": "Carrasco de clássico",
+  "reiDoEstadual": "Rei do estadual",
+  "aposentadoriaTranquila": "Aposentadoria tranquila",
+  "rodado": "Rodado"
+ },
+ "raridade": { "comum": "Comum", "incomum": "Incomum", "rara": "Rara", "epica": "Épica", "lendaria": "Lendária" }
+}

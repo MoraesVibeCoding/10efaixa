@@ -4,7 +4,7 @@ import cfg from '../data/stats.json';
 
 // T39 (SPEC 6.15): números da temporada por posição.
 export interface SeasonStats { games: number; goals: number; assists: number; cleanSheets: number; tackles: number }
-export interface StatsInput { position: Position; overall: number; minutes: number; league: string; teamResult: number }
+export interface StatsInput { position: Position; overall: number; minutes: number; league: string; teamResult: number; /** Goleiro com o traço de cobrador faz gols de bola parada. */ setPieceTaker?: boolean }
 export const ZERO_STATS: SeasonStats = { games: 0, goals: 0, assists: 0, cleanSheets: 0, tackles: 0 };
 
 export const leagueGroup = (league: string): 'BRA' | 'EUR' | 'padrao' =>
@@ -21,7 +21,7 @@ export function seasonStats(i: StatsInput, rng: Prng): SeasonStats {
   const clean = rate.semSofrerGol > 0 ? Math.min(1, Math.max(0, rate.semSofrerGol + i.teamResult * cfg.semSofrerGolPorResultado)) : 0;
   return {
     games,
-    goals: Math.round(games * rate.gols * factor * n1),
+    goals: Math.round(games * (i.position === 'goleiro' && i.setPieceTaker ? cfg.goleiroCobradorGolsPorJogo : rate.gols) * factor * n1),
     assists: Math.round(games * rate.assistencias * factor * n2),
     cleanSheets: Math.round(games * clean),
     tackles: Math.round(games * rate.desarmes * n3),
