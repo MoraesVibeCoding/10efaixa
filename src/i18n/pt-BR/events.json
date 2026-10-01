@@ -90,5 +90,12 @@
    "conservador": "Tratamento conservador",
    "voltar-antes": "Voltar antes da hora, no sacrifício"
   }
+ },
+ "mudanca-posicao": {
+  "titulo": "O técnico quer você em outra posição",
+  "opcoes": {
+   "aceitar": "Aceitar a nova posição",
+   "recusar": "Recusar e seguir onde está"
+  }
  }
 }

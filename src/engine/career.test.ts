@@ -96,4 +96,13 @@ describe('integração da carreira (T24b)', () => {
     expect(total('leve')).toBeGreaterThan(10);
     expect(total('grave')).toBeGreaterThan(0);
   });
+
+  it('mudança de posição acontece em algumas carreiras e fica registrada; a altura prevista não muda', () => {
+    const rs = Array.from({ length: 30 }, (_, seed) => simulateCareer(input({ position: 'lateral', archetypeId: 'lateralConstrutor', biotype: { heightCm: 178, build: 'atletico' } }), seed));
+    const changed = rs.filter((r) => r.positionChanges > 0);
+    expect(changed.length).toBeGreaterThan(0);
+    expect(changed[0]!.finalPosition).toBe('zagueiro');
+    expect(rs.filter((r) => r.positionChanges === 0).every((r) => r.finalPosition === 'lateral')).toBe(true);
+    expect(changed[0]!.player.biotype.heightCm).toBe(178);
+  });
 });

@@ -1,0 +1,37 @@
+{
+ "_nota": "Mudança de posição (SPEC 6.6; T32).",
+ "propostas": [
+  {
+   "de": "meia",
+   "para": "volante",
+   "idadeMin": 30
+  },
+  {
+   "de": "lateral",
+   "para": "zagueiro",
+   "idadeMin": 29
+  },
+  {
+   "de": "atacante",
+   "para": "meia",
+   "idadeMin": 31
+  },
+  {
+   "de": "volante",
+   "para": "zagueiro",
+   "idadeMin": 31
+  }
+ ],
+ "toleranciaProposta": 2,
+ "pedido": {
+  "toleranciaTecnico": 3,
+  "relacaoMin": 0.7,
+  "recusa": {
+   "moral": -0.1,
+   "relacaoTecnico": -0.1
+  }
+ },
+ "proibido": [
+  "goleiro"
+ ]
+}

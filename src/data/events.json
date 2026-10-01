@@ -31,7 +31,8 @@
   "trocarEmpresario": "bool",
   "renovar": "bool",
   "pedirAumento": "bool",
-  "decisaoLesao": "texto"
+  "decisaoLesao": "texto",
+  "mudarPosicao": "bool"
  },
  "eventos": [
   {
@@ -651,6 +652,46 @@
      "frio": "operar",
      "esquentado": "voltar-antes",
      "lider": "voltar-antes"
+    }
+   }
+  },
+  {
+   "id": "mudanca-posicao",
+   "cena": "reuniao-comissao",
+   "peso": 6,
+   "condicoes": [
+    [
+     "propostaMudancaPosicao",
+     "!=",
+     ""
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "aceitar",
+     "efeitos": [
+      [
+       "mudarPosicao",
+       "set",
+       true
+      ]
+     ]
+    },
+    {
+     "id": "recusar",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       -0.05
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "aceitar",
+    "temperamento": {
+     "esquentado": "recusar"
     }
    }
   }

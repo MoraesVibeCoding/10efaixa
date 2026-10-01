@@ -14,7 +14,8 @@ import { decayRelapse, graveDecision, semesterInjury } from './injuries';
 import { chooseOffer, generateOffers, leagueOf, marketValue, salaryFor, type Offer } from './market';
 import { staffMeeting } from './meeting';
 import { minutesShare, squadLevel, updateForm, updateMorale, type Role } from './minutes';
-import { overall } from './overall';
+import { overall, type Position } from './overall';
+import { coachProposal } from './positionChange';
 import { createPlayer, type CreationInput, type Player } from './player';
 import { createPrng, type Prng } from './prng';
 import { simulateSeason, type ClubInfo, type Div, type Divisions, type Row } from './season';
@@ -34,6 +35,7 @@ export interface CareerResult {
   wearsTen: boolean; captain: boolean; idolatry: Record<string, number>;
   wealthBRL: number; agentProfile: string; contracts: number;
   injuries: { leve: number; media: number; grave: number };
+  finalPosition: Position; positionChanges: number;
   seasons: { year: number; clubId: string; division: string | null; minutes: number; overall: number }[];
 }
 
@@ -59,7 +61,10 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   const player = created.player;
   const arch = ARCHETYPES.find((a) => a.id === input.archetypeId)!;
   const temp = input.temperament;
-  const ov = (s: EvoState) => overall(s.attributes, input.position, arch.overallWeightBonus);
+  let position: Position = input.position;
+  let positionChanges = 0;
+  // O bônus de peso do arquétipo só vale na posição de origem (6.6: depois vira "estilo de origem").
+  const ov = (s: EvoState) => overall(s.attributes, position, position === input.position ? arch.overallWeightBonus : undefined);
   const [focusMain, focusSecond] = [...ATTRIBUTES].sort((a, b) => arch.distribution[b] - arch.distribution[a]);
 
   // Mundo
@@ -298,6 +303,16 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       if (canGetArmband({ overall: ov(evo), squadLevel: squad, idolatry, age: evo.age, seasonsAtClub, temperament: temp })) captain = true;
     }
 
+    // Mudança de posição proposta pelo técnico (6.6), decidida pela política do temperamento.
+    if (clubId && !inYouth) {
+      const target = coachProposal({ position, age: evo.age, attributes: evo.attributes });
+      if (target && autoChoice('mudanca-posicao', temp) === 'aceitar') {
+        position = target;
+        positionChanges++;
+        traits = { ...traits, position };
+      }
+    }
+
     // Fim de temporada: volta de empréstimo, empréstimo, mercado (duas janelas) ou renovação.
     if (parent && --loanLeft <= 0) {
       const back: string = parent;
@@ -343,6 +358,6 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
 
   return {
     player, spells, titles, peakOverall, peakAge, endAge: evo.age, wearsTen, captain, idolatry: idol,
-    wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, seasons,
+    wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, seasons,
   };
 }
