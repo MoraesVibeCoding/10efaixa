@@ -52,5 +52,27 @@
    "comemorar": "Comemorar",
    "nao-comemorar": "Não comemorar, por respeito"
   }
+ },
+ "empresario-forca-venda": {
+  "titulo": "Empresário fechou venda sem avisar",
+  "opcoes": {
+   "aceitar-venda": "Aceitar a transferência",
+   "bater-o-pe": "Bater o pé e ficar",
+   "trocar-empresario": "Trocar de empresário"
+  }
+ },
+ "empresario-some-dinheiro": {
+  "titulo": "Sumiu dinheiro da conta",
+  "opcoes": {
+   "trocar-empresario": "Trocar de empresário",
+   "dar-outra-chance": "Dar outra chance"
+  }
+ },
+ "empresario-briga-clube": {
+  "titulo": "Empresário brigou com a diretoria",
+  "opcoes": {
+   "apoiar-empresario": "Ficar do lado do empresário",
+   "ficar-com-o-clube": "Ficar do lado do clube"
+  }
  }
 }

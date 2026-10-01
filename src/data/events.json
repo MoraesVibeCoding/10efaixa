@@ -27,7 +27,8 @@
   ],
   "pedirSaida": "bool",
   "irParaRival": "bool",
-  "aceitarProposta": "bool"
+  "aceitarProposta": "bool",
+  "trocarEmpresario": "bool"
  },
  "eventos": [
   {
@@ -369,6 +370,151 @@
     "padrao": "nao-comemorar",
     "temperamento": {
      "esquentado": "comemorar"
+    }
+   }
+  },
+  {
+   "id": "empresario-forca-venda",
+   "cena": "sala-empresario",
+   "peso": 7,
+   "condicoes": [
+    [
+     "eventoEmpresario",
+     "==",
+     "forcaVenda"
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "aceitar-venda",
+     "efeitos": [
+      [
+       "aceitarProposta",
+       "set",
+       true
+      ]
+     ]
+    },
+    {
+     "id": "bater-o-pe",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       -0.05
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       0.05
+      ]
+     ]
+    },
+    {
+     "id": "trocar-empresario",
+     "efeitos": [
+      [
+       "trocarEmpresario",
+       "set",
+       true
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "bater-o-pe",
+    "temperamento": {
+     "esquentado": "trocar-empresario"
+    }
+   }
+  },
+  {
+   "id": "empresario-some-dinheiro",
+   "cena": "sala-empresario",
+   "peso": 7,
+   "condicoes": [
+    [
+     "eventoEmpresario",
+     "==",
+     "someDinheiro"
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "trocar-empresario",
+     "efeitos": [
+      [
+       "trocarEmpresario",
+       "set",
+       true
+      ],
+      [
+       "moral",
+       "add",
+       -0.05
+      ]
+     ]
+    },
+    {
+     "id": "dar-outra-chance",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       -0.1
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "trocar-empresario",
+    "temperamento": {
+     "resenha": "dar-outra-chance"
+    }
+   }
+  },
+  {
+   "id": "empresario-briga-clube",
+   "cena": "reuniao-comissao",
+   "peso": 6,
+   "condicoes": [
+    [
+     "eventoEmpresario",
+     "==",
+     "brigaClube"
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "apoiar-empresario",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       -0.1
+      ]
+     ]
+    },
+    {
+     "id": "ficar-com-o-clube",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.05
+      ],
+      [
+       "moral",
+       "add",
+       -0.03
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "ficar-com-o-clube",
+    "temperamento": {
+     "esquentado": "apoiar-empresario"
     }
    }
   }

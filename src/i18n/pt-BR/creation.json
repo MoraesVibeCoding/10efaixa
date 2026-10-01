@@ -75,5 +75,10 @@
     "origin.invalid": "Escolha uma origem da lista.",
     "heartClub.invalid": "Escolha um clube da lista ou \"Nenhum\"."
   },
-  "heartClubNone": "Nenhum / não torcia"
+  "heartClubNone": "Nenhum / não torcia",
+  "agent": {
+    "paiTio": "Pai ou tio",
+    "agenteLocal": "Agente local",
+    "grandeAgencia": "Grande agência"
+  }
 }
