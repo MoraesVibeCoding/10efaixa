@@ -1,0 +1,10 @@
+{
+ "_nota": "Minutos, forma e moral (SPEC 6.9; T21). Calibrar com npm run sim.",
+ "nivelElenco": { "base": 40, "porReputacao": 0.45 },
+ "papel": { "titular": 0.85, "rodizio": 0.55, "reserva": 0.25, "promessa": 0.15 },
+ "porPontoRelativo": 0.03,
+ "pesoForma": 0.2,
+ "ruido": 0.08,
+ "forma": { "memoria": 0.6, "escala": 40, "ruido": 0.15 },
+ "moral": { "pesoMinutos": 0.5, "pesoResultado": 0.15 }
+}
