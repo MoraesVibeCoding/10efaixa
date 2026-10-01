@@ -1,0 +1,14 @@
+{
+ "_nota": "Idolatria por clube, −100 a 100 (SPEC 6.9, 6.13, 6.17, 6.18; T22). Calibrar com npm run sim.",
+ "limites": { "idolo": 75, "vilao": -50 },
+ "semestre": { "peso": 12 },
+ "classico": { "peso": 10 },
+ "temperamento": {
+  "esquentado": { "classico": 1.5 },
+  "frio": { "ganho": 0.7 },
+  "lider": { "ganho": 1.1 },
+  "resenha": { "ganho": 1.0 }
+ },
+ "coracao": { "classico": 2, "chegada": 15, "traicao": -40 },
+ "irParaRival": -60
+}
