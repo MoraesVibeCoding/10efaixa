@@ -2,6 +2,7 @@ import { ATTRIBUTES, type Attributes } from './attributes';
 import { applyBiotype } from './biotype';
 import { evolveSemester, type EvoState, type SemesterContext } from './evolution';
 import { createPrng } from './prng';
+import cfg from '../data/evolution.json';
 
 const flat = (v: number): Attributes =>
   Object.fromEntries(ATTRIBUTES.map((a) => [a, v])) as Attributes;
@@ -94,7 +95,7 @@ describe('evolução por semestre', () => {
   it('queda: média preservada pelo arredondamento estocástico e amortecida pelo foco', () => {
     const s = state({ age: 34, attributes: flat(70) });
     const none = meanDelta(s, ctx(), 'velocidade');
-    expect(none).toBeCloseTo(3 * -1.2, 0);
+    expect(none).toBeCloseTo(cfg.basePerSemester * -1.2, 0); // curva de Velocidade aos 34 = −1,2
     expect(meanDelta(s, ctx({ focus: { main: 'velocidade' } }), 'velocidade')).toBeGreaterThan(none);
   });
 

@@ -1,13 +1,143 @@
 {
   "origins": {
-    "baseGrande": { "overall": [45, 55], "potential": [70, 92] },
-    "peneira":    { "overall": [38, 50], "potential": [60, 90] },
-    "varzea":     { "overall": [30, 42], "potential": [55, 85], "diamond": { "chance": 0.03, "potential": [88, 97] } }
+    "baseGrande": {
+      "overall": [
+        45,
+        55
+      ],
+      "profile": {
+        "forca": 4,
+        "velocidade": 4,
+        "fisico": 4,
+        "passe": 4,
+        "finalizacao": 4,
+        "jogoAereo": 4
+      }
+    },
+    "peneira": {
+      "overall": [
+        38,
+        50
+      ],
+      "profile": {
+        "mental": 6,
+        "forca": 4,
+        "velocidade": 3,
+        "fisico": 4
+      }
+    },
+    "varzea": {
+      "overall": [
+        30,
+        42
+      ],
+      "profile": {
+        "mental": 5,
+        "habilidade": 6,
+        "drible": 6
+      },
+      "diamond": {
+        "chance": 0.03,
+        "potentialBonus": 6
+      },
+      "growthBonus": {
+        "passe": 1.35,
+        "finalizacao": 1.35,
+        "jogoAereo": 1.35,
+        "forca": 1.35,
+        "velocidade": 1.35,
+        "fisico": 1.35
+      }
+    }
   },
   "attributeSpread": 12,
-  "dualNationality": { "chance": 0.05, "countries": { "italia": 45, "portugal": 45, "espanha": 5, "alemanha": 5 } },
-  "states": ["AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"],
-  "temperaments": ["frio", "esquentado", "lider", "resenha"],
-  "celebrations": ["aviaozinho", "dancinha", "punhoCerrado", "coracaoMaos", "cambalhota", "apontaCeu", "beijaAlianca", "chuteiraTelefone"],
-  "feet": ["direita", "esquerda"]
+  "dualNationality": {
+    "chance": 0.05,
+    "countries": {
+      "italia": 45,
+      "portugal": 45,
+      "espanha": 5,
+      "alemanha": 5
+    }
+  },
+  "states": [
+    "AC",
+    "AL",
+    "AP",
+    "AM",
+    "BA",
+    "CE",
+    "DF",
+    "ES",
+    "GO",
+    "MA",
+    "MT",
+    "MS",
+    "MG",
+    "PA",
+    "PB",
+    "PR",
+    "PE",
+    "PI",
+    "RJ",
+    "RN",
+    "RS",
+    "RO",
+    "RR",
+    "SC",
+    "SP",
+    "SE",
+    "TO"
+  ],
+  "temperaments": [
+    "frio",
+    "esquentado",
+    "lider",
+    "resenha"
+  ],
+  "celebrations": [
+    "aviaozinho",
+    "dancinha",
+    "punhoCerrado",
+    "coracaoMaos",
+    "cambalhota",
+    "apontaCeu",
+    "beijaAlianca",
+    "chuteiraTelefone"
+  ],
+  "feet": [
+    "direita",
+    "esquerda"
+  ],
+  "potentialTiers": [
+    {
+      "range": [
+        96,
+        99
+      ],
+      "weight": 8
+    },
+    {
+      "range": [
+        91,
+        95
+      ],
+      "weight": 5
+    },
+    {
+      "range": [
+        86,
+        90
+      ],
+      "weight": 61
+    },
+    {
+      "range": [
+        81,
+        85
+      ],
+      "weight": 26
+    }
+  ],
+  "_notaOrigens": "T13b: teto igual entre origens. potentialTiers mira o AUGE da 9.3 (5/10/60/25%): faixas 1 ponto acima da meta e pesos calibrados com npm run sim para compensar a distância auge→teto e o bônus do diamante. 'profile' soma ao formato de atributos e tetos; 'growthBonus' acelera fundamentos e físico da várzea."
 }

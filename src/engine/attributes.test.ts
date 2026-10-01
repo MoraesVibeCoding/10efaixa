@@ -12,12 +12,12 @@ describe('atributos', () => {
   });
 
   it.each([
-    [1, 'fraco', 1], [39, 'fraco', 1],
-    [40, 'regular', 2], [54, 'regular', 2],
-    [55, 'bom', 3], [64, 'bom', 3],
-    [65, 'muitoBom', 4], [74, 'muitoBom', 4],
-    [75, 'excelente', 4.5], [84, 'excelente', 4.5],
-    [85, 'lendario', 5], [99, 'lendario', 5],
+    [1, 'fraco', 1], [49, 'fraco', 1],
+    [50, 'regular', 2], [64, 'regular', 2],
+    [65, 'bom', 3], [74, 'bom', 3],
+    [75, 'muitoBom', 4], [84, 'muitoBom', 4],
+    [85, 'excelente', 4.5], [94, 'excelente', 4.5],
+    [95, 'lendario', 5], [99, 'lendario', 5],
   ])('%i → %s, %f estrelas', (value, key, stars) => {
     expect(toBand(value)).toEqual({ key, stars });
   });

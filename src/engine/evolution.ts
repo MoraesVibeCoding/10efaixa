@@ -20,6 +20,8 @@ export interface EvoState {
   buildPush: number;
   /** Compleição da criação; a atual nunca fica a mais de um degrau dela (6.17). */
   originalBuild: Build;
+  /** Multiplicador de crescimento por atributo (origem); ausente = 1. */
+  growthBonus?: Partial<Attributes>;
 }
 
 export interface SemesterContext {
@@ -79,7 +81,7 @@ export function evolveSemester(state: EvoState, ctx: SemesterContext, rng: Prng)
     const noise = 1 + (rng.next() * 2 - 1) * cfg.noise;
     const delta = c > 0
       ? cfg.basePerSemester * c * cfg.focusGrow[role] * ctx.staffQuality * minutes * morale
-        * Math.max(0, 1 - (cur / caps[a]) ** cfg.k) * noise
+        * Math.max(0, 1 - (cur / caps[a]) ** cfg.k) * noise * (state.growthBonus?.[a] ?? 1)
       : cfg.basePerSemester * c * cfg.focusDecline[role];
     const whole = Math.floor(delta);
     const step = whole + (rng.next() < delta - whole ? 1 : 0);

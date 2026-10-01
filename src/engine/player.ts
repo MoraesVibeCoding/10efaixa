@@ -26,6 +26,8 @@ export interface Player extends CreationInput {
   isDiamond: boolean;
   dualNationality: string | null;
   growth: Growth;
+  /** Multiplicador de crescimento por atributo vindo da origem (várzea: fundamentos e físico). */
+  growthBonus: Partial<Attributes>;
   attributes: Attributes;
   baseCaps: Attributes;
   caps: Attributes;
@@ -33,7 +35,7 @@ export interface Player extends CreationInput {
 
 export type CreationResult = { ok: true; player: Player } | { ok: false; errors: string[] };
 
-type Origin = { overall: number[]; potential: number[]; diamond?: { chance: number; potential: number[] } };
+type Origin = { overall: number[]; profile: Partial<Attributes>; growthBonus?: Partial<Attributes>; diamond?: { chance: number; potentialBonus: number } };
 const ORIGINS: Record<string, Origin> = data.origins;
 
 function validate(i: CreationInput): string[] {
@@ -55,10 +57,23 @@ function validate(i: CreationInput): string[] {
 
 const clamp = (v: number) => Math.min(99, Math.max(1, Math.round(v)));
 
-/** Espalha um nível em torno dos pesos do arquétipo (peso médio 10 = o próprio nível). */
-const shape = (level: number, arch: Archetype): Attributes => {
+/** Espalha um nível em torno dos pesos do arquétipo (peso médio 10 = o próprio nível) + perfil da origem. */
+const shape = (level: number, arch: Archetype, profile: Partial<Attributes>): Attributes => {
   const out = {} as Attributes;
-  for (const a of ATTRIBUTES) out[a] = clamp(level + (data.attributeSpread * (arch.distribution[a] - 10)) / 10);
+  for (const a of ATTRIBUTES) {
+    out[a] = clamp(level + (data.attributeSpread * (arch.distribution[a] - 10)) / 10 + (profile[a] ?? 0));
+  }
+  return out;
+};
+
+/** Desloca todos os atributos até o overall (pela fn dada) bater o alvo; o clamp em 1–99 pede algumas passadas. */
+const fitOverall = (attrs: Attributes, target: number, ov: (x: Attributes) => number): Attributes => {
+  let out = attrs;
+  for (let i = 0; i < 6; i++) {
+    const shift = target - ov(out);
+    if (shift === 0) break;
+    out = Object.fromEntries(ATTRIBUTES.map((a) => [a, clamp(out[a] + shift)])) as Attributes;
+  }
   return out;
 };
 
@@ -72,20 +87,22 @@ export function createPlayer(input: CreationInput, rng: Prng): CreationResult {
 
   const startingOverall = roll(origin.overall);
   const isDiamond = !!origin.diamond && rng.next() < origin.diamond.chance;
-  const potential = roll(isDiamond ? origin.diamond!.potential : origin.potential);
+  // Teto igual para todas as origens (T13b); o diamante bruto ganha bônus por cima.
+  const tier = data.potentialTiers[Number(pickWeighted(rng, Object.fromEntries(data.potentialTiers.map((t, i) => [i, t.weight]))))]!;
+  const potential = Math.min(99, roll(tier.range) + (isDiamond ? origin.diamond!.potentialBonus : 0));
   const { chance, countries } = data.dualNationality;
   const dualNationality = rng.next() < chance ? pickWeighted(rng, countries) : null;
   const growth = rollGrowth(rng);
 
-  const baseCaps = shape(potential, arch);
+  const ov = (x: Attributes) => overall(x, input.position, arch.overallWeightBonus);
+  const baseCaps = fitOverall(shape(potential, arch, origin.profile), potential, (x) => ov(applyBiotype(x, input.biotype)));
   const caps = applyBiotype(baseCaps, input.biotype);
-  const raw = shape(startingOverall, arch);
-  const shift = startingOverall - overall(raw, input.position, arch.overallWeightBonus);
+  const raw = fitOverall(shape(startingOverall, arch, origin.profile), startingOverall, ov);
   const attributes = {} as Attributes;
-  for (const a of ATTRIBUTES) attributes[a] = Math.min(caps[a], clamp(raw[a] + shift));
+  for (const a of ATTRIBUTES) attributes[a] = Math.min(caps[a], raw[a]);
 
   return {
     ok: true,
-    player: { ...input, startingOverall, potential, isDiamond, dualNationality, growth, attributes, baseCaps, caps },
+    player: { ...input, startingOverall, potential, isDiamond, dualNationality, growth, growthBonus: origin.growthBonus ?? {}, attributes, baseCaps, caps },
   };
 }

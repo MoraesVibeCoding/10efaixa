@@ -1,45 +1,53 @@
 # Relatório de simulação — T13
 
 10000 carreiras (16→35 anos, reunião automática pelo arquétipo, contexto sorteado; sem clubes ainda). Semente 2026.
-Tempo médio por carreira: **0.229 ms** (meta < 50 ms).
+Tempo médio por carreira: **0.156 ms** (meta < 50 ms).
 
 ## Por origem
 | Origem | n | Overall inicial | Teto médio | Auge médio | p10 | p50 | p90 | Máx | Idade do auge | % ≥75 | % ≥85 |
 | --- | --: | --: | --: | --: | --: | --: | --: | --: | --: | --: | --: |
-| baseGrande | 3330 | 50 | 80.9 | 70 | 66 | 70 | 74 | 78 | 27.9 | 6.7 | 0 |
-| peneira | 3266 | 44.1 | 74.9 | 64.8 | 59 | 65 | 70 | 75 | 27.9 | 0.1 | 0 |
-| varzea | 3404 | 36.1 | 70.8 | 59.4 | 54 | 60 | 65 | 71 | 28 | 0 | 0 |
+| baseGrande | 3330 | 50 | 87.7 | 86.8 | 82 | 87 | 92 | 98 | 25.6 | 100 | 76.5 |
+| peneira | 3266 | 44.1 | 87.7 | 86.4 | 82 | 86 | 91 | 97 | 26.2 | 100 | 73.8 |
+| varzea | 3404 | 36.1 | 87.8 | 86.9 | 82 | 87 | 92 | 98 | 26.3 | 100 | 76.1 |
 
 Diamante bruto na várzea: **3.00%** (meta 2–4%).
+
+## Auge por faixa (meta 9.3: 5% · 10% · 60% · 25%)
+| Grupo | 95+ | 90–94 | 85–89 | 80–84 | Ganho em fundamentos e físico |
+| --- | --: | --: | --: | --: | --: |
+| todas | 4.6% | 10.3% | 60.6% | 24.4% | — |
+| baseGrande | 5% | 9.5% | 62% | 23.5% | +36.2 |
+| peneira | 3.3% | 9.9% | 60.7% | 26% | +41.7 |
+| varzea | 5.5% | 11.4% | 59.2% | 23.8% | +51.6 |
 
 ## Por posição
 | Posição | n | Auge médio |
 | --- | --: | --: |
-| goleiro | 1690 | 65.8 |
-| zagueiro | 1703 | 65.2 |
-| lateral | 1604 | 63.3 |
-| volante | 1676 | 64.3 |
-| meia | 1676 | 65.1 |
-| atacante | 1651 | 64.3 |
+| goleiro | 1690 | 86.9 |
+| zagueiro | 1703 | 86.7 |
+| lateral | 1604 | 86.5 |
+| volante | 1676 | 86.7 |
+| meia | 1676 | 86.8 |
+| atacante | 1651 | 86.7 |
 
 ## Efeito da altura (terços da faixa da posição; valores no auge)
 | Posição | Altura | n | Overall | Jogo aéreo | Drible | Velocidade |
 | --- | --- | --: | --: | --: | --: | --: |
-| goleiro | baixo | 368 | 65.7 | 66.6 | 48.8 | 68.1 |
-| goleiro | medio | 509 | 65.7 | 67.3 | 48.1 | 67.4 |
-| goleiro | alto | 813 | 66 | 67.9 | 47.5 | 67.7 |
-| zagueiro | baixo | 412 | 65 | 64.7 | 51.1 | 50.3 |
-| zagueiro | medio | 589 | 65.4 | 65.9 | 50.8 | 50.2 |
-| zagueiro | alto | 702 | 65.2 | 66.8 | 49.2 | 49.1 |
-| lateral | baixo | 407 | 64.1 | 50 | 61.3 | 67.6 |
-| lateral | medio | 524 | 63.4 | 50.6 | 60 | 66.4 |
-| lateral | alto | 673 | 62.6 | 51.7 | 58.6 | 66 |
-| volante | baixo | 436 | 64.3 | 51.9 | 55.9 | 54.5 |
-| volante | medio | 515 | 63.8 | 52.6 | 54.6 | 53.6 |
-| volante | alto | 725 | 64.5 | 54.6 | 54.2 | 53.5 |
-| meia | baixo | 436 | 65.4 | 50 | 64.4 | 55 |
-| meia | medio | 557 | 65.2 | 51.7 | 62.9 | 54.6 |
-| meia | alto | 683 | 64.9 | 53.3 | 62.1 | 54.1 |
-| atacante | baixo | 434 | 64.5 | 56.4 | 66.1 | 57.8 |
-| atacante | medio | 536 | 64.3 | 57.9 | 65 | 58.5 |
-| atacante | alto | 681 | 64.1 | 60.1 | 63.3 | 56.7 |
+| goleiro | baixo | 387 | 86.8 | 89.4 | 69.5 | 87.7 |
+| goleiro | medio | 524 | 86.9 | 92 | 67.8 | 86.3 |
+| goleiro | alto | 779 | 87.1 | 94.3 | 66.1 | 84.8 |
+| zagueiro | baixo | 420 | 86.5 | 88 | 72.5 | 76.4 |
+| zagueiro | medio | 581 | 86.8 | 90.6 | 71 | 75.3 |
+| zagueiro | alto | 702 | 86.8 | 93.1 | 68.2 | 73 |
+| lateral | baixo | 401 | 86.4 | 68.1 | 85 | 92.1 |
+| lateral | medio | 555 | 86.6 | 72.1 | 83.9 | 90.8 |
+| lateral | alto | 648 | 86.4 | 76.1 | 82.2 | 89.9 |
+| volante | baixo | 410 | 86.6 | 72.9 | 79.2 | 81.5 |
+| volante | medio | 555 | 86.8 | 76.4 | 77.7 | 80.3 |
+| volante | alto | 711 | 86.7 | 79.7 | 75.6 | 79.1 |
+| meia | baixo | 427 | 86.9 | 68.3 | 87.9 | 82.4 |
+| meia | medio | 589 | 86.8 | 72.4 | 86 | 81.5 |
+| meia | alto | 660 | 86.8 | 77.1 | 84.2 | 80.3 |
+| atacante | baixo | 428 | 86.5 | 76.4 | 89.7 | 84.6 |
+| atacante | medio | 550 | 86.6 | 81.1 | 87.4 | 83.7 |
+| atacante | alto | 673 | 86.8 | 86.5 | 85 | 81.5 |

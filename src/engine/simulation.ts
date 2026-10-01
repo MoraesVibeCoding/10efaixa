@@ -41,7 +41,7 @@ export function simulateCareer(seed: number): CareerResult {
   let s: EvoState = {
     age: cfg.startAge, attributes: player.attributes, baseCaps: player.baseCaps, caps: player.caps,
     predictedHeightCm: player.biotype.heightCm, growth: player.growth,
-    build: player.biotype.build, originalBuild: player.biotype.build, buildPush: 0,
+    build: player.biotype.build, originalBuild: player.biotype.build, buildPush: 0, growthBonus: player.growthBonus,
   };
   let best = { peakOverall: overall(s.attributes, position, arch.overallWeightBonus), peakAge: s.age, peakAttributes: s.attributes };
 
@@ -70,6 +70,10 @@ export interface MassReport {
   byPosition: Record<Position, { n: number; peakOverall: number }>;
   diamondRateVarzea: number;
   height: Record<Position, Record<HeightBucket, Agg>>;
+  /** % do auge por faixa [95+, 90–94, 85–89, 80–84]. */
+  peakTiers: { all: number[]; byOrigin: Record<string, number[]> };
+  /** Ganho médio do início ao auge em fundamentos (Passe, Finalização, Jogo aéreo) e físico. */
+  growth: Record<string, { fundamentosFisico: number }>;
 }
 
 const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
@@ -120,9 +124,21 @@ export function runMass(n: number, seed: number): MassReport {
     }
   }
 
+  const tiers = (rs: CareerResult[]) => [[95, 99], [90, 94], [85, 89], [80, 84]].map(([lo, hi]) =>
+    round1((100 * rs.filter((c) => c.peakOverall >= lo! && c.peakOverall <= hi!).length) / (rs.length || 1)));
+  const FUND = ['passe', 'finalizacao', 'jogoAereo', 'forca', 'velocidade', 'fisico'] as const;
+  const gain = (c: CareerResult) => mean(FUND.map((a) => c.peakAttributes[a] - c.player.attributes[a]));
+  const peakTiers: MassReport['peakTiers'] = { all: tiers(results), byOrigin: {} };
+  const growth: MassReport['growth'] = {};
+  for (const origin of Object.keys(creation.origins)) {
+    const rs = results.filter((c) => c.player.origin === origin);
+    peakTiers.byOrigin[origin] = tiers(rs);
+    growth[origin] = { fundamentosFisico: round1(mean(rs.map(gain))) };
+  }
+
   const varzea = results.filter((c) => c.player.origin === 'varzea');
   return {
-    careers: n, msPerCareer: Math.round(msPerCareer * 1000) / 1000, byOrigin, byPosition, height,
+    careers: n, msPerCareer: Math.round(msPerCareer * 1000) / 1000, byOrigin, byPosition, height, peakTiers, growth,
     diamondRateVarzea: varzea.length ? varzea.filter((c) => c.player.isDiamond).length / varzea.length : 0,
   };
 }

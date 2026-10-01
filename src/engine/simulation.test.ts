@@ -24,20 +24,29 @@ describe('simulação de carreira', () => {
   });
 });
 
-describe('relatório em massa (amostra de 3 mil)', () => {
+describe('relatório em massa (amostra de 6 mil)', () => {
   let report: ReturnType<typeof runMass>;
-  beforeAll(() => { report = runMass(3_000, 2026); }, 60_000);
+  beforeAll(() => { report = runMass(6_000, 2026); }, 60_000);
 
   it('cobre as 3 origens e as 6 posições', HEAVY, () => {
     expect(Object.keys(report.byOrigin).sort()).toEqual(['baseGrande', 'peneira', 'varzea']);
     for (const p of POSITIONS) expect(report.byPosition[p].n).toBeGreaterThan(0);
   });
 
-  it('origem ordena o auge: base > peneira > várzea (em média)', () => {
-    const o = report.byOrigin;
-    expect(o.baseGrande!.peakOverall).toBeGreaterThan(o.peneira!.peakOverall);
-    expect(o.peneira!.peakOverall).toBeGreaterThan(o.varzea!.peakOverall);
-    expect(o.varzea!.p90).toBeGreaterThan(o.varzea!.p10);
+  it('chance igual entre origens: auge médio parecido (±1,5)', () => {
+    const peaks = Object.values(report.byOrigin).map((o) => o.peakOverall);
+    expect(Math.max(...peaks) - Math.min(...peaks)).toBeLessThanOrEqual(1.5);
+  });
+
+  it('meta do auge (9.3): 5% 95+, 10% 90–94, 60% 85–89, 25% 80–84 — geral ±2 p.p., por origem ±3 p.p.', () => {
+    const target = [5, 10, 60, 25];
+    const check = (t: number[], tol: number) => t.forEach((x, i) => expect(Math.abs(x - target[i]!)).toBeLessThanOrEqual(tol));
+    check(report.peakTiers.all, 2);
+    for (const o of Object.keys(report.byOrigin)) check(report.peakTiers.byOrigin[o]!, 3);
+  });
+
+  it('várzea cresce mais em fundamentos e físico do que a base', () => {
+    expect(report.growth.varzea!.fundamentosFisico).toBeGreaterThan(report.growth.baseGrande!.fundamentosFisico + 3);
   });
 
   it('diamante bruto entre 2% e 4% das carreiras de várzea', () => {
