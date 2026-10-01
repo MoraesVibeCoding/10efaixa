@@ -5,6 +5,8 @@ import { randomInput } from './simulation';
 
 // Relatório da carreira integrada (T24b). Roda só com `npm run sim:carreira` (SIM_CARREIRA=1).
 const N = 300;
+const EURO = ['ENG', 'ESP', 'ITA', 'GER', 'FRA', 'POR', 'OUTROS'];
+const OFF = ['SAU', 'USA', 'JPN', 'QAT', 'CHN'];
 
 it.skipIf(!process.env.SIM_CARREIRA)(`gera o relatório de ${N} carreiras integradas em docs/simulacao-carreira.md`, () => {
   const t0 = performance.now();
@@ -19,19 +21,22 @@ it.skipIf(!process.env.SIM_CARREIRA)(`gera o relatório de ${N} carreiras integr
   const tiers = (g: CareerResult[]) => [[95, 99], [90, 94], [85, 89], [80, 84], [0, 79]].map(([lo, hi]) => pct(g.map((r) => r.peakOverall >= lo! && r.peakOverall <= hi!)));
   const row = (c: (string | number)[]) => `| ${c.join(' | ')} |`;
   const groups: [string, typeof rs][] = [['todas', rs], ...['baseGrande', 'peneira', 'varzea'].map((o) => [o, rs.filter((r) => r.origin === o)] as [string, typeof rs])];
-  const comps = ['serieA', 'serieB', 'serieC', 'serieD', 'estadual', 'copaDoBrasil', 'copaDoNordeste', 'libertadores', 'sulAmericana'];
+  const comps = ['serieA', 'serieB', 'estadual', 'copaDoBrasil', 'libertadores', 'sulAmericana', 'ligaNacional', 'copaNacional', 'champions', 'europaLeague'];
   const lines = [
     '# Relatório da carreira integrada — T24b', '',
-    `${N} carreiras completas (16→35, transferência e aposentadoria provisórias até T28/T34). Tempo médio: **${ms.toFixed(1)} ms/carreira** (meta < 50 ms).`, '',
+    `${N} carreiras completas (16→35, mercado da T28; aposentadoria provisória até a T34). Tempo médio: **${ms.toFixed(1)} ms/carreira** (meta < 50 ms).`, '',
     '## Auge por faixa (meta 9.3: 5% · 10% · 60% · 25% · 0%)',
     row(['Grupo', 'n', '95+', '90–94', '85–89', '80–84', '<80']), row(['---', '--:', '--:', '--:', '--:', '--:', '--:']),
     ...groups.map(([g, x]) => row([g, x.length, ...tiers(x)])), '',
     '## Trajetória',
-    row(['Grupo', 'Clubes (média)', 'Empréstimos', 'Temporadas na Série A', 'Camisa 10', 'Capitão']), row(['---', '--:', '--:', '--:', '--:', '--:']),
+    row(['Grupo', 'Clubes (média)', 'Empréstimos', 'Temporadas na Série A', 'Temporadas na Europa', 'Fora do eixo', 'Camisa 10', 'Capitão', 'Patrimônio (R$ mi, mediana)']), row(['---', '--:', '--:', '--:', '--:', '--:', '--:', '--:', '--:']),
     ...groups.map(([g, x]) => row([g, mean(x.map((r) => new Set(r.spells.map((s) => s.clubId)).size)).toFixed(1),
       mean(x.map((r) => r.spells.filter((s) => s.loan).length)).toFixed(1),
-      `${((100 * mean(x.map((r) => r.seasons.filter((s) => s.division === 'A').length / r.seasons.length)))).toFixed(0)}%`,
-      pct(x.map((r) => r.wearsTen)), pct(x.map((r) => r.captain))])), '',
+      `${((100 * mean(x.map((r) => r.seasons.filter((s) => s.division === 'BRA-A').length / r.seasons.length)))).toFixed(0)}%`,
+      `${((100 * mean(x.map((r) => r.seasons.filter((s) => EURO.includes(s.division ?? '')).length / r.seasons.length)))).toFixed(0)}%`,
+      pct(x.map((r) => r.seasons.some((s) => OFF.includes(s.division ?? '')))),
+      pct(x.map((r) => r.wearsTen)), pct(x.map((r) => r.captain)),
+      (x.map((r) => r.wealthBRL).sort((a, b) => a - b)[Math.floor(x.length / 2)]! / 1e6).toFixed(1)])), '',
     '## Títulos por carreira (média)',
     row(['Grupo', ...comps, 'total']), row(['---', ...comps.map(() => '--:'), '--:']),
     ...groups.map(([g, x]) => row([g, ...comps.map((c) => mean(x.map((r) => r.titles.filter((t) => t.competition === c).length)).toFixed(2)), mean(x.map((r) => r.titles.length)).toFixed(1)])), '',

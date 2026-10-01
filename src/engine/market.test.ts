@@ -130,6 +130,12 @@ describe('mercado (T28)', () => {
     expect(chooseOffer(player({ temperament: 'lider' }), [weak], cur)).toBeNull();
   });
 
+  it('margem para sair: proposta só um pouco melhor não tira o jogador do clube', () => {
+    const cur = { annualSalaryBRL: 3_000_000, role: 'titular' };
+    const similar: Offer = { clubId: 'vitoria', league: 'BRA-A', currency: 'BRL', annualSalary: 3_300_000, years: 3, role: 'titular', staffQuality: 1, heartClub: false, rivalOfCurrent: false, rivalOfHeart: false, offAxis: false };
+    expect(chooseOffer(player({ temperament: 'esquentado', clubId: 'sport' }), [similar], cur)).toBeNull();
+  });
+
   it('dilemas da T25 na escolha: Frio recusa o rival; Esquentado aceita', () => {
     const o: Offer = { clubId: 'vitoria', league: 'BRA-A', currency: 'BRL', annualSalary: 9_000_000, years: 3, role: 'titular', staffQuality: 1, heartClub: false, rivalOfCurrent: true, rivalOfHeart: false, offAxis: false };
     const cur = { annualSalaryBRL: 1_000_000, role: 'aposta' };

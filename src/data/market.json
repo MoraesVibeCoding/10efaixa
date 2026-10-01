@@ -219,7 +219,7 @@
   "foraDoEixo": {
    "idadeMin": 28,
    "overallMin": 78,
-   "chance": 0.25
+   "chance": 0.12
   },
   "negociar": {
    "melhora": 0.15,
@@ -228,7 +228,8 @@
   "forcarSaida": {
    "custoMesesSalario": 6,
    "idolatria": -30
-  }
+  },
+  "margemParaSair": 2
  },
  "politica": {
   "_obs": "pesos da escolha automática por temperamento: nível do clube, salário (log), papel e apego ao clube atual",

@@ -1,4 +1,5 @@
 import { CLUBS } from './clubs';
+import { effectiveRep } from './europe';
 import type { Prng } from './prng';
 import cfg from '../data/clubLife.json';
 import neighbors from '../data/neighbors.json';
@@ -11,19 +12,20 @@ const N = neighbors.vizinhos as Record<string, string[]>;
 const byId = new Map(CLUBS.map((c) => [c.id, c]));
 
 export function semesterClubLife(s: ClubLifeState, rng: Prng): ClubLifeResult {
-  const club = byId.get(s.clubId)!;
+  const club = byId.get(s.clubId); // undefined = clube estrangeiro
+  const reputation = club?.reputacao ?? effectiveRep(s.clubId);
   const t = cfg.tecnico;
   const pCoach = Math.min(t.max, t.trocaBase + Math.max(0, s.actualRank - s.expectedRank) * t.porPosicaoAbaixo);
   const coachChanged = rng.next() < pCoach;
 
   const sal = cfg.salario;
-  const salaryDelayed = rng.next() < Math.max(sal.min, sal.atrasoBase - club.reputacao * sal.porReputacao);
+  const salaryDelayed = rng.next() < Math.max(sal.min, sal.atrasoBase - reputation * sal.porReputacao);
   const salaryDelays = salaryDelayed ? s.salaryDelays + 1 : 0;
 
   const e = cfg.emprestimo;
   let loanOffer: string | null = null;
   const loanRoll = rng.next();
-  if (s.age <= e.idadeMax && s.minutes < e.minutosMax && loanRoll < e.chance) {
+  if (club && s.age <= e.idadeMax && s.minutes < e.minutosMax && loanRoll < e.chance) {
     const [lo, hi] = e.reputacaoAbaixo as [number, number];
     const targets = CLUBS.filter((c) => (c.uf === club.uf || N[club.uf]!.includes(c.uf))
       && c.reputacao <= club.reputacao - lo && c.reputacao >= club.reputacao - hi);

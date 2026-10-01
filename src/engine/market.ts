@@ -122,7 +122,9 @@ export function chooseOffer(p: MarketPlayer, offers: Offer[], current: { annualS
     && (!o.rivalOfHeart || autoChoice('traicao-coracao', p.temperament) === 'aceitar')
     && (!o.heartClub || autoChoice('proposta-coracao', p.temperament) !== 'recusar'));
   let best: Offer | null = null;
-  let bestScore = current && p.clubId ? score(effectiveRep(p.clubId), current.annualSalaryBRL, current.role) + w.ficar * 0.3 : -Infinity;
+  // Ficar leva vantagem: o apego do temperamento e uma margem mínima para valer a mudança.
+  let bestScore = current && p.clubId
+    ? score(effectiveRep(p.clubId), current.annualSalaryBRL, current.role) + w.ficar * 0.3 + cfg.propostas.margemParaSair : -Infinity;
   for (const o of allowed) {
     const s = score(effectiveRep(o.clubId), toBRL(o), o.role);
     if (s > bestScore) { best = o; bestScore = s; }

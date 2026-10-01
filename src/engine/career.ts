@@ -1,34 +1,44 @@
 import { ATTRIBUTES } from './attributes';
+import { agentSemester, changeAgent, createAgent, type Agent } from './agent';
 import { ARCHETYPES } from './archetypes';
 import { CLUBS, clubsIn, rivalsOf } from './clubs';
 import { semesterClubLife } from './clubLife';
-import { FOREIGN, brazilQualifiers, copaDoBrasil, copaDoBrasilEntrants, copaDoNordeste, foreignQualifiers, libertadores, nordesteGroups, sulAmericana } from './cups';
+import { addToWealth, makeContract, renew, seasonEarnings, toBRL, type Contract } from './contracts';
+import { brazilQualifiers, copaDoBrasil, copaDoBrasilEntrants, copaDoNordeste, foreignQualifiers, libertadores, nordesteGroups, sulAmericana } from './cups';
+import { EUROPE, areEuroRivals, effectiveRep } from './europe';
+import { initialEuroTables, simulateEuropeSeason, type EuroTables } from './europeSeason';
+import { autoChoice } from './events';
 import { evolveSemester, type EvoState } from './evolution';
 import { afterClassico, afterSemester, afterTransfer, type Idolatry } from './idolatry';
+import { chooseOffer, generateOffers, leagueOf, marketValue, salaryFor, type Offer } from './market';
 import { staffMeeting } from './meeting';
 import { minutesShare, squadLevel, updateForm, updateMorale, type Role } from './minutes';
 import { overall } from './overall';
 import { createPlayer, type CreationInput, type Player } from './player';
 import { createPrng, type Prng } from './prng';
-import { simulateSeason, type ClubInfo, type Div, type Divisions } from './season';
+import { simulateSeason, type ClubInfo, type Div, type Divisions, type Row } from './season';
 import { assignNumber, canGetArmband, canGetTen, rosterNumbers } from './shirt';
 import { baseOffers, copinha, promotion, runPeneira, runVarzea } from './start';
 import { initialStates, simulateStates, type StateWorld } from './states';
 import { progressTraits, type TraitState } from './traits';
 import cfg from '../data/career.json';
 import cups from '../data/cups.json';
+import europe from '../data/europe.json';
 
-// T24b: uma carreira completa ligando todos os sistemas, ano a ano. Provisórios (T28 mercado, T34 aposentadoria) marcados.
+// T24b: uma carreira completa ligando todos os sistemas, ano a ano. A aposentadoria ainda é provisória (T34).
 export interface ClubSpell { clubId: string; fromAge: number; toAge: number; number: number; loan: boolean }
 export interface Title { year: number; competition: string; clubId: string }
 export interface CareerResult {
   player: Player; spells: ClubSpell[]; titles: Title[]; peakOverall: number; peakAge: number; endAge: number;
   wearsTen: boolean; captain: boolean; idolatry: Record<string, number>;
+  wealthBRL: number; agentProfile: string; contracts: number;
   seasons: { year: number; clubId: string; division: string | null; minutes: number; overall: number }[];
 }
 
-const REP = new Map<string, number>([...CLUBS.map((c) => [c.id, c.reputacao] as const), ...FOREIGN.map((c) => [c.id, c.reputacao] as const)]);
 const UF = new Map(CLUBS.map((c) => [c.id, c.uf]));
+const BRAZIL = new Set(CLUBS.map((c) => c.id));
+const EURO_LEAGUE = new Map(EUROPE.map((c) => [c.id, c.liga]));
+const UEFA_POOL = new Set(europe.outros.clubs.map((c) => c.id));
 const DIVS: Div[] = ['A', 'B', 'C', 'D'];
 const clamp = (x: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, x));
 const divisionOf = (d: Divisions, id: string) => DIVS.find((k) => d[k].includes(id)) ?? null;
@@ -40,22 +50,13 @@ function roleFor(ov: number, squad: number, age: number): Role {
   return age <= cfg.papel.promessaIdadeMax ? 'promessa' : 'reserva';
 }
 
-// ponytail: transferência provisória por nível até a T28 (mercado): sobe para o clube de nível mais próximo do overall.
-function provisionalTransfer(ov: number, current: string): string | null {
-  const t = cfg.transferenciaProvisoria;
-  if (ov < squadLevel(REP.get(current)!) + t.margem) return null;
-  const target = CLUBS.filter((c) => c.divisao !== null && c.reputacao > REP.get(current)!
-    && Math.abs(squadLevel(c.reputacao) - ov) <= t.janela)
-    .sort((a, b) => b.reputacao - a.reputacao || (a.id < b.id ? -1 : 1))[0];
-  return target?.id ?? null;
-}
-
 export function simulateCareer(input: CreationInput, seed: number, startYear = 2026): CareerResult {
   const rng = createPrng(seed);
   const created = createPlayer(input, rng);
   if (!created.ok) throw new RangeError(`criação inválida: ${created.errors.join(', ')}`);
   const player = created.player;
   const arch = ARCHETYPES.find((a) => a.id === input.archetypeId)!;
+  const temp = input.temperament;
   const ov = (s: EvoState) => overall(s.attributes, input.position, arch.overallWeightBonus);
   const [focusMain, focusSecond] = [...ATTRIBUTES].sort((a, b) => arch.distribution[b] - arch.distribution[a]);
 
@@ -63,10 +64,11 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let divs: Divisions = { A: clubsIn('A').map((c) => c.id), B: clubsIn('B').map((c) => c.id), C: clubsIn('C').map((c) => c.id), D: clubsIn('D').map((c) => c.id) };
   let states: StateWorld = initialStates();
   let holders = [cfg.campeoesContinentais2025.libertadores, cfg.campeoesContinentais2025.sulAmericana];
-  let prevTable = [...divs.A].sort((a, b) => REP.get(b)! - REP.get(a)!);
+  let prevTable = [...divs.A].sort((a, b) => effectiveRep(b) - effectiveRep(a));
   let prevCdb = { champion: prevTable[5]!, vice: prevTable[6]! };
   let prevChamps: string[] = [];
   let cdnGroups = cups.copaDoNordeste.participantes2026;
+  let euroTables: EuroTables = initialEuroTables();
 
   // Jogador
   let evo: EvoState = {
@@ -75,11 +77,16 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     originalBuild: player.biotype.build, buildPush: 0, growthBonus: player.growthBonus,
   };
   let traits: TraitState = { position: input.position, traits: [...arch.traits.slice(0, 1)], latentTrait: arch.latentTrait, progress: {} };
+  let agent: Agent = createAgent((cfg.empresarioPorTemperamento as Record<string, string>)[temp] ?? 'agenteLocal', rng);
   let form = 0.5;
   let morale = 0.6;
   let coachRelation = 0.5;
   let salaryDelays = 0;
   let idol: Idolatry = {};
+  let wealth = 0;
+  let contract: Contract | null = null;
+  let contractOverall = 0;
+  let contracts = 0;
   const spells: ClubSpell[] = [];
   const titles: Title[] = [];
   const seasons: CareerResult['seasons'] = [];
@@ -95,14 +102,24 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let varzeaClub: string | null = null;
   let parent: string | null = null;
   let loanLeft = 0;
-  let pendingMove: { id: string; loan: boolean } | null = null;
+  let loanTarget: string | null = null;
 
-  const join = (id: string, loan: boolean, r: Prng) => {
+  const divOf = (id: string) => divisionOf(divs, id);
+  const sign = (id: string, annualSalary: number, years: number) => {
+    contract = makeContract({ clubId: id, annualSalary, years, agent });
+    contractOverall = ov(evo);
+    contracts++;
+    wealth = addToWealth(wealth, contract.signingBonus, contract.currency, agent);
+  };
+  const join = (id: string, loan: boolean, r: Prng, offer?: Offer) => {
     const from = clubId;
     clubId = id;
     seasonsAtClub = 0;
     idol = afterTransfer(idol, from, id, input.heartClub);
     spells.push({ clubId: id, fromAge: evo.age, toAge: evo.age, number: assignNumber(input.shirtNumber, rosterNumbers(r)), loan });
+    if (loan) return;
+    if (offer) sign(id, offer.annualSalary, offer.years);
+    else sign(id, salaryFor(marketValue(ov(evo), evo.age), leagueOf(id, divOf)), 2);
   };
 
   if (input.origin === 'baseGrande') {
@@ -123,7 +140,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
 
     // Base: Copinha em janeiro e promoção (17–20).
     if (inYouth && clubId) {
-      const c = copinha(REP.get(clubId)!, ov(evo), yr);
+      const c = copinha(effectiveRep(clubId), ov(evo), yr);
       const p = promotion({ age: evo.age, overall: ov(evo), clubId, highlight: c.highlight });
       if (p.promoted) inYouth = false;
       else if (p.released) { inYouth = false; join(runPeneira({ state: input.state, startingOverall: ov(evo) }, yr).clubId, false, yr); }
@@ -131,8 +148,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
 
     // Temporada do mundo; o clube do jogador recebe o efeito dele.
     const boost = clubId && !inYouth
-      ? clamp((ov(evo) - squadLevel(REP.get(clubId)!)) * cfg.impactoJogador.porPonto, 0, cfg.impactoJogador.max) : 0;
-    const club: ClubInfo = (id) => ({ strength: (REP.get(id) ?? 50) + (id === clubId ? boost : 0), uf: UF.get(id) ?? '' });
+      ? clamp((ov(evo) - squadLevel(effectiveRep(clubId))) * cfg.impactoJogador.porPonto, 0, cfg.impactoJogador.max) : 0;
+    const club: ClubInfo = (id) => ({ strength: effectiveRep(id) + (id === clubId ? boost : 0), uf: UF.get(id) ?? '' });
     const season = simulateSeason(divs, club, ySeed);
     const st = simulateStates(states, club, ySeed);
     const cdb = copaDoBrasil(copaDoBrasilEntrants(divs.A, prevChamps), prevChamps, divs.A, club, ySeed);
@@ -141,15 +158,24 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     const fq = foreignQualifiers(yr, holders);
     const lib = libertadores({ groups: [...holders, ...fq.libGroups, ...br.libGroups], f2: [...fq.libF2, ...br.libF2], f1: fq.libF1 }, club, ySeed);
     const sud = sulAmericana({ groups: [...fq.sudGroups, ...br.sud], national: fq.sudNational }, lib.f3Losers, lib.thirds, club, ySeed);
-
-    // Dois semestres do jogador.
+    // Europa: simulação média, só quando o jogador está lá.
     const seasonClub = clubId ?? varzeaClub!;
-    const division = divisionOf(divs, seasonClub);
-    const table = division ? season.phases[division][0]!.groups!.flat().map((r) => r.id) : [];
-    const actualRank = Math.max(1, table.indexOf(seasonClub) + 1) || 10;
-    const expectedRank = division ? [...divs[division]].sort((a, b) => REP.get(b)! - REP.get(a)!).indexOf(seasonClub) + 1 : 10;
+    const inEurope = EURO_LEAGUE.has(seasonClub) || UEFA_POOL.has(seasonClub);
+    const eu = inEurope ? simulateEuropeSeason(euroTables, club, ySeed) : null;
+    if (eu) euroTables = eu.next;
+
+    // Classificação do clube do jogador na liga dele.
+    const league = leagueOf(seasonClub, divOf);
+    const division = divOf(seasonClub);
+    const tableRows: Row[] = division ? season.phases[division][0]!.groups!.flat()
+      : eu && EURO_LEAGUE.has(seasonClub) ? eu.leagues[EURO_LEAGUE.get(seasonClub)!]! : [];
+    const table = tableRows.map((r) => r.id);
+    const actualRank = table.includes(seasonClub) ? table.indexOf(seasonClub) + 1 : 10;
+    const expectedRank = table.length ? [...table].sort((a, b) => effectiveRep(b) - effectiveRep(a)).indexOf(seasonClub) + 1 : 10;
+    const wins = tableRows.find((r) => r.id === seasonClub)?.wins ?? cfg.ligaSimplificada.vitorias;
     const teamResult = clamp((expectedRank - actualRank) / 10, -1, 1);
     let minutesSum = 0;
+    let wantsOut = false;
 
     for (let sem = 0; sem < 2; sem++) {
       let minutes: number;
@@ -158,7 +184,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       if (varzeaLeft > 0) {
         minutes = cfg.minutosBase;
       } else {
-        const rep = REP.get(clubId!)!;
+        const rep = effectiveRep(clubId!);
         staffQuality = clamp(0.8 + (rep / 100) * 0.4, 0.8, 1.2);
         role = roleFor(ov(evo), squadLevel(rep), evo.age);
         minutes = inYouth ? cfg.minutosBase : minutesShare({ overall: ov(evo), clubRep: rep, role, form }, yr);
@@ -176,54 +202,111 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       } else if (!inYouth && clubId) {
         minutesSum += minutes;
         const perf = clamp(form * 2 - 1, -1, 1);
-        idol = afterSemester(idol, clubId, minutes, perf, input.temperament);
-        const div = divisionOf(divs, clubId);
-        if (div && rivalsOf(clubId).some((r) => divs[div].includes(r))) {
-          idol = afterClassico(idol, clubId, clamp(perf + (yr.next() * 2 - 1) * 0.5, -1, 1), input.temperament, input.heartClub);
-        }
+        idol = afterSemester(idol, clubId, minutes, perf, temp);
+        const hasDerby = division ? rivalsOf(clubId).some((r) => divs[division].includes(r)) : table.some((id) => areEuroRivals(clubId!, id));
+        if (hasDerby) idol = afterClassico(idol, clubId, clamp(perf + (yr.next() * 2 - 1) * 0.5, -1, 1), temp, input.heartClub);
+
         const life = semesterClubLife({ clubId, coachRelation, salaryDelays, age: evo.age, minutes, expectedRank, actualRank }, yr);
         coachRelation = life.coachRelation;
         salaryDelays = life.salaryDelays;
-        if (life.loanOffer && !parent && !pendingMove) pendingMove = { id: life.loanOffer, loan: true };
+        if (life.canRequestLeave && autoChoice('salario-atrasado', temp) === 'pedir-saida') wantsOut = true;
+        if (life.loanOffer && !parent && !loanTarget) loanTarget = life.loanOffer;
+
+        // Empresário: no máximo um evento por semestre, resolvido pela política do temperamento.
+        const ag = agentSemester(agent, yr);
+        if (ag.event === 'someDinheiro') {
+          wealth = Math.max(0, Math.round(wealth * (1 - ag.moneyLossFraction)));
+          if (autoChoice('empresario-some-dinheiro', temp) === 'trocar-empresario') {
+            const ch = changeAgent(wealth, 'agenteLocal', yr);
+            agent = ch.agent; wealth -= ch.cost; morale = clamp(morale + ch.moraleDelta, 0, 1);
+          }
+        } else if (ag.event === 'brigaClube') {
+          coachRelation = clamp(coachRelation + (autoChoice('empresario-briga-clube', temp) === 'apoiar-empresario' ? -0.1 : 0.05), 0, 1);
+        } else if (ag.event === 'forcaVenda') {
+          const choice = autoChoice('empresario-forca-venda', temp);
+          if (choice === 'aceitar-venda') wantsOut = true;
+          else if (choice === 'trocar-empresario') {
+            const ch = changeAgent(wealth, 'paiTio', yr);
+            agent = ch.agent; wealth -= ch.cost; morale = clamp(morale + ch.moraleDelta, 0, 1);
+          }
+        }
       }
       const o = ov(evo);
       if (o > peakOverall) { peakOverall = o; peakAge = evo.age; }
       if (spells.length) spells.at(-1)!.toAge = evo.age;
     }
 
-    // Títulos do clube do jogador com minutos suficientes.
+    // Títulos do clube do jogador com minutos suficientes, e ganhos do contrato.
     const avgMinutes = minutesSum / 2;
     if (clubId && clubId === seasonClub && avgMinutes >= cfg.minutosParaTitulo) {
-      const won = (competition: string, champ: string) => { if (champ === clubId) titles.push({ year, competition, clubId: clubId! }); };
-      if (division) won(`serie${division}`, season.champions[division]);
-      const uf = UF.get(clubId)!;
-      if (st.champions[uf]) won('estadual', st.champions[uf]!);
-      won('copaDoBrasil', cdb.champion);
-      won('copaDoNordeste', cdn.champion);
+      const won = (competition: string, champ: string | undefined) => { if (champ === clubId) titles.push({ year, competition, clubId: clubId! }); };
+      if (division) {
+        won(`serie${division}`, season.champions[division]);
+        won('copaDoBrasil', cdb.champion);
+        won('copaDoNordeste', cdn.champion);
+      }
+      if (BRAZIL.has(clubId)) won('estadual', st.champions[UF.get(clubId)!]);
       won('libertadores', lib.champion);
       won('sulAmericana', sud.champion);
+      if (eu) {
+        const liga = EURO_LEAGUE.get(clubId);
+        if (liga) { won('ligaNacional', eu.champions[liga]); won('copaNacional', eu.cups[liga]!.champion); }
+        won('champions', eu.ucl.champion);
+        won('europaLeague', eu.uel.champion);
+      }
+      if (!division && !EURO_LEAGUE.has(clubId)) {
+        const s = cfg.ligaSimplificada;
+        const chance = clamp(s.chanceBase + (effectiveRep(clubId) - s.refReputacao) * s.porPontoReputacao, 0, s.max);
+        if (yr.next() < chance) titles.push({ year, competition: 'ligaNacional', clubId });
+      }
     }
-    seasons.push({ year, clubId: seasonClub, division, minutes: avgMinutes, overall: ov(evo) });
+    if (contract && clubId && !inYouth) {
+      const c: Contract = contract;
+      wealth = addToWealth(wealth, seasonEarnings(c, Math.round(wins * avgMinutes)), c.currency, agent);
+    }
+    seasons.push({ year, clubId: seasonClub, division: league, minutes: avgMinutes, overall: ov(evo) });
 
     // Camisa 10 e faixa do clube por evento.
     if (clubId && !inYouth) {
       seasonsAtClub++;
-      const squad = squadLevel(REP.get(clubId)!);
+      const squad = squadLevel(effectiveRep(clubId));
       const idolatry = idol[clubId] ?? 0;
       if (canGetTen({ overall: ov(evo), squadLevel: squad, idolatry })) wearsTen = true;
-      if (canGetArmband({ overall: ov(evo), squadLevel: squad, idolatry, age: evo.age, seasonsAtClub, temperament: input.temperament })) captain = true;
+      if (canGetArmband({ overall: ov(evo), squadLevel: squad, idolatry, age: evo.age, seasonsAtClub, temperament: temp })) captain = true;
     }
 
-    // Fim de temporada: volta de empréstimo, empréstimo aceito ou transferência provisória.
-    if (parent && --loanLeft <= 0) { const back = parent; parent = null; join(back, false, yr); }
-    else if (pendingMove) {
-      if (pendingMove.loan) { parent = clubId; loanLeft = cfg.emprestimoTemporadas; }
-      join(pendingMove.id, pendingMove.loan, yr);
+    // Fim de temporada: volta de empréstimo, empréstimo, mercado (duas janelas) ou renovação.
+    if (parent && --loanLeft <= 0) {
+      const back: string = parent;
+      parent = null;
+      const kept: Contract | null = contract;
+      join(back, true, yr);
+      spells.at(-1)!.loan = false;
+      contract = kept;
+    } else if (loanTarget) {
+      parent = clubId;
+      loanLeft = cfg.emprestimoTemporadas;
+      join(loanTarget, true, yr);
     } else if (clubId && !inYouth && !parent) {
-      const target = provisionalTransfer(ov(evo), clubId);
-      if (target) join(target, false, yr);
+      const me = { overall: ov(evo), age: evo.age, clubId, heartClub: input.heartClub, temperament: temp };
+      const offers = [...generateOffers(me, 'brasil', agent, yr, divOf), ...generateOffers(me, 'europa', agent, yr, divOf)];
+      const c = contract as Contract | null;
+      const current = wantsOut || !c ? null : { annualSalaryBRL: toBRL(c.annualSalary, c.currency), role: roleFor(me.overall, squadLevel(effectiveRep(clubId)), evo.age) };
+      const pick = chooseOffer(me, offers, current);
+      if (pick) {
+        const love = pick.heartClub && autoChoice('proposta-coracao', temp) === 'aceitar-por-amor';
+        join(pick.clubId, false, yr, love ? { ...pick, annualSalary: Math.round(pick.annualSalary * 0.7) } : pick);
+        salaryDelays = 0;
+      } else if (c) {
+        c.years -= 1;
+        if (c.years <= 1) {
+          const choice = autoChoice('renovacao', temp);
+          if (choice !== 'nao-renovar') { contract = renew(c, ov(evo) - contractOverall, choice === 'pedir-aumento'); contractOverall = ov(evo); contracts++; }
+          else c.years = 1;
+        }
+      }
     }
-    pendingMove = null;
+    loanTarget = null;
 
     // Mundo do ano seguinte.
     prevTable = season.phases.A[0]!.groups![0]!.map((r) => r.id);
@@ -235,5 +318,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     cdnGroups = nordesteGroups(yr);
   }
 
-  return { player, spells, titles, peakOverall, peakAge, endAge: evo.age, wearsTen, captain, idolatry: idol, seasons };
+  return {
+    player, spells, titles, peakOverall, peakAge, endAge: evo.age, wearsTen, captain, idolatry: idol,
+    wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, seasons,
+  };
 }

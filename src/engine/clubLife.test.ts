@@ -37,4 +37,10 @@ describe('vida de clube (T23)', () => {
     expect(rate({ ...base, age: 30, minutes: 0.1 }, (r) => r.loanOffer !== null)).toBe(0);
     expect(rate({ ...base, age: 19, minutes: 0.9 }, (r) => r.loanOffer !== null)).toBe(0);
   });
+
+  it('clube estrangeiro: funciona e não gera empréstimo (só clubes brasileiros emprestam na v1)', () => {
+    const r = semesterClubLife({ ...base, clubId: 'real-madrid', age: 19, minutes: 0.1 }, createPrng(1));
+    expect(r.loanOffer).toBeNull();
+    expect(rate({ ...base, clubId: 'real-madrid' }, (x) => x.salaryDelayed)).toBeLessThan(0.05);
+  });
 });

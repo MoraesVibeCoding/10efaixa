@@ -1,27 +1,27 @@
 # Relatório da carreira integrada — T24b
 
-300 carreiras completas (16→35, transferência e aposentadoria provisórias até T28/T34). Tempo médio: **18.4 ms/carreira** (meta < 50 ms).
+300 carreiras completas (16→35, mercado da T28; aposentadoria provisória até a T34). Tempo médio: **21.8 ms/carreira** (meta < 50 ms).
 
 ## Auge por faixa (meta 9.3: 5% · 10% · 60% · 25% · 0%)
 | Grupo | n | 95+ | 90–94 | 85–89 | 80–84 | <80 |
 | --- | --: | --: | --: | --: | --: | --: |
-| todas | 300 | 4.3% | 11.7% | 53.0% | 23.7% | 7.3% |
-| baseGrande | 112 | 6.3% | 12.5% | 57.1% | 22.3% | 1.8% |
-| peneira | 90 | 4.4% | 3.3% | 45.6% | 26.7% | 20.0% |
-| varzea | 98 | 2.0% | 18.4% | 55.1% | 22.4% | 2.0% |
+| todas | 300 | 4.7% | 14.3% | 48.7% | 26.3% | 6.0% |
+| baseGrande | 112 | 6.3% | 12.5% | 57.1% | 24.1% | 0.0% |
+| peneira | 90 | 2.2% | 6.7% | 37.8% | 34.4% | 18.9% |
+| varzea | 98 | 5.1% | 23.5% | 49.0% | 21.4% | 1.0% |
 
 ## Trajetória
-| Grupo | Clubes (média) | Empréstimos | Temporadas na Série A | Camisa 10 | Capitão |
-| --- | --: | --: | --: | --: | --: |
-| todas | 3.5 | 1.3 | 74% | 33.0% | 63.0% |
-| baseGrande | 2.9 | 1.4 | 87% | 42.9% | 67.0% |
-| peneira | 4.1 | 1.8 | 62% | 16.7% | 41.1% |
-| varzea | 3.7 | 0.9 | 71% | 36.7% | 78.6% |
+| Grupo | Clubes (média) | Empréstimos | Temporadas na Série A | Temporadas na Europa | Fora do eixo | Camisa 10 | Capitão | Patrimônio (R$ mi, mediana) |
+| --- | --: | --: | --: | --: | --: | --: | --: | --: |
+| todas | 5.5 | 0.9 | 26% | 30% | 7.0% | 39.7% | 79.7% | 408.6 |
+| baseGrande | 4.8 | 1.1 | 36% | 32% | 5.4% | 43.8% | 88.4% | 508.2 |
+| peneira | 6.4 | 1.4 | 19% | 23% | 7.8% | 25.6% | 68.9% | 152.9 |
+| varzea | 5.6 | 0.3 | 21% | 33% | 8.2% | 48.0% | 79.6% | 583.7 |
 
 ## Títulos por carreira (média)
-| Grupo | serieA | serieB | serieC | serieD | estadual | copaDoBrasil | copaDoNordeste | libertadores | sulAmericana | total |
-| --- | --: | --: | --: | --: | --: | --: | --: | --: | --: | --: |
-| todas | 2.93 | 0.19 | 0.04 | 0.02 | 6.28 | 1.54 | 0.28 | 1.50 | 0.38 | 13.2 |
-| baseGrande | 3.41 | 0.14 | 0.02 | 0.02 | 6.21 | 1.80 | 0.15 | 1.58 | 0.51 | 13.8 |
-| peneira | 2.10 | 0.28 | 0.04 | 0.01 | 5.97 | 1.17 | 0.46 | 1.13 | 0.33 | 11.5 |
-| varzea | 3.15 | 0.16 | 0.05 | 0.02 | 6.65 | 1.59 | 0.26 | 1.74 | 0.28 | 13.9 |
+| Grupo | serieA | serieB | estadual | copaDoBrasil | libertadores | sulAmericana | ligaNacional | copaNacional | champions | europaLeague | total |
+| --- | --: | --: | --: | --: | --: | --: | --: | --: | --: | --: | --: |
+| todas | 0.57 | 0.09 | 2.02 | 0.40 | 0.45 | 0.19 | 1.27 | 0.34 | 0.09 | 0.11 | 5.7 |
+| baseGrande | 0.65 | 0.10 | 2.17 | 0.57 | 0.51 | 0.19 | 1.38 | 0.46 | 0.11 | 0.11 | 6.4 |
+| peneira | 0.43 | 0.13 | 1.83 | 0.23 | 0.24 | 0.14 | 0.88 | 0.12 | 0.03 | 0.09 | 4.3 |
+| varzea | 0.59 | 0.03 | 2.01 | 0.36 | 0.58 | 0.22 | 1.50 | 0.41 | 0.11 | 0.13 | 6.2 |
