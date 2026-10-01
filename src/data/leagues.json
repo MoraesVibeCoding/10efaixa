@@ -1,5 +1,5 @@
 {
- "_nota": "Formato das ligas nacionais (SPEC 6.9). Série C muda de tamanho até 2028 conforme o novo calendário da CBF.",
+ "_nota": "Formato das ligas nacionais (SPEC 6.9). v1: divisões fixas (sem acesso/rebaixamento — futuro, SPEC 12). Dados de acesso/descenso mantidos para a fase futura.",
  "leagues": {
   "A": {
    "nome": "Série A",

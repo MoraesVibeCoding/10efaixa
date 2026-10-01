@@ -1,6 +1,6 @@
 # 10eFaixa — Especificação do Produto (SPEC.md)
 
-> Versão 2.6 (clube de coração, seção 6.18) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
+> Versão 2.7 (acesso e rebaixamento para o futuro; divisões fixas na v1) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
 > Este documento é a fonte da verdade para o Claude Code. Nenhuma mudança de escopo sem atualizar este arquivo primeiro.
 
 ---
@@ -34,6 +34,7 @@ O objetivo máximo simbólico dá nome ao jogo: **vestir a camisa 10 e usar a fa
 - **Partidas lance a lance:** fora; simulação por semestre com momentos de decisão.
 - **Divisões inferiores da Europa:** fora; só a 1ª divisão das 6 ligas.
 - **Futebol feminino:** fora da v1, registrado como futuro (motor preparado, ver 5).
+- **Acesso e rebaixamento:** fora da v1 (Séries A–D e divisões de acesso dos estaduais), registrado como futuro junto com o futebol feminino. Na v1 cada clube fica na divisão de 2026 durante toda a carreira; o jogador sobe de patamar trocando de clube.
 - **Outros idiomas:** fora; v1 só em português do Brasil, com textos preparados para tradução.
 
 ## 5. Stack e princípios técnicos
@@ -194,8 +195,8 @@ Aplicada **a cada semestre**, com metade do ganho anual por vez (constantes em c
 
 ### 6.9 Mundo: Brasil (foco, mais detalhado)
 
-- **Divisões nacionais:** Séries A, B, C e D, com acesso e rebaixamento.
-- **Estaduais completos** (fase inicial + mata-mata, com divisões de acesso): **SP, RJ, MG, RS, PR, SC, BA, PE, CE, GO**. Clubes de outros estados nas Séries A–D disputam um **estadual simplificado** (só o resultado final).
+- **Divisões nacionais:** Séries A, B, C e D, **fixas na v1** (cada clube na divisão de 2026). Acesso e rebaixamento ficam para o futuro (seção 12).
+- **Estaduais completos** (fase inicial + mata-mata, com divisões de acesso): **SP, RJ, MG, RS, PR, SC, BA, PE, CE, GO** (só a 1ª divisão estadual na v1). Clubes de outros estados nas Séries A–D disputam um **estadual simplificado** (só o resultado final).
 - **Copas:** Copa do Brasil, Copa do Nordeste, Libertadores e Sul-Americana (vagas conforme regras oficiais, conferidas na implementação).
 - **Base:** categorias de base, **Copinha** e promoção ao profissional (primeiro contrato).
 - **Clássicos e torcida:** rivalidades **manuais nas Séries A e B** e **automáticas por cidade nas Séries C e D**. Atuações em clássicos alteram idolatria; o jogador pode virar **ídolo ou vilão** de uma torcida.
@@ -485,7 +486,7 @@ Zoeira só com o próprio jogador (ex.: "o fanático que foi parar no rival"), n
 | **1 (este SPEC)** | Jogo completo da v1, lançado só com a arte final do ilustrador | Botão discreto "Apoie o projeto" (Apoia.se) na tela de resultado |
 | **2** | Ranking online com antitrapaça, backend, observabilidade completa | Anúncios só entre carreiras e na tela de resultado; revisão jurídica; escudos licenciados se possível |
 | **3** | App nativo reaproveitando o motor | A definir |
-| **Futuro** | Carreira feminina; outros idiomas | A definir |
+| **Futuro** | Carreira feminina; acesso e rebaixamento entre divisões (nacionais e estaduais); outros idiomas | A definir |
 
 ---
 
@@ -495,7 +496,7 @@ Não são decisões pendentes: são dados oficiais a conferir e citar (fonte + d
 
 | Dado | Fonte | Tarefa |
 |---|---|---|
-| Formato de cada um dos 10 estaduais e suas divisões de acesso | Federações estaduais | T18 |
+| Formato da 1ª divisão de cada um dos 10 estaduais | Federações estaduais | T18 |
 | Número de clubes e regras das Séries A–D | CBF | T15, T16 |
 | Vagas e formato de Copa do Brasil, Copa do Nordeste, Libertadores e Sul-Americana | CBF e CONMEBOL | T19 |
 | Número de clubes das 6 ligas europeias e das copas europeias | Sites oficiais das ligas e da UEFA | T29 |
@@ -537,7 +538,7 @@ Cada tarefa é atômica, com teste escrito antes do código e **um commit por ta
 | T15 | Schema de clubes + Séries A e B + rivais manuais | 40 clubes válidos; reputação, UF, cidade, cores; rivais definidos |
 | T16 | Séries C e D + rivais automáticos por cidade | Clubes válidos com fonte citada |
 | T16b | Clube de coração na criação | Opcional ("Nenhum"); só clubes brasileiros A–D; clubes do estado primeiro; guardado no jogador. Efeitos de 6.18 entram em T20, T22, T25/T28, T34 e T39 |
-| T17 | Liga com acesso e rebaixamento | Tabela coerente com a força dos clubes |
+| T17 | Temporada da liga (divisões fixas) | Tabela coerente com a força dos clubes; campeão e posições definidos; sem acesso/rebaixamento na v1 |
 | T18 | 10 estaduais completos + estadual simplificado | Formato por estado vindo de dados; campeão sempre definido |
 | T19 | Copas: Copa do Brasil, Copa do Nordeste, Libertadores, Sul-Americana | Chaveamento e vagas coerentes |
 | T20 | Início por origem: ofertas de base, peneira, várzea; Copinha e promoção | Ofertas do estado ou vizinhos; peneira com três desfechos; primeiro contrato |
@@ -665,6 +666,7 @@ Decisões aprovadas durante a implementação. Complementam as seções acima.
 | 2026-09-30 | T13b | Troca aceita: crescimento mais lento empurra o auge para depois dos 27, mas abre distância até o teto e derruba o 95+. Escolhido auge aos ~26 | Medido na varredura de calibração |
 | 2026-09-30 | T42 | Briefing aprovado. Extras: expressões faciais (4), cabelos com entradas e rugas para envelhecimento, cenários "banco de reservas" e "rua do bairro"; recolor por cores-chave exatas | Aprovado pelo usuário no ⛳ da T42 |
 | 2026-09-30 | T16b | Nova funcionalidade: clube de coração (6.18), opcional, só clubes brasileiros; campo na T16b (após T16, quando existem as Séries A–D) | Pedido do usuário; aprovado |
+| 2026-09-30 | T17 | Acesso e rebaixamento saem da v1 e vão para o futuro, junto com o futebol feminino; divisões fixas em 2026; estaduais só com a 1ª divisão. Formatos de acesso já levantados ficam em leagues.json para uso futuro | Pedido do usuário |
 | 2026-09-30 | T42/T47 | Troféus: arte original que evoca o tipo do troféu real (taça com orelhas, globo, salva…), nunca cópia do desenho; lista mínima no briefing 6.7 | Pedido do usuário; desenhos de troféus reais são protegidos (seção 11). Réplicas só com revisão jurídica/licença |
 | 2026-09-30 | T14 | Sedes reais conferidas: Copa 2026 (EUA, Canadá, México), 2030 (Marrocos, Portugal, Espanha + centenário), 2034 (Arábia Saudita) — FIFA; Olimpíadas 2028 LA, 2032 Brisbane — COI. Demais sedes sorteadas por semente | Fontes e data em src/data/calendar.json |
 | 2026-09-30 | T14 | **Não verificado:** a CONMEBOL não anunciou a próxima Copa América masculina; ciclo assumido a cada 4 anos a partir de 2028 ("entre as Copas", 6.11). Sedes futuras repetem as 5 últimas reais em ordem (2015 Chile, 2016 EUA, 2019 Brasil, 2021 Brasil, 2024 EUA), decisão do usuário. Janelas de transferência modeladas por momento do semestre; datas exatas a conferir na T28 | Marcado `verificado: false` no JSON; revisar quando houver anúncio oficial |
