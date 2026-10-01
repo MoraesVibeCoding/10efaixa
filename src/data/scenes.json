@@ -1,0 +1,30 @@
+{
+ "_nota": "Catálogo de cenários (briefing de arte 6.5; T25). Todo evento aponta para um destes.",
+ "cenas": [
+  "varzea",
+  "rua-do-bairro",
+  "peneira",
+  "treino",
+  "vestiario",
+  "banco-de-reservas",
+  "reuniao-comissao",
+  "sala-empresario",
+  "assinatura-contrato",
+  "aeroporto",
+  "estadio",
+  "gol",
+  "cabecada",
+  "penalti",
+  "titulo",
+  "convocacao",
+  "hospital",
+  "fisioterapia",
+  "festa",
+  "entrevista",
+  "classico",
+  "vaia",
+  "copa",
+  "casa-familia",
+  "despedida"
+ ]
+}

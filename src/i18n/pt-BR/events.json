@@ -1,0 +1,56 @@
+{
+ "estirao-grande": {
+  "titulo": "Esticou de vez!",
+  "opcoes": {
+   "seguir": "Bora pro treino"
+  }
+ },
+ "traco-desbloqueado": {
+  "titulo": "Treino que vira talento",
+  "opcoes": {
+   "comemorar": "Comemorar a evolução"
+  }
+ },
+ "troca-tecnico": {
+  "titulo": "Técnico novo no CT",
+  "opcoes": {
+   "conhecer": "Se apresentar ao novo técnico"
+  }
+ },
+ "proposta-rival": {
+  "titulo": "O rival bateu na porta",
+  "opcoes": {
+   "aceitar": "Aceitar e ir para o rival",
+   "recusar": "Recusar e ficar"
+  }
+ },
+ "salario-atrasado": {
+  "titulo": "Salário atrasado de novo",
+  "opcoes": {
+   "pedir-saida": "Pedir para sair",
+   "ficar": "Ficar e esperar"
+  }
+ },
+ "proposta-coracao": {
+  "titulo": "O clube do coração chamou",
+  "opcoes": {
+   "aceitar": "Aceitar a proposta",
+   "aceitar-por-amor": "Jogar por amor (salário menor)",
+   "recusar": "Recusar"
+  }
+ },
+ "traicao-coracao": {
+  "titulo": "Proposta do rival do seu clube do coração",
+  "opcoes": {
+   "aceitar": "Aceitar mesmo assim",
+   "recusar": "Recusar"
+  }
+ },
+ "jogo-contra-coracao": {
+  "titulo": "Gol contra o clube do coração",
+  "opcoes": {
+   "comemorar": "Comemorar",
+   "nao-comemorar": "Não comemorar, por respeito"
+  }
+ }
+}

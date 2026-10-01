@@ -1,0 +1,376 @@
+{
+ "_nota": "Eventos e dilemas (SPEC 6.13, 6.18; T25). Condições: campo op valor. Efeitos: add (com limites de 'campos') ou set.",
+ "campos": {
+  "moral": [
+   0,
+   1
+  ],
+  "relacaoTecnico": [
+   0,
+   1
+  ],
+  "idolatria": [
+   -100,
+   100
+  ],
+  "idolatriaCoracao": [
+   -100,
+   100
+  ],
+  "patrimonio": [
+   null,
+   null
+  ],
+  "salarioFator": [
+   0,
+   2
+  ],
+  "pedirSaida": "bool",
+  "irParaRival": "bool",
+  "aceitarProposta": "bool"
+ },
+ "eventos": [
+  {
+   "id": "estirao-grande",
+   "cena": "casa-familia",
+   "peso": 10,
+   "condicoes": [
+    [
+     "estiraoGrande",
+     "==",
+     true
+    ],
+    [
+     "idade",
+     "<=",
+     18
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "seguir",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.05
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "seguir"
+   }
+  },
+  {
+   "id": "traco-desbloqueado",
+   "cena": "treino",
+   "peso": 10,
+   "condicoes": [
+    [
+     "tracoDesbloqueado",
+     "!=",
+     ""
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "comemorar",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.05
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "comemorar"
+   }
+  },
+  {
+   "id": "troca-tecnico",
+   "cena": "reuniao-comissao",
+   "peso": 5,
+   "condicoes": [
+    [
+     "tecnicoTrocado",
+     "==",
+     true
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "conhecer",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "set",
+       0.5
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "conhecer"
+   }
+  },
+  {
+   "id": "proposta-rival",
+   "cena": "sala-empresario",
+   "peso": 8,
+   "condicoes": [
+    [
+     "propostaDoRival",
+     "==",
+     true
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "aceitar",
+     "efeitos": [
+      [
+       "irParaRival",
+       "set",
+       true
+      ],
+      [
+       "aceitarProposta",
+       "set",
+       true
+      ]
+     ]
+    },
+    {
+     "id": "recusar",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       5
+      ],
+      [
+       "moral",
+       "add",
+       -0.05
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "recusar",
+    "temperamento": {
+     "esquentado": "aceitar"
+    }
+   }
+  },
+  {
+   "id": "salario-atrasado",
+   "cena": "sala-empresario",
+   "peso": 6,
+   "condicoes": [
+    [
+     "salarioAtrasos",
+     ">=",
+     1
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "pedir-saida",
+     "efeitos": [
+      [
+       "pedirSaida",
+       "set",
+       true
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.1
+      ]
+     ]
+    },
+    {
+     "id": "ficar",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       -0.1
+      ],
+      [
+       "idolatria",
+       "add",
+       5
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "ficar",
+    "temperamento": {
+     "frio": "pedir-saida"
+    }
+   }
+  },
+  {
+   "id": "proposta-coracao",
+   "cena": "assinatura-contrato",
+   "peso": 9,
+   "condicoes": [
+    [
+     "propostaDoCoracao",
+     "==",
+     true
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "aceitar",
+     "efeitos": [
+      [
+       "aceitarProposta",
+       "set",
+       true
+      ]
+     ]
+    },
+    {
+     "id": "aceitar-por-amor",
+     "efeitos": [
+      [
+       "aceitarProposta",
+       "set",
+       true
+      ],
+      [
+       "salarioFator",
+       "set",
+       0.7
+      ],
+      [
+       "idolatriaCoracao",
+       "add",
+       10
+      ]
+     ]
+    },
+    {
+     "id": "recusar",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       -0.05
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "aceitar",
+    "temperamento": {
+     "lider": "aceitar-por-amor",
+     "resenha": "aceitar-por-amor"
+    }
+   }
+  },
+  {
+   "id": "traicao-coracao",
+   "cena": "sala-empresario",
+   "peso": 8,
+   "condicoes": [
+    [
+     "propostaDoRivalDoCoracao",
+     "==",
+     true
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "aceitar",
+     "efeitos": [
+      [
+       "aceitarProposta",
+       "set",
+       true
+      ],
+      [
+       "idolatriaCoracao",
+       "add",
+       -40
+      ]
+     ]
+    },
+    {
+     "id": "recusar",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       -0.05
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "recusar",
+    "temperamento": {
+     "frio": "aceitar"
+    }
+   }
+  },
+  {
+   "id": "jogo-contra-coracao",
+   "cena": "gol",
+   "peso": 7,
+   "condicoes": [
+    [
+     "jogoContraCoracao",
+     "==",
+     true
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "comemorar",
+     "efeitos": [
+      [
+       "idolatriaCoracao",
+       "add",
+       -15
+      ],
+      [
+       "idolatria",
+       "add",
+       5
+      ]
+     ]
+    },
+    {
+     "id": "nao-comemorar",
+     "efeitos": [
+      [
+       "idolatriaCoracao",
+       "add",
+       5
+      ],
+      [
+       "idolatria",
+       "add",
+       -3
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "nao-comemorar",
+    "temperamento": {
+     "esquentado": "comemorar"
+    }
+   }
+  }
+ ]
+}
