@@ -38,7 +38,8 @@
    1
   ],
   "casaComprada": "bool",
-  "investir": "bool"
+  "investir": "bool",
+  "despedida": "bool"
  },
  "eventos": [
   {
@@ -908,6 +909,103 @@
    ],
    "politica": {
     "padrao": "seguir"
+   }
+  },
+  {
+   "id": "retorno-formador",
+   "cena": "despedida",
+   "peso": 9,
+   "condicoes": [
+    [
+     "propostaDoFormador",
+     "==",
+     true
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "aceitar",
+     "efeitos": [
+      [
+       "despedida",
+       "set",
+       true
+      ],
+      [
+       "moral",
+       "add",
+       0.1
+      ],
+      [
+       "idolatria",
+       "add",
+       15
+      ]
+     ]
+    },
+    {
+     "id": "recusar",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       -0.03
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "aceitar",
+    "temperamento": {
+     "frio": "recusar"
+    }
+   }
+  },
+  {
+   "id": "realizar-sonho",
+   "cena": "despedida",
+   "peso": 9,
+   "condicoes": [
+    [
+     "propostaDoSonho",
+     "==",
+     true
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "aceitar",
+     "efeitos": [
+      [
+       "despedida",
+       "set",
+       true
+      ],
+      [
+       "moral",
+       "add",
+       0.1
+      ],
+      [
+       "idolatria",
+       "add",
+       15
+      ]
+     ]
+    },
+    {
+     "id": "recusar",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       -0.03
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "aceitar"
    }
   }
  ]

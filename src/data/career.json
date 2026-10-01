@@ -1,6 +1,5 @@
 {
- "_nota": "Integração da carreira (T24b). 'idadeFinalProvisoria' é substituída na T34 (aposentadoria).",
- "idadeFinalProvisoria": 35,
+ "_nota": "Integração da carreira (T24b). O fim da carreira vem de retirement.json (T34).",
  "impactoJogador": {
   "porPonto": 0.15,
   "max": 5

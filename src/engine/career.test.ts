@@ -4,6 +4,7 @@ import europe from '../data/europe.json';
 import { simulateCareer } from './career';
 import type { CreationInput } from './player';
 import cfg from '../data/career.json';
+import retire from '../data/retirement.json';
 import { readFileSync } from 'node:fs';
 import { EUROPE } from './europe';
 
@@ -19,11 +20,30 @@ describe('integração da carreira (T24b)', () => {
     expect(simulateCareer(input(), 7)).toEqual(simulateCareer(input(), 7));
   });
 
-  it('vai dos 16 anos à idade final provisória, uma temporada por ano', () => {
-    const r = simulateCareer(input(), 3);
-    expect(r.endAge).toBe(cfg.idadeFinalProvisoria);
-    expect(r.seasons.length).toBe(cfg.idadeFinalProvisoria - 16);
-    expect(r.seasons[0]!.year).toBe(2026);
+  it('vai dos 16 anos à aposentadoria (T34): uma temporada por ano, motivo registrado, nunca além dos 40', () => {
+    const rs = Array.from({ length: 30 }, (_, seed) => simulateCareer(input({ temperament: seed % 2 ? 'resenha' : 'frio' }), seed));
+    for (const r of rs) {
+      expect(r.seasons.length).toBe(r.endAge - 16);
+      expect(r.seasons[0]!.year).toBe(2026);
+      expect(r.endAge).toBeLessThanOrEqual(retire.idadeLimite);
+      expect(['decisao', 'fisico', 'overallInicial', 'idadeLimite']).toContain(r.retirement);
+      if (r.retirement === 'decisao') expect(r.endAge).toBeGreaterThanOrEqual(retire.decisao.idadeMin);
+      if (r.retirement === 'idadeLimite') expect(r.endAge).toBe(retire.idadeLimite);
+    }
+    expect(new Set(rs.map((r) => r.endAge)).size).toBeGreaterThan(3);
+  });
+
+  it('despedida (T34): quem aceita encerra a carreira no clube de coração ou no formador, sem sair mais', () => {
+    const rs = Array.from({ length: 40 }, (_, seed) => simulateCareer(input({ temperament: 'lider', heartClub: 'santos' }), seed));
+    const back = rs.filter((r) => r.farewell !== null);
+    expect(back.length).toBeGreaterThan(0);
+    for (const r of back) {
+      const last = r.spells.at(-1)!;
+      expect(last.clubId).toBe(r.farewell === 'coracao' ? 'santos' : r.spells[0]!.clubId);
+      expect(last.fromAge).toBeGreaterThanOrEqual(retire.despedida.idadeMin);
+      expect(last.toAge).toBe(r.endAge);
+    }
+    expect(back.some((r) => r.farewell === 'coracao')).toBe(true);
   });
 
   it('histórico de clubes consistente: clubes existem, passagens encadeadas sem sobreposição', () => {

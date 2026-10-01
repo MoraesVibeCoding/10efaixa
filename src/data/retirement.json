@@ -1,0 +1,31 @@
+{
+ "_nota": "Aposentadoria e despedida (SPEC 6.14, 6.18; T34). Ordem dos gatilhos: limite de idade, físico, overall inicial, decisão.",
+ "idadeLimite": 40,
+ "decisao": {
+  "idadeMin": 30,
+  "chanceBase": 0.03,
+  "porAno": 0.04,
+  "minutosBaixos": 0.25,
+  "bonusMinutosBaixos": 0.15,
+  "temperamento": {
+   "frio": 1.0,
+   "lider": 0.8,
+   "esquentado": 1.2,
+   "resenha": 1.3
+  }
+ },
+ "fisico": {
+  "_obs": "força a aposentadoria: lesões graves acumuladas ou físico abaixo de uma fração do auge físico. ponytail: com a curva de idade atual (rapidez -1,2/semestre aos 34) este gatilho encerra a maioria das carreiras aos 34-35; recalibrar junto com ageCurves.json na T40",
+  "idadeMin": 30,
+  "gravesParaForcar": 3,
+  "fracaoDoAuge": 0.5
+ },
+ "overallInicial": {
+  "_obs": "só vale depois do auge (evita encerrar a carreira de quem ainda não evoluiu)",
+  "idadeMin": 26
+ },
+ "despedida": {
+  "idadeMin": 33,
+  "chance": 0.35
+ }
+}

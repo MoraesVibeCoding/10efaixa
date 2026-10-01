@@ -23,8 +23,8 @@ it.skipIf(!process.env.SIM_CARREIRA)(`gera o relatório de ${N} carreiras integr
   const groups: [string, typeof rs][] = [['todas', rs], ...['baseGrande', 'peneira', 'varzea'].map((o) => [o, rs.filter((r) => r.origin === o)] as [string, typeof rs])];
   const comps = ['serieA', 'serieB', 'estadual', 'copaDoBrasil', 'libertadores', 'sulAmericana', 'ligaNacional', 'copaNacional', 'champions', 'europaLeague'];
   const lines = [
-    '# Relatório da carreira integrada — T24b', '',
-    `${N} carreiras completas (16→35, mercado da T28; aposentadoria provisória até a T34). Tempo médio: **${ms.toFixed(1)} ms/carreira** (meta < 50 ms).`, '',
+    '# Relatório da carreira integrada — Marco 3', '',
+    `${N} carreiras completas (dos 16 anos à aposentadoria, Marco 3 completo). Tempo médio: **${ms.toFixed(1)} ms/carreira** (meta < 50 ms).`, '',
     '## Auge por faixa (meta 9.3: 5% · 10% · 60% · 25% · 0%)',
     row(['Grupo', 'n', '95+', '90–94', '85–89', '80–84', '<80']), row(['---', '--:', '--:', '--:', '--:', '--:', '--:']),
     ...groups.map(([g, x]) => row([g, x.length, ...tiers(x)])), '',
@@ -37,6 +37,13 @@ it.skipIf(!process.env.SIM_CARREIRA)(`gera o relatório de ${N} carreiras integr
       pct(x.map((r) => r.seasons.some((s) => OFF.includes(s.division ?? '')))),
       pct(x.map((r) => r.wearsTen)), pct(x.map((r) => r.captain)),
       (x.map((r) => r.wealthBRL).sort((a, b) => a - b)[Math.floor(x.length / 2)]! / 1e6).toFixed(1)])), '',
+    '## Aposentadoria e disciplina',
+    row(['Grupo', 'Idade final (média)', 'Decisão', 'Físico', 'Overall inicial', '40 anos', 'Despedida no formador', 'Despedida no coração', 'Amarelos', 'Vermelhos', 'Lesões graves', 'Mudou de posição', 'Casa da família']), row(['---', ...Array(12).fill('--:')]),
+    ...groups.map(([g, x]) => row([g, mean(x.map((r) => r.endAge)).toFixed(1),
+      ...['decisao', 'fisico', 'overallInicial', 'idadeLimite'].map((m) => pct(x.map((r) => r.retirement === m))),
+      pct(x.map((r) => r.farewell === 'formador')), pct(x.map((r) => r.farewell === 'coracao')),
+      mean(x.map((r) => r.cards.yellows)).toFixed(0), mean(x.map((r) => r.cards.reds)).toFixed(1),
+      mean(x.map((r) => r.injuries.grave)).toFixed(1), pct(x.map((r) => r.positionChanges > 0)), pct(x.map((r) => r.houseBought))])), '',
     '## Títulos por carreira (média)',
     row(['Grupo', ...comps, 'total']), row(['---', ...comps.map(() => '--:'), '--:']),
     ...groups.map(([g, x]) => row([g, ...comps.map((c) => mean(x.map((r) => r.titles.filter((t) => t.competition === c).length)).toFixed(2)), mean(x.map((r) => r.titles.length)).toFixed(1)])), '',

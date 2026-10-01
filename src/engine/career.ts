@@ -19,6 +19,7 @@ import { overall, type Position } from './overall';
 import { coachProposal } from './positionChange';
 import { createPlayer, type CreationInput, type Player } from './player';
 import { createPrng, type Prng } from './prng';
+import { farewellOffer, retirementCheck, type RetireReason } from './retirement';
 import { simulateSeason, type ClubInfo, type Div, type Divisions, type Row } from './season';
 import { assignNumber, canGetArmband, canGetTen, rosterNumbers } from './shirt';
 import { baseOffers, copinha, promotion, runPeneira, runVarzea } from './start';
@@ -37,6 +38,7 @@ export interface CareerResult {
   wealthBRL: number; agentProfile: string; contracts: number;
   injuries: { leve: number; media: number; grave: number };
   finalPosition: Position; positionChanges: number;
+  retirement: RetireReason; farewell: 'formador' | 'coracao' | null;
   cards: { yellows: number; reds: number }; finalTemperament: string; houseBought: boolean; discipline: number;
   seasons: { year: number; clubId: string; division: string | null; minutes: number; overall: number }[];
 }
@@ -111,6 +113,11 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let suspended = 0; // fração de minutos perdida por suspensão no próximo semestre
   let discipline = 0.6;
   let houseBought = false;
+  const physical = (e: EvoState) => (e.attributes.velocidade + e.attributes.fisico) / 2;
+  let peakPhysical = physical(evo);
+  let retirement: RetireReason = 'idadeLimite';
+  let farewell: CareerResult['farewell'] = null;
+  let farewellAsked = false;
 
   let clubId: string | null = null;
   let inYouth = false;
@@ -150,7 +157,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     varzeaClub = v.clubId;
   }
 
-  for (let year = startYear, k = 0; evo.age < cfg.idadeFinalProvisoria; year++, k++) {
+  for (let year = startYear, k = 0; ; year++, k++) {
     const yr = createPrng(Math.imul(seed + 1, 0x9e3779b1) ^ Math.imul(k + 1, 0x85ebca6b));
     const ySeed = (seed * 1009 + k) >>> 0;
 
@@ -294,6 +301,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       }
       const o = ov(evo);
       if (o > peakOverall) { peakOverall = o; peakAge = evo.age; }
+      peakPhysical = Math.max(peakPhysical, physical(evo));
       if (spells.length) spells.at(-1)!.toAge = evo.age;
     }
 
@@ -363,8 +371,25 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       const offers = [...generateOffers(me, 'brasil', agent, yr, divOf), ...generateOffers(me, 'europa', agent, yr, divOf)];
       const c = contract as Contract | null;
       const current = wantsOut || !c ? null : { annualSalaryBRL: toBRL(c.annualSalary, c.currency), role: roleFor(me.overall, squadLevel(effectiveRep(clubId)), evo.age) };
-      const pick = chooseOffer(me, offers, current);
-      if (pick) {
+      // Despedida (6.14/6.18): proposta única de encerrar a carreira no clube de coração ou no formador.
+      const fw = farewellOffer({ age: evo.age, clubId, formativeClub: spells[0]?.clubId ?? null, heartClub: input.heartClub, done: farewellAsked }, yr);
+      let goingHome = false;
+      if (fw) {
+        farewellAsked = true;
+        const event = fw.kind === 'coracao' ? 'realizar-sonho' : 'retorno-formador';
+        const out = applyOption({ moral: morale, idolatria: idol[fw.clubId] ?? 0, despedida: false }, event, autoChoice(event, temp));
+        morale = out.moral as number;
+        if (out.despedida) {
+          goingHome = true;
+          farewell = fw.kind;
+          join(fw.clubId, false, yr);
+          idol = { ...idol, [fw.clubId]: out.idolatria as number };
+          salaryDelays = 0;
+        }
+      }
+      // Em despedida, o jogador não sai mais: só renova.
+      const pick = goingHome || farewell ? null : chooseOffer(me, offers, current);
+      if (goingHome) { /* contrato novo já assinado */ } else if (pick) {
         const love = pick.heartClub && autoChoice('proposta-coracao', temp) === 'aceitar-por-amor';
         join(pick.clubId, false, yr, love ? { ...pick, annualSalary: Math.round(pick.annualSalary * 0.7) } : pick);
         salaryDelays = 0;
@@ -379,6 +404,13 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     }
     loanTarget = null;
 
+    // Aposentadoria (6.14): o primeiro gatilho que valer encerra a carreira.
+    const reason = retirementCheck({
+      age: evo.age, overall: ov(evo), startingOverall: player.startingOverall, physical: physical(evo), peakPhysical,
+      graveInjuries: injuries.grave, minutes: avgMinutes, temperament: temp,
+    }, yr);
+    if (reason) { retirement = reason; break; }
+
     // Mundo do ano seguinte.
     prevTable = season.phases.A[0]!.groups![0]!.map((r) => r.id);
     prevCdb = { champion: cdb.champion, vice: cdb.runnerUp };
@@ -391,6 +423,6 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
 
   return {
     player, spells, titles, peakOverall, peakAge, endAge: evo.age, wearsTen, captain, idolatry: idol,
-    wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, cards, finalTemperament: temp, houseBought, discipline, seasons,
+    wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, retirement, farewell, cards, finalTemperament: temp, houseBought, discipline, seasons,
   };
 }
