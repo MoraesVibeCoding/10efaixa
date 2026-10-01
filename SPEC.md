@@ -1,6 +1,6 @@
 # 10eFaixa — Especificação do Produto (SPEC.md)
 
-> Versão 2.5 (T13b: teto igual entre origens, perfis por origem, faixas novas) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
+> Versão 2.6 (clube de coração, seção 6.18) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
 > Este documento é a fonte da verdade para o Claude Code. Nenhuma mudança de escopo sem atualizar este arquivo primeiro.
 
 ---
@@ -62,12 +62,13 @@ O objetivo máximo simbólico dá nome ao jogo: **vestir a camisa 10 e usar a fa
 
 ### 6.1 Criação do jogador
 
-Ordem: nome → número da camisa → estado natal → posição → arquétipo → aparência → biotipo (altura e compleição) → temperamento → comemoração → origem → perna boa → (sorteio) nível inicial, potencial oculto, possível dupla nacionalidade → (na base) apelido dado pelo jogo.
+Ordem: nome → número da camisa → estado natal → clube de coração (opcional) → posição → arquétipo → aparência → biotipo (altura e compleição) → temperamento → comemoração → origem → perna boa → (sorteio) nível inicial, potencial oculto, possível dupla nacionalidade → (na base) apelido dado pelo jogo.
 
 Detalhes de aparência, biotipo, temperamento, apelido e cenas na seção 6.17.
 
 - **Nome:** passa por **filtro de palavras bloqueadas** (palavrões, ofensas e nomes de pessoas reais conhecidas). Nome recusado mostra mensagem clara pedindo outro.
 - **Estado natal:** qualquer um dos 27 estados.
+- **Clube de coração (opcional):** qualquer clube brasileiro das Séries A–D, ou "Nenhum". Clubes do estado natal aparecem primeiro. Efeitos na seção 6.18.
 - **Posições:** Goleiro, Zagueiro, Lateral, Volante, Meia, Atacante.
 - **Perna boa:** direita ou esquerda. A perna ruim pode evoluir pelo treino até o traço "Ambidestro".
 
@@ -265,6 +266,7 @@ visibilidade = overall + forma + minutos
 | Lesão grave | Operar, tratamento conservador, ou voltar antes da hora | Tempo fora × risco de recaída |
 | Ir para o rival | Aceitar ou recusar | Salário alto; vira vilão para a torcida antiga |
 | Retorno ao clube formador | Proposta do clube no fim da carreira **ou** pedido do jogador após os 30 (pode ser recusado) | Menos dinheiro, mais idolatria |
+| Clube de coração | Proposta do clube de coração, ida para um rival dele, jogo contra ele, encerrar a carreira nele (6.18) | Moral e idolatria × dinheiro; pode virar vilão da própria torcida |
 | Disciplina | Festas, redes sociais, cartões e suspensões | Moral, relação com técnico, convocação |
 | Mudança de posição | Ver 6.6 | Estende carreira, muda overall |
 
@@ -294,7 +296,7 @@ A carreira termina no primeiro destes gatilhos:
 
 **Prêmios (nomes descritivos):** Melhor do Mundo, Craque da Copa, Artilheiro, Seleção do Campeonato, Revelação, Craque do Brasileirão, Craque do Estadual.
 
-**Rótulos (1 principal no cartão, raridade comum → lendária):** Ídolo de um clube só, Rodado (6+ clubes), Rei do estadual, Carrasco de clássico, Diamante da várzea, Oriundo campeão, Goleiro artilheiro, Craque esquecido, Ganhou muito e gastou tudo, Aposentadoria tranquila, Herói da Copa, Vilão da Copa e o mais raro: **10eFaixa**.
+**Rótulos (1 principal no cartão, raridade comum → lendária):** Ídolo de um clube só, Rodado (6+ clubes), Rei do estadual, Carrasco de clássico, Torcedor que virou ídolo, Diamante da várzea, Oriundo campeão, Goleiro artilheiro, Craque esquecido, Ganhou muito e gastou tudo, Aposentadoria tranquila, Herói da Copa, Vilão da Copa e o mais raro: **10eFaixa**.
 
 **Tom:** manchete **séria** + comentário com **zoeira**, sempre mirando o próprio jogador, nunca clubes, torcidas ou pessoas reais.
 > Exemplo: **"Do terrão de Madureira à faixa de capitão no Maracanã"** — *Perna ruim? Nunca vimos. Folga? Também não.*
@@ -363,6 +365,21 @@ A carreira termina no primeiro destes gatilhos:
 - **Altura e compleição** por ajuste de proporção do boneco, sem desenhos extras.
 - **Skill do projeto no Claude Code** (`.claude/skills/10efaixa-arte/SKILL.md`) com três funções: gerar **arte provisória** em SVG no formato final de camadas; manter o **briefing de arte** (`docs/briefing-arte.md`) atualizado; **conferir cada entrega** do ilustrador (camadas, nomes, tamanho, cores recoloríveis) com script automático.
 - **Lançamento só com a arte final**; até lá o código avança com a arte provisória.
+
+### 6.18 Clube de coração
+
+Opcional, escolhido na criação entre os clubes brasileiros (Séries A–D). Quem escolhe "Nenhum" não tem estes efeitos. Todos os números em dados.
+
+| Momento | Efeito |
+|---|---|
+| Proposta do clube de coração | Aparece em destaque. Aceitar dá bônus de moral e idolatria inicial maior. Opção "jogar por amor": salário menor, mais idolatria |
+| Proposta de um rival do clube de coração | Dilema de "traição": aceitar gera evento com a torcida do coração e pode tornar o jogador vilão dela |
+| Jogo contra o clube de coração | Decisão (ex.: comemorar ou não o gol), com efeito na idolatria dos dois lados |
+| Clássicos defendendo o clube de coração | Pesam o dobro na idolatria; temperamento Esquentado amplifica |
+| Fim de carreira | Gatilho "realizar o sonho": proposta de encerrar a carreira no clube de coração (como o retorno ao clube formador) |
+| Cartão final | Rótulo "Torcedor que virou ídolo" se for ídolo no clube de coração |
+
+Zoeira só com o próprio jogador (ex.: "o fanático que foi parar no rival"), nunca com o clube ou a torcida.
 
 ---
 
@@ -519,6 +536,7 @@ Cada tarefa é atômica, com teste escrito antes do código e **um commit por ta
 | T14 | Calendário: anos reais, semestres, janelas, sedes | Ano inicial pelo relógio; Copas e Olimpíadas nos anos corretos; sedes reais onde definidas |
 | T15 | Schema de clubes + Séries A e B + rivais manuais | 40 clubes válidos; reputação, UF, cidade, cores; rivais definidos |
 | T16 | Séries C e D + rivais automáticos por cidade | Clubes válidos com fonte citada |
+| T16b | Clube de coração na criação | Opcional ("Nenhum"); só clubes brasileiros A–D; clubes do estado primeiro; guardado no jogador. Efeitos de 6.18 entram em T20, T22, T25/T28, T34 e T39 |
 | T17 | Liga com acesso e rebaixamento | Tabela coerente com a força dos clubes |
 | T18 | 10 estaduais completos + estadual simplificado | Formato por estado vindo de dados; campeão sempre definido |
 | T19 | Copas: Copa do Brasil, Copa do Nordeste, Libertadores, Sul-Americana | Chaveamento e vagas coerentes |
@@ -645,3 +663,5 @@ Decisões aprovadas durante a implementação. Complementam as seções acima.
 | 2026-09-30 | T13b | Diamante bruto mantido como bônus de teto para 3% da várzea | Aprovado pelo usuário |
 | 2026-09-30 | T13b | Calibração: evolução base 6/semestre, k = 6; faixas de teto 1 ponto acima da meta do auge, pesos 8/5/61/26; várzea +35% de crescimento em fundamentos e físico; diamante +6 de teto | 10 mil carreiras: auge 4,6% / 10,3% / 60,6% / 24,4%; auge médio igual entre origens (86,4–86,9) aos ~26 anos (docs/simulacao-T13.md) |
 | 2026-09-30 | T13b | Troca aceita: crescimento mais lento empurra o auge para depois dos 27, mas abre distância até o teto e derruba o 95+. Escolhido auge aos ~26 | Medido na varredura de calibração |
+| 2026-09-30 | T42 | Briefing aprovado. Extras: expressões faciais (4), cabelos com entradas e rugas para envelhecimento, cenários "banco de reservas" e "rua do bairro"; recolor por cores-chave exatas | Aprovado pelo usuário no ⛳ da T42 |
+| 2026-09-30 | T16b | Nova funcionalidade: clube de coração (6.18), opcional, só clubes brasileiros; campo na T16b (após T16, quando existem as Séries A–D) | Pedido do usuário; aprovado |
