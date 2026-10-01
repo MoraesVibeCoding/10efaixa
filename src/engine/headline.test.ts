@@ -1,6 +1,6 @@
 import { simulateCareer } from './career';
 import { headlineOf } from './headline';
-import { VERDICTS } from './legacy';
+import { LABELS, VERDICTS } from './legacy';
 import { createPrng } from './prng';
 import { checkName } from './nameFilter';
 import creation from '../data/creation.json';
@@ -32,10 +32,20 @@ describe('manchetes e comentários (T41, SPEC 6.15)', () => {
     }
   });
 
-  it('apelido e comemoração aparecem nos textos', () => {
-    const joined = Array.from({ length: 30 }, (_, s) => career(s, 'cambalhota')).map((r) => r.headline + r.comment);
-    expect(joined.some((t, i) => t.includes(career(i, 'cambalhota').nickname))).toBe(true);
-    expect(joined.some((t) => t.includes(labels.celebration.cambalhota.toLowerCase()))).toBe(true);
+  it('todo comentário cita a comemoração, e todo rótulo tem comentário próprio', () => {
+    const comments = [...Object.values(ptBR.comentario), ...Object.values(ptBR.comentarioRotulo)].flat();
+    for (const t of comments) expect(t).toContain('{comemoracao}');
+    for (const l of LABELS) expect((ptBR.comentarioRotulo as Record<string, string[]>)[l]?.length).toBeGreaterThan(0);
+  });
+
+  it('na carreira, o comentário traz a comemoração do jogador e o apelido aparece nos textos', () => {
+    let nick = false;
+    for (let s = 0; s < 40; s++) {
+      const r = career(s, 'cambalhota');
+      expect(r.comment).toContain(labels.celebration.cambalhota.toLowerCase());
+      nick ||= (r.headline + r.comment).includes(r.nickname);
+    }
+    expect(nick).toBe(true);
   });
 
   it('é determinística pela semente e não mexe no resto da carreira', () => {
@@ -46,7 +56,7 @@ describe('manchetes e comentários (T41, SPEC 6.15)', () => {
 
   it('toda comemoração tem texto e nenhum template cita placeholder desconhecido', () => {
     const known = new Set(['apelido', 'nome', 'comemoracao']);
-    const all = [...Object.values(ptBR.manchete), ...Object.values(ptBR.comentario)].flat();
+    const all = [...Object.values(ptBR.manchete), ...Object.values(ptBR.comentario), ...Object.values(ptBR.comentarioRotulo)].flat();
     for (const t of all) for (const m of t.matchAll(/\{(\w+)\}/g)) expect(known.has(m[1]!)).toBe(true);
     for (const c of creation.celebrations) expect((labels.celebration as Record<string, string>)[c]).toBeTruthy();
   });

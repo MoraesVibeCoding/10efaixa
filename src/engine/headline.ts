@@ -11,9 +11,10 @@ export function headlineOf(r: Pick<CareerResult, 'player' | 'nickname' | 'legacy
     apelido: r.nickname, nome: r.player.name.trim(),
     comemoracao: ((creation.celebration as Record<string, string>)[r.player.celebration] ?? '').toLowerCase(),
   };
-  const fill = (pool: Record<string, string[]>) => {
-    const list = pool[r.legacy.verdict]!;
-    return list[rng.int(0, list.length - 1)]!.replace(/\{(\w+)\}/g, (_, k: string) => vars[k] ?? '');
-  };
-  return { headline: fill(txt.manchete), comment: fill(txt.comentario) };
+  const fill = (list: string[]) =>
+    list[rng.int(0, list.length - 1)]!.replace(/\{(\w+)\}/g, (_, k: string) => vars[k] ?? '');
+  const main = r.legacy.labels[0]?.id;
+  const byLabel = main !== undefined && rng.int(0, 1) === 0;
+  const comments = byLabel ? (txt.comentarioRotulo as Record<string, string[]>)[main]! : (txt.comentario as Record<string, string[]>)[r.legacy.verdict]!;
+  return { headline: fill((txt.manchete as Record<string, string[]>)[r.legacy.verdict]!), comment: fill(comments) };
 }

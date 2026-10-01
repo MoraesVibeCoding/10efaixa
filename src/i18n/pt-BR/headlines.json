@@ -35,36 +35,88 @@
   },
   "comentario": {
     "lendaMundial": [
-      "{apelido} fez tanto gol que a comemoração “{comemoracao}” já tem verbete na enciclopédia.",
-      "Dizem que {nome} nunca errou. Só a gente dentro de campo achava o contrário."
+      "{apelido} fez tanto gol que a comemoração “{comemoracao}” ganhou verbete na enciclopédia.",
+      "Dizem que {nome} nunca errou. Errou, sim: ensaiou a comemoração “{comemoracao}” no espelho e saiu tão bem que virou obrigação.",
+      "Do terrão ao mundo inteiro, {apelido} levou na mala a bola, o sonho e a comemoração “{comemoracao}”."
     ],
     "lendaDoFutebolBrasileiro": [
       "Fez a comemoração “{comemoracao}” tantas vezes que a Seleção já esperava o gol atrasar.",
-      "{apelido} não aposentou: só trocou a bola pelo sofá."
+      "{apelido} não se aposentou: só trocou a bola pelo sofá. A comemoração “{comemoracao}” continua valendo na sala.",
+      "Entre uma convocação e outra, {nome} ensaiava a comemoração “{comemoracao}”. Treinar adiantou."
     ],
     "craqueDaSelecao": [
       "A comemoração “{comemoracao}” saiu tão bem que {apelido} quase ganhou o prêmio sozinho.",
-      "Perna ruim? Nunca vimos. Folga? Também não."
+      "Perna ruim? Nunca vimos. Folga? Também não. A comemoração “{comemoracao}”? Essa nunca faltou.",
+      "{nome} vestia a amarelinha e comemorava com a comemoração “{comemoracao}”: dois jeitos de dizer que estava em casa."
     ],
     "idoloDeClube": [
-      "{apelido} comemorou com {comemoracao} até o dia em que o joelho pediu música.",
-      "Dizem que {nome} ainda recebe cartinha da torcida. E responde com {comemoracao}."
+      "{apelido} fez a comemoração “{comemoracao}” até o dia em que o joelho pediu música.",
+      "Dizem que {nome} ainda repete a comemoração “{comemoracao}” em casa, só para o gol do sofá valer.",
+      "Virou ídolo gol a gol, sempre fechando com a comemoração “{comemoracao}”, que ensaiou no espelho desde criança."
     ],
     "titularDeSerieA": [
-      "{apelido} ficou tanto tempo na elite que já conhecia o gramado pelo nome.",
-      "A comemoração “{comemoracao}” ficou, o fôlego foi embora."
+      "{apelido} ficou tanto tempo na elite que o gramado já o chamava pelo nome. A comemoração “{comemoracao}” era a assinatura.",
+      "A comemoração “{comemoracao}” ficou, o fôlego foi embora.",
+      "Anos de elite e {nome} ainda se emocionava com a comemoração “{comemoracao}”. Repetição também é talento."
     ],
     "promessaQueNaoVingou": [
       "{apelido} treinou a comemoração “{comemoracao}” mais do que o chute.",
-      "A promessa estava lá. {nome} também. O encontro é que não rolou."
+      "A promessa estava lá, {nome} também. A comemoração “{comemoracao}” estava pronta; faltou só o gol.",
+      "O gol demorou tanto que {apelido} teve tempo de inventar três versões da comemoração “{comemoracao}”."
     ],
     "rodadoDoInterior": [
-      "{apelido} conhece mais rodoviárias do que escanteios.",
-      "Mudou de time tantas vezes que a comemoração “{comemoracao}” já vinha com mala."
+      "{apelido} conhece mais rodoviárias do que escanteios, e levou a comemoração “{comemoracao}” em cada mala.",
+      "Mudou de time tantas vezes que a comemoração “{comemoracao}” já vinha com mala.",
+      "{nome} nunca teve camisa guardada, mas a comemoração “{comemoracao}” coube em todas as malas."
     ],
     "jogadorDeSerieB": [
       "{apelido} errou pouco, acertou menos e fez a comemoração “{comemoracao}” com convicção.",
-      "{nome} sempre disse que ia chegar lá. Chegou na lanchonete do estádio."
+      "{nome} sempre disse que ia chegar lá. Chegou na lanchonete do estádio, fazendo a comemoração “{comemoracao}”.",
+      "Na Série B, cada gol de {apelido} merecia a comemoração “{comemoracao}” inteira. E ela vinha completa."
+    ]
+  },
+  "comentarioRotulo": {
+    "dezEFaixa": [
+      "{apelido} usou a 10 e a faixa de capitão, e ainda sobrava braço para a comemoração “{comemoracao}”."
+    ],
+    "heroiDaCopa": [
+      "Na Copa, o país parou. {nome} fez a comemoração “{comemoracao}” e o país fez junto."
+    ],
+    "oriundoCampeao": [
+      "Campeão por outra seleção, {apelido} fez a comemoração “{comemoracao}” em dois idiomas."
+    ],
+    "goleiroArtilheiro": [
+      "Goleiro que marca gol precisa de comemoração: {apelido} escolheu a comemoração “{comemoracao}” e correu o campo todo para usá-la."
+    ],
+    "torcedorQueVirouIdolo": [
+      "Foi da arquibancada ao gramado e fez a comemoração “{comemoracao}” como quem ensaia desde criança. Ensaiou mesmo."
+    ],
+    "diamanteDaVarzea": [
+      "Da várzea direto para a glória: {apelido} trazia na bagagem a bola, o sonho e a comemoração “{comemoracao}”."
+    ],
+    "vilaoDaCopa": [
+      "Na Copa, {nome} errou na hora errada. A comemoração “{comemoracao}” ficou guardada para a próxima."
+    ],
+    "idoloDeUmClubeSo": [
+      "Um clube só, uma camisa só e a comemoração “{comemoracao}” de sempre, sem mudar uma vírgula."
+    ],
+    "craqueEsquecido": [
+      "{apelido} jogava como poucos e comemorava com a comemoração “{comemoracao}”. Só a convocação nunca atendeu."
+    ],
+    "ganhouMuitoEGastouTudo": [
+      "{nome} ganhou muito, gastou tudo, e só a comemoração “{comemoracao}” saiu de graça."
+    ],
+    "carrascoDeClassico": [
+      "Em clássico, {apelido} marcava e fazia a comemoração “{comemoracao}” com a calma de quem estava só passando."
+    ],
+    "reiDoEstadual": [
+      "Rei do estadual: título atrás de título, sempre com a comemoração “{comemoracao}”, por superstição."
+    ],
+    "aposentadoriaTranquila": [
+      "{apelido} se aposentou com a casa paga e a comemoração “{comemoracao}” ainda no repertório, para o quintal."
+    ],
+    "rodado": [
+      "{apelido} rodou tanto que a comemoração “{comemoracao}” já tem sotaque de vários cantos do país."
     ]
   }
 }
