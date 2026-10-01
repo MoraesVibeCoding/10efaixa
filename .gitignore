@@ -9,3 +9,6 @@ coverage
 !.claude/skills/
 .codex/
 files.zip
+
+# chaves de API da skill de imagens: nunca no repositório
+.baoyu-skills/.env
