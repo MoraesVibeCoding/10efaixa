@@ -1,0 +1,79 @@
+{
+ "_nota": "Início por origem (SPEC 6.1, 6.9; T20). Calibrar com npm run sim.",
+ "base": {
+  "ofertas": 3,
+  "divisoes": [
+   "A",
+   "B"
+  ]
+ },
+ "peneira": {
+  "divisoesAprovado": [
+   "B",
+   "C"
+  ],
+  "divisoesMenor": [
+   "D",
+   null
+  ],
+  "aprovado": {
+   "base": 0.2,
+   "porPonto": 0.04,
+   "ref": 38,
+   "min": 0.1,
+   "max": 0.8
+  },
+  "novaChanceFracao": 0.5,
+  "bonusSegundaTentativa": 0.1
+ },
+ "varzea": {
+  "semestresMax": 3,
+  "saidaPorSemestre": {
+   "base": 0.35,
+   "porPonto": 0.03,
+   "ref": 36
+  },
+  "divisoes": [
+   "C",
+   "D",
+   null
+  ]
+ },
+ "copinha": {
+  "fases": [
+   "primeiraFase",
+   "segundaFase",
+   "oitavas",
+   "quartas",
+   "semifinal",
+   "vice",
+   "campeao"
+  ],
+  "pesoClube": 0.6,
+  "pesoJogador": 0.4,
+  "ruido": 15,
+  "faixa": [
+   35,
+   95
+  ],
+  "destaque": {
+   "ref": 48,
+   "ruido": 8
+  }
+ },
+ "promocao": {
+  "idadeMin": 17,
+  "idadeMax": 20,
+  "overallBase": 35,
+  "porReputacao": 0.15,
+  "bonusDestaque": 3,
+  "anosContrato": {
+   "normal": 2,
+   "destaque": 3
+  }
+ },
+ "primeiroContrato": {
+  "anos": 2,
+  "papel": "promessa"
+ }
+}

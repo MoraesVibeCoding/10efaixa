@@ -1,0 +1,28 @@
+{
+ "varzeaTeams": [
+  "Unidos da Vila",
+  "Estrela da Manhã",
+  "Juventude da Praça",
+  "Ases do Campinho",
+  "Esperança FC",
+  "Atlético da Ladeira",
+  "Flor do Campo",
+  "Leões do Terrão",
+  "Raio de Sol",
+  "Amigos da Rua"
+ ],
+ "peneira": {
+  "aprovado": "Aprovado de primeira!",
+  "novaChance": "Não foi dessa vez, mas o olheiro pediu para voltar.",
+  "clubeMenor": "Sem vaga aqui, mas um clube menor abriu as portas."
+ },
+ "copinha": {
+  "primeiraFase": "Caiu na primeira fase",
+  "segundaFase": "Parou na segunda fase",
+  "oitavas": "Oitavas de final",
+  "quartas": "Quartas de final",
+  "semifinal": "Semifinal",
+  "vice": "Vice-campeão",
+  "campeao": "Campeão da Copinha"
+ }
+}

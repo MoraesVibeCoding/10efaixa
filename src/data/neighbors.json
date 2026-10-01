@@ -1,0 +1,162 @@
+{
+ "_nota": "Estados vizinhos (fronteira terrestre), para ofertas quando o estado tem poucos clubes (SPEC 6.1).",
+ "fonte": "IBGE — divisão político-administrativa do Brasil (https://www.ibge.gov.br/geociencias/organizacao-do-territorio.html)",
+ "vizinhos": {
+  "AC": [
+   "AM",
+   "RO"
+  ],
+  "AL": [
+   "PE",
+   "SE",
+   "BA"
+  ],
+  "AP": [
+   "PA"
+  ],
+  "AM": [
+   "AC",
+   "RO",
+   "MT",
+   "PA",
+   "RR"
+  ],
+  "BA": [
+   "SE",
+   "AL",
+   "PE",
+   "PI",
+   "TO",
+   "GO",
+   "MG",
+   "ES"
+  ],
+  "CE": [
+   "PI",
+   "PE",
+   "PB",
+   "RN"
+  ],
+  "DF": [
+   "GO",
+   "MG"
+  ],
+  "ES": [
+   "BA",
+   "MG",
+   "RJ"
+  ],
+  "GO": [
+   "TO",
+   "BA",
+   "MG",
+   "MS",
+   "MT",
+   "DF"
+  ],
+  "MA": [
+   "PI",
+   "TO",
+   "PA"
+  ],
+  "MT": [
+   "RO",
+   "AM",
+   "PA",
+   "TO",
+   "GO",
+   "MS"
+  ],
+  "MS": [
+   "MT",
+   "GO",
+   "MG",
+   "SP",
+   "PR"
+  ],
+  "MG": [
+   "BA",
+   "GO",
+   "DF",
+   "MS",
+   "SP",
+   "RJ",
+   "ES"
+  ],
+  "PA": [
+   "AP",
+   "RR",
+   "AM",
+   "MT",
+   "TO",
+   "MA"
+  ],
+  "PB": [
+   "RN",
+   "CE",
+   "PE"
+  ],
+  "PR": [
+   "SP",
+   "MS",
+   "SC"
+  ],
+  "PE": [
+   "PB",
+   "CE",
+   "PI",
+   "BA",
+   "AL"
+  ],
+  "PI": [
+   "MA",
+   "TO",
+   "BA",
+   "PE",
+   "CE"
+  ],
+  "RJ": [
+   "ES",
+   "MG",
+   "SP"
+  ],
+  "RN": [
+   "CE",
+   "PB"
+  ],
+  "RS": [
+   "SC"
+  ],
+  "RO": [
+   "AC",
+   "AM",
+   "MT"
+  ],
+  "RR": [
+   "AM",
+   "PA"
+  ],
+  "SC": [
+   "PR",
+   "RS"
+  ],
+  "SP": [
+   "MG",
+   "RJ",
+   "PR",
+   "MS"
+  ],
+  "SE": [
+   "AL",
+   "BA"
+  ],
+  "TO": [
+   "MA",
+   "PI",
+   "BA",
+   "GO",
+   "MT",
+   "PA"
+  ]
+ }
+}
