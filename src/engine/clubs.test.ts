@@ -1,4 +1,4 @@
-import { CLUBS, areRivals, clubsIn, validateClubs } from './clubs';
+import { CLUBS, areRivals, clubsIn, rivalsOf, validateClubs } from './clubs';
 import raw from '../data/clubs.json';
 import creation from '../data/creation.json';
 import leagues from '../data/leagues.json';
@@ -10,10 +10,18 @@ describe('clubes (T15)', () => {
     expect(validateClubs(raw.clubs, creation.states)).toEqual([]);
   });
 
-  it('40 clubes: 20 na Série A e 20 na Série B, como no formato da liga', () => {
-    expect(CLUBS).toHaveLength(40);
+  it('Séries A e B com 20 clubes cada, como no formato da liga', () => {
     expect(clubsIn('A')).toHaveLength(leagues.leagues.A.clubes);
     expect(clubsIn('B')).toHaveLength(leagues.leagues.B.clubes);
+  });
+
+  it('Série C com 20 clubes (2026) e Série D com 96, com fonte oficial', () => {
+    expect(clubsIn('C')).toHaveLength(leagues.leagues.C.clubesPorAno['2026']);
+    expect(clubsIn('D')).toHaveLength(leagues.leagues.D.clubes);
+    expect(CLUBS).toHaveLength(156);
+    expect(raw.fonte.serieC).toMatch(/cbf\.com\.br/);
+    expect(raw.fonte.serieD).toMatch(/cbf\.com\.br/);
+    expect(leagues.fonte.serieC).toMatch(/cbf\.com\.br/);
   });
 
   it('dados oficiais com fonte e data', () => {
@@ -47,6 +55,40 @@ describe('clubes (T15)', () => {
   ])('clássico manual definido: %s × %s (nos dois sentidos)', (a, b) => {
     expect(areRivals(a, b)).toBe(true);
     expect(areRivals(b, a)).toBe(true);
+  });
+
+  it.each([
+    ['paysandu', 'remo'], ['guarani', 'ponte-preta'], ['santa-cruz', 'sport'], ['santa-cruz', 'nautico'],
+    ['figueirense', 'avai'], ['caxias', 'juventude'], ['nacional-am', 'manaus-fc'], ['amazonas', 'manauara'],
+    ['abc', 'america-rn'], ['sampaio-correa', 'moto-club'], ['csa', 'crb'],
+  ])('rival automático por cidade (Séries C/D): %s × %s', (a, b) => {
+    expect(areRivals(a, b)).toBe(true);
+    expect(areRivals(b, a)).toBe(true);
+  });
+
+  it('cidade incerta (null) não gera rival automático; só C/D ganham rival por cidade', () => {
+    expect(rivalsOf('decisao')).toEqual([]);
+    expect(areRivals('palmeiras', 'portuguesa')).toBe(true); // Portuguesa (D) em São Paulo
+    expect(areRivals('gremio', 'internacional')).toBe(true); // manual mantido
+    expect(areRivals('atletico-mg', 'gremio')).toBe(false);
+  });
+
+  it('schema: cidade null só é aceita nas Séries C e D', () => {
+    const c = clone();
+    c[0]!.cidade = null;
+    expect(validateClubs(c, creation.states).length).toBeGreaterThan(0);
+    const d = clone();
+    const idx = d.findIndex((x) => x.divisao === 'D');
+    d[idx]!.cidade = null;
+    expect(validateClubs(d, creation.states)).toEqual([]);
+  });
+
+  it('rivais manuais só nas Séries A e B (C/D são calculados)', () => {
+    const c = clone();
+    const idx = c.findIndex((x) => x.id === 'paysandu');
+    c[idx]!.rivais = ['remo'];
+    (c.find((x) => x.id === 'remo')!.rivais as string[]).push('paysandu');
+    expect(validateClubs(c, creation.states).length).toBeGreaterThan(0);
   });
 
   it('times sem rivalidade não são rivais', () => {

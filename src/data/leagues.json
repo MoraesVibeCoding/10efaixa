@@ -1,5 +1,5 @@
 {
- "_nota": "Formato das ligas nacionais (SPEC 6.9). Séries C e D entram na T16.",
+ "_nota": "Formato das ligas nacionais (SPEC 6.9). Série C muda de tamanho até 2028 conforme o novo calendário da CBF.",
  "leagues": {
   "A": {
    "nome": "Série A",
@@ -34,12 +34,47 @@
    },
    "rebaixados": 4,
    "acima": "A",
+   "abaixo": "C"
+  },
+  "C": {
+   "nome": "Série C",
+   "clubesPorAno": {
+    "2026": 20,
+    "2027": 24,
+    "2028": 28
+   },
+   "rebaixadosPorAno": {
+    "2026": 2,
+    "2027": 2,
+    "2028": 6
+   },
+   "formato": {
+    "2026": "turno único; 8 melhores em 2 quadrangulares (ida e volta); 2 primeiros de cada sobem; líderes decidem o título",
+    "2027": "mesmo formato com 24 clubes",
+    "2028": "2 grupos de 14, ida e volta (acesso a detalhar quando a CBF publicar)"
+   },
+   "acesso": 4,
+   "acima": "B",
+   "abaixo": "D"
+  },
+  "D": {
+   "nome": "Série D",
+   "clubes": 96,
+   "grupos": 16,
+   "clubesPorGrupo": 6,
+   "classificamPorGrupo": 4,
+   "acesso": 6,
+   "formato": "16 grupos de 6 (ida e volta); 4 por grupo no mata-mata (ida e volta); 4 semifinalistas sobem + 2 dos playoffs entre eliminados nas quartas",
+   "aberta": true,
+   "acima": "C",
    "abaixo": null
   }
  },
  "fonte": {
   "serieB": "https://www.cbf.com.br/futebol-brasileiro/noticias/noticias/a/brasileirao-serie-b-comeca-com-novo-formato (1º e 2º sobem; 3º×6º e 4º×5º em ida e volta por 2 vagas; 4 últimos caem)",
-  "serieA": "https://www.cbf.com.br/futebol-brasileiro/tabelas/campeonato-brasileiro/serie-a/2026 (20 clubes, 38 rodadas; 4 rebaixados = 4 vagas de acesso da Série B)"
+  "serieA": "https://www.cbf.com.br/futebol-brasileiro/tabelas/campeonato-brasileiro/serie-a/2026 (20 clubes, 38 rodadas; 4 rebaixados = 4 vagas de acesso da Série B)",
+  "serieC": "https://www.cbf.com.br/a-cbf/noticias/informes-cbf/a/cbf-anuncia-novo-calendario-do-futebol-profissional-masculino (C: 20/24/28 clubes, descenso 2/2/6) e https://www.cbf.com.br/futebol-brasileiro/noticias/campeonato-brasileiro-serie-c/a/serie-c-define-os-oito-classificados-a-segunda-fase-santa-cruz-avanca-no-limite (quadrangulares, 4 acessos)",
+  "serieD": "https://www.cbf.com.br/futebol-brasileiro/noticias/campeonato-brasileiro/a/cbf-divulga-grupos-da-serie-d-de-2026 (96 clubes, 16 grupos, 6 acessos)"
  },
  "conferidoEm": "2026-09-30"
 }

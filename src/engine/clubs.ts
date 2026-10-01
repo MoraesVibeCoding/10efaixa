@@ -3,13 +3,17 @@ import creation from '../data/creation.json';
 import leagues from '../data/leagues.json';
 
 // Seções 6.9 e 11: nomes reais, escudo estilizado (sigla + cores). Schema = tipo + validateClubs.
+// Rivais: manuais nas Séries A/B; por cidade quando um dos clubes está na C/D (calculado, não guardado).
 export interface Club {
-  id: string; nome: string; sigla: string; uf: string; cidade: string;
+  id: string; nome: string; sigla: string; uf: string;
+  /** null = cidade incerta (só C/D); sem rival automático. */
+  cidade: string | null;
   cores: [string, string]; reputacao: number; divisao: string; rivais: string[];
 }
 
 const HEX = /^#[0-9A-F]{6}$/i;
 const isStr = (x: unknown): x is string => typeof x === 'string' && x.length > 0;
+const LOWER = ['C', 'D'];
 
 /** Lista de erros; vazia = válido. Rivalidade precisa existir e ser simétrica. */
 export function validateClubs(data: unknown, states: string[]): string[] {
@@ -25,12 +29,14 @@ export function validateClubs(data: unknown, states: string[]): string[] {
     else ids.add(c.id);
     if (!isStr(c.sigla) || !/^[A-Z]{3}$/.test(c.sigla) || siglas.has(c.sigla)) errors.push(`${at}: sigla (3 letras) ausente ou repetida`);
     else siglas.add(c.sigla);
-    if (!isStr(c.nome) || !isStr(c.cidade)) errors.push(`${at}: nome/cidade ausente`);
+    if (!isStr(c.nome)) errors.push(`${at}: nome ausente`);
+    if (!isStr(c.cidade) && !(c.cidade === null && LOWER.includes(c.divisao as string))) errors.push(`${at}: cidade ausente (null só nas Séries C/D)`);
     if (!states.includes(c.uf as string)) errors.push(`${at}: UF inválida`);
     if (!Array.isArray(c.cores) || c.cores.length !== 2 || !c.cores.every((x) => HEX.test(String(x)))) errors.push(`${at}: cores precisam ser 2 hex`);
     if (!Number.isInteger(c.reputacao) || (c.reputacao as number) < 1 || (c.reputacao as number) > 100) errors.push(`${at}: reputação fora de 1–100`);
     if (!divisions.includes(c.divisao as string)) errors.push(`${at}: divisão desconhecida`);
     if (!Array.isArray(c.rivais) || !c.rivais.every(isStr)) errors.push(`${at}: rivais inválido`);
+    else if (LOWER.includes(c.divisao as string) && c.rivais.length) errors.push(`${at}: rivais manuais só nas Séries A/B (C/D são por cidade)`);
   });
   const byId = new Map(items.filter((c) => isStr(c.id)).map((c) => [c.id as string, c]));
   for (const c of items) {
@@ -48,4 +54,15 @@ if (errors.length) throw new Error(`clubs.json inválido:\n${errors.join('\n')}`
 
 export const CLUBS = raw.clubs as Club[];
 export const clubsIn = (div: string) => CLUBS.filter((c) => c.divisao === div);
-export const areRivals = (a: string, b: string) => CLUBS.find((c) => c.id === a)?.rivais.includes(b) ?? false;
+const byId = new Map(CLUBS.map((c) => [c.id, c]));
+
+/** Manual (A/B) ou mesma cidade e UF com pelo menos um dos dois na Série C/D. */
+export function areRivals(a: string, b: string): boolean {
+  const x = byId.get(a);
+  const y = byId.get(b);
+  if (!x || !y || a === b) return false;
+  if (x.rivais.includes(b)) return true;
+  return !!x.cidade && x.cidade === y.cidade && x.uf === y.uf && (LOWER.includes(x.divisao) || LOWER.includes(y.divisao));
+}
+
+export const rivalsOf = (id: string) => CLUBS.filter((c) => areRivals(id, c.id)).map((c) => c.id);
