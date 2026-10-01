@@ -1,0 +1,266 @@
+{
+ "_nota": "Mercado (SPEC 6.12; T28). Faixas de valor por liga = valor total ÷ jogadores, consultadas manualmente nas páginas de resumo do Transfermarkt (sem listas de jogadores, sem raspagem).",
+ "fonte": [
+  "https://www.transfermarkt.com.br/wettbewerbe/europa",
+  "https://www.transfermarkt.com.br/wettbewerbe/amerika",
+  "https://www.transfermarkt.com.br/wettbewerbe/asien",
+  "https://www.transfermarkt.com.br/wettbewerbe/national/wettbewerbe/26"
+ ],
+ "conferidoEm": "2026-10-01",
+ "ligas": {
+  "ENG": {
+   "valorTotalEUR": 13160000000,
+   "jogadores": 542,
+   "salarioPct": 0.13,
+   "pisoSalarioAnual": 300000,
+   "moeda": "EUR",
+   "janela": "europa"
+  },
+  "ESP": {
+   "valorTotalEUR": 5880000000,
+   "jogadores": 512,
+   "salarioPct": 0.12,
+   "pisoSalarioAnual": 150000,
+   "moeda": "EUR",
+   "janela": "europa"
+  },
+  "ITA": {
+   "valorTotalEUR": 6080000000,
+   "jogadores": 581,
+   "salarioPct": 0.12,
+   "pisoSalarioAnual": 150000,
+   "moeda": "EUR",
+   "janela": "europa"
+  },
+  "GER": {
+   "valorTotalEUR": 4930000000,
+   "jogadores": 508,
+   "salarioPct": 0.12,
+   "pisoSalarioAnual": 150000,
+   "moeda": "EUR",
+   "janela": "europa"
+  },
+  "FRA": {
+   "valorTotalEUR": 4220000000,
+   "jogadores": 474,
+   "salarioPct": 0.11,
+   "pisoSalarioAnual": 120000,
+   "moeda": "EUR",
+   "janela": "europa"
+  },
+  "POR": {
+   "valorTotalEUR": 1970000000,
+   "jogadores": 523,
+   "salarioPct": 0.1,
+   "pisoSalarioAnual": 40000,
+   "moeda": "EUR",
+   "janela": "europa"
+  },
+  "OUTROS": {
+   "valorTotalEUR": 3120000000,
+   "jogadores": 1028,
+   "salarioPct": 0.1,
+   "pisoSalarioAnual": 40000,
+   "moeda": "EUR",
+   "janela": "europa",
+   "_obs": "Süper Lig + Eredivisie como referência do pool UEFA"
+  },
+  "BRA-A": {
+   "valorTotalEUR": 2140000000,
+   "jogadores": 677,
+   "salarioPct": 0.12,
+   "pisoSalarioAnual": 240000,
+   "moeda": "BRL",
+   "janela": "brasil"
+  },
+  "BRA-B": {
+   "valorTotalEUR": 231500000,
+   "jogadores": 652,
+   "salarioPct": 0.2,
+   "pisoSalarioAnual": 96000,
+   "moeda": "BRL",
+   "janela": "brasil"
+  },
+  "BRA-C": {
+   "valorTotalEUR": 3100000,
+   "jogadores": 639,
+   "salarioPct": 0.3,
+   "pisoSalarioAnual": 48000,
+   "moeda": "BRL",
+   "janela": "brasil",
+   "coberturaIncompleta": true
+  },
+  "BRA-D": {
+   "valorTotalEUR": 3050000,
+   "jogadores": 2278,
+   "salarioPct": 0.4,
+   "pisoSalarioAnual": 24000,
+   "moeda": "BRL",
+   "janela": "brasil",
+   "coberturaIncompleta": true
+  },
+  "BRA-E": {
+   "valorTotalEUR": 0,
+   "jogadores": 0,
+   "salarioPct": 0.4,
+   "pisoSalarioAnual": 21000,
+   "moeda": "BRL",
+   "janela": "brasil",
+   "coberturaIncompleta": true,
+   "_obs": "clubes só estaduais: sem página própria"
+  },
+  "SAM": {
+   "valorTotalEUR": 1070000000,
+   "jogadores": 893,
+   "salarioPct": 0.12,
+   "pisoSalarioAnual": 30000,
+   "moeda": "EUR",
+   "janela": "brasil",
+   "_obs": "Argentina como referência dos demais sul-americanos"
+  },
+  "SAU": {
+   "valorTotalEUR": 1280000000,
+   "jogadores": 510,
+   "salarioPct": 0.15,
+   "pisoSalarioAnual": 200000,
+   "moeda": "EUR",
+   "janela": "europa"
+  },
+  "USA": {
+   "valorTotalEUR": 1540000000,
+   "jogadores": 876,
+   "salarioPct": 0.15,
+   "pisoSalarioAnual": 80000,
+   "moeda": "EUR",
+   "janela": "europa"
+  },
+  "JPN": {
+   "valorTotalEUR": 314550000,
+   "jogadores": 691,
+   "salarioPct": 0.15,
+   "pisoSalarioAnual": 60000,
+   "moeda": "EUR",
+   "janela": "europa"
+  },
+  "QAT": {
+   "valorTotalEUR": 339480000,
+   "jogadores": 355,
+   "salarioPct": 0.15,
+   "pisoSalarioAnual": 150000,
+   "moeda": "EUR",
+   "janela": "europa"
+  },
+  "CHN": {
+   "valorTotalEUR": 160330000,
+   "jogadores": 509,
+   "salarioPct": 0.15,
+   "pisoSalarioAnual": 80000,
+   "moeda": "EUR",
+   "janela": "europa"
+  }
+ },
+ "curva": {
+  "refOverall": 76,
+  "refValorEUR": 3160000,
+  "k": 0.26,
+  "tetoEUR": 180000000,
+  "pisoEUR": 10000,
+  "_obs": "valor = ref × e^(k × (overall − refOverall)) × fator de idade; ref = média da Série A no nível médio de elenco da Série A"
+ },
+ "idade": [
+  [
+   16,
+   0.7
+  ],
+  [
+   19,
+   0.9
+  ],
+  [
+   22,
+   1.0
+  ],
+  [
+   27,
+   1.0
+  ],
+  [
+   30,
+   0.6
+  ],
+  [
+   33,
+   0.3
+  ],
+  [
+   36,
+   0.12
+  ],
+  [
+   40,
+   0.05
+  ]
+ ],
+ "propostas": {
+  "janelaNivel": [
+   -6,
+   8
+  ],
+  "max": 4,
+  "porInfluencia": 3,
+  "papel": {
+   "titular": 3,
+   "rodizio": -3
+  },
+  "anos": [
+   2,
+   4
+  ],
+  "foraDoEixo": {
+   "idadeMin": 28,
+   "overallMin": 78,
+   "chance": 0.25
+  },
+  "negociar": {
+   "melhora": 0.15,
+   "sumirBase": 0.3
+  },
+  "forcarSaida": {
+   "custoMesesSalario": 6,
+   "idolatria": -30
+  }
+ },
+ "politica": {
+  "_obs": "pesos da escolha automática por temperamento: nível do clube, salário (log), papel e apego ao clube atual",
+  "padrao": {
+   "nivel": 1.0,
+   "salario": 4,
+   "papel": 6,
+   "ficar": 3
+  },
+  "frio": {
+   "nivel": 1.4,
+   "salario": 3,
+   "papel": 6,
+   "ficar": 1
+  },
+  "esquentado": {
+   "nivel": 1.0,
+   "salario": 6,
+   "papel": 5,
+   "ficar": 0
+  },
+  "lider": {
+   "nivel": 1.0,
+   "salario": 3,
+   "papel": 8,
+   "ficar": 6
+  },
+  "resenha": {
+   "nivel": 0.7,
+   "salario": 8,
+   "papel": 4,
+   "ficar": 2
+  }
+ }
+}
