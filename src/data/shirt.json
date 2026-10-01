@@ -1,0 +1,7 @@
+{
+ "_nota": "Número da camisa, a 10 e a faixa do clube (SPEC 6.7; T24).",
+ "reservados": [10],
+ "elenco": { "numerosOcupados": 24, "faixaComum": [1, 30], "faixaMax": 99 },
+ "dez": { "margemSobreElenco": 6, "idolatriaMin": 50 },
+ "faixa": { "idadeMin": 24, "temporadasNoClube": 3, "idolatriaMin": 40, "margemSobreElenco": 0, "lider": { "idadeMin": 22, "temporadasNoClube": 1, "idolatriaMin": 20 } }
+}
