@@ -1,7 +1,7 @@
 # Briefing de arte — 10eFaixa
 
 > Documento para o ilustrador. Mantido pela skill `.claude/skills/10efaixa-arte` (fonte da verdade do formato).
-> Versão 2 · 2026-09-30 · Base: SPEC v2.6, seções 6.17, 7 e 11. (v2: orçamento de peso fechado e validador automático disponível — T43.)
+> Versão 3 · 2026-09-30 · Base: SPEC v2.6, seções 6.17, 7 e 11. (v3: troféus inspirados nos reais, nunca cópias — 6.7.)
 
 ## 1. O jogo em 30 segundos
 
@@ -161,7 +161,13 @@ várzea (campinho de terra) · rua do bairro (olheiro) · peneira · treino · v
 
 ### 6.6 Detalhes
 
-taça (estadual, nacional, continental, Copa — formas genéricas) · bola · placar · faixa de capitão (amarelo braçadeira) · bandeirão de torcida · microfone · celular · maca · contrato e caneta · mala.
+troféus (ver 6.7) · bola · placar · faixa de capitão (amarelo braçadeira) · bandeirão de torcida · microfone · celular · maca · contrato e caneta · mala.
+
+### 6.7 Troféus — inspirados, nunca cópias
+
+Cada título tem um troféu próprio que **evoca** o troféu real da competição pelo "tipo" (taça com orelhas, globo dourado, salva de prata, bola dourada no prêmio individual…), para o jogador reconhecer a conquista. **Não reproduza** o desenho de nenhum troféu real: proporções, figuras, relevos, inscrições e logotipos são originais. Desenhos de troféus reais são protegidos (ex.: a taça da Copa do Mundo é marca e desenho registrados).
+
+Lista mínima: estadual · Série A · Série B · Série C · Série D · Copa do Brasil · Copa do Nordeste · copa continental principal · copa continental secundária · Copa do Mundo · Copa América · Olimpíadas (medalha) · ligas europeias · copa europeia · prêmios individuais (melhor jogador, artilheiro, melhor goleiro, revelação). Cores na paleta; ouro com o amarelo braçadeira `#FFC21A` e sombra marinho.
 
 ## 7. Entregas em lotes
 
