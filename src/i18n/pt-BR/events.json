@@ -82,5 +82,13 @@
    "pedir-aumento": "Renovar pedindo aumento",
    "nao-renovar": "Não renovar"
   }
+ },
+ "lesao-grave": {
+  "titulo": "Lesão grave",
+  "opcoes": {
+   "operar": "Operar e voltar com calma",
+   "conservador": "Tratamento conservador",
+   "voltar-antes": "Voltar antes da hora, no sacrifício"
+  }
  }
 }

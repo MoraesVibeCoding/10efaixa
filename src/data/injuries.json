@@ -1,0 +1,50 @@
+{
+ "_nota": "Lesões (SPEC 6.13, 6.17; T31). Probabilidades por semestre; calibrar com npm run sim:carreira.",
+ "base": {
+  "leve": 0.14,
+  "media": 0.05,
+  "grave": 0.018
+ },
+ "minutosFora": {
+  "leve": 0.15,
+  "media": 0.45,
+  "grave": 1.0
+ },
+ "compleicao": {
+  "franzino": 1.25,
+  "atletico": 1.0,
+  "forte": 0.95
+ },
+ "idade": {
+  "apartirDe": 30,
+  "porAno": 0.06
+ },
+ "exposicao": {
+  "min": 0.5,
+  "porMinuto": 0.5
+ },
+ "recaida": {
+  "reducaoPorSemestre": 0.5
+ },
+ "grave": {
+  "operar": {
+   "semestresFora": 2,
+   "recaida": 0.05,
+   "perdaFisica": 1
+  },
+  "conservador": {
+   "semestresFora": 1,
+   "recaida": 0.2,
+   "perdaFisica": 2
+  },
+  "voltar-antes": {
+   "semestresFora": 0.5,
+   "recaida": 0.45,
+   "perdaFisica": 3
+  }
+ },
+ "atributosAfetados": [
+  "velocidade",
+  "fisico"
+ ]
+}

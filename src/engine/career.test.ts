@@ -88,4 +88,12 @@ describe('integração da carreira (T24b)', () => {
     const s = abroad[0]!.seasons.find((x) => euro.has(x.clubId))!;
     expect(['ENG', 'ESP', 'ITA', 'GER', 'FRA', 'POR']).toContain(s.division);
   });
+
+  it('lesões acontecem ao longo da carreira e são contadas por gravidade', () => {
+    const rs = Array.from({ length: 20 }, (_, seed) => simulateCareer(input({ biotype: { heightCm: 180, build: 'franzino' } }), seed));
+    const total = (k: 'leve' | 'media' | 'grave') => rs.reduce((a, r) => a + r.injuries[k], 0);
+    expect(total('leve')).toBeGreaterThan(total('grave'));
+    expect(total('leve')).toBeGreaterThan(10);
+    expect(total('grave')).toBeGreaterThan(0);
+  });
 });

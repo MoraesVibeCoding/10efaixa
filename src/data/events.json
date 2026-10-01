@@ -30,7 +30,8 @@
   "aceitarProposta": "bool",
   "trocarEmpresario": "bool",
   "renovar": "bool",
-  "pedirAumento": "bool"
+  "pedirAumento": "bool",
+  "decisaoLesao": "texto"
  },
  "eventos": [
   {
@@ -583,6 +584,73 @@
     "temperamento": {
      "frio": "pedir-aumento",
      "esquentado": "pedir-aumento"
+    }
+   }
+  },
+  {
+   "id": "lesao-grave",
+   "cena": "hospital",
+   "peso": 10,
+   "condicoes": [
+    [
+     "lesaoGrave",
+     "==",
+     true
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "operar",
+     "efeitos": [
+      [
+       "decisaoLesao",
+       "set",
+       "operar"
+      ],
+      [
+       "moral",
+       "add",
+       -0.1
+      ]
+     ]
+    },
+    {
+     "id": "conservador",
+     "efeitos": [
+      [
+       "decisaoLesao",
+       "set",
+       "conservador"
+      ],
+      [
+       "moral",
+       "add",
+       -0.05
+      ]
+     ]
+    },
+    {
+     "id": "voltar-antes",
+     "efeitos": [
+      [
+       "decisaoLesao",
+       "set",
+       "voltar-antes"
+      ],
+      [
+       "idolatria",
+       "add",
+       5
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "conservador",
+    "temperamento": {
+     "frio": "operar",
+     "esquentado": "voltar-antes",
+     "lider": "voltar-antes"
     }
    }
   }

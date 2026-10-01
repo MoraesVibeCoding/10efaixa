@@ -10,6 +10,7 @@ import { initialEuroTables, simulateEuropeSeason, type EuroTables } from './euro
 import { autoChoice } from './events';
 import { evolveSemester, type EvoState } from './evolution';
 import { afterClassico, afterSemester, afterTransfer, type Idolatry } from './idolatry';
+import { decayRelapse, graveDecision, semesterInjury } from './injuries';
 import { chooseOffer, generateOffers, leagueOf, marketValue, salaryFor, type Offer } from './market';
 import { staffMeeting } from './meeting';
 import { minutesShare, squadLevel, updateForm, updateMorale, type Role } from './minutes';
@@ -32,6 +33,7 @@ export interface CareerResult {
   player: Player; spells: ClubSpell[]; titles: Title[]; peakOverall: number; peakAge: number; endAge: number;
   wearsTen: boolean; captain: boolean; idolatry: Record<string, number>;
   wealthBRL: number; agentProfile: string; contracts: number;
+  injuries: { leve: number; media: number; grave: number };
   seasons: { year: number; clubId: string; division: string | null; minutes: number; overall: number }[];
 }
 
@@ -95,6 +97,9 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let wearsTen = false;
   let captain = false;
   let seasonsAtClub = 0;
+  const injuries = { leve: 0, media: 0, grave: 0 };
+  let relapseRisk = 0;
+  let outLeft = 0; // semestres ainda fora por lesão grave
 
   let clubId: string | null = null;
   let inYouth = false;
@@ -192,7 +197,25 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       }
       morale = updateMorale(morale, minutes, role, teamResult);
       const clubNeed = ATTRIBUTES[yr.int(0, ATTRIBUTES.length - 1)]!;
-      const { focus } = staffMeeting({ proposal: { main: focusMain!, secondary: focusSecond! }, morale, coachRelation, nationalTeamStatus: 0, clubNeed });
+      const { focus, injuryRiskMultiplier } = staffMeeting({ proposal: { main: focusMain!, secondary: focusSecond! }, morale, coachRelation, nationalTeamStatus: 0, clubNeed });
+      // Lesões: tempo fora de uma grave anterior, depois o sorteio do semestre (só no profissional).
+      if (outLeft > 0) { minutes *= 1 - Math.min(1, outLeft); outLeft = Math.max(0, outLeft - 1); }
+      else if (!inYouth && varzeaLeft === 0) {
+        const inj = semesterInjury({ age: evo.age, build: evo.build, minutes, riskMultiplier: injuryRiskMultiplier, relapseRisk }, yr);
+        if (inj.severity !== 'nenhuma') {
+          injuries[inj.severity]++;
+          minutes *= 1 - inj.minutesLost;
+          if (inj.severity === 'grave') {
+            const d = graveDecision(autoChoice('lesao-grave', temp));
+            outLeft = Math.max(0, d.semestersOut - 1);
+            relapseRisk = d.relapseRisk;
+            const attrs = { ...evo.attributes };
+            for (const a of d.attributes as (keyof typeof attrs)[]) attrs[a] = Math.max(1, attrs[a] - d.physicalLoss);
+            evo = { ...evo, attributes: attrs };
+          }
+        }
+      }
+      relapseRisk = decayRelapse(relapseRisk);
       evo = evolveSemester(evo, { focus, staffQuality, minutes, morale }, yr);
       const tr = progressTraits(traits, focus);
       traits = { position: tr.position, traits: tr.traits, latentTrait: tr.latentTrait, progress: tr.progress };
@@ -320,6 +343,6 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
 
   return {
     player, spells, titles, peakOverall, peakAge, endAge: evo.age, wearsTen, captain, idolatry: idol,
-    wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, seasons,
+    wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, seasons,
   };
 }
