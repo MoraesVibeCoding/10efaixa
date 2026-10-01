@@ -112,6 +112,12 @@ describe('Libertadores e Sul-Americana (T19c)', () => {
     expect(q.sud).toEqual(table.slice(7, 13));
   });
 
+  it('atual campeão (excluído) não ocupa vaga brasileira; a vaga desce', () => {
+    const q = brazilQualifiers(table, table[0]!, table[1]!, [table[0]!]);
+    expect([...q.libGroups, ...q.libF2, ...q.sud]).not.toContain(table[0]);
+    expect(q.libGroups).toEqual(table.slice(1, 6));
+  });
+
   it('estrangeiros: 21 na fase de grupos (ARG 5 + CHI/COL 2 + 6 países × 2), 11 na Fase 2, 6 na Fase 1; Sul-Americana 6 + 32', () => {
     expect(fq.libGroups).toHaveLength(21); // + 5 brasileiros + 2 atuais campeões = 28 diretos
     expect(fq.libF2).toHaveLength(11);

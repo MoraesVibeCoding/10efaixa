@@ -1,0 +1,25 @@
+{
+ "_nota": "Integração da carreira (T24b). Itens 'provisorio' são substituídos em T28 (mercado) e T34 (aposentadoria).",
+ "idadeFinalProvisoria": 35,
+ "impactoJogador": {
+  "porPonto": 0.15,
+  "max": 5
+ },
+ "papel": {
+  "titular": 3,
+  "rodizio": -3,
+  "promessaIdadeMax": 19
+ },
+ "minutosBase": 0.6,
+ "minutosParaTitulo": 0.3,
+ "transferenciaProvisoria": {
+  "margem": 8,
+  "janela": 4
+ },
+ "emprestimoTemporadas": 1,
+ "campeoesContinentais2025": {
+  "libertadores": "flamengo",
+  "sulAmericana": "lanus",
+  "fonte": "https://gol.conmebol.com/libertadores/es/news/sorteo-de-la-fase-de-grupos-de-la-conmebol-libertadores-2026-fecha-horario-clasificados (campeão da Libertadores 2025 é cabeça do Grupo A; campeão da Sul-Americana 2025 abre o pote 2)"
+ }
+}

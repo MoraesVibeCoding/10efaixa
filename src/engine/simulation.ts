@@ -1,10 +1,10 @@
 import { ATTRIBUTES, type Attributes } from './attributes';
-import { archetypesFor } from './archetypes';
+import { ARCHETYPES, archetypesFor } from './archetypes';
 import { BUILDS, heightAt } from './biotype';
 import { evolveSemester, type EvoState } from './evolution';
 import { staffMeeting } from './meeting';
 import { POSITIONS, overall, type Position } from './overall';
-import { createPlayer, type Player } from './player';
+import { createPlayer, type CreationInput, type Player } from './player';
 import { createPrng, type Prng } from './prng';
 import biotype from '../data/biotype.json';
 import creation from '../data/creation.json';
@@ -20,19 +20,28 @@ export interface CareerResult {
 }
 
 const pick = <T>(rng: Prng, xs: readonly T[]) => xs[rng.int(0, xs.length - 1)]!;
+const ARCHETYPES_BY_ID = new Map(ARCHETYPES.map((a) => [a.id, a]));
 const between = (rng: Prng, [lo, hi]: number[]) => lo! + rng.next() * (hi! - lo!);
 
-export function simulateCareer(seed: number): CareerResult {
-  const rng = createPrng(seed);
+/** Entrada de criação aleatória e válida (mesma ordem de sorteios da T13, para não mudar a calibração). */
+export function randomInput(rng: Prng): CreationInput {
   const position = pick(rng, POSITIONS);
   const arch = pick(rng, archetypesFor(position));
   const range = biotype.heightRangesCm[position];
-  const r = createPlayer({
+  return {
     name: 'Jogador Simulado', shirtNumber: rng.int(1, 99), state: pick(rng, creation.states), position,
     archetypeId: arch.id, biotype: { heightCm: rng.int(range.min, range.max), build: pick(rng, BUILDS) },
     temperament: pick(rng, creation.temperaments), celebration: pick(rng, creation.celebrations),
     origin: pick(rng, Object.keys(creation.origins)), foot: pick(rng, creation.feet), heartClub: null,
-  }, rng);
+  };
+}
+
+export function simulateCareer(seed: number): CareerResult {
+  const rng = createPrng(seed);
+  const input = randomInput(rng);
+  const arch = ARCHETYPES_BY_ID.get(input.archetypeId)!;
+  const position = input.position;
+  const r = createPlayer(input, rng);
   if (!r.ok) throw new Error(`criação simulada inválida: ${r.errors.join(', ')}`);
   const player = r.player;
 

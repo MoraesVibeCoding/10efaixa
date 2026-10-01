@@ -137,8 +137,8 @@ export function nordesteGroups(rng: Prng): string[][] {
 // ---------- CONMEBOL ----------
 
 /** Vagas brasileiras: Série A + campeão/vice da Copa do Brasil; vaga já ocupada desce na tabela. */
-export function brazilQualifiers(table: string[], cdbChampion: string, cdbVice: string) {
-  const taken = new Set<string>();
+export function brazilQualifiers(table: string[], cdbChampion: string, cdbVice: string, exclude: string[] = []) {
+  const taken = new Set<string>(exclude);
   const next = () => { const id = table.find((x) => !taken.has(x))!; taken.add(id); return id; };
   const take = (id: string) => (taken.has(id) ? next() : (taken.add(id), id));
   const libGroups = [table[0]!, table[1]!, table[2]!, table[3]!].map(take);

@@ -1,0 +1,42 @@
+import { writeFileSync, mkdirSync } from 'node:fs';
+import { simulateCareer, type CareerResult } from './career';
+import { createPrng } from './prng';
+import { randomInput } from './simulation';
+
+// Relatório da carreira integrada (T24b). Roda só com `npm run sim:carreira` (SIM_CARREIRA=1).
+const N = 300;
+
+it.skipIf(!process.env.SIM_CARREIRA)(`gera o relatório de ${N} carreiras integradas em docs/simulacao-carreira.md`, () => {
+  const t0 = performance.now();
+  const rs: (CareerResult & { origin: string })[] = [];
+  for (let i = 0; i < N; i++) {
+    const input = randomInput(createPrng(50_000 + i));
+    rs.push({ ...simulateCareer(input, 50_000 + i), origin: input.origin });
+  }
+  const ms = (performance.now() - t0) / N;
+  const mean = (xs: number[]) => (xs.reduce((a, b) => a + b, 0) / (xs.length || 1));
+  const pct = (xs: boolean[]) => `${((100 * xs.filter(Boolean).length) / (xs.length || 1)).toFixed(1)}%`;
+  const tiers = (g: CareerResult[]) => [[95, 99], [90, 94], [85, 89], [80, 84], [0, 79]].map(([lo, hi]) => pct(g.map((r) => r.peakOverall >= lo! && r.peakOverall <= hi!)));
+  const row = (c: (string | number)[]) => `| ${c.join(' | ')} |`;
+  const groups: [string, typeof rs][] = [['todas', rs], ...['baseGrande', 'peneira', 'varzea'].map((o) => [o, rs.filter((r) => r.origin === o)] as [string, typeof rs])];
+  const comps = ['serieA', 'serieB', 'serieC', 'serieD', 'estadual', 'copaDoBrasil', 'copaDoNordeste', 'libertadores', 'sulAmericana'];
+  const lines = [
+    '# Relatório da carreira integrada — T24b', '',
+    `${N} carreiras completas (16→35, transferência e aposentadoria provisórias até T28/T34). Tempo médio: **${ms.toFixed(1)} ms/carreira** (meta < 50 ms).`, '',
+    '## Auge por faixa (meta 9.3: 5% · 10% · 60% · 25% · 0%)',
+    row(['Grupo', 'n', '95+', '90–94', '85–89', '80–84', '<80']), row(['---', '--:', '--:', '--:', '--:', '--:', '--:']),
+    ...groups.map(([g, x]) => row([g, x.length, ...tiers(x)])), '',
+    '## Trajetória',
+    row(['Grupo', 'Clubes (média)', 'Empréstimos', 'Temporadas na Série A', 'Camisa 10', 'Capitão']), row(['---', '--:', '--:', '--:', '--:', '--:']),
+    ...groups.map(([g, x]) => row([g, mean(x.map((r) => new Set(r.spells.map((s) => s.clubId)).size)).toFixed(1),
+      mean(x.map((r) => r.spells.filter((s) => s.loan).length)).toFixed(1),
+      `${((100 * mean(x.map((r) => r.seasons.filter((s) => s.division === 'A').length / r.seasons.length)))).toFixed(0)}%`,
+      pct(x.map((r) => r.wearsTen)), pct(x.map((r) => r.captain))])), '',
+    '## Títulos por carreira (média)',
+    row(['Grupo', ...comps, 'total']), row(['---', ...comps.map(() => '--:'), '--:']),
+    ...groups.map(([g, x]) => row([g, ...comps.map((c) => mean(x.map((r) => r.titles.filter((t) => t.competition === c).length)).toFixed(2)), mean(x.map((r) => r.titles.length)).toFixed(1)])), '',
+  ];
+  mkdirSync('docs', { recursive: true });
+  writeFileSync('docs/simulacao-carreira.md', lines.join('\n'));
+  expect(rs).toHaveLength(N);
+}, 600_000);
