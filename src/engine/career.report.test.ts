@@ -1,5 +1,6 @@
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { simulateCareer, type CareerResult } from './career';
+import { AWARDS } from './awards';
 import { createPrng } from './prng';
 import { randomInput } from './simulation';
 
@@ -56,6 +57,10 @@ it.skipIf(!process.env.SIM_CARREIRA)(`gera o relatório de ${N} carreiras integr
       pct(x.map((r) => r.selection.tournaments.some((t) => t.tournament === 'copaDoMundo' && t.hero))),
       pct(x.map((r) => r.selection.tournaments.some((t) => t.tournament === 'copaDoMundo' && t.villain))),
       pct(x.map((r) => r.selection.dual !== null)), pct(x.map((r) => r.selection.dual === 'aceitou')), pct(x.map((r) => r.selection.oriundoCampeao)), pct(x.map((r) => r.selection.esperouOBrasil))])), '',
+    '## Prêmios (% das carreiras com o prêmio ao menos uma vez) e números',
+    row(['Grupo', ...AWARDS, 'Prêmios (média)', 'Jogos', 'Gols', 'Assistências']), row(['---', ...Array(AWARDS.length + 4).fill('--:')]),
+    ...groups.map(([g, x]) => row([g, ...AWARDS.map((a) => pct(x.map((r) => r.awards.some((w) => w.award === a)))), mean(x.map((r) => r.awards.length)).toFixed(1),
+      mean(x.map((r) => r.stats.games)).toFixed(0), mean(x.map((r) => r.stats.goals)).toFixed(0), mean(x.map((r) => r.stats.assists)).toFixed(0)])), '',
     '## Títulos por carreira (média)',
     row(['Grupo', ...comps, 'total']), row(['---', ...comps.map(() => '--:'), '--:']),
     ...groups.map(([g, x]) => row([g, ...comps.map((c) => mean(x.map((r) => r.titles.filter((t) => t.competition === c).length)).toFixed(2)), mean(x.map((r) => r.titles.length)).toFixed(1)])), '',

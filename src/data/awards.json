@@ -1,0 +1,56 @@
+{
+ "_nota": "Prêmios (SPEC 6.15; T39). Nomes descritivos em i18n/pt-BR/awards.json, nunca marcas registradas. nota = overall + forma + minutos; vence quem passa do corte (com ruído). Calibrar na T40.",
+ "nota": {
+  "forma": 6,
+  "minutos": 5,
+  "refMinutos": 0.6
+ },
+ "ruido": 2,
+ "minutosMin": 0.5,
+ "premios": {
+  "artilheiro": {
+   "golsRef": {
+    "BRA": 33.0,
+    "EUR": 35.0,
+    "padrao": 31.0
+   },
+   "ruidoGols": 5
+  },
+  "selecaoDoCampeonato": {
+   "acimaDaLiga": 16.0
+  },
+  "revelacao": {
+   "idadeMax": 21,
+   "acimaDaLiga": 15.0
+  },
+  "craqueDoBrasileirao": {
+   "liga": "BRA-A",
+   "corte": 95.0
+  },
+  "craqueDoEstadual": {
+   "corte": 93.0,
+   "bonusTitulo": 3
+  },
+  "melhorDoMundo": {
+   "corte": 103.0,
+   "bonus": {
+    "champions": 2,
+    "copaDoMundo": 3,
+    "ligaNacional": 1,
+    "libertadores": 1
+   }
+  },
+  "craqueDaCopa": {
+   "fases": [
+    "semifinal",
+    "final",
+    "campeao"
+   ],
+   "corte": 97,
+   "bonus": {
+    "campeao": 3,
+    "heroi": 3
+   }
+  }
+ }
+}

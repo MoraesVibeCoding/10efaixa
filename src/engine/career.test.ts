@@ -3,6 +3,7 @@ import { FOREIGN } from './cups';
 import europe from '../data/europe.json';
 import { simulateCareer } from './career';
 import { isEditionYear } from './calendar';
+import { AWARDS } from './awards';
 import type { CreationInput } from './player';
 import cfg from '../data/career.json';
 import retire from '../data/retirement.json';
@@ -185,5 +186,20 @@ describe('integração da carreira (T24b)', () => {
       expect(r.selection.oriundoCampeao).toBe(false);
       if (r.selection.esperouOBrasil) expect(r.selection.caps).toBeGreaterThan(0);
     }
+  });
+
+  it('números e prêmios (T39): totais da carreira coerentes; prêmios válidos, em anos jogados; Revelação no máximo uma vez', () => {
+    const rs = Array.from({ length: 30 }, (_, seed) => simulateCareer(input({ origin: seed % 2 ? 'peneira' : 'baseGrande' }), seed));
+    for (const r of rs) {
+      expect(r.stats.games).toBeGreaterThan(0);
+      expect(r.stats.games).toBeLessThanOrEqual(r.seasons.length * 60);
+      expect(r.stats.goals).toBeGreaterThan(0);
+      for (const a of r.awards) {
+        expect(AWARDS).toContain(a.award);
+        expect(r.seasons.some((s) => s.year === a.year)).toBe(true);
+      }
+      expect(r.awards.filter((a) => a.award === 'revelacao').length).toBeLessThanOrEqual(1);
+    }
+    expect(rs.some((r) => r.awards.length > 0)).toBe(true);
   });
 });

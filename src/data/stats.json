@@ -1,0 +1,73 @@
+{
+ "_nota": "Números da temporada (SPEC 6.15; T39). Taxas por jogo para um jogador no nível da liga; balanceamento do jogo.",
+ "jogosPorTemporada": {
+  "BRA": 60,
+  "EUR": 48,
+  "padrao": 44
+ },
+ "nivelLiga": {
+  "ENG": 84,
+  "ESP": 83,
+  "ITA": 82,
+  "GER": 82,
+  "FRA": 80,
+  "POR": 77,
+  "OUTROS": 76,
+  "BRA-A": 76,
+  "BRA-B": 70,
+  "BRA-C": 65,
+  "BRA-D": 61,
+  "BRA-E": 58,
+  "padrao": 74
+ },
+ "porPontoAcimaDaLiga": 0.035,
+ "ruido": 0.25,
+ "porJogo": {
+  "atacante": {
+   "gols": 0.42,
+   "assistencias": 0.14,
+   "desarmes": 0.4,
+   "semSofrerGol": 0
+  },
+  "meia": {
+   "gols": 0.2,
+   "assistencias": 0.24,
+   "desarmes": 1.0,
+   "semSofrerGol": 0
+  },
+  "volante": {
+   "gols": 0.06,
+   "assistencias": 0.1,
+   "desarmes": 2.4,
+   "semSofrerGol": 0.3
+  },
+  "lateral": {
+   "gols": 0.04,
+   "assistencias": 0.14,
+   "desarmes": 1.9,
+   "semSofrerGol": 0.3
+  },
+  "zagueiro": {
+   "gols": 0.05,
+   "assistencias": 0.02,
+   "desarmes": 2.1,
+   "semSofrerGol": 0.32
+  },
+  "goleiro": {
+   "gols": 0,
+   "assistencias": 0.01,
+   "desarmes": 0,
+   "semSofrerGol": 0.34
+  }
+ },
+ "semSofrerGolPorResultado": 0.12,
+ "ligasEUR": [
+  "ENG",
+  "ESP",
+  "ITA",
+  "GER",
+  "FRA",
+  "POR",
+  "OUTROS"
+ ]
+}

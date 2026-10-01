@@ -25,6 +25,8 @@ import { isEditionYear } from './calendar';
 import tcfg from '../data/nationalTournaments.json';
 import { ancestry, cutOffset, invited, residenceCountry, teamStrength } from './dualNationality';
 import dual from '../data/dualNationality.json';
+import { seasonAwards, type Award } from './awards';
+import { ZERO_STATS, addStats, seasonStats, type SeasonStats } from './stats';
 import { farewellOffer, retirementCheck, type RetireReason } from './retirement';
 import { simulateSeason, type ClubInfo, type Div, type Divisions, type Row } from './season';
 import { assignNumber, canGetArmband, canGetTen, rosterNumbers } from './shirt';
@@ -50,6 +52,8 @@ export interface CareerResult {
     /** Dupla nacionalidade (T38): seleção defendida e a resposta ao convite. */
     nationality: string; dual: 'aceitou' | 'recusou' | null; oriundoCampeao: boolean; esperouOBrasil: boolean;
   };
+  /** Números da carreira e prêmios individuais (T39). */
+  stats: SeasonStats; awards: { year: number; award: Award }[];
   retirement: RetireReason; farewell: 'formador' | 'coracao' | null;
   cards: { yellows: number; reds: number }; finalTemperament: string; houseBought: boolean; discipline: number;
   seasons: { year: number; clubId: string; division: string | null; minutes: number; overall: number }[];
@@ -135,6 +139,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   const selection: CareerResult['selection'] = { callUps: { sub17: 0, sub20: 0, olimpica: 0, lista: 0, reserva: 0, titular: 0 }, caps: 0, ten: 0, captain: 0, tournaments: [], nationality: 'Brasil', dual: null, oriundoCampeao: false, esperouOBrasil: false };
   const heritage = ancestry(createPrng(Math.imul(seed + 13, 0x9e3779b1)));
   let nation: string | null = null; // null = Brasil
+  let stats: SeasonStats = ZERO_STATS;
+  const awards: CareerResult['awards'] = [];
 
   let clubId: string | null = null;
   let inYouth = false;
@@ -215,6 +221,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     const wins = tableRows.find((r) => r.id === seasonClub)?.wins ?? cfg.ligaSimplificada.vitorias;
     const teamResult = clamp((expectedRank - actualRank) / 10, -1, 1);
     let minutesSum = 0;
+    let worldCup: { stage: string; titular: boolean; hero: boolean } | null = null;
     let wantsOut = false;
 
     for (let sem = 0; sem < 2; sem++) {
@@ -352,6 +359,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
           if (res.hero) { prestige = Math.min(1, prestige + fxT.heroi.prestigio); morale = clamp(morale + fxT.heroi.moral, 0, 1); }
           if (res.villain) { prestige *= fxT.vilao.prestigioFator; morale = clamp(morale + fxT.vilao.moral, 0, 1); }
           if (res.injured) outLeft = Math.max(outLeft, fxT.lesaoSemestresFora);
+          if (t === 'copaDoMundo') worldCup = { stage: res.stage, titular: sel.rung === 'titular', hero: res.hero };
           selection.tournaments.push({ year, tournament: t, team: selection.nationality, stage: res.stage, hero: res.hero, villain: res.villain });
         }
       }
@@ -388,6 +396,16 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     if (contract && clubId && !inYouth) {
       const c: Contract = contract;
       wealth = addToWealth(wealth, seasonEarnings(c, Math.round(wins * avgMinutes)), c.currency, agent);
+    }
+    // Números e prêmios da temporada (só no profissional).
+    if (clubId && !inYouth) {
+      const st = seasonStats({ position, overall: ov(evo), minutes: avgMinutes, league, teamResult }, yr);
+      stats = addStats(stats, st);
+      const won = seasonAwards({
+        age: evo.age - 1, overall: ov(evo), form, minutes: avgMinutes, league, goals: st.goals,
+        titles: titles.filter((t) => t.year === year).map((t) => t.competition), worldCup,
+      }, yr);
+      for (const award of won) if (award !== 'revelacao' || !awards.some((a) => a.award === 'revelacao')) awards.push({ year, award });
     }
     seasons.push({ year, clubId: seasonClub, division: league, minutes: avgMinutes, overall: ov(evo) });
 
@@ -482,6 +500,6 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   selection.esperouOBrasil = selection.dual === 'recusou' && selection.caps > 0;
   return {
     player, spells, titles, peakOverall, peakAge, endAge: evo.age, wearsTen, captain, idolatry: idol,
-    wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, selection, retirement, farewell, cards, finalTemperament: temp, houseBought, discipline, seasons,
+    wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, selection, stats, awards, retirement, farewell, cards, finalTemperament: temp, houseBought, discipline, seasons,
   };
 }
