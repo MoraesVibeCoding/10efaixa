@@ -77,7 +77,8 @@
    "formato": "16 grupos de 6 (ida e volta); 4 por grupo no mata-mata (ida e volta) até a final; os 2 finalistas sobem",
    "aberta": true,
    "acima": "C",
-   "abaixo": null
+   "abaixo": null,
+   "chaveamento": "pares de grupos (1-2, 3-4, …): 1º×4º, 2º×3º, 3º×2º, 4º×1º; vencedores seguem em ordem de chave"
   }
  },
  "fonte": {
@@ -86,5 +87,46 @@
   "serieC": "https://www.cbf.com.br/a-cbf/noticias/informes-cbf/a/cbf-anuncia-novo-calendario-do-futebol-profissional-masculino (C: 20/24/28 clubes, descenso 2/2/6) e https://www.cbf.com.br/futebol-brasileiro/noticias/campeonato-brasileiro-serie-c/a/serie-c-define-os-oito-classificados-a-segunda-fase-santa-cruz-avanca-no-limite (quadrangulares, 4 acessos)",
   "serieD": "https://www.cbf.com.br/futebol-brasileiro/noticias/campeonato-brasileiro/a/cbf-divulga-grupos-da-serie-d-de-2026 (96 clubes, 16 grupos, 6 acessos)"
  },
- "conferidoEm": "2026-09-30"
+ "conferidoEm": "2026-09-30",
+ "match": {
+  "_nota": "Modelo de partida sem gols (T17). Calibrar com npm run sim.",
+  "homeAdv": 3,
+  "drawBase": 0.3,
+  "scale": 10,
+  "formNoise": 5,
+  "penaltyStrengthWeight": 0.004,
+  "penaltyClamp": [
+   0.3,
+   0.7
+  ]
+ },
+ "regionOrder": [
+  "AM",
+  "RR",
+  "AC",
+  "RO",
+  "AP",
+  "PA",
+  "TO",
+  "DF",
+  "MT",
+  "GO",
+  "MS",
+  "MA",
+  "PI",
+  "CE",
+  "RN",
+  "PB",
+  "PE",
+  "AL",
+  "SE",
+  "BA",
+  "ES",
+  "MG",
+  "RJ",
+  "SP",
+  "PR",
+  "SC",
+  "RS"
+ ]
 }
