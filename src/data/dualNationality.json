@@ -1,16 +1,25 @@
 {
- "_nota": "Dupla nacionalidade (SPEC 6.11; T38). Simplificação consciente da regra da FIFA: aceitar é definitivo. Números de balanceamento.",
- "ascendencia": {
-  "chance": 0.12,
-  "paises": { "Itália": 4, "Portugal": 4, "Espanha": 2, "Alemanha": 1, "Japão": 1 }
- },
+ "_nota": "Dupla nacionalidade (SPEC 6.1, 6.11; T38). O direito vem do sorteio da criação (creation.json) ou é descoberto no meio da carreira por residência. Aceitar é definitivo (simplificação consciente da regra da FIFA).",
  "residencia": {
+  "_obs": "descoberta no meio da carreira: temporadas na liga do país (só os países da SPEC 6.1)",
   "temporadas": 5,
-  "ligas": { "ENG": "Inglaterra", "ESP": "Espanha", "ITA": "Itália", "GER": "Alemanha", "FRA": "França", "POR": "Portugal" }
+  "ligas": {
+   "ITA": "italia",
+   "POR": "portugal",
+   "ESP": "espanha",
+   "GER": "alemanha"
+  }
  },
  "convite": {
   "idadeMin": 20,
   "cortePorPontoDeForca": 1.2,
   "folga": 4
+ },
+ "selecao": {
+  "_obs": "id do país (creation.json) → chave da força em nationalTournaments.json",
+  "italia": "Itália",
+  "portugal": "Portugal",
+  "espanha": "Espanha",
+  "alemanha": "Alemanha"
  }
 }

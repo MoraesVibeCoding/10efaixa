@@ -23,7 +23,7 @@ import { createPrng, type Prng } from './prng';
 import { TOURNAMENTS, eligible, playTournament, type NTournament } from './tournaments';
 import { isEditionYear } from './calendar';
 import tcfg from '../data/nationalTournaments.json';
-import { ancestry, cutOffset, invited, residenceCountry, teamStrength } from './dualNationality';
+import { cutOffset, invited, residenceCountry, teamName, teamStrength } from './dualNationality';
 import dual from '../data/dualNationality.json';
 import { seasonAwards, type Award } from './awards';
 import { ZERO_STATS, addStats, seasonStats, type SeasonStats } from './stats';
@@ -136,8 +136,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let farewellAsked = false;
   let sel: CallUp = { rung: 'nenhum', ten: false, captain: false };
   let prestige = 0;
-  const selection: CareerResult['selection'] = { callUps: { sub17: 0, sub20: 0, olimpica: 0, lista: 0, reserva: 0, titular: 0 }, caps: 0, ten: 0, captain: 0, tournaments: [], nationality: 'Brasil', dual: null, oriundoCampeao: false, esperouOBrasil: false };
-  const heritage = ancestry(createPrng(Math.imul(seed + 13, 0x9e3779b1)));
+  const selection: CareerResult['selection'] = { callUps: { sub17: 0, sub20: 0, olimpica: 0, lista: 0, reserva: 0, titular: 0 }, caps: 0, ten: 0, captain: 0, tournaments: [], nationality: 'brasil', dual: null, oriundoCampeao: false, esperouOBrasil: false };
+  const heritage = player.dualNationality; // sorteada na criação (6.1); também pode ser descoberta por residência
   let nation: string | null = null; // null = Brasil
   let stats: SeasonStats = ZERO_STATS;
   const awards: CareerResult['awards'] = [];
@@ -350,7 +350,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       // Torneios de seleções no meio do ano (calendário da T14); título com a Seleção é permanente.
       if (sem === 0) {
         for (const t of TOURNAMENTS) {
-          if (!isEditionYear(t, year) || !eligible(t, sel.rung, evo.age, nation ?? undefined)) continue;
+          if (!isEditionYear(t, year) || !eligible(t, sel.rung, evo.age, nation ? teamName(nation) : undefined)) continue;
           const tr = createPrng(Math.imul(seed + 7, 0x9e3779b1) ^ Math.imul(year, 0x85ebca6b) ^ TOURNAMENTS.indexOf(t));
           const res = playTournament({ tournament: t, rung: sel.rung, overall: ov(evo), mental: evo.attributes.mental, teamStrength: nation ? teamStrength(nation) : undefined }, (e) => autoChoice(e, temp), tr);
           const fxT = tcfg.efeitos;
@@ -496,7 +496,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     cdnGroups = nordesteGroups(yr);
   }
 
-  selection.oriundoCampeao = selection.dual === 'aceitou' && selection.tournaments.some((t) => t.stage === 'campeao' && t.team !== 'Brasil');
+  selection.oriundoCampeao = selection.dual === 'aceitou' && selection.tournaments.some((t) => t.stage === 'campeao' && t.team !== 'brasil');
   selection.esperouOBrasil = selection.dual === 'recusou' && selection.caps > 0;
   return {
     player, spells, titles, peakOverall, peakAge, endAge: evo.age, wearsTen, captain, idolatry: idol,
