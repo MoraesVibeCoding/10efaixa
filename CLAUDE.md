@@ -57,7 +57,7 @@ Pare e peça minha aprovação nos pontos da seção 15 do SPEC: após T13, T40,
 - **Privacidade:** nenhum dado pessoal em analytics, Sentry, URLs ou logs. Sem cookies de rastreamento.
 - **Segredos** (chaves do Sentry, tokens) nunca no repositório; só em variáveis de ambiente.
 - **Acessibilidade WCAG 2.1 AA** em toda tela: teclado, foco visível, contraste, leitor de tela, `prefers-reduced-motion`. Toda cena tem texto alternativo.
-- **Arte:** enquanto o ilustrador não entrega, usar a arte provisória gerada pela skill, sempre no formato final de camadas. O lançamento só acontece com a arte final validada.
+- **Arte:** a arte final é pintada e gerada por IA (SPEC v2.12). Enquanto ela não está pronta, usar a arte provisória gerada pela skill, sempre no formato de camadas. O lançamento só acontece com a arte final validada (inclusive juridicamente).
 
 ## Definição de pronto
 Uma tarefa só está concluída quando: os critérios de aceitação do SPEC são atendidos, os testes novos existem e passaram depois de falhar, typecheck e build passam, o commit está feito e o log foi apresentado.

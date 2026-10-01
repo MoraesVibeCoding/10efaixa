@@ -1,6 +1,6 @@
 # 10eFaixa — Especificação do Produto (SPEC.md)
 
-> Versão 2.11 (declínio por idade mais tardio; Marco 4) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
+> Versão 2.12 (arte final pintada, gerada por IA; decisões no estilo Copero) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
 > Este documento é a fonte da verdade para o Claude Code. Nenhuma mudança de escopo sem atualizar este arquivo primeiro.
 
 ---
@@ -357,13 +357,13 @@ A carreira termina no primeiro destes gatilhos:
 - **Cenas padrão são reaproveitadas** entre carreiras; mudam só o avatar, companheiros e cores.
 - **Catálogo inicial:** ~25 cenários (várzea, peneira, treino, vestiário, reunião com a comissão, sala do empresário, assinatura de contrato, aeroporto, estádio, gol, cabeçada, pênalti, título, convocação, hospital, fisioterapia, festa, entrevista/redes sociais, clássico, vaia, Copa, casa da família, despedida) e ~10 poses.
 - Toda cena tem **texto alternativo** gerado a partir do momento; animações respeitam `prefers-reduced-motion`.
-- Formato **SVG**, com orçamento de peso por cena definido na T43 e carregamento sob demanda.
+- Formato **raster pintado (WebP) em camadas**, com orçamento de peso por cena e carregamento sob demanda (v2.12; a arte provisória em SVG vale até a T43b–T45b).
 
 **Produção da arte**
-- **Ilustrador humano** faz a arte final no modelo **boneco-base**: ~10 poses, 3 ângulos de cabeça (frente, perfil, três quartos); cabelos, barbas e acessórios como peças separadas por ângulo; camadas nomeadas.
-- **Recolor por código:** tom de pele e cores do uniforme são aplicados pelo código; o artista desenha cada peça uma vez.
-- **Altura e compleição** por ajuste de proporção do boneco, sem desenhos extras.
-- **Skill do projeto no Claude Code** (`.claude/skills/10efaixa-arte/SKILL.md`) com três funções: gerar **arte provisória** em SVG no formato final de camadas; manter o **briefing de arte** (`docs/briefing-arte.md`) atualizado; **conferir cada entrega** do ilustrador (camadas, nomes, tamanho, cores recoloríveis) com script automático.
+- **Arte final gerada por IA** (v2.12, decisão do usuário), em estilo de **ilustração pintada semi-realista** (referência de qualidade e layout: `docs/referencias/estilo-layout-2026-10-01.webp`), na **paleta original da seção 7**. O usuário gera as imagens com a própria conta; o Claude Code escreve os prompts e processa as peças. Modelo de camadas mantido: ~10 poses de corpo, cabeças em 3 ângulos (frente, perfil, três quartos), cabelos, barbas e acessórios como peças separadas por ângulo.
+- **Recolor por máscara:** tom de pele, cabelo e cores do uniforme são aplicados pelo código sobre a pintura, preservando luz e sombra; cada peça é gerada uma vez, com as áreas recoloríveis em cores de chroma.
+- **Altura e compleição** por escala da figura inteira (vertical e horizontal), sem desenhos extras.
+- **Skill do projeto no Claude Code** (`.claude/skills/10efaixa-arte/SKILL.md`) com três funções: gerar **arte provisória** no formato de camadas; manter o **guia de produção da arte** (`docs/briefing-arte.md`, com os prompts) atualizado; **conferir cada lote** gerado (nomes, tamanho, máscaras, peso) com script automático.
 - **Lançamento só com a arte final**; até lá o código avança com a arte provisória.
 
 ### 6.18 Clube de coração
@@ -471,7 +471,7 @@ Zoeira só com o próprio jogador (ex.: "o fanático que foi parar no rival"), n
 - **Nome do jogador:** filtro de palavras bloqueadas, incluindo nomes de pessoas reais conhecidas.
 - **Seleção e prêmios:** sem escudo da CBF; prêmios com nomes descritivos, nunca marcas registradas.
 - **Avatares e cenas:** arte original; nenhum rosto, visual característico ou comemoração marca registrada de pessoa real.
-- **Ilustrador:** contrato por escrito com **cessão dos direitos patrimoniais** para uso comercial, incluindo a Fase 2.
+- **Arte gerada por IA:** só ferramentas cujos termos permitam **uso comercial**; registro por peça (ferramenta, plano, data, prompt) em `docs/arte-registro.csv`; prompts nunca citam pessoa, clube, marca ou artista. A titularidade de direitos sobre arte de IA é incerta no Brasil: **validar com advogado antes do lançamento**. Se algum ilustrador retocar peças, contrato por escrito com cessão dos direitos patrimoniais.
 - **Transfermarkt:** apenas consulta manual como referência, respeitando os termos de uso.
 - **Aviso fixo:** projeto independente, sem afiliação com clubes, ligas, federações ou atletas.
 - **Apoio:** Apoia.se, seguindo as regras da plataforma e obrigações fiscais aplicáveis.
@@ -482,7 +482,7 @@ Zoeira só com o próprio jogador (ex.: "o fanático que foi parar no rival"), n
 
 | Fase | Conteúdo | Receita |
 |---|---|---|
-| **1 (este SPEC)** | Jogo completo da v1, lançado só com a arte final do ilustrador | Botão discreto "Apoie o projeto" (Apoia.se) na tela de resultado |
+| **1 (este SPEC)** | Jogo completo da v1, lançado só com a arte final validada | Botão discreto "Apoie o projeto" (Apoia.se) na tela de resultado |
 | **2** | Ranking online com antitrapaça, backend, observabilidade completa | Anúncios só entre carreiras e na tela de resultado; revisão jurídica; escudos licenciados se possível |
 | **3** | App nativo reaproveitando o motor | A definir |
 | **Futuro** | Carreira feminina; outros idiomas | A definir |
@@ -576,6 +576,10 @@ Cada tarefa é atômica, com teste escrito antes do código e **um commit por ta
 | ID | Tarefa | Critério de aceitação |
 |---|---|---|
 | T42 | Skill de arte do projeto + briefing do ilustrador | `.claude/skills/10efaixa-arte/SKILL.md` e `docs/briefing-arte.md` com boneco-base, poses, ângulos, camadas, paleta e lista de peças ⛳ |
+| T42b | Guia de produção v4 + lote piloto (1 pose, cabeça em 1 ângulo com 2 cabelos e 1 barba, 1 cenário) | Piloto gerado pelo usuário, processado e montado numa cena; decide se o formato segue ⛳ |
+| T43b | Formato raster e validador (nomes, dimensões, alfa, máscaras, peso, arquivo de âncoras) | Validador aponta cada erro por arquivo; piloto passa |
+| T44b | Motor do avatar raster: recolor por máscara, escala por altura e compleição, cabeça montada, envelhecimento | Mesmos critérios da T44, sobre as peças pintadas |
+| T45b | Compositor de cenas raster | Mesmos critérios da T45; cena dentro do orçamento de peso |
 | T43 | Especificação de formato e validador de entregas | Script aponta camada faltando, nome errado, cor não recolorível e peso acima do orçamento |
 | T44 | Motor do avatar | Camadas combinadas; recolor de pele e uniforme; proporção por altura e compleição; envelhecimento |
 | T45 | Compositor de cenas | Cenário + avatar + companheiros nas cores do clube + detalhes; texto alternativo gerado |
@@ -597,7 +601,7 @@ Cada tarefa é atômica, com teste escrito antes do código e **um commit por ta
 | T57 | Desafio diário | Mesma semente do dia; sem ranking online |
 | T58 | Apoio (Apoia.se), aviso legal e página de privacidade | Botão só na tela de resultado |
 | T59 | Vercel Web Analytics + Sentry sem dados pessoais | Eventos do funil; nenhum dado pessoal |
-| T60 | Integração da arte final do ilustrador | Todas as peças finais passam no validador; nenhuma peça provisória restante ⛳ |
+| T60 | Integração da arte final (gerada por IA) | Todas as peças finais passam no validador; nenhuma peça provisória restante ⛳ |
 | T61 | PWA, deploy na Vercel, domínio e E2E finais | Instalável; CI verde; 10efaixa.com; E2E das jornadas principais ⛳ |
 
 ---
@@ -611,7 +615,8 @@ O Claude Code **para e pede aprovação** nestes momentos:
 | Após T13 | Relatório das 10 mil carreiras: overall, tetos, diamantes brutos, efeito da altura |
 | Após T40 | Distribuição de vereditos, rótulos e idade média de aposentadoria por origem |
 | Após T41 | Amostra de manchetes, comentários e apelidos para revisão de tom |
-| Após T42 | Briefing de arte para enviar ao ilustrador |
+| Após T42 | Guia de produção da arte (prompts) |
+| Após T42b | Lote piloto gerado e montado no jogo |
 | Após T49 e T55 | Capturas do visual e do cartão |
 | Após T60 | Cenas com a arte final, antes do lançamento |
 | Fim de cada marco | Resumo, logs de testes e próximos passos |
@@ -712,5 +717,8 @@ Decisões aprovadas durante a implementação. Complementam as seções acima.
 | 2026-10-01 | T46 | Catálogo em `src/art/sceneCatalog.ts` + `scenes.json`: cada um dos 25 cenários define pose, expressão, detalhes e nº de companheiros (poses, expressões e detalhes do briefing 6.1–6.6); evento → cena por `sceneOf`; uma definição por cenário, reaproveitada entre eventos e carreiras; goleiro usa pose própria no pênalti | `allFiles()` lista as peças que a T47 precisa gerar |
 | 2026-10-01 | Escopo | **Mentalidade** (aprovada pelo usuário, opção A): 4º campo da criação, opcional no motor — Fominha · Capitão · Professor · Máquina. Muda o caminho até o teto (multiplicador de crescimento por atributo, ruído e perda por idade), nunca o teto. Números em `src/data/mentality.json` (±30%, v2) | Pendente: efeitos em lesões/polêmicas/atrito (Máquina e Fominha), mudança ao longo da carreira, tela na T50 e calibração na T13. Simulação de 50 carreiras em docs/simulacao-mentalidade.md |
 | 2026-10-01 | T47 | Arte provisória: 154 peças geradas por `src/art/provisional.ts` (`npm run art:generate` → `src/assets/art/provisoria/`): 10 poses (6 com luvas e mangas de goleiro), 78 peças de cabeça, 5 uniformes, 8 comemorações, 25 cenários, 10 detalhes e 18 troféus; todas passam no validador. Só paleta e cores-chave (nenhuma cor fixa nova) | Luvas e mangas-longas ainda não acompanham a compleição no motor do avatar; troféus provisórios são formas genéricas |
+| 2026-10-01 | Arte (v2.12) | **Arte final = ilustração pintada semi-realista, gerada por IA**, com as camadas e a personalização mantidas (recolor por máscara) e a **paleta original** da seção 7. A imagem `docs/referencias/estilo-layout-2026-10-01.webp` vale como referência de qualidade e de layout (cena ao fundo, painéis de interface por cima), não de cores nem de escudos | Decisão do usuário. Substitui "ilustrador humano" e "vetorial chapado". Novas tarefas T42b, T43b, T44b e T45b; T43–T47 seguem valendo para a arte provisória |
+| 2026-10-01 | Arte (v2.12) | **Risco registrado:** geradores de imagem não entregam camadas nem personagem idêntico entre poses. O formato só é confirmado depois do lote piloto (T42b ⛳); se o encaixe de cabelos e barbas sobre a cabeça não ficar aceitável, a alternativa é reduzir a personalização a personagens prontos | Por isso o piloto vem antes do retrabalho do código |
+| 2026-10-01 | Decisões | **"Estilo Copero"** = esquema de decisões do jogo Copero, uma das inspirações do projeto (esclarecido pelo usuário). Entendimento, a confirmar: antes de decidir, o jogador vê o contexto e as consequências prováveis de cada opção (minutos previstos, espaço no elenco, salário, duração do contrato); depois, um "o que aconteceu"; a frequência das decisões muda com o ritmo. Inspiração de mecânica apenas: nenhum texto, nome, marca ou tela do Copero é copiado | Fonte consultada em 2026-10-01: https://copero.io/pt. Afeta a T51 (tela de decisão) e pede uma prévia por opção no motor |
 | 2026-09-30 | T14 | Sedes reais conferidas: Copa 2026 (EUA, Canadá, México), 2030 (Marrocos, Portugal, Espanha + centenário), 2034 (Arábia Saudita) — FIFA; Olimpíadas 2028 LA, 2032 Brisbane — COI. Demais sedes sorteadas por semente | Fontes e data em src/data/calendar.json |
 | 2026-09-30 | T14 | **Não verificado:** a CONMEBOL não anunciou a próxima Copa América masculina; ciclo assumido a cada 4 anos a partir de 2028 ("entre as Copas", 6.11). Sedes futuras repetem as 5 últimas reais em ordem (2015 Chile, 2016 EUA, 2019 Brasil, 2021 Brasil, 2024 EUA), decisão do usuário. Janelas de transferência modeladas por momento do semestre; datas exatas a conferir na T28 | Marcado `verificado: false` no JSON; revisar quando houver anúncio oficial |

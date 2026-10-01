@@ -1,5 +1,5 @@
 {
-  "_nota": "Formato das peças de arte (docs/briefing-arte.md, seções 4–5). Fonte de regras do validador (T43).",
+  "_nota": "Formato das peças de arte (docs/briefing-arte.md, Apêndice A: SVG da arte provisória). Fonte de regras do validador (T43).",
   "palette": ["#F2F4EF", "#14213D", "#FFC21A", "#1E7B4F", "#D62839", "#C9CFC6"],
   "keyColors": {
     "pele": "#FF00FF", "peleSombra": "#B000B0",
