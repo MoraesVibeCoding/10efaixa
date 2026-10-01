@@ -1,6 +1,6 @@
 # 10eFaixa — Especificação do Produto (SPEC.md)
 
-> Versão 2.4 (T11b: progressão de traços por foco) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
+> Versão 2.5 (T13b: teto igual entre origens, perfis por origem, faixas novas) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
 > Este documento é a fonte da verdade para o Claude Code. Nenhuma mudança de escopo sem atualizar este arquivo primeiro.
 
 ---
@@ -73,11 +73,13 @@ Detalhes de aparência, biotipo, temperamento, apelido e cenas na seção 6.17.
 
 **Origem (nível inicial e teto):**
 
-| Origem | Overall inicial | Potencial (teto) | Como começa |
-|---|---|---|---|
-| Base de clube grande | 45–55 | 70–92 | Três ofertas de clubes do estado ou da região, com prós e contras (minutos, estrutura, concorrência) |
-| Peneira | 38–50 | 60–90 | Peneiras em clubes do estado: passa de primeira, tenta de novo ou vai para um clube menor. Alta variância |
-| Várzea | 30–42 | 55–85 | Time fictício do bairro até um olheiro levar para um clube pequeno ou médio. **3% de "diamante bruto"** (teto 88–97) |
+| Origem | Overall inicial | Perfil (nasce melhor em) | Crescimento | Como começa |
+|---|---|---|---|---|
+| Base de clube grande | 45–55 | Físico e fundamentos (Passe, Finalização, Jogo aéreo) | Equilibrado | Três ofertas de clubes do estado ou da região, com prós e contras (minutos, estrutura, concorrência) |
+| Peneira | 38–50 | Mental e físico | Equilibrado | Peneiras em clubes do estado: passa de primeira, tenta de novo ou vai para um clube menor. Alta variância |
+| Várzea | 30–42 | Mental e técnica (Habilidade, Drible) | Mais forte em fundamentos e físico, para alcançar as outras origens | Time fictício do bairro até um olheiro levar para um clube pequeno ou médio. **3% de "diamante bruto"** (bônus de teto) |
+
+- **Potencial (teto) igual para todas as origens:** a origem muda o *perfil* dos atributos, não a chance de chegar ao topo. Meta do auge da carreira (decisões automáticas, seção 9.3): **5% com 95+, 10% com 90–94, 60% com 85–89, 25% com 80–84**. O diamante bruto da várzea ganha bônus de teto por cima disso.
 
 - Estado com poucos clubes: as ofertas vêm dos estados vizinhos.
 - **Potencial oculto:** o jogador vê a estimativa do olheiro, que fica mais precisa a cada temporada.
@@ -125,12 +127,12 @@ Dez atributos, escala interna 1–99:
 
 | Faixa interna | Rótulo | Estrelas |
 |---|---|---|
-| 1–39 | Fraco | ★ |
-| 40–54 | Regular | ★★ |
-| 55–64 | Bom | ★★★ |
-| 65–74 | Muito bom | ★★★★ |
-| 75–84 | Excelente | ★★★★½ |
-| 85–99 | Lendário | ★★★★★ |
+| 1–49 | Fraco | ★ |
+| 50–64 | Regular | ★★ |
+| 65–74 | Bom | ★★★ |
+| 75–84 | Muito bom | ★★★★ |
+| 85–94 | Excelente | ★★★★½ |
+| 95–99 | Lendário | ★★★★★ |
 
 ### 6.4 Evolução
 
@@ -421,6 +423,7 @@ A carreira termina no primeiro destes gatilhos:
 
 ### 9.3 Sanidade da simulação (10 mil carreiras por origem × posição, ritmo Rápido, decisões automáticas)
 - "Lenda mundial" ≤ 1%; todas as 8 faixas de veredito aparecem.
+- Auge de overall (todas as origens juntas e cada origem separada, ±2 p.p.): 5% com 95+, 10% com 90–94, 60% com 85–89, 25% com 80–84.
 - "Diamante bruto" entre 2% e 4% das carreiras de várzea.
 - Idade média de aposentadoria por origem entre 30 e 39 (reportada em log).
 - Defensores e goleiros alcançam "Lenda do futebol brasileiro" em proporção comparável a atacantes.
@@ -508,6 +511,7 @@ Cada tarefa é atômica, com teste escrito antes do código e **um commit por ta
 | T11b | Progressão de traços por foco | Foco em Bola parada leva a Cobrador (goleiro; Goleiro-líbero mais rápido) ou Bola parada (linha); foco em Perna ruim leva a Ambidestro; desbloqueio vira evento |
 | T12 | Infraestrutura de textos (i18n pt-BR) + gerador de apelido | Todo texto vem de arquivo; apelido gerado por origem, cidade e estilo, sempre filtrado |
 | T13 | Harness de simulação em massa | Roda 10 mil carreiras e gera relatório, incluindo efeito da altura ⛳ |
+| T13b | Recalibração por origem | Teto igual entre origens; perfil e crescimento por origem; faixas 6.3 novas; auge na meta da 9.3 ⛳ |
 
 ### Marco 2 — Brasil
 | ID | Tarefa | Critério de aceitação |
@@ -636,3 +640,6 @@ Decisões aprovadas durante a implementação. Complementam as seções acima.
 | 2026-09-30 | T11 | `clubNeed` escondido do jogador na UI | Evita estratégia dominante (propor sempre o que o clube quer) |
 | 2026-09-30 | T11 | Uma reunião por temporada é garantida por quem chama (máquina de estados, T48) | Motor puro não guarda histórico de reuniões |
 | 2026-09-30 | T11b | Nova tarefa: progressão de traços por foco (Bola parada → Cobrador/Bola parada; Perna ruim → Ambidestro) | Prometido em 6.1/6.2 sem tarefa no plano; achado da revisão cross-model (Gemini) |
+| 2026-09-30 | T13b | Teto igual entre origens; origem define perfil (base: físico + fundamentos; peneira: mental + físico; várzea: mental + técnica) e crescimento (várzea mais forte em fundamentos e físico); overall inicial por origem mantido | Pedido do usuário após o relatório da T13 (ninguém chegava a 85) |
+| 2026-09-30 | T13b | Meta do auge: 5% 95+, 10% 90–94, 60% 85–89, 25% 80–84; faixas 6.3 sobem (Lendário = 95–99) para as estrelas seguirem diferenciando o topo | Aprovado pelo usuário |
+| 2026-09-30 | T13b | Diamante bruto mantido como bônus de teto para 3% da várzea | Aprovado pelo usuário |
