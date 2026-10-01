@@ -1,5 +1,5 @@
 {
- "_nota": "Formato das ligas nacionais (SPEC 6.9). Série C muda de tamanho até 2028 conforme o novo calendário da CBF.",
+ "_nota": "Formato das ligas nacionais (SPEC 6.9). Regras de 2026 mantidas em todos os anos (decisão do usuário). Para a Série C ficar com 20 clubes, a Série D dá 2 vagas (finalistas) em vez das 6 de 2026, que serviam à expansão da C prevista pela CBF.",
  "leagues": {
   "A": {
    "nome": "Série A",
@@ -38,24 +38,34 @@
   },
   "C": {
    "nome": "Série C",
-   "clubesPorAno": {
-    "2026": 20,
-    "2027": 24,
-    "2028": 28
-   },
-   "rebaixadosPorAno": {
-    "2026": 2,
-    "2027": 2,
-    "2028": 6
-   },
    "formato": {
-    "2026": "turno único; 8 melhores em 2 quadrangulares (ida e volta); 2 primeiros de cada sobem; líderes decidem o título",
-    "2027": "mesmo formato com 24 clubes",
-    "2028": "2 grupos de 14, ida e volta (acesso a detalhar quando a CBF publicar)"
+    "faseInicial": "turno único",
+    "quadrangulares": {
+     "classificados": 8,
+     "grupos": [
+      [
+       1,
+       4,
+       5,
+       8
+      ],
+      [
+       2,
+       3,
+       6,
+       7
+      ]
+     ],
+     "idaEVolta": true,
+     "sobemPorGrupo": 2
+    },
+    "final": "líderes dos quadrangulares, ida e volta"
    },
    "acesso": 4,
    "acima": "B",
-   "abaixo": "D"
+   "abaixo": "D",
+   "clubes": 20,
+   "rebaixados": 2
   },
   "D": {
    "nome": "Série D",
@@ -63,8 +73,8 @@
    "grupos": 16,
    "clubesPorGrupo": 6,
    "classificamPorGrupo": 4,
-   "acesso": 6,
-   "formato": "16 grupos de 6 (ida e volta); 4 por grupo no mata-mata (ida e volta); 4 semifinalistas sobem + 2 dos playoffs entre eliminados nas quartas",
+   "acesso": 2,
+   "formato": "16 grupos de 6 (ida e volta); 4 por grupo no mata-mata (ida e volta) até a final; os 2 finalistas sobem",
    "aberta": true,
    "acima": "C",
    "abaixo": null

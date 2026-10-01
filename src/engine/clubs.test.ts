@@ -16,7 +16,7 @@ describe('clubes (T15)', () => {
   });
 
   it('Série C com 20 clubes (2026) e Série D com 96, com fonte oficial', () => {
-    expect(clubsIn('C')).toHaveLength(leagues.leagues.C.clubesPorAno['2026']);
+    expect(clubsIn('C')).toHaveLength(leagues.leagues.C.clubes);
     expect(clubsIn('D')).toHaveLength(leagues.leagues.D.clubes);
     expect(CLUBS).toHaveLength(156);
     expect(raw.fonte.serieC).toMatch(/cbf\.com\.br/);
