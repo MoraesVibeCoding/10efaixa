@@ -105,4 +105,19 @@ describe('integração da carreira (T24b)', () => {
     expect(rs.filter((r) => r.positionChanges === 0).every((r) => r.finalPosition === 'lateral')).toBe(true);
     expect(changed[0]!.player.biotype.heightCm).toBe(178);
   });
+
+  it('temperamento: Esquentado leva mais cartões que Frio e amadurece para Líder; Frio não muda', () => {
+    const run = (temperament: string) => Array.from({ length: 12 }, (_, seed) => simulateCareer(input({ temperament }), seed));
+    const sum = (rs: ReturnType<typeof run>) => rs.reduce((a, r) => a + r.cards.yellows + r.cards.reds, 0);
+    const [esq, frio] = [run('esquentado'), run('frio')];
+    expect(sum(esq)).toBeGreaterThan(sum(frio));
+    expect(esq.every((r) => r.finalTemperament === 'lider')).toBe(true);
+    expect(frio.every((r) => r.finalTemperament === 'frio')).toBe(true);
+  });
+
+  it('vida fora de campo: carreira rica compra a casa da família; disciplina fica em 0–1', () => {
+    const rs = Array.from({ length: 10 }, (_, seed) => simulateCareer(input(), seed));
+    expect(rs.some((r) => r.houseBought)).toBe(true);
+    for (const r of rs) { expect(r.discipline).toBeGreaterThanOrEqual(0); expect(r.discipline).toBeLessThanOrEqual(1); }
+  });
 });

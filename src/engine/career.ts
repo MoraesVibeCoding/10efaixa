@@ -3,11 +3,12 @@ import { agentSemester, changeAgent, createAgent, type Agent } from './agent';
 import { ARCHETYPES } from './archetypes';
 import { CLUBS, clubsIn, rivalsOf } from './clubs';
 import { semesterClubLife } from './clubLife';
+import { investmentReturn, leaderEffects, matureTemperament, offFieldFlags, semesterCards } from './discipline';
 import { addToWealth, makeContract, renew, seasonEarnings, toBRL, type Contract } from './contracts';
 import { brazilQualifiers, copaDoBrasil, copaDoBrasilEntrants, copaDoNordeste, foreignQualifiers, libertadores, nordesteGroups, sulAmericana } from './cups';
 import { EUROPE, areEuroRivals, effectiveRep } from './europe';
 import { initialEuroTables, simulateEuropeSeason, type EuroTables } from './europeSeason';
-import { autoChoice } from './events';
+import { applyOption, autoChoice } from './events';
 import { evolveSemester, type EvoState } from './evolution';
 import { afterClassico, afterSemester, afterTransfer, type Idolatry } from './idolatry';
 import { decayRelapse, graveDecision, semesterInjury } from './injuries';
@@ -36,6 +37,7 @@ export interface CareerResult {
   wealthBRL: number; agentProfile: string; contracts: number;
   injuries: { leve: number; media: number; grave: number };
   finalPosition: Position; positionChanges: number;
+  cards: { yellows: number; reds: number }; finalTemperament: string; houseBought: boolean; discipline: number;
   seasons: { year: number; clubId: string; division: string | null; minutes: number; overall: number }[];
 }
 
@@ -60,7 +62,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   if (!created.ok) throw new RangeError(`criação inválida: ${created.errors.join(', ')}`);
   const player = created.player;
   const arch = ARCHETYPES.find((a) => a.id === input.archetypeId)!;
-  const temp = input.temperament;
+  let temp = input.temperament; // pode amadurecer (T33)
   let position: Position = input.position;
   let positionChanges = 0;
   // O bônus de peso do arquétipo só vale na posição de origem (6.6: depois vira "estilo de origem").
@@ -105,6 +107,10 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   const injuries = { leve: 0, media: 0, grave: 0 };
   let relapseRisk = 0;
   let outLeft = 0; // semestres ainda fora por lesão grave
+  const cards = { yellows: 0, reds: 0 };
+  let suspended = 0; // fração de minutos perdida por suspensão no próximo semestre
+  let discipline = 0.6;
+  let houseBought = false;
 
   let clubId: string | null = null;
   let inYouth = false;
@@ -221,6 +227,10 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         }
       }
       relapseRisk = decayRelapse(relapseRisk);
+      if (suspended > 0) { minutes *= 1 - Math.min(1, suspended); suspended = 0; }
+      const leader = leaderEffects(temp, teamResult);
+      evo = { ...evo, growthBonus: { ...player.growthBonus, mental: (player.growthBonus.mental ?? 1) * leader.mentalBonus } };
+      coachRelation = clamp(coachRelation + leader.relationDelta, 0, 1);
       evo = evolveSemester(evo, { focus, staffQuality, minutes, morale }, yr);
       const tr = progressTraits(traits, focus);
       traits = { position: tr.position, traits: tr.traits, latentTrait: tr.latentTrait, progress: tr.progress };
@@ -239,6 +249,29 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         salaryDelays = life.salaryDelays;
         if (life.canRequestLeave && autoChoice('salario-atrasado', temp) === 'pedir-saida') wantsOut = true;
         if (life.loanOffer && !parent && !loanTarget) loanTarget = life.loanOffer;
+
+        // Disciplina: cartões pelo temperamento; suspensão tira minutos do próximo semestre.
+        const cd = semesterCards({ temperament: temp, minutes }, yr);
+        cards.yellows += cd.yellows;
+        cards.reds += cd.reds;
+        suspended = cd.minutesLost;
+        // Vida fora de campo: dilemas resolvidos pela política do temperamento, com efeitos do catálogo.
+        const flags = offFieldFlags({ temperament: temp, wealthBRL: wealth, houseBought }, yr);
+        let st8 = { moral: morale, disciplina: discipline, idolatria: idol[clubId] ?? 0, relacaoTecnico: coachRelation, patrimonio: wealth, casaComprada: houseBought, investir: false } as Record<string, number | string | boolean>;
+        if (flags.conviteFesta) st8 = applyOption(st8, 'festa', autoChoice('festa', temp));
+        if (flags.polemica) st8 = applyOption(st8, 'polemica-redes', autoChoice('polemica-redes', temp));
+        if (flags.podeComprarCasa) st8 = applyOption(st8, 'casa-da-familia', autoChoice('casa-da-familia', temp));
+        if (flags.conviteInvestir) st8 = applyOption(st8, 'investir', autoChoice('investir', temp));
+        // Amadurecimento do temperamento por idade ou suspensão longa (evento narrado).
+        const matured = matureTemperament(temp, evo.age, cd.longSuspension);
+        if (matured !== temp) { temp = matured; st8 = applyOption(st8, 'amadurecimento', 'seguir'); }
+        morale = st8.moral as number;
+        discipline = st8.disciplina as number;
+        coachRelation = clamp((st8.relacaoTecnico as number) - (discipline < 0.3 ? 0.03 : 0), 0, 1);
+        idol = { ...idol, [clubId]: st8.idolatria as number };
+        houseBought = st8.casaComprada as boolean;
+        wealth = Math.round(st8.patrimonio as number);
+        if (st8.investir) wealth = Math.max(0, wealth + investmentReturn(wealth, yr));
 
         // Empresário: no máximo um evento por semestre, resolvido pela política do temperamento.
         const ag = agentSemester(agent, yr);
@@ -358,6 +391,6 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
 
   return {
     player, spells, titles, peakOverall, peakAge, endAge: evo.age, wearsTen, captain, idolatry: idol,
-    wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, seasons,
+    wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, cards, finalTemperament: temp, houseBought, discipline, seasons,
   };
 }

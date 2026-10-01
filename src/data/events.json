@@ -1,5 +1,5 @@
 {
- "_nota": "Eventos e dilemas (SPEC 6.13, 6.18; T25). Condições: campo op valor. Efeitos: add (com limites de 'campos') ou set.",
+ "_nota": "Eventos e dilemas (SPEC 6.13, 6.18; T25). Condições: campo op valor. Efeitos: add ou mul (com limites de 'campos') ou set.",
  "campos": {
   "moral": [
    0,
@@ -32,7 +32,13 @@
   "renovar": "bool",
   "pedirAumento": "bool",
   "decisaoLesao": "texto",
-  "mudarPosicao": "bool"
+  "mudarPosicao": "bool",
+  "disciplina": [
+   0,
+   1
+  ],
+  "casaComprada": "bool",
+  "investir": "bool"
  },
  "eventos": [
   {
@@ -693,6 +699,215 @@
     "temperamento": {
      "esquentado": "recusar"
     }
+   }
+  },
+  {
+   "id": "festa",
+   "cena": "festa",
+   "peso": 5,
+   "condicoes": [
+    [
+     "conviteFesta",
+     "==",
+     true
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "ir",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.08
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.1
+      ]
+     ]
+    },
+    {
+     "id": "ficar-em-casa",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       -0.02
+      ],
+      [
+       "disciplina",
+       "add",
+       0.03
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "ficar-em-casa",
+    "temperamento": {
+     "resenha": "ir",
+     "esquentado": "ir"
+    }
+   }
+  },
+  {
+   "id": "polemica-redes",
+   "cena": "entrevista",
+   "peso": 5,
+   "condicoes": [
+    [
+     "polemica",
+     "==",
+     true
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "postar",
+     "efeitos": [
+      [
+       "disciplina",
+       "add",
+       -0.1
+      ],
+      [
+       "idolatria",
+       "add",
+       3
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.05
+      ]
+     ]
+    },
+    {
+     "id": "deixar-pra-la",
+     "efeitos": [
+      [
+       "disciplina",
+       "add",
+       0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "deixar-pra-la",
+    "temperamento": {
+     "esquentado": "postar"
+    }
+   }
+  },
+  {
+   "id": "casa-da-familia",
+   "cena": "casa-familia",
+   "peso": 9,
+   "condicoes": [
+    [
+     "podeComprarCasa",
+     "==",
+     true
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "comprar",
+     "efeitos": [
+      [
+       "patrimonio",
+       "mul",
+       0.85
+      ],
+      [
+       "moral",
+       "add",
+       0.1
+      ],
+      [
+       "casaComprada",
+       "set",
+       true
+      ]
+     ]
+    },
+    {
+     "id": "adiar",
+     "efeitos": []
+    }
+   ],
+   "politica": {
+    "padrao": "comprar"
+   }
+  },
+  {
+   "id": "investir",
+   "cena": "sala-empresario",
+   "peso": 4,
+   "condicoes": [
+    [
+     "conviteInvestir",
+     "==",
+     true
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "investir",
+     "efeitos": [
+      [
+       "investir",
+       "set",
+       true
+      ]
+     ]
+    },
+    {
+     "id": "guardar",
+     "efeitos": []
+    }
+   ],
+   "politica": {
+    "padrao": "guardar",
+    "temperamento": {
+     "esquentado": "investir",
+     "resenha": "investir"
+    }
+   }
+  },
+  {
+   "id": "amadurecimento",
+   "cena": "vestiario",
+   "peso": 10,
+   "condicoes": [
+    [
+     "amadureceu",
+     "!=",
+     ""
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "seguir",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.05
+      ],
+      [
+       "disciplina",
+       "add",
+       0.1
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "seguir"
    }
   }
  ]

@@ -97,5 +97,39 @@
    "aceitar": "Aceitar a nova posição",
    "recusar": "Recusar e seguir onde está"
   }
+ },
+ "festa": {
+  "titulo": "Convite para a festa",
+  "opcoes": {
+   "ir": "Ir pra resenha",
+   "ficar-em-casa": "Ficar em casa e descansar"
+  }
+ },
+ "polemica-redes": {
+  "titulo": "Polêmica nas redes",
+  "opcoes": {
+   "postar": "Postar a resposta",
+   "deixar-pra-la": "Deixar pra lá"
+  }
+ },
+ "casa-da-familia": {
+  "titulo": "A casa da família",
+  "opcoes": {
+   "comprar": "Comprar a casa da família",
+   "adiar": "Deixar para depois"
+  }
+ },
+ "investir": {
+  "titulo": "Proposta de investimento",
+  "opcoes": {
+   "investir": "Investir",
+   "guardar": "Guardar o dinheiro"
+  }
+ },
+ "amadurecimento": {
+  "titulo": "Mudou de postura",
+  "opcoes": {
+   "seguir": "Seguir em frente, mais maduro"
+  }
  }
 }

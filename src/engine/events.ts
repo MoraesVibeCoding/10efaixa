@@ -6,7 +6,7 @@ import scenes from '../data/scenes.json';
 export type Ctx = Record<string, number | string | boolean>;
 type Val = number | string | boolean;
 type Cond = [string, string, Val];
-type Effect = [string, 'add' | 'set', Val];
+type Effect = [string, 'add' | 'set' | 'mul', Val];
 interface EventDef {
   id: string; cena: string; peso: number; condicoes: Cond[];
   opcoes: { id: string; efeitos: Effect[] }[];
@@ -34,7 +34,7 @@ export function validateEvents(d: unknown, sceneIds: string[]): string[] {
     for (const o of opts) {
       for (const [field, op] of o.efeitos) {
         if (!(field in def.campos)) errors.push(`${at}/${o.id}: campo desconhecido ${field}`);
-        if (op !== 'add' && op !== 'set') errors.push(`${at}/${o.id}: efeito inválido ${op}`);
+        if (op !== 'add' && op !== 'set' && op !== 'mul') errors.push(`${at}/${o.id}: efeito inválido ${op}`);
       }
     }
     const optIds = opts.map((o) => o.id);
@@ -72,7 +72,8 @@ export function applyOption(s: Ctx, eventId: string, optionId: string): Ctx {
   const out = { ...s };
   for (const [field, op, v] of opt.efeitos) {
     const range = RANGES[field];
-    let next: Val = op === 'set' ? v : ((out[field] as number) ?? 0) + (v as number);
+    const cur = (out[field] as number) ?? 0;
+    let next: Val = op === 'set' ? v : op === 'mul' ? cur * (v as number) : cur + (v as number);
     if (Array.isArray(range) && typeof next === 'number') {
       const [lo, hi] = range;
       next = Math.round(Math.min(hi ?? Infinity, Math.max(lo ?? -Infinity, next)) * 1000) / 1000;

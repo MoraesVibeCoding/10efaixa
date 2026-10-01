@@ -1,0 +1,69 @@
+{
+ "_nota": "Disciplina, vida fora de campo e amadurecimento (SPEC 6.12, 6.13, 6.17; T33).",
+ "cartoes": {
+  "amarelosPorSemestre": 3,
+  "vermelhosPorSemestre": 0.12,
+  "temperamento": {
+   "frio": 0.6,
+   "esquentado": 1.6,
+   "lider": 1.0,
+   "resenha": 1.0
+  },
+  "suspensaoLonga": {
+   "vermelhos": 2,
+   "chanceEsquentado": 0.03
+  },
+  "minutosPorVermelho": 0.06,
+  "minutosSuspensaoLonga": 0.4
+ },
+ "foraDeCampo": {
+  "festa": {
+   "frio": 0.05,
+   "esquentado": 0.12,
+   "lider": 0.06,
+   "resenha": 0.3
+  },
+  "polemica": {
+   "frio": 0.01,
+   "esquentado": 0.12,
+   "lider": 0.02,
+   "resenha": 0.06
+  },
+  "casa": {
+   "patrimonioMin": 2000000
+  },
+  "investir": {
+   "patrimonioMin": 5000000,
+   "chance": 0.1,
+   "fracao": 0.2,
+   "retorno": [
+    -0.6,
+    1.0
+   ]
+  }
+ },
+ "amadurecimento": [
+  {
+   "de": "esquentado",
+   "para": "lider",
+   "idadeMin": 30
+  },
+  {
+   "de": "esquentado",
+   "para": "lider",
+   "evento": "suspensaoLonga"
+  },
+  {
+   "de": "resenha",
+   "para": "lider",
+   "idadeMin": 32
+  }
+ ],
+ "lider": {
+  "bonusMental": 1.15,
+  "atrito": {
+   "resultadoAbaixo": -0.3,
+   "relacaoTecnico": -0.05
+  }
+ }
+}
