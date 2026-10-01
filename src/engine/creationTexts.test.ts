@@ -16,7 +16,7 @@ describe('textos pt-BR da criação', () => {
   it('todo erro de criação tem mensagem', () => {
     const errors = [
       'name.empty', 'name.tooShort', 'name.tooLong', 'name.blocked', 'shirtNumber.invalid', 'state.invalid',
-      'height.outOfRange', 'build.invalid', 'archetype.invalid', 'temperament.invalid', 'celebration.invalid', 'foot.invalid', 'origin.invalid',
+      'height.outOfRange', 'build.invalid', 'archetype.invalid', 'temperament.invalid', 'celebration.invalid', 'foot.invalid', 'origin.invalid', 'heartClub.invalid',
     ];
     expect(has(ptBR.error, errors)).toEqual([]);
   });

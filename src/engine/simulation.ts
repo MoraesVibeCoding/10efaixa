@@ -31,7 +31,7 @@ export function simulateCareer(seed: number): CareerResult {
     name: 'Jogador Simulado', shirtNumber: rng.int(1, 99), state: pick(rng, creation.states), position,
     archetypeId: arch.id, biotype: { heightCm: rng.int(range.min, range.max), build: pick(rng, BUILDS) },
     temperament: pick(rng, creation.temperaments), celebration: pick(rng, creation.celebrations),
-    origin: pick(rng, Object.keys(creation.origins)), foot: pick(rng, creation.feet),
+    origin: pick(rng, Object.keys(creation.origins)), foot: pick(rng, creation.feet), heartClub: null,
   }, rng);
   if (!r.ok) throw new Error(`criação simulada inválida: ${r.errors.join(', ')}`);
   const player = r.player;

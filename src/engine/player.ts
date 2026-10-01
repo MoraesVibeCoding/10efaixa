@@ -1,5 +1,6 @@
 import { ATTRIBUTES, type Attributes } from './attributes';
 import { ARCHETYPES, type Archetype } from './archetypes';
+import { CLUBS } from './clubs';
 import { BUILDS, applyBiotype, isHeightAllowed, rollGrowth, type Biotype, type Growth } from './biotype';
 import { checkName } from './nameFilter';
 import { overall, type Position } from './overall';
@@ -18,6 +19,8 @@ export interface CreationInput {
   celebration: string;
   origin: string;
   foot: string;
+  /** Clube de coração (6.18): id de clube brasileiro ou null = "Nenhum". */
+  heartClub: string | null;
 }
 
 export interface Player extends CreationInput {
@@ -52,6 +55,7 @@ function validate(i: CreationInput): string[] {
   if (!data.celebrations.includes(i.celebration)) errors.push('celebration.invalid');
   if (!data.feet.includes(i.foot)) errors.push('foot.invalid');
   if (!ORIGINS[i.origin]) errors.push('origin.invalid');
+  if (i.heartClub !== null && !CLUBS.some((c) => c.id === i.heartClub)) errors.push('heartClub.invalid');
   return errors;
 }
 

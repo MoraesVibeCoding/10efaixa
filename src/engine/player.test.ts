@@ -8,7 +8,7 @@ import data from '../data/creation.json';
 const base: CreationInput = {
   name: 'Zé Pequeno da Silva', shirtNumber: 10, state: 'BA', position: 'atacante',
   archetypeId: 'matador', biotype: { heightCm: 172, build: 'atletico' },
-  temperament: 'frio', celebration: 'aviaozinho', origin: 'varzea', foot: 'esquerda',
+  temperament: 'frio', celebration: 'aviaozinho', origin: 'varzea', foot: 'esquerda', heartClub: 'bahia',
 };
 
 const make = (input: Partial<CreationInput> = {}, seed = 1): Player => {
@@ -39,6 +39,11 @@ describe('criação do jogador', () => {
   it('guarda os tetos antes do biotipo (baseCaps) para a evolução recalcular', () => {
     const p = make({ biotype: { heightCm: 190, build: 'forte' } });
     expect(applyBiotype(p.baseCaps, p.biotype)).toEqual(p.caps);
+  });
+
+  it('clube de coração: guardado no jogador; "Nenhum" (null) é aceito', () => {
+    expect(make().heartClub).toBe('bahia');
+    expect(make({ heartClub: null }).heartClub).toBeNull();
   });
 
   it('mesma semente, mesmo jogador', () => {
@@ -131,6 +136,7 @@ describe('criação do jogador', () => {
     [{ celebration: 'nada' }, 'celebration.invalid'],
     [{ foot: 'ambas' }, 'foot.invalid'],
     [{ shirtNumber: 100 }, 'shirtNumber.invalid'],
+    [{ heartClub: 'barcelona' }, 'heartClub.invalid'],
     [{ biotype: { heightCm: 172, build: 'gigante' as never } }, 'build.invalid'],
   ])('recusa entrada inválida %j → %s', (input, error) => {
     const r = createPlayer({ ...base, ...input }, createPrng(1));
