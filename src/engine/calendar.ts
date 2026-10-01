@@ -3,7 +3,13 @@ import data from '../data/calendar.json';
 
 // Seção 6.8. O relógio entra como parâmetro: o motor continua puro e testável.
 export type Tournament = keyof typeof data.tournaments;
-type Def = { anchorYear: number; cycleYears: number; hosts: Record<string, string[]>; hostPool: string[][] };
+type Def = {
+  anchorYear: number; cycleYears: number; hosts: Record<string, string[]>;
+  /** Sorteio por semente entre estas sedes. */
+  hostPool?: string[][];
+  /** Ou: sequência fixa repetida edição a edição (ex.: Copa América, 5 últimas sedes reais). */
+  hostCycle?: string[][];
+};
 const T = data.tournaments as Record<Tournament, Def>;
 const KEYS = Object.keys(T) as Tournament[];
 
@@ -21,11 +27,12 @@ export function firstEditionAfter(t: Tournament, year: number): number {
   return anchorYear + (Math.floor((year - anchorYear) / cycleYears) + 1) * cycleYears;
 }
 
-/** Sede real se definida; senão sorteio estável por (semente da carreira, torneio, ano) — independe da ordem das chamadas. */
+/** Sede real se definida; senão a sequência fixa (hostCycle) ou sorteio estável por (semente, torneio, ano). */
 export function hostOf(t: Tournament, year: number, careerSeed: number): string[] {
   if (!isEditionYear(t, year)) return [];
-  const { hosts, hostPool } = T[t];
+  const { hosts, hostPool = [], hostCycle, anchorYear, cycleYears } = T[t];
   if (hosts[year]) return hosts[year]!;
+  if (hostCycle) return hostCycle[((year - anchorYear) / cycleYears) % hostCycle.length]!;
   const rng = createPrng(Math.imul(careerSeed, 0x9e3779b1) ^ Math.imul(year, 0x85ebca6b) ^ KEYS.indexOf(t));
   return hostPool[rng.int(0, hostPool.length - 1)]!;
 }

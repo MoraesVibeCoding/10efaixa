@@ -2,42 +2,178 @@
   "_nota": "Calendário (SPEC 6.8, 6.11). Sedes reais onde definidas; demais sorteadas por semente da carreira.",
   "tournaments": {
     "copaDoMundo": {
-      "anchorYear": 2026, "cycleYears": 4,
+      "anchorYear": 2026,
+      "cycleYears": 4,
       "hosts": {
-        "2026": ["Estados Unidos", "Canadá", "México"],
-        "2030": ["Marrocos", "Portugal", "Espanha"],
-        "2034": ["Arábia Saudita"]
+        "2026": [
+          "Estados Unidos",
+          "Canadá",
+          "México"
+        ],
+        "2030": [
+          "Marrocos",
+          "Portugal",
+          "Espanha"
+        ],
+        "2034": [
+          "Arábia Saudita"
+        ]
       },
-      "hostPool": [["Brasil"], ["Inglaterra"], ["Alemanha"], ["Itália"], ["França"], ["Austrália", "Nova Zelândia"], ["Argentina", "Uruguai", "Paraguai", "Chile"], ["Japão", "Coreia do Sul"], ["Egito"], ["China"]],
+      "hostPool": [
+        [
+          "Brasil"
+        ],
+        [
+          "Inglaterra"
+        ],
+        [
+          "Alemanha"
+        ],
+        [
+          "Itália"
+        ],
+        [
+          "França"
+        ],
+        [
+          "Austrália",
+          "Nova Zelândia"
+        ],
+        [
+          "Argentina",
+          "Uruguai",
+          "Paraguai",
+          "Chile"
+        ],
+        [
+          "Japão",
+          "Coreia do Sul"
+        ],
+        [
+          "Egito"
+        ],
+        [
+          "China"
+        ]
+      ],
       "fonte": "https://inside.fifa.com/media-releases/extraordinary-congress-appoints-hosts-of-2030-and-2034-editions-of-fifa-world-cup (2030: Marrocos, Portugal e Espanha, com 3 jogos do centenário em Argentina, Paraguai e Uruguai; 2034: Arábia Saudita)",
       "conferidoEm": "2026-09-30",
       "verificado": true
     },
     "olimpiadas": {
-      "anchorYear": 2028, "cycleYears": 4,
-      "hosts": { "2028": ["Los Angeles"], "2032": ["Brisbane"] },
-      "hostPool": [["Paris"], ["Madri"], ["Rio de Janeiro"], ["Tóquio"], ["Roma"], ["Berlim"], ["Toronto"], ["Cidade do México"], ["Seul"], ["Buenos Aires"]],
+      "anchorYear": 2028,
+      "cycleYears": 4,
+      "hosts": {
+        "2028": [
+          "Los Angeles"
+        ],
+        "2032": [
+          "Brisbane"
+        ]
+      },
+      "hostPool": [
+        [
+          "Paris"
+        ],
+        [
+          "Madri"
+        ],
+        [
+          "Rio de Janeiro"
+        ],
+        [
+          "Tóquio"
+        ],
+        [
+          "Roma"
+        ],
+        [
+          "Berlim"
+        ],
+        [
+          "Toronto"
+        ],
+        [
+          "Cidade do México"
+        ],
+        [
+          "Seul"
+        ],
+        [
+          "Buenos Aires"
+        ]
+      ],
       "fonte": "https://www.olympics.com/ioc/faq/future-olympic-games/where-will-the-next-olympic-games-be-held (LA 14–30/07/2028; Brisbane 23/07–08/08/2032)",
       "conferidoEm": "2026-09-30",
       "verificado": true
     },
     "copaAmerica": {
-      "anchorYear": 2028, "cycleYears": 4,
+      "anchorYear": 2028,
+      "cycleYears": 4,
       "hosts": {},
-      "hostPool": [["Brasil"], ["Argentina"], ["Chile"], ["Colômbia"], ["Uruguai"], ["Paraguai"], ["Peru"], ["Equador"], ["Venezuela"], ["Bolívia"]],
-      "fonte": "https://www.conmebol.com/pt-br/conmebol-copa-america/3/ — sem anúncio da próxima edição masculina; ciclo assumido 'entre as Copas' (SPEC 6.11)",
+      "fonte": "Próxima edição masculina não anunciada pela CONMEBOL (https://www.conmebol.com/pt-br/conmebol-copa-america/3/). Por decisão do usuário, as edições futuras repetem as 5 últimas sedes reais, em ordem: 2015 Chile (https://www.conmebol.com/pt-br/copa-america-2015-pt/), 2016 EUA Centenário (https://www.conmebol.com/pt-br/noticias-pt-br/dez-areas-metropolitanas-dos-eua-foram-selecionadas-para-organizacao-da-copa-america/), 2019 e 2021 Brasil, 2024 EUA (https://www.conmebol.com/pt-br/noticias-pt-br/conmebol-e-embaixada-dos-estados-unidos-dialogam-sobre-a-organizacao-da-conmebol-copa-america-usa-2024%EF%B8%8F/). Ciclo de 4 anos a partir de 2028 assumido ('entre as Copas', SPEC 6.11).",
       "conferidoEm": "2026-09-30",
-      "verificado": false
+      "verificado": false,
+      "hostCycle": [
+        [
+          "Chile"
+        ],
+        [
+          "Estados Unidos"
+        ],
+        [
+          "Brasil"
+        ],
+        [
+          "Brasil"
+        ],
+        [
+          "Estados Unidos"
+        ]
+      ]
     }
   },
   "semesters": {
-    "1": { "brasil": ["estadual", "brasileiraoInicio", "copaDoBrasil", "continentalGrupos", "copaDoNordeste"], "europa": "segundaMetadeTemporada" },
-    "2": { "brasil": ["brasileiraoFim", "mataMata"], "europa": "primeiraMetadeTemporada" }
+    "1": {
+      "brasil": [
+        "estadual",
+        "brasileiraoInicio",
+        "copaDoBrasil",
+        "continentalGrupos",
+        "copaDoNordeste"
+      ],
+      "europa": "segundaMetadeTemporada"
+    },
+    "2": {
+      "brasil": [
+        "brasileiraoFim",
+        "mataMata"
+      ],
+      "europa": "primeiraMetadeTemporada"
+    }
   },
   "transferWindows": {
     "_nota": "Momento dentro do semestre (simulação é semestral). Datas exatas a conferir na CBF/FIFA quando o mercado (T28) usar janelas.",
-    "brasil": [{ "semester": 1, "moment": "inicio" }, { "semester": 2, "moment": "meio" }],
-    "europa": [{ "semester": 2, "moment": "inicio" }, { "semester": 1, "moment": "inicio" }],
+    "brasil": [
+      {
+        "semester": 1,
+        "moment": "inicio"
+      },
+      {
+        "semester": 2,
+        "moment": "meio"
+      }
+    ],
+    "europa": [
+      {
+        "semester": 2,
+        "moment": "inicio"
+      },
+      {
+        "semester": 1,
+        "moment": "inicio"
+      }
+    ],
     "verificado": false
   }
 }

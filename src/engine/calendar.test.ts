@@ -41,6 +41,12 @@ describe('calendário (6.8)', () => {
     expect(hostOf('copaDoMundo', 2038, 7).length).toBeGreaterThan(0);
   });
 
+  it('Copa América repete as 5 últimas sedes reais, em ordem, igual em toda carreira', () => {
+    const seq = [2028, 2032, 2036, 2040, 2044, 2048].map((y) => hostOf('copaAmerica', y, 123).join('/'));
+    expect(seq).toEqual(['Chile', 'Estados Unidos', 'Brasil', 'Brasil', 'Estados Unidos', 'Chile']);
+    expect(hostOf('copaAmerica', 2036, 1)).toEqual(hostOf('copaAmerica', 2036, 999));
+  });
+
   it('sede de ano sem edição é vazia', () => {
     expect(hostOf('copaDoMundo', 2031, 1)).toEqual([]);
   });
