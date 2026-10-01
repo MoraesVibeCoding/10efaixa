@@ -52,6 +52,11 @@ export function headFiles(s: AvatarSpec, angle: string): string[] {
   ];
 }
 
+export function uniformColors(u1: string, u2: string): Record<string, string> {
+  const f = cfg.shadowFactor;
+  return { [K.uniforme1]: u1, [K.uniforme1Sombra]: shade(u1, f), [K.uniforme2]: u2, [K.uniforme2Sombra]: shade(u2, f) };
+}
+
 function palette(s: AvatarSpec): Record<string, string> {
   const skin = cfg.skinTones.find((t) => t.id === s.skin)!.hex;
   const base = cfg.hairColors.find((h) => h.id === s.hairColor)!.hex;
@@ -59,8 +64,7 @@ function palette(s: AvatarSpec): Record<string, string> {
   const f = cfg.shadowFactor;
   return {
     [K.pele]: skin, [K.peleSombra]: shade(skin, f),
-    [K.uniforme1]: s.uniform1, [K.uniforme1Sombra]: shade(s.uniform1, f),
-    [K.uniforme2]: s.uniform2, [K.uniforme2Sombra]: shade(s.uniform2, f),
+    ...uniformColors(s.uniform1, s.uniform2),
     [K.cabelo]: hair, [K.cabeloSombra]: shade(hair, f),
     [K.chuteira]: s.boots, [K.acessorio]: s.headband ?? '#FFFFFF',
   };
