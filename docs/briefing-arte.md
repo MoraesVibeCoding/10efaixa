@@ -1,7 +1,7 @@
 # Briefing de arte — 10eFaixa
 
 > Documento para o ilustrador. Mantido pela skill `.claude/skills/10efaixa-arte` (fonte da verdade do formato).
-> Versão 1 · 2026-09-30 · Base: SPEC v2.5, seções 6.17, 7 e 11.
+> Versão 2 · 2026-09-30 · Base: SPEC v2.6, seções 6.17, 7 e 11. (v2: orçamento de peso fechado e validador automático disponível — T43.)
 
 ## 1. O jogo em 30 segundos
 
@@ -101,7 +101,7 @@ fundo · meio · slot-jogador · slot-companheiro-1 … slot-companheiro-4 · fr
 - `slot-*` são retângulos invisíveis com `data-escala` (tamanho relativo do boneco naquele ponto) e `data-pose-sugerida`.
 - Torcida, bandeiras e faixas no cenário usam as cores-chave de uniforme (pintadas com as cores do clube).
 
-### 5.3 Orçamento de peso (provisório — fechado na T43)
+### 5.3 Orçamento de peso
 
 | Tipo | Máximo (SVG sem compressão) |
 |---|---|
@@ -109,6 +109,10 @@ fundo · meio · slot-jogador · slot-companheiro-1 … slot-companheiro-4 · fr
 | Pose | 30 KB |
 | Detalhe | 20 KB |
 | Cenário | 80 KB |
+| Uniforme (padrão) | 15 KB |
+| Comemoração | 30 KB |
+
+As regras completas que o validador aplica estão em `src/art/format.json`.
 
 ## 6. Lista de peças (v1)
 
@@ -168,7 +172,7 @@ taça (estadual, nacional, continental, Copa — formas genéricas) · bola · p
 | 3 | Cenários e detalhes | Todas as cenas |
 | 4 | Ajustes finais | Revisão no jogo antes do lançamento |
 
-Cada lote passa no **validador automático** (camadas, nomes, cores-chave, peso) antes da revisão visual. Você recebe o relatório com o que corrigir.
+Cada lote passa no **validador automático** (`npm run art:check -- <pasta>`: camadas, nomes, cores-chave, elementos proibidos, peso) antes da revisão visual. Você recebe o relatório com o que corrigir, arquivo por arquivo.
 
 ## 8. Checklist por arquivo
 

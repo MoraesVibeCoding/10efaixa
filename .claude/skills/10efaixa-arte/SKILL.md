@@ -42,9 +42,7 @@ O briefing é o contrato com o ilustrador; ele precisa refletir o jogo real.
 
 ## Função 3 — Conferir entregas
 
-Toda entrega (lote do ilustrador ou provisória) passa pelo validador automático antes da revisão visual. O validador é criado na **T43**; até lá, confira manualmente pelo checklist da seção 8 do briefing.
-
-Depois da T43:
+Toda entrega (lote do ilustrador ou provisória) passa pelo validador automático antes da revisão visual. Regras em `src/art/format.json` (mude lá, nunca no código, e reflita no briefing):
 
 ```bash
 npm run art:check -- src/assets/art/final
