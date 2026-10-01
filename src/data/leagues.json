@@ -1,0 +1,45 @@
+{
+ "_nota": "Formato das ligas nacionais (SPEC 6.9). Séries C e D entram na T16.",
+ "leagues": {
+  "A": {
+   "nome": "Série A",
+   "clubes": 20,
+   "turnos": 2,
+   "rebaixados": 4,
+   "acima": null,
+   "abaixo": "B"
+  },
+  "B": {
+   "nome": "Série B",
+   "clubes": 20,
+   "turnos": 2,
+   "acessoDireto": 2,
+   "playoffs": {
+    "posicoes": [
+     3,
+     6
+    ],
+    "vagas": 2,
+    "confrontos": [
+     [
+      3,
+      6
+     ],
+     [
+      4,
+      5
+     ]
+    ],
+    "idaEVolta": true
+   },
+   "rebaixados": 4,
+   "acima": "A",
+   "abaixo": null
+  }
+ },
+ "fonte": {
+  "serieB": "https://www.cbf.com.br/futebol-brasileiro/noticias/noticias/a/brasileirao-serie-b-comeca-com-novo-formato (1º e 2º sobem; 3º×6º e 4º×5º em ida e volta por 2 vagas; 4 últimos caem)",
+  "serieA": "https://www.cbf.com.br/futebol-brasileiro/tabelas/campeonato-brasileiro/serie-a/2026 (20 clubes, 38 rodadas; 4 rebaixados = 4 vagas de acesso da Série B)"
+ },
+ "conferidoEm": "2026-09-30"
+}

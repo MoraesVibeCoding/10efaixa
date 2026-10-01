@@ -1,0 +1,640 @@
+{
+ "_nota": "Clubes das Séries A e B 2026 (SPEC 6.9, 11: nomes reais, escudo estilizado com sigla e cores). 'reputacao' (1–100) é estimativa de balanceamento do jogo, não dado oficial; 'cores' são aproximações para o uniforme. Rivais manuais nas Séries A e B; rivais nas Séries C/D entram na T16.",
+ "fonte": {
+  "serieA": "https://www.cbf.com.br/futebol-brasileiro/tabelas/campeonato-brasileiro/serie-a/2026",
+  "serieB": "https://www.cbf.com.br/futebol-brasileiro/tabelas/campeonato-brasileiro/serie-b/2026"
+ },
+ "conferidoEm": "2026-09-30",
+ "clubs": [
+  {
+   "id": "flamengo",
+   "nome": "Flamengo",
+   "sigla": "FLA",
+   "uf": "RJ",
+   "cidade": "Rio de Janeiro",
+   "cores": [
+    "#C8102E",
+    "#000000"
+   ],
+   "reputacao": 95,
+   "divisao": "A",
+   "rivais": [
+    "botafogo",
+    "fluminense",
+    "vasco"
+   ]
+  },
+  {
+   "id": "fluminense",
+   "nome": "Fluminense",
+   "sigla": "FLU",
+   "uf": "RJ",
+   "cidade": "Rio de Janeiro",
+   "cores": [
+    "#7A1F3D",
+    "#006241"
+   ],
+   "reputacao": 87,
+   "divisao": "A",
+   "rivais": [
+    "botafogo",
+    "flamengo",
+    "vasco"
+   ]
+  },
+  {
+   "id": "vasco",
+   "nome": "Vasco da Gama",
+   "sigla": "VAS",
+   "uf": "RJ",
+   "cidade": "Rio de Janeiro",
+   "cores": [
+    "#000000",
+    "#FFFFFF"
+   ],
+   "reputacao": 85,
+   "divisao": "A",
+   "rivais": [
+    "botafogo",
+    "flamengo",
+    "fluminense"
+   ]
+  },
+  {
+   "id": "botafogo",
+   "nome": "Botafogo",
+   "sigla": "BOT",
+   "uf": "RJ",
+   "cidade": "Rio de Janeiro",
+   "cores": [
+    "#000000",
+    "#FFFFFF"
+   ],
+   "reputacao": 86,
+   "divisao": "A",
+   "rivais": [
+    "flamengo",
+    "fluminense",
+    "vasco"
+   ]
+  },
+  {
+   "id": "palmeiras",
+   "nome": "Palmeiras",
+   "sigla": "PAL",
+   "uf": "SP",
+   "cidade": "São Paulo",
+   "cores": [
+    "#006437",
+    "#FFFFFF"
+   ],
+   "reputacao": 94,
+   "divisao": "A",
+   "rivais": [
+    "corinthians",
+    "santos",
+    "sao-paulo"
+   ]
+  },
+  {
+   "id": "corinthians",
+   "nome": "Corinthians",
+   "sigla": "COR",
+   "uf": "SP",
+   "cidade": "São Paulo",
+   "cores": [
+    "#000000",
+    "#FFFFFF"
+   ],
+   "reputacao": 92,
+   "divisao": "A",
+   "rivais": [
+    "palmeiras",
+    "santos",
+    "sao-paulo"
+   ]
+  },
+  {
+   "id": "sao-paulo",
+   "nome": "São Paulo",
+   "sigla": "SAO",
+   "uf": "SP",
+   "cidade": "São Paulo",
+   "cores": [
+    "#FFFFFF",
+    "#E30613"
+   ],
+   "reputacao": 91,
+   "divisao": "A",
+   "rivais": [
+    "corinthians",
+    "palmeiras",
+    "santos"
+   ]
+  },
+  {
+   "id": "santos",
+   "nome": "Santos",
+   "sigla": "SAN",
+   "uf": "SP",
+   "cidade": "Santos",
+   "cores": [
+    "#FFFFFF",
+    "#000000"
+   ],
+   "reputacao": 86,
+   "divisao": "A",
+   "rivais": [
+    "corinthians",
+    "palmeiras",
+    "sao-paulo"
+   ]
+  },
+  {
+   "id": "bragantino",
+   "nome": "Red Bull Bragantino",
+   "sigla": "RBB",
+   "uf": "SP",
+   "cidade": "Bragança Paulista",
+   "cores": [
+    "#FFFFFF",
+    "#D20A11"
+   ],
+   "reputacao": 74,
+   "divisao": "A",
+   "rivais": []
+  },
+  {
+   "id": "mirassol",
+   "nome": "Mirassol",
+   "sigla": "MIR",
+   "uf": "SP",
+   "cidade": "Mirassol",
+   "cores": [
+    "#FFD700",
+    "#006B3F"
+   ],
+   "reputacao": 60,
+   "divisao": "A",
+   "rivais": []
+  },
+  {
+   "id": "atletico-mg",
+   "nome": "Atlético-MG",
+   "sigla": "CAM",
+   "uf": "MG",
+   "cidade": "Belo Horizonte",
+   "cores": [
+    "#000000",
+    "#FFFFFF"
+   ],
+   "reputacao": 88,
+   "divisao": "A",
+   "rivais": [
+    "america-mg",
+    "cruzeiro"
+   ]
+  },
+  {
+   "id": "cruzeiro",
+   "nome": "Cruzeiro",
+   "sigla": "CRU",
+   "uf": "MG",
+   "cidade": "Belo Horizonte",
+   "cores": [
+    "#0033A0",
+    "#FFFFFF"
+   ],
+   "reputacao": 87,
+   "divisao": "A",
+   "rivais": [
+    "america-mg",
+    "atletico-mg"
+   ]
+  },
+  {
+   "id": "gremio",
+   "nome": "Grêmio",
+   "sigla": "GRE",
+   "uf": "RS",
+   "cidade": "Porto Alegre",
+   "cores": [
+    "#0D80BF",
+    "#000000"
+   ],
+   "reputacao": 88,
+   "divisao": "A",
+   "rivais": [
+    "internacional"
+   ]
+  },
+  {
+   "id": "internacional",
+   "nome": "Internacional",
+   "sigla": "INT",
+   "uf": "RS",
+   "cidade": "Porto Alegre",
+   "cores": [
+    "#E30613",
+    "#FFFFFF"
+   ],
+   "reputacao": 88,
+   "divisao": "A",
+   "rivais": [
+    "gremio"
+   ]
+  },
+  {
+   "id": "athletico-pr",
+   "nome": "Athletico-PR",
+   "sigla": "CAP",
+   "uf": "PR",
+   "cidade": "Curitiba",
+   "cores": [
+    "#C8102E",
+    "#000000"
+   ],
+   "reputacao": 82,
+   "divisao": "A",
+   "rivais": [
+    "coritiba"
+   ]
+  },
+  {
+   "id": "coritiba",
+   "nome": "Coritiba",
+   "sigla": "CFC",
+   "uf": "PR",
+   "cidade": "Curitiba",
+   "cores": [
+    "#00543C",
+    "#FFFFFF"
+   ],
+   "reputacao": 72,
+   "divisao": "A",
+   "rivais": [
+    "athletico-pr"
+   ]
+  },
+  {
+   "id": "bahia",
+   "nome": "Bahia",
+   "sigla": "BAH",
+   "uf": "BA",
+   "cidade": "Salvador",
+   "cores": [
+    "#0057B8",
+    "#E30613"
+   ],
+   "reputacao": 80,
+   "divisao": "A",
+   "rivais": [
+    "vitoria"
+   ]
+  },
+  {
+   "id": "vitoria",
+   "nome": "Vitória",
+   "sigla": "VIT",
+   "uf": "BA",
+   "cidade": "Salvador",
+   "cores": [
+    "#E30613",
+    "#000000"
+   ],
+   "reputacao": 72,
+   "divisao": "A",
+   "rivais": [
+    "bahia"
+   ]
+  },
+  {
+   "id": "remo",
+   "nome": "Remo",
+   "sigla": "REM",
+   "uf": "PA",
+   "cidade": "Belém",
+   "cores": [
+    "#0B1F5C",
+    "#FFFFFF"
+   ],
+   "reputacao": 64,
+   "divisao": "A",
+   "rivais": []
+  },
+  {
+   "id": "chapecoense",
+   "nome": "Chapecoense",
+   "sigla": "CHA",
+   "uf": "SC",
+   "cidade": "Chapecó",
+   "cores": [
+    "#00843D",
+    "#FFFFFF"
+   ],
+   "reputacao": 65,
+   "divisao": "A",
+   "rivais": []
+  },
+  {
+   "id": "vila-nova",
+   "nome": "Vila Nova",
+   "sigla": "VNO",
+   "uf": "GO",
+   "cidade": "Goiânia",
+   "cores": [
+    "#C8102E",
+    "#FFFFFF"
+   ],
+   "reputacao": 58,
+   "divisao": "B",
+   "rivais": [
+    "atletico-go",
+    "goias"
+   ]
+  },
+  {
+   "id": "juventude",
+   "nome": "Juventude",
+   "sigla": "JUV",
+   "uf": "RS",
+   "cidade": "Caxias do Sul",
+   "cores": [
+    "#006B3F",
+    "#FFFFFF"
+   ],
+   "reputacao": 64,
+   "divisao": "B",
+   "rivais": []
+  },
+  {
+   "id": "fortaleza",
+   "nome": "Fortaleza",
+   "sigla": "FOR",
+   "uf": "CE",
+   "cidade": "Fortaleza",
+   "cores": [
+    "#0033A0",
+    "#E30613"
+   ],
+   "reputacao": 76,
+   "divisao": "B",
+   "rivais": [
+    "ceara"
+   ]
+  },
+  {
+   "id": "novorizontino",
+   "nome": "Novorizontino",
+   "sigla": "NOV",
+   "uf": "SP",
+   "cidade": "Novo Horizonte",
+   "cores": [
+    "#FFD700",
+    "#000000"
+   ],
+   "reputacao": 55,
+   "divisao": "B",
+   "rivais": []
+  },
+  {
+   "id": "criciuma",
+   "nome": "Criciúma",
+   "sigla": "CRI",
+   "uf": "SC",
+   "cidade": "Criciúma",
+   "cores": [
+    "#FFD700",
+    "#000000"
+   ],
+   "reputacao": 60,
+   "divisao": "B",
+   "rivais": []
+  },
+  {
+   "id": "atletico-go",
+   "nome": "Atlético-GO",
+   "sigla": "ACG",
+   "uf": "GO",
+   "cidade": "Goiânia",
+   "cores": [
+    "#E30613",
+    "#000000"
+   ],
+   "reputacao": 62,
+   "divisao": "B",
+   "rivais": [
+    "goias",
+    "vila-nova"
+   ]
+  },
+  {
+   "id": "crb",
+   "nome": "CRB",
+   "sigla": "CRB",
+   "uf": "AL",
+   "cidade": "Maceió",
+   "cores": [
+    "#E30613",
+    "#FFFFFF"
+   ],
+   "reputacao": 56,
+   "divisao": "B",
+   "rivais": []
+  },
+  {
+   "id": "operario-pr",
+   "nome": "Operário-PR",
+   "sigla": "OPE",
+   "uf": "PR",
+   "cidade": "Ponta Grossa",
+   "cores": [
+    "#000000",
+    "#FFFFFF"
+   ],
+   "reputacao": 54,
+   "divisao": "B",
+   "rivais": []
+  },
+  {
+   "id": "sport",
+   "nome": "Sport",
+   "sigla": "SPT",
+   "uf": "PE",
+   "cidade": "Recife",
+   "cores": [
+    "#E30613",
+    "#000000"
+   ],
+   "reputacao": 72,
+   "divisao": "B",
+   "rivais": [
+    "nautico"
+   ]
+  },
+  {
+   "id": "cuiaba",
+   "nome": "Cuiabá",
+   "sigla": "CUI",
+   "uf": "MT",
+   "cidade": "Cuiabá",
+   "cores": [
+    "#006B3F",
+    "#FFD700"
+   ],
+   "reputacao": 62,
+   "divisao": "B",
+   "rivais": []
+  },
+  {
+   "id": "goias",
+   "nome": "Goiás",
+   "sigla": "GOI",
+   "uf": "GO",
+   "cidade": "Goiânia",
+   "cores": [
+    "#006B3F",
+    "#FFFFFF"
+   ],
+   "reputacao": 68,
+   "divisao": "B",
+   "rivais": [
+    "atletico-go",
+    "vila-nova"
+   ]
+  },
+  {
+   "id": "sao-bernardo",
+   "nome": "São Bernardo",
+   "sigla": "SBE",
+   "uf": "SP",
+   "cidade": "São Bernardo do Campo",
+   "cores": [
+    "#FFD700",
+    "#000000"
+   ],
+   "reputacao": 48,
+   "divisao": "B",
+   "rivais": []
+  },
+  {
+   "id": "athletic-mg",
+   "nome": "Athletic-MG",
+   "sigla": "ATH",
+   "uf": "MG",
+   "cidade": "São João del-Rei",
+   "cores": [
+    "#000000",
+    "#FFFFFF"
+   ],
+   "reputacao": 46,
+   "divisao": "B",
+   "rivais": []
+  },
+  {
+   "id": "nautico",
+   "nome": "Náutico",
+   "sigla": "NAU",
+   "uf": "PE",
+   "cidade": "Recife",
+   "cores": [
+    "#E30613",
+    "#FFFFFF"
+   ],
+   "reputacao": 60,
+   "divisao": "B",
+   "rivais": [
+    "sport"
+   ]
+  },
+  {
+   "id": "ceara",
+   "nome": "Ceará",
+   "sigla": "CEA",
+   "uf": "CE",
+   "cidade": "Fortaleza",
+   "cores": [
+    "#000000",
+    "#FFFFFF"
+   ],
+   "reputacao": 70,
+   "divisao": "B",
+   "rivais": [
+    "fortaleza"
+   ]
+  },
+  {
+   "id": "botafogo-sp",
+   "nome": "Botafogo-SP",
+   "sigla": "BSP",
+   "uf": "SP",
+   "cidade": "Ribeirão Preto",
+   "cores": [
+    "#E30613",
+    "#000000"
+   ],
+   "reputacao": 50,
+   "divisao": "B",
+   "rivais": []
+  },
+  {
+   "id": "avai",
+   "nome": "Avaí",
+   "sigla": "AVA",
+   "uf": "SC",
+   "cidade": "Florianópolis",
+   "cores": [
+    "#0057B8",
+    "#FFFFFF"
+   ],
+   "reputacao": 60,
+   "divisao": "B",
+   "rivais": []
+  },
+  {
+   "id": "londrina",
+   "nome": "Londrina",
+   "sigla": "LON",
+   "uf": "PR",
+   "cidade": "Londrina",
+   "cores": [
+    "#0D80BF",
+    "#FFFFFF"
+   ],
+   "reputacao": 52,
+   "divisao": "B",
+   "rivais": []
+  },
+  {
+   "id": "america-mg",
+   "nome": "América-MG",
+   "sigla": "AME",
+   "uf": "MG",
+   "cidade": "Belo Horizonte",
+   "cores": [
+    "#006B3F",
+    "#000000"
+   ],
+   "reputacao": 64,
+   "divisao": "B",
+   "rivais": [
+    "atletico-mg",
+    "cruzeiro"
+   ]
+  },
+  {
+   "id": "ponte-preta",
+   "nome": "Ponte Preta",
+   "sigla": "PON",
+   "uf": "SP",
+   "cidade": "Campinas",
+   "cores": [
+    "#000000",
+    "#FFFFFF"
+   ],
+   "reputacao": 60,
+   "divisao": "B",
+   "rivais": []
+  }
+ ]
+}
