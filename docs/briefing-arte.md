@@ -2,9 +2,17 @@
 
 > Arte final **pintada e gerada por IA** (decisão do usuário, SPEC v2.12). O usuário gera as imagens com a própria conta; o Claude Code escreve os prompts, processa as peças e confere cada lote.
 > Mantido pela skill `.claude/skills/10efaixa-arte`.
-> Versão 4 · 2026-10-01 · Base: SPEC v2.12, seções 6.17, 7 e 11. (v4: sai o vetorial chapado feito por ilustrador; entra ilustração pintada semi-realista por IA, com recolor por máscara. v3: troféus inspirados nos reais, nunca cópias.)
+> Versão 5 · 2026-10-01 · Base: SPEC v2.13, seções 6.17, 7 e 11. (v4: sai o vetorial chapado feito por ilustrador; entra ilustração pintada semi-realista por IA, com recolor por máscara. v3: troféus inspirados nos reais, nunca cópias.)
 >
-> **Estado:** o formato raster desta versão é uma **proposta a validar no lote piloto** (seção 7). Até a T43b–T45b, o jogo roda com a arte provisória em SVG descrita no Apêndice A.
+> **Versão 5 · 2026-10-01 · plano em vigor (SPEC v2.13).** Onde este documento divergir do resumo abaixo, vale o resumo; as seções 4 a 7 da versão 4 (avatar montado por peças, cabeça canônica, lote piloto) estão superadas.
+>
+> - **Cenas:** jogador de costas; uma imagem-base por cena e cinco edições, uma por corte de cabelo (curto, cacheado médio, liso médio, cacheado grande, liso grande, careca).
+> - **Por código:** tom de pele, cor do cabelo (e grisalho), uniforme do clube (`src/data/kits.json`) e número do jogador.
+> - **Cores de troca na geração:** camisa magenta, calção e meião cianos, torcida e bandeiras em cinza claro; retrato com fundo verde chapado.
+> - **Retrato de frente:** da cintura para cima, nos mesmos 6 cortes.
+> - **Goleiro:** uniforme único, rosa, de manga longa e com luvas; versões próprias das cenas de jogo.
+> - **Geração:** Gemini (Nano Banana 2), manual. Prompts, um por pasta, em `docs/arte/` (comece pelo README de lá).
+> - **Continuam valendo:** seções 2 (regras) e 3 (estilo e paleta), e a lista de cenários e troféus da seção 6.
 
 ## 1. O jogo em 30 segundos
 

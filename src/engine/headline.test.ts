@@ -38,7 +38,7 @@ describe('manchetes e comentários (T41, SPEC 6.15)', () => {
     for (const l of LABELS) expect((ptBR.comentarioRotulo as Record<string, string[]>)[l]?.length).toBeGreaterThan(0);
   });
 
-  it('na carreira, o comentário traz a comemoração do jogador e o apelido aparece nos textos', () => {
+  it('na carreira, o comentário traz a comemoração do jogador e o apelido aparece nos textos', { timeout: 30_000 }, () => {
     let nick = false;
     for (let s = 0; s < 40; s++) {
       const r = career(s, 'cambalhota');

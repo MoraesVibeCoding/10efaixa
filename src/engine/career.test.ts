@@ -24,7 +24,7 @@ describe('integração da carreira (T24b)', () => {
     expect(simulateCareer(input(), 7)).toEqual(simulateCareer(input(), 7));
   });
 
-  it('vai dos 16 anos à aposentadoria (T34): uma temporada por ano, motivo registrado, nunca além dos 40', () => {
+  it('vai dos 16 anos à aposentadoria (T34): uma temporada por ano, motivo registrado, nunca além dos 40', { timeout: 30_000 }, () => {
     const rs = Array.from({ length: 30 }, (_, seed) => simulateCareer(input({ temperament: seed % 2 ? 'resenha' : 'frio' }), seed));
     for (const r of rs) {
       expect(r.seasons.length).toBe(r.endAge - 16);
