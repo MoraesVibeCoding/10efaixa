@@ -1,6 +1,6 @@
 # 10eFaixa — Especificação do Produto (SPEC.md)
 
-> Versão 2.8 (acesso e rebaixamento mantidos na v1) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
+> Versão 2.9 (T24b: integração da carreira) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
 > Este documento é a fonte da verdade para o Claude Code. Nenhuma mudança de escopo sem atualizar este arquivo primeiro.
 
 ---
@@ -545,6 +545,7 @@ Cada tarefa é atômica, com teste escrito antes do código e **um commit por ta
 | T22 | Clássicos, torcida, ídolo e vilão | Idolatria muda com clássicos e escolhas; temperamento influencia |
 | T23 | Vida de clube: técnicos, salário atrasado, empréstimo | Salário atrasado habilita pedir para sair |
 | T24 | Número da camisa, a 10 e a faixa do clube | Número mantido se livre; a 10 e a faixa só por evento |
+| T24b | Integração da carreira | Uma carreira completa liga criação, início por origem, temporadas (ligas, estaduais, copas), minutos, evolução, reunião, traços, idolatria, vida de clube e camisa; determinística; relatório em massa com tempo por carreira |
 
 ### Marco 3 — Carreira e mercado
 | ID | Tarefa | Critério de aceitação |
@@ -674,6 +675,7 @@ Decisões aprovadas durante a implementação. Complementam as seções acima.
 | 2026-09-30 | T19 | **Não verificado:** ordem do Ranking Nacional de Federações (cotas da Copa do Brasil); 2ª vaga da Copa do Brasil na Libertadores (CBF ainda estudava, tratada como Fase 2); Copa Verde não modelada (vaga vai ao clube mais forte fora) | Registrado em cups.json |
 | 2026-09-30 | T15+ | **A confirmar:** reputação de clubes na escala 1–100 (SPEC 6.9 diz 1–10000); mesma ordem de grandeza, mais simples de calibrar | Divergência encontrada no fim do Marco 2 |
 | 2026-09-30 | T20–T24 | Início por origem com vizinhos do IBGE; minutos pelo nível do elenco estimado pela reputação; idolatria −100..100 (ídolo ≥ 75, vilão ≤ −50); salário atrasado dá direito de sair a partir do 1º atraso; a 10 é reservada na chegada | Regras em start/minutes/idolatry/clubLife/shirt.json |
+| 2026-09-30 | T24b | Nova tarefa de integração antes do Marco 3; transferências e aposentadoria provisórias até T28 e T34 | Pedido do usuário no fechamento do Marco 2 |
 | 2026-09-30 | T42/T47 | Troféus: arte original que evoca o tipo do troféu real (taça com orelhas, globo, salva…), nunca cópia do desenho; lista mínima no briefing 6.7 | Pedido do usuário; desenhos de troféus reais são protegidos (seção 11). Réplicas só com revisão jurídica/licença |
 | 2026-09-30 | T14 | Sedes reais conferidas: Copa 2026 (EUA, Canadá, México), 2030 (Marrocos, Portugal, Espanha + centenário), 2034 (Arábia Saudita) — FIFA; Olimpíadas 2028 LA, 2032 Brisbane — COI. Demais sedes sorteadas por semente | Fontes e data em src/data/calendar.json |
 | 2026-09-30 | T14 | **Não verificado:** a CONMEBOL não anunciou a próxima Copa América masculina; ciclo assumido a cada 4 anos a partir de 2028 ("entre as Copas", 6.11). Sedes futuras repetem as 5 últimas reais em ordem (2015 Chile, 2016 EUA, 2019 Brasil, 2021 Brasil, 2024 EUA), decisão do usuário. Janelas de transferência modeladas por momento do semestre; datas exatas a conferir na T28 | Marcado `verificado: false` no JSON; revisar quando houver anúncio oficial |
