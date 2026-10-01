@@ -33,12 +33,12 @@ export function validateMatchConfig(c: typeof M): string[] {
 const cfgErrors = validateMatchConfig(M);
 if (cfgErrors.length) throw new Error(`leagues.json (match) inválido: ${cfgErrors.join('; ')}`);
 
-interface Ctx { rng: Prng; strength: Map<string, number>; key: Map<string, number> }
+export interface Ctx { rng: Prng; strength: Map<string, number>; key: Map<string, number> }
 
 const logistic = (x: number) => 1 / (1 + Math.exp(-x));
 
 /** 3 = vitória do mandante, 1 = empate, 0 = derrota. Um sorteio por partida. */
-function play(ctx: Ctx, home: string, away: string): 0 | 1 | 3 {
+export function play(ctx: Ctx, home: string, away: string): 0 | 1 | 3 {
   const d = ctx.strength.get(home)! + M.homeAdv - ctx.strength.get(away)!;
   const pDraw = M.drawBase * Math.exp(-Math.abs(d) / M.scale);
   const pHome = (1 - pDraw) * logistic(d / M.scale);
@@ -46,9 +46,9 @@ function play(ctx: Ctx, home: string, away: string): 0 | 1 | 3 {
   return u < pHome ? 3 : u < pHome + pDraw ? 1 : 0;
 }
 
-const newRow = (id: string): Row => ({ id, points: 0, wins: 0, draws: 0, losses: 0, home: 0 });
+export const newRow = (id: string): Row => ({ id, points: 0, wins: 0, draws: 0, losses: 0, home: 0 });
 
-function record(rows: Map<string, Row>, home: string, away: string, r: 0 | 1 | 3) {
+export function record(rows: Map<string, Row>, home: string, away: string, r: 0 | 1 | 3) {
   const h = rows.get(home)!;
   const a = rows.get(away)!;
   h.home++;
@@ -58,11 +58,11 @@ function record(rows: Map<string, Row>, home: string, away: string, r: 0 | 1 | 3
 }
 
 /** Ordena por pontos, vitórias e chave sorteada antes (nunca o PRNG dentro do comparador). */
-const rank = (ctx: Ctx, rows: Row[]) =>
+export const rank = (ctx: Ctx, rows: Row[]) =>
   [...rows].sort((x, y) => y.points - x.points || y.wins - x.wins || ctx.key.get(x.id)! - ctx.key.get(y.id)!);
 
 /** Método do círculo (alternância pelo índice do par): mandos 9/10 em turno único de 20. */
-function roundRobin(ctx: Ctx, clubs: string[], double: boolean): Row[] {
+export function roundRobin(ctx: Ctx, clubs: string[], double: boolean): Row[] {
   const rows = new Map(clubs.map((id) => [id, newRow(id)]));
   const n = clubs.length;
   let arr = clubs.map((_, i) => i);
@@ -81,17 +81,39 @@ function roundRobin(ctx: Ctx, clubs: string[], double: boolean): Row[] {
   return rank(ctx, [...rows.values()]);
 }
 
+/** Pênaltis ponderados pela força (a = mais bem colocado). */
+export function penalties(ctx: Ctx, a: string, b: string): string {
+  const [lo, hi] = M.penaltyClamp as [number, number];
+  const pA = Math.min(hi, Math.max(lo, 0.5 + (ctx.strength.get(a)! - ctx.strength.get(b)!) * M.penaltyStrengthWeight));
+  return ctx.rng.next() < pA ? a : b;
+}
+
+/** Jogo único na casa do mais bem colocado (a); empate vai aos pênaltis. */
+export function oneLeg(ctx: Ctx, a: string, b: string): Tie {
+  const r = play(ctx, a, b);
+  return { a, b, winner: r === 3 ? a : r === 0 ? b : penalties(ctx, a, b) };
+}
+
+/** Força com ruído de forma e chave de desempate, sorteadas em ordem fixa no início. */
+export function makeCtx(ids: string[], club: ClubInfo, rng: Prng): Ctx {
+  const strength = new Map<string, number>();
+  const key = new Map<string, number>();
+  for (const id of ids) {
+    strength.set(id, club(id).strength + (rng.next() * 2 - 1) * M.formNoise);
+    key.set(id, rng.next());
+  }
+  return { rng, strength, key };
+}
+
 /** Ida e volta: o mais bem colocado (a) decide em casa. Empate no agregado vai aos pênaltis ponderados. */
-function twoLegs(ctx: Ctx, a: string, b: string): Tie {
+export function twoLegs(ctx: Ctx, a: string, b: string): Tie {
   const leg1 = play(ctx, b, a);
   const leg2 = play(ctx, a, b);
   const pts = (r: number, isHome: boolean) => (r === 1 ? 1 : (r === 3) === isHome ? 3 : 0);
   const aPts = pts(leg1, false) + pts(leg2, true);
   const bPts = pts(leg1, true) + pts(leg2, false);
   if (aPts !== bPts) return { a, b, winner: aPts > bPts ? a : b };
-  const [lo, hi] = M.penaltyClamp as [number, number];
-  const pA = Math.min(hi, Math.max(lo, 0.5 + (ctx.strength.get(a)! - ctx.strength.get(b)!) * M.penaltyStrengthWeight));
-  return { a, b, winner: ctx.rng.next() < pA ? a : b };
+  return { a, b, winner: penalties(ctx, a, b) };
 }
 
 function knockout(ctx: Ctx, pairs: [string, string][], phases: Phase[], names: string[]): Tie {
@@ -122,16 +144,7 @@ const streamFor = (seed: number, div: Div) => createPrng(Math.imul(seed, 0x9e377
 
 export function simulateSeason(d: Divisions, club: ClubInfo, seed: number): SeasonResult {
   validate(d);
-  const ctx = (div: Div): Ctx => {
-    const rng = streamFor(seed, div);
-    const strength = new Map<string, number>();
-    const key = new Map<string, number>();
-    for (const id of d[div]) {
-      strength.set(id, club(id).strength + (rng.next() * 2 - 1) * M.formNoise);
-      key.set(id, rng.next());
-    }
-    return { rng, strength, key };
-  };
+  const ctx = (div: Div): Ctx => makeCtx(d[div], club, streamFor(seed, div));
 
   // A: pontos corridos; 4 caem.
   const tA = roundRobin(ctx('A'), d.A, true);

@@ -1,11 +1,12 @@
 {
- "_nota": "Clubes 2026 (SPEC 6.9, 11: nomes reais, escudo estilizado com sigla e cores). 'reputacao' (1–100) é estimativa de balanceamento, não dado oficial; 'cores' são aproximações para o uniforme (Série D: marinho/branco provisório até conferência). Rivais manuais só nas Séries A e B; rivais por cidade das Séries C e D são calculados pelo motor (cidade null = incerta, sem rival automático). Série D é divisão aberta, remontada pelos estaduais (T18).",
+ "_nota": "Clubes 2026 (SPEC 6.9, 11: nomes reais, escudo estilizado com sigla e cores). 'reputacao' (1–100) é estimativa de balanceamento, não dado oficial; 'cores' são aproximações para o uniforme (Série D: marinho/branco provisório até conferência). Rivais manuais só nas Séries A e B; rivais por cidade das Séries C e D são calculados pelo motor (cidade null = incerta, sem rival automático). Série D é divisão aberta, remontada pelos estaduais (T18). Clubes com divisao null disputam só o estadual (elite ou divisão de acesso); cores provisórias.",
  "fonte": {
   "serieA": "https://www.cbf.com.br/futebol-brasileiro/tabelas/campeonato-brasileiro/serie-a/2026",
   "serieB": "https://www.cbf.com.br/futebol-brasileiro/tabelas/campeonato-brasileiro/serie-b/2026",
   "serieC": "https://www.cbf.com.br/futebol-brasileiro/tabelas/campeonato-brasileiro/serie-c/2026/2013 (UF: notícias de rodada da CBF)",
   "serieD": "https://www.cbf.com.br/futebol-brasileiro/noticias/campeonato-brasileiro/a/cbf-divulga-grupos-da-serie-d-de-2026 (96 clubes com UF)",
-  "cidades": "Conhecimento geral (não há fonte oficial de cidade); null quando incerta"
+  "cidades": "Conhecimento geral (não há fonte oficial de cidade); null quando incerta",
+  "estaduais": "Regulamentos e notícias das federações (ver src/data/states.json)"
  },
  "conferidoEm": "2026-09-30",
  "clubs": [
@@ -2261,6 +2262,1714 @@
    ],
    "reputacao": 44,
    "divisao": "D",
+   "rivais": []
+  },
+  {
+   "id": "capivariano",
+   "nome": "Capivariano",
+   "sigla": "CAV",
+   "uf": "SP",
+   "cidade": "Capivari",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "primavera-sp",
+   "nome": "Primavera",
+   "sigla": "PRM",
+   "uf": "SP",
+   "cidade": "Indaiatuba",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "bangu",
+   "nome": "Bangu",
+   "sigla": "BAN",
+   "uf": "RJ",
+   "cidade": "Rio de Janeiro",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "boavista-rj",
+   "nome": "Boavista",
+   "sigla": "BOV",
+   "uf": "RJ",
+   "cidade": "Saquarema",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "urt",
+   "nome": "URT",
+   "sigla": "URT",
+   "uf": "MG",
+   "cidade": "Patos de Minas",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "itabirito",
+   "nome": "Itabirito",
+   "sigla": "ITB",
+   "uf": "MG",
+   "cidade": "Itabirito",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "north",
+   "nome": "North",
+   "sigla": "NOT",
+   "uf": "MG",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "avenida",
+   "nome": "Avenida",
+   "sigla": "AVE",
+   "uf": "RS",
+   "cidade": "Santa Cruz do Sul",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "novo-hamburgo",
+   "nome": "Novo Hamburgo",
+   "sigla": "NOO",
+   "uf": "RS",
+   "cidade": "Novo Hamburgo",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "monsoon",
+   "nome": "Monsoon",
+   "sigla": "MOS",
+   "uf": "RS",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "inter-sm",
+   "nome": "Inter-SM",
+   "sigla": "INR",
+   "uf": "RS",
+   "cidade": "Santa Maria",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "foz-do-iguacu",
+   "nome": "Foz do Iguaçu",
+   "sigla": "FOZ",
+   "uf": "PR",
+   "cidade": "Foz do Iguaçu",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "andraus",
+   "nome": "Andraus",
+   "sigla": "AND",
+   "uf": "PR",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "galo-maringa",
+   "nome": "Galo Maringá",
+   "sigla": "GAO",
+   "uf": "PR",
+   "cidade": "Maringá",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "camboriu",
+   "nome": "Camboriú",
+   "sigla": "CAB",
+   "uf": "SC",
+   "cidade": "Camboriú",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "concordia",
+   "nome": "Concórdia",
+   "sigla": "COC",
+   "uf": "SC",
+   "cidade": "Concórdia",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "carlos-renaux",
+   "nome": "Carlos Renaux",
+   "sigla": "CAR",
+   "uf": "SC",
+   "cidade": "Brusque",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "barcelona-ba",
+   "nome": "Barcelona",
+   "sigla": "BAC",
+   "uf": "BA",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "bahia-de-feira",
+   "nome": "Bahia de Feira",
+   "sigla": "BAI",
+   "uf": "BA",
+   "cidade": "Feira de Santana",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "galicia",
+   "nome": "Galícia",
+   "sigla": "GAI",
+   "uf": "BA",
+   "cidade": "Salvador",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "jequie",
+   "nome": "Jequié",
+   "sigla": "JEQ",
+   "uf": "BA",
+   "cidade": "Jequié",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "jaguar",
+   "nome": "Jaguar",
+   "sigla": "JAG",
+   "uf": "PE",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "vitoria-pe",
+   "nome": "Vitória-PE",
+   "sigla": "VIR",
+   "uf": "PE",
+   "cidade": "Vitória de Santo Antão",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "jataiense",
+   "nome": "Jataiense",
+   "sigla": "JAT",
+   "uf": "GO",
+   "cidade": "Jataí",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "centro-oeste",
+   "nome": "Centro Oeste",
+   "sigla": "CET",
+   "uf": "GO",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "anapolina",
+   "nome": "Anapolina",
+   "sigla": "ANP",
+   "uf": "GO",
+   "cidade": "Anápolis",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 30,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "taubate",
+   "nome": "Taubaté",
+   "sigla": "TAU",
+   "uf": "SP",
+   "cidade": "Taubaté",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "sao-jose-sp",
+   "nome": "São José",
+   "sigla": "SAE",
+   "uf": "SP",
+   "cidade": "São José dos Campos",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "santo-andre",
+   "nome": "Santo André",
+   "sigla": "SAD",
+   "uf": "SP",
+   "cidade": "Santo André",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "gremio-prudente",
+   "nome": "Grêmio Prudente",
+   "sigla": "GRM",
+   "uf": "SP",
+   "cidade": "Presidente Prudente",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "oeste",
+   "nome": "Oeste",
+   "sigla": "OES",
+   "uf": "SP",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "juventus-sp",
+   "nome": "Juventus",
+   "sigla": "JUE",
+   "uf": "SP",
+   "cidade": "São Paulo",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "linense",
+   "nome": "Linense",
+   "sigla": "LIN",
+   "uf": "SP",
+   "cidade": "Lins",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "votuporanguense",
+   "nome": "Votuporanguense",
+   "sigla": "VOT",
+   "uf": "SP",
+   "cidade": "Votuporanga",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "sao-bento",
+   "nome": "São Bento",
+   "sigla": "SAB",
+   "uf": "SP",
+   "cidade": "Sorocaba",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "sertaozinho",
+   "nome": "Sertãozinho",
+   "sigla": "SET",
+   "uf": "SP",
+   "cidade": "Sertãozinho",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "monte-azul",
+   "nome": "Monte Azul",
+   "sigla": "MOE",
+   "uf": "SP",
+   "cidade": "Monte Azul Paulista",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "americano",
+   "nome": "Americano",
+   "sigla": "AMC",
+   "uf": "RJ",
+   "cidade": "Campos dos Goytacazes",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "araruama",
+   "nome": "Araruama",
+   "sigla": "ARR",
+   "uf": "RJ",
+   "cidade": "Araruama",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "audax-rj",
+   "nome": "Audax Rio",
+   "sigla": "AUD",
+   "uf": "RJ",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "bonsucesso",
+   "nome": "Bonsucesso",
+   "sigla": "BON",
+   "uf": "RJ",
+   "cidade": "Rio de Janeiro",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "cabofriense",
+   "nome": "Cabofriense",
+   "sigla": "CAO",
+   "uf": "RJ",
+   "cidade": "Cabo Frio",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "olaria",
+   "nome": "Olaria",
+   "sigla": "OLA",
+   "uf": "RJ",
+   "cidade": "Rio de Janeiro",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "perolas-negras",
+   "nome": "Pérolas Negras",
+   "sigla": "PER",
+   "uf": "RJ",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "resende",
+   "nome": "Resende",
+   "sigla": "RES",
+   "uf": "RJ",
+   "cidade": "Resende",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "sao-goncalo",
+   "nome": "São Gonçalo",
+   "sigla": "SAG",
+   "uf": "RJ",
+   "cidade": "São Gonçalo",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "serrano",
+   "nome": "Serrano",
+   "sigla": "SEA",
+   "uf": "RJ",
+   "cidade": "Petrópolis",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "aymores",
+   "nome": "Aymorés",
+   "sigla": "AYM",
+   "uf": "MG",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "villa-nova-mg",
+   "nome": "Villa Nova",
+   "sigla": "VIL",
+   "uf": "MG",
+   "cidade": "Nova Lima",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "democrata-sl",
+   "nome": "Democrata-SL",
+   "sigla": "DEO",
+   "uf": "MG",
+   "cidade": "Sete Lagoas",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "ipatinga",
+   "nome": "Ipatinga",
+   "sigla": "IPA",
+   "uf": "MG",
+   "cidade": "Ipatinga",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "patrocinense",
+   "nome": "Patrocinense",
+   "sigla": "PAT",
+   "uf": "MG",
+   "cidade": "Patrocínio",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "mamore",
+   "nome": "Mamoré",
+   "sigla": "MAM",
+   "uf": "MG",
+   "cidade": "Patos de Minas",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "valeriodoce",
+   "nome": "Valeriodoce",
+   "sigla": "VAL",
+   "uf": "MG",
+   "cidade": "Itabira",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "uberaba",
+   "nome": "Uberaba",
+   "sigla": "UBR",
+   "uf": "MG",
+   "cidade": "Uberaba",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "guarani-mg",
+   "nome": "Guarani-MG",
+   "sigla": "GUN",
+   "uf": "MG",
+   "cidade": "Divinópolis",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "caldense",
+   "nome": "Caldense",
+   "sigla": "CAL",
+   "uf": "MG",
+   "cidade": "Poços de Caldas",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "coimbra",
+   "nome": "Coimbra",
+   "sigla": "COI",
+   "uf": "MG",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "boa-esporte",
+   "nome": "Boa Esporte",
+   "sigla": "BOE",
+   "uf": "MG",
+   "cidade": "Varginha",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "aimore",
+   "nome": "Aimoré",
+   "sigla": "AIM",
+   "uf": "RS",
+   "cidade": "São Leopoldo",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "apafut",
+   "nome": "Apafut",
+   "sigla": "APF",
+   "uf": "RS",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "bage",
+   "nome": "Bagé",
+   "sigla": "BAG",
+   "uf": "RS",
+   "cidade": "Bagé",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "brasil-far",
+   "nome": "Brasil-FAR",
+   "sigla": "BRI",
+   "uf": "RS",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "esportivo",
+   "nome": "Esportivo",
+   "sigla": "ESP",
+   "uf": "RS",
+   "cidade": "Bento Gonçalves",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "gaucho",
+   "nome": "Gaúcho",
+   "sigla": "GAU",
+   "uf": "RS",
+   "cidade": "Passo Fundo",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "gloria",
+   "nome": "Glória",
+   "sigla": "GLO",
+   "uf": "RS",
+   "cidade": "Vacaria",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "gramadense",
+   "nome": "Gramadense",
+   "sigla": "GRA",
+   "uf": "RS",
+   "cidade": "Gramado",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "guarani-va",
+   "nome": "Guarani-VA",
+   "sigla": "GUI",
+   "uf": "RS",
+   "cidade": "Venâncio Aires",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "lajeadense",
+   "nome": "Lajeadense",
+   "sigla": "LAJ",
+   "uf": "RS",
+   "cidade": "Lajeado",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "passo-fundo",
+   "nome": "Passo Fundo",
+   "sigla": "PAS",
+   "uf": "RS",
+   "cidade": "Passo Fundo",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "pelotas",
+   "nome": "Pelotas",
+   "sigla": "PEL",
+   "uf": "RS",
+   "cidade": "Pelotas",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "santa-cruz-rs",
+   "nome": "Santa Cruz-RS",
+   "sigla": "SAC",
+   "uf": "RS",
+   "cidade": "Santa Cruz do Sul",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "uniao-frederiquense",
+   "nome": "União Frederiquense",
+   "sigla": "UNA",
+   "uf": "RS",
+   "cidade": "Frederico Westphalen",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "veranopolis",
+   "nome": "Veranópolis",
+   "sigla": "VER",
+   "uf": "RS",
+   "cidade": "Veranópolis",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "araucaria",
+   "nome": "Araucária",
+   "sigla": "ARU",
+   "uf": "PR",
+   "cidade": "Araucária",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "batel",
+   "nome": "Batel",
+   "sigla": "BAT",
+   "uf": "PR",
+   "cidade": "Guarapuava",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "laranja-mecanica",
+   "nome": "Laranja Mecânica",
+   "sigla": "LAR",
+   "uf": "PR",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "nacional-pr",
+   "nome": "Nacional-PR",
+   "sigla": "NAI",
+   "uf": "PR",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "parana-clube",
+   "nome": "Paraná Clube",
+   "sigla": "PAA",
+   "uf": "PR",
+   "cidade": "Curitiba",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "paranavai",
+   "nome": "Paranavaí",
+   "sigla": "PAN",
+   "uf": "PR",
+   "cidade": "Paranavaí",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "patriotas",
+   "nome": "Patriotas",
+   "sigla": "PAI",
+   "uf": "PR",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "prudentopolis",
+   "nome": "Prudentópolis",
+   "sigla": "PRU",
+   "uf": "PR",
+   "cidade": "Prudentópolis",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "rio-branco-pr",
+   "nome": "Rio Branco-PR",
+   "sigla": "RIB",
+   "uf": "PR",
+   "cidade": "Paranaguá",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "toledo",
+   "nome": "Toledo",
+   "sigla": "TOL",
+   "uf": "PR",
+   "cidade": "Toledo",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "caravaggio",
+   "nome": "Caravaggio",
+   "sigla": "CAA",
+   "uf": "SC",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "fluminense-sc",
+   "nome": "Fluminense-SC",
+   "sigla": "FLI",
+   "uf": "SC",
+   "cidade": "Joinville",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "guarani-sc",
+   "nome": "Guarani-SC",
+   "sigla": "GUS",
+   "uf": "SC",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "hercilio-luz",
+   "nome": "Hercílio Luz",
+   "sigla": "HER",
+   "uf": "SC",
+   "cidade": "Tubarão",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "jaragua",
+   "nome": "Jaraguá",
+   "sigla": "JAR",
+   "uf": "SC",
+   "cidade": "Jaraguá do Sul",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "juventus-sc",
+   "nome": "Juventus-SC",
+   "sigla": "JUN",
+   "uf": "SC",
+   "cidade": "Jaraguá do Sul",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "metropolitano",
+   "nome": "Metropolitano",
+   "sigla": "MET",
+   "uf": "SC",
+   "cidade": "Blumenau",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "nacao",
+   "nome": "Nação",
+   "sigla": "NAA",
+   "uf": "SC",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "tubarao",
+   "nome": "Tubarão",
+   "sigla": "TUB",
+   "uf": "SC",
+   "cidade": "Tubarão",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "leonico",
+   "nome": "Leônico",
+   "sigla": "LEO",
+   "uf": "BA",
+   "cidade": "Salvador",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "barreiras",
+   "nome": "Barreiras",
+   "sigla": "BAE",
+   "uf": "BA",
+   "cidade": "Barreiras",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "camacari",
+   "nome": "Camaçari",
+   "sigla": "CAC",
+   "uf": "BA",
+   "cidade": "Camaçari",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "vitoria-da-conquista",
+   "nome": "Vitória da Conquista",
+   "sigla": "VII",
+   "uf": "BA",
+   "cidade": "Vitória da Conquista",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "feira-fc",
+   "nome": "Feira FC",
+   "sigla": "FEI",
+   "uf": "BA",
+   "cidade": "Feira de Santana",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "fluminense-de-feira",
+   "nome": "Fluminense de Feira",
+   "sigla": "FLN",
+   "uf": "BA",
+   "cidade": "Feira de Santana",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "grapiuna",
+   "nome": "Grapiúna",
+   "sigla": "GRP",
+   "uf": "BA",
+   "cidade": "Itabuna",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "jacobina",
+   "nome": "Jacobina",
+   "sigla": "JAO",
+   "uf": "BA",
+   "cidade": "Jacobina",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "redencao",
+   "nome": "Redenção",
+   "sigla": "RED",
+   "uf": "BA",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "ssa-fc",
+   "nome": "SSA FC",
+   "sigla": "SSA",
+   "uf": "BA",
+   "cidade": "Salvador",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "aguia-pe",
+   "nome": "Águia",
+   "sigla": "AGI",
+   "uf": "PE",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "america-pe",
+   "nome": "América-PE",
+   "sigla": "AMP",
+   "uf": "PE",
+   "cidade": "Recife",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "belo-jardim",
+   "nome": "Belo Jardim",
+   "sigla": "BEL",
+   "uf": "PE",
+   "cidade": "Belo Jardim",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "caruaru-city",
+   "nome": "Caruaru City",
+   "sigla": "CAU",
+   "uf": "PE",
+   "cidade": "Caruaru",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "centro-limoeirense",
+   "nome": "Centro Limoeirense",
+   "sigla": "CER",
+   "uf": "PE",
+   "cidade": "Limoeiro",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "ipojuca",
+   "nome": "Ipojuca",
+   "sigla": "IPO",
+   "uf": "PE",
+   "cidade": "Ipojuca",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "porto-pe",
+   "nome": "Porto-PE",
+   "sigla": "POO",
+   "uf": "PE",
+   "cidade": "Caruaru",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "vera-cruz",
+   "nome": "Vera Cruz",
+   "sigla": "VEA",
+   "uf": "PE",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "ypiranga-pe",
+   "nome": "Ypiranga-PE",
+   "sigla": "YPR",
+   "uf": "PE",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "bom-jesus",
+   "nome": "Bom Jesus",
+   "sigla": "BOM",
+   "uf": "GO",
+   "cidade": null,
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "crixas",
+   "nome": "Crixás",
+   "sigla": "CRX",
+   "uf": "GO",
+   "cidade": "Crixás",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "goiania",
+   "nome": "Goiânia",
+   "sigla": "GON",
+   "uf": "GO",
+   "cidade": "Goiânia",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "goianesia",
+   "nome": "Goianésia",
+   "sigla": "GOE",
+   "uf": "GO",
+   "cidade": "Goianésia",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "gremio-anapolis",
+   "nome": "Grêmio Anápolis",
+   "sigla": "GRI",
+   "uf": "GO",
+   "cidade": "Anápolis",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "mineiros",
+   "nome": "Mineiros",
+   "sigla": "MIN",
+   "uf": "GO",
+   "cidade": "Mineiros",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "morrinhos",
+   "nome": "Morrinhos",
+   "sigla": "MOR",
+   "uf": "GO",
+   "cidade": "Morrinhos",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "rio-verde",
+   "nome": "Rio Verde",
+   "sigla": "RIV",
+   "uf": "GO",
+   "cidade": "Rio Verde",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "trindade",
+   "nome": "Trindade",
+   "sigla": "TRI",
+   "uf": "GO",
+   "cidade": "Trindade",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
+   "rivais": []
+  },
+  {
+   "id": "tupy",
+   "nome": "Tupy",
+   "sigla": "TUP",
+   "uf": "GO",
+   "cidade": "Jussara",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 22,
+   "divisao": null,
    "rivais": []
   }
  ]

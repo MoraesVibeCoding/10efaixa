@@ -18,7 +18,7 @@ describe('clubes (T15)', () => {
   it('Série C com 20 clubes (2026) e Série D com 96, com fonte oficial', () => {
     expect(clubsIn('C')).toHaveLength(leagues.leagues.C.clubes);
     expect(clubsIn('D')).toHaveLength(leagues.leagues.D.clubes);
-    expect(CLUBS).toHaveLength(156);
+    expect(CLUBS.filter((c) => c.divisao !== null)).toHaveLength(156);
     expect(raw.fonte.serieC).toMatch(/cbf\.com\.br/);
     expect(raw.fonte.serieD).toMatch(/cbf\.com\.br/);
     expect(leagues.fonte.serieC).toMatch(/cbf\.com\.br/);
@@ -71,6 +71,10 @@ describe('clubes (T15)', () => {
     expect(areRivals('palmeiras', 'portuguesa')).toBe(true); // Portuguesa (D) em São Paulo
     expect(areRivals('gremio', 'internacional')).toBe(true); // manual mantido
     expect(areRivals('atletico-mg', 'gremio')).toBe(false);
+  });
+
+  it('clube só estadual (divisao null) não ganha rival por cidade', () => {
+    expect(areRivals('bangu', 'flamengo')).toBe(false);
   });
 
   it('schema: cidade null só é aceita nas Séries C e D', () => {

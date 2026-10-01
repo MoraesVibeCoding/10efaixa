@@ -1,0 +1,851 @@
+{
+ "_nota": "Estaduais completos (SPEC 6.9, T18). Regras de 2026 para todos os anos; tamanho da elite fixo (sobem tantos quantos caem). Refs: G=geral, A/B/C=posição no grupo, Q=classificados especiais, V=vencedor do confronto anterior.",
+ "conferidoEm": "2026-09-30",
+ "estaduais": {
+  "SP": {
+   "nome": "Paulistão",
+   "grupos": [
+    [
+     "corinthians",
+     "palmeiras",
+     "santos",
+     "sao-paulo"
+    ],
+    [
+     "sao-bernardo",
+     "novorizontino",
+     "bragantino",
+     "mirassol"
+    ],
+    [
+     "ponte-preta",
+     "guarani",
+     "velo-clube",
+     "portuguesa"
+    ],
+    [
+     "botafogo-sp",
+     "noroeste",
+     "capivariano",
+     "primavera-sp"
+    ]
+   ],
+   "primeiraFase": "potes",
+   "mataMata": [
+    {
+     "jogos": 1,
+     "pares": [
+      [
+       "G1",
+       "G8"
+      ],
+      [
+       "G4",
+       "G5"
+      ],
+      [
+       "G2",
+       "G7"
+      ],
+      [
+       "G3",
+       "G6"
+      ]
+     ]
+    },
+    {
+     "jogos": 1,
+     "pares": [
+      [
+       "V1",
+       "V2"
+      ],
+      [
+       "V3",
+       "V4"
+      ]
+     ]
+    },
+    {
+     "jogos": 2,
+     "pares": [
+      [
+       "V1",
+       "V2"
+      ]
+     ]
+    }
+   ],
+   "rebaixamento": {
+    "tipo": "ultimos",
+    "quantidade": 2
+   },
+   "acesso": {
+    "divisao": "Paulistão A2",
+    "pool": [
+     "agua-santa",
+     "inter-de-limeira",
+     "ituano",
+     "taubate",
+     "ferroviaria",
+     "xv-de-piracicaba",
+     "sao-jose-sp",
+     "santo-andre",
+     "gremio-prudente",
+     "oeste",
+     "juventus-sp",
+     "linense",
+     "votuporanguense",
+     "sao-bento",
+     "sertaozinho",
+     "monte-azul"
+    ]
+   },
+   "fonte": "https://futebolpaulista.com.br/Noticias/Detalhe.aspx?Noticia=30476 ; https://futebolpaulista.com.br/Repositorio/Competicao/Regulamento/1551/1551_639033989807692307.pdf ; A2: https://futebolpaulista.com.br/Noticias/Detalhe.aspx?Noticia=30386",
+   "aproximacoes": "Potes: cada clube joga o próprio pote (3) + o clube de mesma posição nos outros potes (3) + 2 cruzamentos; semifinal em jogo único e final em ida e volta assumidas."
+  },
+  "RJ": {
+   "nome": "Cariocão",
+   "grupos": [
+    [
+     "fluminense",
+     "vasco",
+     "volta-redonda",
+     "sampaio-correa-rj",
+     "portuguesa-rj",
+     "bangu"
+    ],
+    [
+     "flamengo",
+     "botafogo",
+     "madureira",
+     "marica",
+     "boavista-rj",
+     "nova-iguacu"
+    ]
+   ],
+   "primeiraFase": "cruzado",
+   "mataMata": [
+    {
+     "jogos": 1,
+     "pares": [
+      [
+       "A1",
+       "A4"
+      ],
+      [
+       "B1",
+       "B4"
+      ],
+      [
+       "A2",
+       "A3"
+      ],
+      [
+       "B2",
+       "B3"
+      ]
+     ]
+    },
+    {
+     "jogos": 2,
+     "pares": [
+      [
+       "V1",
+       "V4"
+      ],
+      [
+       "V2",
+       "V3"
+      ]
+     ]
+    },
+    {
+     "jogos": 2,
+     "pares": [
+      [
+       "V1",
+       "V2"
+      ]
+     ]
+    }
+   ],
+   "rebaixamento": {
+    "tipo": "quadrangular",
+    "participantes": [
+     "A5",
+     "A6",
+     "B5",
+     "B6"
+    ],
+    "idaEVolta": false,
+    "caem": 1
+   },
+   "acesso": {
+    "divisao": "Série A2",
+    "pool": [
+     "america-rj",
+     "americano",
+     "araruama",
+     "audax-rj",
+     "bonsucesso",
+     "cabofriense",
+     "olaria",
+     "perolas-negras",
+     "resende",
+     "sao-goncalo",
+     "serrano"
+    ]
+   },
+   "fonte": "https://www.fferj.com.br/Noticias/View/23148 ; A2: http://fferj.com.br/noticias/definidos-o-regulamento-e-a-tabela-da-serie-a2-carioca",
+   "aproximacoes": "Semifinal por sorteio substituída por chave fixa; final em ida e volta e quadrangular do rebaixamento em turno único assumidos; 1 rebaixado porque a A2 dá 1 vaga."
+  },
+  "MG": {
+   "nome": "Mineiro",
+   "grupos": [
+    [
+     "atletico-mg",
+     "uberlandia",
+     "democrata-gv",
+     "urt"
+    ],
+    [
+     "america-mg",
+     "tombense",
+     "betim",
+     "pouso-alegre"
+    ],
+    [
+     "cruzeiro",
+     "athletic-mg",
+     "itabirito",
+     "north"
+    ]
+   ],
+   "primeiraFase": "cruzado",
+   "classificados": {
+    "tipo": "lideresMaisSegundos",
+    "segundos": 1
+   },
+   "mataMata": [
+    {
+     "jogos": 2,
+     "pares": [
+      [
+       "Q1",
+       "Q4"
+      ],
+      [
+       "Q2",
+       "Q3"
+      ]
+     ]
+    },
+    {
+     "jogos": 1,
+     "pares": [
+      [
+       "V1",
+       "V2"
+      ]
+     ]
+    }
+   ],
+   "rebaixamento": {
+    "tipo": "ultimos",
+    "quantidade": 2
+   },
+   "acesso": {
+    "divisao": "Módulo II",
+    "pool": [
+     "aymores",
+     "villa-nova-mg",
+     "democrata-sl",
+     "ipatinga",
+     "patrocinense",
+     "mamore",
+     "valeriodoce",
+     "uberaba",
+     "guarani-mg",
+     "caldense",
+     "coimbra",
+     "boa-esporte"
+    ]
+   },
+   "fonte": "http://esumula.fmf.com.br/Arquivos/ArquivosCompeticao/1941/Arquivo_19412914.pdf ; Módulo II: http://esumula.fmf.com.br/Arquivos/ArquivosCompeticao/1906/Arquivo_19062883.pdf",
+   "aproximacoes": "'Democrata' da elite tratado como Democrata GV; semifinais 1º×4º e 2º×3º pela campanha."
+  },
+  "RS": {
+   "nome": "Gauchão",
+   "grupos": [
+    [
+     "internacional",
+     "juventude",
+     "avenida",
+     "sao-jose-rs",
+     "guarany-de-bage",
+     "sao-luiz"
+    ],
+    [
+     "gremio",
+     "caxias",
+     "novo-hamburgo",
+     "monsoon",
+     "inter-sm",
+     "ypiranga-rs"
+    ]
+   ],
+   "primeiraFase": "cruzado",
+   "mataMata": [
+    {
+     "jogos": 1,
+     "pares": [
+      [
+       "A1",
+       "B4"
+      ],
+      [
+       "B2",
+       "A3"
+      ],
+      [
+       "B1",
+       "A4"
+      ],
+      [
+       "A2",
+       "B3"
+      ]
+     ]
+    },
+    {
+     "jogos": 2,
+     "pares": [
+      [
+       "V1",
+       "V2"
+      ],
+      [
+       "V3",
+       "V4"
+      ]
+     ]
+    },
+    {
+     "jogos": 2,
+     "pares": [
+      [
+       "V1",
+       "V2"
+      ]
+     ]
+    }
+   ],
+   "rebaixamento": {
+    "tipo": "quadrangular",
+    "participantes": [
+     "A5",
+     "A6",
+     "B5",
+     "B6"
+    ],
+    "idaEVolta": true,
+    "caem": 2
+   },
+   "acesso": {
+    "divisao": "Gauchão A2",
+    "pool": [
+     "aimore",
+     "apafut",
+     "bage",
+     "brasil-far",
+     "brasil-de-pelotas",
+     "esportivo",
+     "gaucho",
+     "gloria",
+     "gramadense",
+     "guarani-va",
+     "lajeadense",
+     "passo-fundo",
+     "pelotas",
+     "santa-cruz-rs",
+     "uniao-frederiquense",
+     "veranopolis"
+    ]
+   },
+   "fonte": "https://fgf.com.br/noticia/fgf-promove-conselho-tecnico-para-o-gauchao-superbet-2026-e-define-nova-formula-da-competicao ; A2: https://fgf.com.br/noticia/gauchao-serie-a2-2026-tem-formato-definido-em-conselho-tecnico-na-fgf",
+   "aproximacoes": "Pareamento das quartas (A1×B4…) e jogos das fases finais assumidos."
+  },
+  "PR": {
+   "nome": "Paranaense",
+   "grupos": [
+    [
+     "londrina",
+     "athletico-pr",
+     "maringa",
+     "cascavel",
+     "sao-joseense",
+     "foz-do-iguacu"
+    ],
+    [
+     "andraus",
+     "azuriz",
+     "cianorte",
+     "coritiba",
+     "galo-maringa",
+     "operario-pr"
+    ]
+   ],
+   "primeiraFase": "cruzado",
+   "mataMata": [
+    {
+     "jogos": 2,
+     "pares": [
+      [
+       "A1",
+       "B4"
+      ],
+      [
+       "B2",
+       "A3"
+      ],
+      [
+       "B1",
+       "A4"
+      ],
+      [
+       "A2",
+       "B3"
+      ]
+     ]
+    },
+    {
+     "jogos": 2,
+     "pares": [
+      [
+       "V1",
+       "V2"
+      ],
+      [
+       "V3",
+       "V4"
+      ]
+     ]
+    },
+    {
+     "jogos": 2,
+     "pares": [
+      [
+       "V1",
+       "V2"
+      ]
+     ]
+    }
+   ],
+   "rebaixamento": {
+    "tipo": "mataMata",
+    "pares": [
+     [
+      "G9",
+      "G12"
+     ],
+     [
+      "G10",
+      "G11"
+     ]
+    ],
+    "jogos": 2
+   },
+   "acesso": {
+    "divisao": "Segundona",
+    "pool": [
+     "araucaria",
+     "batel",
+     "laranja-mecanica",
+     "nacional-pr",
+     "parana-clube",
+     "paranavai",
+     "patriotas",
+     "prudentopolis",
+     "rio-branco-pr",
+     "toledo"
+    ]
+   },
+   "fonte": "https://federacaopr.com.br/2025/noticias/paranaense/1-divisao/paranaense-2026-comeca-em-07-de-janeiro-e-tera-12-rodadas/ ; Segundona: https://federacaopr.com.br/noticias/paranaense/segundona-tera-inicio-antecipado-em-2026-veja-as-datas-e-formula-de-disputa/",
+   "aproximacoes": "Pareamento das quartas assumido (A1×B4…)."
+  },
+  "SC": {
+   "nome": "Catarinense",
+   "grupos": [
+    [
+     "avai",
+     "camboriu",
+     "concordia",
+     "marcilio-dias",
+     "brusque",
+     "joinville"
+    ],
+    [
+     "chapecoense",
+     "carlos-renaux",
+     "barra-sc",
+     "figueirense",
+     "criciuma",
+     "santa-catarina"
+    ]
+   ],
+   "primeiraFase": "cruzado",
+   "mataMata": [
+    {
+     "jogos": 1,
+     "pares": [
+      [
+       "A1",
+       "B4"
+      ],
+      [
+       "B2",
+       "A3"
+      ],
+      [
+       "B1",
+       "A4"
+      ],
+      [
+       "A2",
+       "B3"
+      ]
+     ]
+    },
+    {
+     "jogos": 2,
+     "pares": [
+      [
+       "V1",
+       "V2"
+      ],
+      [
+       "V3",
+       "V4"
+      ]
+     ]
+    },
+    {
+     "jogos": 2,
+     "pares": [
+      [
+       "V1",
+       "V2"
+      ]
+     ]
+    }
+   ],
+   "rebaixamento": {
+    "tipo": "quadrangular",
+    "participantes": [
+     "A5",
+     "A6",
+     "B5",
+     "B6"
+    ],
+    "idaEVolta": true,
+    "caem": 3
+   },
+   "acesso": {
+    "divisao": "Série B",
+    "pool": [
+     "blumenau",
+     "caravaggio",
+     "fluminense-sc",
+     "guarani-sc",
+     "hercilio-luz",
+     "jaragua",
+     "juventus-sc",
+     "metropolitano",
+     "nacao",
+     "tubarao"
+    ]
+   },
+   "fonte": "https://fcf.com.br/catarinense-fort-atacadista-2026-comeca-em-07-de-janeiro/ ; descenso: https://fcf.com.br/divulgada-a-tabela-do-quadrangular-do-descenso-do-catarinense-fort-atacadista-2026/ ; Série B: https://fcf.com.br/definido-o-novo-regulamento-do-catarinense-serie-b/",
+   "aproximacoes": "Fases finais assumidas; sobem 3 (= caem 3) para manter 12 clubes (a regra oficial de 2026 é transição para 10)."
+  },
+  "BA": {
+   "nome": "Baianão",
+   "grupos": [
+    [
+     "atletico-ba",
+     "bahia",
+     "barcelona-ba",
+     "bahia-de-feira",
+     "galicia",
+     "jacuipense",
+     "jequie",
+     "juazeirense",
+     "porto-ba",
+     "vitoria"
+    ]
+   ],
+   "primeiraFase": "turnoUnico",
+   "mataMata": [
+    {
+     "jogos": 1,
+     "pares": [
+      [
+       "G1",
+       "G4"
+      ],
+      [
+       "G2",
+       "G3"
+      ]
+     ]
+    },
+    {
+     "jogos": 1,
+     "pares": [
+      [
+       "V1",
+       "V2"
+      ]
+     ]
+    }
+   ],
+   "rebaixamento": {
+    "tipo": "ultimos",
+    "quantidade": 2
+   },
+   "acesso": {
+    "divisao": "Série B",
+    "pool": [
+     "leonico",
+     "barreiras",
+     "camacari",
+     "vitoria-da-conquista",
+     "feira-fc",
+     "fluminense-de-feira",
+     "grapiuna",
+     "jacobina",
+     "redencao",
+     "ssa-fc"
+    ]
+   },
+   "fonte": "https://www.fbf.org.br/noticias/detalhe/12657 ; Série B: https://www.fbf.org.br/noticias/detalhe/12831",
+   "aproximacoes": "Nenhuma relevante."
+  },
+  "PE": {
+   "nome": "Pernambucano",
+   "grupos": [
+    [
+     "decisao",
+     "jaguar",
+     "maguary",
+     "nautico",
+     "retro",
+     "santa-cruz",
+     "sport",
+     "vitoria-pe"
+    ]
+   ],
+   "primeiraFase": "turnoUnico",
+   "mataMata": [
+    {
+     "jogos": 1,
+     "pares": [
+      [
+       "G3",
+       "G6"
+      ],
+      [
+       "G4",
+       "G5"
+      ]
+     ]
+    },
+    {
+     "jogos": 1,
+     "pares": [
+      [
+       "G1",
+       "V2"
+      ],
+      [
+       "G2",
+       "V1"
+      ]
+     ]
+    },
+    {
+     "jogos": 2,
+     "pares": [
+      [
+       "V1",
+       "V2"
+      ]
+     ]
+    }
+   ],
+   "rebaixamento": {
+    "tipo": "ultimos",
+    "quantidade": 1
+   },
+   "acesso": {
+    "divisao": "Série A2",
+    "pool": [
+     "aguia-pe",
+     "america-pe",
+     "belo-jardim",
+     "caruaru-city",
+     "centro-limoeirense",
+     "ipojuca",
+     "porto-pe",
+     "vera-cruz",
+     "ypiranga-pe",
+     "central-pe"
+    ]
+   },
+   "fonte": "https://www.fpf-pe.com.br/pt/noticias/view.php?q=11961 ; A2 (lista de 2025): https://www.fpf-pe.com.br/pt/noticias/view.php?q=11460",
+   "aproximacoes": "Eliminatória 3º×6º e 4º×5º e semifinais em jogo único, final em ida e volta assumidas; acesso usa a lista da A2 de 2025 sem o Vitória (promovido)."
+  },
+  "GO": {
+   "nome": "Goianão",
+   "grupos": [
+    [
+     "vila-nova",
+     "crac",
+     "inhumas",
+     "goiatuba"
+    ],
+    [
+     "anapolis",
+     "goias",
+     "jataiense",
+     "aparecidense"
+    ],
+    [
+     "atletico-go",
+     "abecat",
+     "centro-oeste",
+     "anapolina"
+    ]
+   ],
+   "primeiraFase": "cruzado",
+   "mataMata": [
+    {
+     "jogos": 2,
+     "pares": [
+      [
+       "G1",
+       "G8"
+      ],
+      [
+       "G4",
+       "G5"
+      ],
+      [
+       "G2",
+       "G7"
+      ],
+      [
+       "G3",
+       "G6"
+      ]
+     ]
+    },
+    {
+     "jogos": 2,
+     "pares": [
+      [
+       "V1",
+       "V2"
+      ],
+      [
+       "V3",
+       "V4"
+      ]
+     ]
+    },
+    {
+     "jogos": 2,
+     "pares": [
+      [
+       "V1",
+       "V2"
+      ]
+     ]
+    }
+   ],
+   "rebaixamento": {
+    "tipo": "ultimos",
+    "quantidade": 2
+   },
+   "acesso": {
+    "divisao": "Divisão de Acesso",
+    "pool": [
+     "bom-jesus",
+     "crixas",
+     "goiania",
+     "goianesia",
+     "gremio-anapolis",
+     "mineiros",
+     "morrinhos",
+     "rio-verde",
+     "trindade",
+     "tupy"
+    ]
+   },
+   "fonte": "https://www.fgf.esp.br/assets/uploads/file/Regulamento%20Goian%C3%A3o%202026.pdf ; Acesso: https://www.fgf.esp.br/pt/noticias/view.php?q=25286",
+   "aproximacoes": "Semifinal re-semeada por pontos substituída por chave fixa; playoff de permanência (10º×11º, condicional) simplificado: caem os 2 últimos."
+  },
+  "CE": {
+   "nome": "Cearense",
+   "grupos": [
+    [
+     "fortaleza",
+     "ceara",
+     "floresta",
+     "ferroviario-ce",
+     "maracana-ce",
+     "iguatu",
+     "tirol",
+     "atletico-ce"
+    ]
+   ],
+   "primeiraFase": "turnoUnico",
+   "mataMata": [
+    {
+     "jogos": 1,
+     "pares": [
+      [
+       "G1",
+       "G4"
+      ],
+      [
+       "G2",
+       "G3"
+      ]
+     ]
+    },
+    {
+     "jogos": 2,
+     "pares": [
+      [
+       "V1",
+       "V2"
+      ]
+     ]
+    }
+   ],
+   "rebaixamento": {
+    "tipo": "nenhum"
+   },
+   "acesso": null,
+   "fonte": "https://www.futebolcearense.com.br/2023/noticia.asp?id=18422 (conteúdo não carregou; participantes e formato NÃO VERIFICADOS)",
+   "verificado": false,
+   "aproximacoes": "Participantes = clubes cearenses da base; formato genérico; sem rebaixamento/acesso até conferir na FCF."
+  }
+ },
+ "simplificado": {
+  "_nota": "Demais estados: clubes da UF nas Séries A–D; turno único + final em ida e volta (ou só a final com 2 clubes); sem acesso.",
+  "minimo": 2
+ }
+}
