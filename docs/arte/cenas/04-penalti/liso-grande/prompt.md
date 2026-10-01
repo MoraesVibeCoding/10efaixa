@@ -1,5 +1,9 @@
 # Cena 04 — Pênalti — corte Liso grande
 
+> **INSTRUCTIONS FOR THE ASSISTANT — READ FIRST**
+> Start from a clean slate. Clear and ignore everything from earlier in this conversation and from any previous conversation: earlier prompts, earlier images, earlier styles and earlier corrections. Use only what is written in this file.
+> Then generate one image following the section "Prompt" below. The sections in Portuguese are notes for the human reviewer and are not part of the request.
+
 **Usada em:** Momento de decisão em jogo grande (o pênalti decisivo). Jogador de costas diante da bola e do gol.
 
 **Como gerar:** Gere do zero com o prompt abaixo. Se quiser reforçar a semelhança, anexe também a imagem-base (`../curto/imagem.jpeg`) e acrescente no fim: `Use the attached image as a reference for composition, camera angle and painting style.`
@@ -37,7 +41,11 @@ Composition: vertical 4:5. The character and all the action are in the upper 60%
 The image must contain no text, letters or numbers anywhere, no logos, crests, badges, sponsor or brand marks on kits, boots, flags, boards or walls, no watermark or signature, and no interface elements, frames or borders. Every person is an original fictional character who does not resemble any real person.
 ```
 
-## Conferência
+> **AFTER GENERATING — FINAL STEP**
+> Save the generated image to Google Drive, in the same folder where this file is stored, with the file name `imagem.jpeg`. If you cannot save to Drive yourself, say so clearly and show the image so that the user can save it to that folder manually.
+
+
+## Conferência (nota para revisão humana)
 
 - [ ] Formato vertical 4:5, na resolução maior
 - [ ] Jogador de costas, cabelo no corte **Liso grande**
