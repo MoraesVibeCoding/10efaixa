@@ -59,7 +59,7 @@ const count = (xs: string[]) => xs.reduce<Record<string, number>>((m, x) => ({ .
 const prefixed = (prefix: string, m: Record<string, number>) => Object.fromEntries(Object.entries(m).map(([k, v]) => [prefix + k, v]));
 
 /** Fatos da carreira usados pela nota, pelo veredito e pelos rótulos (um contexto plano, como o dos eventos). */
-export function legacyFacts(r: Omit<CareerResult, 'legacy'>): Ctx {
+export function legacyFacts(r: Omit<CareerResult, 'legacy' | 'nickname' | 'headline' | 'comment'>): Ctx {
   const sel = r.selection;
   const played = r.seasons.filter((s) => s.minutes >= cfg.elite.minutosMin);
   const worldCups = sel.tournaments.filter((t) => t.tournament === 'copaDoMundo');
@@ -83,7 +83,7 @@ export function legacyFacts(r: Omit<CareerResult, 'legacy'>): Ctx {
   };
 }
 
-export function legacyOf(r: Omit<CareerResult, 'legacy'>): Legacy {
+export function legacyOf(r: Omit<CareerResult, 'legacy' | 'nickname' | 'headline' | 'comment'>): Legacy {
   const facts = legacyFacts(r);
   const { score, components } = legacyScore(facts);
   return { score, components, verdict: verdictOf(facts, score), labels: labelsOf(facts) };

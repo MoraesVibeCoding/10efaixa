@@ -1,0 +1,70 @@
+{
+  "manchete": {
+    "lendaMundial": [
+      "{apelido} encerra a carreira como um dos maiores da história do futebol mundial",
+      "O mundo se despede de {nome}, o {apelido}, lenda de todas as Copas"
+    ],
+    "lendaDoFutebolBrasileiro": [
+      "{apelido} pendura as chuteiras e entra para a galeria dos grandes do futebol brasileiro",
+      "{nome} deixa os gramados como lenda da camisa amarela"
+    ],
+    "craqueDaSelecao": [
+      "{apelido} se aposenta depois de anos como titular da Seleção",
+      "{nome} encerra a carreira com a Seleção Brasileira no currículo"
+    ],
+    "idoloDeClube": [
+      "{apelido} se despede e deixa a torcida em lágrimas e a taça em casa",
+      "{nome} vira ídolo eterno e pendura as chuteiras"
+    ],
+    "titularDeSerieA": [
+      "{apelido} encerra uma longa carreira entre os titulares da elite do futebol",
+      "{nome} se aposenta depois de anos de Série A"
+    ],
+    "promessaQueNaoVingou": [
+      "{apelido} se aposenta e fica a pergunta: o que poderia ter sido?",
+      "A promessa de {nome} pendura as chuteiras sem cumprir o que prometeu"
+    ],
+    "rodadoDoInterior": [
+      "{apelido} pendura as chuteiras depois de rodar meio Brasil",
+      "{nome} encerra a carreira com malas cheias de endereços e histórias"
+    ],
+    "jogadorDeSerieB": [
+      "{apelido} se despede dos gramados depois de uma carreira de luta",
+      "{nome} encerra a carreira com a dignidade de quem nunca deixou de correr"
+    ]
+  },
+  "comentario": {
+    "lendaMundial": [
+      "{apelido} fez tanto gol que a comemoração “{comemoracao}” já tem verbete na enciclopédia.",
+      "Dizem que {nome} nunca errou. Só a gente dentro de campo achava o contrário."
+    ],
+    "lendaDoFutebolBrasileiro": [
+      "Fez a comemoração “{comemoracao}” tantas vezes que a Seleção já esperava o gol atrasar.",
+      "{apelido} não aposentou: só trocou a bola pelo sofá."
+    ],
+    "craqueDaSelecao": [
+      "A comemoração “{comemoracao}” saiu tão bem que {apelido} quase ganhou o prêmio sozinho.",
+      "Perna ruim? Nunca vimos. Folga? Também não."
+    ],
+    "idoloDeClube": [
+      "{apelido} comemorou com {comemoracao} até o dia em que o joelho pediu música.",
+      "Dizem que {nome} ainda recebe cartinha da torcida. E responde com {comemoracao}."
+    ],
+    "titularDeSerieA": [
+      "{apelido} ficou tanto tempo na elite que já conhecia o gramado pelo nome.",
+      "A comemoração “{comemoracao}” ficou, o fôlego foi embora."
+    ],
+    "promessaQueNaoVingou": [
+      "{apelido} treinou a comemoração “{comemoracao}” mais do que o chute.",
+      "A promessa estava lá. {nome} também. O encontro é que não rolou."
+    ],
+    "rodadoDoInterior": [
+      "{apelido} conhece mais rodoviárias do que escanteios.",
+      "Mudou de time tantas vezes que a comemoração “{comemoracao}” já vinha com mala."
+    ],
+    "jogadorDeSerieB": [
+      "{apelido} errou pouco, acertou menos e fez a comemoração “{comemoracao}” com convicção.",
+      "{nome} sempre disse que ia chegar lá. Chegou na lanchonete do estádio."
+    ]
+  }
+}

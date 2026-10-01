@@ -27,7 +27,9 @@ import { cutOffset, invited, residenceCountry, teamName, teamStrength } from './
 import dual from '../data/dualNationality.json';
 import { seasonAwards, type Award } from './awards';
 import { ZERO_STATS, addStats, seasonStats, type SeasonStats } from './stats';
+import { headlineOf } from './headline';
 import { legacyOf, type Legacy } from './legacy';
+import { generateNickname } from './nickname';
 import { farewellOffer, retirementCheck, type RetireReason } from './retirement';
 import { simulateSeason, type ClubInfo, type Div, type Divisions, type Row } from './season';
 import { assignNumber, canGetArmband, canGetTen, rosterNumbers } from './shirt';
@@ -58,6 +60,8 @@ export interface CareerResult {
   /** Tudo o que entrou no bolso (antes de gastos e perdas) e clássicos decisivos — usados pelos rótulos (T40). */
   earnedBRL: number; decisiveDerbies: number;
   legacy: Legacy;
+  /** T41: apelido dado pelo jogo, manchete séria e comentário com zoeira. */
+  nickname: string; headline: string; comment: string;
   retirement: RetireReason; farewell: 'formador' | 'coracao' | null;
   cards: { yellows: number; reds: number }; finalTemperament: string; houseBought: boolean; discipline: number;
   seasons: { year: number; clubId: string; division: string | null; minutes: number; overall: number }[];
@@ -513,5 +517,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     player, spells, titles, peakOverall, peakAge, endAge: evo.age, wearsTen, captain, idolatry: idol,
     wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, selection, stats, awards, retirement, farewell, cards, finalTemperament: temp, houseBought, discipline, seasons, earnedBRL: earned, decisiveDerbies,
   };
-  return { ...result, legacy: legacyOf(result) };
+  // Sorteios novos ficam por último para não alterar nenhum resultado anterior da mesma semente.
+  const nickname = generateNickname(player, rng);
+  const legacy = legacyOf(result);
+  return { ...result, nickname, legacy, ...headlineOf({ player, nickname, legacy }, rng) };
 }
