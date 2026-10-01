@@ -16,18 +16,18 @@ const byStrength = (ctx: Ctx) => (x: string, y: string) => ctx.strength.get(y)! 
 const stream = (seed: number, salt: number) => createPrng(Math.imul(seed, 0x9e3779b1) ^ Math.imul(salt, 0x85ebca6b));
 
 /** Pareamento do sorteio por força: o mais forte (mandante na volta) contra o mais fraco. */
-function seedPairs(ctx: Ctx, ids: string[]): [string, string][] {
+export function seedPairs(ctx: Ctx, ids: string[]): [string, string][] {
   const s = [...ids].sort(byStrength(ctx));
   return Array.from({ length: s.length / 2 }, (_, i) => [s[i]!, s[s.length - 1 - i]!]);
 }
-const runTies = (ctx: Ctx, pairs: [string, string][], legs: number): Tie[] =>
+export const runTies = (ctx: Ctx, pairs: [string, string][], legs: number): Tie[] =>
   pairs.map(([a, b]) => (legs === 2 ? twoLegs : oneLeg)(ctx, a, b));
-const adjacent = (ties: Tie[]): [string, string][] =>
+export const adjacent = (ties: Tie[]): [string, string][] =>
   Array.from({ length: ties.length / 2 }, (_, i) => [ties[2 * i]!.winner, ties[2 * i + 1]!.winner]);
-const winners = (ties: Tie[]) => ties.map((t) => t.winner);
+export const winners = (ties: Tie[]) => ties.map((t) => t.winner);
 
 /** Chaveamento até a final: ida e volta, final em jogo único. */
-function bracket(ctx: Ctx, first: Tie[], phases: Phase[]): string {
+export function bracket(ctx: Ctx, first: Tie[], phases: Phase[]): string {
   let ties = first;
   while (ties.length > 1) {
     const legs = ties.length === 2 ? 1 : 2;

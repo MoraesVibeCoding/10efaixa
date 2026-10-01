@@ -2182,5 +2182,35 @@
     "reputacao": 66
    }
   ]
+ },
+ "copasUEFA": {
+  "_nota": "Formato atual (fase de liga com 36 clubes, 8 jogos; 1–8 direto às oitavas; 9–24 em playoffs). Vagas por posição na liga na temporada anterior + pool de outras ligas.",
+  "fonte": "https://www.uefa.com/uefachampionsleague/news/02a8-21717d0c6cb5-03a9a5ff1552-1000--champions-league-league-phase-draw-pots-confirmed/",
+  "clubes": 36,
+  "jogosFaseDeLiga": 8,
+  "diretoOitavas": 8,
+  "playoffs": [
+   9,
+   24
+  ],
+  "vagasChampions": {
+   "ENG": 5,
+   "ESP": 5,
+   "ITA": 4,
+   "GER": 4,
+   "FRA": 3,
+   "POR": 2,
+   "outros": 13
+  },
+  "vagasEuropaLeague": {
+   "ENG": 3,
+   "ESP": 2,
+   "ITA": 2,
+   "GER": 2,
+   "FRA": 3,
+   "POR": 2,
+   "outros": 22
+  },
+  "aproximacoes": "Vagas por liga copiadas da distribuição de 2026/27; sorteio da fase de liga por calendário circular (8 adversários distintos, sem potes); atual campeão sem vaga extra; copa nacional em mata-mata de jogo único entre os clubes da liga."
  }
 }
