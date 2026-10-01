@@ -5,6 +5,7 @@ dist
 coverage
 
 # ferramentas locais (caminhos da máquina) e pacote original
-.claude/
+.claude/*
+!.claude/skills/
 .codex/
 files.zip
