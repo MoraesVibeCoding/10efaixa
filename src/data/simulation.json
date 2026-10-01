@@ -1,0 +1,9 @@
+{
+  "_nota": "Harness T13: contexto sorteado por semestre, sem clubes ainda (Marcos 2–3).",
+  "startAge": 16,
+  "endAge": 35,
+  "minutes": [0.3, 1],
+  "morale": [0.3, 0.9],
+  "staffQuality": [0.9, 1.1],
+  "maxCareerMs": 50
+}
