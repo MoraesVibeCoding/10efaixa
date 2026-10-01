@@ -145,5 +145,26 @@
    "aceitar": "Realizar o sonho",
    "recusar": "Agradecer e seguir onde está"
   }
+ },
+ "copa-sacrificio": {
+  "titulo": "No sacrifício pela Seleção",
+  "opcoes": {
+   "jogar": "Jogar mesmo sentindo dor",
+   "poupar": "Ficar fora e se recuperar"
+  }
+ },
+ "copa-fora-posicao": {
+  "titulo": "O treinador pede você fora de posição",
+  "opcoes": {
+   "aceitar": "Jogar onde o time precisa",
+   "recusar": "Dizer que só rende na sua posição"
+  }
+ },
+ "copa-penalti": {
+  "titulo": "O pênalti decisivo",
+  "opcoes": {
+   "bater": "Pegar a bola e bater",
+   "deixar": "Deixar para um companheiro"
+  }
  }
 }

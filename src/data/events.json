@@ -39,7 +39,11 @@
   ],
   "casaComprada": "bool",
   "investir": "bool",
-  "despedida": "bool"
+  "despedida": "bool",
+  "prestigio": [
+   0,
+   1
+  ]
  },
  "eventos": [
   {
@@ -1006,6 +1010,120 @@
    ],
    "politica": {
     "padrao": "aceitar"
+   }
+  },
+  {
+   "id": "copa-sacrificio",
+   "cena": "copa",
+   "peso": 10,
+   "condicoes": [
+    [
+     "torneioSacrificio",
+     "==",
+     true
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "jogar",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.05
+      ]
+     ]
+    },
+    {
+     "id": "poupar",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       -0.05
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "jogar",
+    "temperamento": {
+     "frio": "poupar"
+    }
+   }
+  },
+  {
+   "id": "copa-fora-posicao",
+   "cena": "copa",
+   "peso": 10,
+   "condicoes": [
+    [
+     "torneioForaPosicao",
+     "==",
+     true
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "aceitar",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.02
+      ]
+     ]
+    },
+    {
+     "id": "recusar",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       -0.05
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "aceitar",
+    "temperamento": {
+     "esquentado": "recusar"
+    }
+   }
+  },
+  {
+   "id": "copa-penalti",
+   "cena": "penalti",
+   "peso": 10,
+   "condicoes": [
+    [
+     "torneioPenalti",
+     "==",
+     true
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "bater",
+     "efeitos": []
+    },
+    {
+     "id": "deixar",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "bater",
+    "temperamento": {
+     "resenha": "deixar"
+    }
    }
   }
  ]

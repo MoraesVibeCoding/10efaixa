@@ -20,6 +20,9 @@ import { overall, type Position } from './overall';
 import { coachProposal } from './positionChange';
 import { createPlayer, type CreationInput, type Player } from './player';
 import { createPrng, type Prng } from './prng';
+import { TOURNAMENTS, eligible, playTournament, type NTournament } from './tournaments';
+import { isEditionYear } from './calendar';
+import tcfg from '../data/nationalTournaments.json';
 import { farewellOffer, retirementCheck, type RetireReason } from './retirement';
 import { simulateSeason, type ClubInfo, type Div, type Divisions, type Row } from './season';
 import { assignNumber, canGetArmband, canGetTen, rosterNumbers } from './shirt';
@@ -40,7 +43,9 @@ export interface CareerResult {
   injuries: { leve: number; media: number; grave: number };
   finalPosition: Position; positionChanges: number;
   /** Seleção: semestres convocado por degrau; caps = convocações para a principal. */
-  selection: { callUps: Record<Exclude<Rung, 'nenhum'>, number>; caps: number; ten: number; captain: number };
+  selection: { callUps: Record<Exclude<Rung, 'nenhum'>, number>; caps: number; ten: number; captain: number;
+    tournaments: { year: number; tournament: NTournament; stage: string; hero: boolean; villain: boolean }[];
+  };
   retirement: RetireReason; farewell: 'formador' | 'coracao' | null;
   cards: { yellows: number; reds: number }; finalTemperament: string; houseBought: boolean; discipline: number;
   seasons: { year: number; clubId: string; division: string | null; minutes: number; overall: number }[];
@@ -123,7 +128,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let farewellAsked = false;
   let sel: CallUp = { rung: 'nenhum', ten: false, captain: false };
   let prestige = 0;
-  const selection: CareerResult['selection'] = { callUps: { sub17: 0, sub20: 0, olimpica: 0, lista: 0, reserva: 0, titular: 0 }, caps: 0, ten: 0, captain: 0 };
+  const selection: CareerResult['selection'] = { callUps: { sub17: 0, sub20: 0, olimpica: 0, lista: 0, reserva: 0, titular: 0 }, caps: 0, ten: 0, captain: 0, tournaments: [] };
 
   let clubId: string | null = null;
   let inYouth = false;
@@ -319,6 +324,21 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         if (isPrincipal(next.rung)) selection.caps++;
         if (next.ten) selection.ten++;
         if (next.captain) selection.captain++;
+      }
+      // Torneios de seleções no meio do ano (calendário da T14); título com a Seleção é permanente.
+      if (sem === 0) {
+        for (const t of TOURNAMENTS) {
+          if (!isEditionYear(t, year) || !eligible(t, sel.rung, evo.age)) continue;
+          const tr = createPrng(Math.imul(seed + 7, 0x9e3779b1) ^ Math.imul(year, 0x85ebca6b) ^ TOURNAMENTS.indexOf(t));
+          const res = playTournament({ tournament: t, rung: sel.rung, overall: ov(evo), mental: evo.attributes.mental }, (e) => autoChoice(e, temp), tr);
+          const fxT = tcfg.efeitos;
+          for (const d of res.decisions) morale = applyOption({ moral: morale }, d.event, d.option).moral as number;
+          if (res.champion) { titles.push({ year, competition: t, clubId: 'selecao' }); morale = clamp(morale + fxT.titulo.moral, 0, 1); }
+          if (res.hero) { prestige = Math.min(1, prestige + fxT.heroi.prestigio); morale = clamp(morale + fxT.heroi.moral, 0, 1); }
+          if (res.villain) { prestige *= fxT.vilao.prestigioFator; morale = clamp(morale + fxT.vilao.moral, 0, 1); }
+          if (res.injured) outLeft = Math.max(outLeft, fxT.lesaoSemestresFora);
+          selection.tournaments.push({ year, tournament: t, stage: res.stage, hero: res.hero, villain: res.villain });
+        }
       }
       const o = ov(evo);
       if (o > peakOverall) { peakOverall = o; peakAge = evo.age; }

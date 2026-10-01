@@ -2,6 +2,7 @@ import { CLUBS } from './clubs';
 import { FOREIGN } from './cups';
 import europe from '../data/europe.json';
 import { simulateCareer } from './career';
+import { isEditionYear } from './calendar';
 import type { CreationInput } from './player';
 import cfg from '../data/career.json';
 import retire from '../data/retirement.json';
@@ -59,7 +60,7 @@ describe('integração da carreira (T24b)', () => {
   it('títulos só do clube do jogador naquela temporada', () => {
     for (let seed = 0; seed < 10; seed++) {
       const r = simulateCareer(input({ origin: 'baseGrande' }), seed);
-      for (const t of r.titles) {
+      for (const t of r.titles.filter((x) => x.clubId !== 'selecao')) {
         const season = r.seasons.find((s) => s.year === t.year)!;
         expect(t.clubId).toBe(season.clubId);
         expect(season.minutes).toBeGreaterThanOrEqual(cfg.minutosParaTitulo);
@@ -153,5 +154,17 @@ describe('integração da carreira (T24b)', () => {
     expect(rs.some((r) => r.selection.caps === 0)).toBe(true);
     const best = [...rs].sort((a, b) => b.peakOverall - a.peakOverall);
     expect(best[0]!.selection.caps).toBeGreaterThan(best.at(-1)!.selection.caps);
+  });
+
+  it('torneios de seleções (T37): só em ano de edição do calendário; título com a Seleção fica na carreira', () => {
+    const rs = Array.from({ length: 60 }, (_, seed) => simulateCareer(input({ position: 'meia', archetypeId: 'classico10', origin: seed % 2 ? 'varzea' : 'baseGrande' }), seed));
+    const all = rs.flatMap((r) => r.selection.tournaments);
+    expect(all.length).toBeGreaterThan(0);
+    for (const t of all) expect(isEditionYear(t.tournament, t.year)).toBe(true);
+    for (const r of rs) {
+      const won = r.selection.tournaments.filter((t) => t.stage === 'campeao');
+      expect(r.titles.filter((t) => t.clubId === 'selecao').map((t) => `${t.year}-${t.competition}`)).toEqual(won.map((t) => `${t.year}-${t.tournament}`));
+    }
+    expect(all.some((t) => t.tournament === 'copaDoMundo')).toBe(true);
   });
 });

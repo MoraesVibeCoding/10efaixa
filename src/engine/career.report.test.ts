@@ -23,8 +23,8 @@ it.skipIf(!process.env.SIM_CARREIRA)(`gera o relatório de ${N} carreiras integr
   const groups: [string, typeof rs][] = [['todas', rs], ...['baseGrande', 'peneira', 'varzea'].map((o) => [o, rs.filter((r) => r.origin === o)] as [string, typeof rs])];
   const comps = ['serieA', 'serieB', 'estadual', 'copaDoBrasil', 'libertadores', 'sulAmericana', 'ligaNacional', 'copaNacional', 'champions', 'europaLeague'];
   const lines = [
-    '# Relatório da carreira integrada — Marco 3', '',
-    `${N} carreiras completas (dos 16 anos à aposentadoria, Marco 3 completo). Tempo médio: **${ms.toFixed(1)} ms/carreira** (meta < 50 ms).`, '',
+    '# Relatório da carreira integrada — Marcos 3 e 4', '',
+    `${N} carreiras completas (dos 16 anos à aposentadoria, Marcos 3 e 4). Tempo médio: **${ms.toFixed(1)} ms/carreira** (meta < 50 ms).`, '',
     '## Auge por faixa (meta 9.3: 5% · 10% · 60% · 25% · 0%)',
     row(['Grupo', 'n', '95+', '90–94', '85–89', '80–84', '<80']), row(['---', '--:', '--:', '--:', '--:', '--:', '--:']),
     ...groups.map(([g, x]) => row([g, x.length, ...tiers(x)])), '',
@@ -49,6 +49,12 @@ it.skipIf(!process.env.SIM_CARREIRA)(`gera o relatório de ${N} carreiras integr
     ...groups.map(([g, x]) => row([g, pct(x.map((r) => r.selection.callUps.sub17 > 0)), pct(x.map((r) => r.selection.callUps.sub20 > 0)), pct(x.map((r) => r.selection.callUps.olimpica > 0)),
       pct(x.map((r) => r.selection.caps > 0)), pct(x.map((r) => r.selection.callUps.titular > 0)), pct(x.map((r) => r.selection.ten > 0)), pct(x.map((r) => r.selection.captain > 0)),
       pct(x.map((r) => r.selection.ten > 0 && r.selection.captain > 0)), mean(x.filter((r) => r.selection.caps > 0).map((r) => r.selection.caps)).toFixed(1)])), '',
+    '## Torneios de seleções',
+    row(['Grupo', 'Jogou Copa', 'Campeão do mundo', 'Copa América', 'Ouro olímpico', 'Herói da Copa', 'Vilão da Copa']), row(['---', ...Array(6).fill('--:')]),
+    ...groups.map(([g, x]) => row([g, pct(x.map((r) => r.selection.tournaments.some((t) => t.tournament === 'copaDoMundo'))),
+      ...['copaDoMundo', 'copaAmerica', 'olimpiadas'].map((c) => pct(x.map((r) => r.titles.some((t) => t.competition === c)))),
+      pct(x.map((r) => r.selection.tournaments.some((t) => t.tournament === 'copaDoMundo' && t.hero))),
+      pct(x.map((r) => r.selection.tournaments.some((t) => t.tournament === 'copaDoMundo' && t.villain)))])), '',
     '## Títulos por carreira (média)',
     row(['Grupo', ...comps, 'total']), row(['---', ...comps.map(() => '--:'), '--:']),
     ...groups.map(([g, x]) => row([g, ...comps.map((c) => mean(x.map((r) => r.titles.filter((t) => t.competition === c).length)).toFixed(2)), mean(x.map((r) => r.titles.length)).toFixed(1)])), '',

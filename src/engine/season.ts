@@ -37,14 +37,16 @@ export interface Ctx { rng: Prng; strength: Map<string, number>; key: Map<string
 
 const logistic = (x: number) => 1 / (1 + Math.exp(-x));
 
-/** 3 = vitória do mandante, 1 = empate, 0 = derrota. Um sorteio por partida. */
-export function play(ctx: Ctx, home: string, away: string): 0 | 1 | 3 {
-  const d = ctx.strength.get(home)! + M.homeAdv - ctx.strength.get(away)!;
+/** Resultado pela diferença de força `d` (já com mando, se houver) e um sorteio `u`: 3 vitória, 1 empate, 0 derrota. */
+export function outcome(d: number, u: number): 0 | 1 | 3 {
   const pDraw = M.drawBase * Math.exp(-Math.abs(d) / M.scale);
-  const pHome = (1 - pDraw) * logistic(d / M.scale);
-  const u = ctx.rng.next();
-  return u < pHome ? 3 : u < pHome + pDraw ? 1 : 0;
+  const pWin = (1 - pDraw) * logistic(d / M.scale);
+  return u < pWin ? 3 : u < pWin + pDraw ? 1 : 0;
 }
+
+/** 3 = vitória do mandante, 1 = empate, 0 = derrota. Um sorteio por partida. */
+export const play = (ctx: Ctx, home: string, away: string): 0 | 1 | 3 =>
+  outcome(ctx.strength.get(home)! + M.homeAdv - ctx.strength.get(away)!, ctx.rng.next());
 
 export const newRow = (id: string): Row => ({ id, points: 0, wins: 0, draws: 0, losses: 0, home: 0 });
 

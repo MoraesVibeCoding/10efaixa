@@ -1,0 +1,149 @@
+{
+ "_nota": "Torneios de seleções (SPEC 6.11; T37). Só o caminho do Brasil é simulado. As forças das seleções são números de balanceamento do jogo, não ranking oficial.",
+ "conferidoEm": "2026-10-01",
+ "torneios": {
+  "copaDoMundo": {
+   "degrau": "principal",
+   "jogosGrupo": 3,
+   "pontosParaAvancar": 3,
+   "mataMata": [
+    "dezesseis-avos",
+    "oitavas",
+    "quartas",
+    "semifinal",
+    "final"
+   ],
+   "adversarios": "todos",
+   "verificado": true,
+   "fonte": "https://www.fifa.com/en/articles/article-fifa-world-cup-2026-mexico-canada-usa-new-format-tournament-football-soccer (48 seleções, 12 grupos de 4; avançam os 2 primeiros e os 8 melhores terceiros; mata-mata a partir dos 16 avos)"
+  },
+  "copaAmerica": {
+   "degrau": "principal",
+   "jogosGrupo": 3,
+   "pontosParaAvancar": 4,
+   "mataMata": [
+    "quartas",
+    "semifinal",
+    "final"
+   ],
+   "adversarios": "americas",
+   "verificado": true,
+   "fonte": "https://www.conmebol.com/noticias/grupos-de-la-conmebol-copa-america-2024%EF%B8%8F/ (edição de 2024: 16 seleções, 4 grupos de 4, os 2 primeiros vão às quartas; formato mantido para as edições futuras)"
+  },
+  "olimpiadas": {
+   "degrau": "olimpica",
+   "idadeMaxPrincipal": 23,
+   "jogosGrupo": 3,
+   "pontosParaAvancar": 4,
+   "mataMata": [
+    "quartas",
+    "semifinal",
+    "final"
+   ],
+   "adversarios": "todos",
+   "verificado": false,
+   "fonte": "https://inside.fifa.com/media-releases/fifa-celebrates-historic-step-for-womens-football-at-la28-olympic-games (LA28: 12 seleções no masculino). NÃO VERIFICADO: desenho dos grupos do torneio de 12; assumidos grupos de 4 e quartas de final"
+  }
+ },
+ "brasil": {
+  "forca": 84,
+  "impacto": {
+   "refOverall": 84,
+   "porPonto": 0.3,
+   "max": 4,
+   "porDegrau": {
+    "titular": 1,
+    "reserva": 0.5,
+    "lista": 0.2,
+    "olimpica": 1
+   }
+  }
+ },
+ "selecoes": {
+  "americas": {
+   "Argentina": 87,
+   "Uruguai": 80,
+   "Colômbia": 79,
+   "Equador": 76,
+   "Estados Unidos": 76,
+   "México": 76,
+   "Paraguai": 73,
+   "Chile": 72,
+   "Peru": 71,
+   "Venezuela": 70,
+   "Canadá": 72,
+   "Costa Rica": 67,
+   "Panamá": 67,
+   "Bolívia": 64,
+   "Jamaica": 65
+  },
+  "resto": {
+   "França": 88,
+   "Espanha": 88,
+   "Inglaterra": 86,
+   "Portugal": 85,
+   "Alemanha": 85,
+   "Holanda": 84,
+   "Itália": 83,
+   "Bélgica": 81,
+   "Croácia": 80,
+   "Marrocos": 79,
+   "Japão": 78,
+   "Senegal": 77,
+   "Suíça": 77,
+   "Dinamarca": 77,
+   "Coreia do Sul": 75,
+   "Nigéria": 74,
+   "Egito": 73,
+   "Austrália": 72,
+   "Irã": 72,
+   "Arábia Saudita": 68
+  }
+ },
+ "momentos": {
+  "_obs": "1 momento garantido no último jogo do grupo (sacrifício ou fora de posição); o pênalti decisivo aparece se um mata-mata empatar",
+  "copa-sacrificio": {
+   "jogar": {
+    "forca": 2,
+    "riscoLesao": 0.25
+   },
+   "poupar": {
+    "semImpacto": true
+   }
+  },
+  "copa-fora-posicao": {
+   "aceitar": {
+    "forca": 1
+   },
+   "recusar": {
+    "semImpactoAteOFim": true
+   }
+  },
+  "copa-penalti": {
+   "acertoBase": 0.7,
+   "porPontoMental": 0.006,
+   "refMental": 70,
+   "limites": [
+    0.5,
+    0.92
+   ]
+  },
+  "heroi": {
+   "chanceTitularCampeao": 0.3
+  }
+ },
+ "efeitos": {
+  "heroi": {
+   "prestigio": 0.2,
+   "moral": 0.1
+  },
+  "vilao": {
+   "prestigioFator": 0.5,
+   "moral": -0.15
+  },
+  "titulo": {
+   "moral": 0.1
+  },
+  "lesaoSemestresFora": 0.5
+ }
+}
