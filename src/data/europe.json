@@ -1,0 +1,2186 @@
+{
+ "_nota": "Europa e ligas fora do eixo (SPEC 6.10, 6.12; T29). Temporada 2026/27. Reputação (1–100) ordena dentro da liga; 'bonusNivel' ajusta o nível do elenco entre ligas. Reputação e cores são estimativas do jogo.",
+ "conferidoEm": "2026-10-01",
+ "ligas": {
+  "ENG": {
+   "nome": "Premier League",
+   "clubes": 20,
+   "bonusNivel": 12,
+   "fonte": "https://www.premierleague.com/en/news/4673099/the-202627-premier-league-season-officially-starts/"
+  },
+  "ESP": {
+   "nome": "LaLiga",
+   "clubes": 20,
+   "bonusNivel": 10,
+   "fonte": "https://www.laliga.com/en-GB/laliga-easports/clubs"
+  },
+  "ITA": {
+   "nome": "Serie A",
+   "clubes": 20,
+   "bonusNivel": 9,
+   "fonte": "https://www.legaseriea.it/serie-a/classifica"
+  },
+  "GER": {
+   "nome": "Bundesliga",
+   "clubes": 18,
+   "bonusNivel": 9,
+   "fonte": "https://www.bundesliga.com/en/bundesliga/table"
+  },
+  "FRA": {
+   "nome": "Ligue 1",
+   "clubes": 18,
+   "bonusNivel": 7,
+   "fonte": "https://www.lfp.fr/assets/L1_MD_2627_CALENDRIER_SOMBRE_920e8f5afd.pdf"
+  },
+  "POR": {
+   "nome": "Liga Portugal",
+   "clubes": 18,
+   "bonusNivel": 3,
+   "fonte": "https://www.ligaportugal.pt/competition/911/liga-portugal-betclic/round/20262027"
+  }
+ },
+ "clubs": [
+  {
+   "id": "man-city",
+   "nome": "Manchester City",
+   "sigla": "MAH",
+   "liga": "ENG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 97,
+   "rivais": [
+    "man-united"
+   ]
+  },
+  {
+   "id": "arsenal",
+   "nome": "Arsenal",
+   "sigla": "ARS",
+   "liga": "ENG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 96,
+   "rivais": [
+    "chelsea",
+    "tottenham"
+   ]
+  },
+  {
+   "id": "liverpool",
+   "nome": "Liverpool",
+   "sigla": "LIR",
+   "liga": "ENG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 97,
+   "rivais": [
+    "everton",
+    "man-united"
+   ]
+  },
+  {
+   "id": "chelsea",
+   "nome": "Chelsea",
+   "sigla": "CHE",
+   "liga": "ENG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 92,
+   "rivais": [
+    "arsenal",
+    "tottenham"
+   ]
+  },
+  {
+   "id": "man-united",
+   "nome": "Manchester United",
+   "sigla": "MAE",
+   "liga": "ENG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 92,
+   "rivais": [
+    "liverpool",
+    "man-city"
+   ]
+  },
+  {
+   "id": "tottenham",
+   "nome": "Tottenham",
+   "sigla": "TOT",
+   "liga": "ENG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 88,
+   "rivais": [
+    "arsenal",
+    "chelsea"
+   ]
+  },
+  {
+   "id": "newcastle",
+   "nome": "Newcastle United",
+   "sigla": "NEW",
+   "liga": "ENG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 87,
+   "rivais": [
+    "sunderland"
+   ]
+  },
+  {
+   "id": "aston-villa",
+   "nome": "Aston Villa",
+   "sigla": "AST",
+   "liga": "ENG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 86,
+   "rivais": []
+  },
+  {
+   "id": "brighton",
+   "nome": "Brighton",
+   "sigla": "BRG",
+   "liga": "ENG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 80,
+   "rivais": []
+  },
+  {
+   "id": "crystal-palace",
+   "nome": "Crystal Palace",
+   "sigla": "CRY",
+   "liga": "ENG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 78,
+   "rivais": []
+  },
+  {
+   "id": "nottingham-forest",
+   "nome": "Nottingham Forest",
+   "sigla": "NOI",
+   "liga": "ENG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 78,
+   "rivais": []
+  },
+  {
+   "id": "everton",
+   "nome": "Everton",
+   "sigla": "EVE",
+   "liga": "ENG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 78,
+   "rivais": [
+    "liverpool"
+   ]
+  },
+  {
+   "id": "bournemouth",
+   "nome": "Bournemouth",
+   "sigla": "BOU",
+   "liga": "ENG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 77,
+   "rivais": []
+  },
+  {
+   "id": "brentford",
+   "nome": "Brentford",
+   "sigla": "BRE",
+   "liga": "ENG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 76,
+   "rivais": []
+  },
+  {
+   "id": "fulham",
+   "nome": "Fulham",
+   "sigla": "FUL",
+   "liga": "ENG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 76,
+   "rivais": []
+  },
+  {
+   "id": "leeds",
+   "nome": "Leeds United",
+   "sigla": "LEE",
+   "liga": "ENG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 74,
+   "rivais": []
+  },
+  {
+   "id": "sunderland",
+   "nome": "Sunderland",
+   "sigla": "SUN",
+   "liga": "ENG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 72,
+   "rivais": [
+    "newcastle"
+   ]
+  },
+  {
+   "id": "ipswich",
+   "nome": "Ipswich Town",
+   "sigla": "IPS",
+   "liga": "ENG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 68,
+   "rivais": []
+  },
+  {
+   "id": "coventry",
+   "nome": "Coventry City",
+   "sigla": "COV",
+   "liga": "ENG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 66,
+   "rivais": []
+  },
+  {
+   "id": "hull",
+   "nome": "Hull City",
+   "sigla": "HUL",
+   "liga": "ENG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 64,
+   "rivais": []
+  },
+  {
+   "id": "real-madrid",
+   "nome": "Real Madrid",
+   "sigla": "REL",
+   "liga": "ESP",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 99,
+   "rivais": [
+    "atletico-madrid",
+    "barcelona"
+   ]
+  },
+  {
+   "id": "barcelona",
+   "nome": "Barcelona",
+   "sigla": "BAO",
+   "liga": "ESP",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 98,
+   "rivais": [
+    "espanyol",
+    "real-madrid"
+   ]
+  },
+  {
+   "id": "atletico-madrid",
+   "nome": "Atlético de Madrid",
+   "sigla": "ATC",
+   "liga": "ESP",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 93,
+   "rivais": [
+    "real-madrid"
+   ]
+  },
+  {
+   "id": "athletic-club",
+   "nome": "Athletic Club",
+   "sigla": "ATU",
+   "liga": "ESP",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 85,
+   "rivais": [
+    "real-sociedad"
+   ]
+  },
+  {
+   "id": "real-sociedad",
+   "nome": "Real Sociedad",
+   "sigla": "REO",
+   "liga": "ESP",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 84,
+   "rivais": [
+    "athletic-club"
+   ]
+  },
+  {
+   "id": "villarreal",
+   "nome": "Villarreal",
+   "sigla": "VIA",
+   "liga": "ESP",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 84,
+   "rivais": []
+  },
+  {
+   "id": "betis",
+   "nome": "Real Betis",
+   "sigla": "REB",
+   "liga": "ESP",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 83,
+   "rivais": [
+    "sevilla"
+   ]
+  },
+  {
+   "id": "sevilla",
+   "nome": "Sevilla",
+   "sigla": "SEV",
+   "liga": "ESP",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 82,
+   "rivais": [
+    "betis"
+   ]
+  },
+  {
+   "id": "valencia",
+   "nome": "Valencia",
+   "sigla": "VAE",
+   "liga": "ESP",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 80,
+   "rivais": [
+    "levante"
+   ]
+  },
+  {
+   "id": "celta",
+   "nome": "Celta",
+   "sigla": "CEL",
+   "liga": "ESP",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 77,
+   "rivais": [
+    "deportivo-la-coruna"
+   ]
+  },
+  {
+   "id": "osasuna",
+   "nome": "Osasuna",
+   "sigla": "OSA",
+   "liga": "ESP",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 75,
+   "rivais": []
+  },
+  {
+   "id": "rayo-vallecano",
+   "nome": "Rayo Vallecano",
+   "sigla": "RAY",
+   "liga": "ESP",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 74,
+   "rivais": []
+  },
+  {
+   "id": "getafe",
+   "nome": "Getafe",
+   "sigla": "GET",
+   "liga": "ESP",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 73,
+   "rivais": []
+  },
+  {
+   "id": "espanyol",
+   "nome": "Espanyol",
+   "sigla": "ESA",
+   "liga": "ESP",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 73,
+   "rivais": [
+    "barcelona"
+   ]
+  },
+  {
+   "id": "deportivo-la-coruna",
+   "nome": "Deportivo La Coruña",
+   "sigla": "DEU",
+   "liga": "ESP",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 72,
+   "rivais": [
+    "celta"
+   ]
+  },
+  {
+   "id": "alaves",
+   "nome": "Alavés",
+   "sigla": "ALV",
+   "liga": "ESP",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 71,
+   "rivais": []
+  },
+  {
+   "id": "malaga",
+   "nome": "Málaga",
+   "sigla": "MLA",
+   "liga": "ESP",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 70,
+   "rivais": []
+  },
+  {
+   "id": "elche",
+   "nome": "Elche",
+   "sigla": "ELC",
+   "liga": "ESP",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 68,
+   "rivais": []
+  },
+  {
+   "id": "levante",
+   "nome": "Levante",
+   "sigla": "LEV",
+   "liga": "ESP",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 68,
+   "rivais": [
+    "valencia"
+   ]
+  },
+  {
+   "id": "racing-santander",
+   "nome": "Racing de Santander",
+   "sigla": "RAN",
+   "liga": "ESP",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 68,
+   "rivais": []
+  },
+  {
+   "id": "inter",
+   "nome": "Inter",
+   "sigla": "ITE",
+   "liga": "ITA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 95,
+   "rivais": [
+    "juventus",
+    "milan"
+   ]
+  },
+  {
+   "id": "juventus",
+   "nome": "Juventus",
+   "sigla": "JUU",
+   "liga": "ITA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 93,
+   "rivais": [
+    "inter",
+    "torino"
+   ]
+  },
+  {
+   "id": "milan",
+   "nome": "Milan",
+   "sigla": "MIA",
+   "liga": "ITA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 93,
+   "rivais": [
+    "inter"
+   ]
+  },
+  {
+   "id": "napoli",
+   "nome": "Napoli",
+   "sigla": "NAP",
+   "liga": "ITA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 92,
+   "rivais": [
+    "roma"
+   ]
+  },
+  {
+   "id": "roma",
+   "nome": "Roma",
+   "sigla": "ROM",
+   "liga": "ITA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 88,
+   "rivais": [
+    "lazio",
+    "napoli"
+   ]
+  },
+  {
+   "id": "atalanta",
+   "nome": "Atalanta",
+   "sigla": "ATA",
+   "liga": "ITA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 87,
+   "rivais": []
+  },
+  {
+   "id": "lazio",
+   "nome": "Lazio",
+   "sigla": "LAZ",
+   "liga": "ITA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 85,
+   "rivais": [
+    "roma"
+   ]
+  },
+  {
+   "id": "fiorentina",
+   "nome": "Fiorentina",
+   "sigla": "FIO",
+   "liga": "ITA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 82,
+   "rivais": []
+  },
+  {
+   "id": "bologna",
+   "nome": "Bologna",
+   "sigla": "BOO",
+   "liga": "ITA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 81,
+   "rivais": []
+  },
+  {
+   "id": "torino",
+   "nome": "Torino",
+   "sigla": "TOR",
+   "liga": "ITA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 77,
+   "rivais": [
+    "juventus"
+   ]
+  },
+  {
+   "id": "como",
+   "nome": "Como",
+   "sigla": "COM",
+   "liga": "ITA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 76,
+   "rivais": []
+  },
+  {
+   "id": "udinese",
+   "nome": "Udinese",
+   "sigla": "UDI",
+   "liga": "ITA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 74,
+   "rivais": []
+  },
+  {
+   "id": "genoa",
+   "nome": "Genoa",
+   "sigla": "GEN",
+   "liga": "ITA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 74,
+   "rivais": []
+  },
+  {
+   "id": "sassuolo",
+   "nome": "Sassuolo",
+   "sigla": "SAU",
+   "liga": "ITA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 72,
+   "rivais": []
+  },
+  {
+   "id": "parma",
+   "nome": "Parma",
+   "sigla": "PAM",
+   "liga": "ITA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 72,
+   "rivais": []
+  },
+  {
+   "id": "cagliari",
+   "nome": "Cagliari",
+   "sigla": "CAG",
+   "liga": "ITA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 71,
+   "rivais": []
+  },
+  {
+   "id": "lecce",
+   "nome": "Lecce",
+   "sigla": "LEC",
+   "liga": "ITA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 69,
+   "rivais": []
+  },
+  {
+   "id": "monza",
+   "nome": "Monza",
+   "sigla": "MOZ",
+   "liga": "ITA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 68,
+   "rivais": []
+  },
+  {
+   "id": "venezia",
+   "nome": "Venezia",
+   "sigla": "VEN",
+   "liga": "ITA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 67,
+   "rivais": []
+  },
+  {
+   "id": "frosinone",
+   "nome": "Frosinone",
+   "sigla": "FRO",
+   "liga": "ITA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 66,
+   "rivais": []
+  },
+  {
+   "id": "bayern",
+   "nome": "Bayern de Munique",
+   "sigla": "BAY",
+   "liga": "GER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 98,
+   "rivais": [
+    "dortmund"
+   ]
+  },
+  {
+   "id": "dortmund",
+   "nome": "Borussia Dortmund",
+   "sigla": "BOR",
+   "liga": "GER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 92,
+   "rivais": [
+    "bayern",
+    "schalke"
+   ]
+  },
+  {
+   "id": "leverkusen",
+   "nome": "Bayer Leverkusen",
+   "sigla": "BAV",
+   "liga": "GER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 90,
+   "rivais": []
+  },
+  {
+   "id": "leipzig",
+   "nome": "RB Leipzig",
+   "sigla": "RBL",
+   "liga": "GER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 89,
+   "rivais": []
+  },
+  {
+   "id": "stuttgart",
+   "nome": "Stuttgart",
+   "sigla": "STU",
+   "liga": "GER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 84,
+   "rivais": []
+  },
+  {
+   "id": "frankfurt",
+   "nome": "Eintracht Frankfurt",
+   "sigla": "EIN",
+   "liga": "GER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 84,
+   "rivais": []
+  },
+  {
+   "id": "freiburg",
+   "nome": "Freiburg",
+   "sigla": "FRE",
+   "liga": "GER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 80,
+   "rivais": []
+  },
+  {
+   "id": "monchengladbach",
+   "nome": "Borussia Mönchengladbach",
+   "sigla": "BOI",
+   "liga": "GER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 78,
+   "rivais": [
+    "koln"
+   ]
+  },
+  {
+   "id": "schalke",
+   "nome": "Schalke 04",
+   "sigla": "SCH",
+   "liga": "GER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 78,
+   "rivais": [
+    "dortmund"
+   ]
+  },
+  {
+   "id": "hoffenheim",
+   "nome": "Hoffenheim",
+   "sigla": "HOF",
+   "liga": "GER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 77,
+   "rivais": []
+  },
+  {
+   "id": "werder-bremen",
+   "nome": "Werder Bremen",
+   "sigla": "WER",
+   "liga": "GER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 77,
+   "rivais": [
+    "hamburg"
+   ]
+  },
+  {
+   "id": "mainz",
+   "nome": "Mainz 05",
+   "sigla": "MAZ",
+   "liga": "GER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 76,
+   "rivais": []
+  },
+  {
+   "id": "hamburg",
+   "nome": "Hamburgo",
+   "sigla": "HAM",
+   "liga": "GER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 76,
+   "rivais": [
+    "werder-bremen"
+   ]
+  },
+  {
+   "id": "union-berlin",
+   "nome": "Union Berlin",
+   "sigla": "UNO",
+   "liga": "GER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 75,
+   "rivais": []
+  },
+  {
+   "id": "augsburg",
+   "nome": "Augsburg",
+   "sigla": "AUG",
+   "liga": "GER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 74,
+   "rivais": []
+  },
+  {
+   "id": "koln",
+   "nome": "Colônia",
+   "sigla": "COL",
+   "liga": "GER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 74,
+   "rivais": [
+    "monchengladbach"
+   ]
+  },
+  {
+   "id": "paderborn",
+   "nome": "Paderborn",
+   "sigla": "PAD",
+   "liga": "GER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 66,
+   "rivais": []
+  },
+  {
+   "id": "elversberg",
+   "nome": "Elversberg",
+   "sigla": "ELV",
+   "liga": "GER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 62,
+   "rivais": []
+  },
+  {
+   "id": "psg",
+   "nome": "Paris Saint-Germain",
+   "sigla": "PAG",
+   "liga": "FRA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 98,
+   "rivais": [
+    "marseille",
+    "paris-fc"
+   ]
+  },
+  {
+   "id": "marseille",
+   "nome": "Olympique de Marseille",
+   "sigla": "OLY",
+   "liga": "FRA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 89,
+   "rivais": [
+    "lyon",
+    "psg"
+   ]
+  },
+  {
+   "id": "lyon",
+   "nome": "Lyon",
+   "sigla": "LYO",
+   "liga": "FRA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 87,
+   "rivais": [
+    "marseille"
+   ]
+  },
+  {
+   "id": "monaco",
+   "nome": "Monaco",
+   "sigla": "MOC",
+   "liga": "FRA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 87,
+   "rivais": [
+    "nice"
+   ]
+  },
+  {
+   "id": "lille",
+   "nome": "Lille",
+   "sigla": "LIL",
+   "liga": "FRA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 85,
+   "rivais": [
+    "lens"
+   ]
+  },
+  {
+   "id": "lens",
+   "nome": "Lens",
+   "sigla": "LEN",
+   "liga": "FRA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 82,
+   "rivais": [
+    "lille"
+   ]
+  },
+  {
+   "id": "nice",
+   "nome": "Nice",
+   "sigla": "NIC",
+   "liga": "FRA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 81,
+   "rivais": [
+    "monaco"
+   ]
+  },
+  {
+   "id": "rennes",
+   "nome": "Rennes",
+   "sigla": "REN",
+   "liga": "FRA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 81,
+   "rivais": []
+  },
+  {
+   "id": "strasbourg",
+   "nome": "Strasbourg",
+   "sigla": "STR",
+   "liga": "FRA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 79,
+   "rivais": []
+  },
+  {
+   "id": "brest",
+   "nome": "Brest",
+   "sigla": "BRT",
+   "liga": "FRA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 76,
+   "rivais": []
+  },
+  {
+   "id": "toulouse",
+   "nome": "Toulouse",
+   "sigla": "TOU",
+   "liga": "FRA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 75,
+   "rivais": []
+  },
+  {
+   "id": "paris-fc",
+   "nome": "Paris FC",
+   "sigla": "PAF",
+   "liga": "FRA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 72,
+   "rivais": [
+    "psg"
+   ]
+  },
+  {
+   "id": "auxerre",
+   "nome": "Auxerre",
+   "sigla": "AUX",
+   "liga": "FRA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 70,
+   "rivais": []
+  },
+  {
+   "id": "lorient",
+   "nome": "Lorient",
+   "sigla": "LOR",
+   "liga": "FRA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 69,
+   "rivais": []
+  },
+  {
+   "id": "angers",
+   "nome": "Angers",
+   "sigla": "ANG",
+   "liga": "FRA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 68,
+   "rivais": []
+  },
+  {
+   "id": "le-havre",
+   "nome": "Le Havre",
+   "sigla": "LEH",
+   "liga": "FRA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 68,
+   "rivais": []
+  },
+  {
+   "id": "troyes",
+   "nome": "Troyes",
+   "sigla": "TRO",
+   "liga": "FRA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 64,
+   "rivais": []
+  },
+  {
+   "id": "le-mans",
+   "nome": "Le Mans",
+   "sigla": "LEM",
+   "liga": "FRA",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 62,
+   "rivais": []
+  },
+  {
+   "id": "benfica",
+   "nome": "Benfica",
+   "sigla": "BEN",
+   "liga": "POR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 92,
+   "rivais": [
+    "porto",
+    "sporting-cp"
+   ]
+  },
+  {
+   "id": "porto",
+   "nome": "Porto",
+   "sigla": "PRT",
+   "liga": "POR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 91,
+   "rivais": [
+    "benfica",
+    "sporting-cp"
+   ]
+  },
+  {
+   "id": "sporting-cp",
+   "nome": "Sporting",
+   "sigla": "SPI",
+   "liga": "POR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 91,
+   "rivais": [
+    "benfica",
+    "porto"
+   ]
+  },
+  {
+   "id": "braga",
+   "nome": "Braga",
+   "sigla": "BGA",
+   "liga": "POR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 82,
+   "rivais": [
+    "vitoria-sc"
+   ]
+  },
+  {
+   "id": "vitoria-sc",
+   "nome": "Vitória de Guimarães",
+   "sigla": "VID",
+   "liga": "POR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 77,
+   "rivais": [
+    "braga"
+   ]
+  },
+  {
+   "id": "famalicao",
+   "nome": "Famalicão",
+   "sigla": "FAM",
+   "liga": "POR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 70,
+   "rivais": []
+  },
+  {
+   "id": "rio-ave",
+   "nome": "Rio Ave",
+   "sigla": "RIA",
+   "liga": "POR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 68,
+   "rivais": []
+  },
+  {
+   "id": "gil-vicente",
+   "nome": "Gil Vicente",
+   "sigla": "GIL",
+   "liga": "POR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 68,
+   "rivais": []
+  },
+  {
+   "id": "moreirense",
+   "nome": "Moreirense",
+   "sigla": "MOI",
+   "liga": "POR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 67,
+   "rivais": []
+  },
+  {
+   "id": "santa-clara",
+   "nome": "Santa Clara",
+   "sigla": "SNT",
+   "liga": "POR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 67,
+   "rivais": []
+  },
+  {
+   "id": "maritimo",
+   "nome": "Marítimo",
+   "sigla": "MAT",
+   "liga": "POR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 67,
+   "rivais": []
+  },
+  {
+   "id": "arouca",
+   "nome": "Arouca",
+   "sigla": "ARO",
+   "liga": "POR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 66,
+   "rivais": []
+  },
+  {
+   "id": "estoril",
+   "nome": "Estoril",
+   "sigla": "ESO",
+   "liga": "POR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 66,
+   "rivais": []
+  },
+  {
+   "id": "casa-pia",
+   "nome": "Casa Pia",
+   "sigla": "CSP",
+   "liga": "POR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 65,
+   "rivais": []
+  },
+  {
+   "id": "nacional-por",
+   "nome": "Nacional da Madeira",
+   "sigla": "NAD",
+   "liga": "POR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 65,
+   "rivais": []
+  },
+  {
+   "id": "estrela-amadora",
+   "nome": "Estrela da Amadora",
+   "sigla": "ESR",
+   "liga": "POR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 64,
+   "rivais": []
+  },
+  {
+   "id": "alverca",
+   "nome": "Alverca",
+   "sigla": "ALE",
+   "liga": "POR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 62,
+   "rivais": []
+  },
+  {
+   "id": "academico-viseu",
+   "nome": "Académico de Viseu",
+   "sigla": "ACD",
+   "liga": "POR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 60,
+   "rivais": []
+  }
+ ],
+ "outros": {
+  "_nota": "Clubes de outras ligas na fase de liga da Champions e da Europa League 2026/27 (pool para as copas e para propostas).",
+  "bonusNivel": 3,
+  "fonte": [
+   "https://www.uefa.com/uefachampionsleague/news/02a8-21717d0c6cb5-03a9a5ff1552-1000--champions-league-league-phase-draw-pots-confirmed/",
+   "https://www.uefa.com/uefaeuropaleague/news/02a8-21736c090a44-d0fdd9f91599-1000--europa-league-league-phase-draw-pots-confirmed/"
+  ],
+  "clubs": [
+   {
+    "id": "club-brugge",
+    "nome": "Club Brugge",
+    "sigla": "CLU",
+    "pais": "BEL",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 84
+   },
+   {
+    "id": "psv",
+    "nome": "PSV",
+    "sigla": "PSV",
+    "pais": "NED",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 86
+   },
+   {
+    "id": "feyenoord",
+    "nome": "Feyenoord",
+    "sigla": "FEY",
+    "pais": "NED",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 85
+   },
+   {
+    "id": "bodo-glimt",
+    "nome": "Bodø/Glimt",
+    "sigla": "BOD",
+    "pais": "NOR",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 76
+   },
+   {
+    "id": "fenerbahce",
+    "nome": "Fenerbahçe",
+    "sigla": "FEN",
+    "pais": "TUR",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 84
+   },
+   {
+    "id": "shakhtar",
+    "nome": "Shakhtar Donetsk",
+    "sigla": "SHA",
+    "pais": "UKR",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 83
+   },
+   {
+    "id": "galatasaray",
+    "nome": "Galatasaray",
+    "sigla": "GAA",
+    "pais": "TUR",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 85
+   },
+   {
+    "id": "slavia-praha",
+    "nome": "Slavia Praga",
+    "sigla": "SLA",
+    "pais": "CZE",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 79
+   },
+   {
+    "id": "slovan-bratislava",
+    "nome": "Slovan Bratislava",
+    "sigla": "SLO",
+    "pais": "SVK",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 70
+   },
+   {
+    "id": "aek-athens",
+    "nome": "AEK Atenas",
+    "sigla": "AEK",
+    "pais": "GRE",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 76
+   },
+   {
+    "id": "lask",
+    "nome": "LASK",
+    "sigla": "LAS",
+    "pais": "AUT",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 70
+   },
+   {
+    "id": "viking",
+    "nome": "Viking",
+    "sigla": "VIK",
+    "pais": "NOR",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 66
+   },
+   {
+    "id": "sabah",
+    "nome": "Sabah",
+    "sigla": "SAH",
+    "pais": "AZE",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 60
+   },
+   {
+    "id": "az",
+    "nome": "AZ Alkmaar",
+    "sigla": "AZA",
+    "pais": "NED",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 80
+   },
+   {
+    "id": "olympiacos",
+    "nome": "Olympiacos",
+    "sigla": "OLM",
+    "pais": "GRE",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 81
+   },
+   {
+    "id": "ferencvaros",
+    "nome": "Ferencváros",
+    "sigla": "FEE",
+    "pais": "HUN",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 74
+   },
+   {
+    "id": "viktoria-plzen",
+    "nome": "Viktoria Plzeň",
+    "sigla": "VIP",
+    "pais": "CZE",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 74
+   },
+   {
+    "id": "union-sg",
+    "nome": "Union Saint-Gilloise",
+    "sigla": "UNN",
+    "pais": "BEL",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 77
+   },
+   {
+    "id": "dinamo-zagreb",
+    "nome": "Dinamo Zagreb",
+    "sigla": "DIN",
+    "pais": "CRO",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 78
+   },
+   {
+    "id": "salzburg",
+    "nome": "Salzburg",
+    "sigla": "SLZ",
+    "pais": "AUT",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 80
+   },
+   {
+    "id": "celtic",
+    "nome": "Celtic",
+    "sigla": "CEC",
+    "pais": "SCO",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 82
+   },
+   {
+    "id": "sparta-praha",
+    "nome": "Sparta Praga",
+    "sigla": "SPA",
+    "pais": "CZE",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 78
+   },
+   {
+    "id": "anderlecht",
+    "nome": "Anderlecht",
+    "sigla": "ANE",
+    "pais": "BEL",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 79
+   },
+   {
+    "id": "sturm-graz",
+    "nome": "Sturm Graz",
+    "sigla": "STM",
+    "pais": "AUT",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 73
+   },
+   {
+    "id": "lech-poznan",
+    "nome": "Lech Poznań",
+    "sigla": "LEP",
+    "pais": "POL",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 70
+   },
+   {
+    "id": "celje",
+    "nome": "Celje",
+    "sigla": "CEJ",
+    "pais": "SVN",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 62
+   },
+   {
+    "id": "jagiellonia",
+    "nome": "Jagiellonia",
+    "sigla": "JAI",
+    "pais": "POL",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 66
+   },
+   {
+    "id": "omonia",
+    "nome": "Omonia",
+    "sigla": "OMO",
+    "pais": "CYP",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 64
+   },
+   {
+    "id": "besiktas",
+    "nome": "Beşiktaş",
+    "sigla": "BES",
+    "pais": "TUR",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 80
+   },
+   {
+    "id": "hapoel-beer-sheva",
+    "nome": "Hapoel Beer-Sheva",
+    "sigla": "HAP",
+    "pais": "ISR",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 66
+   },
+   {
+    "id": "nec",
+    "nome": "N.E.C.",
+    "sigla": "NEC",
+    "pais": "NED",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 68
+   },
+   {
+    "id": "ofi",
+    "nome": "OFI Creta",
+    "sigla": "OFI",
+    "pais": "GRE",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 62
+   },
+   {
+    "id": "lillestrom",
+    "nome": "Lillestrøm",
+    "sigla": "LIS",
+    "pais": "NOR",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 62
+   },
+   {
+    "id": "levski-sofia",
+    "nome": "Levski Sofia",
+    "sigla": "LES",
+    "pais": "BUL",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 66
+   },
+   {
+    "id": "ararat-armenia",
+    "nome": "Ararat-Armenia",
+    "sigla": "ART",
+    "pais": "ARM",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 56
+   },
+   {
+    "id": "torreense",
+    "nome": "Torreense",
+    "sigla": "TOE",
+    "pais": "POR",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 58
+   }
+  ]
+ },
+ "foraDoEixo": {
+  "_nota": "Ligas fora do eixo (tentação do dinheiro fácil): salário alto, pouca visibilidade. Poucos clubes reais por liga.",
+  "ligas": {
+   "SAU": {
+    "nome": "Liga Saudita",
+    "bonusNivel": -4,
+    "salarioMultiplicador": 3.5,
+    "visibilidade": 0.35,
+    "fonte": "https://www.spl.com.sa/en/teams",
+    "verificado": true
+   },
+   "USA": {
+    "nome": "MLS",
+    "bonusNivel": -6,
+    "salarioMultiplicador": 2,
+    "visibilidade": 0.4,
+    "fonte": "https://www.mlssoccer.com/news/mls-unveils-2026-regular-season-schedule",
+    "verificado": true
+   },
+   "JPN": {
+    "nome": "J1 League",
+    "bonusNivel": -6,
+    "salarioMultiplicador": 1.8,
+    "visibilidade": 0.35,
+    "fonte": "https://jleague.co/clubs",
+    "verificado": true
+   },
+   "QAT": {
+    "nome": "Liga do Catar",
+    "bonusNivel": -8,
+    "salarioMultiplicador": 3,
+    "visibilidade": 0.25,
+    "fonte": "https://www.qsl.qa/en/doha-bank-stars-league-standings",
+    "verificado": true
+   },
+   "CHN": {
+    "nome": "Superliga Chinesa",
+    "bonusNivel": -8,
+    "salarioMultiplicador": 2.2,
+    "visibilidade": 0.25,
+    "fonte": "https://en.wikipedia.org/wiki/2026_Chinese_Super_League (não oficial)",
+    "verificado": false
+   }
+  },
+  "clubs": [
+   {
+    "id": "al-hilal",
+    "nome": "Al Hilal",
+    "sigla": "ALH",
+    "liga": "SAU",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 86
+   },
+   {
+    "id": "al-nassr",
+    "nome": "Al Nassr",
+    "sigla": "ALN",
+    "liga": "SAU",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 84
+   },
+   {
+    "id": "al-ittihad",
+    "nome": "Al Ittihad",
+    "sigla": "ALD",
+    "liga": "SAU",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 83
+   },
+   {
+    "id": "al-ahli",
+    "nome": "Al Ahli",
+    "sigla": "ALL",
+    "liga": "SAU",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 83
+   },
+   {
+    "id": "al-qadsiah",
+    "nome": "Al Qadsiah",
+    "sigla": "ALQ",
+    "liga": "SAU",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 76
+   },
+   {
+    "id": "inter-miami",
+    "nome": "Inter Miami",
+    "sigla": "INM",
+    "liga": "USA",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 76
+   },
+   {
+    "id": "lafc",
+    "nome": "LAFC",
+    "sigla": "LAF",
+    "liga": "USA",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 76
+   },
+   {
+    "id": "la-galaxy",
+    "nome": "LA Galaxy",
+    "sigla": "LAL",
+    "liga": "USA",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 74
+   },
+   {
+    "id": "vissel-kobe",
+    "nome": "Vissel Kobe",
+    "sigla": "VIS",
+    "liga": "JPN",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 70
+   },
+   {
+    "id": "kashima-antlers",
+    "nome": "Kashima Antlers",
+    "sigla": "KAS",
+    "liga": "JPN",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 70
+   },
+   {
+    "id": "urawa-reds",
+    "nome": "Urawa Reds",
+    "sigla": "URA",
+    "liga": "JPN",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 70
+   },
+   {
+    "id": "kawasaki-frontale",
+    "nome": "Kawasaki Frontale",
+    "sigla": "KAW",
+    "liga": "JPN",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 70
+   },
+   {
+    "id": "al-sadd",
+    "nome": "Al Sadd",
+    "sigla": "ALS",
+    "liga": "QAT",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 72
+   },
+   {
+    "id": "al-duhail",
+    "nome": "Al Duhail",
+    "sigla": "ALU",
+    "liga": "QAT",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 70
+   },
+   {
+    "id": "al-rayyan",
+    "nome": "Al Rayyan",
+    "sigla": "ALR",
+    "liga": "QAT",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 68
+   },
+   {
+    "id": "shanghai-port",
+    "nome": "Shanghai Port",
+    "sigla": "SHN",
+    "liga": "CHN",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 68
+   },
+   {
+    "id": "shanghai-shenhua",
+    "nome": "Shanghai Shenhua",
+    "sigla": "SHG",
+    "liga": "CHN",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 66
+   },
+   {
+    "id": "beijing-guoan",
+    "nome": "Beijing Guoan",
+    "sigla": "BEI",
+    "liga": "CHN",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 66
+   },
+   {
+    "id": "shandong-taishan",
+    "nome": "Shandong Taishan",
+    "sigla": "SHD",
+    "liga": "CHN",
+    "cores": [
+     "#14213D",
+     "#FFFFFF"
+    ],
+    "reputacao": 66
+   }
+  ]
+ }
+}
