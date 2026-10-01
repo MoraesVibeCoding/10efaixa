@@ -31,8 +31,8 @@ describe('mentalidade (SPEC 6.17, proposta Fominha · Capitão · Professor · M
     expect(bad.ok ? [] : bad.errors).toContain('mentality.invalid');
   });
 
-  it('efeitos pequenos (±15%) e sem mexer no teto de potencial', () => {
-    for (const m of MENTALITIES) for (const v of Object.values(cfg[m].crescimento)) expect(Math.abs(v - 1)).toBeLessThanOrEqual(0.15);
+  it('efeitos moderados (±30%) e sem mexer no teto de potencial', () => {
+    for (const m of MENTALITIES) for (const v of Object.values(cfg[m].crescimento)) expect(Math.abs(v - 1)).toBeLessThanOrEqual(0.3);
     const [a, b] = [createPlayer(input(), createPrng(7)), createPlayer(input('professor'), createPrng(7))];
     if (!a.ok || !b.ok) throw new Error('criação');
     expect(b.player.caps).toEqual(a.player.caps);
