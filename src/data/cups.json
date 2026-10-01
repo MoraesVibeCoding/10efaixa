@@ -1,0 +1,257 @@
+{
+ "_nota": "Copas (SPEC 6.9, T19). Sorteios reais substituídos por pareamento por força (melhor × pior) ou sorteio com semente; regras de 2026 para todos os anos.",
+ "copaDoBrasil": {
+  "fonte": "https://www.cbf.com.br/a-cbf/noticias/informes-cbf/a/cbf-anuncia-novo-calendario-do-futebol-profissional-masculino",
+  "conferidoEm": "2026-09-30",
+  "vagasPorRankingFederacao": [
+   [
+    2,
+    6
+   ],
+   [
+    5,
+    5
+   ],
+   [
+    14,
+    4
+   ],
+   [
+    27,
+    3
+   ]
+  ],
+  "rankingFederacoes": [
+   "SP",
+   "RJ",
+   "MG",
+   "RS",
+   "PR",
+   "SC",
+   "BA",
+   "PE",
+   "CE",
+   "GO",
+   "PA",
+   "MA",
+   "AL",
+   "RN",
+   "PB",
+   "SE",
+   "PI",
+   "MT",
+   "MS",
+   "ES",
+   "DF",
+   "AM",
+   "TO",
+   "RO",
+   "AC",
+   "AP",
+   "RR"
+  ],
+  "rankingFederacoesVerificado": false,
+  "fases": {
+   "fase1": {
+    "clubes": 28,
+    "jogos": 1
+   },
+   "fase2": {
+    "entram": 74,
+    "jogos": 1
+   },
+   "fase3": {
+    "entramCampeoes": 4,
+    "jogos": 1
+   },
+   "fase4": {
+    "jogos": 1
+   },
+   "fase5": {
+    "entramSerieA": 20,
+    "jogos": 2
+   },
+   "oitavas": 2,
+   "quartas": 2,
+   "semifinal": 2,
+   "final": 1
+  },
+  "aproximacoes": "Ranking Nacional de Federações 2026 não conferido (ordem estimada); sorteios por pareamento de força; 2ª fase em jogo único (44 jogos); 4ª vaga de campeão da 3ª fase (Copa Verde, não modelada) vai ao clube mais forte ainda fora."
+ },
+ "copaDoNordeste": {
+  "fonte": "https://www.cbf.com.br/futebol-brasileiro/noticias/copa-nordeste/a/cbf-sorteia-grupos-da-copa-do-nordeste-2026",
+  "conferidoEm": "2026-09-30",
+  "vagasPorEstado": {
+   "BA": 3,
+   "CE": 3,
+   "PE": 2,
+   "AL": 2,
+   "PB": 2,
+   "RN": 2,
+   "SE": 2,
+   "PI": 2,
+   "MA": 2
+  },
+  "participantes2026": [
+   [
+    "vitoria",
+    "asa",
+    "sousa",
+    "itabaiana",
+    "fluminense-pi"
+   ],
+   [
+    "juazeirense",
+    "crb",
+    "botafogo-pb",
+    "confianca",
+    "piaui"
+   ],
+   [
+    "ceara",
+    "sport",
+    "america-rn",
+    "imperatriz",
+    "ferroviario-ce"
+   ],
+   [
+    "fortaleza",
+    "retro",
+    "abc",
+    "maranhao",
+    "jacuipense"
+   ]
+  ],
+  "confrontoDeGrupos": [
+   [
+    0,
+    1
+   ],
+   [
+    2,
+    3
+   ]
+  ],
+  "quartas": [
+   [
+    "A1",
+    "B2"
+   ],
+   [
+    "B1",
+    "A2"
+   ],
+   [
+    "C1",
+    "D2"
+   ],
+   [
+    "D1",
+    "C2"
+   ]
+  ],
+  "aproximacoes": "Vagas por estado copiadas da distribuição de 2026; quem ocupa a vaga em anos seguintes sai do estadual (ou da reputação nos estados com estadual simplificado). Semifinal W1×W3 e W2×W4 assumida."
+ },
+ "conmebol": {
+  "fonte": [
+   "https://www.conmebol.com/pt-br/noticias-pt-br/diretrizes-do-sorteio-para-a-conmebol-libertadores-e-conmebol-sudamericana-2026/",
+   "https://gol.conmebol.com/libertadores/es/news/sorteo-de-la-fase-de-grupos-de-la-conmebol-libertadores-2026-fecha-horario-clasificados",
+   "https://www.cbf.com.br/futebol-brasileiro/noticias/detalhes/noticias/copa-do-brasil-de-2026-dara-duas-vagas-a-libertadores"
+  ],
+  "conferidoEm": "2026-09-30",
+  "libertadores": {
+   "vagas": {
+    "ARG": {
+     "grupos": 5,
+     "fase2": 1
+    },
+    "CHI": {
+     "grupos": 2,
+     "fase2": 2
+    },
+    "COL": {
+     "grupos": 2,
+     "fase2": 2
+    },
+    "BOL": {
+     "grupos": 2,
+     "fase2": 1,
+     "fase1": 1
+    },
+    "ECU": {
+     "grupos": 2,
+     "fase2": 1,
+     "fase1": 1
+    },
+    "PAR": {
+     "grupos": 2,
+     "fase2": 1,
+     "fase1": 1
+    },
+    "PER": {
+     "grupos": 2,
+     "fase2": 1,
+     "fase1": 1
+    },
+    "URU": {
+     "grupos": 2,
+     "fase2": 1,
+     "fase1": 1
+    },
+    "VEN": {
+     "grupos": 2,
+     "fase2": 1,
+     "fase1": 1
+    }
+   },
+   "brasil": {
+    "grupos": [
+     "serieA:1",
+     "serieA:2",
+     "serieA:3",
+     "serieA:4",
+     "copaDoBrasil:campeao"
+    ],
+    "fase2": [
+     "serieA:5",
+     "copaDoBrasil:vice"
+    ]
+   }
+  },
+  "sulAmericana": {
+   "vagas": {
+    "ARG": {
+     "grupos": 6
+    },
+    "CHI": {
+     "faseNacional": 4
+    },
+    "COL": {
+     "faseNacional": 4
+    },
+    "BOL": {
+     "faseNacional": 4
+    },
+    "ECU": {
+     "faseNacional": 4
+    },
+    "PAR": {
+     "faseNacional": 4
+    },
+    "PER": {
+     "faseNacional": 4
+    },
+    "URU": {
+     "faseNacional": 4
+    },
+    "VEN": {
+     "faseNacional": 4
+    }
+   },
+   "brasil": {
+    "grupos": 6
+   }
+  },
+  "aproximacoes": "2ª vaga da Copa do Brasil na Libertadores tratada como Fase 2 (a CBF ainda estudava); se campeão/vice já classificados, a vaga desce na Série A. Sorteios por potes de força com semente, evitando mesmo país no grupo quando possível; final em jogo único com vantagem do mais bem colocado."
+ }
+}

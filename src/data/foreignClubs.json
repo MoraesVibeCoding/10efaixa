@@ -1,0 +1,860 @@
+{
+ "_nota": "Clubes estrangeiros sul-americanos: participantes oficiais de 2026 da Libertadores/Sul-Americana. Formam o pool de cada país; a cada ano o país distribui suas vagas entre eles pela força. Reputação é estimativa de balanceamento; cores provisórias.",
+ "fonte": [
+  "https://gol.conmebol.com/libertadores/es/news/sorteo-de-la-fase-de-grupos-de-la-conmebol-libertadores-2026-fecha-horario-clasificados",
+  "https://gol.conmebol.com/sudamericana/en/news/great-conquest-these-are-groups-2026-conmebol-sudamericana",
+  "https://www.conmebol.com/noticias/fase-preliminar-conmebol-sudamericana-2026-los-cruces/",
+  "https://cdn.conmebol.com/wp-content/uploads/2025/12/Fixture_CONMEBOL-Libertadores-2026_Fases-1-y-2_v22.01.pdf",
+  "https://www.conmebol.com/noticias/la-conmebol-sudamericana-2026-levanta-el-telon-con-duelos-decisivos/"
+ ],
+ "conferidoEm": "2026-09-30",
+ "clubs": [
+  {
+   "id": "boca-juniors",
+   "nome": "Boca Juniors",
+   "sigla": "BOC",
+   "pais": "ARG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 92
+  },
+  {
+   "id": "river-plate",
+   "nome": "River Plate",
+   "sigla": "RIE",
+   "pais": "ARG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 93
+  },
+  {
+   "id": "racing",
+   "nome": "Racing",
+   "sigla": "RAC",
+   "pais": "ARG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 86
+  },
+  {
+   "id": "estudiantes",
+   "nome": "Estudiantes",
+   "sigla": "EST",
+   "pais": "ARG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 84
+  },
+  {
+   "id": "lanus",
+   "nome": "Lanús",
+   "sigla": "LAN",
+   "pais": "ARG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 80
+  },
+  {
+   "id": "san-lorenzo",
+   "nome": "San Lorenzo",
+   "sigla": "SAZ",
+   "pais": "ARG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 80
+  },
+  {
+   "id": "rosario-central",
+   "nome": "Rosario Central",
+   "sigla": "ROS",
+   "pais": "ARG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 80
+  },
+  {
+   "id": "argentinos-juniors",
+   "nome": "Argentinos Juniors",
+   "sigla": "ARG",
+   "pais": "ARG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 78
+  },
+  {
+   "id": "independiente-rivadavia",
+   "nome": "Independiente Rivadavia",
+   "sigla": "INP",
+   "pais": "ARG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 72
+  },
+  {
+   "id": "platense",
+   "nome": "Platense",
+   "sigla": "PLA",
+   "pais": "ARG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 72
+  },
+  {
+   "id": "tigre",
+   "nome": "Tigre",
+   "sigla": "TIG",
+   "pais": "ARG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 72
+  },
+  {
+   "id": "barracas-central",
+   "nome": "Barracas Central",
+   "sigla": "BAA",
+   "pais": "ARG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 68
+  },
+  {
+   "id": "deportivo-riestra",
+   "nome": "Deportivo Riestra",
+   "sigla": "DEP",
+   "pais": "ARG",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 66
+  },
+  {
+   "id": "penarol",
+   "nome": "Peñarol",
+   "sigla": "PEN",
+   "pais": "URU",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 84
+  },
+  {
+   "id": "nacional-uru",
+   "nome": "Nacional",
+   "sigla": "NAO",
+   "pais": "URU",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 84
+  },
+  {
+   "id": "liverpool-uru",
+   "nome": "Liverpool",
+   "sigla": "LIV",
+   "pais": "URU",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 70
+  },
+  {
+   "id": "defensor-sporting",
+   "nome": "Defensor Sporting",
+   "sigla": "DEF",
+   "pais": "URU",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 70
+  },
+  {
+   "id": "juventud-uru",
+   "nome": "Juventud",
+   "sigla": "JUT",
+   "pais": "URU",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 64
+  },
+  {
+   "id": "boston-river",
+   "nome": "Boston River",
+   "sigla": "BOS",
+   "pais": "URU",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 62
+  },
+  {
+   "id": "montevideo-city-torque",
+   "nome": "Montevideo City Torque",
+   "sigla": "MOV",
+   "pais": "URU",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 62
+  },
+  {
+   "id": "racing-uru",
+   "nome": "Racing",
+   "sigla": "RAI",
+   "pais": "URU",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 60
+  },
+  {
+   "id": "atletico-nacional",
+   "nome": "Atlético Nacional",
+   "sigla": "ATT",
+   "pais": "COL",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 82
+  },
+  {
+   "id": "millonarios",
+   "nome": "Millonarios",
+   "sigla": "MIL",
+   "pais": "COL",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 78
+  },
+  {
+   "id": "america-de-cali",
+   "nome": "América de Cali",
+   "sigla": "AMD",
+   "pais": "COL",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 78
+  },
+  {
+   "id": "junior",
+   "nome": "Junior",
+   "sigla": "JUI",
+   "pais": "COL",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 76
+  },
+  {
+   "id": "santa-fe",
+   "nome": "Santa Fe",
+   "sigla": "SAF",
+   "pais": "COL",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 74
+  },
+  {
+   "id": "independiente-medellin",
+   "nome": "Independiente Medellín",
+   "sigla": "INN",
+   "pais": "COL",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 74
+  },
+  {
+   "id": "deportes-tolima",
+   "nome": "Deportes Tolima",
+   "sigla": "DER",
+   "pais": "COL",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 72
+  },
+  {
+   "id": "atletico-bucaramanga",
+   "nome": "Atlético Bucaramanga",
+   "sigla": "ATI",
+   "pais": "COL",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 68
+  },
+  {
+   "id": "universidad-de-chile",
+   "nome": "Universidad de Chile",
+   "sigla": "UNV",
+   "pais": "CHI",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 78
+  },
+  {
+   "id": "universidad-catolica",
+   "nome": "Universidad Católica",
+   "sigla": "UNE",
+   "pais": "CHI",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 76
+  },
+  {
+   "id": "coquimbo-unido",
+   "nome": "Coquimbo Unido",
+   "sigla": "COQ",
+   "pais": "CHI",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 68
+  },
+  {
+   "id": "ohiggins",
+   "nome": "O'Higgins",
+   "sigla": "OHI",
+   "pais": "CHI",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 68
+  },
+  {
+   "id": "huachipato",
+   "nome": "Huachipato",
+   "sigla": "HUA",
+   "pais": "CHI",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 66
+  },
+  {
+   "id": "palestino",
+   "nome": "Palestino",
+   "sigla": "PAE",
+   "pais": "CHI",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 66
+  },
+  {
+   "id": "audax-italiano",
+   "nome": "Audax Italiano",
+   "sigla": "AUA",
+   "pais": "CHI",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 64
+  },
+  {
+   "id": "cobresal",
+   "nome": "Cobresal",
+   "sigla": "COB",
+   "pais": "CHI",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 62
+  },
+  {
+   "id": "ldu-quito",
+   "nome": "Liga de Quito",
+   "sigla": "LIG",
+   "pais": "ECU",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 82
+  },
+  {
+   "id": "independiente-del-valle",
+   "nome": "Independiente del Valle",
+   "sigla": "INI",
+   "pais": "ECU",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 82
+  },
+  {
+   "id": "barcelona-sc",
+   "nome": "Barcelona",
+   "sigla": "BAL",
+   "pais": "ECU",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 78
+  },
+  {
+   "id": "universidad-catolica-ecu",
+   "nome": "Universidad Católica",
+   "sigla": "UNR",
+   "pais": "ECU",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 66
+  },
+  {
+   "id": "deportivo-cuenca",
+   "nome": "Deportivo Cuenca",
+   "sigla": "DET",
+   "pais": "ECU",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 64
+  },
+  {
+   "id": "macara",
+   "nome": "Macará",
+   "sigla": "MCA",
+   "pais": "ECU",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 62
+  },
+  {
+   "id": "orense",
+   "nome": "Orense",
+   "sigla": "ORE",
+   "pais": "ECU",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 62
+  },
+  {
+   "id": "libertad-ecu",
+   "nome": "Libertad",
+   "sigla": "LIB",
+   "pais": "ECU",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 60
+  },
+  {
+   "id": "olimpia",
+   "nome": "Olimpia",
+   "sigla": "OLI",
+   "pais": "PAR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 80
+  },
+  {
+   "id": "cerro-porteno",
+   "nome": "Cerro Porteño",
+   "sigla": "CEO",
+   "pais": "PAR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 80
+  },
+  {
+   "id": "libertad",
+   "nome": "Libertad",
+   "sigla": "LIE",
+   "pais": "PAR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 78
+  },
+  {
+   "id": "guarani-par",
+   "nome": "Guaraní",
+   "sigla": "GAR",
+   "pais": "PAR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 70
+  },
+  {
+   "id": "nacional-par",
+   "nome": "Nacional",
+   "sigla": "NAN",
+   "pais": "PAR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 68
+  },
+  {
+   "id": "2-de-mayo",
+   "nome": "2 de Mayo",
+   "sigla": "DEA",
+   "pais": "PAR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 60
+  },
+  {
+   "id": "recoleta",
+   "nome": "Recoleta",
+   "sigla": "REC",
+   "pais": "PAR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 60
+  },
+  {
+   "id": "sportivo-trinidense",
+   "nome": "Sportivo Trinidense",
+   "sigla": "SPO",
+   "pais": "PAR",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 60
+  },
+  {
+   "id": "universitario",
+   "nome": "Universitario",
+   "sigla": "UNS",
+   "pais": "PER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 76
+  },
+  {
+   "id": "alianza-lima",
+   "nome": "Alianza Lima",
+   "sigla": "ALI",
+   "pais": "PER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 76
+  },
+  {
+   "id": "sporting-cristal",
+   "nome": "Sporting Cristal",
+   "sigla": "SPR",
+   "pais": "PER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 74
+  },
+  {
+   "id": "melgar",
+   "nome": "Melgar",
+   "sigla": "MEL",
+   "pais": "PER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 66
+  },
+  {
+   "id": "cusco",
+   "nome": "Cusco",
+   "sigla": "CUS",
+   "pais": "PER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 64
+  },
+  {
+   "id": "cienciano",
+   "nome": "Cienciano",
+   "sigla": "CIE",
+   "pais": "PER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 64
+  },
+  {
+   "id": "alianza-atletico",
+   "nome": "Alianza Atlético",
+   "sigla": "ALA",
+   "pais": "PER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 60
+  },
+  {
+   "id": "deportivo-garcilaso",
+   "nome": "Deportivo Garcilaso",
+   "sigla": "DEI",
+   "pais": "PER",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 60
+  },
+  {
+   "id": "bolivar",
+   "nome": "Bolívar",
+   "sigla": "BOL",
+   "pais": "BOL",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 74
+  },
+  {
+   "id": "the-strongest",
+   "nome": "The Strongest",
+   "sigla": "THE",
+   "pais": "BOL",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 72
+  },
+  {
+   "id": "always-ready",
+   "nome": "Always Ready",
+   "sigla": "ALW",
+   "pais": "BOL",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 68
+  },
+  {
+   "id": "blooming",
+   "nome": "Blooming",
+   "sigla": "BLO",
+   "pais": "BOL",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 64
+  },
+  {
+   "id": "nacional-potosi",
+   "nome": "Nacional Potosí",
+   "sigla": "NAL",
+   "pais": "BOL",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 62
+  },
+  {
+   "id": "independiente-petrolero",
+   "nome": "Independiente Petrolero",
+   "sigla": "INO",
+   "pais": "BOL",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 60
+  },
+  {
+   "id": "guabira",
+   "nome": "Guabirá",
+   "sigla": "GUB",
+   "pais": "BOL",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 58
+  },
+  {
+   "id": "san-antonio-bulo-bulo",
+   "nome": "San Antonio Bulo Bulo",
+   "sigla": "SAI",
+   "pais": "BOL",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 56
+  },
+  {
+   "id": "deportivo-tachira",
+   "nome": "Deportivo Táchira",
+   "sigla": "DEV",
+   "pais": "VEN",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 66
+  },
+  {
+   "id": "caracas",
+   "nome": "Caracas",
+   "sigla": "CAS",
+   "pais": "VEN",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 66
+  },
+  {
+   "id": "deportivo-la-guaira",
+   "nome": "Deportivo La Guaira",
+   "sigla": "DEL",
+   "pais": "VEN",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 64
+  },
+  {
+   "id": "carabobo",
+   "nome": "Carabobo",
+   "sigla": "CRO",
+   "pais": "VEN",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 62
+  },
+  {
+   "id": "universidad-central",
+   "nome": "Universidad Central",
+   "sigla": "UND",
+   "pais": "VEN",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 60
+  },
+  {
+   "id": "academia-puerto-cabello",
+   "nome": "Academia Puerto Cabello",
+   "sigla": "ACA",
+   "pais": "VEN",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 60
+  },
+  {
+   "id": "monagas",
+   "nome": "Monagas",
+   "sigla": "MOA",
+   "pais": "VEN",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 58
+  },
+  {
+   "id": "metropolitanos",
+   "nome": "Metropolitanos",
+   "sigla": "MER",
+   "pais": "VEN",
+   "cores": [
+    "#14213D",
+    "#FFFFFF"
+   ],
+   "reputacao": 58
+  }
+ ]
+}
