@@ -22,6 +22,9 @@ export interface EvoState {
   originalBuild: Build;
   /** Multiplicador de crescimento por atributo (origem); ausente = 1. */
   growthBonus?: Partial<Attributes>;
+  /** Mentalidade: multiplicadores do ruído do crescimento e da perda por idade; ausente = 1. */
+  noiseFactor?: number;
+  declineFactor?: number;
 }
 
 export interface SemesterContext {
@@ -78,11 +81,11 @@ export function evolveSemester(state: EvoState, ctx: SemesterContext, rng: Prng)
     const role = a === main ? 'main' : a === secondary ? 'secondary' : 'none';
     const c = ageCurve(a, state.age);
     const cur = state.attributes[a];
-    const noise = 1 + (rng.next() * 2 - 1) * cfg.noise;
+    const noise = 1 + (rng.next() * 2 - 1) * cfg.noise * (state.noiseFactor ?? 1);
     const delta = c > 0
       ? cfg.basePerSemester * c * cfg.focusGrow[role] * ctx.staffQuality * minutes * morale
         * Math.max(0, 1 - (cur / caps[a]) ** cfg.k) * noise * (state.growthBonus?.[a] ?? 1)
-      : cfg.basePerSemester * c * cfg.focusDecline[role];
+      : cfg.basePerSemester * c * cfg.focusDecline[role] * (state.declineFactor ?? 1);
     const whole = Math.floor(delta);
     const step = whole + (rng.next() < delta - whole ? 1 : 0);
     attributes[a] = Math.max(1, Math.min(caps[a], cur + step));

@@ -73,12 +73,19 @@
     "celebration.invalid": "Escolha uma comemoração da lista.",
     "foot.invalid": "Escolha a perna boa.",
     "origin.invalid": "Escolha uma origem da lista.",
-    "heartClub.invalid": "Escolha um clube da lista ou \"Nenhum\"."
+    "heartClub.invalid": "Escolha um clube da lista ou \"Nenhum\".",
+    "mentality.invalid": "Escolha uma mentalidade da lista."
   },
   "heartClubNone": "Nenhum / não torcia",
   "agent": {
     "paiTio": "Pai ou tio",
     "agenteLocal": "Agente local",
     "grandeAgencia": "Grande agência"
+  },
+  "mentality": {
+    "fominha": "Fominha",
+    "capitao": "Capitão",
+    "professor": "Professor",
+    "maquina": "Máquina"
   }
 }

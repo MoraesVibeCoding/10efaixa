@@ -11,6 +11,7 @@ import { initialEuroTables, simulateEuropeSeason, type EuroTables } from './euro
 import { applyOption, autoChoice } from './events';
 import { callUp, coachFor, isPrincipal, selectionEffect, updatePrestige, visibility, type CallUp, type Rung } from './nationalTeam';
 import { evolveSemester, type EvoState } from './evolution';
+import { mentalityEffects } from './mentality';
 import { afterClassico, afterSemester, afterTransfer, type Idolatry } from './idolatry';
 import { decayRelapse, graveDecision, semesterInjury } from './injuries';
 import { chooseOffer, generateOffers, leagueOf, marketValue, salaryFor, type Offer } from './market';
@@ -108,7 +109,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let evo: EvoState = {
     age: 16, attributes: player.attributes, baseCaps: player.baseCaps, caps: player.caps,
     predictedHeightCm: player.biotype.heightCm, growth: player.growth, build: player.biotype.build,
-    originalBuild: player.biotype.build, buildPush: 0, growthBonus: player.growthBonus,
+    originalBuild: player.biotype.build, buildPush: 0, growthBonus: player.growthBonus, ...mentalityEffects(input.mentality).evo,
   };
   let traits: TraitState = { position: input.position, traits: [...arch.traits.slice(0, 1)], latentTrait: arch.latentTrait, progress: {} };
   let agent: Agent = createAgent((cfg.empresarioPorTemperamento as Record<string, string>)[temp] ?? 'agenteLocal', rng);
