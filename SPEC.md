@@ -1,6 +1,6 @@
 # 10eFaixa — Especificação do Produto (SPEC.md)
 
-> Versão 2.10 (decisões do Marco 3; reputação 1–100) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
+> Versão 2.11 (declínio por idade mais tardio; Marco 4) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
 > Este documento é a fonte da verdade para o Claude Code. Nenhuma mudança de escopo sem atualizar este arquivo primeiro.
 
 ---
@@ -151,12 +151,12 @@ Aplicada **a cada semestre**, com metade do ganho anual por vez (constantes em c
 ```
 
 **Curvas de idade (forma):**
-- Velocidade e Físico: crescem até ~23, platô 23–27, queda a partir de ~29, queda forte após ~32.
-- Força: cresce até ~27, queda lenta após ~31.
+- Velocidade e Físico: crescem até ~23, platô 23–30, queda a partir de ~31, queda forte após ~35.
+- Força: cresce até ~27, queda lenta após ~33.
 - Técnicos: crescem até ~30, queda lenta.
 - Marcação: cresce até ~31.
 - Mental: cresce até ~33, quase não cai.
-- Jogo aéreo: cresce até ~28; a impulsão cai após ~30, com o posicionamento segurando parte da queda.
+- Jogo aéreo: cresce até ~28; a impulsão cai após ~32, com o posicionamento segurando parte da queda.
 
 **Invariantes (viram testes):** nenhum atributo passa do teto nem sai de 1–99; sem minutos e sem foco, jogador de 30+ não evolui fisicamente.
 
@@ -691,6 +691,7 @@ Decisões aprovadas durante a implementação. Complementam as seções acima.
 | 2026-10-01 | T34 | Aposentadoria no fim de cada temporada, primeiro gatilho que valer: 40 anos; físico (3 lesões graves ou velocidade+físico ≤ 50% do auge, a partir dos 30); overall ≤ overall inicial (a partir dos 26, para não encerrar quem ainda não evoluiu); decisão (a partir dos 30; na simulação, chance que cresce com a idade, com poucos minutos e pelo temperamento) | Números em retirement.json |
 | 2026-10-01 | T34 | Despedida: proposta única a partir dos 33 (35%/ano) para encerrar a carreira no clube de coração ("realizar o sonho", prioridade) ou no clube formador; quem aceita não sai mais. Clube formador = primeiro clube da carreira (para várzea e peneira, o primeiro clube profissional) | Eventos `retorno-formador` e `realizar-sonho`, cena `despedida` |
 | 2026-10-01 | T34 | **Achado para a T40:** a curva de idade derruba velocidade e físico para menos da metade do auge aos 34–35 e o overall perde ~4 pontos/ano depois dos 32; por isso ~55% das carreiras terminam pelo gatilho físico, idade média final ~34 e ninguém chega aos 40 | docs/simulacao-carreira.md |
+| 2026-10-01 | T09/T34 | Declínio por idade mais tardio (v2.11): Velocidade/Físico platô até 30, queda a partir de ~31 e forte após ~35; Força cai após ~33; Jogo aéreo após ~32; técnicos e Marcação caem mais devagar | Pedido do usuário no fechamento do Marco 3: antes, o overall perdia ~4 pontos/ano depois dos 32 e ninguém chegava aos 40 |
 | 2026-09-30 | T42/T47 | Troféus: arte original que evoca o tipo do troféu real (taça com orelhas, globo, salva…), nunca cópia do desenho; lista mínima no briefing 6.7 | Pedido do usuário; desenhos de troféus reais são protegidos (seção 11). Réplicas só com revisão jurídica/licença |
 | 2026-09-30 | T14 | Sedes reais conferidas: Copa 2026 (EUA, Canadá, México), 2030 (Marrocos, Portugal, Espanha + centenário), 2034 (Arábia Saudita) — FIFA; Olimpíadas 2028 LA, 2032 Brisbane — COI. Demais sedes sorteadas por semente | Fontes e data em src/data/calendar.json |
 | 2026-09-30 | T14 | **Não verificado:** a CONMEBOL não anunciou a próxima Copa América masculina; ciclo assumido a cada 4 anos a partir de 2028 ("entre as Copas", 6.11). Sedes futuras repetem as 5 últimas reais em ordem (2015 Chile, 2016 EUA, 2019 Brasil, 2021 Brasil, 2024 EUA), decisão do usuário. Janelas de transferência modeladas por momento do semestre; datas exatas a conferir na T28 | Marcado `verificado: false` no JSON; revisar quando houver anúncio oficial |

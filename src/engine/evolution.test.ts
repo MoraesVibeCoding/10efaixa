@@ -1,3 +1,4 @@
+import { ageCurve } from './ageCurves';
 import { ATTRIBUTES, type Attributes } from './attributes';
 import { applyBiotype } from './biotype';
 import { evolveSemester, type EvoState, type SemesterContext } from './evolution';
@@ -95,7 +96,7 @@ describe('evolução por semestre', () => {
   it('queda: média preservada pelo arredondamento estocástico e amortecida pelo foco', () => {
     const s = state({ age: 34, attributes: flat(70) });
     const none = meanDelta(s, ctx(), 'velocidade');
-    expect(none).toBeCloseTo(cfg.basePerSemester * -1.2, 0); // curva de Velocidade aos 34 = −1,2
+    expect(none).toBeCloseTo(cfg.basePerSemester * ageCurve('velocidade', 34), 0); // lê a curva: o número não fica fixo no teste
     expect(meanDelta(s, ctx({ focus: { main: 'velocidade' } }), 'velocidade')).toBeGreaterThan(none);
   });
 
