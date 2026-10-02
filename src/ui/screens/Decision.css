@@ -258,7 +258,13 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   cursor: pointer;
+  touch-action: manipulation;
 }
+@media (hover: hover) {
+  .resultado__seguir:hover { background: var(--cor-texto); }
+  .gaveta__fechar:hover { background: var(--cor-fundo); }
+}
+.resultado__seguir:active { transform: translate(1px, 1px); }
 
 /* ---------- gaveta "Minha carreira": sobe do pé da tela; o que está atrás fica levemente desfocado, como no resultado */
 .gaveta {
@@ -295,6 +301,7 @@
   background: var(--cor-superficie);
   color: var(--cor-texto);
   cursor: pointer;
+  touch-action: manipulation;
 }
 .gaveta__fechar:active { background: var(--cor-destaque); color: var(--cor-sobre-destaque); }
 

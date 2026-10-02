@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import events from '../../data/events.json';
 import { previewOf } from '../../engine/preview';
@@ -44,12 +46,34 @@ describe('resultado da escolha (SPEC v2.20)', () => {
     expect(screen.getByRole('main')).toHaveAttribute('data-resultado', 'aberto');
   });
 
-  it('segue sozinho para a próxima decisão depois de um instante, uma única vez', () => {
+  // T49b: no ritmo normal o resultado só fecha pelo botão ou Esc (WCAG 2.2.1); sozinho, só no ritmo Rápido
+  it('no ritmo normal o resultado espera o jogador: não fecha sozinho', () => {
     const onContinue = open();
+    act(() => { vi.advanceTimersByTime(10_000); });
+    expect(onContinue).not.toHaveBeenCalled();
+  });
+
+  it('no ritmo Rápido segue sozinho depois de um instante, uma única vez', () => {
+    const onContinue = vi.fn();
+    render(<Decision eventId="salario-atrasado" age={24} progress={0.4} ritmo="rapido" player={{ name: 'Zé', position: 'meia', clubId: 'flamengo', overall: 60, titles: [], role: 'reserva', monthlySalary: { amount: 4_000, currency: 'BRL' } }} state={STATE} scene={{ src: 'c.webp', alt: 'cena' }} onContinue={onContinue} />);
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(t('events.salario-atrasado.opcoes.ficar')) }));
     expect(onContinue).not.toHaveBeenCalled();
     act(() => { vi.advanceTimersByTime(10_000); });
     expect(onContinue).toHaveBeenCalledTimes(1);
     expect(onContinue).toHaveBeenCalledWith('ficar', expect.objectContaining({ moral: 0.5, idolatria: 45 }));
+  });
+
+  it('Esc segue, como o botão', () => {
+    const onContinue = open();
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(onContinue).toHaveBeenCalledTimes(1);
+  });
+
+  it('com o resultado aberto, o resto da tela fica inerte (sem foco nem clique por trás)', () => {
+    open();
+    const main = screen.getByRole('main');
+    for (const el of main.querySelectorAll('.decisao__cena, .faixa, .decisao__painel')) expect(el).toHaveAttribute('inert');
+    expect(screen.getByRole('dialog')).not.toHaveAttribute('inert');
   });
 
   it('quem não quer esperar segue pelo botão', () => {
@@ -114,6 +138,29 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
       fireEvent.click(opener());
       expect(opener()).toHaveAttribute('aria-expanded', 'true');
       expect(screen.getByRole('dialog', { name: t('ui.carreira.titulo') })).toBeInTheDocument();
+    });
+
+    it('aberta, deixa o resto da tela inerte; Esc fecha de qualquer ponto e o foco volta para a caixa do jogador (T49b)', () => {
+      openDrawer();
+      const main = screen.getByRole('main');
+      for (const el of main.querySelectorAll('.decisao__cena, .faixa, .decisao__painel')) expect(el).toHaveAttribute('inert');
+      (document.activeElement as HTMLElement).blur();
+      fireEvent.keyDown(document, { key: 'Escape' });
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      for (const el of main.querySelectorAll('.decisao__cena, .faixa, .decisao__painel')) expect(el).not.toHaveAttribute('inert');
+      expect(opener()).toHaveFocus();
+    });
+
+    it('o foco só volta para a caixa do jogador depois que a tela deixou de ser inerte (navegador recusa foco em inerte)', () => {
+      openDrawer();
+      const box = opener();
+      const painel = screen.getByRole('main').querySelector('.decisao__painel')!;
+      const inertWhenFocused: boolean[] = [];
+      const focus = vi.spyOn(box, 'focus').mockImplementation(() => { inertWhenFocused.push(painel.hasAttribute('inert')); });
+      fireEvent.keyDown(document, { key: 'Escape' });
+      expect(inertWhenFocused.length).toBeGreaterThan(0);
+      expect(inertWhenFocused.every((x) => !x)).toBe(true);
+      focus.mockRestore();
     });
 
     it('atributos do momento: os dez, cada um com a faixa em palavra e em barra, sem número (SPEC v2.22)', () => {
@@ -225,5 +272,21 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
     fireEvent.click(first!);
     expect(first).toHaveAttribute('aria-pressed', 'true');
     expect(onChoose).toHaveBeenCalledWith(def.opcoes[0]!.id);
+  });
+});
+
+describe('detalhes de navegador (T49b)', () => {
+  it('a cena tem largura e altura (sem pulo ao carregar) e prioridade alta de carga', () => {
+    setup();
+    const img = screen.getByRole('img', { name: 'O jogador na sala do empresário' });
+    expect(img).toHaveAttribute('width');
+    expect(img).toHaveAttribute('height');
+    expect(img).toHaveAttribute('fetchpriority', 'high');
+  });
+
+  it('index.html declara a cor do navegador e o esquema claro', () => {
+    const html = readFileSync(resolve(__dirname, '../../../index.html'), 'utf8');
+    expect(html).toMatch(/<meta name="theme-color" content="#EEE9DF"/);
+    expect(html).toMatch(/<meta name="color-scheme" content="light"/);
   });
 });

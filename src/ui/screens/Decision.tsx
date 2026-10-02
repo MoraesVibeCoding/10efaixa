@@ -32,6 +32,8 @@ export interface DecisionProps {
   };
   /** Situação atual do jogador (moral, torcida, patrimônio…): o resultado da escolha mostra o ganho e a perda reais sobre ela. */
   state?: Ctx;
+  /** Ritmo da carreira (T49b): no normal o resultado espera o jogador; no rápido segue sozinho depois de `resultadoMs`. */
+  ritmo?: 'normal' | 'rapido';
   onChoose?: (optionId: string) => void;
   /** Chamado quando o resultado fecha, sozinho ou pelo botão, com a situação já atualizada. */
   onContinue?: (optionId: string, state: Ctx) => void;
@@ -161,7 +163,7 @@ function Career({ player, onClose }: { player: DecisionProps['player']; onClose:
     <div className="gaveta" onClick={onClose}>
       <div
         className="gaveta__folha" role="dialog" aria-modal="true" aria-labelledby="gaveta-titulo"
-        onClick={(e) => { e.stopPropagation(); }} onKeyDown={(e) => { if (e.key === 'Escape') onClose(); }}
+        onClick={(e) => { e.stopPropagation(); }}
       >
         <header className="gaveta__topo">
           <h2 id="gaveta-titulo">{t('ui.carreira.titulo')}</h2>
@@ -208,6 +210,9 @@ function Career({ player, onClose }: { player: DecisionProps['player']; onClose:
   );
 }
 
+// as cenas são pintadas em 4:5 (docs/briefing-arte.md); largura e altura reservam o espaço antes de a imagem chegar
+const SCENE_SIZE = [1856, 2304] as const;
+
 const SENSES = [['sobe', 'ganha'], ['desce', 'emTroca'], ['muda', 'muda']] as const;
 
 /** Em todo campo, subir é ganho e descer é custo (engine/preview): a prévia sai em linhas, uma por sentido que a opção tem. */
@@ -230,16 +235,17 @@ function outcomeText(o: Outcome): string {
   return t('ui.resultado.pontos', { sinal, n: Math.round(o.unidade === 'pontos100' ? abs * 100 : abs) });
 }
 
-/** O que a escolha rendeu de verdade, por cima da tela desfocada; fecha sozinho depois de um instante ou pelo botão. */
-function Result({ eventId, optionId, state, onDone }: { eventId: string; optionId: string; state: Ctx; onDone: () => void }) {
+/** O que a escolha rendeu de verdade, por cima da tela desfocada; fecha pelo botão ou Esc e, no ritmo Rápido, sozinho depois de um instante. */
+function Result({ eventId, optionId, state, auto, onDone }: { eventId: string; optionId: string; state: Ctx; auto: boolean; onDone: () => void }) {
   const outcome = outcomeOf(state, eventId, optionId);
   const verdict = outcomeVerdict(outcome);
   const button = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     button.current?.focus();
+    if (!auto) return undefined;
     const timer = setTimeout(onDone, previewCfg.resultadoMs);
     return () => clearTimeout(timer);
-  }, [onDone]);
+  }, [onDone, auto]);
   return (
     <div className="resultado">
       <div className={`resultado__caixa caixa resultado--${verdict}`} role="dialog" aria-modal="true" aria-label={t(`ui.resultado.${verdict}`)}>
@@ -262,7 +268,7 @@ function Result({ eventId, optionId, state, onDone }: { eventId: string; optionI
   );
 }
 
-export function Decision({ eventId, age, progress, scene, player, state = {}, onChoose, onContinue }: DecisionProps) {
+export function Decision({ eventId, age, progress, scene, player, state = {}, ritmo = 'normal', onChoose, onContinue }: DecisionProps) {
   const club = clubOf(player.clubId);
   const band = toBand(player.overall).key;
   const medal = MEDALS[band]!.nome;
@@ -282,17 +288,35 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, on
   const options = events.eventos.find((e) => e.id === eventId)?.opcoes ?? [];
   const percent = Math.round(Math.min(1, Math.max(0, progress)) * 100);
   const text = hasText(eventId) ? t(`events.${eventId}.texto`) : null;
+  // gaveta ou resultado abertos: o resto da tela fica inerte e o Esc vale de qualquer ponto (T49b)
+  const overlay = career || chosen !== null;
+  // o foco volta para a caixa do jogador só depois que o painel deixou de ser inerte: o navegador recusa foco em inerte
+  const wasOpen = useRef(false);
+  useEffect(() => {
+    if (wasOpen.current && !career) opener.current?.focus();
+    wasOpen.current = career;
+  }, [career]);
+  useEffect(() => {
+    if (!overlay) return undefined;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      if (career) setCareer(false);
+      else onDone();
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [overlay, career, onDone]);
 
   return (
     <main className="decisao" data-tema="claro" data-resultado={chosen === null ? 'fechado' : 'aberto'}>
-      <img className="decisao__cena" src={scene.src} alt={scene.alt} />
+      <img className="decisao__cena" src={scene.src} alt={scene.alt} width={SCENE_SIZE[0]} height={SCENE_SIZE[1]} fetchPriority="high" inert={overlay} />
       <div
-        className="faixa" role="progressbar" aria-label={t('ui.decisao.progresso')}
+        inert={overlay} className="faixa" role="progressbar" aria-label={t('ui.decisao.progresso')}
         aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent} aria-valuetext={t('ui.decisao.idade', { idade: age })}
       >
         <span className="faixa__feito" style={{ inlineSize: `${percent}%` }} />
       </div>
-      <div className="decisao__painel">
+      <div className="decisao__painel" inert={overlay}>
         <section className="jogador caixa" aria-label={t('ui.decisao.jogador')}>
           <button ref={opener} type="button" className="jogador__abrir" aria-haspopup="dialog" aria-expanded={career} onClick={() => { setCareer(true); }}>
             <span className="jogador__topo">
@@ -370,8 +394,8 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, on
           })}
         </div>
       </div>
-      {career && <Career player={player} onClose={() => { setCareer(false); opener.current?.focus(); }} />}
-      {chosen !== null && <Result eventId={eventId} optionId={chosen} state={state} onDone={onDone} />}
+      {career && <Career player={player} onClose={() => { setCareer(false); }} />}
+      {chosen !== null && <Result eventId={eventId} optionId={chosen} state={state} auto={ritmo === 'rapido'} onDone={onDone} />}
     </main>
   );
 }
