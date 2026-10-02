@@ -42,7 +42,14 @@ function Arrows({ sentido, intensidade }: Pick<Preview, 'sentido' | 'intensidade
 const STAR = 'M8 .8 10.2 5.6l5.2.6-3.9 3.6 1.1 5.2L8 12.4 3.4 15l1.1-5.2L.6 6.2l5.2-.6z';
 const TITLE_WEIGHT = legacy.titulos.pontos as Record<string, number>;
 const clubOf = (id: string) => CLUBS.find((c) => c.id === id);
-const total = (rows: [string, number][]) => rows.reduce((n, [, c]) => n + c, 0);
+
+/** Títulos agrupados por competição, da mais pesada para a mais leve: as três primeiras aparecem, o resto vira contagem. */
+function rankTitles(titles: string[]) {
+  const counts: Record<string, number> = {};
+  for (const id of titles) counts[id] = (counts[id] ?? 0) + 1;
+  const ranked = Object.entries(counts).sort((a, b) => (TITLE_WEIGHT[b[0]] ?? 0) - (TITLE_WEIGHT[a[0]] ?? 0));
+  return { shown: ranked.slice(0, 3), hidden: ranked.slice(3).reduce((n, [, c]) => n + c, 0) };
+}
 
 function Stars({ value, label }: { value: number; label: string }) {
   return (
@@ -72,11 +79,7 @@ function Crest({ clubId }: { clubId: string }) {
 }
 
 function Trophies({ titles }: { titles: string[] }) {
-  const counts = new Map<string, number>();
-  for (const id of titles) counts.set(id, (counts.get(id) ?? 0) + 1);
-  const ranked = [...counts].sort((a, b) => (TITLE_WEIGHT[b[0]] ?? 0) - (TITLE_WEIGHT[a[0]] ?? 0));
-  const shown = ranked.slice(0, 3);
-  const hidden = total(ranked.slice(3));
+  const { shown, hidden } = rankTitles(titles);
   return (
     <p className="trofeus">
       <svg viewBox="0 0 18 18" width="18" height="18" aria-hidden="true" focusable="false">
