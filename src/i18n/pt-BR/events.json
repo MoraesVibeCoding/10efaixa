@@ -28,7 +28,7 @@
  },
  "proposta-rival": {
   "titulo": "O rival bateu na porta",
-  "texto": "O maior rival do seu clube fez uma proposta que dobra o seu salário. A notícia vazou antes de você atender o telefone. No treino, a torcida pendurou uma faixa na grade: \"Aqui não tem traidor\".",
+  "texto": "O maior rival do seu clube fez uma proposta que dobra o seu salário. A notícia vazou antes de você atender o telefone. No treino, a torcida pendurou uma faixa na grade: “Aqui não tem traidor”.",
   "opcoes": {
    "aceitar": "Aceitar e vestir a camisa do rival",
    "recusar": "Recusar e beijar o escudo no próximo jogo",
@@ -82,7 +82,7 @@
  },
  "empresario-some-dinheiro": {
   "titulo": "Sumiu dinheiro da conta",
-  "texto": "O extrato chegou e a conta não fecha: falta uma parte do que você juntou. Seu empresário fala em \"taxa de investimento\" e muda de assunto. Seu pai, que nunca reclama, ficou calado no almoço.",
+  "texto": "O extrato chegou e a conta não fecha: falta uma parte do que você juntou. Seu empresário fala em “taxa de investimento” e muda de assunto. Seu pai, que nunca reclama, ficou calado no almoço.",
   "opcoes": {
    "trocar-empresario": "Trocar de empresário e chamar um advogado",
    "dar-outra-chance": "Acreditar na explicação e seguir com ele",
@@ -154,7 +154,7 @@
  },
  "investir": {
   "titulo": "Proposta de investimento",
-  "texto": "Um conhecido do seu empresário oferece sociedade numa rede de academias que \"não tem como dar errado\". O retorno pode ser grande; o prejuízo também. Ele quer resposta até sexta.",
+  "texto": "Um conhecido do seu empresário oferece sociedade numa rede de academias que “não tem como dar errado”. O retorno pode ser grande; o prejuízo também. Ele quer resposta até sexta.",
   "opcoes": {
    "investir": "Entrar com uma parte grande do que você tem",
    "guardar": "Guardar o dinheiro onde está",

@@ -35,6 +35,13 @@ describe('narrativa dos eventos (skill 10efaixa-narrativa)', () => {
     }
   });
 
+  it('tipografia: aspas curvas e reticências de um caractere, nunca aspas retas ou três pontos', () => {
+    for (const e of EVENTS) {
+      const all = [TEXT[e.id]!.titulo, TEXT[e.id]!.texto ?? '', ...Object.values(TEXT[e.id]!.opcoes)].join(' ');
+      expect(all, e.id).not.toMatch(/["']|\.\.\./);
+    }
+  });
+
   // Consequências que moram em outras tabelas entram na comparação (mais é melhor para o jogador).
   const EXTERNAL: Record<string, Record<string, Record<string, number>>> = {
     'lesao-grave': Object.fromEntries(Object.entries(injuries.grave).map(([k, v]) => [k, { tempoEmCampo: -v.semestresFora, semRecaida: -v.recaida, fisico: -v.perdaFisica }])),

@@ -38,7 +38,7 @@ Jeito = o temperamento que escolhe aquela opção sozinho na simulação; ★ ma
 
 ## O rival bateu na porta  ·  `proposta-rival`
 
-> O maior rival do seu clube fez uma proposta que dobra o seu salário. A notícia vazou antes de você atender o telefone. No treino, a torcida pendurou uma faixa na grade: "Aqui não tem traidor".
+> O maior rival do seu clube fez uma proposta que dobra o seu salário. A notícia vazou antes de você atender o telefone. No treino, a torcida pendurou uma faixa na grade: “Aqui não tem traidor”.
 
 | Opção | Jeito | Consequência (dados) |
 |---|---|---|
@@ -98,7 +98,7 @@ Jeito = o temperamento que escolhe aquela opção sozinho na simulação; ★ ma
 
 ## Sumiu dinheiro da conta  ·  `empresario-some-dinheiro`
 
-> O extrato chegou e a conta não fecha: falta uma parte do que você juntou. Seu empresário fala em "taxa de investimento" e muda de assunto. Seu pai, que nunca reclama, ficou calado no almoço.
+> O extrato chegou e a conta não fecha: falta uma parte do que você juntou. Seu empresário fala em “taxa de investimento” e muda de assunto. Seu pai, que nunca reclama, ficou calado no almoço.
 
 | Opção | Jeito | Consequência (dados) |
 |---|---|---|
@@ -178,7 +178,7 @@ Jeito = o temperamento que escolhe aquela opção sozinho na simulação; ★ ma
 
 ## Proposta de investimento  ·  `investir`
 
-> Um conhecido do seu empresário oferece sociedade numa rede de academias que "não tem como dar errado". O retorno pode ser grande; o prejuízo também. Ele quer resposta até sexta.
+> Um conhecido do seu empresário oferece sociedade numa rede de academias que “não tem como dar errado”. O retorno pode ser grande; o prejuízo também. Ele quer resposta até sexta.
 
 | Opção | Jeito | Consequência (dados) |
 |---|---|---|
