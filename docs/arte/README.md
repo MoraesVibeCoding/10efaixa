@@ -31,6 +31,34 @@ Lote 1 completo em 2026-10-02: 30 de 30 imagens aprovadas, todas em 1856×2304. 
 
 Lote 2 completo em 2026-10-02: 6 de 6 retratos aprovados, todos em 1856×2304. Ressalvas: os rostos são parecidos, não idênticos (o `curto` tem o maxilar mais largo); o `liso-medio` saiu em escala um pouco menor (camisa com 73% da largura, contra ~81% dos outros), o que o código compensa ao recortar.
 
-## Depois
+## Lote 3 — cenários que já têm evento no jogo (11 cenas × 6 cortes = 66 imagens)
 
-Lote 3: os outros 9 cenários que já têm evento no jogo. Lote 4: os 11 cenários restantes. Lote 5: versões de goleiro (manga longa e luvas) das cenas de jogo, troféus e tela de abertura.
+| Pasta | Cena | Roupa do jogador |
+|---|---|---|
+| `cenas/06-sala-empresario/` | Sala do empresário | camisa magenta, calça marinho |
+| `cenas/07-reuniao-comissao/` | Reunião com a comissão | uniforme |
+| `cenas/08-casa-familia/` | Em casa com a família | camisa magenta, calça marinho |
+| `cenas/09-despedida/` | Despedida | uniforme |
+| `cenas/10-copa/` | Copa do Mundo | uniforme |
+| `cenas/11-treino/` | Treino | uniforme |
+| `cenas/12-gol/` | Gol | uniforme |
+| `cenas/13-hospital/` | Hospital | camisa magenta, calção marinho |
+| `cenas/14-festa/` | Festa | camisa magenta, calça marinho |
+| `cenas/15-entrevista/` | Entrevista | uniforme |
+| `cenas/16-convocacao/` | Convocação | camisa magenta, calça marinho |
+
+## Lote 4 — cenários restantes do catálogo (9 cenas × 6 cortes = 54 imagens)
+
+`cenas/17-rua-do-bairro/` · `18-peneira/` · `19-banco-de-reservas/` · `20-aeroporto/` · `21-estadio/` · `22-cabecada/` · `23-fisioterapia/` · `24-classico/` · `25-vaia/`.
+
+## Lote 5 — goleiro, troféus e abertura (79 imagens)
+
+- `cenas-goleiro/<cena>/<corte>/`: 10 cenas de jogo × 6 cortes, com o goleiro de rosa (`#F0569B`), manga longa e luvas laranja; os companheiros seguem de magenta e ciano. Cenas: título, pênalti (ele defende), defesa (no lugar do gol), saída do gol (no lugar da cabeçada), estádio, clássico, Copa, vaia, treino e despedida. Nas cenas fora de campo o goleiro usa a mesma imagem dos jogadores de linha.
+- `trofeus/<id>/`: 18 troféus de desenho original, quadrados (1:1), em fundo azul-marinho chapado. **Confira um a um se não lembra o troféu real.**
+- `abertura/`: a tela de abertura, com o jogador em silhueta no túnel e a faixa de capitão amarela.
+
+## Como os prompts dos lotes 3 a 5 são feitos
+
+Saem de `gerar-lotes-3-5.py` (os textos das cenas ficam no próprio script). Para ajustar uma cena, edite o script e rode `python3 docs/arte/gerar-lotes-3-5.py`: ele reescreve só os `prompt.md` desses lotes e não toca em imagens nem nos lotes 1 e 2.
+
+Em todas as cenas: jogador de costas, costas da camisa livres para o número, torcida e adversários em cinza, 40% de baixo escuros e vazios, nenhum texto.
