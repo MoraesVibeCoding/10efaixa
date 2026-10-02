@@ -1,0 +1,61 @@
+/* Figurinha (T49c, SPEC v2.26): papel branco de figurinha, borda de tinta e a sombra dura verde do jogo. */
+.figurinha {
+  display: grid;
+  align-content: start;
+  inline-size: 7rem;
+  padding: 5px 5px 7px;
+  border: var(--forma-borda) solid var(--cor-linha);
+  border-radius: 6px;
+  background: #FFFFFF;
+  box-shadow: var(--forma-sombra) var(--forma-sombra) 0 var(--cor-destaque);
+  color: var(--cor-texto);
+  text-align: start;
+}
+/* creme em cima e as duas faixas do clube na altura dos ombros */
+.figurinha__foto {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 3px;
+  background: linear-gradient(var(--cor-superficie) 0 60%, var(--faixa1) 60% 80%, var(--faixa2) 80%);
+}
+/* recorte de álbum: contorno branco por dentro e linha de tinta por fora */
+.figurinha__retrato {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  filter:
+    drop-shadow(2px 0 0 #FFFFFF) drop-shadow(-2px 0 0 #FFFFFF) drop-shadow(0 2px 0 #FFFFFF) drop-shadow(0 -2px 0 #FFFFFF)
+    drop-shadow(1px 0 0 var(--cor-linha)) drop-shadow(-1px 0 0 var(--cor-linha)) drop-shadow(0 1px 0 var(--cor-linha)) drop-shadow(0 -1px 0 var(--cor-linha));
+}
+.figurinha__numero {
+  position: absolute;
+  inset-block-start: 1px;
+  inset-inline-end: 5px;
+  font-family: var(--fonte-titulo);
+  font-size: 1.9rem;
+  font-weight: 900;
+  line-height: 1;
+  color: #FFFFFF;
+  -webkit-text-stroke: 1.5px var(--cor-linha);
+  paint-order: stroke;
+}
+.figurinha__over {
+  position: absolute;
+  inset-inline-start: 4px;
+  inset-block-end: 6px;
+  inline-size: 2.125rem;
+  block-size: 2.375rem;
+}
+.figurinha__over .over__numero { font-size: 1.25rem; }
+.figurinha__nome {
+  margin-block-start: 5px;
+  font-family: var(--fonte-titulo);
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+.figurinha__clube { font-size: 0.75rem; line-height: 1.25; color: var(--cor-texto-suave); }

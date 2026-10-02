@@ -87,5 +87,13 @@
   "ano": "Fora por um ano",
   "anos": "Fora por {n} anos",
   "meses": "Fora por {n} meses"
+ },
+ "figurinha": {
+  "posicaoNoClube": "{posicao} {prep} {clube}",
+  "prep": {
+   "o": "do",
+   "a": "da"
+  },
+  "over": "OVR"
  }
 }
