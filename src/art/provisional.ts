@@ -3,6 +3,8 @@ export interface ProvisionalInput {
   scenes: { cenas: string[]; poses: string[]; detalhes: string[]; trofeus: string[]; definicoes: Record<string, { pose: string; companheiros: number }> };
   styles: { hair: string[]; beards: string[]; expressions: string[] };
   celebrations: string[];
+  /** Clubes com emblema próprio (src/data/emblems.json); todo o resto usa o escudo genérico. */
+  emblems: string[];
 }
 
 const K = { pele: '#FF00FF', peleS: '#B000B0', u1: '#00FF00', u1s: '#00B000', u2: '#0000FF', u2s: '#0000B0', cab: '#FF8000', cabS: '#B05800', boot: '#00FFFF', acc: '#FFFF00' };
@@ -180,6 +182,41 @@ function cenario(id: string, def: { pose: string; companheiros: number }): strin
 }
 
 /** Todas as peças provisórias: caminho relativo (`categoria/arquivo.svg`) → SVG. Determinístico. */
+// ---------- emblemas (viewBox 100 × 100; T49d) ----------
+// uniforme1 = primeira cor da camisa, uniforme2 = segunda (ou o detalhe): o código troca pelas cores do clube.
+const VB_EMB = '0 0 100 100';
+const SHIELD = 'M12 8h76v44c0 22-17 36-38 44C29 88 12 74 12 52z';
+const FLAME = 'M50 16c4 12 16 18 14 34-1 10-8 16-14 18-8-2-15-9-14-20 1-9 7-12 8-20 3 5 2 10 6 12 2-8-3-16 0-24z';
+const HEX = 'M50 4 92 28v44L50 96 8 72V28z';
+const EMBLEM: Record<string, { completo: string; simples: string }> = {
+  flamengo: {
+    completo: `<path d="${SHIELD}" fill="${K.u2}"/><path d="M14 74 86 52v8L14 82zM20 88 82 66v6L28 92z" fill="${K.u1}"/><path d="${FLAME}" fill="${K.u1}"/>`
+      + `<path d="M50 38c3 6 8 9 7 17-1 5-4 8-7 9-4-1-7-5-7-10 0-5 4-7 5-11 1 2 1 4 3 5 0-3-2-6-1-10z" fill="${P.cal}"/><path d="${SHIELD}" fill="none" stroke="${K.u1}" stroke-width="6"/>`,
+    simples: `<path d="${SHIELD}" fill="${K.u2}" stroke="${K.u1}" stroke-width="9"/><path d="${FLAME}" fill="${K.u1}"/>`,
+  },
+  santos: {
+    completo: `<circle cx="50" cy="50" r="46" fill="${K.u2}"/><circle cx="50" cy="50" r="39" fill="none" stroke="${K.u1}" stroke-width="3"/><path d="M52 16V66H26zM57 26V66H74z" fill="${K.u1}"/>`
+      + `<path d="M20 72c10-6 20 6 30 0s20-6 30 0" fill="none" stroke="${P.cin}" stroke-width="5" stroke-linecap="round"/><path d="M24 82c9-5 17 5 26 0s17-5 26 0" fill="none" stroke="${K.u1}" stroke-width="4" stroke-linecap="round"/>`,
+    simples: `<circle cx="50" cy="50" r="45" fill="${K.u2}" stroke="${K.u1}" stroke-width="6"/><path d="M54 18V70H24zM60 30V70H78z" fill="${K.u1}"/>`,
+  },
+  palmeiras: {
+    completo: `<path d="${HEX}" fill="${K.u1}"/><path d="M50 11 86 31v38L50 89 14 69V31z" fill="none" stroke="${K.u2}" stroke-width="3"/><circle cx="50" cy="30" r="12" fill="${K.u2}"/><path d="M48 36h4l2 46h-8z" fill="${K.u2}"/>`
+      + `<path d="M50 38C40 26 28 28 20 36c10-2 20 0 30 4zM50 38c10-12 22-10 30-2-10-2-20 0-30 4zM50 38c-8-4-18 0-24 10 8-6 16-8 24-6zM50 38c8-4 18 0 24 10-8-6-16-8-24-6z" fill="${K.u2}"/><path d="M14 76c14-8 30-10 36-8 8-2 22 0 36 8v-4c-14-8-28-10-36-8-8-2-22 0-36 8z" fill="${K.u1s}"/>`,
+    simples: `<path d="${HEX}" fill="${K.u1}" stroke="${K.u2}" stroke-width="6"/><path d="M46 40h8l3 42H43z" fill="${K.u2}"/><path d="M50 42C40 26 26 28 18 40c12-4 22-2 32 4zM50 42c10-16 24-14 32-2-12-4-22-2-32 4zM50 42c-2-12 0-20 0-26 3 9 3 18 0 26z" fill="${K.u2}"/>`,
+  },
+  coritiba: {
+    completo: `${rect(5, 5, 90, 90, K.u1, 20)}${rect(13, 13, 74, 74, K.u2, 14)}<path d="M13 70c14-10 26-12 37-6 12-6 24-4 37 6v17H13z" fill="${K.u1s}"/>${rect(47, 30, 6, 46, K.u1)}`
+      + `<path d="M28 40c4-6 14-6 20-2H28zM52 38c6-4 16-4 20 2H52zM24 52c4-6 16-6 24-2H24zM52 50c8-4 20-4 24 2H52zM36 30c4-6 12-8 14-2 2-6 10-4 14 2z" fill="${K.u1}" stroke="${K.u1}" stroke-width="5" stroke-linejoin="round"/>`,
+    simples: `${rect(6, 6, 88, 88, K.u1, 20)}${rect(46, 34, 8, 48, K.u2)}<path d="M22 50c6-10 22-10 28-4H22zM50 46c6-6 22-6 28 4H50zM32 34c6-10 30-10 36 0z" fill="${K.u2}" stroke="${K.u2}" stroke-width="7" stroke-linejoin="round"/>`,
+  },
+  // escudo genérico (clube sem emblema próprio): formato e faixas nas cores do clube; a sigla vem do código, fora da peça
+  generico: {
+    completo: `<path d="M12 8h76v50c0 18-14 30-38 38C26 88 12 76 12 58z" fill="${P.cal}"/><path d="M12 8h25v66L12 58zM63 8h25v50L63 76z" fill="${K.u1}"/><path d="M37 8h26v82l-13 6-13-6z" fill="${K.u2}"/>`
+      + `<path d="M12 8h76v50c0 18-14 30-38 38C26 88 12 76 12 58z" fill="none" stroke="${P.mar}" stroke-width="5"/>`,
+    simples: `<path d="M12 8h38v86C26 86 12 76 12 58z" fill="${K.u1}"/><path d="M50 8h38v50c0 18-14 28-38 36z" fill="${K.u2}"/><path d="M12 8h76v50c0 18-14 30-38 38C26 88 12 76 12 58z" fill="none" stroke="${P.mar}" stroke-width="8"/>`,
+  },
+};
+
 export function generateProvisional(i: ProvisionalInput): Record<string, string> {
   const out: Record<string, string> = {};
   const put = (cat: string, name: string, content: string) => { out[`${cat}/${name}.svg`] = content; };
@@ -200,5 +237,8 @@ export function generateProvisional(i: ProvisionalInput): Record<string, string>
   for (const id of i.scenes.cenas) put('cenario', `cenario__${id}`, cenario(id, i.scenes.definicoes[id]!));
   for (const id of i.scenes.detalhes) put('detalhe', `detalhe__${id}`, svg(VB_DET, `<g id="detalhe">${DETAIL[id]!}</g>`));
   for (const id of i.scenes.trofeus) put('detalhe', `detalhe__trofeu-${id}`, svg(VB_DET, `<g id="detalhe">${TROPHY[id]!}</g>`));
+  for (const id of [...i.emblems, 'generico']) {
+    for (const v of ['completo', 'simples'] as const) put('emblema', `emblema__${id}-${v}`, svg(VB_EMB, `<g id="emblema">${EMBLEM[id]![v]}</g>`));
+  }
   return out;
 }

@@ -6,8 +6,9 @@ import avatar from '../data/avatar.json';
 import creation from '../data/creation.json';
 import fmt from './format.json';
 import scenes from '../data/scenes.json';
+import emblems from '../data/emblems.json';
 
-const out = generateProvisional({ scenes, styles: avatar.styles, celebrations: creation.celebrations });
+const out = generateProvisional({ scenes, styles: avatar.styles, celebrations: creation.celebrations, emblems: Object.keys(emblems.clubes) });
 const names = new Map(Object.keys(out).map((p) => [p.split('/').pop()!, p]));
 
 describe('arte provisória (T47)', () => {
@@ -43,6 +44,21 @@ describe('arte provisória (T47)', () => {
       expect(svg).toContain(`data-pose-sugerida="${d.pose}"`);
       expect(svg.match(/id="slot-companheiro-\d"/g)?.length ?? 0).toBe(d.companheiros);
     }
-    expect(generateProvisional({ scenes, styles: avatar.styles, celebrations: creation.celebrations })).toEqual(out);
+    expect(generateProvisional({ scenes, styles: avatar.styles, celebrations: creation.celebrations, emblems: Object.keys(emblems.clubes) })).toEqual(out);
+  });
+
+  it('emblemas (T49d): completo e simplificado de cada clube com emblema próprio e do escudo genérico, só com cores-chave do uniforme e paleta, sem texto', () => {
+    const ids = [...Object.keys(emblems.clubes), 'generico'];
+    expect(ids).toEqual(expect.arrayContaining(['flamengo', 'santos', 'palmeiras', 'coritiba', 'generico']));
+    for (const id of ids) {
+      for (const v of ['completo', 'simples']) {
+        const svg = out[names.get(`emblema__${id}-${v}.svg`) ?? '']!;
+        expect(svg, `${id}-${v}`).toBeTruthy();
+        expect(svg).toContain('id="emblema"');
+        expect(svg).toMatch(/#00FF00/i);
+        expect(svg).not.toMatch(/<text/);
+      }
+    }
   });
 });
+

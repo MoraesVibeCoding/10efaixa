@@ -2,7 +2,7 @@
 
 > Arte final **pintada e gerada por IA** (decisão do usuário, SPEC v2.12). O usuário gera as imagens com a própria conta; o Claude Code escreve os prompts, processa as peças e confere cada lote.
 > Mantido pela skill `.claude/skills/10efaixa-arte`.
-> Versão 5 · 2026-10-01 · Base: SPEC v2.13, seções 6.17, 7 e 11. (v4: sai o vetorial chapado feito por ilustrador; entra ilustração pintada semi-realista por IA, com recolor por máscara. v3: troféus inspirados nos reais, nunca cópias.)
+> Versão 6 · 2026-10-02 · Base: SPEC v2.26 (v6: emblemas originais dos clubes, seção 6.8). Versão 5 · 2026-10-01 · Base: SPEC v2.13, seções 6.17, 7 e 11. (v4: sai o vetorial chapado feito por ilustrador; entra ilustração pintada semi-realista por IA, com recolor por máscara. v3: troféus inspirados nos reais, nunca cópias.)
 >
 > **Versão 5 · 2026-10-01 · plano em vigor (SPEC v2.13).** Onde este documento divergir do resumo abaixo, vale o resumo; as seções 4 a 7 da versão 4 (avatar montado por peças, cabeça canônica, lote piloto) estão superadas.
 >
@@ -188,6 +188,16 @@ Cada título tem um troféu próprio que **evoca** o troféu real da competiçã
 
 Lista mínima: estadual · Série A · Série B · Série C · Série D · Copa do Brasil · Copa do Nordeste · copa continental principal · copa continental secundária · Copa do Mundo · Copa América · Olimpíadas (medalha) · ligas europeias · copa europeia · prêmios individuais (melhor jogador, artilheiro, melhor goleiro, revelação). Ouro puxado para o amarelo braçadeira `#FFC21A`, com sombra marinho.
 
+### 6.8 Emblemas dos clubes — originais, nunca o escudo (v6, SPEC v2.26)
+
+Cada clube aparece com um **emblema original** que evoca o **nome ou a cidade** (chama, vela e ondas, palmeira, araucária…), no traço do jogo: formas chapadas, contorno grosso, no máximo três cores. **Proibido:** o escudo oficial ou qualquer elemento dele, sua forma e disposição, monograma, mascote oficial, estrelas e ano de fundação. Revisão jurídica antes do lançamento.
+
+- Duas versões por clube: **completa** (figurinha grande, mercado, tela final) e **simplificada** (só a silhueta, legível em 18 px), usada abaixo de 40 px (`src/data/emblems.json`).
+- As cores do clube entram por troca de cor: o desenho usa a cor 1 e a cor 2 do uniforme (provisória: cores-chave `uniforme1` e `uniforme2`).
+- Sem texto dentro do emblema: o nome do clube aparece ao lado.
+- Clube sem emblema próprio usa o **escudo genérico** (formato e faixas nas cores do clube).
+- Prompts por clube em `docs/arte/emblemas/`; os quatro primeiros conceitos (Flamengo, Santos, Palmeiras, Coritiba) vieram do usuário. A araucária do Coritiba ainda precisa ser conferida contra os escudos do clube.
+
 ## 7. Lotes
 
 | Lote | Conteúdo | Objetivo |
@@ -255,6 +265,7 @@ Cenários trazem **lugares marcados** (`slot`) onde o código encaixa o avatar e
 - Exportar com **IDs preservados** e sem minificar nomes (no Illustrator: "Propriedades de objeto: Identificadores de camada").
 - **Nome do arquivo:** `categoria__peca__variante__angulo.svg`, tudo minúsculo, sem acento, palavras com hífen. Partes que não se aplicam são omitidas.
   - Exemplos: `cabelo__black-power__frente.svg`, `cabelo__cacheado-entradas__tres-quartos.svg`, `pose__correndo.svg`, `cenario__vestiario.svg`, `detalhe__taca.svg`.
+  - Emblemas (v6): `emblema__<clube>-completo.svg` e `emblema__<clube>-simples.svg`, viewBox 100 × 100, grupo `emblema`, até 8 KB; `emblema__generico-*` é o escudo genérico.
   - Ângulos: `frente`, `perfil`, `tres-quartos`.
 
 #### A.2.2 Camadas (grupos `<g>` com `id`)

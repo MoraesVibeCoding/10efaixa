@@ -1,0 +1,10 @@
+{
+ "_nota": "Emblemas originais dos clubes (SPEC v2.26, seção 11): evocam o nome ou a cidade, nunca o escudo oficial nem elemento, forma ou disposição dele, monograma, mascote oficial, estrelas ou ano de fundação. Peças em src/assets/art/provisoria/emblema/ (geradas) com as cores-chave do uniforme, trocadas pelas do clube (kits.json). Clube sem emblema próprio usa o escudo genérico. Abaixo de 'simplesAbaixoDePx' entra a versão simplificada. Conceitos do usuário (2026-10-02); revisão jurídica antes do lançamento.",
+ "simplesAbaixoDePx": 40,
+ "clubes": {
+  "flamengo": { "simbolo": "chama", "forma": "escudo" },
+  "santos": { "simbolo": "vela e ondas de cidade portuária", "forma": "círculo" },
+  "palmeiras": { "simbolo": "palmeira", "forma": "hexágono" },
+  "coritiba": { "simbolo": "araucária, árvore-símbolo do Paraná", "forma": "quadrado arredondado", "conferir": "se a araucária já apareceu em algum escudo do clube; se sim, trocar o símbolo" }
+ }
+}
