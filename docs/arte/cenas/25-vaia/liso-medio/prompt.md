@@ -50,6 +50,7 @@ COMPOSITION - follow these positions
 MUST NOT APPEAR
 - No text, letters or numbers anywhere: not on shirts, boards, screens, papers, flags, walls or signs.
 - No logos, crests, badges, sponsor or brand marks on kits, boots, balls, flags, boards, bags or walls.
+- No badge, emblem or stripes on the clothes of coaches, staff, reporters or anyone else: tracksuits, jackets and polo shirts are completely plain.
 - No watermark or signature, and no interface elements, frames or borders.
 - The face of the main character is not visible: he is seen from behind.
 - Every person is an original fictional character who does not resemble any real person.

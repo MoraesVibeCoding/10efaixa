@@ -61,4 +61,6 @@ Lote 2 completo em 2026-10-02: 6 de 6 retratos aprovados, todos em 1856×2304. R
 
 Saem de `gerar-lotes-3-5.py` (os textos das cenas ficam no próprio script). Para ajustar uma cena, edite o script e rode `python3 docs/arte/gerar-lotes-3-5.py`: ele reescreve só os `prompt.md` desses lotes e não toca em imagens nem nos lotes 1 e 2.
 
+**Seis cortes de uma vez:** cada pasta de cena dos lotes 3 a 5 tem também um `prompt-6-cortes.md`, que pede as seis imagens na mesma conversa do Gemini (testado em 2026-10-02 com o treino: saíram seis imagens separadas, na ordem). Cole o bloco inteiro numa conversa nova; se ele parar antes da sexta, responda `Continue with the next image.`
+
 Em todas as cenas: jogador de costas, costas da camisa livres para o número, torcida e adversários em cinza, 40% de baixo escuros e vazios, nenhum texto.

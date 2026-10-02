@@ -58,6 +58,7 @@ def scene_prompt(s, cut):
     ]
     must = ['No text, letters or numbers anywhere: not on shirts, boards, screens, papers, flags, walls or signs.',
             'No logos, crests, badges, sponsor or brand marks on kits, boots, balls, flags, boards, bags or walls.',
+            'No badge, emblem or stripes on the clothes of coaches, staff, reporters or anyone else: tracksuits, jackets and polo shirts are completely plain.',
             'No watermark or signature, and no interface elements, frames or borders.',
             'The face of the main character is not visible: he is seen from behind.',
             'Every person is an original fictional character who does not resemble any real person.'] + s.get('must', [])
@@ -613,9 +614,6 @@ After the sixth image, write: "All 6 images done." If any image was skipped, say
 '''
 
 
-BATCH = ['11-treino']  # cenas com arquivo "os 6 de uma vez" (teste; ampliar se funcionar)
-
-
 def write(path, text):
     full = os.path.join(HERE, path)
     os.makedirs(os.path.dirname(full), exist_ok=True)
@@ -633,7 +631,8 @@ for s in GK:
 for tid, nome, design in TROPHIES:
     write(f'trofeus/{tid}/prompt.md', trophy_md(tid, nome, design)); n += 1
 write('abertura/prompt.md', OPENING); n += 1
-for s in LOTE3 + LOTE4:
-    if s['folder'] in BATCH:
-        write(f"cenas/{s['folder']}/prompt-6-cortes.md", batch_md(s)); n += 1
+# um arquivo por cena com os 6 cortes na mesma conversa (testado no Gemini em 2026-10-02 com a cena do treino)
+for base, scenes in (('cenas', LOTE3 + LOTE4), ('cenas-goleiro', GK)):
+    for s in scenes:
+        write(f"{base}/{s['folder']}/prompt-6-cortes.md", batch_md(s)); n += 1
 print(n, 'arquivos')
