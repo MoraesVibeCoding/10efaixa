@@ -6,9 +6,6 @@
   "opcoes": "O que você faz?",
   "semPrevia": "Sem efeito imediato",
   "previa": ": {sentido} {intensidade}",
-  "jeito": "Jeito",
-  "seuJeito": "Seu jeito",
-  "perfis": "{rotulo}: {perfis}",
   "jogador": "Seu jogador",
   "escudo": "Escudo estilizado do {clube}",
   "clubePosicao": "{posicao} · {clube}",
@@ -53,5 +50,16 @@
   "reserva": "Reserva",
   "promessa": "Promessa",
   "aposta": "Aposta"
+ },
+ "resultado": {
+  "positivo": "Deu certo",
+  "negativo": "Saiu caro",
+  "misto": "Ganhou de um lado, perdeu de outro",
+  "neutro": "Decisão tomada",
+  "semEfeito": "Nada mudou por enquanto.",
+  "seguir": "Seguir",
+  "pontos": "{sinal}{n} pontos",
+  "porcento": "{sinal}{n}%",
+  "dinheiro": "{sinal}{valor}"
  }
 }

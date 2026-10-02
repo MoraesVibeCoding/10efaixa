@@ -65,6 +65,10 @@ Lote 2 completo em 2026-10-02: 6 de 6 retratos aprovados, todos em 1856×2304. R
 - `12-gol`: parte da torcida em tons azulados; `13-hospital`: borda reta na faixa escura em três cortes; `06/liso-grande`: encosto da cadeira; `07/cacheado-grande`: bolinhas no quadro tático.
 - Tudo o que é cor fora do lugar (torcida, casas, roupas de figurantes) se resolve com a máscara por região no código de arte (T43b).
 
+## Cartões do Over (6 imagens)
+
+`cartoes-over/prompt.md`: o fundo do cartão do Over em seis materiais, do bronze ao diamante (um por faixa de overall). Quadrados, ocupando a imagem inteira, sem número nem texto: o jogo escreve por cima e arredonda os cantos.
+
 ## Como os prompts dos lotes 3 a 5 são feitos
 
 Saem de `gerar-lotes-3-5.py` (os textos das cenas ficam no próprio script). Para ajustar uma cena, edite o script e rode `python3 docs/arte/gerar-lotes-3-5.py`: ele reescreve só os `prompt.md` desses lotes e não toca em imagens nem nos lotes 1 e 2.

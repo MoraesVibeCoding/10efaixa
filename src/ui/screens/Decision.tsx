@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import events from '../../data/events.json';
 import legacy from '../../data/legacy.json';
 import { toBand } from '../../engine/attributes';
 import { CLUBS } from '../../engine/clubs';
-import { jeitoOf } from '../../engine/events';
-import { previewOf, type Preview } from '../../engine/preview';
+import { applyOption, type Ctx } from '../../engine/events';
+import { outcomeOf, outcomeVerdict, previewOf, type Outcome, type Preview } from '../../engine/preview';
+import previewCfg from '../../data/preview.json';
 import { t } from '../../i18n';
 import tokens from '../theme/tokens.json';
 import './Decision.css';
@@ -23,9 +24,11 @@ export interface DecisionProps {
     role: string;
     monthlySalary: { amount: number; currency: 'BRL' | 'EUR' };
   };
-  /** Temperamento do jogador: a opção que combina com ele é marcada como "Seu jeito". */
-  temperament?: string;
+  /** Situação atual do jogador (moral, torcida, patrimônio…): o resultado da escolha mostra o ganho e a perda reais sobre ela. */
+  state?: Ctx;
   onChoose?: (optionId: string) => void;
+  /** Chamado quando o resultado fecha, sozinho ou pelo botão, com a situação já atualizada. */
+  onContinue?: (optionId: string, state: Ctx) => void;
 }
 
 const ARROW = { sobe: 'M6 1 11 8H7.6v7H4.4V8H1z', desce: 'M6 15 1 8h3.4V1h3.2v7H11z', muda: 'M1 5.5 5 2v2.4h10v2.2H5V9zM15 10.5 11 14v-2.4H1V9.4h10V7z' };
@@ -105,16 +108,67 @@ function Trophies({ titles }: { titles: string[] }) {
   );
 }
 
-export function Decision({ eventId, age, progress, scene, player, temperament, onChoose }: DecisionProps) {
+const SIGN = { up: '+', down: '−' };
+
+function outcomeText(o: Outcome): string {
+  const sinal = o.delta > 0 ? SIGN.up : SIGN.down;
+  const abs = Math.abs(o.delta);
+  if (o.unidade === 'dinheiro') return t('ui.resultado.dinheiro', { sinal, valor: money(abs, 'BRL') });
+  if (o.unidade === 'porcento') return t('ui.resultado.porcento', { sinal, n: Math.round(abs * 100) });
+  return t('ui.resultado.pontos', { sinal, n: Math.round(o.unidade === 'pontos100' ? abs * 100 : abs) });
+}
+
+/** O que a escolha rendeu de verdade, por cima da tela desfocada; fecha sozinho depois de um instante ou pelo botão. */
+function Result({ eventId, optionId, state, onDone }: { eventId: string; optionId: string; state: Ctx; onDone: () => void }) {
+  const outcome = outcomeOf(state, eventId, optionId);
+  const verdict = outcomeVerdict(outcome);
+  const button = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    button.current?.focus();
+    const timer = setTimeout(onDone, previewCfg.resultadoMs);
+    return () => clearTimeout(timer);
+  }, [onDone]);
+  return (
+    <div className="resultado">
+      <div className={`resultado__caixa caixa resultado--${verdict}`} role="dialog" aria-modal="true" aria-label={t(`ui.resultado.${verdict}`)}>
+        <p className="resultado__veredito" aria-hidden="true">{t(`ui.resultado.${verdict}`)}</p>
+        <p className="resultado__escolha">{t(`events.${eventId}.opcoes.${optionId}`)}</p>
+        {outcome.length === 0 && <p className="resultado__vazio">{t('ui.resultado.semEfeito')}</p>}
+        {outcome.length > 0 && (
+          <ul className="resultado__lista">
+            {outcome.map((o) => (
+              <li key={o.campo} className={o.delta > 0 ? 'resultado__ganho' : 'resultado__perda'}>
+                <span>{t(`preview.campo.${o.campo}`)}</span>
+                <strong>{outcomeText(o)}</strong>
+              </li>
+            ))}
+          </ul>
+        )}
+        <button ref={button} type="button" className="resultado__seguir" onClick={onDone}>{t('ui.resultado.seguir')}</button>
+      </div>
+    </div>
+  );
+}
+
+export function Decision({ eventId, age, progress, scene, player, state = {}, onChoose, onContinue }: DecisionProps) {
   const club = clubOf(player.clubId);
   const band = toBand(player.overall).key;
   const [chosen, setChosen] = useState<string | null>(null);
+  // o resultado fecha uma vez só, venha do tempo ou do botão
+  const done = useRef(false);
+  const finish = useRef(() => {});
+  finish.current = () => {
+    if (done.current || chosen === null) return;
+    done.current = true;
+    onContinue?.(chosen, applyOption(state, eventId, chosen));
+  };
+  const [onDone] = useState(() => () => finish.current());
   const options = events.eventos.find((e) => e.id === eventId)?.opcoes ?? [];
   const percent = Math.round(Math.min(1, Math.max(0, progress)) * 100);
   const text = hasText(eventId) ? t(`events.${eventId}.texto`) : null;
 
   return (
-    <main className="decisao" data-tema="claro">
+    <main className="decisao" data-tema="claro" data-resultado={chosen === null ? 'fechado' : 'aberto'}>
       <img className="decisao__cena" src={scene.src} alt={scene.alt} />
       <div
         className="faixa" role="progressbar" aria-label={t('ui.decisao.progresso')}
@@ -164,20 +218,13 @@ export function Decision({ eventId, age, progress, scene, player, temperament, o
         <div className="decisao__opcoes" role="group" aria-label={t('ui.decisao.opcoes')}>
           {options.map((o) => {
             const preview = previewOf(eventId, o.id);
-            const jeito = jeitoOf(eventId, o.id);
-            const mine = !!temperament && jeito === temperament;
             return (
               <button
-                key={o.id} type="button" className="opcao" aria-pressed={chosen === o.id}
-                onClick={() => { setChosen(o.id); onChoose?.(o.id); }}
+                key={o.id} type="button" className="opcao" aria-pressed={chosen === o.id} disabled={chosen !== null && chosen !== o.id}
+                onClick={() => { if (chosen === null) { setChosen(o.id); onChoose?.(o.id); } }}
               >
                 <span className="opcao__rotulo">{t(`events.${eventId}.opcoes.${o.id}`)}</span>
                 <span className="opcao__previa">
-                  {jeito && (
-                    <span className={`previa previa--jeito${mine ? ' previa--meu' : ''}`}>
-                      {t('ui.decisao.perfis', { rotulo: t(mine ? 'ui.decisao.seuJeito' : 'ui.decisao.jeito'), perfis: t(`creation.temperament.${jeito}`) })}
-                    </span>
-                  )}
                   {preview.length === 0 && <span className="previa">{t('ui.decisao.semPrevia')}</span>}
                   {preview.map((p) => (
                     <span key={p.campo} className={`previa previa--${p.sentido}`}>
@@ -199,6 +246,7 @@ export function Decision({ eventId, age, progress, scene, player, temperament, o
           })}
         </div>
       </div>
+      {chosen !== null && <Result eventId={eventId} optionId={chosen} state={state} onDone={onDone} />}
     </main>
   );
 }

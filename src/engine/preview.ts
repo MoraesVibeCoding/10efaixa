@@ -1,3 +1,4 @@
+import { applyOption, type Ctx } from './events';
 import { toBRL, type Offer } from './market';
 import data from '../data/events.json';
 import cfg from '../data/preview.json';
@@ -36,4 +37,25 @@ export function offerPreview(o: Offer, currentAnnualSalaryBRL: number | null): O
     salario: ratio < s.menor ? 'menor' : ratio >= s.muitoMaior ? 'muitoMaior' : ratio >= s.maior ? 'maior' : 'parecido',
     anos: o.years,
   };
+}
+
+export interface Outcome { campo: string; delta: number; unidade: string }
+
+/** Resultado real da escolha (SPEC v2.20): quanto cada campo numérico mudou de verdade, já com os limites aplicados. */
+export function outcomeOf(state: Ctx, eventId: string, optionId: string): Outcome[] {
+  const after = applyOption(state, eventId, optionId);
+  const units = cfg.unidade as Record<string, string>;
+  return Object.keys(after).flatMap((campo): Outcome[] => {
+    const [a, b] = [state[campo] ?? 0, after[campo]];
+    if (typeof a !== 'number' || typeof b !== 'number' || campo.startsWith('_') || !units[campo]) return [];
+    const delta = Math.round((b - a) * 1000) / 1000;
+    return delta === 0 ? [] : [{ campo, delta, unidade: units[campo]! }];
+  });
+}
+
+/** Em todo campo, subir é bom e descer é ruim; ações sem efeito numérico dão resultado neutro. */
+export function outcomeVerdict(o: Outcome[]): 'positivo' | 'negativo' | 'misto' | 'neutro' {
+  const up = o.some((x) => x.delta > 0);
+  const down = o.some((x) => x.delta < 0);
+  return up && down ? 'misto' : up ? 'positivo' : down ? 'negativo' : 'neutro';
 }

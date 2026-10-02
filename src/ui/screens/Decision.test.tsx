@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import events from '../../data/events.json';
 import { previewOf } from '../../engine/preview';
 import { t } from '../../i18n';
@@ -15,17 +15,48 @@ const setup = (onChoose = vi.fn()) => {
   return onChoose;
 };
 
-describe('perfil de cada opção (pedido do usuário na T49)', () => {
-  it('cada opção mostra o temperamento a que remete, e marca o do próprio jogador', () => {
-    render(<Decision eventId="proposta-coracao" age={24} progress={0.4} temperament="lider" player={{ name: 'Zé', position: 'meia', clubId: 'flamengo', overall: 60, titles: [], role: 'reserva', monthlySalary: { amount: 4_000, currency: 'BRL' } }} scene={{ src: 'c.webp', alt: 'cena' }} />);
-    const buttons = screen.getAllByRole('button');
-    expect(buttons).toHaveLength(3);
-    for (const [i, o] of (events.eventos.find((e) => e.id === 'proposta-coracao')!.opcoes as { jeito: string }[]).entries()) {
-      expect(buttons[i]).toHaveAccessibleName(new RegExp(t(`creation.temperament.${o.jeito}`)));
-      const mine = o.jeito === 'lider';
-      if (mine) expect(buttons[i]).toHaveAccessibleName(new RegExp(t('ui.decisao.seuJeito')));
-      else expect(buttons[i]).not.toHaveAccessibleName(new RegExp(t('ui.decisao.seuJeito')));
-    }
+const STATE = { moral: 0.6, relacaoTecnico: 0.6, idolatria: 40, idolatriaCoracao: 55, disciplina: 0.7, patrimonio: 2_000_000, salarioFator: 1 };
+
+describe('resultado da escolha (SPEC v2.20)', () => {
+  beforeEach(() => { vi.useFakeTimers(); });
+  afterEach(() => { vi.useRealTimers(); });
+
+  const open = (onContinue = vi.fn()) => {
+    render(<Decision eventId="salario-atrasado" age={24} progress={0.4} player={{ name: 'Zé', position: 'meia', clubId: 'flamengo', overall: 60, titles: [], role: 'reserva', monthlySalary: { amount: 4_000, currency: 'BRL' } }} state={STATE} scene={{ src: 'c.webp', alt: 'cena' }} onContinue={onContinue} />);
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(t('events.salario-atrasado.opcoes.ficar')) }));
+    return onContinue;
+  };
+
+  it('as opções não mostram mais o jeito: só o texto e o resumo das consequências', () => {
+    render(<Decision eventId="proposta-coracao" age={24} progress={0.4} player={{ name: 'Zé', position: 'meia', clubId: 'flamengo', overall: 60, titles: [], role: 'reserva', monthlySalary: { amount: 4_000, currency: 'BRL' } }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    expect(screen.getAllByRole('button')).toHaveLength(3);
+    for (const tmp of ['frio', 'esquentado', 'lider', 'resenha']) expect(screen.queryByText(new RegExp(t(`creation.temperament.${tmp}`)))).not.toBeInTheDocument();
+  });
+
+  it('depois de escolher, abre o resultado por cima da tela, com o ganho e a perda reais', () => {
+    open();
+    const dialog = screen.getByRole('dialog', { name: t('ui.resultado.misto') });
+    expect(within(dialog).getByText(t('events.salario-atrasado.opcoes.ficar'))).toBeInTheDocument();
+    expect(within(dialog).getByText(t('preview.campo.moral'))).toBeInTheDocument();
+    expect(within(dialog).getByText(t('ui.resultado.pontos', { sinal: '−', n: 10 }))).toBeInTheDocument();
+    expect(within(dialog).getByText(t('ui.resultado.pontos', { sinal: '+', n: 5 }))).toBeInTheDocument();
+    expect(screen.getByRole('main')).toHaveAttribute('data-resultado', 'aberto');
+  });
+
+  it('segue sozinho para a próxima decisão depois de um instante, uma única vez', () => {
+    const onContinue = open();
+    expect(onContinue).not.toHaveBeenCalled();
+    act(() => { vi.advanceTimersByTime(10_000); });
+    expect(onContinue).toHaveBeenCalledTimes(1);
+    expect(onContinue).toHaveBeenCalledWith('ficar', expect.objectContaining({ moral: 0.5, idolatria: 45 }));
+  });
+
+  it('quem não quer esperar segue pelo botão', () => {
+    const onContinue = open();
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: t('ui.resultado.seguir') }));
+    expect(onContinue).toHaveBeenCalledTimes(1);
+    act(() => { vi.advanceTimersByTime(10_000); });
+    expect(onContinue).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -125,7 +156,7 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
 
   it('escolher uma opção marca a faixa e avisa quem chamou', () => {
     const onChoose = setup();
-    const [first] = screen.getAllByRole('button');
+    const [first] = within(screen.getByRole('group', { name: t('ui.decisao.opcoes') })).getAllByRole('button');
     expect(first).toHaveAttribute('aria-pressed', 'false');
     fireEvent.click(first!);
     expect(first).toHaveAttribute('aria-pressed', 'true');

@@ -2,7 +2,7 @@ import events from '../data/events.json';
 import cfg from '../data/preview.json';
 import txt from '../i18n/pt-BR/preview.json';
 import type { Offer } from './market';
-import { offerPreview, previewOf } from './preview';
+import { offerPreview, outcomeOf, outcomeVerdict, previewOf } from './preview';
 
 const offer = (o: Partial<Offer> = {}): Offer => ({
   clubId: 'x', league: 'BRA-A', currency: 'BRL', annualSalary: 1_000_000, years: 3, role: 'titular', staffQuality: 1,
@@ -64,5 +64,28 @@ describe('prévia de consequências por opção (T41b, estilo Copero)', () => {
     expect(offerPreview(offer({ years: 4 }), 1).anos).toBe(4);
     for (const k of ['menor', 'parecido', 'maior', 'muitoMaior']) expect((txt.salario as Record<string, string>)[k]).toBeTruthy();
     for (const k of Object.keys(cfg.papel)) expect((txt.papel as Record<string, string>)[k]).toBeTruthy();
+  });
+
+  it('resultado real da escolha: quanto cada campo ganhou ou perdeu de verdade, respeitando os limites', () => {
+    const state = { moral: 0.6, relacaoTecnico: 0.6, idolatria: 40, idolatriaCoracao: 55, disciplina: 0.7, patrimonio: 2_000_000, salarioFator: 1 };
+    expect(outcomeOf(state, 'salario-atrasado', 'ficar')).toEqual([
+      { campo: 'moral', delta: -0.1, unidade: cfg.unidade.moral },
+      { campo: 'idolatria', delta: 5, unidade: cfg.unidade.idolatria },
+    ]);
+    const house = outcomeOf(state, 'casa-da-familia', 'comprar');
+    expect(house.find((o) => o.campo === 'patrimonio')!.delta).toBeCloseTo(-300_000);
+    // no teto, o ganho real é zero e não entra no resultado
+    expect(outcomeOf({ ...state, moral: 1 }, 'casa-da-familia', 'comprar').some((o) => o.campo === 'moral')).toBe(false);
+    // escolha que é só a própria ação não tem ganho nem perda
+    expect(outcomeOf(state, 'proposta-rival', 'aceitar')).toEqual([]);
+    for (const campo of Object.keys(txt.campo)) expect((cfg.unidade as Record<string, string>)[campo], campo).toBeTruthy();
+  });
+
+  it('veredito do resultado: positivo, negativo, misto ou neutro', () => {
+    const o = (delta: number) => ({ campo: 'moral', delta, unidade: 'pontos100' });
+    expect(outcomeVerdict([o(0.1)])).toBe('positivo');
+    expect(outcomeVerdict([o(-0.1)])).toBe('negativo');
+    expect(outcomeVerdict([o(0.1), o(-0.1)])).toBe('misto');
+    expect(outcomeVerdict([])).toBe('neutro');
   });
 });
