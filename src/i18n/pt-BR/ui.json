@@ -104,5 +104,30 @@
  },
  "emblema": {
   "de": "Emblema {prep} {clube}"
+ },
+ "criacao": {
+  "progresso": "Passo {passo} de {total}",
+  "avancar": "Avançar",
+  "voltar": "Voltar",
+  "pendente": "Este passo chega nas próximas entregas. Por enquanto, siga em frente.",
+  "nome": {
+   "rotulo": "Nome do jogador",
+   "dica": "É o nome que vai nas manchetes. Apelido o jogo dá na base."
+  },
+  "passos": {
+   "nome": "Como ele se chama?",
+   "numero": "Qual número ele quer nas costas?",
+   "estado": "Onde ele nasceu?",
+   "clubeDeCoracao": "Para que time ele torce?",
+   "posicao": "Em que posição ele joga?",
+   "arquetipo": "Qual é o estilo dele?",
+   "aparencia": "Como ele é?",
+   "biotipo": "Qual é a altura e o físico dele?",
+   "temperamento": "Como é o gênio dele?",
+   "mentalidade": "O que move ele?",
+   "comemoracao": "Como ele comemora o gol?",
+   "origem": "De onde ele vem?",
+   "pernaBoa": "Qual é a perna boa?"
+  }
  }
 }

@@ -1,0 +1,56 @@
+/* T50 (SPEC 6.1): assistente de criação. Cabeçalho com o passo, o conteúdo do passo e as ações sempre embaixo. */
+.criacao { min-block-size: 100dvh; display: grid; }
+.criacao__form {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: var(--espaco-3);
+  inline-size: min(100%, 30rem);
+  margin-inline: auto;
+  padding: var(--espaco-4) var(--espaco-3) var(--espaco-3);
+}
+.criacao__topo { display: grid; gap: var(--espaco-2); }
+.criacao__progresso { font-size: var(--tipo-apoio); color: var(--cor-texto-suave); }
+.criacao__trilho { display: block; block-size: 6px; border-radius: 3px; background: var(--cor-trilho); overflow: hidden; }
+.criacao__trilho > span { display: block; block-size: 100%; background: var(--cor-destaque); }
+.criacao__titulo { font-size: var(--tipo-titulo); line-height: 1.1; }
+.criacao__titulo:focus { outline: none; }
+.criacao__titulo:focus-visible { outline: 3px solid var(--cor-foco); outline-offset: 2px; }
+
+.criacao__passo { align-content: start; display: grid; gap: var(--espaco-2); }
+.criacao__campo { display: grid; gap: var(--espaco-1); }
+.criacao__campo label { font-weight: 700; }
+.criacao__campo input {
+  min-block-size: var(--toque-minimo);
+  padding: 0 var(--espaco-3);
+  border: var(--forma-borda) solid var(--cor-linha);
+  border-radius: var(--forma-raio);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  font: inherit;
+  font-size: var(--tipo-opcao);
+}
+.criacao__campo input[aria-invalid='true'] { border-color: var(--cor-negativo); }
+.criacao__dica { font-size: var(--tipo-apoio); color: var(--cor-texto-suave); }
+.criacao__erro { font-size: var(--tipo-apoio); font-weight: 700; color: var(--cor-negativo); }
+
+.criacao__acoes { display: grid; grid-template-columns: 1fr 2fr; gap: var(--espaco-2); }
+.criacao__botao {
+  min-block-size: var(--toque-minimo);
+  padding: 0 var(--espaco-3);
+  border: var(--forma-borda) solid var(--cor-linha);
+  border-radius: var(--forma-raio);
+  background: var(--cor-superficie);
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.criacao__botao--principal {
+  background: var(--cor-destaque);
+  color: var(--cor-sobre-destaque);
+  box-shadow: var(--forma-sombra) var(--forma-sombra) 0 var(--cor-linha);
+}
+@media (hover: hover) {
+  .criacao__botao:hover { background: var(--cor-fundo); }
+  .criacao__botao--principal:hover { background: var(--cor-positivo); }
+}
