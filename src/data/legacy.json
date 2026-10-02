@@ -167,8 +167,8 @@
    "condicoes": [
     [
      "convocacoesBase",
-     ">",
-     0
+     ">=",
+     2
     ],
     [
      "convocacoes",
@@ -293,8 +293,8 @@
    "condicoes": [
     [
      "clubes",
-     "==",
-     1
+     "<=",
+     2
     ],
     [
      "idolatriaMax",
@@ -331,7 +331,7 @@
     [
      "fracaoGuardada",
      "<=",
-     0.15
+     0.75
     ]
    ]
   },
