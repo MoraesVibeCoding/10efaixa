@@ -1,0 +1,6 @@
+{
+ "_nota": "Prévia de consequências por opção (T41b, SPEC v2.14). intensidade: limites da fração do efeito sobre a faixa do campo (abaixo do 1º = 1, abaixo do 2º = 2, senão 3). papel: estrelas de minutos previstos. salario: razão entre o salário da proposta e o atual.",
+ "intensidade": [0.03, 0.08],
+ "papel": { "titular": 3, "rodizio": 2, "aposta": 1 },
+ "salario": { "menor": 0.9, "maior": 1.1, "muitoMaior": 2 }
+}

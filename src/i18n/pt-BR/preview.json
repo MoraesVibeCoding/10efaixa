@@ -1,0 +1,18 @@
+{
+ "campo": {
+  "moral": "Moral",
+  "relacaoTecnico": "Relação com o técnico",
+  "idolatria": "Carinho da torcida",
+  "idolatriaCoracao": "Carinho da torcida do clube do coração",
+  "patrimonio": "Patrimônio",
+  "salarioFator": "Salário",
+  "disciplina": "Disciplina",
+  "prestigio": "Prestígio na Seleção"
+ },
+ "sentido": { "sobe": "sobe", "desce": "desce", "muda": "muda" },
+ "intensidade": { "1": "um pouco", "2": "bastante", "3": "muito" },
+ "papel": { "titular": "Chega para ser titular", "rodizio": "Entra no rodízio", "aposta": "Chega como aposta" },
+ "salario": { "menor": "Salário menor", "parecido": "Salário parecido", "maior": "Salário maior", "muitoMaior": "Salário muito maior" },
+ "anos": "{anos} anos de contrato",
+ "minutos": "Minutos previstos"
+}

@@ -113,7 +113,7 @@ export function negotiate(o: Offer, agent: Agent, rng: Prng): Offer | null {
 }
 
 const ROLE_SCORE: Record<string, number> = { titular: 1, rodizio: 0.6, aposta: 0.2, reserva: 0.2, promessa: 0.2 };
-const toBRL = (o: Offer) => (o.currency === 'EUR' ? o.annualSalary * money.cambio.EUR : o.annualSalary);
+export const toBRL = (o: Offer) => (o.currency === 'EUR' ? o.annualSalary * money.cambio.EUR : o.annualSalary);
 
 /** Escolha automática por temperamento (simulação e ritmo Rápido); null = fica no clube atual. Usa os dilemas da T25. */
 export function chooseOffer(p: MarketPlayer, offers: Offer[], current: { annualSalaryBRL: number; role: string } | null): Offer | null {
