@@ -41,6 +41,8 @@ function Arrows({ sentido, intensidade }: Pick<Preview, 'sentido' | 'intensidade
 
 const STAR = 'M8 .8 10.2 5.6l5.2.6-3.9 3.6 1.1 5.2L8 12.4 3.4 15l1.1-5.2L.6 6.2l5.2-.6z';
 const TITLE_WEIGHT = legacy.titulos.pontos as Record<string, number>;
+const clubOf = (id: string) => CLUBS.find((c) => c.id === id);
+const total = (rows: [string, number][]) => rows.reduce((n, [, c]) => n + c, 0);
 
 function Stars({ value, label }: { value: number; label: string }) {
   return (
@@ -57,7 +59,7 @@ function Stars({ value, label }: { value: number; label: string }) {
 
 /** Escudo estilizado: só as duas cores e a sigla do clube, nunca o escudo oficial (SPEC 11). */
 function Crest({ clubId }: { clubId: string }) {
-  const club = CLUBS.find((c) => c.id === clubId);
+  const club = clubOf(clubId);
   if (!club) return null;
   return (
     <svg className="escudo" viewBox="0 0 44 50" width="44" height="50" role="img" aria-label={t('ui.decisao.escudo', { clube: club.nome })}>
@@ -74,7 +76,7 @@ function Trophies({ titles }: { titles: string[] }) {
   for (const id of titles) counts.set(id, (counts.get(id) ?? 0) + 1);
   const ranked = [...counts].sort((a, b) => (TITLE_WEIGHT[b[0]] ?? 0) - (TITLE_WEIGHT[a[0]] ?? 0));
   const shown = ranked.slice(0, 3);
-  const hidden = ranked.slice(3).reduce((n, [, c]) => n + c, 0);
+  const hidden = total(ranked.slice(3));
   return (
     <p className="trofeus">
       <svg viewBox="0 0 18 18" width="18" height="18" aria-hidden="true" focusable="false">
@@ -89,7 +91,7 @@ function Trophies({ titles }: { titles: string[] }) {
 
 export function Decision({ eventId, age, progress, scene, player, temperament, onChoose }: DecisionProps) {
   const band = toBand(player.overall);
-  const club = CLUBS.find((c) => c.id === player.clubId);
+  const club = clubOf(player.clubId);
   const [chosen, setChosen] = useState<string | null>(null);
   const options = events.eventos.find((e) => e.id === eventId)?.opcoes ?? [];
   const percent = Math.round(Math.min(1, Math.max(0, progress)) * 100);
