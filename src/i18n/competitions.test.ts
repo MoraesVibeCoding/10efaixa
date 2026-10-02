@@ -41,7 +41,7 @@ describe('competições com nomes não oficiais (v2.32)', () => {
       ...Object.keys(cups).filter((k) => !k.startsWith('_') && k !== 'conmebol').map((k) => `brasil.${k}`),
       ...['libertadores', 'sulAmericana'].filter((k) => k in cups.conmebol).map((k) => `continental.${k}`),
       ...Object.keys(tournaments.torneios).map((k) => `selecoes.${k}`),
-      'europa.copaEuropeia', 'europa.ligaEuropeia', 'brasil.copaJuniores',
+      'europa.copaEuropeia', 'europa.copaEuropeia2', 'brasil.copaJuniores',
     ];
     for (const id of ids) expect(() => t(`competitions.${id}`), id).not.toThrow();
     for (const uf of Object.keys(states.estaduais)) expect(t('competitions.brasil.estadual', { uf })).toContain(uf);
@@ -51,7 +51,8 @@ describe('competições com nomes não oficiais (v2.32)', () => {
     expect(t('competitions.brasil.serieA')).toBe('Nacional · Série A');
     expect(t('competitions.continental.libertadores')).toBe('Copa Continental');
     expect(t('competitions.europa.copaEuropeia')).toBe('Copa Europeia');
-    expect(t('competitions.europa.ligaEuropeia')).toBe('Liga Europeia');
+    expect(t('competitions.europa.copaEuropeia2')).toBe('Copa Europeia 2'); // era "Liga Europeia": perto demais de "Liga Europa"
+    expect(t('ui.titulo.europaLeague')).toBe('Copa Europeia 2');
     expect(t('competitions.selecoes.copaDoMundo')).toBe('Mundial de Seleções');
   });
 });

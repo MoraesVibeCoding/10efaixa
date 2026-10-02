@@ -1,6 +1,6 @@
 # Nomes das competições: oficiais × nomes do jogo (v2.32)
 
-**Aprovado pelo usuário em 2026-10-02** (única mudança: Europa League → "Liga Europeia"). Aplicado em `src/i18n/pt-BR/competitions.json`, com teste de guarda em `src/i18n/competitions.test.ts`. **Vai para a revisão jurídica antes do lançamento.**
+**Aprovado pelo usuário em 2026-10-02.** A Europa League chegou a virar "Liga Europeia", mas o usuário trocou para **"Copa Europeia 2"**, porque o primeiro ficava perto demais do nome oficial em português ("Liga Europa"). Aplicado em `src/i18n/pt-BR/competitions.json`, com teste de guarda em `src/i18n/competitions.test.ts`. **Vai para a revisão jurídica antes do lançamento.**
 
 ## Regra
 
@@ -69,7 +69,7 @@ O termo "olímpico" tem proteção específica na lei brasileira (Lei 9.615/98, 
 |---|---|
 | FA Cup, Copa del Rey, Coppa Italia, DFB-Pokal, Coupe de France, Taça de Portugal | **Copa da Inglaterra / da Espanha / da Itália / da Alemanha / da França / de Portugal** |
 | UEFA Champions League | **Copa Europeia** |
-| UEFA Europa League | **Liga Europeia** (decisão do usuário; **conferir na revisão jurídica**: o nome oficial em português é "Liga Europa", muito próximo. Alternativa pronta: "Copa Europeia 2") |
+| UEFA Europa League | **Copa Europeia 2** |
 
 ## Ligas fora do eixo
 
