@@ -2,7 +2,7 @@
 
 Jogado em 2026-10-02 em https://copero.io/pt, no computador, do começo à aposentadoria: meia-atacante brasileiro, 18 temporadas (16 a 34 anos), 6 clubes em 5 países, 536 jogos, 10 títulos, pico de 71 de overall, 5.802 pontos.
 
-**Outra referência indicada pelo usuário (2026-10-02):** https://copero.net/pt. Ainda não acessada: a rede do ambiente de desenvolvimento bloqueia `copero.net` (e `copero.io`). Quando houver acesso ou prints, registrar aqui o que ela tem de diferente do que está abaixo.
+**Outra referência indicada pelo usuário (2026-10-02):** https://copero.net/pt, jogada nos dois modos (Normal e Futebol é vida). Ver `copero-net-observacoes.md`.
 
 Serve de referência de mecânica e de organização de tela. **Nada do Copero é copiado:** nem texto, nem imagem, nem tela. O Copero usa escudos reais de clubes; o 10eFaixa não pode (SPEC 11).
 
