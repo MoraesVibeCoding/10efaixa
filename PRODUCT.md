@@ -30,7 +30,8 @@ Um simulador de carreira rápido e compartilhável na língua do torcedor brasil
 - Três ritmos: Rápido (~5 min), Normal (~15 min), Completo (livre).
 - Uma decisão por tela, sempre com uma cena pintada ao fundo. As cenas têm os 40% de baixo escuros para receber os painéis da interface.
 - Toda decisão tem três opções, cada uma ligada a um temperamento (Frio, Esquentado, Líder, Resenha); a tela marca a que combina com o jogador.
-- Antes de decidir, o jogador vê a prévia das consequências de cada opção em sentido e intensidade, nunca em números (T41b).
+- Antes de decidir, o jogador vê a prévia das consequências de cada opção em sentido e intensidade, nunca em números (T41b), em duas linhas: "Você ganha" e "Em troca".
+- A caixa do jogador é compacta e abre a gaveta "Minha carreira" (salário, títulos e trajetória por temporada).
 - No fim, um cartão 1080×1350 para compartilhar, com veredito, rótulo e os números do auge.
 
 ## Capabilities and Constraints

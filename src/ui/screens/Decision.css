@@ -23,7 +23,7 @@
   inline-size: 100%;
   /* a pintura é 4:5 com os 40% de baixo escuros; entra cortada por baixo e, em tela baixa, encolhe para as opções caberem */
   flex: 0 1 calc(min(100vw, 30rem) * 0.46);
-  min-block-size: 6.5rem;
+  min-block-size: 4rem;
   object-fit: cover;
   object-position: 50% 19%;
 }
@@ -41,8 +41,23 @@
   padding: var(--espaco-3) var(--espaco-4) calc(var(--espaco-3) + env(safe-area-inset-bottom));
 }
 
-/* ---------- quem decide */
+/* ---------- quem decide: a caixa inteira é o botão que abre a gaveta "Minha carreira" */
 .jogador { display: grid; }
+.jogador__abrir {
+  display: grid;
+  inline-size: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: calc(var(--forma-raio) - var(--forma-borda));
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.jogador__abrir:focus-visible { outline-offset: 4px; }
 .jogador__topo {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
@@ -50,7 +65,7 @@
   column-gap: var(--espaco-3);
   padding: var(--espaco-2) var(--espaco-3);
 }
-.escudo { color: var(--cor-texto); }
+.escudo { flex: none; color: var(--cor-texto); }
 .escudo__sigla {
   font-family: var(--fonte-titulo);
   font-size: 15px;
@@ -61,6 +76,7 @@
   stroke-width: 3px;
   paint-order: stroke;
 }
+.jogador__quem { display: grid; }
 .jogador__nome {
   font-family: var(--fonte-titulo);
   font-size: var(--tipo-nome);
@@ -92,56 +108,36 @@
 .over__rotulo { font-size: var(--tipo-apoio); font-weight: 800; letter-spacing: 0.08em; }
 .over__numero { font-size: var(--tipo-over); font-weight: 900; font-variant-numeric: tabular-nums; }
 
-.ficha {
-  display: grid;
-  /* a idade é curta e fica com a largura do próprio texto; tempo de jogo e salário dividem o resto, sem quebrar o rótulo */
-  grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
-  margin: 0;
+/* rodapé da caixa: idade e papel de um lado, o convite para abrir a carreira do outro */
+.jogador__resumo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--espaco-3);
+  padding: var(--espaco-1) var(--espaco-3);
   border-block-start: var(--forma-borda) solid var(--cor-linha);
-}
-.ficha > div { display: grid; align-content: start; gap: 1px; padding: var(--espaco-1) var(--espaco-3) var(--espaco-2); }
-.ficha > div + div { border-inline-start: var(--forma-borda) solid var(--cor-linha); }
-.ficha dt { white-space: nowrap; }
-.ficha dt,
-.jogador__titulos-rotulo {
-  font-family: var(--fonte-titulo);
   font-size: var(--tipo-apoio);
   font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--cor-texto-suave);
+  line-height: 1.5;
 }
-.ficha dd { margin: 0; font-weight: 700; line-height: 1.25; white-space: nowrap; }
-
-.jogador__titulos {
-  display: flex;
-  align-items: center;
-  gap: var(--espaco-4);
-  min-block-size: 2.75rem;
-  padding: var(--espaco-1) var(--espaco-3) var(--espaco-2);
-  border-block-start: var(--forma-borda) solid var(--cor-linha);
-}
-.jogador__sem-titulos { font-size: var(--tipo-apoio); color: var(--cor-texto-suave); }
-.trofeus { display: flex; align-items: center; gap: var(--espaco-4); margin: 0; padding: 0; list-style: none; }
-.trofeu { position: relative; display: grid; color: var(--cor-texto); }
-.trofeu--resto { font-family: var(--fonte-titulo); font-size: var(--tipo-opcao); font-weight: 800; }
-/* quantas vezes ganhou: etiqueta escura no canto de baixo do troféu */
-.trofeu__vezes {
-  position: absolute;
-  inset-block-end: -0.35rem;
-  inset-inline-end: -0.95rem;
-  padding: 0 0.3rem;
-  border-radius: var(--forma-raio-etiqueta);
-  background: color-mix(in srgb, var(--cor-texto) 88%, transparent);
-  color: var(--cor-superficie);
+.jogador__mais,
+.previa__rotulo,
+.ficha dt,
+.gaveta__bloco h3,
+.trajetoria th {
   font-family: var(--fonte-titulo);
   font-size: var(--tipo-apoio);
   font-weight: 800;
-  line-height: 1.2rem;
-  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
-.trofeu:has(.trofeu__vezes) { margin-inline-end: 0.6rem; }
+.jogador__mais { display: inline-flex; align-items: center; gap: var(--espaco-2); color: var(--cor-destaque); white-space: nowrap; }
+@media (hover: hover) {
+  .jogador__abrir:hover .jogador__resumo { background: var(--cor-fundo); }
+}
+.jogador__abrir:active .jogador__resumo { background: var(--cor-destaque); color: var(--cor-sobre-destaque); }
+.jogador__abrir:active .jogador__mais { color: inherit; }
 
 /* ---------- o que aconteceu */
 .decisao__cabeca { display: grid; gap: var(--espaco-2); }
@@ -157,9 +153,7 @@
 .decisao__opcoes { grid-row: 4; display: grid; gap: 0.625rem; }
 .opcao {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  column-gap: var(--espaco-3);
+  align-content: center;
   row-gap: var(--espaco-1);
   inline-size: 100%;
   min-block-size: var(--toque-minimo);
@@ -175,21 +169,20 @@
 }
 .opcao__rotulo { font-size: var(--tipo-opcao); font-weight: 700; line-height: 1.2; }
 .opcao__previa {
-  grid-column: 1;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--espaco-1) var(--espaco-3);
+  display: grid;
+  gap: 1px;
   font-size: var(--tipo-apoio);
   line-height: 1.3;
   color: var(--cor-texto-suave);
 }
-.opcao__seta { grid-column: 2; grid-row: 1 / span 2; align-self: center; color: var(--cor-texto); }
 
+/* "Você ganha" em cima, "Em troca" embaixo: os rótulos ocupam a mesma coluna e os itens alinham */
+.previa__linha { display: grid; grid-template-columns: 5.25rem minmax(0, 1fr); align-items: baseline; column-gap: var(--espaco-3); }
+.previa__itens { display: flex; flex-wrap: wrap; gap: 0 var(--espaco-3); }
 .previa { display: inline-flex; align-items: center; gap: var(--espaco-2); }
 .previa__setas { display: inline-flex; gap: 1px; }
-.previa--sobe .previa__setas { color: var(--cor-positivo); }
-.previa--desce .previa__setas { color: var(--cor-negativo); }
+.previa--sobe :is(.previa__rotulo, .previa__setas) { color: var(--cor-positivo); }
+.previa--desce :is(.previa__rotulo, .previa__setas) { color: var(--cor-negativo); }
 @media (hover: hover) {
   .opcao:hover { background: var(--cor-fundo); }
 }
@@ -203,8 +196,8 @@
   background: var(--cor-destaque);
   color: var(--cor-sobre-destaque);
 }
-.opcao[aria-pressed='true'] :is(.opcao__previa, .opcao__seta, .previa__setas),
-.opcao:active :is(.opcao__previa, .opcao__seta, .previa__setas) { color: var(--cor-sobre-destaque); border-color: var(--cor-sobre-destaque); }
+.opcao[aria-pressed='true'] :is(.opcao__previa, .previa__setas, .previa__rotulo),
+.opcao:active :is(.opcao__previa, .previa__setas, .previa__rotulo) { color: var(--cor-sobre-destaque); border-color: var(--cor-sobre-destaque); }
 .opcao:disabled { cursor: default; }
 
 /* ---------- o que a escolha rendeu: um cartão menor por cima da tela, que fica levemente desfocada */
@@ -263,6 +256,88 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   cursor: pointer;
+}
+
+/* ---------- gaveta "Minha carreira": sobe do pé da tela; o que está atrás fica levemente desfocado, como no resultado */
+.gaveta {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-items: end;
+  background: color-mix(in srgb, var(--cor-fundo) 35%, transparent);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+.gaveta__folha {
+  display: grid;
+  align-content: start;
+  gap: var(--espaco-4);
+  max-block-size: 86dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--espaco-3) var(--espaco-4) calc(var(--espaco-5) + env(safe-area-inset-bottom));
+  border-block-start: var(--forma-borda) solid var(--cor-linha);
+  background: var(--cor-fundo);
+  box-shadow: 0 calc(var(--forma-sombra) * -1) 0 var(--cor-destaque);
+  scrollbar-color: var(--cor-destaque) var(--cor-fundo);
+}
+.gaveta__topo { display: flex; justify-content: space-between; align-items: center; gap: var(--espaco-3); }
+.gaveta__topo h2 { font-size: var(--tipo-titulo); font-weight: 900; line-height: 1; text-transform: uppercase; }
+.gaveta__fechar {
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border: var(--forma-borda) solid var(--cor-linha);
+  border-radius: var(--forma-raio);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  cursor: pointer;
+}
+.gaveta__fechar:active { background: var(--cor-destaque); color: var(--cor-sobre-destaque); }
+
+.ficha {
+  display: grid;
+  /* a idade é curta e fica com a largura do próprio texto; tempo de jogo e salário dividem o resto, sem quebrar o rótulo */
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
+  margin: 0;
+}
+.ficha > div { display: grid; align-content: start; gap: 2px; padding: var(--espaco-2) var(--espaco-3); }
+.ficha > div + div { border-inline-start: var(--forma-borda) solid var(--cor-linha); }
+.ficha dt { white-space: nowrap; color: var(--cor-texto-suave); }
+.ficha dd { margin: 0; font-weight: 700; line-height: 1.25; white-space: nowrap; }
+
+.gaveta__bloco { display: grid; gap: var(--espaco-2); }
+.gaveta__bloco h3 { color: var(--cor-texto-suave); }
+.gaveta__vazio { color: var(--cor-texto-suave); line-height: 1.4; }
+
+.trofeus { display: flex; flex-wrap: wrap; gap: var(--espaco-2); margin: 0; padding: 0; list-style: none; }
+.trofeu {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  padding: var(--espaco-1) var(--espaco-3) var(--espaco-1) var(--espaco-2);
+  border: var(--forma-borda) solid var(--cor-linha);
+  border-radius: var(--forma-raio);
+  background: var(--cor-superficie);
+  font-weight: 700;
+  line-height: 1.3;
+}
+.trofeu svg { color: var(--cor-destaque); }
+.trofeu strong { font-family: var(--fonte-titulo); font-size: var(--tipo-opcao); font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
+
+.trajetoria { inline-size: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.trajetoria th { padding: 0 var(--espaco-2) var(--espaco-1); border-block-end: var(--forma-borda) solid var(--cor-linha); color: var(--cor-texto-suave); text-align: start; }
+.trajetoria td { padding: var(--espaco-2); border-block-end: 1px solid var(--cor-trilho); line-height: 1.3; }
+.trajetoria :is(th, td):first-child { inline-size: 3.5rem; padding-inline-start: 0; }
+.trajetoria :is(th, td):last-child { inline-size: 3rem; padding-inline-end: 0; text-align: end; }
+.trajetoria td:last-child { font-family: var(--fonte-titulo); font-size: var(--tipo-opcao); font-weight: 900; }
+.trajetoria__clube { display: flex; align-items: center; gap: var(--espaco-2); font-weight: 700; }
+
+/* celular baixo: a história aperta um pouco para as três opções caberem sem rolar */
+@media (max-height: 42.5rem) {
+  .decisao__painel { gap: var(--espaco-2); padding-block-start: var(--espaco-2); }
+  .decisao__historia { font-size: var(--tipo-corpo); line-height: 1.4; }
 }
 
 @media (min-width: 40rem) {

@@ -11,17 +11,16 @@
   "clubePosicao": "{posicao} · {clube}",
   "over": "OVR",
   "titulosLista": "Títulos conquistados",
-  "trofeu": "{titulo}",
-  "trofeuVarios": "{titulo}, {n} vezes",
   "tempoDeJogo": "Tempo de jogo",
   "salario": "Salário/mês",
-  "titulosRotulo": "Títulos",
   "nenhumTitulo": "Nenhum ainda",
   "faixaOver": " ({faixa})",
-  "maisTitulos": "+{n}",
-  "maisTitulosLeitor": "e mais {n} títulos de outras competições",
   "idadeRotulo": "Idade",
-  "vezes": "×{n}"
+  "vezes": "×{n}",
+  "resumo": "{idade} anos · {papel}",
+  "ganha": "Você ganha",
+  "emTroca": "Em troca",
+  "muda": "Muda"
  },
  "amostra": {
   "clube": "clube do coração"
@@ -61,5 +60,15 @@
   "pontos": "{sinal}{n} pontos",
   "porcento": "{sinal}{n}%",
   "dinheiro": "{sinal}{valor}"
+ },
+ "carreira": {
+  "titulo": "Minha carreira",
+  "fechar": "Fechar",
+  "titulos": "Títulos",
+  "trajetoria": "Trajetória",
+  "semTrajetoria": "A primeira temporada ainda está em andamento.",
+  "colIdade": "Idade",
+  "colClube": "Clube",
+  "colOver": "OVR"
  }
 }

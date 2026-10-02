@@ -23,6 +23,8 @@ export interface DecisionProps {
     /** Papel no elenco (titular, rodízio, reserva…): é o tempo de jogo que o jogador vê. */
     role: string;
     monthlySalary: { amount: number; currency: 'BRL' | 'EUR' };
+    /** Temporadas já fechadas, da mais antiga para a mais recente: a trajetória da gaveta "Minha carreira". */
+    seasons?: Season[];
   };
   /** Situação atual do jogador (moral, torcida, patrimônio…): o resultado da escolha mostra o ganho e a perda reais sobre ela. */
   state?: Ctx;
@@ -30,6 +32,8 @@ export interface DecisionProps {
   /** Chamado quando o resultado fecha, sozinho ou pelo botão, com a situação já atualizada. */
   onContinue?: (optionId: string, state: Ctx) => void;
 }
+
+interface Season { age: number; clubId: string; overall: number }
 
 const ARROW = { sobe: 'M6 1 11 8H7.6v7H4.4V8H1z', desce: 'M6 15 1 8h3.4V1h3.2v7H11z', muda: 'M1 5.5 5 2v2.4h10v2.2H5V9zM15 10.5 11 14v-2.4H1V9.4h10V7z' };
 
@@ -62,9 +66,19 @@ function rankTitles(titles: string[]) {
 }
 
 /** Escudo estilizado: só as duas cores e a sigla do clube, nunca o escudo oficial (SPEC 11). */
-function Crest({ clubId }: { clubId: string }) {
+function Crest({ clubId, small = false }: { clubId: string; small?: boolean }) {
   const club = clubOf(clubId);
   if (!club) return null;
+  // na trajetória o nome do clube vem escrito ao lado: o escudo pequeno é só cor
+  if (small) {
+    return (
+    <svg className="escudo" viewBox="0 0 44 50" width="18" height="20" aria-hidden="true" focusable="false">
+      <path d="M3 3h38v25c0 10-8 16-19 20C11 44 3 38 3 28z" fill={club.cores[0]} />
+      <path d="M22 3h19v25c0 10-8 16-19 20z" fill={club.cores[1]} />
+      <path d="M3 3h38v25c0 10-8 16-19 20C11 44 3 38 3 28z" fill="none" stroke="currentColor" strokeWidth="3" />
+    </svg>
+    );
+  }
   return (
     <svg className="escudo" viewBox="0 0 44 50" width="44" height="50" role="img" aria-label={t('ui.decisao.escudo', { clube: club.nome })}>
       <path d="M3 3h38v25c0 10-8 16-19 20C11 44 3 38 3 28z" fill={club.cores[0]} />
@@ -75,40 +89,101 @@ function Crest({ clubId }: { clubId: string }) {
   );
 }
 
-/** A linha comporta cinco itens: cinco troféus, ou quatro e o contador do resto. */
-function shownTitles(titles: string[]) {
-  const all = rankTitles(titles);
-  const ranked = all.length > 5 ? all.slice(0, 4) : all;
-  let shown = 0;
-  for (const [, count] of ranked) shown += count;
-  return { ranked, rest: titles.length - shown };
-}
+const TROPHY = 'M7 3h10v2h3.5v3.2A4.3 4.3 0 0 1 16.6 12 5.2 5.2 0 0 1 13 14.4V17h3v4H8v-4h3v-2.6A5.2 5.2 0 0 1 7.4 12 4.3 4.3 0 0 1 3.5 8.2V5H7zm0 4H5.5v1.2c0 .9.6 1.7 1.5 2zm10 0v3.2c.9-.3 1.5-1.1 1.5-2V7z';
 
-/** Um mini troféu por competição vencida; o balão só aparece quando há mais de um título dela. */
+/** Uma etiqueta por competição vencida, com o nome; o ×N só aparece quando há mais de um título dela. */
 function Trophies({ titles }: { titles: string[] }) {
-  const { ranked, rest } = shownTitles(titles);
-  if (!ranked.length) return null;
   return (
     <ul className="trofeus" aria-label={t('ui.decisao.titulosLista')}>
-      {ranked.map(([id, n]) => (
+      {rankTitles(titles).map(([id, n]) => (
         <li key={id} className="trofeu">
-          <svg
-            viewBox="0 0 24 24" width="30" height="30" role="img" focusable="false"
-            aria-label={n > 1 ? t('ui.decisao.trofeuVarios', { titulo: t(`ui.titulo.${id}`), n }) : t('ui.decisao.trofeu', { titulo: t(`ui.titulo.${id}`) })}
-          >
-            <path d="M7 3h10v2h3.5v3.2A4.3 4.3 0 0 1 16.6 12 5.2 5.2 0 0 1 13 14.4V17h3v4H8v-4h3v-2.6A5.2 5.2 0 0 1 7.4 12 4.3 4.3 0 0 1 3.5 8.2V5H7zm0 4H5.5v1.2c0 .9.6 1.7 1.5 2zm10 0v3.2c.9-.3 1.5-1.1 1.5-2V7z" fill="currentColor" />
-          </svg>
-          {n > 1 && <span className="trofeu__vezes" aria-hidden="true">{t('ui.decisao.vezes', { n })}</span>}
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d={TROPHY} fill="currentColor" /></svg>
+          <span>{t(`ui.titulo.${id}`)}</span>
+          {n > 1 && <strong>{t('ui.decisao.vezes', { n })}</strong>}
         </li>
       ))}
-      {rest > 0 && (
-        <li className="trofeu trofeu--resto">
-          <span aria-hidden="true">{t('ui.decisao.maisTitulos', { n: rest })}</span>
-          <span className="sr-only">{t('ui.decisao.maisTitulosLeitor', { n: rest })}</span>
-        </li>
-      )}
     </ul>
   );
+}
+
+function recentFirst(seasons: Season[]) {
+  return [...seasons].reverse();
+}
+
+/** Gaveta "Minha carreira" (SPEC v2.21): o que saiu da tela de decisão para ela caber no celular. Fecha pelo botão, por Esc ou tocando fora. */
+function Career({ player, age, onClose }: { player: DecisionProps['player']; age: number; onClose: () => void }) {
+  const close = useRef<HTMLButtonElement>(null);
+  useEffect(() => { close.current?.focus(); }, []);
+  const seasons = recentFirst(player.seasons ?? []);
+  return (
+    <div className="gaveta" onClick={onClose}>
+      <div
+        className="gaveta__folha" role="dialog" aria-modal="true" aria-labelledby="gaveta-titulo"
+        onClick={(e) => { e.stopPropagation(); }} onKeyDown={(e) => { if (e.key === 'Escape') onClose(); }}
+      >
+        <header className="gaveta__topo">
+          <h2 id="gaveta-titulo">{t('ui.carreira.titulo')}</h2>
+          <button ref={close} type="button" className="gaveta__fechar" aria-label={t('ui.carreira.fechar')} onClick={onClose}>
+            <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><path d="M2 2l12 12M14 2 2 14" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="square" /></svg>
+          </button>
+        </header>
+        <dl className="ficha caixa">
+          <div>
+            <dt>{t('ui.decisao.idadeRotulo')}</dt>
+            <dd>{t('ui.decisao.idade', { idade: age })}</dd>
+          </div>
+          <div>
+            <dt>{t('ui.decisao.tempoDeJogo')}</dt>
+            <dd>{t(`ui.papel.${player.role}`)}</dd>
+          </div>
+          <div>
+            <dt>{t('ui.decisao.salario')}</dt>
+            <dd>{money(player.monthlySalary.amount, player.monthlySalary.currency)}</dd>
+          </div>
+        </dl>
+        <section className="gaveta__bloco">
+          <h3>{t('ui.carreira.titulos')}</h3>
+          {player.titles.length ? <Trophies titles={player.titles} /> : <p className="gaveta__vazio">{t('ui.decisao.nenhumTitulo')}</p>}
+        </section>
+        <section className="gaveta__bloco">
+          <h3 id="gaveta-trajetoria">{t('ui.carreira.trajetoria')}</h3>
+          {seasons.length === 0 && <p className="gaveta__vazio">{t('ui.carreira.semTrajetoria')}</p>}
+          {seasons.length > 0 && (
+            <table className="trajetoria" aria-labelledby="gaveta-trajetoria">
+              <thead>
+                <tr>
+                  <th scope="col">{t('ui.carreira.colIdade')}</th>
+                  <th scope="col">{t('ui.carreira.colClube')}</th>
+                  <th scope="col">{t('ui.carreira.colOver')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {seasons.map((s) => (
+                  <tr key={s.age}>
+                    <td>{s.age}</td>
+                    <td><span className="trajetoria__clube"><Crest clubId={s.clubId} small />{clubOf(s.clubId)?.nome}</span></td>
+                    <td>{s.overall}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </section>
+      </div>
+    </div>
+  );
+}
+
+const SENSES = [['sobe', 'ganha'], ['desce', 'emTroca'], ['muda', 'muda']] as const;
+
+/** Em todo campo, subir é ganho e descer é custo (engine/preview): a prévia sai em linhas, uma por sentido que a opção tem. */
+function previewLines(preview: Preview[]) {
+  const lines: { sentido: string; rotulo: string; itens: Preview[] }[] = [];
+  for (const [sentido, rotulo] of SENSES) {
+    const itens = preview.filter((p) => p.sentido === sentido);
+    if (itens.length) lines.push({ sentido, rotulo, itens });
+  }
+  return lines;
 }
 
 const SIGN = { up: '+', down: '−' };
@@ -157,6 +232,9 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, on
   const club = clubOf(player.clubId);
   const band = toBand(player.overall).key;
   const medal = MEDALS[band]!.nome;
+  const [career, setCareer] = useState(false);
+  // sem genérico aqui: a guarda de texto fora do i18n confunde o genérico com JSX
+  const opener = useRef(null as HTMLButtonElement | null);
   const [chosen, setChosen] = useState<string | null>(null);
   // o resultado fecha uma vez só, venha do tempo ou do botão
   const done = useRef(false);
@@ -182,38 +260,31 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, on
       </div>
       <div className="decisao__painel">
         <section className="jogador caixa" aria-label={t('ui.decisao.jogador')}>
-          <div className="jogador__topo">
-            <Crest clubId={player.clubId} />
-            <div className="jogador__quem">
-              <p className="jogador__nome">{player.name}</p>
-              <p className="jogador__clube">{t('ui.decisao.clubePosicao', { posicao: t(`positions.${player.position}`), clube: club?.nome ?? '' })}</p>
-            </div>
-            <p className="over" data-medalha={medal} style={cardArt(medal) ? { backgroundImage: `url(${cardArt(medal)})` } : undefined}>
-              <span className="over__rotulo">
-                {t('ui.decisao.over')}
-                <span className="sr-only">{t('ui.decisao.faixaOver', { faixa: t(`attributes.band.${band}`) })}</span>
+          <button ref={opener} type="button" className="jogador__abrir" aria-haspopup="dialog" aria-expanded={career} onClick={() => { setCareer(true); }}>
+            <span className="jogador__topo">
+              <Crest clubId={player.clubId} />
+              <span className="jogador__quem">
+                <span className="jogador__nome">{player.name}</span>
+                <span className="jogador__clube">{t('ui.decisao.clubePosicao', { posicao: t(`positions.${player.position}`), clube: club?.nome ?? '' })}</span>
               </span>
-              <span className="over__numero">{player.overall}</span>
-            </p>
-          </div>
-          <dl className="ficha">
-            <div>
-              <dt>{t('ui.decisao.idadeRotulo')}</dt>
-              <dd><span>{age}</span>&nbsp;{t('ui.decisao.anos')}</dd>
-            </div>
-            <div>
-              <dt>{t('ui.decisao.tempoDeJogo')}</dt>
-              <dd>{t(`ui.papel.${player.role}`)}</dd>
-            </div>
-            <div>
-              <dt>{t('ui.decisao.salario')}</dt>
-              <dd>{money(player.monthlySalary.amount, player.monthlySalary.currency)}</dd>
-            </div>
-          </dl>
-          <div className="jogador__titulos">
-            <p className="jogador__titulos-rotulo">{t('ui.decisao.titulosRotulo')}</p>
-            {player.titles.length ? <Trophies titles={player.titles} /> : <p className="jogador__sem-titulos">{t('ui.decisao.nenhumTitulo')}</p>}
-          </div>
+              <span className="over" data-medalha={medal} style={cardArt(medal) ? { backgroundImage: `url(${cardArt(medal)})` } : undefined}>
+                <span className="over__rotulo">
+                  {t('ui.decisao.over')}
+                  <span className="sr-only">{t('ui.decisao.faixaOver', { faixa: t(`attributes.band.${band}`) })}</span>
+                </span>
+                <span className="over__numero">{player.overall}</span>
+              </span>
+            </span>
+            <span className="jogador__resumo">
+              <span>{t('ui.decisao.resumo', { idade: age, papel: t(`ui.papel.${player.role}`) })}</span>
+              <span className="jogador__mais">
+                {t('ui.carreira.titulo')}
+                <svg viewBox="0 0 10 16" width="8" height="13" aria-hidden="true" focusable="false">
+                  <path d="M1.5 1.5 8 8l-6.5 6.5" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="square" />
+                </svg>
+              </span>
+            </span>
+          </button>
         </section>
         <header className="decisao__cabeca">
           <h1>{t(`events.${eventId}.titulo`)}</h1>
@@ -230,26 +301,31 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, on
                 <span className="opcao__rotulo">{t(`events.${eventId}.opcoes.${o.id}`)}</span>
                 <span className="opcao__previa">
                   {preview.length === 0 && <span className="previa">{t('ui.decisao.semPrevia')}</span>}
-                  {preview.map((p) => (
-                    <span key={p.campo} className={`previa previa--${p.sentido}`}>
-                      <span>
-                        {t(`preview.campo.${p.campo}`)}
-                        <span className="sr-only">
-                          {t('ui.decisao.previa', { sentido: t(`preview.sentido.${p.sentido}`), intensidade: p.sentido === 'muda' ? '' : t(`preview.intensidade.${p.intensidade}`) })}
+                  {previewLines(preview).map((line) => (
+                    <span key={line.sentido} className={`previa__linha previa--${line.sentido}`}>
+                      <span className="previa__rotulo">{t(`ui.decisao.${line.rotulo}`)}</span>
+                      <span className="previa__itens">
+                      {line.itens.map((p) => (
+                        <span key={p.campo} className="previa">
+                          <span>
+                            {t(`preview.campo.${p.campo}`)}
+                            <span className="sr-only">
+                              {t('ui.decisao.previa', { sentido: t(`preview.sentido.${p.sentido}`), intensidade: p.sentido === 'muda' ? '' : t(`preview.intensidade.${p.intensidade}`) })}
+                            </span>
+                          </span>
+                          <Arrows sentido={p.sentido} intensidade={p.intensidade} />
                         </span>
+                      ))}
                       </span>
-                      <Arrows sentido={p.sentido} intensidade={p.intensidade} />
                     </span>
                   ))}
                 </span>
-                <svg className="opcao__seta" viewBox="0 0 10 16" width="10" height="16" aria-hidden="true" focusable="false">
-                  <path d="M1.5 1.5 8 8l-6.5 6.5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="square" />
-                </svg>
               </button>
             );
           })}
         </div>
       </div>
+      {career && <Career player={player} age={age} onClose={() => { setCareer(false); opener.current?.focus(); }} />}
       {chosen !== null && <Result eventId={eventId} optionId={chosen} state={state} onDone={onDone} />}
     </main>
   );
