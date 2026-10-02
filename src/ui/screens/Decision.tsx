@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import events from '../../data/events.json';
+import legacy from '../../data/legacy.json';
+import { toBand } from '../../engine/attributes';
+import { CLUBS } from '../../engine/clubs';
 import { temperamentsFor } from '../../engine/events';
 import { previewOf, type Preview } from '../../engine/preview';
 import { t } from '../../i18n';
@@ -13,6 +16,8 @@ export interface DecisionProps {
   /** Fração da carreira já vivida, de 0 a 1. */
   progress: number;
   scene: { src: string; alt: string };
+  /** Quem decide: o nível entra como número, mas só estrelas e faixa vão para a tela (SPEC: nenhum número de atributo antes do cartão). */
+  player: { name: string; position: string; clubId: string; overall: number; titles: string[] };
   /** Temperamento do jogador: a opção que combina com ele é marcada como "Seu jeito". */
   temperament?: string;
   onChoose?: (optionId: string) => void;
@@ -34,7 +39,57 @@ function Arrows({ sentido, intensidade }: Pick<Preview, 'sentido' | 'intensidade
   );
 }
 
-export function Decision({ eventId, age, progress, scene, temperament, onChoose }: DecisionProps) {
+const STAR = 'M8 .8 10.2 5.6l5.2.6-3.9 3.6 1.1 5.2L8 12.4 3.4 15l1.1-5.2L.6 6.2l5.2-.6z';
+const TITLE_WEIGHT = legacy.titulos.pontos as Record<string, number>;
+
+function Stars({ value, label }: { value: number; label: string }) {
+  return (
+    <span className="estrelas" role="img" aria-label={label}>
+      {[0, 1, 2, 3, 4].map((i) => (
+        <svg key={i} viewBox="0 0 16 16" width="16" height="16" focusable="false">
+          <path d={STAR} className="estrelas__vazia" />
+          <path d={STAR} className="estrelas__cheia" style={{ clipPath: `inset(0 ${100 - Math.min(1, Math.max(0, value - i)) * 100}% 0 0)` }} />
+        </svg>
+      ))}
+    </span>
+  );
+}
+
+/** Escudo estilizado: só as duas cores e a sigla do clube, nunca o escudo oficial (SPEC 11). */
+function Crest({ clubId }: { clubId: string }) {
+  const club = CLUBS.find((c) => c.id === clubId);
+  if (!club) return null;
+  return (
+    <svg className="escudo" viewBox="0 0 44 50" width="44" height="50" role="img" aria-label={t('ui.decisao.escudo', { clube: club.nome })}>
+      <path d="M3 3h38v25c0 10-8 16-19 20C11 44 3 38 3 28z" fill={club.cores[0]} />
+      <path d="M22 3h19v25c0 10-8 16-19 20z" fill={club.cores[1]} />
+      <path d="M3 3h38v25c0 10-8 16-19 20C11 44 3 38 3 28z" fill="none" stroke="currentColor" strokeWidth="2" />
+      <text x="22" y="27" textAnchor="middle" className="escudo__sigla">{club.sigla}</text>
+    </svg>
+  );
+}
+
+function Trophies({ titles }: { titles: string[] }) {
+  const counts = new Map<string, number>();
+  for (const id of titles) counts.set(id, (counts.get(id) ?? 0) + 1);
+  const ranked = [...counts].sort((a, b) => (TITLE_WEIGHT[b[0]] ?? 0) - (TITLE_WEIGHT[a[0]] ?? 0));
+  const shown = ranked.slice(0, 3);
+  const hidden = ranked.slice(3).reduce((n, [, c]) => n + c, 0);
+  return (
+    <p className="trofeus">
+      <svg viewBox="0 0 18 18" width="18" height="18" aria-hidden="true" focusable="false">
+        <path d="M5 2h8v5a4 4 0 0 1-8 0zM5 3.5H2.2V5A2.8 2.8 0 0 0 5 7.8M13 3.5h2.8V5A2.8 2.8 0 0 1 13 7.8M9 11v3M5.5 16h7" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="square" />
+      </svg>
+      <strong>{titles.length === 0 ? t('ui.decisao.semTitulos') : titles.length === 1 ? t('ui.decisao.umTitulo') : t('ui.decisao.titulos', { n: titles.length })}</strong>
+      {shown.map(([id, n]) => <span key={id}>{n > 1 ? `${t(`ui.titulo.${id}`)} ×${n}` : t(`ui.titulo.${id}`)}</span>)}
+      {hidden > 0 && <span>{t('ui.decisao.maisTitulos', { n: hidden })}</span>}
+    </p>
+  );
+}
+
+export function Decision({ eventId, age, progress, scene, player, temperament, onChoose }: DecisionProps) {
+  const band = toBand(player.overall);
+  const club = CLUBS.find((c) => c.id === player.clubId);
   const [chosen, setChosen] = useState<string | null>(null);
   const options = events.eventos.find((e) => e.id === eventId)?.opcoes ?? [];
   const percent = Math.round(Math.min(1, Math.max(0, progress)) * 100);
@@ -50,6 +105,18 @@ export function Decision({ eventId, age, progress, scene, temperament, onChoose 
         >
           <span className="faixa__feito" style={{ inlineSize: `${percent}%` }} />
         </div>
+        <section className="jogador" aria-label={t('ui.decisao.jogador')}>
+          <Crest clubId={player.clubId} />
+          <div className="jogador__quem">
+            <p className="jogador__nome">{player.name}</p>
+            <p className="jogador__clube">{t('ui.decisao.clubePosicao', { posicao: t(`positions.${player.position}`), clube: club?.nome ?? '' })}</p>
+          </div>
+          <div className="jogador__nivel">
+            <Stars value={band.stars} label={t('ui.decisao.nivel', { faixa: t(`attributes.band.${band.key}`) })} />
+            <span aria-hidden="true">{t(`attributes.band.${band.key}`)}</span>
+          </div>
+          <Trophies titles={player.titles} />
+        </section>
         <header className="decisao__cabeca">
           <p className="decisao__idade" aria-hidden="true">
             <span className="decisao__numero">{age}</span>

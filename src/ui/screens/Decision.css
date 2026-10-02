@@ -13,7 +13,7 @@
 .decisao__cena {
   inline-size: 100%;
   /* a pintura é 4:5 com os 40% de baixo escuros; entra cortada por baixo e, em tela baixa, encolhe para as opções caberem sem rolagem */
-  flex: 0 1 calc(min(100vw, 30rem) * 0.62);
+  flex: 0 1 calc(min(100vw, 30rem) * 0.5);
   min-block-size: 7rem;
   object-fit: cover;
   object-position: 50% 6%;
@@ -26,20 +26,69 @@
   flex: 1 0 auto;
   display: grid;
   /* faixa e cabeça em cima; a sobra de altura fica entre o texto e as opções, que encostam no polegar */
-  grid-template-rows: auto auto minmax(var(--espaco-3), 1fr) auto;
+  grid-template-rows: auto auto auto minmax(var(--espaco-2), 1fr) auto;
   padding-block-end: env(safe-area-inset-bottom);
 }
-.decisao__opcoes { grid-row: 4; }
+.decisao__opcoes { grid-row: 5; }
 
 .faixa { block-size: 6px; background: var(--cor-trilho); }
 .faixa__feito { display: block; block-size: 100%; min-inline-size: 6px; background: var(--cor-destaque); }
+
+.jogador {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--espaco-3);
+  row-gap: var(--espaco-3);
+  padding: var(--espaco-3) var(--espaco-4);
+  background: var(--cor-superficie);
+  border-block-end: 1px solid var(--cor-linha);
+}
+.escudo { color: var(--cor-texto); }
+.escudo__sigla {
+  font-family: var(--fonte-titulo);
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  fill: #fff;
+  stroke: #14213d;
+  stroke-width: 3px;
+  paint-order: stroke;
+}
+.jogador__nome {
+  font-family: var(--fonte-titulo);
+  font-size: var(--tipo-nome);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+.jogador__clube { font-size: var(--tipo-apoio); line-height: 1.3; color: var(--cor-texto-suave); }
+.jogador__nivel { display: grid; justify-items: end; gap: 2px; font-size: var(--tipo-apoio); line-height: 1.2; color: var(--cor-texto-suave); }
+.estrelas { display: inline-flex; gap: 1px; }
+.estrelas__vazia { fill: var(--cor-trilho); }
+.estrelas__cheia { fill: var(--cor-estrela); }
+
+.trofeus {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espaco-1) var(--espaco-3);
+  font-size: var(--tipo-apoio);
+  line-height: 1.3;
+  color: var(--cor-texto-suave);
+}
+.trofeus svg { flex: none; color: var(--cor-estrela); }
+.trofeus strong { color: var(--cor-texto); }
 
 .decisao__cabeca {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: start;
   gap: var(--espaco-4);
-  padding: var(--espaco-5) var(--espaco-4) var(--espaco-4);
+  padding: var(--espaco-4) var(--espaco-4) var(--espaco-3);
 }
 
 .decisao__idade { display: grid; justify-items: start; font-family: var(--fonte-titulo); }

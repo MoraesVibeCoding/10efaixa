@@ -15,7 +15,9 @@ describe('tokens visuais (T49, SPEC 7)', () => {
     });
     for (const t of THEMES) expect(tokens.temas[t].destaque).toBe(tokens.paleta.amarelo);
     expect(tokens.temas.claro.fundo).toBe(tokens.paleta.cal);
-    expect(tokens.temas.escuro.fundo).toBe(tokens.paleta.marinho);
+    // pedido do usuário (T49): fundo cinza neutro nas telas com cena, para não brigar com as cores dos clubes
+    const [r, g, b] = [1, 3, 5].map((i) => parseInt(tokens.temas.escuro.fundo.slice(i, i + 2), 16)) as [number, number, number];
+    expect(Math.max(r, g, b) - Math.min(r, g, b)).toBeLessThanOrEqual(12);
   });
 
   it('todo par de texto passa em AA (4,5:1) e todo par gráfico em 3:1, nos dois temas', () => {
@@ -55,5 +57,6 @@ describe('tokens visuais (T49, SPEC 7)', () => {
     for (const role of Object.keys(tokens.temas.claro)) expect(css).toContain(`--cor-${role.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase())}:`);
     expect(css).toContain('--fonte-titulo:');
     expect(css).toContain('--espaco-4:');
+    expect(css).toContain(`body:has([data-tema="escuro"]) { background: ${tokens.temas.escuro.fundo}`);
   });
 });

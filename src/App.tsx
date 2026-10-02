@@ -3,7 +3,10 @@ import { Decision } from './ui/screens/Decision';
 import scene from './assets/amostra/assinatura-contrato.webp';
 
 // T49: tela de amostra para aprovar o visual. Evento, idade, temperamento e cena são fixos aqui; a T51 liga a tela à carreira de verdade.
-const SAMPLE = { eventId: 'proposta-coracao', age: 24, careerYears: 20, temperament: 'lider' };
+const SAMPLE = {
+  eventId: 'proposta-coracao', age: 24, careerYears: 20, temperament: 'lider',
+  player: { name: 'Dudu Maestro', position: 'meia', clubId: 'flamengo', overall: 78, titles: ['estadual', 'estadual', 'copaDoBrasil'] },
+};
 
 export function App() {
   return (
@@ -11,6 +14,7 @@ export function App() {
       eventId={SAMPLE.eventId}
       age={SAMPLE.age}
       temperament={SAMPLE.temperament}
+      player={SAMPLE.player}
       progress={(SAMPLE.age - 16 + 0.5) / SAMPLE.careerYears}
       scene={{ src: scene, alt: t('scenes.alt.assinatura-contrato', { nome: t('scenes.jogadorPadrao'), clube: t('ui.amostra.clube') }) }}
     />

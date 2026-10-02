@@ -8,9 +8,35 @@
   "previa": ": {sentido} {intensidade}",
   "jeito": "Jeito",
   "seuJeito": "Seu jeito",
-  "perfis": "{rotulo}: {perfis}"
+  "perfis": "{rotulo}: {perfis}",
+  "jogador": "Seu jogador",
+  "escudo": "Escudo estilizado do {clube}",
+  "nivel": "Nível: {faixa}",
+  "titulos": "{n} títulos",
+  "umTitulo": "1 título",
+  "semTitulos": "Nenhum título ainda",
+  "maisTitulos": "e mais {n}",
+  "clubePosicao": "{posicao} · {clube}"
  },
  "amostra": {
   "clube": "clube do coração"
+ },
+ "titulo": {
+  "copaDoMundo": "Copa do Mundo",
+  "champions": "Copa europeia",
+  "libertadores": "Copa continental",
+  "serieA": "Série A",
+  "ligaNacional": "Liga nacional",
+  "copaAmerica": "Copa América",
+  "europaLeague": "Copa europeia secundária",
+  "olimpiadas": "Ouro olímpico",
+  "sulAmericana": "Copa continental secundária",
+  "copaDoBrasil": "Copa do Brasil",
+  "copaNacional": "Copa nacional",
+  "copaDoNordeste": "Copa do Nordeste",
+  "serieB": "Série B",
+  "serieC": "Série C",
+  "serieD": "Série D",
+  "estadual": "Estadual"
  }
 }

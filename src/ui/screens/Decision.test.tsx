@@ -6,14 +6,15 @@ import { Decision } from './Decision';
 
 const EVENT = 'salario-atrasado';
 const def = events.eventos.find((e) => e.id === EVENT)!;
+const PLAYER = { name: 'Dudu Maestro', position: 'meia', clubId: 'flamengo', overall: 78, titles: ['estadual', 'estadual', 'copaDoBrasil'] };
 const setup = (onChoose = vi.fn()) => {
-  render(<Decision eventId={EVENT} age={17} progress={0.05} scene={{ src: 'cena.webp', alt: 'O jogador na sala do empresário' }} onChoose={onChoose} />);
+  render(<Decision eventId={EVENT} age={17} progress={0.05} player={PLAYER} scene={{ src: 'cena.webp', alt: 'O jogador na sala do empresário' }} onChoose={onChoose} />);
   return onChoose;
 };
 
 describe('perfil de cada opção (pedido do usuário na T49)', () => {
   it('cada opção mostra o temperamento a que remete, e marca o do próprio jogador', () => {
-    render(<Decision eventId="proposta-coracao" age={24} progress={0.4} temperament="lider" scene={{ src: 'c.webp', alt: 'cena' }} />);
+    render(<Decision eventId="proposta-coracao" age={24} progress={0.4} temperament="lider" player={{ name: 'Zé', position: 'meia', clubId: 'flamengo', overall: 60, titles: [] }} scene={{ src: 'c.webp', alt: 'cena' }} />);
     const buttons = screen.getAllByRole('button');
     expect(buttons).toHaveLength(3);
     const [accept, byLove, refuse] = buttons;
@@ -43,6 +44,29 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
     const bar = screen.getByRole('progressbar', { name: t('ui.decisao.progresso') });
     expect(bar).toHaveAttribute('aria-valuenow', '5');
     expect(bar).toHaveAttribute('aria-valuetext', t('ui.decisao.idade', { idade: 17 }));
+  });
+
+  it('quem é o jogador: nome, posição, clube com escudo estilizado e nível em estrelas e faixa, sem o número', () => {
+    setup();
+    const who = screen.getByRole('region', { name: t('ui.decisao.jogador') });
+    expect(within(who).getByText('Dudu Maestro')).toBeInTheDocument();
+    expect(within(who).getByText(new RegExp(`${t('positions.meia')}.*Flamengo`))).toBeInTheDocument();
+    expect(within(who).getByRole('img', { name: t('ui.decisao.escudo', { clube: 'Flamengo' }) })).toBeInTheDocument();
+    expect(within(who).getByRole('img', { name: t('ui.decisao.nivel', { faixa: t('attributes.band.muitoBom') }) })).toBeInTheDocument();
+    expect(who.textContent).not.toMatch(/78/);
+  });
+
+  it('resumo dos títulos conquistados até aqui, agrupados por competição', () => {
+    setup();
+    const who = screen.getByRole('region', { name: t('ui.decisao.jogador') });
+    expect(within(who).getByText(t('ui.decisao.titulos', { n: 3 }))).toBeInTheDocument();
+    expect(within(who).getByText(`${t('ui.titulo.estadual')} ×2`)).toBeInTheDocument();
+    expect(within(who).getByText(t('ui.titulo.copaDoBrasil'))).toBeInTheDocument();
+  });
+
+  it('sem título ainda: diz isso, em vez de sumir com a linha', () => {
+    render(<Decision eventId={EVENT} age={16} progress={0} player={{ ...PLAYER, titles: [] }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    expect(screen.getAllByText(t('ui.decisao.semTitulos')).length).toBeGreaterThan(0);
   });
 
   it('uma decisão por tela: cada opção do evento é um botão com o texto do i18n', () => {

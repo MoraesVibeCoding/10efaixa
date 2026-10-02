@@ -29,5 +29,7 @@ export function themeCss(): string {
     `@media (prefers-color-scheme: dark) { :root { ${colors(escuro)} color-scheme: dark; } }`,
     `[data-tema="claro"] { ${colors(claro)} color-scheme: light; }`,
     `[data-tema="escuro"] { ${colors(escuro)} color-scheme: dark; }`,
+    // a página inteira acompanha a tela escura com cena, para não sobrar moldura clara em volta dela
+    `body:has([data-tema="escuro"]) { background: ${escuro.fundo}; }`,
   ].join('\n');
 }
