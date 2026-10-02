@@ -2,6 +2,8 @@ import { applyOption, type Ctx } from './events';
 import { toBRL, type Offer } from './market';
 import data from '../data/events.json';
 import cfg from '../data/preview.json';
+import injuries from '../data/injuries.json';
+import tournaments from '../data/nationalTournaments.json';
 
 // T41b (SPEC v2.14, estilo Copero): antes de decidir, o jogador vê o efeito provável de cada opção em sentido e intensidade, nunca em números.
 export interface Preview { campo: string; sentido: 'sobe' | 'desce' | 'muda'; intensidade: 1 | 2 | 3 }
@@ -32,6 +34,30 @@ export type RiskBand = 'baixo' | 'medio' | 'alto' | 'muitoAlto';
 export function riskBand(p: number): RiskBand {
   const r = cfg.risco;
   return p < r.baixo ? 'baixo' : p < r.medio ? 'medio' : p < r.alto ? 'alto' : 'muitoAlto';
+}
+
+export interface Risk { tipo: 'recaida' | 'lesao'; faixa: RiskBand }
+type Moment = Record<string, { riscoLesao?: number }>;
+
+// onde mora a probabilidade de cada evento com risco: o número fica na tabela do motor, a tela só vê a faixa
+const RISK_SOURCES: Record<string, (option: string) => Risk | null> = {
+  'lesao-grave': (o) => {
+    const g = (injuries.grave as Record<string, { recaida: number }>)[o];
+    return g ? { tipo: 'recaida', faixa: riskBand(g.recaida) } : null;
+  },
+  'copa-sacrificio': (o) => {
+    const p = (tournaments.momentos['copa-sacrificio'] as Moment)[o]?.riscoLesao;
+    return p ? { tipo: 'lesao', faixa: riskBand(p) } : null;
+  },
+};
+
+/** Risco da opção em faixa de palavras (SPEC v2.23); null quando a escolha não arrisca nada. */
+export const riskOf = (eventId: string, optionId: string): Risk | null => RISK_SOURCES[eventId]?.(optionId) ?? null;
+
+/** Semestres fora de campo que a opção custa (lesão grave); null quando não tira o jogador de campo. */
+export function timeOutOf(eventId: string, optionId: string): number | null {
+  if (eventId !== 'lesao-grave') return null;
+  return (injuries.grave as Record<string, { semestresFora: number }>)[optionId]?.semestresFora ?? null;
 }
 
 export interface OfferPreview { minutos: number; salario: 'menor' | 'parecido' | 'maior' | 'muitoMaior'; anos: number }

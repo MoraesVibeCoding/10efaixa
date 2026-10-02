@@ -2,7 +2,7 @@ import events from '../data/events.json';
 import cfg from '../data/preview.json';
 import txt from '../i18n/pt-BR/preview.json';
 import type { Offer } from './market';
-import { offerPreview, outcomeOf, outcomeVerdict, previewOf } from './preview';
+import { offerPreview, outcomeOf, outcomeVerdict, previewOf, riskOf, timeOutOf } from './preview';
 
 const offer = (o: Partial<Offer> = {}): Offer => ({
   clubId: 'x', league: 'BRA-A', currency: 'BRL', annualSalary: 1_000_000, years: 3, role: 'titular', staffQuality: 1,
@@ -87,5 +87,27 @@ describe('prévia de consequências por opção (T41b, estilo Copero)', () => {
     expect(outcomeVerdict([o(-0.1)])).toBe('negativo');
     expect(outcomeVerdict([o(0.1), o(-0.1)])).toBe('misto');
     expect(outcomeVerdict([])).toBe('neutro');
+  });
+});
+
+describe('risco e tempo fora por opção (T49c): lidos das tabelas de lesão e de Copa, em faixa de palavras', () => {
+  it('lesão grave: o risco é de recaída, na faixa que injuries.json dá; o tempo fora vem em semestres', () => {
+    expect(riskOf('lesao-grave', 'operar')).toEqual({ tipo: 'recaida', faixa: 'baixo' });
+    expect(riskOf('lesao-grave', 'conservador')).toEqual({ tipo: 'recaida', faixa: 'medio' });
+    expect(riskOf('lesao-grave', 'voltar-antes')).toEqual({ tipo: 'recaida', faixa: 'muitoAlto' });
+    expect(timeOutOf('lesao-grave', 'operar')).toBe(2);
+    expect(timeOutOf('lesao-grave', 'voltar-antes')).toBe(0.5);
+  });
+
+  it('Copa no sacrifício: o risco é de lesão; poupar não tem risco', () => {
+    expect(riskOf('copa-sacrificio', 'jogar')).toEqual({ tipo: 'lesao', faixa: 'alto' });
+    expect(riskOf('copa-sacrificio', 'entrar-no-segundo-tempo')).toEqual({ tipo: 'lesao', faixa: 'medio' });
+    expect(riskOf('copa-sacrificio', 'poupar')).toBeNull();
+  });
+
+  it('evento sem risco nem tempo fora devolve null', () => {
+    expect(riskOf('festa', 'ir')).toBeNull();
+    expect(timeOutOf('festa', 'ir')).toBeNull();
+    expect(timeOutOf('copa-sacrificio', 'jogar')).toBeNull();
   });
 });
