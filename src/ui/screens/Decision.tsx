@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import events from '../../data/events.json';
 import legacy from '../../data/legacy.json';
-import { toBand } from '../../engine/attributes';
 import { CLUBS } from '../../engine/clubs';
 import { temperamentsFor } from '../../engine/events';
 import { previewOf, type Preview } from '../../engine/preview';
 import { t } from '../../i18n';
 import creation from '../../i18n/pt-BR/creation.json';
+import tokens from '../theme/tokens.json';
 import './Decision.css';
 
 // T49 (amostra aprovada) e T51: uma decisão por tela, com a cena ao fundo. Só faixas e setas, nunca números de atributo.
@@ -16,7 +16,7 @@ export interface DecisionProps {
   /** Fração da carreira já vivida, de 0 a 1. */
   progress: number;
   scene: { src: string; alt: string };
-  /** Quem decide: o nível entra como número, mas só estrelas e faixa vão para a tela (SPEC: nenhum número de atributo antes do cartão). */
+  /** Quem decide. O overall aparece em número (SPEC v2.16); os atributos, um a um, seguem só em faixas e estrelas. */
   player: { name: string; position: string; clubId: string; overall: number; titles: string[] };
   /** Temperamento do jogador: a opção que combina com ele é marcada como "Seu jeito". */
   temperament?: string;
@@ -39,29 +39,15 @@ function Arrows({ sentido, intensidade }: Pick<Preview, 'sentido' | 'intensidade
   );
 }
 
-const STAR = 'M8 .8 10.2 5.6l5.2.6-3.9 3.6 1.1 5.2L8 12.4 3.4 15l1.1-5.2L.6 6.2l5.2-.6z';
 const TITLE_WEIGHT = legacy.titulos.pontos as Record<string, number>;
 const clubOf = (id: string) => CLUBS.find((c) => c.id === id);
+const metalOf = (id: string) => ((TITLE_WEIGHT[id] ?? 0) >= tokens.trofeu.ouroMin ? 'ouro' : (TITLE_WEIGHT[id] ?? 0) >= tokens.trofeu.prataMin ? 'prata' : 'bronze');
 
-/** Títulos agrupados por competição, da mais pesada para a mais leve: as três primeiras aparecem, o resto vira contagem. */
+/** Títulos agrupados por competição, da mais pesada para a mais leve. */
 function rankTitles(titles: string[]) {
   const counts: Record<string, number> = {};
   for (const id of titles) counts[id] = (counts[id] ?? 0) + 1;
-  const ranked = Object.entries(counts).sort((a, b) => (TITLE_WEIGHT[b[0]] ?? 0) - (TITLE_WEIGHT[a[0]] ?? 0));
-  return { shown: ranked.slice(0, 3), hidden: ranked.slice(3).reduce((n, [, c]) => n + c, 0) };
-}
-
-function Stars({ value, label }: { value: number; label: string }) {
-  return (
-    <span className="estrelas" role="img" aria-label={label}>
-      {[0, 1, 2, 3, 4].map((i) => (
-        <svg key={i} viewBox="0 0 16 16" width="16" height="16" focusable="false">
-          <path d={STAR} className="estrelas__vazia" />
-          <path d={STAR} className="estrelas__cheia" style={{ clipPath: `inset(0 ${100 - Math.min(1, Math.max(0, value - i)) * 100}% 0 0)` }} />
-        </svg>
-      ))}
-    </span>
-  );
+  return Object.entries(counts).sort((a, b) => (TITLE_WEIGHT[b[0]] ?? 0) - (TITLE_WEIGHT[a[0]] ?? 0));
 }
 
 /** Escudo estilizado: só as duas cores e a sigla do clube, nunca o escudo oficial (SPEC 11). */
@@ -78,22 +64,28 @@ function Crest({ clubId }: { clubId: string }) {
   );
 }
 
+/** Um mini troféu por competição vencida; o balão só aparece quando há mais de um título dela. */
 function Trophies({ titles }: { titles: string[] }) {
-  const { shown, hidden } = rankTitles(titles);
+  const ranked = rankTitles(titles);
+  if (!ranked.length) return null;
   return (
-    <p className="trofeus">
-      <svg viewBox="0 0 18 18" width="18" height="18" aria-hidden="true" focusable="false">
-        <path d="M5 2h8v5a4 4 0 0 1-8 0zM5 3.5H2.2V5A2.8 2.8 0 0 0 5 7.8M13 3.5h2.8V5A2.8 2.8 0 0 1 13 7.8M9 11v3M5.5 16h7" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="square" />
-      </svg>
-      <strong>{titles.length === 0 ? t('ui.decisao.semTitulos') : titles.length === 1 ? t('ui.decisao.umTitulo') : t('ui.decisao.titulos', { n: titles.length })}</strong>
-      {shown.map(([id, n]) => <span key={id}>{n > 1 ? `${t(`ui.titulo.${id}`)} ×${n}` : t(`ui.titulo.${id}`)}</span>)}
-      {hidden > 0 && <span>{t('ui.decisao.maisTitulos', { n: hidden })}</span>}
-    </p>
+    <ul className="trofeus" aria-label={t('ui.decisao.titulosLista')}>
+      {ranked.map(([id, n]) => (
+        <li key={id} className={`trofeu trofeu--${metalOf(id)}`}>
+          <svg
+            viewBox="0 0 24 24" width="28" height="28" role="img" focusable="false"
+            aria-label={n > 1 ? t('ui.decisao.trofeuVarios', { titulo: t(`ui.titulo.${id}`), n }) : t('ui.decisao.trofeu', { titulo: t(`ui.titulo.${id}`) })}
+          >
+            <path d="M7 3h10v2h3.5v3.2A4.3 4.3 0 0 1 16.6 12 5.2 5.2 0 0 1 13 14.4V17h3v4H8v-4h3v-2.6A5.2 5.2 0 0 1 7.4 12 4.3 4.3 0 0 1 3.5 8.2V5H7zm0 4H5.5v1.2c0 .9.6 1.7 1.5 2zm10 0v3.2c.9-.3 1.5-1.1 1.5-2V7z" fill="currentColor" />
+          </svg>
+          {n > 1 && <span className="trofeu__vezes" aria-hidden="true">{n}</span>}
+        </li>
+      ))}
+    </ul>
   );
 }
 
 export function Decision({ eventId, age, progress, scene, player, temperament, onChoose }: DecisionProps) {
-  const band = toBand(player.overall);
   const club = clubOf(player.clubId);
   const [chosen, setChosen] = useState<string | null>(null);
   const options = events.eventos.find((e) => e.id === eventId)?.opcoes ?? [];
@@ -116,10 +108,10 @@ export function Decision({ eventId, age, progress, scene, player, temperament, o
             <p className="jogador__nome">{player.name}</p>
             <p className="jogador__clube">{t('ui.decisao.clubePosicao', { posicao: t(`positions.${player.position}`), clube: club?.nome ?? '' })}</p>
           </div>
-          <div className="jogador__nivel">
-            <Stars value={band.stars} label={t('ui.decisao.nivel', { faixa: t(`attributes.band.${band.key}`) })} />
-            <span aria-hidden="true">{t(`attributes.band.${band.key}`)}</span>
-          </div>
+          <p className="jogador__over">
+            <span className="jogador__over-rotulo">{t('ui.decisao.over')}</span>
+            <span className="jogador__over-numero">{player.overall}</span>
+          </p>
           <Trophies titles={player.titles} />
         </section>
         <header className="decisao__cabeca">

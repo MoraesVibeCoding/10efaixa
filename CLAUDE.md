@@ -47,7 +47,7 @@ Pare e peça minha aprovação nos pontos da seção 15 do SPEC: após T13, T40,
 
 ## Regras que nunca podem ser quebradas
 - **Aparência** (tom de pele, cabelo, barba, acessórios) **nunca** altera atributos ou eventos. Só altura e compleição afetam o jogo.
-- **Nenhum número de atributo** aparece ao jogador antes do cartão final (só estrelas e faixas).
+- **Nenhum número dos 10 atributos** aparece ao jogador antes do cartão final (só estrelas e faixas). A única exceção é o **overall geral**, mostrado em número na tela de decisão (SPEC v2.16, decisão do usuário).
 - **Sem escudos oficiais** de clubes nem da CBF; usar escudos estilizados (cores e iniciais).
 - **Lendas reais** só como texto descritivo no campo `inspiracao`, controlado pela flag `inspiracaoLendas`. Nunca imagem, rosto ou visual característico de pessoa real.
 - **Todos os atletas da carreira são fictícios.** Nome e apelido passam pelo filtro de palavras bloqueadas.

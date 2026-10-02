@@ -11,12 +11,11 @@
   "perfis": "{rotulo}: {perfis}",
   "jogador": "Seu jogador",
   "escudo": "Escudo estilizado do {clube}",
-  "nivel": "Nível: {faixa}",
-  "titulos": "{n} títulos",
-  "umTitulo": "1 título",
-  "semTitulos": "Nenhum título ainda",
-  "maisTitulos": "e mais {n}",
-  "clubePosicao": "{posicao} · {clube}"
+  "clubePosicao": "{posicao} · {clube}",
+  "over": "Over",
+  "titulosLista": "Títulos conquistados",
+  "trofeu": "{titulo}",
+  "trofeuVarios": "{titulo}, {n} vezes"
  },
  "amostra": {
   "clube": "clube do coração"

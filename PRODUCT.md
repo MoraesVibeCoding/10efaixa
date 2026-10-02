@@ -37,7 +37,7 @@ Um simulador de carreira rápido e compartilhável na língua do torcedor brasil
 - Stack: Vite 8, React 19, TypeScript estrito, Vitest 5. Hospedagem na Vercel, como PWA.
 - Motor puro e determinístico em `src/engine`; a interface só lê o estado.
 - Todo texto visível ao jogador fica em `src/i18n/pt-BR`, nunca no código.
-- Nenhum número de atributo aparece antes do cartão final: só estrelas e faixas.
+- Nenhum número dos atributos aparece antes do cartão final: só estrelas e faixas. A exceção é o overall geral, que aparece em número na tela de decisão.
 - Fora da v1: anúncios, contas, ranking online, app nativo, partidas lance a lance, outros idiomas.
 
 ## Brand Commitments

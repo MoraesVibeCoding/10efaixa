@@ -46,27 +46,30 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
     expect(bar).toHaveAttribute('aria-valuetext', t('ui.decisao.idade', { idade: 17 }));
   });
 
-  it('quem é o jogador: nome, posição, clube com escudo estilizado e nível em estrelas e faixa, sem o número', () => {
+  it('quem é o jogador: nome, posição, clube com escudo estilizado e o overall em número (SPEC v2.16)', () => {
     setup();
     const who = screen.getByRole('region', { name: t('ui.decisao.jogador') });
     expect(within(who).getByText('Dudu Maestro')).toBeInTheDocument();
     expect(within(who).getByText(new RegExp(`${t('positions.meia')}.*Flamengo`))).toBeInTheDocument();
     expect(within(who).getByRole('img', { name: t('ui.decisao.escudo', { clube: 'Flamengo' }) })).toBeInTheDocument();
-    expect(within(who).getByRole('img', { name: t('ui.decisao.nivel', { faixa: t('attributes.band.muitoBom') }) })).toBeInTheDocument();
-    expect(who.textContent).not.toMatch(/78/);
+    expect(within(who).getByText(t('ui.decisao.over'))).toBeInTheDocument();
+    expect(within(who).getByText('78')).toBeInTheDocument();
   });
 
-  it('resumo dos títulos conquistados até aqui, agrupados por competição', () => {
+  it('títulos: um mini troféu por competição, com balão de quantidade só quando ganhou mais de um', () => {
     setup();
-    const who = screen.getByRole('region', { name: t('ui.decisao.jogador') });
-    expect(within(who).getByText(t('ui.decisao.titulos', { n: 3 }))).toBeInTheDocument();
-    expect(within(who).getByText(`${t('ui.titulo.estadual')} ×2`)).toBeInTheDocument();
-    expect(within(who).getByText(t('ui.titulo.copaDoBrasil'))).toBeInTheDocument();
+    const list = screen.getByRole('list', { name: t('ui.decisao.titulosLista') });
+    expect(within(list).getAllByRole('listitem')).toHaveLength(2);
+    const state = within(list).getByRole('img', { name: t('ui.decisao.trofeuVarios', { titulo: t('ui.titulo.estadual'), n: 2 }) });
+    expect(state.parentElement).toHaveTextContent('2');
+    const cup = within(list).getByRole('img', { name: t('ui.decisao.trofeu', { titulo: t('ui.titulo.copaDoBrasil') }) });
+    expect(cup.parentElement).not.toHaveTextContent(/\d/);
+    expect(screen.queryByText(/títulos/)).not.toBeInTheDocument();
   });
 
-  it('sem título ainda: diz isso, em vez de sumir com a linha', () => {
+  it('sem título ainda: a lista de troféus não aparece', () => {
     render(<Decision eventId={EVENT} age={16} progress={0} player={{ ...PLAYER, titles: [] }} scene={{ src: 'c.webp', alt: 'cena' }} />);
-    expect(screen.getAllByText(t('ui.decisao.semTitulos')).length).toBeGreaterThan(0);
+    expect(screen.queryByRole('list', { name: t('ui.decisao.titulosLista') })).not.toBeInTheDocument();
   });
 
   it('uma decisão por tela: cada opção do evento é um botão com o texto do i18n', () => {
