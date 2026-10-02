@@ -1,6 +1,6 @@
 # 10eFaixa — Especificação do Produto (SPEC.md)
 
-> Versão 2.28 (papel em campo, minutos e nível do clube na proposta, momento e "isso vai pesar" nas decisões, decisões por ritmo e catálogo ampliado) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
+> Versão 2.29 (marcos da carreira: primeiras vezes na carreira, em cada clube e na Seleção; v2.28: papel em campo, minutos e nível do clube na proposta, momento e "isso vai pesar", decisões por ritmo e catálogo ampliado) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
 > Este documento é a fonte da verdade para o Claude Code. Nenhuma mudança de escopo sem atualizar este arquivo primeiro.
 
 ---
@@ -281,6 +281,29 @@ Para quem veio da várzea ou peneira, "clube formador" = primeiro clube profissi
 - **"Isso vai pesar":** quando a opção escolhida mexe num medidor que outra parte do motor lê, o resultado diz **onde** pesa (relação com o técnico → "vai pesar na próxima reunião com a comissão"; disciplina → "a Seleção vai lembrar disso"; idolatria → "a torcida não esquece"). Mapa medidor → frase em dados; teste garante que todo medidor citado é lido pelo motor.
 - **Efeitos do resultado com setas, sem número** ("Minutos ↑", "Valor ↓", "Moral ↓").
 - **Catálogo e repetição:** um evento não se repete na mesma carreira, salvo os recorrentes marcados nos dados (janela, renovação, lesão).
+
+### 6.13b Marcos da carreira (v2.29)
+
+Momentos de **primeira vez** viram cena com 3 opções (uma por jeito), como os dilemas, mas quase sem escolha errada: a escolha decide **como o jogador vive o momento**.
+
+**Uma vez por carreira:** estreia profissional; primeira vez titular; primeiro gol; primeira assistência; assumir as faltas; assumir os pênaltis; primeira final ou jogo do título (campeonato e copa); primeiro título; primeiro clássico; primeira braçadeira de capitão; primeira convocação (por degrau, 6.11); estreia na Seleção principal; primeiro gol pela Seleção; primeira Copa; estreia no exterior.
+
+**Uma vez por clube e na Seleção:** estreia, primeiro gol, primeiro clássico, primeira braçadeira e assumir a bola parada. Cada transferência ganha o seu arco.
+
+**Efeitos:**
+- **Mais cabeça do que técnica:** bônus pequeno de evolução em **Mental** (nunca soma direto no atributo), moral, idolatria no clube e relação com o técnico.
+- **Cobrador do time:** "assumir a bola parada" torna o jogador cobrador do clube atual. Alguns gols a mais por temporada (como o goleiro cobrador, 6.2) e progresso do traço "Bola parada". Perder pênalti decisivo pesa em moral e idolatria. Perde a função ao trocar de clube.
+- Números em dados, calibrados na 9.3. Aparência nunca entra.
+
+**Encaixe nos ritmos (6.16):**
+- O marco tem **prioridade** sobre evento comum e **ocupa uma das vagas** da temporada (não soma).
+- **Marcos de carreira** aparecem em todos os ritmos, inclusive no Rápido.
+- **Marcos de clube** aparecem no Normal e no Completo; no Rápido, escolha automática pelo temperamento.
+- O registro das primeiras vezes vai no save.
+
+**Narrativa e álbum:**
+- Variações pelo contexto (ex.: primeiro gol num clássico ≠ num jogo comum).
+- Cada marco vira figurinha no **álbum da carreira** ("Primeiro gol · Fluminense · 2027") e pode alimentar a manchete do cartão final (6.15).
 
 ### 6.14 Aposentadoria
 
@@ -567,6 +590,7 @@ Cada tarefa é atômica, com teste escrito antes do código e **um commit por ta
 |---|---|---|
 | T25 | Motor de eventos e dilemas (cada evento aponta para uma cena) | Condições e efeitos determinísticos; evento sem cena falha no teste |
 | T25b | Catálogo ampliado de eventos (v2.28) | **Pelo menos 80 eventos** escritos com a skill `10efaixa-narrativa`, em lotes de ~15 aprovados pelo usuário; todo evento com `momento` e cena; inclui os que faltam da v2.23 (peneira, primeiro contrato, estreia, banco, convocação, exterior, aposentadoria) e os de papel em campo; nenhum evento repete na carreira salvo os recorrentes; nenhuma opção domina outra (`narrative.test.ts`) ⛳ por lote |
+| T25c | Motor de marcos da carreira (v2.29, 6.13b) | Detecta as primeiras vezes (carreira, clube, Seleção) a partir do motor; cada marco uma vez por carreira ou por clube, registrado no save; prioridade na vaga de decisão; marcos de carreira também no Rápido; cobrador de linha (gols em `stats`, progresso de "Bola parada"); efeitos sobretudo em Mental, moral, idolatria e relação; ~20 marcos escritos com a skill de narrativa (lote próprio, ⛳), contados nos 80 da T25b; figurinha no álbum |
 | T26 | Empresário | 3 perfis; eventos; troca com custo |
 | T27 | Contratos, bicho, multa e renovação | Moedas corretas; patrimônio em R$; € 1 = R$ 6,00 configurável |
 | T28 | Valor de mercado, salários, propostas e janelas | Faixas com fonte e data; salário como % do valor |
@@ -778,3 +802,4 @@ Decisões aprovadas durante a implementação. Complementam as seções acima.
 | 2026-09-30 | T14 | Sedes reais conferidas: Copa 2026 (EUA, Canadá, México), 2030 (Marrocos, Portugal, Espanha + centenário), 2034 (Arábia Saudita) — FIFA; Olimpíadas 2028 LA, 2032 Brisbane — COI. Demais sedes sorteadas por semente | Fontes e data em src/data/calendar.json |
 | 2026-09-30 | T14 | **Não verificado:** a CONMEBOL não anunciou a próxima Copa América masculina; ciclo assumido a cada 4 anos a partir de 2028 ("entre as Copas", 6.11). Sedes futuras repetem as 5 últimas reais em ordem (2015 Chile, 2016 EUA, 2019 Brasil, 2021 Brasil, 2024 EUA), decisão do usuário. Janelas de transferência modeladas por momento do semestre; datas exatas a conferir na T28 | Marcado `verificado: false` no JSON; revisar quando houver anúncio oficial |
 | 2026-10-02 | v2.28 | **Ideias do copero.net incorporadas** (`docs/referencias/copero-net-observacoes.md`; aprovadas pelo usuário): (1) proposta mostra **minutos previstos e nível do clube em faixa**: a regra já existia na 6.4 (mais minutos, mais evolução; clube fraco, menos evolução) e agora aparece na escolha; (2) **selo de momento** na cena; (3) **"isso vai pesar"** no resultado, dizendo onde a escolha pesa; (6) **papel em campo** junto com o arquétipo (6.2, T52b). Também: efeitos em setas, faixa de competições, resumo da virada que se pula e **honrarias bem-humoradas** (6.15). **Decisões por temporada** (pedido do usuário): Completo ≥ 6, Normal 2–3, Rápido até 1; Normal passa a ~20 min. Para não repetir, **catálogo ampliado para ≥ 80 eventos** (T25b) | No copero.net o modo narrativo teve ~6 decisões por temporada e 116 eventos distintos numa carreira; com os 25 eventos atuais, 6 por temporada repetiriam cada evento ~5 vezes. |
+| 2026-10-02 | v2.29 | **Marcos da carreira** (pedido e aprovação do usuário): primeiras vezes na carreira, em cada clube e na Seleção (estreia, titular, gol, assistência, bola parada, pênaltis, finais, título, clássico, capitão, convocação, Copa, exterior), com efeito sobretudo mental; tarefa T25c | O motor já tinha papel, capitão (clube e Seleção), gols, finais e pênaltis; faltava o registro das primeiras vezes e o cobrador de linha (só o goleiro tinha) |
