@@ -355,3 +355,13 @@ describe('contraste das cores de texto (T49c)', () => {
     expect(pairs).toContain('textoSuave/sobreDestaque');
   });
 });
+
+describe('camadas (T49c)', () => {
+  it('gaveta e resultado ficam acima da figurinha, que sobe sobre a cena com z-index', () => {
+    const css = readFileSync(resolve(__dirname, 'Decision.css'), 'utf8');
+    const z = (sel: string) => Number(new RegExp(`\\n\\${sel} \\{[^}]*z-index:\\s*(\\d+)`).exec(css)?.[1] ?? 0);
+    expect(z('.jogador__abrir')).toBeGreaterThan(0);
+    expect(z('.gaveta')).toBeGreaterThan(z('.jogador__abrir'));
+    expect(z('.resultado')).toBeGreaterThan(z('.jogador__abrir'));
+  });
+});

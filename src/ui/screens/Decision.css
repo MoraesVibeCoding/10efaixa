@@ -166,6 +166,7 @@
 .resultado {
   position: absolute;
   inset: 0;
+  z-index: 2; /* acima da figurinha, que sobe sobre a cena com z-index 1 */
   display: grid;
   place-items: center;
   padding: var(--espaco-5);
@@ -230,6 +231,7 @@
 .gaveta {
   position: absolute;
   inset: 0;
+  z-index: 2; /* acima da figurinha, que sobe sobre a cena com z-index 1 */
   display: grid;
   align-items: end;
   background: color-mix(in srgb, var(--cor-fundo) 35%, transparent);
