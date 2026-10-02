@@ -1,0 +1,75 @@
+# Cena 14 — Festa — corte Cacheado grande
+
+> **INSTRUCTIONS FOR THE ASSISTANT — READ FIRST**
+> Start from a clean slate. Clear and ignore everything from earlier in this conversation and from any previous conversation: earlier prompts, earlier images, earlier styles and earlier corrections. Use only what is written in this file.
+> Then generate one image following the section "Prompt" below. The sections in Portuguese are notes for the human reviewer and are not part of the request.
+
+**Usada em:** Tentação da noite, festa com o elenco e polêmicas fora de campo.
+
+**Como gerar:** abra uma conversa nova e gere do zero com o prompt abaixo. Para reforçar o traço, anexe uma cena aprovada do lote 1 (por exemplo `cenas/04-penalti/cacheado-grande/imagem.jpeg`) e acrescente no fim: `Use the attached image only as a reference for the painting style and for the player's hair. Do not copy its scene.`
+
+**Arquivo da imagem:** salve nesta pasta como `imagem.jpeg`.
+
+## Prompt
+
+```
+Create a vertical 4:5 portrait image at the highest resolution available (about 1856 x 2304 pixels).
+
+STYLE
+A semi-realistic painted digital illustration for a mobile football career game. Painterly look: soft blended shading, visible brush texture, gentle gradients of light and shadow, and only very thin, subtle linework. Realistic human proportions and anatomy. It must look hand-painted, not like a cartoon, comic, cel-shaded art, flat vector art, anime, a 3D render or a photograph. Avoid thick black outlines.
+
+SETTING
+A lively party on the terrace of a house at night. Strings of small warm-white bulbs hang overhead, there is a low table with plain glasses and a plain black loudspeaker, and potted plants along a low wall. The city lights are far away in the dark.
+
+MAIN CHARACTER
+One young Brazilian football player, seen entirely from behind so his face is not visible. He has brown skin, long, voluminous curly dark-brown hair, loose and not tied, that falls to his shoulders and ends there, and an athletic build.
+He stands in the centre of the frame, with his back to the camera, relaxed, weight on one leg, holding a plain glass of soft drink in his right hand at his side.
+
+CLOTHING
+He wears a plain bright magenta short-sleeved football shirt, plain dark navy-blue tracksuit trousers and plain white trainers. He wears nothing over the shirt: no jacket, no backpack, no bag strap.
+
+THE BACK OF THE SHIRT
+His hair ends at shoulder height at the lowest. From the shoulders down to the waist, the back of the magenta shirt is fully visible to the camera: one smooth, flat, evenly lit magenta surface with nothing printed on it and nothing covering it (no arm, no hand, no strap, no other person, no object). Software will write the player's number there.
+
+OTHER PEOPLE AND OBJECTS
+In front of him, slightly out of focus, five friends dance and laugh in a loose group, wearing plain casual clothes in muted grey, navy, off-white and beige. Nobody stands between the camera and the player and nobody touches him.
+
+COLOUR PLAN - follow it exactly, because software will recolour this image afterwards
+- Magenta appears in one place only: the shirt of the player.
+- There is no cyan anywhere in the image.
+- His trousers are dark navy blue and his trainers are white.
+- The party lights are warm white only: no coloured disco lights.
+- Warm yellow or gold appears only on: the strings of warm-white bulbs.
+- Everything else uses navy blue, concrete grey, off-white, pitch green and muted natural tones. No purple, no pink other than the kit described, no neon colours.
+
+COMPOSITION - follow these positions
+- Vertical 4:5. The camera is at chest height, about three metres behind him, looking towards the dancing group.
+- The main character is horizontally centred and is the largest figure in the image.
+- The main character and all the action are in the upper 60% of the image. His feet are no lower than 75% of the way down from the top edge.
+- The lower 40% of the image is calm and dark: the terrace floor fading into deep navy shadow down to the bottom edge, with no objects, no people and no detail, because interface panels will be placed over that area.
+
+MUST NOT APPEAR
+- No text, letters or numbers anywhere: not on shirts, boards, screens, papers, flags, walls or signs.
+- No logos, crests, badges, sponsor or brand marks on kits, boots, balls, flags, boards, bags or walls.
+- No badge, emblem or stripes on the clothes of coaches, staff, reporters or anyone else: tracksuits, jackets and polo shirts are completely plain.
+- No watermark or signature, and no interface elements, frames or borders.
+- The face of the main character is not visible: he is seen from behind.
+- Every person is an original fictional character who does not resemble any real person.
+- No bottles with labels, no cigarettes and no brand of drink.
+```
+
+> **AFTER GENERATING — FINAL STEP**
+> Save the generated image to Google Drive, in the same folder where this file is stored, with the file name `imagem.jpeg`. If you cannot save to Drive yourself, say so clearly and show the image so that the user can save it to that folder manually.
+
+
+## Conferência (nota para revisão humana)
+
+- [ ] Formato vertical 4:5, na resolução maior (1856×2304)
+- [ ] Jogador de costas, rosto não aparece, cabelo no corte **Cacheado grande**
+- [ ] Costas da camisa lisas e livres do ombro à cintura, sem nada na frente
+- [ ] Camisa magenta, calça azul-marinho, tênis branco; nenhum ciano na imagem
+- [ ] Torcida, bandeiras e adversários em cinza; nada além do uniforme em magenta ou ciano
+- [ ] Luzes só em branco quente
+- [ ] Amigos em roupas de tons neutros
+- [ ] Sem texto, número, escudo, logo ou marca d'água (nem a estrela do Gemini fora da faixa escura)
+- [ ] Parte de baixo (40%) escura e vazia
