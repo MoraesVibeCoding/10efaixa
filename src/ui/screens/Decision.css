@@ -22,9 +22,9 @@
 .decisao__cena {
   inline-size: 100%;
   /* a pintura é 4:5 com os 40% de baixo escuros: no celular só a parte de cima aparece;
-     quando falta altura, a cena encolhe (até 7,5rem, que ainda recebe a figurinha) para as opções caberem */
+     quando falta altura, a cena encolhe (até 6,5rem, que ainda recebe a figurinha; era 7,5rem até o selo do valor de mercado, v2.33) para as opções caberem */
   flex: 0 1 calc(min(100vw, 30rem) * 0.55);
-  min-block-size: 7.5rem;
+  min-block-size: 6.5rem;
   object-fit: cover;
   object-position: 50% 10%;
 }

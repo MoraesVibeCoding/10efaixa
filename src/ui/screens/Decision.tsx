@@ -28,6 +28,8 @@ export interface DecisionProps {
     /** Papel no elenco (titular, rodízio, reserva…): é o tempo de jogo que o jogador vê. */
     role: string;
     monthlySalary: { amount: number; currency: 'BRL' | 'EUR' };
+    /** Valor de mercado em euros (v2.33): não é atributo, então aparece em número. */
+    marketValueEUR?: number;
     /** Temporadas já fechadas, da mais antiga para a mais recente: a trajetória da gaveta "Minha carreira". */
     seasons?: Season[];
     /** Atributos de agora. Na gaveta aparecem só em faixa (palavra e barra), nunca em número. */
@@ -361,6 +363,7 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, ri
           <li>{t('ui.decisao.idade', { idade: age })}</li>
           <li>{t(`ui.papel.${player.role}`)}</li>
           <li>{t('ui.decisao.porMes', { valor: money(player.monthlySalary.amount, player.monthlySalary.currency) })}</li>
+          {player.marketValueEUR === undefined ? null : <li>{t('ui.decisao.valor', { valor: money(player.marketValueEUR, 'EUR') })}</li>}
         </ul>
         {text && <p className="decisao__historia">{text}</p>}
         <div className="decisao__opcoes" role="group" aria-label={t('ui.decisao.opcoes')}>

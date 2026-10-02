@@ -12,7 +12,7 @@ const EVENT = 'salario-atrasado';
 const def = events.eventos.find((e) => e.id === EVENT)!;
 const PLAYER = {
   name: 'Dudu Maestro', position: 'meia', clubId: 'flamengo', overall: 78, titles: ['estadual', 'estadual', 'copaDoBrasil'],
-  role: 'titular', monthlySalary: { amount: 180_000, currency: 'BRL' as const },
+  role: 'titular', monthlySalary: { amount: 180_000, currency: 'BRL' as const }, marketValueEUR: 12_500_000,
 };
 const setup = (onChoose = vi.fn()) => {
   render(<Decision eventId={EVENT} age={17} progress={0.05} player={PLAYER} scene={{ src: 'cena.webp', alt: 'O jogador na sala do empresário' }} onChoose={onChoose} />);
@@ -117,13 +117,15 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
     expect(within(card).getByText(new RegExp(t('attributes.band.muitoBom')))).toBeInTheDocument();
   });
 
-  it('título do evento com os selos do jogador ao lado: idade, tempo de jogo e salário do mês sempre à vista (v2.22)', () => {
+  it('título do evento com os selos do jogador ao lado: idade, tempo de jogo, salário do mês e valor de mercado (v2.22, v2.33)', () => {
     setup();
     expect(screen.getByRole('heading', { level: 1, name: t(`events.${EVENT}.titulo`) })).toBeInTheDocument();
     const selos = screen.getByRole('list', { name: t('ui.decisao.ficha') });
     expect(within(selos).getByText(t('ui.decisao.idade', { idade: 17 }))).toBeInTheDocument();
     expect(within(selos).getByText(t('ui.papel.titular'))).toBeInTheDocument();
     expect(within(selos).getByText(/R\$\s180\smil/)).toBeInTheDocument();
+    // v2.33: valor de mercado em euros junto do salário e do tempo de jogo
+    expect(within(selos).getByText(/^Valor\s€\s12,5\smi$/)).toBeInTheDocument();
     // títulos, atributos e trajetória ficam na gaveta
     expect(screen.queryByRole('list', { name: t('ui.decisao.titulosLista') })).not.toBeInTheDocument();
   });

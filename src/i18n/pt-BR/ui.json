@@ -14,7 +14,8 @@
   "emTroca": "Em troca",
   "muda": "Muda",
   "ficha": "Ficha do jogador",
-  "porMes": "{valor}/mês"
+  "porMes": "{valor}/mês",
+  "valor": "Valor {valor}"
  },
  "amostra": {
   "clube": "clube do coração"

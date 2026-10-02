@@ -71,6 +71,8 @@ export interface CareerResult {
 /** T51: o momento de uma decisão, para a tela mostrar o jogador como ele está ali. */
 export interface DecisionView {
   year: number; age: number; clubId: string | null; position: Position; overall: number; role: Role; temperament: string;
+  /** Valor de mercado em € (v2.33): a regra do mercado, com o efeito Seleção. */
+  marketValueEUR: number;
   /** Estado que o evento lê e muda (moral, idolatria, patrimônio...), já com o que aconteceu neste semestre. */
   state: Record<string, number | string | boolean>;
   seasons: CareerResult['seasons']; titles: Title[];
@@ -166,6 +168,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   /** Toda decisão passa por aqui (T51): o padrão é a escolha do temperamento, como antes. */
   const ask = (eventId: string, state: Record<string, number | string | boolean> = {}, who = temp) => decide(eventId, who, () => ({
     year: curYear, age: evo.age, clubId, position, overall: ov(evo), role: curRole, temperament: who,
+    marketValueEUR: Math.round(marketValue(ov(evo), evo.age) * selectionEffect(prestige, sel, sel.rung).marketMultiplier),
     state: {
       moral: morale, disciplina: discipline, relacaoTecnico: coachRelation, patrimonio: wealth, salarioFator: 1,
       idolatria: clubId ? idol[clubId] ?? 0 : 0, idolatriaCoracao: input.heartClub ? idol[input.heartClub] ?? 0 : 0, ...state,

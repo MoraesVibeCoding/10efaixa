@@ -1,6 +1,7 @@
 import events from '../data/events.json';
 import { simulateCareer, type Decider } from '../engine/career';
 import { autoChoice } from '../engine/events';
+import { marketValue } from '../engine/market';
 import type { CreationInput } from '../engine/player';
 import { runUntilDecision } from './careerRun';
 
@@ -43,6 +44,8 @@ describe('motor interativo (T51a)', () => {
     expect(v.overall).toBeGreaterThan(0);
     expect(typeof v.state.moral).toBe('number');
     expect(v.seasons.length).toBe(v.year - 2026); // temporadas já fechadas; a idade anda de meio em meio ano
+    // valor de mercado em € (v2.33): a mesma regra do mercado, com o efeito Seleção (que só aumenta)
+    expect(v.marketValueEUR).toBeGreaterThanOrEqual(marketValue(v.overall, v.age));
   });
 
   it('respondendo sempre o automático, a carreira termina igual à simulada', () => {
