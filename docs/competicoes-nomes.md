@@ -1,6 +1,6 @@
-# Nomes das competições: oficiais × nomes do jogo (proposta v2.32)
+# Nomes das competições: oficiais × nomes do jogo (v2.32)
 
-**Para aprovação do usuário e revisão jurídica antes do lançamento.**
+**Aprovado pelo usuário em 2026-10-02** (única mudança: Europa League → "Liga Europeia"). Aplicado em `src/i18n/pt-BR/competitions.json`, com teste de guarda em `src/i18n/competitions.test.ts`. **Vai para a revisão jurídica antes do lançamento.**
 
 ## Regra
 
@@ -69,7 +69,7 @@ O termo "olímpico" tem proteção específica na lei brasileira (Lei 9.615/98, 
 |---|---|
 | FA Cup, Copa del Rey, Coppa Italia, DFB-Pokal, Coupe de France, Taça de Portugal | **Copa da Inglaterra / da Espanha / da Itália / da Alemanha / da França / de Portugal** |
 | UEFA Champions League | **Copa Europeia** |
-| UEFA Europa League | **Copa Europeia 2** |
+| UEFA Europa League | **Liga Europeia** (decisão do usuário; **conferir na revisão jurídica**: o nome oficial em português é "Liga Europa", muito próximo. Alternativa pronta: "Copa Europeia 2") |
 
 ## Ligas fora do eixo
 
@@ -89,7 +89,7 @@ O termo "olímpico" tem proteção específica na lei brasileira (Lei 9.615/98, 
 | Campeão da Copinha | **Campeão da Copa de Juniores** |
 | "numa Copa do Mundo" (texto das cenas) | **"num Mundial"** |
 
-## Como fica no código (depois da aprovação)
+## Como ficou no código
 
 - **Nomes no i18n:** os nomes visíveis passam a vir só do `src/i18n/pt-BR`. Os dados (`leagues.json`, `europe.json`, `cups.json`, `nationalTournaments.json`) guardam apenas ids.
 - **Teste de guarda:** uma lista de nomes oficiais proibidos (Brasileirão, Libertadores, Champions, Premier League, Copa do Mundo, Olimpíadas…) faz o teste falhar se algum aparecer em textos do jogo, na arte ou nos prompts.

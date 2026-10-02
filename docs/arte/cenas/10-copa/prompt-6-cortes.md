@@ -1,6 +1,6 @@
-# Cena 10 — Copa do Mundo — os 6 cortes de uma vez
+# Cena 10 — Mundial de Seleções — os 6 cortes de uma vez
 
-**Usada em:** Convocação que vira Copa do Mundo e os momentos do torneio (herói ou vilão da Copa).
+**Usada em:** Convocação que vira Mundial de Seleções e os momentos do torneio (herói ou vilão da Copa).
 
 **Como usar:** abra uma conversa nova no Gemini, cole tudo o que está dentro do bloco abaixo e envie. Se ele gerar menos de 6 imagens, responda `Continue with the next image.` até completar.
 

@@ -1,6 +1,7 @@
 import app from './pt-BR/app.json';
 import archetypes from './pt-BR/archetypes.json';
 import attributes from './pt-BR/attributes.json';
+import competitions from './pt-BR/competitions.json';
 import creation from './pt-BR/creation.json';
 import events from './pt-BR/events.json';
 import nicknames from './pt-BR/nicknames.json';
@@ -13,7 +14,7 @@ import ui from './pt-BR/ui.json';
 export type Params = Record<string, string | number>;
 type Tree = { [k: string]: string | Tree };
 
-const ptBR = { app, archetypes, attributes, creation, events, nicknames, positions, preview, scenes, ui } as unknown as Tree;
+const ptBR = { app, archetypes, attributes, competitions, creation, events, nicknames, positions, preview, scenes, ui } as unknown as Tree;
 
 /** Desce na árvore; aceita chaves que contêm ponto (ex.: "error" → "name.blocked"). */
 function lookup(node: string | Tree | undefined, parts: string[]): string | Tree | undefined {

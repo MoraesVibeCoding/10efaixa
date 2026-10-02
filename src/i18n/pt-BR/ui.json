@@ -20,18 +20,18 @@
   "clube": "clube do coração"
  },
  "titulo": {
-  "copaDoMundo": "Copa do Mundo",
-  "champions": "Copa europeia",
-  "libertadores": "Copa continental",
+  "copaDoMundo": "Mundial de Seleções",
+  "champions": "Copa Europeia",
+  "libertadores": "Copa Continental",
   "serieA": "Série A",
   "ligaNacional": "Liga nacional",
-  "copaAmerica": "Copa América",
-  "europaLeague": "Copa europeia secundária",
-  "olimpiadas": "Ouro olímpico",
-  "sulAmericana": "Copa continental secundária",
-  "copaDoBrasil": "Copa do Brasil",
+  "copaAmerica": "Continental de Seleções",
+  "europaLeague": "Liga Europeia",
+  "olimpiadas": "Ouro no Sub-23",
+  "sulAmericana": "Copa Continental 2",
+  "copaDoBrasil": "Copa Nacional",
   "copaNacional": "Copa nacional",
-  "copaDoNordeste": "Copa do Nordeste",
+  "copaDoNordeste": "Copa Regional do Nordeste",
   "serieB": "Série B",
   "serieC": "Série C",
   "serieD": "Série D",
@@ -97,7 +97,7 @@
   "faltam": "Ainda faltam",
   "meta": {
    "serieA": "Série A",
-   "libertadores": "Libertadores",
+   "libertadores": "Copa Continental",
    "selecao": "Seleção",
    "camisa10": "Camisa 10"
   }

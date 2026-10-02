@@ -51,7 +51,7 @@ Pare e peça minha aprovação nos pontos da seção 15 do SPEC: após T13, T40,
 - **Sem escudos oficiais** de clubes nem da CBF. Clubes usam **emblemas originais** que evocam o nome ou a cidade (SPEC v2.26): nunca o escudo oficial nem elemento, forma ou disposição dele, monograma, mascote oficial, estrelas ou ano de fundação. Revisão jurídica antes do lançamento.
 - **Lendas reais** só como texto descritivo no campo `inspiracao`, controlado pela flag `inspiracaoLendas`. Nunca imagem, rosto ou visual característico de pessoa real.
 - **Todos os atletas da carreira são fictícios.** Nome e apelido passam pelo filtro de palavras bloqueadas.
-- **Prêmios com nomes descritivos**, nunca marcas registradas.
+- **Prêmios e competições com nomes descritivos** (SPEC v2.32, `src/i18n/pt-BR/competitions.json`), nunca nomes oficiais ou marcas registradas (Brasileirão, Libertadores, Copa do Mundo, Olimpíadas, Champions...).
 - **Zoeira só com o próprio jogador**, nunca com clubes, torcidas ou pessoas reais.
 - **Dados oficiais** (formatos de campeonatos, número de clubes, calendários, valores de mercado) sempre com **fonte e data** no arquivo de dados. Transfermarkt só por consulta manual, sem raspagem.
 - **Privacidade:** nenhum dado pessoal em analytics, Sentry, URLs ou logs. Sem cookies de rastreamento.

@@ -1,6 +1,6 @@
-# Cena 10 — Copa do Mundo — os 6 cortes de uma vez
+# Cena 10 — Mundial de Seleções — os 6 cortes de uma vez
 
-**Usada em:** Copa do Mundo, quando o jogador é goleiro.
+**Usada em:** Mundial de Seleções, quando o jogador é goleiro.
 
 **Como usar:** abra uma conversa nova no Gemini, cole tudo o que está dentro do bloco abaixo e envie. Se ele gerar menos de 6 imagens, responda `Continue with the next image.` até completar.
 

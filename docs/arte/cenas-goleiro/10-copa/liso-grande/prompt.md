@@ -1,10 +1,10 @@
-# Cena 10 — Copa do Mundo (goleiro) — corte Liso grande
+# Cena 10 — Mundial de Seleções (goleiro) — corte Liso grande
 
 > **INSTRUCTIONS FOR THE ASSISTANT — READ FIRST**
 > Start from a clean slate. Clear and ignore everything from earlier in this conversation and from any previous conversation: earlier prompts, earlier images, earlier styles and earlier corrections. Use only what is written in this file.
 > Then generate one image following the section "Prompt" below. The sections in Portuguese are notes for the human reviewer and are not part of the request.
 
-**Usada em:** Copa do Mundo, quando o jogador é goleiro.
+**Usada em:** Mundial de Seleções, quando o jogador é goleiro.
 
 **Como gerar:** abra uma conversa nova e gere do zero com o prompt abaixo. Para reforçar o traço, anexe uma cena aprovada do lote 1 (por exemplo `cenas/04-penalti/liso-grande/imagem.jpeg`) e acrescente no fim: `Use the attached image only as a reference for the painting style and for the player's hair. Do not copy its scene.`
 
