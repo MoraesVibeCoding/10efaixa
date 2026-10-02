@@ -57,6 +57,8 @@ describe('tokens visuais (T49, SPEC 7)', () => {
     expect(parseFloat(tokens.tipo.corpo)).toBeGreaterThanOrEqual(1);
     expect(parseFloat(tokens.tipo.apoio)).toBeGreaterThanOrEqual(0.875);
     expect(parseFloat(tokens.toque.minimo)).toBeGreaterThanOrEqual(3);
+    // T50: faixas de escolha da criação; nunca abaixo dos 44 px (2,75rem) do WCAG 2.5.5.
+    expect(parseFloat(tokens.toque.compacto)).toBeGreaterThanOrEqual(2.75);
   });
 
   it('CSS: claro por padrão, escuro pela preferência do aparelho e forçado por data-tema', () => {

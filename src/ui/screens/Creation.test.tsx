@@ -1,6 +1,7 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { CREATION_STEPS } from '../../state/flow';
 import { t } from '../../i18n';
+import avatarData from '../../data/avatar.json';
 import { Creation } from './Creation';
 
 // T50 (a): esqueleto do assistente de criação (SPEC 6.1) e o passo do nome com o filtro.
@@ -65,6 +66,56 @@ describe('assistente de criação (T50)', () => {
     const { onExit } = setup();
     fireEvent.click(screen.getByRole('button', { name: t('ui.criacao.voltar') }));
     expect(onExit).toHaveBeenCalledOnce();
+  });
+
+  describe('aparência (T50b): só visual, com a figurinha ao vivo', () => {
+    const toLook = () => {
+      setup();
+      fireEvent.change(nameInput(), { target: { value: 'Dudu Maestro' } });
+      while (!screen.queryByRole('heading', { level: 1, name: t('ui.criacao.passos.aparencia') })) advance();
+    };
+    const group = (k: string) => screen.getByRole('group', { name: t(`ui.criacao.aparencia.${k}`) });
+
+    it('mostra os grupos de escolha com opções de rádio e um valor já marcado em cada', () => {
+      toLook();
+      for (const k of ['pele', 'cabelo', 'corDoCabelo', 'barba', 'faixa', 'chuteira']) {
+        const radios = within(group(k)).getAllByRole('radio');
+        expect(radios.length).toBeGreaterThan(1);
+        expect(radios.filter((r) => (r as HTMLInputElement).checked)).toHaveLength(1);
+      }
+      expect(within(group('pele')).getAllByRole('radio')).toHaveLength(10);
+      expect(within(group('cabelo')).getAllByRole('radio')).toHaveLength(8);
+    });
+
+    it('a aparência padrão (avatar.json) aponta para opções que existem', () => {
+      const { skinTones, hairColors, styles, escolhas } = avatarData;
+      const d = escolhas.padrao;
+      expect(skinTones.map((o) => o.id)).toContain(d.skin);
+      expect(styles.hair).toContain(d.hairStyle);
+      expect(hairColors.map((o) => o.id)).toContain(d.hairColor);
+      expect(escolhas.chuteiras.map((o) => o.id)).toContain(d.boots);
+      expect([null, ...styles.beards]).toContain(d.beard);
+      expect([null, ...escolhas.faixas.map((o) => o.id)]).toContain(d.headband);
+    });
+
+    it('a figurinha ao vivo mostra o nome digitado', () => {
+      toLook();
+      expect(screen.getByText('Dudu Maestro', { selector: '.figurinha__nome' })).toBeInTheDocument();
+    });
+
+    it('trocar o cabelo atualiza a descrição anunciada da prévia', () => {
+      toLook();
+      fireEvent.click(within(group('cabelo')).getByRole('radio', { name: t('creation.hairStyle.black-power') }));
+      expect(screen.getByRole('status')).toHaveTextContent(new RegExp(t('creation.hairStyle.black-power'), 'i'));
+    });
+
+    it('a escolha continua marcada depois de voltar e avançar', () => {
+      toLook();
+      fireEvent.click(within(group('barba')).getByRole('radio', { name: t('creation.beard.cavanhaque') }));
+      fireEvent.click(screen.getByRole('button', { name: t('ui.criacao.voltar') }));
+      advance();
+      expect(within(group('barba')).getByRole('radio', { name: t('creation.beard.cavanhaque') })).toBeChecked();
+    });
   });
 
   it('o título do passo recebe o foco ao trocar de passo (leitor de tela anuncia o passo novo)', () => {

@@ -153,5 +153,60 @@
    "#D62839"
   ],
   "max": 4
+ },
+ "escolhas": {
+  "_nota": "T50 (6.17): opções do jogador na criação. Só visual: nunca entra no motor.",
+  "padrao": {
+   "skin": "t6",
+   "hairStyle": "curto",
+   "hairColor": "preto",
+   "beard": null,
+   "headband": null,
+   "boots": "preta"
+  },
+  "chuteiras": [
+   {
+    "id": "preta",
+    "hex": "#1C1C1C"
+   },
+   {
+    "id": "branca",
+    "hex": "#F2F4EF"
+   },
+   {
+    "id": "amarela",
+    "hex": "#FFC21A"
+   },
+   {
+    "id": "vermelha",
+    "hex": "#D62839"
+   },
+   {
+    "id": "azul",
+    "hex": "#1F5FBF"
+   },
+   {
+    "id": "laranja",
+    "hex": "#F07F1E"
+   }
+  ],
+  "faixas": [
+   {
+    "id": "branca",
+    "hex": "#F2F4EF"
+   },
+   {
+    "id": "preta",
+    "hex": "#1C1C1C"
+   },
+   {
+    "id": "amarela",
+    "hex": "#FFC21A"
+   },
+   {
+    "id": "vermelha",
+    "hex": "#D62839"
+   }
+  ]
  }
 }

@@ -128,6 +128,16 @@
    "comemoracao": "Como ele comemora o gol?",
    "origem": "De onde ele vem?",
    "pernaBoa": "Qual é a perna boa?"
+  },
+  "aparencia": {
+   "pele": "Tom de pele",
+   "cabelo": "Cabelo",
+   "corDoCabelo": "Cor do cabelo",
+   "barba": "Barba",
+   "faixa": "Faixa de cabelo",
+   "chuteira": "Chuteira",
+   "aviso": "Só muda o visual. Não mexe em nenhum atributo.",
+   "descricao": "Prévia: pele {pele}, cabelo {cabelo} {cor}, {barba}, {faixa}, chuteira {chuteira}"
   }
  }
 }

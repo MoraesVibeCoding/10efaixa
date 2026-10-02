@@ -24,6 +24,16 @@ describe('figurinha do jogador (T49c, SPEC v2.26)', () => {
     expect(foto.style.getPropertyValue('--faixa2')).toBe(kit.camisa[1] ?? kit.detalhe);
   });
 
+  it('em criação (T50): sem OVR, emblema nem clube ainda; faixas no uniforme neutro', () => {
+    const { container } = render(<Figurinha name="Zé" />);
+    expect(screen.getByText('Zé')).toBeInTheDocument();
+    expect(container.querySelector('.figurinha__over')).toBeNull();
+    expect(container.querySelector('[data-emblema]')).toBeNull();
+    expect(container.querySelector('.figurinha__clube')).toBeNull();
+    const neutral = kitOf('');
+    expect(container.querySelector<HTMLElement>('.figurinha__foto')!.style.getPropertyValue('--faixa1')).toBe(neutral.camisa[0]);
+  });
+
   it('com avatar, mostra o busto montado pela arte provisória, de frente e com a camisa do clube', async () => {
     const { container } = render(<Figurinha name="Zé" number={8} overall={60} position="meia" clubId="palmeiras" avatar={AVATAR} />);
     await waitFor(() => expect(container.querySelector('img.figurinha__retrato')).not.toBeNull());

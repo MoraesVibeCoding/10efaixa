@@ -87,5 +87,59 @@
     "capitao": "Capitão",
     "professor": "Professor",
     "maquina": "Máquina"
+  },
+  "skin": {
+    "t1": "Tom 1",
+    "t2": "Tom 2",
+    "t3": "Tom 3",
+    "t4": "Tom 4",
+    "t5": "Tom 5",
+    "t6": "Tom 6",
+    "t7": "Tom 7",
+    "t8": "Tom 8",
+    "t9": "Tom 9",
+    "t10": "Tom 10"
+  },
+  "hairStyle": {
+    "raspado": "Raspado",
+    "curto": "Curto",
+    "cacheado": "Cacheado",
+    "crespo": "Crespo",
+    "black-power": "Black power",
+    "dread": "Dread",
+    "moicano": "Moicano",
+    "longo": "Longo"
+  },
+  "hairColor": {
+    "preto": "Preto",
+    "castanhoEscuro": "Castanho-escuro",
+    "castanho": "Castanho",
+    "castanhoClaro": "Castanho-claro",
+    "loiroEscuro": "Loiro-escuro",
+    "loiro": "Loiro",
+    "ruivo": "Ruivo",
+    "descolorido": "Descolorido"
+  },
+  "beard": {
+    "nenhuma": "Sem barba",
+    "rala": "Rala",
+    "cavanhaque": "Cavanhaque",
+    "bigode": "Bigode",
+    "cheia": "Cheia"
+  },
+  "headband": {
+    "nenhuma": "Sem faixa",
+    "branca": "Branca",
+    "preta": "Preta",
+    "amarela": "Amarela",
+    "vermelha": "Vermelha"
+  },
+  "boots": {
+    "preta": "Preta",
+    "branca": "Branca",
+    "amarela": "Amarela",
+    "vermelha": "Vermelha",
+    "azul": "Azul",
+    "laranja": "Laranja"
   }
 }
