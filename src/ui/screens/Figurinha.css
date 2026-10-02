@@ -6,7 +6,7 @@
   padding: 5px 5px 7px;
   border: var(--forma-borda) solid var(--cor-linha);
   border-radius: 6px;
-  background: #FFFFFF;
+  background: var(--cor-sobre-destaque);
   box-shadow: var(--forma-sombra) var(--forma-sombra) 0 var(--cor-destaque);
   color: var(--cor-texto);
   text-align: start;
@@ -26,7 +26,7 @@
   inline-size: 100%;
   block-size: 100%;
   filter:
-    drop-shadow(2px 0 0 #FFFFFF) drop-shadow(-2px 0 0 #FFFFFF) drop-shadow(0 2px 0 #FFFFFF) drop-shadow(0 -2px 0 #FFFFFF)
+    drop-shadow(2px 0 0 var(--cor-sobre-destaque)) drop-shadow(-2px 0 0 var(--cor-sobre-destaque)) drop-shadow(0 2px 0 var(--cor-sobre-destaque)) drop-shadow(0 -2px 0 var(--cor-sobre-destaque))
     drop-shadow(1px 0 0 var(--cor-linha)) drop-shadow(-1px 0 0 var(--cor-linha)) drop-shadow(0 1px 0 var(--cor-linha)) drop-shadow(0 -1px 0 var(--cor-linha));
 }
 .figurinha__numero {
@@ -37,10 +37,25 @@
   font-size: 1.9rem;
   font-weight: 900;
   line-height: 1;
-  color: #FFFFFF;
+  color: var(--cor-sobre-destaque);
   -webkit-text-stroke: 1.5px var(--cor-linha);
   paint-order: stroke;
 }
+.over {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  border: var(--forma-borda) solid var(--medalha-aro);
+  border-radius: var(--forma-raio-cartao);
+  background: linear-gradient(160deg, var(--medalha-clara), var(--medalha-escura)) center / cover;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.45);
+  color: var(--medalha-texto);
+  font-family: var(--fonte-titulo);
+  line-height: 1;
+}
+/* sobre a arte pintada, um contorno suave na cor oposta segura a leitura do número */
+.over[data-medalha='bronze'], .over[data-medalha='esmeralda'], .over[data-medalha='diamante'] { text-shadow: var(--forma-contorno-numero); }
+.over__numero { font-weight: 900; font-variant-numeric: tabular-nums; }
 .figurinha__over {
   position: absolute;
   inset-inline-start: 4px;

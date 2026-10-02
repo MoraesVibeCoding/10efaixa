@@ -1,0 +1,9 @@
+{
+ "_nota": "Álbum da carreira (SPEC v2.26): metas que aparecem como espaços vazios até serem conquistadas. 'titulo' = id de legacy.json (conquista quando o jogador tem o título); 'marco' = marco da carreira (convocação, camisa 10), informado pela tela a partir do motor (T51).",
+ "metas": [
+  { "id": "serieA", "titulo": "serieA" },
+  { "id": "libertadores", "titulo": "libertadores" },
+  { "id": "selecao", "marco": "selecao" },
+  { "id": "camisa10", "marco": "camisa10" }
+ ]
+}

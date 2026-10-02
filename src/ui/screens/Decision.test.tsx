@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import tokens from '../theme/tokens.json';
 import { resolve } from 'node:path';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import events from '../../data/events.json';
@@ -104,23 +105,39 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
     expect(bar).toHaveAttribute('aria-valuetext', t('ui.decisao.idade', { idade: 17 }));
   });
 
-  it('caixa do jogador compacta: escudo, nome, posição, clube e o overall em número (SPEC v2.16); idade e papel numa linha só', () => {
+  it('figurinha do jogador (SPEC v2.26): nome, "meia do Flamengo", OVR na medalha da faixa; é o botão que abre "Minha carreira"', () => {
     setup();
-    const who = screen.getByRole('region', { name: t('ui.decisao.jogador') });
-    expect(within(who).getByText('Dudu Maestro')).toBeInTheDocument();
-    expect(within(who).getByText(new RegExp(`${t('positions.meia')}.*Flamengo`))).toBeInTheDocument();
-    expect(within(who).getByRole('img', { name: t('ui.decisao.escudo', { clube: 'Flamengo' }) })).toBeInTheDocument();
-    const card = within(who).getByText('78').closest('[data-medalha]');
-    expect(card).toHaveAttribute('data-medalha', 'platina');
-    expect((card as HTMLElement).style.backgroundImage).toMatch(/platina/);
-    expect(within(who).getByText(new RegExp(t('attributes.band.muitoBom')))).toBeInTheDocument();
-    // a ficha fica sempre à vista (SPEC v2.22): idade, tempo de jogo e salário do mês
-    expect(within(who).getAllByRole('term')).toHaveLength(3);
-    expect(within(who).getByText(t('ui.decisao.idade', { idade: 17 }))).toBeInTheDocument();
-    expect(within(who).getByText(t('ui.papel.titular'))).toBeInTheDocument();
-    expect(within(who).getByText(/R\$\s180\smil/)).toBeInTheDocument();
+    const card = screen.getByRole('button', { name: new RegExp(t('ui.carreira.titulo')) });
+    expect(card.querySelector('.figurinha')).not.toBeNull();
+    expect(within(card).getByText('Dudu Maestro')).toBeInTheDocument();
+    expect(within(card).getByText(t('ui.figurinha.posicaoNoClube', { posicao: t('positions.meia'), prep: t('ui.figurinha.prep.o'), clube: 'Flamengo' }))).toBeInTheDocument();
+    const over = within(card).getByText('78').closest('[data-medalha]');
+    expect(over).toHaveAttribute('data-medalha', 'platina');
+    expect((over as HTMLElement).style.backgroundImage).toMatch(/platina/);
+    expect(within(card).getByText(new RegExp(t('attributes.band.muitoBom')))).toBeInTheDocument();
+  });
+
+  it('título do evento com os selos do jogador ao lado: idade, tempo de jogo e salário do mês sempre à vista (v2.22)', () => {
+    setup();
+    expect(screen.getByRole('heading', { level: 1, name: t(`events.${EVENT}.titulo`) })).toBeInTheDocument();
+    const selos = screen.getByRole('list', { name: t('ui.decisao.ficha') });
+    expect(within(selos).getByText(t('ui.decisao.idade', { idade: 17 }))).toBeInTheDocument();
+    expect(within(selos).getByText(t('ui.papel.titular'))).toBeInTheDocument();
+    expect(within(selos).getByText(/R\$\s180\smil/)).toBeInTheDocument();
     // títulos, atributos e trajetória ficam na gaveta
     expect(screen.queryByRole('list', { name: t('ui.decisao.titulosLista') })).not.toBeInTheDocument();
+  });
+
+  it('álbum da carreira (v2.26): títulos conquistados com ×N e espaços vazios para as metas que faltam', () => {
+    render(<Decision eventId={EVENT} age={24} progress={0.4} player={{ ...PLAYER, titles: ['estadual', 'estadual', 'serieA'] }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    const album = screen.getByRole('region', { name: t('ui.album.titulo') });
+    const got = within(album).getByRole('list', { name: t('ui.album.conquistas') });
+    expect(within(got).getByText(t('ui.titulo.estadual'))).toBeInTheDocument();
+    expect(within(got).getByText(t('ui.decisao.vezes', { n: 2 }))).toBeInTheDocument();
+    const missing = within(album).getByRole('list', { name: t('ui.album.faltam') });
+    expect(within(missing).queryByText(t('ui.titulo.serieA'))).not.toBeInTheDocument();
+    expect(within(missing).getByText(t('ui.album.meta.libertadores'))).toBeInTheDocument();
+    expect(within(missing).getByText(t('ui.album.meta.camisa10'))).toBeInTheDocument();
   });
 
   describe('gaveta "Minha carreira" (SPEC v2.21)', () => {
@@ -320,5 +337,21 @@ describe('tarja de risco nas opções (T49c, SPEC v2.26)', () => {
       expect(b.querySelector('.opcao__risco')).toBeNull();
       expect(b.querySelector('.opcao__fora')).toBeNull();
     }
+  });
+});
+
+describe('contraste das cores de texto (T49c)', () => {
+  it('o verde de destaque (4,34:1 sobre o papel) nunca é cor de texto: só preenchimento, borda ou ícone; texto verde usa --cor-positivo', () => {
+    const css = ['Decision.css', 'Figurinha.css'].map((f) => readFileSync(resolve(__dirname, f), 'utf8')).join('\n');
+    const offenders = [...css.matchAll(/([^{}]+)\{[^}]*(?:^|[\s;{])color:\s*var\(--cor-destaque\)/gm)]
+      .map((m) => m[1]!.trim())
+      .filter((sel) => !sel.split(',').every((x) => /\bsvg\s*$/.test(x.trim())));
+    expect(offenders).toEqual([]);
+  });
+
+  it('a figurinha tem os pares de texto conferidos no tema: marinho e texto suave sobre o papel branco', () => {
+    const pairs = tokens.contraste.texto.map((p) => p.join('/'));
+    expect(pairs).toContain('texto/sobreDestaque');
+    expect(pairs).toContain('textoSuave/sobreDestaque');
   });
 });

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import events from '../../data/events.json';
 import legacy from '../../data/legacy.json';
+import album from '../../data/album.json';
+import type { AvatarSpec } from '../../art/avatar';
 import trophyArt from '../../data/trophyArt.json';
 import { ATTRIBUTES, toBand, type Attributes } from '../../engine/attributes';
 import bands from '../../data/bands.json';
@@ -9,7 +11,7 @@ import { applyOption, type Ctx } from '../../engine/events';
 import { outcomeOf, outcomeVerdict, previewOf, riskOf, RISK_BANDS, timeOutOf, type Outcome, type Preview, type Risk } from '../../engine/preview';
 import previewCfg from '../../data/preview.json';
 import { t } from '../../i18n';
-import tokens from '../theme/tokens.json';
+import { Figurinha } from './Figurinha';
 import './Decision.css';
 
 // T49 (amostra aprovada) e T51: uma decisão por tela, com a cena ao fundo. Só faixas e setas, nunca números de atributo.
@@ -29,6 +31,11 @@ export interface DecisionProps {
     seasons?: Season[];
     /** Atributos de agora. Na gaveta aparecem só em faixa (palavra e barra), nunca em número. */
     attributes?: Attributes;
+    /** Número da camisa e aparência: a figurinha (v2.26). */
+    number?: number;
+    avatar?: AvatarSpec;
+    /** Marcos já alcançados ("selecao", "camisa10"): saem dos espaços vazios do álbum. */
+    milestones?: string[];
   };
   /** Situação atual do jogador (moral, torcida, patrimônio…): o resultado da escolha mostra o ganho e a perda reais sobre ela. */
   state?: Ctx;
@@ -58,10 +65,6 @@ function Arrows({ sentido, intensidade }: Pick<Preview, 'sentido' | 'intensidade
 const TITLE_WEIGHT = legacy.titulos.pontos as Record<string, number>;
 const money = (amount: number, currency: string) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency, notation: 'compact', minimumFractionDigits: 0, maximumFractionDigits: 1 }).format(amount);
-const MEDALS = tokens.medalha as unknown as Record<string, { nome: string }>;
-// arte pintada de cada cartão (docs/arte/cartoes-over); sem a imagem, vale o degradê dos tokens
-const CARD_ART = import.meta.glob('../../assets/cartoes-over/*.webp', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
-const cardArt = (medal: string) => CARD_ART[`../../assets/cartoes-over/${medal}.webp`];
 const clubOf = (id: string) => CLUBS.find((c) => c.id === id);
 
 /** Títulos agrupados por competição, da mais pesada para a mais leve. */
@@ -71,26 +74,15 @@ function rankTitles(titles: string[]) {
   return Object.entries(counts).sort((a, b) => (TITLE_WEIGHT[b[0]] ?? 0) - (TITLE_WEIGHT[a[0]] ?? 0));
 }
 
-/** Escudo estilizado: só as duas cores e a sigla do clube, nunca o escudo oficial (SPEC 11). */
-function Crest({ clubId, small = false }: { clubId: string; small?: boolean }) {
+/** Escudo estilizado pequeno da trajetória: só as duas cores, o nome do clube vem ao lado (SPEC 11). Até os emblemas da T49d. */
+function Crest({ clubId }: { clubId: string }) {
   const club = clubOf(clubId);
   if (!club) return null;
-  // na trajetória o nome do clube vem escrito ao lado: o escudo pequeno é só cor
-  if (small) {
-    return (
+  return (
     <svg className="escudo" viewBox="0 0 44 50" width="18" height="20" aria-hidden="true" focusable="false">
       <path d="M3 3h38v25c0 10-8 16-19 20C11 44 3 38 3 28z" fill={club.cores[0]} />
       <path d="M22 3h19v25c0 10-8 16-19 20z" fill={club.cores[1]} />
       <path d="M3 3h38v25c0 10-8 16-19 20C11 44 3 38 3 28z" fill="none" stroke="currentColor" strokeWidth="3" />
-    </svg>
-    );
-  }
-  return (
-    <svg className="escudo" viewBox="0 0 44 50" width="44" height="50" role="img" aria-label={t('ui.decisao.escudo', { clube: club.nome })}>
-      <path d="M3 3h38v25c0 10-8 16-19 20C11 44 3 38 3 28z" fill={club.cores[0]} />
-      <path d="M22 3h19v25c0 10-8 16-19 20z" fill={club.cores[1]} />
-      <path d="M3 3h38v25c0 10-8 16-19 20C11 44 3 38 3 28z" fill="none" stroke="currentColor" strokeWidth="2" />
-      <text x="22" y="27" textAnchor="middle" className="escudo__sigla">{club.sigla}</text>
     </svg>
   );
 }
@@ -150,6 +142,39 @@ function Levels({ attributes }: { attributes: Attributes }) {
   );
 }
 
+const GOALS = album.metas as { id: string; titulo?: string; marco?: string }[];
+
+/** Metas do álbum ainda não alcançadas: nem o título conquistado, nem o marco da carreira. */
+function missingGoals(titles: string[], milestones: string[]) {
+  return GOALS.filter((g) => {
+    const won = g.titulo ? titles.includes(g.titulo) : false;
+    const reached = g.marco ? milestones.includes(g.marco) : false;
+    return !won && !reached;
+  });
+}
+
+/** Álbum da carreira (v2.26): as conquistas em cromo e, tracejadas, as metas que ainda faltam. */
+function Album({ titles, milestones }: { titles: string[]; milestones: string[] }) {
+  const missing = missingGoals(titles, milestones);
+  return (
+    <section className="album" aria-labelledby="album-titulo">
+      <h2 id="album-titulo">{t('ui.album.titulo')}</h2>
+      <ul className="album__cromos" aria-label={t('ui.album.conquistas')}>
+        {rankTitles(titles).map(([id, n]) => (
+          <li key={id} className="album__cromo">
+            <TrophyIcon id={id} />
+            <span>{t(`ui.titulo.${id}`)}</span>
+            {n > 1 && <strong>{t('ui.decisao.vezes', { n })}</strong>}
+          </li>
+        ))}
+      </ul>
+      <ul className="album__cromos" aria-label={t('ui.album.faltam')}>
+        {missing.map((g) => <li key={g.id} className="album__vazio">{t(`ui.album.meta.${g.id}`)}</li>)}
+      </ul>
+    </section>
+  );
+}
+
 function recentFirst(seasons: Season[]) {
   return [...seasons].reverse();
 }
@@ -197,7 +222,7 @@ function Career({ player, onClose }: { player: DecisionProps['player']; onClose:
                 {seasons.map((s) => (
                   <tr key={s.age}>
                     <td>{s.age}</td>
-                    <td><span className="trajetoria__clube"><Crest clubId={s.clubId} small />{clubOf(s.clubId)?.nome}</span></td>
+                    <td><span className="trajetoria__clube"><Crest clubId={s.clubId} />{clubOf(s.clubId)?.nome}</span></td>
                     <td>{s.overall}</td>
                   </tr>
                 ))}
@@ -289,9 +314,6 @@ function Result({ eventId, optionId, state, auto, onDone }: { eventId: string; o
 }
 
 export function Decision({ eventId, age, progress, scene, player, state = {}, ritmo = 'normal', onChoose, onContinue }: DecisionProps) {
-  const club = clubOf(player.clubId);
-  const band = toBand(player.overall).key;
-  const medal = MEDALS[band]!.nome;
   const [career, setCareer] = useState(false);
   // sem genérico aqui: a guarda de texto fora do i18n confunde o genérico com JSX
   const opener = useRef(null as HTMLButtonElement | null);
@@ -337,48 +359,22 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, ri
         <span className="faixa__feito" style={{ inlineSize: `${percent}%` }} />
       </div>
       <div className="decisao__painel" inert={overlay}>
-        <section className="jogador caixa" aria-label={t('ui.decisao.jogador')}>
-          <button ref={opener} type="button" className="jogador__abrir" aria-haspopup="dialog" aria-expanded={career} onClick={() => { setCareer(true); }}>
-            <span className="jogador__topo">
-              <Crest clubId={player.clubId} />
-              <span className="jogador__quem">
-                <span className="jogador__nome">{player.name}</span>
-                <span className="jogador__clube">{t('ui.decisao.clubePosicao', { posicao: t(`positions.${player.position}`), clube: club?.nome ?? '' })}</span>
-                <span className="jogador__mais">
-                  {t('ui.carreira.titulo')}
-                  <svg viewBox="0 0 10 16" width="7" height="11" aria-hidden="true" focusable="false">
-                    <path d="M1.5 1.5 8 8l-6.5 6.5" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="square" />
-                  </svg>
-                </span>
-              </span>
-              <span className="over" data-medalha={medal} style={cardArt(medal) ? { backgroundImage: `url(${cardArt(medal)})` } : undefined}>
-                <span className="over__rotulo">
-                  {t('ui.decisao.over')}
-                  <span className="sr-only">{t('ui.decisao.faixaOver', { faixa: t(`attributes.band.${band}`) })}</span>
-                </span>
-                <span className="over__numero">{player.overall}</span>
-              </span>
-            </span>
-          </button>
-          <dl className="ficha">
-            <div>
-              <dt>{t('ui.decisao.idadeRotulo')}</dt>
-              <dd>{t('ui.decisao.idade', { idade: age })}</dd>
-            </div>
-            <div>
-              <dt>{t('ui.decisao.tempoDeJogo')}</dt>
-              <dd>{t(`ui.papel.${player.role}`)}</dd>
-            </div>
-            <div>
-              <dt>{t('ui.decisao.salario')}</dt>
-              <dd>{money(player.monthlySalary.amount, player.monthlySalary.currency)}</dd>
-            </div>
-          </dl>
-        </section>
-        <header className="decisao__cabeca">
-          <h1>{t(`events.${eventId}.titulo`)}</h1>
-          {text && <p className="decisao__historia">{text}</p>}
-        </header>
+        <button ref={opener} type="button" className="jogador__abrir" aria-haspopup="dialog" aria-expanded={career} onClick={() => { setCareer(true); }}>
+          <Figurinha name={player.name} number={player.number} overall={player.overall} position={player.position} clubId={player.clubId} avatar={player.avatar} />
+          <span className="jogador__mais">
+            {t('ui.carreira.titulo')}
+            <svg viewBox="0 0 10 16" width="7" height="11" aria-hidden="true" focusable="false">
+              <path d="M1.5 1.5 8 8l-6.5 6.5" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="square" />
+            </svg>
+          </span>
+        </button>
+        <h1 className="decisao__titulo">{t(`events.${eventId}.titulo`)}</h1>
+        <ul className="selos" aria-label={t('ui.decisao.ficha')}>
+          <li>{t('ui.decisao.idade', { idade: age })}</li>
+          <li>{t(`ui.papel.${player.role}`)}</li>
+          <li>{t('ui.decisao.porMes', { valor: money(player.monthlySalary.amount, player.monthlySalary.currency) })}</li>
+        </ul>
+        {text && <p className="decisao__historia">{text}</p>}
         <div className="decisao__opcoes" role="group" aria-label={t('ui.decisao.opcoes')}>
           {options.map((o) => {
             const preview = previewOf(eventId, o.id);
@@ -417,6 +413,7 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, ri
             );
           })}
         </div>
+        <Album titles={player.titles} milestones={player.milestones ?? []} />
       </div>
       {career && <Career player={player} onClose={() => { setCareer(false); }} />}
       {chosen !== null && <Result eventId={eventId} optionId={chosen} state={state} auto={ritmo === 'rapido'} onDone={onDone} />}

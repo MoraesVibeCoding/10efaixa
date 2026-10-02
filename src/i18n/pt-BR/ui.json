@@ -6,20 +6,15 @@
   "opcoes": "O que você faz?",
   "semPrevia": "Sem efeito imediato",
   "previa": ": {sentido} {intensidade}",
-  "jogador": "Seu jogador",
-  "escudo": "Escudo estilizado do {clube}",
-  "clubePosicao": "{posicao} · {clube}",
-  "over": "OVR",
   "titulosLista": "Títulos conquistados",
-  "tempoDeJogo": "Tempo de jogo",
-  "salario": "Salário/mês",
   "nenhumTitulo": "Nenhum ainda",
   "faixaOver": " ({faixa})",
-  "idadeRotulo": "Idade",
   "vezes": "×{n}",
   "ganha": "Você ganha",
   "emTroca": "Em troca",
-  "muda": "Muda"
+  "muda": "Muda",
+  "ficha": "Ficha do jogador",
+  "porMes": "{valor}/mês"
  },
  "amostra": {
   "clube": "clube do coração"
@@ -95,5 +90,16 @@
    "a": "da"
   },
   "over": "OVR"
+ },
+ "album": {
+  "titulo": "Álbum da carreira",
+  "conquistas": "Conquistas",
+  "faltam": "Ainda faltam",
+  "meta": {
+   "serieA": "Série A",
+   "libertadores": "Libertadores",
+   "selecao": "Seleção",
+   "camisa10": "Camisa 10"
+  }
  }
 }

@@ -11,7 +11,7 @@ import './Figurinha.css';
 // T49c (SPEC v2.26): o jogador como figurinha de álbum. Fundo creme com as faixas do clube nos ombros;
 // o busto tem o contorno branco e a linha marinho do recorte de álbum, que separam a camisa da faixa em qualquer cor.
 export interface FigurinhaProps {
-  name: string; number: number; overall: number; position: string; clubId: string;
+  name: string; number?: number; overall: number; position: string; clubId: string;
   /** Aparência do jogador; o uniforme vem do clube. Sem ela, a figurinha fica só com o fundo. */
   avatar?: AvatarSpec;
 }
@@ -46,9 +46,9 @@ export function Figurinha({ name, number, overall, position, clubId, avatar }: F
     <span className="figurinha">
       <span className="figurinha__foto" style={stripes}>
         {bust && <img className="figurinha__retrato" src={bust} alt="" width="220" height="220" />}
-        <span className="figurinha__numero" aria-hidden="true">{number}</span>
+        {number !== undefined && <span className="figurinha__numero" aria-hidden="true">{number}</span>}
         <span className="figurinha__over over" data-medalha={medal} style={art ? { backgroundImage: `url(${art})` } : undefined}>
-          <span className="sr-only">{t('ui.figurinha.over')}</span>
+          <span className="sr-only">{t('ui.figurinha.over')}{t('ui.decisao.faixaOver', { faixa: t(`attributes.band.${toBand(overall).key}`) })}</span>
           <span className="over__numero">{overall}</span>
         </span>
       </span>

@@ -21,34 +21,44 @@
 
 .decisao__cena {
   inline-size: 100%;
-  /* a pintura é 4:5 com os 40% de baixo escuros; entra cortada por baixo e, em tela baixa, encolhe para as opções caberem */
-  flex: 0 1 calc(min(100vw, 30rem) * 0.46);
-  min-block-size: 4rem;
+  /* a pintura é 4:5 com os 40% de baixo escuros: no celular só a parte de cima aparece;
+     quando falta altura, a cena encolhe (até 7,5rem, que ainda recebe a figurinha) para as opções caberem */
+  flex: 0 1 calc(min(100vw, 30rem) * 0.55);
+  min-block-size: 7.5rem;
   object-fit: cover;
-  object-position: 50% 19%;
+  object-position: 50% 10%;
 }
 
 /* progresso da carreira: a linha de tinta que fecha a cena */
 .faixa { flex: none; block-size: 8px; background: var(--cor-trilho); border-block: var(--forma-borda) solid var(--cor-linha); box-sizing: content-box; }
 .faixa__feito { display: block; block-size: 100%; min-inline-size: 8px; background: var(--cor-destaque); }
 
+/* celular (v2.26): a figurinha sobe sobre a cena; título e selos ao lado dela; a sobra de altura fica antes das opções */
 .decisao__painel {
   flex: 1 0 auto;
   display: grid;
-  /* jogador e cabeça em cima; a sobra de altura fica entre a história e as opções, que encostam no polegar */
-  grid-template-rows: auto auto minmax(var(--espaco-2), 1fr) auto;
-  gap: var(--espaco-3);
-  padding: var(--espaco-3) var(--espaco-4) calc(var(--espaco-3) + env(safe-area-inset-bottom));
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas: "fig titulo" "fig selos" "hist hist" "sobra sobra" "op op";
+  /* só a sobra é flexível: com duas linhas 1fr o navegador as iguala e abre um vão mesmo sem espaço */
+  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+  column-gap: var(--espaco-3);
+  row-gap: var(--espaco-2);
+  padding: 0 var(--espaco-4) calc(var(--espaco-4) + env(safe-area-inset-bottom));
 }
 
-/* ---------- quem decide: a caixa inteira é o botão que abre a gaveta "Minha carreira" */
-.jogador { display: grid; }
+/* ---------- quem decide: a figurinha é o botão que abre a gaveta "Minha carreira" */
 .jogador__abrir {
+  grid-area: fig;
+  align-self: start;
+  position: relative;
+  z-index: 1;
   display: grid;
-  inline-size: 100%;
+  justify-items: start;
+  gap: var(--espaco-1);
+  margin-block-start: -4rem;
   padding: 0;
   border: 0;
-  border-radius: calc(var(--forma-raio) - var(--forma-borda));
+  border-radius: 6px;
   background: none;
   color: inherit;
   font: inherit;
@@ -58,59 +68,15 @@
   touch-action: manipulation;
 }
 .jogador__abrir:focus-visible { outline-offset: 4px; }
-.jogador__topo {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  column-gap: var(--espaco-3);
-  padding: var(--espaco-2) var(--espaco-3);
+@media (hover: hover) {
+  .jogador__abrir:hover .figurinha { translate: -1px -1px; box-shadow: calc(var(--forma-sombra) + 1px) calc(var(--forma-sombra) + 1px) 0 var(--cor-destaque); }
 }
+.jogador__abrir:active .figurinha { translate: var(--forma-sombra) var(--forma-sombra); box-shadow: none; }
 .escudo { flex: none; color: var(--cor-texto); }
-.escudo__sigla {
-  font-family: var(--fonte-titulo);
-  font-size: 15px;
-  font-weight: 900;
-  letter-spacing: 0.02em;
-  fill: var(--cor-sigla-texto);
-  stroke: var(--cor-sigla-contorno);
-  stroke-width: 3px;
-  paint-order: stroke;
-}
-.jogador__quem { display: grid; }
-.jogador__nome {
-  font-family: var(--fonte-titulo);
-  font-size: var(--tipo-nome);
-  font-weight: 900;
-  line-height: 1;
-  text-transform: uppercase;
-  overflow-wrap: break-word;
-}
-.jogador__clube { margin-block-start: 2px; font-size: var(--tipo-apoio); line-height: 1.3; color: var(--cor-texto-suave); }
 
-/* cartão do Over: a cor é a da faixa de overall, do bronze ao diamante */
-.over {
-  display: grid;
-  justify-items: center;
-  align-content: center;
-  gap: 1px;
-  inline-size: 3.5rem;
-  block-size: 3.75rem;
-  border: var(--forma-borda) solid var(--medalha-aro);
-  border-radius: var(--forma-raio-cartao);
-  background: linear-gradient(160deg, var(--medalha-clara), var(--medalha-escura)) center / cover;
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.45);
-  color: var(--medalha-texto);
-  font-family: var(--fonte-titulo);
-  line-height: 1;
-}
-/* sobre a arte pintada, um contorno suave na cor oposta segura a leitura do número */
-.over[data-medalha='bronze'], .over[data-medalha='esmeralda'], .over[data-medalha='diamante'] { text-shadow: var(--forma-contorno-numero); }
-.over__rotulo { font-size: var(--tipo-apoio); font-weight: 800; letter-spacing: 0.08em; }
-.over__numero { font-size: var(--tipo-over); font-weight: 900; font-variant-numeric: tabular-nums; }
-
+/* rótulos pequenos em caixa normal (v2.26): a caixa alta fica para os títulos */
 .jogador__mais,
 .previa__rotulo,
-.ficha dt,
 .gaveta__bloco h3,
 .niveis__faixa,
 .trajetoria th {
@@ -118,41 +84,35 @@
   font-size: var(--tipo-apoio);
   font-weight: 800;
   line-height: 1.15;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
 }
-.jogador__mais { display: inline-flex; align-items: center; gap: var(--espaco-2); margin-block-start: 3px; color: var(--cor-destaque); }
-@media (hover: hover) {
-  .jogador__abrir:hover { background: var(--cor-fundo); }
-}
-.jogador__abrir:active { background: var(--cor-destaque); color: var(--cor-sobre-destaque); }
-.jogador__abrir:active :is(.jogador__mais, .jogador__clube, .escudo) { color: inherit; }
-
-/* a ficha fica sempre à vista, no pé da caixa */
-.ficha {
-  display: grid;
-  /* a idade é curta e fica com a largura do próprio texto; tempo de jogo e salário dividem o resto, sem quebrar o rótulo */
-  grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
-  margin: 0;
-  border-block-start: var(--forma-borda) solid var(--cor-linha);
-}
-.ficha > div { display: grid; align-content: start; padding: 3px var(--espaco-3) var(--espaco-1); }
-.ficha > div + div { border-inline-start: var(--forma-borda) solid var(--cor-linha); }
-.ficha dt { white-space: nowrap; color: var(--cor-texto-suave); }
-.ficha dd { margin: 0; font-weight: 700; line-height: 1.25; white-space: nowrap; }
+.jogador__mais { display: inline-flex; align-items: center; gap: var(--espaco-2); color: var(--cor-positivo); }
 
 /* ---------- o que aconteceu */
-.decisao__cabeca { display: grid; gap: var(--espaco-2); }
-.decisao__cabeca h1 {
+.decisao__titulo {
+  grid-area: titulo;
+  align-self: end;
+  padding-block-start: var(--espaco-3);
   font-size: var(--tipo-titulo);
   font-weight: 900;
   line-height: 1;
   text-transform: uppercase;
 }
-.decisao__historia { max-inline-size: 44ch; font-size: var(--tipo-historia); line-height: 1.45; color: var(--cor-texto-suave); }
+.selos { grid-area: selos; align-self: start; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.selos li {
+  padding: 1px 9px;
+  border: var(--forma-borda) solid var(--cor-linha);
+  border-radius: 999px;
+  background: var(--cor-superficie);
+  font-size: var(--tipo-apoio);
+  font-weight: 700;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+.decisao__historia { grid-area: hist; max-inline-size: 44ch; padding-block-start: var(--espaco-1); font-size: var(--tipo-historia); line-height: 1.45; color: var(--cor-texto-suave); }
 
 /* ---------- o que você faz */
-.decisao__opcoes { grid-row: 4; display: grid; gap: 0.625rem; }
+.decisao__opcoes { grid-area: op; display: grid; gap: 0.625rem; padding-block-start: var(--espaco-2); }
 .opcao {
   display: grid;
   align-content: center;
@@ -313,7 +273,7 @@
 .niveis { display: grid; gap: var(--espaco-2); margin: 0; padding: 0; list-style: none; }
 .niveis li { display: grid; grid-template-columns: 6.25rem minmax(0, 1fr) 5.5rem; align-items: center; column-gap: var(--espaco-3); }
 .niveis__nome { font-weight: 700; line-height: 1.25; }
-.niveis__faixa { order: 1; color: var(--cor-destaque); text-align: end; white-space: nowrap; }
+.niveis__faixa { order: 1; color: var(--cor-positivo); text-align: end; white-space: nowrap; }
 .nivel { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; block-size: 10px; }
 .nivel i { border: 1px solid var(--cor-linha); background: var(--cor-superficie); }
 .nivel i[data-cheio] { background: var(--cor-destaque); }
@@ -341,15 +301,6 @@
 .trajetoria td:last-child { font-family: var(--fonte-titulo); font-size: var(--tipo-opcao); font-weight: 900; }
 .trajetoria__clube { display: flex; align-items: center; gap: var(--espaco-2); font-weight: 700; }
 
-/* celular baixo: a história aperta um pouco para as três opções caberem sem rolar */
-@media (max-height: 42.5rem) {
-  .decisao__painel { gap: var(--espaco-2); padding-block-start: var(--espaco-2); }
-  .decisao__historia { font-size: var(--tipo-corpo); line-height: 1.35; }
-  .jogador__topo { padding-block: var(--espaco-1); }
-  .decisao__opcoes { gap: 0.4375rem; }
-  .decisao__painel { padding-block-end: calc(var(--espaco-2) + env(safe-area-inset-bottom)); }
-}
-
 @media (min-width: 40rem) {
   .decisao { border-inline: var(--forma-borda) solid var(--cor-linha); }
 }
@@ -376,3 +327,53 @@
 .medidor s[data-cheio] { background: var(--cor-negativo); border-color: var(--cor-negativo); }
 .opcao__fora { color: var(--cor-texto-suave); }
 .opcao[aria-pressed='true'] .opcao__risco, .opcao:active .opcao__risco { background: transparent; color: var(--cor-sobre-destaque); border-color: var(--cor-sobre-destaque); }
+
+/* ---------- álbum da carreira (v2.26): só no computador; no celular os títulos ficam na gaveta */
+.album { display: none; }
+.album h2 { font-size: var(--tipo-opcao); font-weight: 900; line-height: 1; }
+.album__cromos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--espaco-2); margin: 0; padding: 0; list-style: none; }
+.album__cromo, .album__vazio {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 2px;
+  min-block-size: 5rem;
+  padding: var(--espaco-1);
+  border-radius: var(--forma-raio);
+  font-size: var(--tipo-apoio);
+  line-height: 1.2;
+  text-align: center;
+}
+.album__cromo { border: var(--forma-borda) solid var(--cor-linha); background: var(--cor-superficie); box-shadow: 2px 2px 0 var(--cor-destaque); font-weight: 700; }
+.album__cromo strong { font-family: var(--fonte-titulo); font-weight: 900; }
+.album__vazio { border: var(--forma-borda) dashed var(--cor-texto-suave); color: var(--cor-texto-suave); }
+
+/* ---------- computador (v2.26): figurinha e álbum à esquerda; cena, título, história e as três opções lado a lado à direita */
+@media (min-width: 64rem) {
+  .decisao {
+    display: grid;
+    grid-template-columns: 18rem minmax(0, 1fr) auto;
+    grid-template-areas: "fig cena cena" "album faixa faixa" "album titulo selos" "album hist hist" "album op op" "album . .";
+    grid-template-rows: auto auto auto auto auto 1fr;
+    column-gap: 1.75rem;
+    max-inline-size: 77.5rem;
+    block-size: auto;
+    padding: 1.75rem;
+    border-inline: 0;
+  }
+  .decisao__painel { display: contents; }
+  .decisao__cena { grid-area: cena; block-size: 24rem; min-block-size: 0; border: var(--forma-borda) solid var(--cor-linha); border-block-end: 0; border-radius: var(--forma-raio) var(--forma-raio) 0 0; object-position: 50% 26%; }
+  .faixa { grid-area: faixa; border-inline: var(--forma-borda) solid var(--cor-linha); }
+  .jogador__abrir { margin: 0; }
+  .jogador__abrir .figurinha { inline-size: 100%; padding: 8px 8px 12px; }
+  .jogador__abrir .figurinha__numero { font-size: 3.2rem; }
+  .jogador__abrir .figurinha__over { inline-size: 3.5rem; block-size: 3.875rem; inset-inline-start: 8px; inset-block-end: 12px; }
+  .jogador__abrir .figurinha__over .over__numero { font-size: 2rem; }
+  .jogador__abrir .figurinha__nome { margin-block-start: 10px; font-size: 1.6rem; }
+  .jogador__abrir .figurinha__clube { font-size: var(--tipo-apoio); }
+  .decisao__titulo { align-self: end; padding-block-start: var(--espaco-4); }
+  .selos { align-self: end; justify-content: end; }
+  .decisao__historia { max-inline-size: none; padding-block-start: var(--espaco-2); }
+  .decisao__opcoes { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; padding-block-start: var(--espaco-2); }
+  .album { display: grid; grid-area: album; align-content: start; gap: var(--espaco-3); padding-block-start: var(--espaco-4); }
+}
