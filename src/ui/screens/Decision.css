@@ -72,7 +72,6 @@
   .jogador__abrir:hover .figurinha { translate: -1px -1px; box-shadow: calc(var(--forma-sombra) + 1px) calc(var(--forma-sombra) + 1px) 0 var(--cor-destaque); }
 }
 .jogador__abrir:active .figurinha { translate: var(--forma-sombra) var(--forma-sombra); box-shadow: none; }
-.escudo { flex: none; color: var(--cor-texto); }
 
 /* rótulos pequenos em caixa normal (v2.26): a caixa alta fica para os títulos */
 .jogador__mais,

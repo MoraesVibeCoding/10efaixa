@@ -365,3 +365,21 @@ describe('camadas (T49c)', () => {
     expect(z('.resultado')).toBeGreaterThan(z('.jogador__abrir'));
   });
 });
+
+describe('emblemas na tela (T49d)', () => {
+  const seasons = [{ age: 20, clubId: 'bahia', overall: 69 }, { age: 21, clubId: 'flamengo', overall: 72 }];
+  it('trajetória: cada temporada com o emblema do clube (simplificado, decorativo) ao lado do nome', () => {
+    render(<Decision eventId={EVENT} age={22} progress={0.3} player={{ ...PLAYER, seasons }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(t('ui.carreira.titulo')) }));
+    const rows = within(screen.getByRole('table')).getAllByRole('row').slice(1);
+    expect(rows[0]!.querySelector('.emblema')).toHaveAttribute('data-emblema', 'flamengo');
+    expect(rows[1]!.querySelector('.emblema')).toHaveAttribute('data-emblema', 'generico');
+    expect(rows[0]!.querySelector('.emblema')).toHaveAttribute('data-versao', 'simples');
+  });
+
+  it('a figurinha traz o emblema do clube no canto', () => {
+    setup();
+    const card = screen.getByRole('button', { name: new RegExp(t('ui.carreira.titulo')) });
+    expect(card.querySelector('.figurinha .emblema')).toHaveAttribute('data-emblema', 'flamengo');
+  });
+});

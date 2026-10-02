@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import type { AvatarSpec } from '../../art/avatar';
 import { kitOf } from '../../art/kits';
 import { toBand } from '../../engine/attributes';
-import { CLUBS } from '../../engine/clubs';
 import { t } from '../../i18n';
 import tokens from '../theme/tokens.json';
+import { clubName } from './clubText';
+import { Emblema } from './Emblema';
 import { bustSvg, svgUri } from './portrait';
 import './Figurinha.css';
 
@@ -20,8 +21,8 @@ const MEDALS = tokens.medalha as unknown as Record<string, { nome: string }>;
 const CARD_ART = import.meta.glob('../../assets/cartoes-over/*.webp', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
 
 function clubLine(position: string, clubId: string) {
-  const club = CLUBS.find((c) => c.id === clubId);
-  return t('ui.figurinha.posicaoNoClube', { posicao: t(`positions.${position}`), prep: t(`ui.figurinha.prep.${club?.artigo ?? 'o'}`), clube: club?.nome ?? '' });
+  const { nome, prep } = clubName(clubId);
+  return t('ui.figurinha.posicaoNoClube', { posicao: t(`positions.${position}`), prep, clube: nome });
 }
 
 function useBust(avatar: AvatarSpec | undefined, clubId: string) {
@@ -47,6 +48,7 @@ export function Figurinha({ name, number, overall, position, clubId, avatar }: F
       <span className="figurinha__foto" style={stripes}>
         {bust && <img className="figurinha__retrato" src={bust} alt="" width="220" height="220" />}
         {number !== undefined && <span className="figurinha__numero" aria-hidden="true">{number}</span>}
+        <span className="figurinha__emblema"><Emblema clubId={clubId} size={30} /></span>
         <span className="figurinha__over over" data-medalha={medal} style={art ? { backgroundImage: `url(${art})` } : undefined}>
           <span className="sr-only">{t('ui.figurinha.over')}{t('ui.decisao.faixaOver', { faixa: t(`attributes.band.${toBand(overall).key}`) })}</span>
           <span className="over__numero">{overall}</span>

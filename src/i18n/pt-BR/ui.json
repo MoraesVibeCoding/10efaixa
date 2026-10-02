@@ -101,5 +101,8 @@
    "selecao": "Seleção",
    "camisa10": "Camisa 10"
   }
+ },
+ "emblema": {
+  "de": "Emblema {prep} {clube}"
  }
 }

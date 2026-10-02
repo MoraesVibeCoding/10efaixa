@@ -11,6 +11,7 @@ import { applyOption, type Ctx } from '../../engine/events';
 import { outcomeOf, outcomeVerdict, previewOf, riskOf, RISK_BANDS, timeOutOf, type Outcome, type Preview, type Risk } from '../../engine/preview';
 import previewCfg from '../../data/preview.json';
 import { t } from '../../i18n';
+import { Emblema } from './Emblema';
 import { Figurinha } from './Figurinha';
 import './Decision.css';
 
@@ -72,19 +73,6 @@ function rankTitles(titles: string[]) {
   const counts: Record<string, number> = {};
   for (const id of titles) counts[id] = (counts[id] ?? 0) + 1;
   return Object.entries(counts).sort((a, b) => (TITLE_WEIGHT[b[0]] ?? 0) - (TITLE_WEIGHT[a[0]] ?? 0));
-}
-
-/** Escudo estilizado pequeno da trajetória: só as duas cores, o nome do clube vem ao lado (SPEC 11). Até os emblemas da T49d. */
-function Crest({ clubId }: { clubId: string }) {
-  const club = clubOf(clubId);
-  if (!club) return null;
-  return (
-    <svg className="escudo" viewBox="0 0 44 50" width="18" height="20" aria-hidden="true" focusable="false">
-      <path d="M3 3h38v25c0 10-8 16-19 20C11 44 3 38 3 28z" fill={club.cores[0]} />
-      <path d="M22 3h19v25c0 10-8 16-19 20z" fill={club.cores[1]} />
-      <path d="M3 3h38v25c0 10-8 16-19 20C11 44 3 38 3 28z" fill="none" stroke="currentColor" strokeWidth="3" />
-    </svg>
-  );
 }
 
 // troféu de cada competição (provisório até o lote 5); sem peça, o ícone genérico abaixo
@@ -222,7 +210,7 @@ function Career({ player, onClose }: { player: DecisionProps['player']; onClose:
                 {seasons.map((s) => (
                   <tr key={s.age}>
                     <td>{s.age}</td>
-                    <td><span className="trajetoria__clube"><Crest clubId={s.clubId} />{clubOf(s.clubId)?.nome}</span></td>
+                    <td><span className="trajetoria__clube"><Emblema clubId={s.clubId} size={20} />{clubOf(s.clubId)?.nome}</span></td>
                     <td>{s.overall}</td>
                   </tr>
                 ))}
