@@ -74,7 +74,9 @@
     "foot.invalid": "Escolha a perna boa.",
     "origin.invalid": "Escolha uma origem da lista.",
     "heartClub.invalid": "Escolha um clube da lista ou \"Nenhum\".",
-    "mentality.invalid": "Escolha uma mentalidade da lista."
+    "mentality.invalid": "Escolha uma mentalidade da lista.",
+    "position.invalid": "Escolha uma posição.",
+    "archetype.empty": "Escolha um estilo de jogo."
   },
   "heartClubNone": "Nenhum / não torcia",
   "agent": {
@@ -141,5 +143,27 @@
     "vermelha": "Vermelha",
     "azul": "Azul",
     "laranja": "Laranja"
+  },
+  "build": {
+    "franzino": "Franzino",
+    "atletico": "Atlético",
+    "forte": "Forte"
+  },
+  "buildDica": {
+    "franzino": "Mais agilidade, menos força e mais lesões por choque.",
+    "atletico": "Equilibrado.",
+    "forte": "Mais força, menos velocidade."
+  },
+  "temperamentDica": {
+    "frio": "Menos cartões e frieza no pênalti; a torcida demora a se apegar.",
+    "esquentado": "Raça em clássico, mais cartões e polêmicas.",
+    "lider": "Caminho curto para a braçadeira; atrito com o técnico na fase ruim.",
+    "resenha": "Querido no elenco, mais tentação de festas."
+  },
+  "mentalityDica": {
+    "fominha": "Vive para o gol: cresce rápido no ataque, mas oscila mais.",
+    "capitao": "Cabeça e liderança crescem mais rápido.",
+    "professor": "Técnica e leitura de jogo; envelhece devagar.",
+    "maquina": "Físico e marcação, rendimento constante."
   }
 }

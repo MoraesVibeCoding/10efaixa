@@ -136,6 +136,27 @@
    "comemoracao": "Comemoração",
    "visual": "Visual",
    "sortear": "Sortear"
+  },
+  "emCampo": {
+   "posicao": "Posição",
+   "estilo": "Estilo",
+   "estiloPrimeiro": "Escolha a posição primeiro.",
+   "traco": "Traço: {traco}",
+   "perna": "Perna boa",
+   "altura": "Altura",
+   "metros": "{altura} m",
+   "alturaDica": "Mais alto: mais jogo aéreo, menos velocidade e drible.",
+   "compleicao": "Compleição",
+   "temperamento": "Temperamento",
+   "mentalidade": "Mentalidade",
+   "sigla": {
+    "goleiro": "GOL",
+    "zagueiro": "ZAG",
+    "lateral": "LAT",
+    "volante": "VOL",
+    "meia": "MEI",
+    "atacante": "ATA"
+   }
   }
  }
 }

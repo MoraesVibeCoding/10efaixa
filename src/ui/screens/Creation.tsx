@@ -7,27 +7,29 @@ import { checkName } from '../../engine/nameFilter';
 import { createPrng } from '../../engine/prng';
 import { t } from '../../i18n';
 import { CREATION_STEPS, transition, type FlowState } from '../../state/flow';
+import { Choices, NONE, named, swatches, withNone, type Option } from './Choices';
 import { Figurinha } from './Figurinha';
 import { PICKS, previewAvatar, randomLook, type Look } from './look';
-import { revealChecked } from './reveal';
+import { DEFAULT_FIELD, FIELD_ERROR_ORDER, fieldErrors, type OnField } from './onField';
+import { OnFieldStep } from './OnFieldStep';
 import './Creation.css';
 
 // T50 (SPEC 6.1, v2.30): criação em duas telas + tipo de início, na ordem de flow.json e pela máquina da T48.
-// Tela 1 "quem é ele": identidade e visual (nada aqui mexe nos atributos). As outras telas chegam nas próximas fatias.
+// Tela 1 "quem é ele": identidade e visual (nada aqui mexe nos atributos). Tela 2 "em campo e cabeça": OnFieldStep.
 export interface Identity { name: string; number: string; state: string; heartClub: string; celebration: string | null }
-export interface CreationDraft { identity: Identity; look: Look }
+export interface CreationDraft { identity: Identity; look: Look; field: OnField }
 export interface CreationProps {
   onExit: () => void; onFinish: (draft: CreationDraft) => void;
   /** Semente do sorteio do visual (o desafio diário passa a do dia). */
   seed?: number;
 }
-type Errors = Partial<Record<keyof Identity, string>>;
+type Errors = Partial<Record<string, string>>;
 
 const TOTAL = CREATION_STEPS.length;
-const NONE = 'nenhuma';
-const BY_NAME = [...CLUBS].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
-/** Ordem do foco quando há erro: o primeiro campo inválido recebe o foco. */
-const FIELD_ORDER: (keyof Identity)[] = ['name', 'number', 'state', 'celebration'];
+function byName(a: { nome: string }, b: { nome: string }) { return a.nome.localeCompare(b.nome, 'pt-BR'); }
+const BY_NAME = [...CLUBS].sort(byName);
+/** Ordem do foco quando há erro, por tela: o primeiro campo inválido recebe o foco. */
+const FIELD_ORDER: Record<string, readonly string[]> = { quemE: ['name', 'number', 'state', 'celebration'], emCampo: FIELD_ERROR_ORDER };
 
 /** Erros da tela 1, como chaves de i18n de creation.error. */
 function identityErrors(id: Identity): Errors {
@@ -60,6 +62,7 @@ export function Creation({ onExit, onFinish, seed = Date.now() }: CreationProps)
   const [flow, setFlow] = useState({ screen: 'criacao', step: 0 } as FlowState);
   const [identity, setIdentity] = useState({ name: '', number: '10', state: '', heartClub: '', celebration: null } as Identity);
   const [look, setLook] = useState(() => { return randomLook(rng.current!); });
+  const [field, setField] = useState(DEFAULT_FIELD);
   const [errors, setErrors] = useState({} as Errors);
   const titleRef = useRef(null as HTMLHeadingElement | null);
   const shown = useRef(flow.step);
@@ -76,14 +79,14 @@ export function Creation({ onExit, onFinish, seed = Date.now() }: CreationProps)
 
   const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const found = step === 'quemE' ? identityErrors(identity) : {};
-    const first = FIELD_ORDER.find((k) => found[k]);
+    const found = stepErrors(step, identity, field);
+    const first = (FIELD_ORDER[step] ?? []).find((k) => found[k]);
     if (first) {
       setErrors(found);
       e.currentTarget.querySelector<HTMLElement>(`[data-campo="${first}"]`)?.focus();
       return;
     }
-    if (flow.step === TOTAL - 1) { onFinish({ identity, look }); return; }
+    if (flow.step === TOTAL - 1) { onFinish({ identity, look, field }); return; }
     setFlow(transition(flow, 'AVANCAR'));
   };
   const back = () => {
@@ -97,7 +100,11 @@ export function Creation({ onExit, onFinish, seed = Date.now() }: CreationProps)
     const { [k]: _, ...rest } = errors;
     setErrors(rest);
   };
-  const ctx = { ids, identity, look, avatar, errors, change, setLook, reroll: () => setLook(randomLook(rng.current!)) };
+  const changeField = (next: OnField) => {
+    setErrors(Object.fromEntries(Object.entries(errors).filter(([k]) => next[k as keyof OnField] === field[k as keyof OnField])));
+    setField(next);
+  };
+  const ctx = { ids, identity, look, avatar, errors, change, setLook, reroll: () => setLook(randomLook(rng.current!)), field, changeField };
 
   return (
     <main className="criacao">
@@ -120,11 +127,20 @@ export function Creation({ onExit, onFinish, seed = Date.now() }: CreationProps)
 interface StepCtx {
   ids: string; identity: Identity; look: Look; avatar: AvatarSpec; errors: Errors;
   change: (k: keyof Identity, v: string) => void; setLook: (l: Look) => void; reroll: () => void;
+  field: OnField; changeField: (f: OnField) => void;
+}
+
+/** Erros da tela atual (as que não validam nada devolvem vazio). */
+function stepErrors(step: string, identity: Identity, field: OnField): Errors {
+  if (step === 'quemE') return identityErrors(identity);
+  if (step === 'emCampo') return fieldErrors(field);
+  return {};
 }
 
 /** Conteúdo de cada tela; as que ainda não existem mostram o aviso. */
 function stepBody(step: string, c: StepCtx) {
   if (step === 'quemE') { return <IdentityStep c={c} />; }
+  if (step === 'emCampo') { return <OnFieldStep ids={c.ids} field={c.field} errors={c.errors} onChange={c.changeField} />; }
   return <p className="criacao__dica">{t('ui.criacao.pendente')}</p>;
 }
 
@@ -200,13 +216,6 @@ function ClubOptions({ state }: { state: string }) {
   );
 }
 
-interface Option { id: string; label: string; swatch?: string }
-
-const swatches = (list: { id: string; hex: string }[], prefix: string): Option[] =>
-  list.map((o) => ({ id: o.id, label: t(`${prefix}.${o.id}`), swatch: o.hex }));
-const named = (list: string[], prefix: string): Option[] => list.map((id) => ({ id, label: t(`${prefix}.${id}`) }));
-const withNone = (opts: Option[], prefix: string): Option[] => [{ id: NONE, label: t(`${prefix}.${NONE}`) }, ...opts];
-
 /** Visual (v2.30): na própria tela, sorteado ao abrir, "Sortear" ao lado do título e tudo editável. */
 function LookSection({ c }: { c: StepCtx }) {
   const { ids, look, setLook } = c;
@@ -230,42 +239,5 @@ function LookSection({ c }: { c: StepCtx }) {
           value={look[g.key] ?? NONE} onChange={(v) => set(g.key, v)} />
       ))}
     </section>
-  );
-}
-
-interface ChoicesProps {
-  id: string; name: string; legend: string; options: Option[]; value: string; onChange: (v: string) => void; error?: string | null;
-}
-
-/** Grupo de rádio nativo numa faixa que desliza: setas trocam a opção, Tab passa de grupo. */
-function Choices({ id, name, legend, options, value, onChange, error = null }: ChoicesProps) {
-  const list = useRef(null as HTMLDivElement | null);
-  useEffect(() => { revealChecked(list.current); }, [value]);
-  return (
-    <div className="escolhas">
-      <span id={`${id}-rotulo`} className="escolhas__rotulo">{legend}</span>
-      <div className="escolhas__lista" ref={list} role="radiogroup" aria-labelledby={`${id}-rotulo`}
-        aria-describedby={error ? `${id}-erro` : undefined} aria-invalid={error ? true : undefined}>
-        {options.map((o, i) => (
-          <label key={o.id} className={o.swatch ? 'escolha escolha--cor' : 'escolha'}>
-            <input className="escolha__input sr-only" type="radio" name={name} value={o.id} checked={value === o.id}
-              data-campo={i === 0 ? name : undefined} onChange={() => onChange(o.id)} />
-            <ChoiceMark option={o} />
-          </label>
-        ))}
-      </div>
-      <p id={`${id}-erro`} className="criacao__erro escolhas__erro" hidden={!error}>{error}</p>
-    </div>
-  );
-}
-
-/** Cor vira amostra com o nome escondido para o leitor de tela; o resto é texto. */
-function ChoiceMark({ option }: { option: Option }) {
-  if (!option.swatch) { return <span className="escolha__marca">{option.label}</span>; }
-  return (
-    <span className="escolha__marca" title={option.label}>
-      <span className="escolha__amostra" style={{ background: option.swatch }} aria-hidden="true" />
-      <span className="sr-only">{option.label}</span>
-    </span>
   );
 }

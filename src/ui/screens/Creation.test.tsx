@@ -1,5 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import avatarData from '../../data/avatar.json';
+import biotypeData from '../../data/biotype.json';
+import { ARCHETYPES, archetypesFor } from '../../engine/archetypes';
 import { CLUBS } from '../../engine/clubs';
 import { CREATION_STEPS } from '../../state/flow';
 import { t } from '../../i18n';
@@ -153,5 +155,88 @@ describe('criação (T50, v2.30)', () => {
       expect([null, ...escolhas.faixas.map((o) => o.id)]).toContain(d.headband);
       for (const [k, p] of Object.entries(escolhas.sorteio)) if (!k.startsWith('_')) { expect(p).toBeGreaterThanOrEqual(0); expect(p).toBeLessThanOrEqual(1); }
     });
+  });
+});
+
+describe('tela 2: em campo e cabeça (T50d, v2.30)', () => {
+  const toField = () => {
+    const view = setup();
+    fillIdentity();
+    advance();
+    return view;
+  };
+  const radio = (k: string, name: string | RegExp) => within(group(k)).getByRole('radio', { name });
+  const height = () => screen.getByRole('slider', { name: t('ui.criacao.emCampo.altura') });
+
+  it('abre com posição, perna, compleição, temperamento e mentalidade como grupos; altura como controle deslizante', () => {
+    toField();
+    expect(title('emCampo')).toBeInTheDocument();
+    const order = within(group('emCampo.posicao')).getAllByRole('radio').map((r) => (r as HTMLInputElement).value);
+    // ordem do teclado = ordem visual do campinho, e todas as posições com faixa de altura aparecem
+    expect(order).toEqual(['goleiro', 'zagueiro', 'lateral', 'volante', 'meia', 'atacante']);
+    expect([...order].sort()).toEqual(Object.keys(biotypeData.heightRangesCm).sort());
+    expect(within(group('emCampo.perna')).getAllByRole('radio')).toHaveLength(2);
+    expect(within(group('emCampo.compleicao')).getAllByRole('radio')).toHaveLength(3);
+    expect(within(group('emCampo.temperamento')).getAllByRole('radio')).toHaveLength(4);
+    expect(within(group('emCampo.mentalidade')).getAllByRole('radio')).toHaveLength(4);
+    expect(height()).toBeInTheDocument();
+  });
+
+  it('sem posição, o estilo pede a posição primeiro; com posição, mostra só os arquétipos dela', () => {
+    toField();
+    expect(screen.getByText(t('ui.criacao.emCampo.estiloPrimeiro'))).toBeInTheDocument();
+    fireEvent.click(radio('emCampo.posicao', t('positions.meia')));
+    expect(within(group('emCampo.estilo')).getAllByRole('radio')).toHaveLength(archetypesFor('meia').length);
+  });
+
+  it('o estilo escolhido mostra o traço e a inspiração (flag), em palavras', () => {
+    toField();
+    fireEvent.click(radio('emCampo.posicao', t('positions.meia')));
+    fireEvent.click(radio('emCampo.estilo', t('archetypes.archetype.classico10')));
+    const zico = ARCHETYPES.find((a) => a.id === 'classico10')!;
+    const trait = t('ui.criacao.emCampo.traco', { traco: zico.traits.map((k) => t(`archetypes.trait.${k}`)).join(' / ') });
+    expect(group('emCampo.estilo')).toHaveAccessibleDescription(`${trait} · ${t('archetypes.inspiracao', { lenda: zico.inspiracao })}`);
+  });
+
+  it('trocar para uma posição sem o estilo escolhido limpa o estilo', () => {
+    toField();
+    fireEvent.click(radio('emCampo.posicao', t('positions.meia')));
+    fireEvent.click(radio('emCampo.estilo', t('archetypes.archetype.classico10')));
+    fireEvent.click(radio('emCampo.posicao', t('positions.zagueiro')));
+    expect(within(group('emCampo.estilo')).getAllByRole('radio').every((r) => !(r as HTMLInputElement).checked)).toBe(true);
+  });
+
+  it('a altura respeita a faixa da posição e se ajusta ao trocar de posição', () => {
+    toField();
+    fireEvent.click(radio('emCampo.posicao', t('positions.goleiro')));
+    const gk = biotypeData.heightRangesCm.goleiro;
+    expect(height()).toHaveAttribute('min', String(gk.min));
+    expect(height()).toHaveAttribute('max', String(gk.max));
+    expect(Number((height() as HTMLInputElement).value)).toBeGreaterThanOrEqual(gk.min);
+    fireEvent.change(height(), { target: { value: '195' } });
+    fireEvent.click(radio('emCampo.posicao', t('positions.meia')));
+    expect(height()).toHaveValue(String(biotypeData.heightRangesCm.meia.max));
+    expect(height()).toHaveAttribute('aria-valuetext', t('ui.criacao.emCampo.metros', { altura: '1,85' }));
+  });
+
+  it('sem posição, estilo e temperamento, não avança: mostra os erros e o foco vai para a posição', () => {
+    toField();
+    advance();
+    expect(group('emCampo.posicao')).toHaveAccessibleDescription(t('creation.error.position.invalid'));
+    expect(group('emCampo.temperamento')).toHaveAccessibleDescription(t('creation.error.temperament.invalid'));
+    expect(within(group('emCampo.posicao')).getAllByRole('radio')[0]).toHaveFocus();
+    expect(title('emCampo')).toBeInTheDocument();
+  });
+
+  it('completa, avança para o tipo de início; mentalidade é opcional; o Voltar mantém as escolhas', () => {
+    toField();
+    fireEvent.click(radio('emCampo.posicao', t('positions.atacante')));
+    fireEvent.click(radio('emCampo.estilo', t('archetypes.archetype.matador')));
+    fireEvent.click(radio('emCampo.temperamento', t('creation.temperament.frio')));
+    advance();
+    expect(title('origem')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: t('ui.criacao.voltar') }));
+    expect(radio('emCampo.posicao', t('positions.atacante'))).toBeChecked();
+    expect(radio('emCampo.estilo', t('archetypes.archetype.matador'))).toBeChecked();
   });
 });
