@@ -57,6 +57,24 @@ Lote 2 completo em 2026-10-02: 6 de 6 retratos aprovados, todos em 1856×2304. R
 - `trofeus/<id>/`: 18 troféus de desenho original, quadrados (1:1), em fundo azul-marinho chapado. **Confira um a um se não lembra o troféu real.**
 - `abertura/`: a tela de abertura, com o jogador em silhueta no túnel e a faixa de capitão amarela.
 
+## Lote 6 — marcos da carreira e papel em campo (84 imagens)
+
+Cenas dos marcos da carreira (SPEC v2.29, 6.13b) e do papel em campo (v2.28, 6.2): 9 cenas × 6 cortes em `cenas/` e 5 delas também de goleiro × 6 cortes em `cenas-goleiro/` (rosa `#F0569B`, manga longa, luvas laranja; companheiros de magenta e ciano).
+
+| Pasta | Cena | Usada em | Roupa do jogador |
+|---|---|---|---|
+| `cenas/26-estreia/` | Estreia | Estreia profissional, no clube e na Seleção: saindo do túnel para o gramado | uniforme · também goleiro |
+| `cenas/27-capitao/` | Braçadeira de capitão | Primeira braçadeira: um veterano prende a braçadeira **amarela lisa** no braço esquerdo, no vestiário | uniforme + braçadeira amarela · também goleiro |
+| `cenas/28-cobranca-falta/` | Cobrança de falta | Assumir a bola parada: bola parada, barreira cinza, gol ao fundo | uniforme |
+| `cenas/29-final/` | Final | Primeira final ou jogo do título: entrando em campo ao lado da taça genérica no pedestal | uniforme · também goleiro |
+| `cenas/30-escalacao/` | Escalação | Primeira vez titular: quadro tático só com ímãs brancos e cinza, sem texto | uniforme |
+| `cenas/31-hino/` | Hino | Estreia na Seleção e primeira Copa: perfilado no hino, mão no peito, crianças à frente | uniforme · também goleiro |
+| `cenas/32-exterior/` | Estreia no exterior | Estreia num clube europeu: noite fria, neve fina, respiração visível | uniforme · também goleiro |
+| `cenas/33-prancheta/` | Prancheta do técnico | Papel em campo: o técnico mostra a nova função na prancheta (só setas e círculos) | uniforme |
+| `cenas/34-assistencia/` | Assistência | Primeira assistência: o autor do gol corre para abraçá-lo (ainda sem encostar) | uniforme |
+
+Os prompts saem de `gerar-lote-6.py`, que reaproveita as funções e os textos de `gerar-lotes-3-5.py` sem reescrever os lotes 1 a 5. Para ajustar uma cena, edite o script e rode `python3 docs/arte/gerar-lote-6.py`. Cada cena tem os `prompt.md` por corte e o `prompt-6-cortes.md`. **Foto a foto:** um `.md` por imagem que ainda falta em `nanobanana-lote6/` (`001_...` em diante, no formato de `nanobanana/`), refeito a cada execução; imagens já salvas (`imagem.jpeg`) saem da lista e nunca são sobrescritas.
+
 ## Ressalvas aceitas (decisão do usuário em 2026-10-02: pequenos defeitos não pedem nova geração)
 
 - Cenas 15 a 18 (20 imagens) estão em 825×1024, não em 1856×2304. O jogo serve as cenas em cerca de 1080 px de largura, então a diferença é pequena; se as conversas do Gemini ainda existirem, vale baixar de novo em tamanho cheio.
