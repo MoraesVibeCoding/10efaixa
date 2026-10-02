@@ -571,6 +571,51 @@ MUST NOT APPEAR
 '''
 
 
+def batch_md(s):
+    """Um arquivo só por cena, pedindo as 6 imagens (uma por corte) na mesma conversa."""
+    blocks = '\n\n'.join(
+        f"=============== IMAGE {i} OF 6 — file name: {cut}.jpeg ===============\n" + scene_prompt(s, cut).strip('`').strip()
+        for i, cut in enumerate(CUTS, 1))
+    return f'''# Cena {s['folder'][:2]} — {s['nome']} — os 6 cortes de uma vez
+
+**Usada em:** {s['usada']}
+
+**Como usar:** abra uma conversa nova no Gemini, cole tudo o que está dentro do bloco abaixo e envie. Se ele gerar menos de 6 imagens, responda `Continue with the next image.` até completar.
+
+**Arquivos:** salve cada imagem na pasta do corte correspondente (`curto/`, `cacheado-medio/`…) como `imagem.jpeg`.
+
+## Prompt
+
+````
+You will generate 6 SEPARATE images in this conversation. Start from a clean slate: ignore everything from any earlier conversation.
+
+RULES FOR THE WHOLE JOB
+1. Generate exactly 6 images, one for each prompt below, in the order given: image 1, then image 2, and so on up to image 6.
+2. Each image is a separate, complete, full-size picture. Never combine them into one picture: no grid, no collage, no contact sheet, no split screen, no character sheet.
+3. Treat each prompt as independent. For each image, use only the text of its own prompt.
+4. The six prompts describe the same scene. The ONLY difference between them is the hair of the main character. Keep the scene, the camera, the colours and the painting style as close as possible across the six images.
+5. Do not write any text, caption, label or number inside any image.
+6. Before each image, write one short line outside the image with its number and file name, for example: "Image 1 of 6 - curto.jpeg".
+7. If you cannot generate all six in one reply, generate as many as you can and stop. When I write "Continue with the next image.", carry on from the next number. Do not start again from image 1.
+
+{blocks}
+
+=============== END OF THE 6 PROMPTS ===============
+After the sixth image, write: "All 6 images done." If any image was skipped, say which one.
+````
+
+## Conferência (nota para revisão humana)
+
+- [ ] 6 imagens separadas, nenhuma em grade ou colagem
+- [ ] Cada corte na ordem: curto, cacheado médio, liso médio, cacheado grande, liso grande, careca
+- [ ] Mesma cena nas seis; só o cabelo muda
+- [ ] Cada uma passa na conferência do `prompt.md` da sua pasta
+'''
+
+
+BATCH = ['11-treino']  # cenas com arquivo "os 6 de uma vez" (teste; ampliar se funcionar)
+
+
 def write(path, text):
     full = os.path.join(HERE, path)
     os.makedirs(os.path.dirname(full), exist_ok=True)
@@ -588,4 +633,7 @@ for s in GK:
 for tid, nome, design in TROPHIES:
     write(f'trofeus/{tid}/prompt.md', trophy_md(tid, nome, design)); n += 1
 write('abertura/prompt.md', OPENING); n += 1
+for s in LOTE3 + LOTE4:
+    if s['folder'] in BATCH:
+        write(f"cenas/{s['folder']}/prompt-6-cortes.md", batch_md(s)); n += 1
 print(n, 'arquivos')
