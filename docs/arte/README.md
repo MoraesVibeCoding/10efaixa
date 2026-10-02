@@ -27,7 +27,9 @@ Lote 1 completo em 2026-10-02: 30 de 30 imagens aprovadas, todas em 1856×2304. 
 
 ## Lote 2 — retratos de frente
 
-`retratos/<corte>/`: seis retratos de frente, da cintura para cima, para a criação, a apresentação no clube e o cartão final. Camisa magenta lisa e fundo verde chapado (`#00B140`) para o recorte. Cada pasta tem um prompt completo, gerado do zero. Gere primeiro o `curto`, aprove o rosto e anexe-o como referência nos outros cinco, para o rosto ficar igual.
+`retratos/<corte>/`: seis retratos de frente, da cintura para cima, para a criação, a apresentação no clube e o cartão final. Camisa magenta lisa e fundo verde chapado (`#00B140`) para o recorte. Cada pasta tem um prompt completo, gerado do zero. Gere um primeiro, aprove o rosto e anexe-o como referência nos outros cinco.
+
+Lote 2 completo em 2026-10-02: 6 de 6 retratos aprovados, todos em 1856×2304. Ressalvas: os rostos são parecidos, não idênticos (o `curto` tem o maxilar mais largo); o `liso-medio` saiu em escala um pouco menor (camisa com 73% da largura, contra ~81% dos outros), o que o código compensa ao recortar.
 
 ## Depois
 
