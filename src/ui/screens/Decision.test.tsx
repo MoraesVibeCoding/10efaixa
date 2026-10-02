@@ -3,6 +3,7 @@ import events from '../../data/events.json';
 import { previewOf } from '../../engine/preview';
 import { t } from '../../i18n';
 import { Decision } from './Decision';
+import libertaArt from '../../assets/art/provisoria/detalhe/detalhe__trofeu-continental-principal.svg';
 
 const EVENT = 'salario-atrasado';
 const def = events.eventos.find((e) => e.id === EVENT)!;
@@ -141,6 +142,17 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
       const state = items.find((li) => li.textContent?.includes(t('ui.titulo.estadual')))!;
       expect(state).toHaveTextContent(t('ui.decisao.vezes', { n: 2 }));
       expect(items[0]!.textContent).not.toMatch(/\d/);
+    });
+
+    it('títulos com a imagem do troféu provisório da competição; sem peça própria, fica o ícone genérico', () => {
+      const drawer = openDrawer({ titles: ['libertadores', 'europaLeague'] });
+      const [liberta, europa] = within(within(drawer).getByRole('list', { name: t('ui.decisao.titulosLista') })).getAllByRole('listitem');
+      // a imagem é decorativa (alt vazio): o nome da competição já está escrito ao lado
+      const img = liberta!.querySelector('img')!;
+      expect(img.getAttribute('src')).toBe(libertaArt);
+      expect(img).toHaveAttribute('alt', '');
+      expect(europa!.querySelector('img')).toBeNull();
+      expect(europa!.querySelector('svg')).not.toBeNull();
     });
 
     it('sem título ainda: a gaveta diz isso, sem lista', () => {

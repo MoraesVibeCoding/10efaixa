@@ -1,0 +1,19 @@
+{
+  "_nota": "Peça de troféu de cada título (ids de legacy.json → src/assets/art/provisoria/detalhe/detalhe__trofeu-<peça>.svg). Provisório até a arte do lote 5 (docs/arte/trofeus). Título fora daqui usa o ícone genérico: Liga Europa e copa nacional europeia ainda não têm peça própria.",
+  "pecas": {
+    "copaDoMundo": "copa-do-mundo",
+    "champions": "copa-europeia",
+    "libertadores": "continental-principal",
+    "sulAmericana": "continental-secundaria",
+    "copaAmerica": "copa-america",
+    "olimpiadas": "olimpiadas-medalha",
+    "serieA": "serie-a",
+    "serieB": "serie-b",
+    "serieC": "serie-c",
+    "serieD": "serie-d",
+    "ligaNacional": "liga-europeia",
+    "copaDoBrasil": "copa-do-brasil",
+    "copaDoNordeste": "copa-do-nordeste",
+    "estadual": "estadual"
+  }
+}

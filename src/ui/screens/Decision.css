@@ -346,3 +346,4 @@
 @media (min-width: 40rem) {
   .decisao { border-inline: var(--forma-borda) solid var(--cor-linha); }
 }
+.trofeu__arte { flex: none; inline-size: 32px; block-size: 32px; }
