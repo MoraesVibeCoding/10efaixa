@@ -1,0 +1,604 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-02T06:18:59.525Z",
+  "title": "Design System: 10eFaixa",
+  "extensions": {
+    "colorMeta": {
+      "escuro-fundo": {
+        "role": "neutral",
+        "displayName": "Grafite de painel (escuro)",
+        "canonical": "#212222",
+        "tonalRamp": [
+          "#262727",
+          "#414343",
+          "#5F6262",
+          "#7E8181",
+          "#9DA0A0",
+          "#B9BBBB",
+          "#D6D7D7",
+          "#F2F2F2"
+        ]
+      },
+      "escuro-superficie": {
+        "role": "neutral",
+        "displayName": "Grafite de faixa (escuro)",
+        "canonical": "#2C2D2D",
+        "tonalRamp": [
+          "#262727",
+          "#424343",
+          "#606262",
+          "#7E8181",
+          "#9D9F9F",
+          "#B9BBBB",
+          "#D6D7D7",
+          "#F2F2F2"
+        ]
+      },
+      "escuro-texto": {
+        "role": "neutral",
+        "displayName": "Cal de campo (escuro)",
+        "canonical": "#F2F4EF",
+        "tonalRamp": [
+          "#282D1F",
+          "#454F36",
+          "#64734F",
+          "#849768",
+          "#A2B08C",
+          "#BDC7AD",
+          "#D8DECF",
+          "#F3F5F0"
+        ]
+      },
+      "escuro-textoSuave": {
+        "role": "neutral",
+        "displayName": "Cinza de apoio (escuro)",
+        "canonical": "#C4C6C6",
+        "tonalRamp": [
+          "#262727",
+          "#414343",
+          "#5F6363",
+          "#7D8282",
+          "#9CA0A0",
+          "#B9BBBB",
+          "#D5D7D7",
+          "#F2F2F2"
+        ]
+      },
+      "escuro-linha": {
+        "role": "neutral",
+        "displayName": "Cinza de linha (escuro)",
+        "canonical": "#414242",
+        "tonalRamp": [
+          "#262727",
+          "#424343",
+          "#606262",
+          "#7F8080",
+          "#9D9F9F",
+          "#BABBBB",
+          "#D6D7D7",
+          "#F2F2F2"
+        ]
+      },
+      "escuro-trilho": {
+        "role": "neutral",
+        "displayName": "Cinza de trilho (escuro)",
+        "canonical": "#505151",
+        "tonalRamp": [
+          "#262626",
+          "#424343",
+          "#606262",
+          "#7F8080",
+          "#9D9F9F",
+          "#BABBBB",
+          "#D6D6D6",
+          "#F2F2F2"
+        ]
+      },
+      "escuro-destaque": {
+        "role": "primary",
+        "displayName": "Amarelo braçadeira (escuro)",
+        "canonical": "#FFC21A",
+        "tonalRamp": [
+          "#4D3800",
+          "#856100",
+          "#C28E00",
+          "#FFBB00",
+          "#FFCB3D",
+          "#FFDA75",
+          "#FFE9AD",
+          "#FFF8E5"
+        ]
+      },
+      "escuro-sobreDestaque": {
+        "role": "primary",
+        "displayName": "Marinho sobre a braçadeira (escuro)",
+        "canonical": "#14213D",
+        "tonalRamp": [
+          "#131F3A",
+          "#213664",
+          "#304F92",
+          "#3F68C0",
+          "#6D8CCF",
+          "#97ADDD",
+          "#C2CFEB",
+          "#ECF0F9"
+        ]
+      },
+      "escuro-positivo": {
+        "role": "secondary",
+        "displayName": "Verde de subida (escuro)",
+        "canonical": "#63D7A0",
+        "tonalRamp": [
+          "#103D27",
+          "#1B6A44",
+          "#289A64",
+          "#34CB83",
+          "#65D7A1",
+          "#91E3BC",
+          "#BEEED7",
+          "#EBFAF3"
+        ]
+      },
+      "escuro-negativo": {
+        "role": "secondary",
+        "displayName": "Vermelho de queda (escuro)",
+        "canonical": "#FF8E97",
+        "tonalRamp": [
+          "#4D0006",
+          "#85000B",
+          "#C2000F",
+          "#FF0014",
+          "#FF3D4D",
+          "#FF7580",
+          "#FFADB4",
+          "#FFE5E8"
+        ]
+      },
+      "escuro-foco": {
+        "role": "neutral",
+        "displayName": "Anel de foco (escuro)",
+        "canonical": "#FFC21A",
+        "tonalRamp": [
+          "#4D3800",
+          "#856100",
+          "#C28E00",
+          "#FFBB00",
+          "#FFCB3D",
+          "#FFDA75",
+          "#FFE9AD",
+          "#FFF8E5"
+        ]
+      },
+      "escuro-siglaTexto": {
+        "role": "neutral",
+        "displayName": "Branco de sigla (escuro)",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "#262626",
+          "#424242",
+          "#616161",
+          "#808080",
+          "#9E9E9E",
+          "#BABABA",
+          "#D6D6D6",
+          "#F2F2F2"
+        ]
+      },
+      "escuro-siglaContorno": {
+        "role": "neutral",
+        "displayName": "Contorno de sigla (escuro)",
+        "canonical": "#14213D",
+        "tonalRamp": [
+          "#131F3A",
+          "#213664",
+          "#304F92",
+          "#3F68C0",
+          "#6D8CCF",
+          "#97ADDD",
+          "#C2CFEB",
+          "#ECF0F9"
+        ]
+      },
+      "claro-fundo": {
+        "role": "neutral",
+        "displayName": "Cal de campo (claro)",
+        "canonical": "#F2F4EF",
+        "tonalRamp": [
+          "#282D1F",
+          "#454F36",
+          "#64734F",
+          "#849768",
+          "#A2B08C",
+          "#BDC7AD",
+          "#D8DECF",
+          "#F3F5F0"
+        ]
+      },
+      "claro-superficie": {
+        "role": "neutral",
+        "displayName": "Cal de faixa (claro)",
+        "canonical": "#E5E9E0",
+        "tonalRamp": [
+          "#272D20",
+          "#444E37",
+          "#637150",
+          "#82956A",
+          "#A0AF8E",
+          "#BBC6AE",
+          "#D7DDCF",
+          "#F2F4F0"
+        ]
+      },
+      "claro-texto": {
+        "role": "neutral",
+        "displayName": "Marinho de vestiário (claro)",
+        "canonical": "#14213D",
+        "tonalRamp": [
+          "#131F3A",
+          "#213664",
+          "#304F92",
+          "#3F68C0",
+          "#6D8CCF",
+          "#97ADDD",
+          "#C2CFEB",
+          "#ECF0F9"
+        ]
+      },
+      "claro-textoSuave": {
+        "role": "neutral",
+        "displayName": "Marinho de apoio (claro)",
+        "canonical": "#414D69",
+        "tonalRamp": [
+          "#1D232F",
+          "#333C52",
+          "#4A5878",
+          "#62739E",
+          "#8795B5",
+          "#AAB4CA",
+          "#CDD2E0",
+          "#EFF1F5"
+        ]
+      },
+      "claro-linha": {
+        "role": "neutral",
+        "displayName": "Cinza de linha (claro)",
+        "canonical": "#C9CFC6",
+        "tonalRamp": [
+          "#252A23",
+          "#40483D",
+          "#5E6959",
+          "#7C8A75",
+          "#9BA696",
+          "#B8C0B4",
+          "#D5DAD3",
+          "#F2F3F1"
+        ]
+      },
+      "claro-trilho": {
+        "role": "neutral",
+        "displayName": "Trilho marinho (claro)",
+        "canonical": "#14213D",
+        "tonalRamp": [
+          "#131F3A",
+          "#213664",
+          "#304F92",
+          "#3F68C0",
+          "#6D8CCF",
+          "#97ADDD",
+          "#C2CFEB",
+          "#ECF0F9"
+        ]
+      },
+      "claro-destaque": {
+        "role": "primary",
+        "displayName": "Amarelo braçadeira (claro)",
+        "canonical": "#FFC21A",
+        "tonalRamp": [
+          "#4D3800",
+          "#856100",
+          "#C28E00",
+          "#FFBB00",
+          "#FFCB3D",
+          "#FFDA75",
+          "#FFE9AD",
+          "#FFF8E5"
+        ]
+      },
+      "claro-sobreDestaque": {
+        "role": "primary",
+        "displayName": "Marinho sobre a braçadeira (claro)",
+        "canonical": "#14213D",
+        "tonalRamp": [
+          "#131F3A",
+          "#213664",
+          "#304F92",
+          "#3F68C0",
+          "#6D8CCF",
+          "#97ADDD",
+          "#C2CFEB",
+          "#ECF0F9"
+        ]
+      },
+      "claro-positivo": {
+        "role": "secondary",
+        "displayName": "Verde de subida (claro)",
+        "canonical": "#18683F",
+        "tonalRamp": [
+          "#0E3E26",
+          "#196C41",
+          "#249D5F",
+          "#30CF7E",
+          "#62DB9D",
+          "#8FE5B9",
+          "#BDF0D6",
+          "#EAFAF2"
+        ]
+      },
+      "claro-negativo": {
+        "role": "secondary",
+        "displayName": "Vermelho de queda (claro)",
+        "canonical": "#B81E2E",
+        "tonalRamp": [
+          "#420B10",
+          "#72131D",
+          "#A71B2A",
+          "#DB2437",
+          "#E45867",
+          "#EC8993",
+          "#F4B9BF",
+          "#FBE9EB"
+        ]
+      },
+      "claro-foco": {
+        "role": "neutral",
+        "displayName": "Anel de foco (claro)",
+        "canonical": "#14213D",
+        "tonalRamp": [
+          "#131F3A",
+          "#213664",
+          "#304F92",
+          "#3F68C0",
+          "#6D8CCF",
+          "#97ADDD",
+          "#C2CFEB",
+          "#ECF0F9"
+        ]
+      },
+      "claro-siglaTexto": {
+        "role": "neutral",
+        "displayName": "Branco de sigla (claro)",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "#262626",
+          "#424242",
+          "#616161",
+          "#808080",
+          "#9E9E9E",
+          "#BABABA",
+          "#D6D6D6",
+          "#F2F2F2"
+        ]
+      },
+      "claro-siglaContorno": {
+        "role": "neutral",
+        "displayName": "Contorno de sigla (claro)",
+        "canonical": "#14213D",
+        "tonalRamp": [
+          "#131F3A",
+          "#213664",
+          "#304F92",
+          "#3F68C0",
+          "#6D8CCF",
+          "#97ADDD",
+          "#C2CFEB",
+          "#ECF0F9"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "numero": {
+        "displayName": "Numeral gigante",
+        "purpose": "A idade na cabeça da tela. Um por tela."
+      },
+      "over": {
+        "displayName": "Over",
+        "purpose": "O número do Over na faixa do jogador."
+      },
+      "titulo": {
+        "displayName": "Título",
+        "purpose": "Título do evento, o h1 da tela, em caixa alta."
+      },
+      "nome": {
+        "displayName": "Nome",
+        "purpose": "Nome do jogador, em caixa alta."
+      },
+      "opcao": {
+        "displayName": "Opção",
+        "purpose": "Rótulo de cada faixa de opção."
+      },
+      "historia": {
+        "displayName": "História",
+        "purpose": "Texto do evento, no máximo 44ch."
+      },
+      "corpo": {
+        "displayName": "Corpo",
+        "purpose": "Padrão do body."
+      },
+      "apoio": {
+        "displayName": "Apoio",
+        "purpose": "Posição e clube, temperamento e consequências. O menor texto do sistema."
+      },
+      "apoio-unidade": {
+        "displayName": "Rótulo de unidade",
+        "purpose": "Só ANOS e OVER, colados ao número que qualificam."
+      }
+    },
+    "shadows": [
+      {
+        "name": "anel-balao",
+        "value": "inset 0 0 0 1px var(--cor-linha)",
+        "purpose": "Borda de 1px do balão de contagem dos troféus. Não é elevação; não há sombra projetada no sistema."
+      }
+    ],
+    "motion": [],
+    "breakpoints": [
+      {
+        "name": "coluna",
+        "value": "40rem"
+      }
+    ],
+    "focus": {
+      "value": "3px solid var(--cor-foco)",
+      "offset": "2px",
+      "note": "Nas faixas de opção o anel recua 3px para dentro; na opção escolhida passa a --cor-sobre-destaque."
+    },
+    "themes": {
+      "default": "claro",
+      "byPreference": "escuro (prefers-color-scheme: dark)",
+      "forced": "data-tema=\"claro\" | data-tema=\"escuro\"",
+      "builtSurfaces": "Só a tela de decisão, que força o escuro; o tema claro ainda não foi visto em tela."
+    },
+    "layout": {
+      "maxColumn": "30rem",
+      "viewportHeight": "100dvh",
+      "sceneBasis": "calc(min(100vw, 30rem) * 0.5)",
+      "sceneMin": "7rem",
+      "sceneMask": "linear-gradient(to bottom, #000 84%, transparent)"
+    }
+  },
+  "components": [
+    {
+      "name": "Faixa do jogador",
+      "kind": "custom",
+      "refersTo": "jogador",
+      "description": "Quem decide: escudo estilizado, nome, posição e clube, troféus e Over. Fica logo abaixo da cena.",
+      "html": "<section class=\"ds-jogador\" aria-label=\"Seu jogador\"><svg class=\"ds-escudo\" viewBox=\"0 0 44 50\" width=\"44\" height=\"50\" role=\"img\" aria-label=\"Escudo estilizado\"><path d=\"M3 3h38v25c0 10-8 16-19 20C11 44 3 38 3 28z\" fill=\"#1E7B4F\"/><path d=\"M22 3h19v25c0 10-8 16-19 20z\" fill=\"#F2F4EF\"/><path d=\"M3 3h38v25c0 10-8 16-19 20C11 44 3 38 3 28z\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><text x=\"22\" y=\"27\" text-anchor=\"middle\" class=\"ds-escudo-sigla\">VZA</text></svg><div><p class=\"ds-jogador-nome\">Dudu Maestro</p><p class=\"ds-jogador-clube\">Meia · Várzea</p><ul class=\"ds-trofeus\" aria-label=\"Títulos conquistados\"><li class=\"ds-trofeu\"><svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\"><path d=\"M7 3h10v2h3.5v3.2A4.3 4.3 0 0 1 16.6 12 5.2 5.2 0 0 1 13 14.4V17h3v4H8v-4h3v-2.6A5.2 5.2 0 0 1 7.4 12 4.3 4.3 0 0 1 3.5 8.2V5H7zm0 4H5.5v1.2c0 .9.6 1.7 1.5 2zm10 0v3.2c.9-.3 1.5-1.1 1.5-2V7z\" fill=\"currentColor\"/></svg></li><li class=\"ds-trofeu\"><svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\"><path d=\"M7 3h10v2h3.5v3.2A4.3 4.3 0 0 1 16.6 12 5.2 5.2 0 0 1 13 14.4V17h3v4H8v-4h3v-2.6A5.2 5.2 0 0 1 7.4 12 4.3 4.3 0 0 1 3.5 8.2V5H7zm0 4H5.5v1.2c0 .9.6 1.7 1.5 2zm10 0v3.2c.9-.3 1.5-1.1 1.5-2V7z\" fill=\"currentColor\"/></svg><span class=\"ds-trofeu-vezes\">2</span></li></ul></div><p class=\"ds-over\"><span class=\"ds-over-rotulo\">Over</span><span class=\"ds-over-numero\">78</span></p></section>",
+      "css": ".ds-jogador { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; column-gap: 0.75rem; padding: 0.75rem 1rem; background: var(--cor-superficie, #2C2D2D); color: var(--cor-texto, #F2F4EF); font-family: var(--fonte-texto, 'Atkinson Hyperlegible', Verdana, sans-serif); } .ds-jogador p { margin: 0; } .ds-jogador-nome { font-family: var(--fonte-titulo, 'Big Shoulders Display Variable', 'Arial Narrow', sans-serif); font-size: 1.375rem; font-weight: 800; line-height: 1.05; letter-spacing: 0.01em; text-transform: uppercase; overflow-wrap: anywhere; } .ds-jogador-clube { font-size: 0.9375rem; line-height: 1.3; color: var(--cor-texto-suave, #C4C6C6); } .ds-escudo { color: var(--cor-texto, #F2F4EF); } .ds-escudo-sigla { font-family: var(--fonte-titulo, 'Big Shoulders Display Variable', 'Arial Narrow', sans-serif); font-size: 15px; font-weight: 900; letter-spacing: 0.02em; fill: var(--cor-sigla-texto, #FFFFFF); stroke: var(--cor-sigla-contorno, #14213D); stroke-width: 3px; paint-order: stroke; } .ds-trofeus { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; margin: 0.5rem 0 0; padding: 0; list-style: none; } .ds-trofeu { position: relative; display: grid; color: var(--cor-texto-suave, #C4C6C6); } .ds-trofeu-vezes { position: absolute; top: -0.35rem; right: -0.8rem; min-width: 1.4rem; padding: 0 0.3rem; border-radius: 1rem; background: color-mix(in srgb, var(--cor-fundo, #212222) 74%, transparent); box-shadow: inset 0 0 0 1px var(--cor-linha, #414242); color: var(--cor-texto, #F2F4EF); font-family: var(--fonte-titulo, 'Big Shoulders Display Variable', 'Arial Narrow', sans-serif); font-size: 0.9375rem; font-weight: 800; line-height: 1.4rem; text-align: center; font-variant-numeric: tabular-nums; } .ds-over { display: flex; align-items: baseline; gap: 0.5rem; margin: 0; font-family: var(--fonte-titulo, 'Big Shoulders Display Variable', 'Arial Narrow', sans-serif); line-height: 1; color: var(--cor-texto, #F2F4EF); } .ds-over-rotulo { font-size: 0.9375rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cor-texto-suave, #C4C6C6); } .ds-over-numero { font-size: 2.25rem; font-weight: 900; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Escudo estilizado",
+      "kind": "custom",
+      "refersTo": "escudo",
+      "description": "Duas cores e a sigla do clube, nunca o escudo oficial. Sigla branca com contorno marinho.",
+      "html": "<div class=\"ds-escudo-chao\"><svg class=\"ds-escudo\" viewBox=\"0 0 44 50\" width=\"44\" height=\"50\" role=\"img\" aria-label=\"Escudo estilizado\"><path d=\"M3 3h38v25c0 10-8 16-19 20C11 44 3 38 3 28z\" fill=\"#1E7B4F\"/><path d=\"M22 3h19v25c0 10-8 16-19 20z\" fill=\"#F2F4EF\"/><path d=\"M3 3h38v25c0 10-8 16-19 20C11 44 3 38 3 28z\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><text x=\"22\" y=\"27\" text-anchor=\"middle\" class=\"ds-escudo-sigla\">VZA</text></svg></div>",
+      "css": ".ds-escudo-chao { display: inline-block; padding: 0.75rem 1rem; background: var(--cor-superficie, #2C2D2D); } .ds-escudo { color: var(--cor-texto, #F2F4EF); } .ds-escudo-sigla { font-family: var(--fonte-titulo, 'Big Shoulders Display Variable', 'Arial Narrow', sans-serif); font-size: 15px; font-weight: 900; letter-spacing: 0.02em; fill: var(--cor-sigla-texto, #FFFFFF); stroke: var(--cor-sigla-contorno, #14213D); stroke-width: 3px; paint-order: stroke; }"
+    },
+    {
+      "name": "Número do Over",
+      "kind": "custom",
+      "refersTo": "over-numero",
+      "description": "Rótulo de unidade e número na mesma linha de base. O único número de desempenho visível ao jogador.",
+      "html": "<div class=\"ds-over-chao\"><p class=\"ds-over\"><span class=\"ds-over-rotulo\">Over</span><span class=\"ds-over-numero\">78</span></p></div>",
+      "css": ".ds-over-chao { display: inline-block; padding: 0.75rem 1rem; background: var(--cor-superficie, #2C2D2D); } .ds-over { display: flex; align-items: baseline; gap: 0.5rem; margin: 0; font-family: var(--fonte-titulo, 'Big Shoulders Display Variable', 'Arial Narrow', sans-serif); line-height: 1; color: var(--cor-texto, #F2F4EF); } .ds-over-rotulo { font-size: 0.9375rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cor-texto-suave, #C4C6C6); } .ds-over-numero { font-size: 2.25rem; font-weight: 900; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Lista de troféus com balão",
+      "kind": "chip",
+      "refersTo": "trofeu-vezes",
+      "description": "Um mini troféu por competição vencida; o balão de contagem só aparece com mais de um título.",
+      "html": "<div class=\"ds-trofeus-chao\"><ul class=\"ds-trofeus\" aria-label=\"Títulos conquistados\"><li class=\"ds-trofeu\"><svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\"><path d=\"M7 3h10v2h3.5v3.2A4.3 4.3 0 0 1 16.6 12 5.2 5.2 0 0 1 13 14.4V17h3v4H8v-4h3v-2.6A5.2 5.2 0 0 1 7.4 12 4.3 4.3 0 0 1 3.5 8.2V5H7zm0 4H5.5v1.2c0 .9.6 1.7 1.5 2zm10 0v3.2c.9-.3 1.5-1.1 1.5-2V7z\" fill=\"currentColor\"/></svg></li><li class=\"ds-trofeu\"><svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\"><path d=\"M7 3h10v2h3.5v3.2A4.3 4.3 0 0 1 16.6 12 5.2 5.2 0 0 1 13 14.4V17h3v4H8v-4h3v-2.6A5.2 5.2 0 0 1 7.4 12 4.3 4.3 0 0 1 3.5 8.2V5H7zm0 4H5.5v1.2c0 .9.6 1.7 1.5 2zm10 0v3.2c.9-.3 1.5-1.1 1.5-2V7z\" fill=\"currentColor\"/></svg><span class=\"ds-trofeu-vezes\">2</span></li></ul></div>",
+      "css": ".ds-trofeus-chao { display: inline-block; padding: 0.5rem 1.5rem 0.75rem 1rem; background: var(--cor-superficie, #2C2D2D); } .ds-trofeus { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; margin: 0.5rem 0 0; padding: 0; list-style: none; } .ds-trofeu { position: relative; display: grid; color: var(--cor-texto-suave, #C4C6C6); } .ds-trofeu-vezes { position: absolute; top: -0.35rem; right: -0.8rem; min-width: 1.4rem; padding: 0 0.3rem; border-radius: 1rem; background: color-mix(in srgb, var(--cor-fundo, #212222) 74%, transparent); box-shadow: inset 0 0 0 1px var(--cor-linha, #414242); color: var(--cor-texto, #F2F4EF); font-family: var(--fonte-titulo, 'Big Shoulders Display Variable', 'Arial Narrow', sans-serif); font-size: 0.9375rem; font-weight: 800; line-height: 1.4rem; text-align: center; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Braçadeira de progresso",
+      "kind": "custom",
+      "refersTo": "faixa",
+      "description": "Barra de 6px, largura inteira: trilho cinza, carreira vivida em amarelo.",
+      "html": "<div class=\"ds-faixa\" role=\"progressbar\" aria-label=\"Progresso da carreira\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-valuenow=\"43\" aria-valuetext=\"24 anos\"><span class=\"ds-faixa-feito\" style=\"width: 43%\"></span></div>",
+      "css": ".ds-faixa { height: 6px; background: var(--cor-trilho, #505151); } .ds-faixa-feito { display: block; height: 100%; min-width: 6px; background: var(--cor-destaque, #FFC21A); }"
+    },
+    {
+      "name": "Cabeça de numeral gigante",
+      "kind": "custom",
+      "refersTo": "cabeca-numero",
+      "description": "A idade como número de camisa, com a unidade embaixo, ao lado do título do evento; a história ocupa a largura inteira.",
+      "html": "<header class=\"ds-cabeca\"><p class=\"ds-cabeca-idade\"><span class=\"ds-cabeca-numero\">24</span><span class=\"ds-cabeca-anos\">anos</span></p><h1>O clube do coração chamou</h1><p class=\"ds-cabeca-historia\">O clube que você via da arquibancada ligou. O salário é menor que o das outras propostas, mas a camisa é aquela.</p></header>",
+      "css": ".ds-cabeca { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: 0.75rem 1rem; padding: 1rem 1rem 0.75rem; background: var(--cor-fundo, #212222); color: var(--cor-texto, #F2F4EF); font-family: var(--fonte-texto, 'Atkinson Hyperlegible', Verdana, sans-serif); } .ds-cabeca p, .ds-cabeca h1 { margin: 0; } .ds-cabeca-idade { display: grid; justify-items: start; font-family: var(--fonte-titulo, 'Big Shoulders Display Variable', 'Arial Narrow', sans-serif); } .ds-cabeca-numero { font-size: 5.5rem; font-weight: 900; line-height: 0.8; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; } .ds-cabeca-anos { margin-top: 0.5rem; font-size: 0.9375rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cor-texto-suave, #C4C6C6); } .ds-cabeca h1 { align-self: center; font-family: var(--fonte-titulo, 'Big Shoulders Display Variable', 'Arial Narrow', sans-serif); font-size: 1.875rem; font-weight: 800; line-height: 1.02; letter-spacing: 0.01em; text-transform: uppercase; text-wrap: balance; } .ds-cabeca-historia { grid-column: 1 / -1; max-width: 44ch; font-size: 1.125rem; line-height: 1.45; }"
+    },
+    {
+      "name": "Faixas de opção",
+      "kind": "button",
+      "refersTo": "opcao",
+      "description": "O único controle da tela: faixas de largura inteira com rótulo, temperamento e setas de consequência. Passe o ponteiro, foque ou pressione.",
+      "html": "<div class=\"ds-opcoes\" role=\"group\" aria-label=\"O que você faz?\"><button type=\"button\" class=\"ds-opcao\" aria-pressed=\"false\"><span class=\"ds-opcao-rotulo\">Aceitar a proposta</span><span class=\"ds-opcao-previa\"><span class=\"ds-previa ds-previa-meu\">Seu jeito: Líder</span><span class=\"ds-previa\">Sem efeito imediato</span></span><svg class=\"ds-opcao-seta\" viewBox=\"0 0 10 16\" width=\"10\" height=\"16\"><path d=\"M1.5 1.5 8 8l-6.5 6.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"square\"/></svg></button><button type=\"button\" class=\"ds-opcao\" aria-pressed=\"false\"><span class=\"ds-opcao-rotulo\">Jogar por amor (salário menor)</span><span class=\"ds-opcao-previa\"><span class=\"ds-previa\">Jeito: Resenha</span><span class=\"ds-previa ds-previa-sobe\">Carinho da torcida<span class=\"ds-previa-setas\"><svg viewBox=\"0 0 12 16\" width=\"12\" height=\"16\"><path d=\"M6 1 11 8H7.6v7H4.4V8H1z\" fill=\"currentColor\"/></svg><svg viewBox=\"0 0 12 16\" width=\"12\" height=\"16\"><path d=\"M6 1 11 8H7.6v7H4.4V8H1z\" fill=\"currentColor\"/></svg></span></span></span><svg class=\"ds-opcao-seta\" viewBox=\"0 0 10 16\" width=\"10\" height=\"16\"><path d=\"M1.5 1.5 8 8l-6.5 6.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"square\"/></svg></button><button type=\"button\" class=\"ds-opcao\" aria-pressed=\"false\"><span class=\"ds-opcao-rotulo\">Recusar</span><span class=\"ds-opcao-previa\"><span class=\"ds-previa\">Jeito: Frio</span><span class=\"ds-previa ds-previa-desce\">Moral<span class=\"ds-previa-setas\"><svg viewBox=\"0 0 12 16\" width=\"12\" height=\"16\"><path d=\"M6 15 1 8h3.4V1h3.2v7H11z\" fill=\"currentColor\"/></svg><svg viewBox=\"0 0 12 16\" width=\"12\" height=\"16\"><path d=\"M6 15 1 8h3.4V1h3.2v7H11z\" fill=\"currentColor\"/></svg></span></span></span><svg class=\"ds-opcao-seta\" viewBox=\"0 0 10 16\" width=\"10\" height=\"16\"><path d=\"M1.5 1.5 8 8l-6.5 6.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"square\"/></svg></button></div>",
+      "css": ".ds-opcoes { background: var(--cor-fundo, #212222); color: var(--cor-texto, #F2F4EF); font-family: var(--fonte-texto, 'Atkinson Hyperlegible', Verdana, sans-serif); } .ds-opcao { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 1rem; row-gap: 0.25rem; width: 100%; min-height: 4rem; padding: 0.75rem 1rem; border: 0; border-top: 1px solid var(--cor-linha, #414242); border-radius: 0; background: transparent; color: inherit; font: inherit; text-align: start; cursor: pointer; } .ds-opcao-rotulo { font-size: 1.1875rem; font-weight: 700; line-height: 1.2; } .ds-opcao-previa { grid-column: 1; display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; font-size: 0.9375rem; line-height: 1.3; color: var(--cor-texto-suave, #C4C6C6); } .ds-opcao-seta { grid-column: 2; grid-row: 1 / span 2; color: var(--cor-texto-suave, #C4C6C6); } .ds-previa { display: inline-flex; align-items: center; gap: 0.5rem; } .ds-previa-setas { display: inline-flex; gap: 1px; } .ds-previa-meu { color: var(--cor-texto, #F2F4EF); font-weight: 700; } .ds-previa-sobe .ds-previa-setas { color: var(--cor-positivo, #63D7A0); } .ds-previa-desce .ds-previa-setas { color: var(--cor-negativo, #FF8E97); } @media (hover: hover) { .ds-opcao:hover { background: var(--cor-superficie, #2C2D2D); } } .ds-opcao:focus-visible { outline: 3px solid var(--cor-foco, #FFC21A); outline-offset: -3px; } .ds-opcao[aria-pressed='true'], .ds-opcao:active { background: var(--cor-destaque, #FFC21A); color: var(--cor-sobre-destaque, #14213D); } .ds-opcao[aria-pressed='true'] :is(.ds-opcao-previa, .ds-opcao-seta, .ds-previa-setas, .ds-previa-meu), .ds-opcao:active :is(.ds-opcao-previa, .ds-opcao-seta, .ds-previa-setas, .ds-previa-meu) { color: var(--cor-sobre-destaque, #14213D); } .ds-opcao[aria-pressed='true']:focus-visible { outline-color: var(--cor-sobre-destaque, #14213D); }"
+    },
+    {
+      "name": "Faixa de opção escolhida",
+      "kind": "button",
+      "refersTo": "opcao-pressed",
+      "description": "A opção escolhida vira a braçadeira: faixa inteira amarela com tipo marinho, na hora, sem transição.",
+      "html": "<div class=\"ds-opcoes\"><button type=\"button\" class=\"ds-opcao\" aria-pressed=\"true\"><span class=\"ds-opcao-rotulo\">Jogar por amor (salário menor)</span><span class=\"ds-opcao-previa\"><span class=\"ds-previa\">Jeito: Resenha</span><span class=\"ds-previa ds-previa-sobe\">Carinho da torcida<span class=\"ds-previa-setas\"><svg viewBox=\"0 0 12 16\" width=\"12\" height=\"16\"><path d=\"M6 1 11 8H7.6v7H4.4V8H1z\" fill=\"currentColor\"/></svg><svg viewBox=\"0 0 12 16\" width=\"12\" height=\"16\"><path d=\"M6 1 11 8H7.6v7H4.4V8H1z\" fill=\"currentColor\"/></svg></span></span></span><svg class=\"ds-opcao-seta\" viewBox=\"0 0 10 16\" width=\"10\" height=\"16\"><path d=\"M1.5 1.5 8 8l-6.5 6.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"square\"/></svg></button></div>",
+      "css": ".ds-opcoes { background: var(--cor-fundo, #212222); color: var(--cor-texto, #F2F4EF); font-family: var(--fonte-texto, 'Atkinson Hyperlegible', Verdana, sans-serif); } .ds-opcao { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 1rem; row-gap: 0.25rem; width: 100%; min-height: 4rem; padding: 0.75rem 1rem; border: 0; border-top: 1px solid var(--cor-linha, #414242); border-radius: 0; background: transparent; color: inherit; font: inherit; text-align: start; cursor: pointer; } .ds-opcao-rotulo { font-size: 1.1875rem; font-weight: 700; line-height: 1.2; } .ds-opcao-previa { grid-column: 1; display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; font-size: 0.9375rem; line-height: 1.3; color: var(--cor-texto-suave, #C4C6C6); } .ds-opcao-seta { grid-column: 2; grid-row: 1 / span 2; color: var(--cor-texto-suave, #C4C6C6); } .ds-previa { display: inline-flex; align-items: center; gap: 0.5rem; } .ds-previa-setas { display: inline-flex; gap: 1px; } .ds-previa-meu { color: var(--cor-texto, #F2F4EF); font-weight: 700; } .ds-previa-sobe .ds-previa-setas { color: var(--cor-positivo, #63D7A0); } .ds-previa-desce .ds-previa-setas { color: var(--cor-negativo, #FF8E97); } @media (hover: hover) { .ds-opcao:hover { background: var(--cor-superficie, #2C2D2D); } } .ds-opcao:focus-visible { outline: 3px solid var(--cor-foco, #FFC21A); outline-offset: -3px; } .ds-opcao[aria-pressed='true'], .ds-opcao:active { background: var(--cor-destaque, #FFC21A); color: var(--cor-sobre-destaque, #14213D); } .ds-opcao[aria-pressed='true'] :is(.ds-opcao-previa, .ds-opcao-seta, .ds-previa-setas, .ds-previa-meu), .ds-opcao:active :is(.ds-opcao-previa, .ds-opcao-seta, .ds-previa-setas, .ds-previa-meu) { color: var(--cor-sobre-destaque, #14213D); } .ds-opcao[aria-pressed='true']:focus-visible { outline-color: var(--cor-sobre-destaque, #14213D); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "A camisa e a braçadeira",
+    "overview": "O número nas costas é a tela. Um numeral gigante (a idade do jogador) ancora o painel como o número de uma camisa, e a braçadeira de capitão é a única cor que se move: ela marca o progresso da carreira e a opção que o polegar escolheu. Todo o resto é chão neutro e tipo claro. O painel fica em grafite sem matiz para nunca disputar com as cores do clube, que só aparecem dentro do escudo estilizado e da pintura da cena.\n\nA densidade é de celular com uma mão: uma decisão por tela, tudo alinhado à esquerda, coluna única de no máximo 30rem, opções encostadas no polegar. O texto que se lê é grande e folgado; o que é placar (número, nome, título, Over) é condensado, pesado e em caixa alta. Não há cartões, sombras de elevação, gradientes nem movimento: a hierarquia vem do tamanho do tipo, de dois tons de cinza e de linhas de 1px.\n\nA composição recusa a folha arredondada com botões em pílula flutuando sobre a imagem. A cena fica em cima, o painel continua o escuro da pintura, e as opções são faixas de largura inteira.",
+    "keyCharacteristics": [
+      "Numeral gigante como âncora da tela (`numero`, 5.5rem, peso 900).",
+      "Chão grafite neutro (`fundo`, `superficie`); as cores de clube vivem só no escudo e na cena.",
+      "Um único destaque, o amarelo da braçadeira (`destaque`), sempre como faixa cheia com tipo marinho por cima.",
+      "Verde e vermelho só nas setas de consequência.",
+      "Faixas de largura inteira separadas por linha de 1px; cantos retos.",
+      "Alvo de toque de 4rem (`toque.minimo`); nenhum texto abaixo de 0.9375rem.",
+      "Sem animação e sem transição nesta tela."
+    ],
+    "rules": [
+      {
+        "name": "A Regra da Braçadeira",
+        "body": "O amarelo só aparece como faixa cheia: progresso feito e opção escolhida (mais o anel de foco no escuro e a seleção de texto). Nunca como cor de texto, ícone ou borda decorativa.",
+        "section": "colors"
+      },
+      {
+        "name": "A Regra do Chão Neutro",
+        "body": "Nenhuma cor de clube sai do escudo ou da cena. O painel é cinza sem matiz justamente para que qualquer par de cores de clube caiba sem briga.",
+        "section": "colors"
+      },
+      {
+        "name": "A Regra do Sinal",
+        "body": "Verde e vermelho pintam só as setas. O nome do campo afetado continua em `textoSuave`, e o sentido também é dito por forma (seta para cima, para baixo, troca) e por texto para leitor de tela; a cor nunca é o único sinal.",
+        "section": "colors"
+      },
+      {
+        "name": "A Regra do Placar",
+        "body": "Big Shoulders só para numerais, nomes e títulos, sempre em peso 700 a 900. Tudo o que é frase vai em Atkinson.",
+        "section": "typography"
+      },
+      {
+        "name": "A Regra do Piso",
+        "body": "`apoio` (0.9375rem) é o menor texto do sistema e o corpo nunca desce de 1rem. Todos os tamanhos em rem, para respeitar o ajuste de fonte do aparelho.",
+        "section": "typography"
+      },
+      {
+        "name": "A Regra da Unidade",
+        "body": "A etiqueta condensada e espaçada só existe colada a um número, como unidade dele. Não vira sobretítulo de seção nem antetítulo de manchete.",
+        "section": "typography"
+      },
+      {
+        "name": "A Regra do Tom",
+        "body": "Um plano se separa do outro por tom ou por linha de 1px, nunca por sombra projetada nem por desfoque.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** usar as variáveis geradas do `tokens.json` (`--cor-*`, `--tipo-*`, `--espaco-*`, `--toque-minimo`); cor nova entra primeiro no `tokens.json`, com o par registrado em `contraste`.",
+      "**Do** forçar `data-tema=\"escuro\"` em tela com cena, para o painel continuar o escuro da pintura.",
+      "**Do** manter um numeral gigante em `numero` como âncora da tela, com a unidade colada embaixo.",
+      "**Do** fazer de todo controle tocável uma faixa de largura inteira com pelo menos `toque.minimo` de altura e rótulo que diz o que acontece.",
+      "**Do** mostrar consequência por nome do campo, forma da seta e quantidade de setas, com o texto equivalente para leitor de tela.",
+      "**Do** separar planos por `superficie` ou por linha de 1px em `linha`.",
+      "**Do** desenhar clube só como escudo estilizado: duas cores, sigla branca com contorno marinho."
+    ],
+    "donts": [
+      "**Don't** usar `destaque` em texto, ícone ou borda; ele é faixa cheia de progresso ou de escolha.",
+      "**Don't** pintar nada com verde ou vermelho além das setas de consequência.",
+      "**Don't** levar cor de clube para o painel, para os botões ou para o tipo.",
+      "**Don't** usar cartões, sombras projetadas, gradientes de fundo ou botões em pílula; o único arredondado é o balão de contagem dos troféus.",
+      "**Don't** mostrar número de atributo; só o Over aparece em número.",
+      "**Don't** escrever frase em Big Shoulders nem número de placar em Atkinson.",
+      "**Don't** descer texto abaixo de `apoio` (0.9375rem) nem apertar a entrelinha de leitura abaixo de 1.3.",
+      "**Don't** acrescentar animação ou transição: o produto tem um único momento animado, o carimbo do número na abertura, e ele ainda não foi construído."
+    ]
+  }
+}

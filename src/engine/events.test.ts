@@ -1,4 +1,4 @@
-import { applyOption, autoChoice, eligibleEvents, pickEvent, temperamentsFor, validateEvents } from './events';
+import { applyOption, autoChoice, eligibleEvents, jeitoOf, pickEvent, validateEvents } from './events';
 import { createPrng } from './prng';
 import raw from '../data/events.json';
 import scenes from '../data/scenes.json';
@@ -63,7 +63,7 @@ describe('motor de eventos e dilemas (T25)', () => {
 
   it('escolha automática por temperamento (política)', () => {
     expect(autoChoice('proposta-rival', 'esquentado')).toBe('aceitar');
-    expect(autoChoice('proposta-rival', 'frio')).toBe('recusar');
+    expect(autoChoice('proposta-rival', 'lider')).toBe('recusar');
     expect(autoChoice('salario-atrasado', 'frio')).toBe('pedir-saida');
     expect(autoChoice('jogo-contra-coracao', 'resenha')).toBe('nao-comemorar');
   });
@@ -76,10 +76,35 @@ describe('motor de eventos e dilemas (T25)', () => {
     }
   });
 
-  it('temperamentos de cada opção: quem a escolheria sozinho; o padrão fica com os que não têm regra própria', () => {
-    expect(temperamentsFor('proposta-coracao', 'aceitar-por-amor', ALL_TEMPERAMENTS)).toEqual(['lider', 'resenha']);
-    expect(temperamentsFor('proposta-coracao', 'aceitar', ALL_TEMPERAMENTS)).toEqual(['frio', 'esquentado']);
-    expect(temperamentsFor('proposta-coracao', 'recusar', ALL_TEMPERAMENTS)).toEqual([]);
-    for (const tmp of ALL_TEMPERAMENTS) expect(temperamentsFor('proposta-coracao', autoChoice('proposta-coracao', tmp), ALL_TEMPERAMENTS)).toContain(tmp);
+  it('três opções por decisão, cada uma com o seu jeito (SPEC v2.17); eventos só narrados têm uma opção', () => {
+    for (const e of raw.eventos) {
+      expect([1, 3], e.id).toContain(e.opcoes.length);
+      const jeitos = (e.opcoes as { jeito?: string }[]).map((o) => o.jeito);
+      if (e.opcoes.length === 1) { expect(jeitos, e.id).toEqual([undefined]); continue; }
+      expect(new Set(jeitos).size, e.id).toBe(3);
+      for (const j of jeitos) expect(ALL_TEMPERAMENTS, e.id).toContain(j);
+    }
+  });
+
+  it('escolha automática: a opção do jeito do jogador; o temperamento sem opção própria segue o padrão', () => {
+    for (const e of raw.eventos.filter((x) => x.opcoes.length === 3)) {
+      for (const o of e.opcoes as { id: string; jeito: string }[]) {
+        expect(jeitoOf(e.id, o.id)).toBe(o.jeito);
+        expect(autoChoice(e.id, o.jeito), e.id).toBe(o.id);
+      }
+      const fourth = ALL_TEMPERAMENTS.find((tmp) => !(e.opcoes as { jeito: string }[]).some((o) => o.jeito === tmp))!;
+      expect(autoChoice(e.id, fourth), e.id).toBe(e.politica.padrao);
+    }
+    expect(jeitoOf('estirao-grande', 'seguir')).toBeNull();
+  });
+
+  it('configuração inválida é recusada: duas opções, jeito repetido ou jeito desconhecido', () => {
+    const scenes = [...new Set(raw.eventos.map((e) => e.cena))];
+    const clone = () => structuredClone(raw) as unknown as { eventos: { opcoes: { id: string; jeito?: string }[] }[] };
+    const idx = raw.eventos.findIndex((e) => e.opcoes.length === 3);
+    const two = clone(); two.eventos[idx]!.opcoes.pop();
+    const dup = clone(); dup.eventos[idx]!.opcoes[1]!.jeito = dup.eventos[idx]!.opcoes[0]!.jeito;
+    const unk = clone(); unk.eventos[idx]!.opcoes[0]!.jeito = 'zen';
+    for (const bad of [two, dup, unk]) expect(validateEvents(bad, scenes)).not.toEqual([]);
   });
 });

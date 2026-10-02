@@ -1,3 +1,4 @@
+import bands from '../../data/bands.json';
 import tokens from './tokens.json';
 import { contrast, themeCss } from './theme';
 
@@ -31,6 +32,19 @@ describe('tokens visuais (T49, SPEC 7)', () => {
   it('os pares conferidos cobrem todos os papéis de cor dos temas', () => {
     const checked = new Set([...tokens.contraste.texto, ...tokens.contraste.grafico].flat().concat(tokens.contraste.decorativo));
     for (const t of THEMES) for (const role of Object.keys(tokens.temas[t])) expect(checked, `${t}.${role}`).toContain(role);
+  });
+
+  it('medalha do Over: uma por faixa de overall, do bronze ao diamante, com o número legível nas duas metades', () => {
+    const medals = tokens.medalha as unknown as Record<string, { nome: string; clara: string; escura: string; aro: string; texto: string }>;
+    expect(Object.keys(medals).filter((k) => !k.startsWith('_'))).toEqual(bands.map((b) => b.key));
+    expect(medals[bands[0]!.key]!.nome).toBe('bronze');
+    expect(medals[bands.at(-1)!.key]!.nome).toBe('diamante');
+    for (const b of bands) {
+      const m = medals[b.key]!;
+      expect.soft(contrast(m.texto, m.clara), `${m.nome} clara`).toBeGreaterThanOrEqual(4.5);
+      expect.soft(contrast(m.texto, m.escura), `${m.nome} escura`).toBeGreaterThanOrEqual(4.5);
+    }
+    expect(themeCss()).toContain('[data-medalha="diamante"]');
   });
 
   it('fontes do SPEC, sempre com reserva do sistema', () => {

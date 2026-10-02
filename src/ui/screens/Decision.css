@@ -16,7 +16,7 @@
   flex: 0 1 calc(min(100vw, 30rem) * 0.5);
   min-block-size: 7rem;
   object-fit: cover;
-  object-position: 50% 10%;
+  object-position: 50% 16%;
   /* a máscara só costura a emenda com o painel */
   -webkit-mask-image: linear-gradient(to bottom, #000 84%, transparent);
   mask-image: linear-gradient(to bottom, #000 84%, transparent);
@@ -26,6 +26,7 @@
   flex: 1 0 auto;
   display: grid;
   /* faixa e cabeça em cima; a sobra de altura fica entre o texto e as opções, que encostam no polegar */
+  /* jogador, braçadeira de progresso e cabeça em cima; a sobra de altura fica entre a história e as opções */
   grid-template-rows: auto auto auto minmax(var(--espaco-2), 1fr) auto;
   padding-block-end: env(safe-area-inset-bottom);
 }
@@ -34,15 +35,15 @@
 .faixa { block-size: 6px; background: var(--cor-trilho); }
 .faixa__feito { display: block; block-size: 100%; min-inline-size: 6px; background: var(--cor-destaque); }
 
-.jogador {
+/* Quem decide: uma tira com as duas cores do clube, o jogador e o Over; embaixo, a ficha em três células, como um placar. */
+.jogador { background: var(--cor-superficie); }
+.jogador__cores { display: block; block-size: 4px; }
+.jogador__topo {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   column-gap: var(--espaco-3);
-  row-gap: var(--espaco-3);
   padding: var(--espaco-3) var(--espaco-4);
-  background: var(--cor-superficie);
-  border-block-end: 1px solid var(--cor-linha);
 }
 .escudo { color: var(--cor-texto); }
 .escudo__sigla {
@@ -50,8 +51,8 @@
   font-size: 15px;
   font-weight: 900;
   letter-spacing: 0.02em;
-  fill: #fff;
-  stroke: #14213d;
+  fill: var(--cor-sigla-texto);
+  stroke: var(--cor-sigla-contorno);
   stroke-width: 3px;
   paint-order: stroke;
 }
@@ -62,32 +63,88 @@
   line-height: 1.05;
   letter-spacing: 0.01em;
   text-transform: uppercase;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 .jogador__clube { font-size: var(--tipo-apoio); line-height: 1.3; color: var(--cor-texto-suave); }
-.jogador__over { display: grid; justify-items: end; font-family: var(--fonte-titulo); line-height: 1; }
+.jogador__over { display: flex; align-items: center; gap: var(--espaco-2); font-family: var(--fonte-titulo); line-height: 1; }
 .jogador__over-rotulo { font-size: var(--tipo-apoio); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cor-texto-suave); }
-.jogador__over-numero { font-size: var(--tipo-over); font-weight: 900; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
-
-.trofeus {
-  grid-column: 1 / -1;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--espaco-2) var(--espaco-4);
-  margin: 0;
-  padding: 0;
-  list-style: none;
+/* O Over mora numa moeda de metal: borda serrilhada, aro, disco com brilho e o número em relevo.
+   As cores vêm da medalha da faixa de overall (bronze, prata, ouro, platina, esmeralda, diamante). */
+.moeda {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  inline-size: 3.75rem;
+  block-size: 3.75rem;
+  border-radius: 50%;
+  /* serrilha da borda */
+  background: repeating-conic-gradient(var(--medalha-aro) 0 3deg, var(--medalha-escura) 3deg 6deg);
+  box-shadow: 0 2px 5px rgb(0 0 0 / 0.5), 0 0 0 1px rgb(0 0 0 / 0.35);
+  color: var(--medalha-texto);
+  font-size: var(--tipo-over);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  /* número cunhado: luz por baixo, sombra por cima */
+  text-shadow: 0 1px 0 rgb(255 255 255 / 0.55), 0 -1px 0 rgb(0 0 0 / 0.18);
 }
-.trofeu { position: relative; display: grid; }
-.trofeu--ouro { color: var(--cor-ouro); }
-.trofeu--prata { color: var(--cor-prata); }
-.trofeu--bronze { color: var(--cor-bronze); }
+/* aro polido, com o reflexo girando como em metal escovado */
+.moeda::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  z-index: -2;
+  border-radius: 50%;
+  background: conic-gradient(from 215deg, var(--medalha-escura), var(--medalha-clara) 14%, var(--medalha-escura) 30%, var(--medalha-aro) 50%, var(--medalha-escura) 66%, var(--medalha-clara) 84%, var(--medalha-escura));
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.35);
+}
+/* disco central rebaixado, com o brilho no alto à esquerda */
+.moeda::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  z-index: -1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 22%, rgb(255 255 255 / 0.85) 0, rgb(255 255 255 / 0) 34%),
+    radial-gradient(circle at 50% 45%, var(--medalha-clara) 0 45%, var(--medalha-escura) 100%);
+  box-shadow: inset 0 2px 3px rgb(0 0 0 / 0.35), 0 1px 0 rgb(255 255 255 / 0.5);
+}
+
+.ficha {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  border-block-start: 1px solid var(--cor-linha);
+}
+.ficha > div { display: grid; align-content: start; gap: var(--espaco-1); padding: var(--espaco-2) var(--espaco-3) var(--espaco-3); }
+.ficha > div:first-child { padding-inline-start: var(--espaco-4); }
+.ficha > div:last-child { padding-inline-end: var(--espaco-4); }
+.ficha > div + div { border-inline-start: 1px solid var(--cor-linha); }
+.ficha dt {
+  font-family: var(--fonte-titulo);
+  font-size: var(--tipo-apoio);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
+.ficha dd { margin: 0; min-block-size: 1.6rem; display: flex; align-items: center; font-weight: 700; line-height: 1.2; white-space: nowrap; }
+
+.trofeus { display: flex; align-items: center; gap: var(--espaco-3); margin: 0; padding: 0; list-style: none; }
+.trofeu--resto { font-family: var(--fonte-titulo); font-size: var(--tipo-opcao); font-weight: 800; }
+.trofeu { position: relative; display: grid; color: var(--cor-texto); }
+.trofeu:has(.trofeu__vezes) { margin-inline-end: 0.5rem; }
 .trofeu__vezes {
   position: absolute;
-  inset-block-start: -0.35rem;
-  inset-inline-end: -0.8rem;
-  min-inline-size: 1.4rem;
-  padding-inline: 0.3rem;
+  /* canto de cima do troféu, sem cobrir a taça nem encostar no rótulo da célula */
+  inset-block-start: -0.15rem;
+  inset-inline-end: -0.7rem;
+  min-inline-size: 1.15rem;
+  padding-inline: 0.2rem;
   border-radius: 1rem;
   /* balão translúcido: deixa ver o troféu por baixo sem perder a leitura do número */
   background: color-mix(in srgb, var(--cor-fundo) 74%, transparent);
@@ -96,7 +153,7 @@
   font-family: var(--fonte-titulo);
   font-size: var(--tipo-apoio);
   font-weight: 800;
-  line-height: 1.4rem;
+  line-height: 1.15rem;
   text-align: center;
   font-variant-numeric: tabular-nums;
 }
@@ -105,7 +162,7 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: start;
-  gap: var(--espaco-4);
+  gap: var(--espaco-3) var(--espaco-4);
   padding: var(--espaco-4) var(--espaco-4) var(--espaco-3);
 }
 
@@ -126,15 +183,17 @@
   color: var(--cor-texto-suave);
 }
 
-.decisao__texto { display: grid; gap: var(--espaco-2); padding-block-start: 0.1rem; }
-.decisao__texto h1 {
+.decisao__cabeca h1 {
+  /* o alto das letras do título alinha com o alto do número da idade */
+  align-self: start;
+  margin-block-start: -2px;
   font-size: var(--tipo-titulo);
   font-weight: 800;
   line-height: 1.02;
   letter-spacing: 0.01em;
   text-transform: uppercase;
 }
-.decisao__texto p { max-inline-size: 38ch; font-size: var(--tipo-historia); line-height: 1.45; }
+.decisao__historia { grid-column: 1 / -1; max-inline-size: 44ch; font-size: var(--tipo-historia); line-height: 1.45; }
 
 .opcao {
   display: grid;
@@ -154,16 +213,6 @@
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
-.opcao__perfil {
-  grid-column: 1;
-  font-family: var(--fonte-titulo);
-  font-size: var(--tipo-apoio);
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--cor-texto-suave);
-}
-.opcao__perfil--meu { color: var(--cor-texto); }
 .opcao__rotulo { font-size: var(--tipo-opcao); font-weight: 700; line-height: 1.2; }
 .opcao__previa {
   grid-column: 1;
@@ -174,10 +223,11 @@
   line-height: 1.3;
   color: var(--cor-texto-suave);
 }
-.opcao__seta { grid-column: 2; grid-row: 1 / span 3; align-self: center; color: var(--cor-texto-suave); }
+.opcao__seta { grid-column: 2; grid-row: 1 / span 2; align-self: center; color: var(--cor-texto-suave); }
 
 .previa { display: inline-flex; align-items: center; gap: var(--espaco-2); }
 .previa__setas { display: inline-flex; gap: 1px; }
+.previa--meu { color: var(--cor-texto); font-weight: 700; }
 .previa--sobe .previa__setas { color: var(--cor-positivo); }
 .previa--desce .previa__setas { color: var(--cor-negativo); }
 
@@ -189,8 +239,8 @@
 /* a faixa de capitão: a opção escolhida vira o amarelo da braçadeira */
 .opcao[aria-pressed='true'],
 .opcao:active { background: var(--cor-destaque); color: var(--cor-sobre-destaque); }
-.opcao[aria-pressed='true'] :is(.opcao__perfil, .opcao__previa, .opcao__seta, .previa__setas),
-.opcao:active :is(.opcao__perfil, .opcao__previa, .opcao__seta, .previa__setas) { color: var(--cor-sobre-destaque); }
+.opcao[aria-pressed='true'] :is(.opcao__previa, .opcao__seta, .previa__setas),
+.opcao:active :is(.opcao__previa, .opcao__seta, .previa__setas) { color: var(--cor-sobre-destaque); }
 .opcao[aria-pressed='true']:focus-visible { outline-color: var(--cor-sobre-destaque); }
 
 @media (min-width: 40rem) {

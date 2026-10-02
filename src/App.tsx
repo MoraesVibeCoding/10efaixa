@@ -5,7 +5,8 @@ import scene from './assets/amostra/assinatura-contrato.webp';
 // T49: tela de amostra para aprovar o visual. Evento, idade, temperamento e cena são fixos aqui; a T51 liga a tela à carreira de verdade.
 const SAMPLE = {
   eventId: 'proposta-coracao', age: 24, careerYears: 20, temperament: 'lider',
-  player: { name: 'Dudu Maestro', position: 'meia', clubId: 'flamengo', overall: 78, titles: ['estadual', 'estadual', 'copaDoBrasil'] },
+  player: { name: 'Dudu Maestro', position: 'meia', clubId: 'flamengo', overall: 78, titles: ['estadual', 'estadual', 'copaDoBrasil'],
+    role: 'titular', monthlySalary: { amount: 180_000, currency: 'BRL' as const } },
 };
 
 export function App() {

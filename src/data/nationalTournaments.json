@@ -109,6 +109,10 @@
    },
    "poupar": {
     "semImpacto": true
+   },
+   "entrar-no-segundo-tempo": {
+    "forca": 1,
+    "riscoLesao": 0.12
    }
   },
   "copa-fora-posicao": {
@@ -117,6 +121,9 @@
    },
    "recusar": {
     "semImpactoAteOFim": true
+   },
+   "aceitar-e-cobrar": {
+    "forca": 1
    }
   },
   "copa-penalti": {

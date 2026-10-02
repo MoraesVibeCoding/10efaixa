@@ -1,5 +1,5 @@
 {
- "_nota": "Eventos e dilemas (SPEC 6.13, 6.18; T25). Condições: campo op valor. Efeitos: add ou mul (com limites de 'campos') ou set.",
+ "_nota": "Eventos e dilemas (SPEC 6.13, 6.18; T25). Condições: campo op valor. Efeitos: add ou mul (com limites de 'campos') ou set. v2.17: toda decisão tem 3 opções, cada uma com o 'jeito' (temperamento) a que remete; a escolha automática é a opção do jeito do jogador, e o temperamento sem opção própria segue 'politica.padrao'.",
  "campos": {
   "moral": [
    0,
@@ -158,7 +158,8 @@
        "set",
        true
       ]
-     ]
+     ],
+     "jeito": "esquentado"
     },
     {
      "id": "recusar",
@@ -173,14 +174,28 @@
        "add",
        -0.05
       ]
-     ]
+     ],
+     "jeito": "lider"
+    },
+    {
+     "id": "usar-como-trunfo",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       -0.03
+      ],
+      [
+       "moral",
+       "add",
+       0.02
+      ]
+     ],
+     "jeito": "frio"
     }
    ],
    "politica": {
-    "padrao": "recusar",
-    "temperamento": {
-     "esquentado": "aceitar"
-    }
+    "padrao": "recusar"
    }
   },
   {
@@ -208,7 +223,8 @@
        "add",
        -0.1
       ]
-     ]
+     ],
+     "jeito": "frio"
     },
     {
      "id": "ficar",
@@ -223,14 +239,33 @@
        "add",
        5
       ]
-     ]
+     ],
+     "jeito": "lider"
+    },
+    {
+     "id": "cobrar-a-diretoria",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       -0.05
+      ],
+      [
+       "idolatria",
+       "add",
+       3
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.02
+      ]
+     ],
+     "jeito": "esquentado"
     }
    ],
    "politica": {
-    "padrao": "ficar",
-    "temperamento": {
-     "frio": "pedir-saida"
-    }
+    "padrao": "ficar"
    }
   },
   {
@@ -253,7 +288,8 @@
        "set",
        true
       ]
-     ]
+     ],
+     "jeito": "lider"
     },
     {
      "id": "aceitar-por-amor",
@@ -273,7 +309,8 @@
        "add",
        10
       ]
-     ]
+     ],
+     "jeito": "resenha"
     },
     {
      "id": "recusar",
@@ -283,15 +320,12 @@
        "add",
        -0.05
       ]
-     ]
+     ],
+     "jeito": "frio"
     }
    ],
    "politica": {
-    "padrao": "aceitar",
-    "temperamento": {
-     "lider": "aceitar-por-amor",
-     "resenha": "aceitar-por-amor"
-    }
+    "padrao": "aceitar-por-amor"
    }
   },
   {
@@ -319,7 +353,8 @@
        "add",
        -40
       ]
-     ]
+     ],
+     "jeito": "frio"
     },
     {
      "id": "recusar",
@@ -329,14 +364,28 @@
        "add",
        -0.05
       ]
-     ]
+     ],
+     "jeito": "lider"
+    },
+    {
+     "id": "recusar-em-publico",
+     "efeitos": [
+      [
+       "idolatriaCoracao",
+       "add",
+       10
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.02
+      ]
+     ],
+     "jeito": "esquentado"
     }
    ],
    "politica": {
-    "padrao": "recusar",
-    "temperamento": {
-     "frio": "aceitar"
-    }
+    "padrao": "recusar"
    }
   },
   {
@@ -364,7 +413,8 @@
        "add",
        5
       ]
-     ]
+     ],
+     "jeito": "esquentado"
     },
     {
      "id": "nao-comemorar",
@@ -379,14 +429,28 @@
        "add",
        -3
       ]
-     ]
+     ],
+     "jeito": "lider"
+    },
+    {
+     "id": "comemorar-discreto",
+     "efeitos": [
+      [
+       "idolatriaCoracao",
+       "add",
+       -5
+      ],
+      [
+       "idolatria",
+       "add",
+       2
+      ]
+     ],
+     "jeito": "frio"
     }
    ],
    "politica": {
-    "padrao": "nao-comemorar",
-    "temperamento": {
-     "esquentado": "comemorar"
-    }
+    "padrao": "nao-comemorar"
    }
   },
   {
@@ -409,7 +473,8 @@
        "set",
        true
       ]
-     ]
+     ],
+     "jeito": "frio"
     },
     {
      "id": "bater-o-pe",
@@ -424,7 +489,8 @@
        "add",
        0.05
       ]
-     ]
+     ],
+     "jeito": "lider"
     },
     {
      "id": "trocar-empresario",
@@ -434,14 +500,12 @@
        "set",
        true
       ]
-     ]
+     ],
+     "jeito": "esquentado"
     }
    ],
    "politica": {
-    "padrao": "bater-o-pe",
-    "temperamento": {
-     "esquentado": "trocar-empresario"
-    }
+    "padrao": "bater-o-pe"
    }
   },
   {
@@ -469,7 +533,8 @@
        "add",
        -0.05
       ]
-     ]
+     ],
+     "jeito": "frio"
     },
     {
      "id": "dar-outra-chance",
@@ -479,14 +544,28 @@
        "add",
        -0.1
       ]
-     ]
+     ],
+     "jeito": "resenha"
+    },
+    {
+     "id": "cobrar-cara-a-cara",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       -0.03
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.02
+      ]
+     ],
+     "jeito": "esquentado"
     }
    ],
    "politica": {
-    "padrao": "trocar-empresario",
-    "temperamento": {
-     "resenha": "dar-outra-chance"
-    }
+    "padrao": "trocar-empresario"
    }
   },
   {
@@ -509,7 +588,8 @@
        "add",
        -0.1
       ]
-     ]
+     ],
+     "jeito": "esquentado"
     },
     {
      "id": "ficar-com-o-clube",
@@ -524,14 +604,23 @@
        "add",
        -0.03
       ]
-     ]
+     ],
+     "jeito": "lider"
+    },
+    {
+     "id": "nao-se-meter",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ],
+     "jeito": "frio"
     }
    ],
    "politica": {
-    "padrao": "ficar-com-o-clube",
-    "temperamento": {
-     "esquentado": "apoiar-empresario"
-    }
+    "padrao": "ficar-com-o-clube"
    }
   },
   {
@@ -554,7 +643,8 @@
        "set",
        true
       ]
-     ]
+     ],
+     "jeito": "lider"
     },
     {
      "id": "pedir-aumento",
@@ -574,7 +664,8 @@
        "add",
        -0.03
       ]
-     ]
+     ],
+     "jeito": "esquentado"
     },
     {
      "id": "nao-renovar",
@@ -589,15 +680,12 @@
        "add",
        -0.02
       ]
-     ]
+     ],
+     "jeito": "frio"
     }
    ],
    "politica": {
-    "padrao": "renovar",
-    "temperamento": {
-     "frio": "pedir-aumento",
-     "esquentado": "pedir-aumento"
-    }
+    "padrao": "renovar"
    }
   },
   {
@@ -625,7 +713,8 @@
        "add",
        -0.1
       ]
-     ]
+     ],
+     "jeito": "frio"
     },
     {
      "id": "conservador",
@@ -640,7 +729,8 @@
        "add",
        -0.05
       ]
-     ]
+     ],
+     "jeito": "resenha"
     },
     {
      "id": "voltar-antes",
@@ -655,16 +745,12 @@
        "add",
        5
       ]
-     ]
+     ],
+     "jeito": "lider"
     }
    ],
    "politica": {
-    "padrao": "conservador",
-    "temperamento": {
-     "frio": "operar",
-     "esquentado": "voltar-antes",
-     "lider": "voltar-antes"
-    }
+    "padrao": "voltar-antes"
    }
   },
   {
@@ -687,7 +773,8 @@
        "set",
        true
       ]
-     ]
+     ],
+     "jeito": "lider"
     },
     {
      "id": "recusar",
@@ -697,14 +784,28 @@
        "add",
        -0.05
       ]
-     ]
+     ],
+     "jeito": "esquentado"
+    },
+    {
+     "id": "aceitar-com-garantia",
+     "efeitos": [
+      [
+       "mudarPosicao",
+       "set",
+       true
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.03
+      ]
+     ],
+     "jeito": "frio"
     }
    ],
    "politica": {
-    "padrao": "aceitar",
-    "temperamento": {
-     "esquentado": "recusar"
-    }
+    "padrao": "aceitar"
    }
   },
   {
@@ -732,7 +833,8 @@
        "add",
        -0.1
       ]
-     ]
+     ],
+     "jeito": "resenha"
     },
     {
      "id": "ficar-em-casa",
@@ -747,15 +849,28 @@
        "add",
        0.03
       ]
-     ]
+     ],
+     "jeito": "frio"
+    },
+    {
+     "id": "dar-uma-passada",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.03
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.03
+      ]
+     ],
+     "jeito": "lider"
     }
    ],
    "politica": {
-    "padrao": "ficar-em-casa",
-    "temperamento": {
-     "resenha": "ir",
-     "esquentado": "ir"
-    }
+    "padrao": "ir"
    }
   },
   {
@@ -788,7 +903,8 @@
        "add",
        -0.05
       ]
-     ]
+     ],
+     "jeito": "esquentado"
     },
     {
      "id": "deixar-pra-la",
@@ -798,14 +914,28 @@
        "add",
        0.02
       ]
-     ]
+     ],
+     "jeito": "frio"
+    },
+    {
+     "id": "responder-na-zoeira",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       3
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.03
+      ]
+     ],
+     "jeito": "resenha"
     }
    ],
    "politica": {
-    "padrao": "deixar-pra-la",
-    "temperamento": {
-     "esquentado": "postar"
-    }
+    "padrao": "deixar-pra-la"
    }
   },
   {
@@ -838,11 +968,55 @@
        "set",
        true
       ]
-     ]
+     ],
+     "jeito": "lider"
     },
     {
-     "id": "adiar",
-     "efeitos": []
+     "id": "comprar-e-festejar",
+     "efeitos": [
+      [
+       "patrimonio",
+       "mul",
+       0.82
+      ],
+      [
+       "moral",
+       "add",
+       0.1
+      ],
+      [
+       "casaComprada",
+       "set",
+       true
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.02
+      ]
+     ],
+     "jeito": "resenha"
+    },
+    {
+     "id": "comprar-financiado",
+     "efeitos": [
+      [
+       "patrimonio",
+       "mul",
+       0.93
+      ],
+      [
+       "moral",
+       "add",
+       0.07
+      ],
+      [
+       "casaComprada",
+       "set",
+       true
+      ]
+     ],
+     "jeito": "frio"
     }
    ],
    "politica": {
@@ -869,19 +1043,28 @@
        "set",
        true
       ]
-     ]
+     ],
+     "jeito": "esquentado"
     },
     {
      "id": "guardar",
-     "efeitos": []
+     "efeitos": [],
+     "jeito": "frio"
+    },
+    {
+     "id": "pedir-conselho",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.02
+      ]
+     ],
+     "jeito": "lider"
     }
    ],
    "politica": {
-    "padrao": "guardar",
-    "temperamento": {
-     "esquentado": "investir",
-     "resenha": "investir"
-    }
+    "padrao": "investir"
    }
   },
   {
@@ -946,7 +1129,8 @@
        "add",
        15
       ]
-     ]
+     ],
+     "jeito": "lider"
     },
     {
      "id": "recusar",
@@ -956,14 +1140,23 @@
        "add",
        -0.03
       ]
-     ]
+     ],
+     "jeito": "frio"
+    },
+    {
+     "id": "pedir-mais-um-ano",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.02
+      ]
+     ],
+     "jeito": "esquentado"
     }
    ],
    "politica": {
-    "padrao": "aceitar",
-    "temperamento": {
-     "frio": "recusar"
-    }
+    "padrao": "aceitar"
    }
   },
   {
@@ -996,7 +1189,8 @@
        "add",
        15
       ]
-     ]
+     ],
+     "jeito": "resenha"
     },
     {
      "id": "recusar",
@@ -1006,7 +1200,34 @@
        "add",
        -0.03
       ]
-     ]
+     ],
+     "jeito": "frio"
+    },
+    {
+     "id": "aceitar-pedindo-a-faixa",
+     "efeitos": [
+      [
+       "despedida",
+       "set",
+       true
+      ],
+      [
+       "moral",
+       "add",
+       0.1
+      ],
+      [
+       "idolatria",
+       "add",
+       15
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.03
+      ]
+     ],
+     "jeito": "lider"
     }
    ],
    "politica": {
@@ -1033,7 +1254,8 @@
        "add",
        0.05
       ]
-     ]
+     ],
+     "jeito": "lider"
     },
     {
      "id": "poupar",
@@ -1043,14 +1265,23 @@
        "add",
        -0.05
       ]
-     ]
+     ],
+     "jeito": "frio"
+    },
+    {
+     "id": "entrar-no-segundo-tempo",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.02
+      ]
+     ],
+     "jeito": "resenha"
     }
    ],
    "politica": {
-    "padrao": "jogar",
-    "temperamento": {
-     "frio": "poupar"
-    }
+    "padrao": "jogar"
    }
   },
   {
@@ -1073,7 +1304,8 @@
        "add",
        0.02
       ]
-     ]
+     ],
+     "jeito": "lider"
     },
     {
      "id": "recusar",
@@ -1083,14 +1315,23 @@
        "add",
        -0.05
       ]
-     ]
+     ],
+     "jeito": "esquentado"
+    },
+    {
+     "id": "aceitar-e-cobrar",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.01
+      ]
+     ],
+     "jeito": "frio"
     }
    ],
    "politica": {
-    "padrao": "aceitar",
-    "temperamento": {
-     "esquentado": "recusar"
-    }
+    "padrao": "aceitar"
    }
   },
   {
@@ -1107,7 +1348,8 @@
    "opcoes": [
     {
      "id": "bater",
-     "efeitos": []
+     "efeitos": [],
+     "jeito": "lider"
     },
     {
      "id": "deixar",
@@ -1117,14 +1359,17 @@
        "add",
        -0.02
       ]
-     ]
+     ],
+     "jeito": "resenha"
+    },
+    {
+     "id": "encher-o-pe",
+     "efeitos": [],
+     "jeito": "esquentado"
     }
    ],
    "politica": {
-    "padrao": "bater",
-    "temperamento": {
-     "resenha": "deixar"
-    }
+    "padrao": "bater"
    }
   },
   {
@@ -1152,7 +1397,8 @@
        "add",
        0.05
       ]
-     ]
+     ],
+     "jeito": "frio"
     },
     {
      "id": "recusar",
@@ -1162,14 +1408,23 @@
        "add",
        0.02
       ]
-     ]
+     ],
+     "jeito": "lider"
+    },
+    {
+     "id": "pedir-tempo",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ],
+     "jeito": "resenha"
     }
    ],
    "politica": {
-    "padrao": "recusar",
-    "temperamento": {
-     "frio": "aceitar"
-    }
+    "padrao": "recusar"
    }
   }
  ]

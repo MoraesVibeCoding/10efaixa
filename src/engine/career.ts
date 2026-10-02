@@ -332,7 +332,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
             agent = ch.agent; wealth -= ch.cost; morale = clamp(morale + ch.moraleDelta, 0, 1);
           }
         } else if (ag.event === 'brigaClube') {
-          coachRelation = clamp(coachRelation + (autoChoice('empresario-briga-clube', temp) === 'apoiar-empresario' ? -0.1 : 0.05), 0, 1);
+          coachRelation = applyOption({ relacaoTecnico: coachRelation }, 'empresario-briga-clube', autoChoice('empresario-briga-clube', temp)).relacaoTecnico as number;
         } else if (ag.event === 'forcaVenda') {
           const choice = autoChoice('empresario-forca-venda', temp);
           if (choice === 'aceitar-venda') wantsOut = true;
@@ -437,7 +437,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     // Mudança de posição proposta pelo técnico (6.6), decidida pela política do temperamento.
     if (clubId && !inYouth) {
       const target = coachProposal({ position, age: evo.age, attributes: evo.attributes });
-      if (target && autoChoice('mudanca-posicao', temp) === 'aceitar') {
+      if (target && autoChoice('mudanca-posicao', temp) !== 'recusar') {
         position = target;
         positionChanges++;
         traits = { ...traits, position };

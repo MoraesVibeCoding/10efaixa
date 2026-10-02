@@ -15,7 +15,14 @@
   "over": "Over",
   "titulosLista": "Títulos conquistados",
   "trofeu": "{titulo}",
-  "trofeuVarios": "{titulo}, {n} vezes"
+  "trofeuVarios": "{titulo}, {n} vezes",
+  "tempoDeJogo": "Tempo de jogo",
+  "salario": "Salário/mês",
+  "titulosRotulo": "Títulos",
+  "nenhumTitulo": "Nenhum ainda",
+  "faixaOver": " ({faixa})",
+  "maisTitulos": "+{n}",
+  "maisTitulosLeitor": "e mais {n} títulos de outras competições"
  },
  "amostra": {
   "clube": "clube do coração"
@@ -37,5 +44,12 @@
   "serieC": "Série C",
   "serieD": "Série D",
   "estadual": "Estadual"
+ },
+ "papel": {
+  "titular": "Titular",
+  "rodizio": "Rodízio",
+  "reserva": "Reserva",
+  "promessa": "Promessa",
+  "aposta": "Aposta"
  }
 }

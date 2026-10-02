@@ -1,5 +1,6 @@
 import type { Prng } from './prng';
 import data from '../data/events.json';
+import creation from '../data/creation.json';
 import scenes from '../data/scenes.json';
 
 // T25 (SPEC 6.13, 6.18): eventos com condições, opções e efeitos em dados; toda decisão aponta para uma cena.
@@ -9,9 +10,12 @@ export type Cond = [string, string, Val];
 type Effect = [string, 'add' | 'set' | 'mul', Val];
 interface EventDef {
   id: string; cena: string; peso: number; condicoes: Cond[];
-  opcoes: { id: string; efeitos: Effect[] }[];
-  politica: { padrao: string; temperamento?: Record<string, string> };
+  /** `jeito`: temperamento a que a opção remete (SPEC v2.17). Decisões têm 3 opções, cada uma com um jeito diferente. */
+  opcoes: { id: string; efeitos: Effect[]; jeito?: string }[];
+  politica: { padrao: string };
 }
+
+const TEMPERAMENTS: string[] = creation.temperaments;
 
 const OPS: Record<string, (a: Val, b: Val) => boolean> = {
   '==': (a, b) => a === b, '!=': (a, b) => a !== b,
@@ -30,7 +34,11 @@ export function validateEvents(d: unknown, sceneIds: string[]): string[] {
     if (!e.cena || !sceneIds.includes(e.cena)) errors.push(`${at}: cena ausente ou inexistente (${e.cena ?? 'nenhuma'})`);
     for (const [, op] of e.condicoes ?? []) if (!OPS[op]) errors.push(`${at}: operador inválido ${op}`);
     const opts = e.opcoes ?? [];
-    if (!opts.length) errors.push(`${at}: sem opções`);
+    if (opts.length !== 1 && opts.length !== 3) errors.push(`${at}: precisa de 1 opção (só narrado) ou 3 (decisão), tem ${opts.length}`);
+    const jeitos = opts.map((o) => o.jeito);
+    if (opts.length === 1 ? jeitos[0] !== undefined : new Set(jeitos).size !== 3 || jeitos.some((j) => !j || !TEMPERAMENTS.includes(j))) {
+      errors.push(`${at}: cada opção de decisão precisa de um jeito válido e diferente (${jeitos.join(', ')})`);
+    }
     for (const o of opts) {
       for (const [field, op] of o.efeitos) {
         if (!(field in def.campos)) errors.push(`${at}/${o.id}: campo desconhecido ${field}`);
@@ -38,9 +46,8 @@ export function validateEvents(d: unknown, sceneIds: string[]): string[] {
       }
     }
     const optIds = opts.map((o) => o.id);
-    for (const choice of [e.politica?.padrao, ...Object.values(e.politica?.temperamento ?? {})]) {
-      if (!choice || !optIds.includes(choice)) errors.push(`${at}: política aponta para opção inexistente ${choice}`);
-    }
+    const choice = e.politica?.padrao;
+    if (!choice || !optIds.includes(choice)) errors.push(`${at}: política aponta para opção inexistente ${choice}`);
   }
   return errors;
 }
@@ -84,14 +91,14 @@ export function applyOption(s: Ctx, eventId: string, optionId: string): Ctx {
   return out;
 }
 
-/** Decisão automática (simulação e ritmo Rápido): política do evento por temperamento. */
+/** Decisão automática (simulação e ritmo Rápido): a opção do jeito do jogador; sem opção própria, o padrão do evento. */
 export function autoChoice(eventId: string, temperament: string): string {
-  const p = BY_ID.get(eventId)!.politica;
-  return p.temperamento?.[temperament] ?? p.padrao;
+  const e = BY_ID.get(eventId)!;
+  return e.opcoes.find((o) => o.jeito === temperament)?.id ?? e.politica.padrao;
 }
 
-/** Temperamentos que escolheriam esta opção sozinhos (a política do evento): é o "jeito" a que a opção remete na tela de decisão. */
-export const temperamentsFor = (eventId: string, optionId: string, all: string[]): string[] =>
-  all.filter((tmp) => autoChoice(eventId, tmp) === optionId);
+/** Temperamento a que a opção remete; null nos eventos só narrados. */
+export const jeitoOf = (eventId: string, optionId: string): string | null =>
+  BY_ID.get(eventId)?.opcoes.find((o) => o.id === optionId)?.jeito ?? null;
 
 export const sceneOf = (eventId: string) => BY_ID.get(eventId)!.cena;

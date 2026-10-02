@@ -21,14 +21,16 @@
   "titulo": "O rival bateu na porta",
   "opcoes": {
    "aceitar": "Aceitar e ir para o rival",
-   "recusar": "Recusar e ficar"
+   "recusar": "Recusar e ficar",
+   "usar-como-trunfo": "Usar a proposta como trunfo e pedir valorização"
   }
  },
  "salario-atrasado": {
   "titulo": "Salário atrasado de novo",
   "opcoes": {
    "pedir-saida": "Pedir para sair",
-   "ficar": "Ficar e esperar"
+   "ficar": "Ficar e esperar",
+   "cobrar-a-diretoria": "Cobrar a diretoria na frente do elenco"
   },
   "texto": "Dois meses sem ver a cor do dinheiro. O elenco está dividido e a diretoria pede paciência."
  },
@@ -45,14 +47,16 @@
   "titulo": "Proposta do rival do seu clube do coração",
   "opcoes": {
    "aceitar": "Aceitar mesmo assim",
-   "recusar": "Recusar"
+   "recusar": "Recusar",
+   "recusar-em-publico": "Recusar e avisar em público que essa camisa não veste"
   }
  },
  "jogo-contra-coracao": {
   "titulo": "Gol contra o clube do coração",
   "opcoes": {
    "comemorar": "Comemorar",
-   "nao-comemorar": "Não comemorar, por respeito"
+   "nao-comemorar": "Não comemorar, por respeito",
+   "comemorar-discreto": "Gol é gol: comemorar discreto, com os companheiros"
   }
  },
  "empresario-forca-venda": {
@@ -67,14 +71,16 @@
   "titulo": "Sumiu dinheiro da conta",
   "opcoes": {
    "trocar-empresario": "Trocar de empresário",
-   "dar-outra-chance": "Dar outra chance"
+   "dar-outra-chance": "Dar outra chance",
+   "cobrar-cara-a-cara": "Cobrar cara a cara e exigir o dinheiro de volta"
   }
  },
  "empresario-briga-clube": {
   "titulo": "Empresário brigou com a diretoria",
   "opcoes": {
    "apoiar-empresario": "Ficar do lado do empresário",
-   "ficar-com-o-clube": "Ficar do lado do clube"
+   "ficar-com-o-clube": "Ficar do lado do clube",
+   "nao-se-meter": "Não se meter e deixar os dois se entenderem"
   }
  },
  "renovacao": {
@@ -97,35 +103,40 @@
   "titulo": "O técnico quer você em outra posição",
   "opcoes": {
    "aceitar": "Aceitar a nova posição",
-   "recusar": "Recusar e seguir onde está"
+   "recusar": "Recusar e seguir onde está",
+   "aceitar-com-garantia": "Aceitar, mas pedir garantia de sequência no time"
   }
  },
  "festa": {
   "titulo": "Convite para a festa",
   "opcoes": {
    "ir": "Ir pra resenha",
-   "ficar-em-casa": "Ficar em casa e descansar"
+   "ficar-em-casa": "Ficar em casa e descansar",
+   "dar-uma-passada": "Dar uma passada, só para marcar presença"
   }
  },
  "polemica-redes": {
   "titulo": "Polêmica nas redes",
   "opcoes": {
    "postar": "Postar a resposta",
-   "deixar-pra-la": "Deixar pra lá"
+   "deixar-pra-la": "Deixar pra lá",
+   "responder-na-zoeira": "Responder na zoeira e virar a página"
   }
  },
  "casa-da-familia": {
   "titulo": "A casa da família",
   "opcoes": {
    "comprar": "Comprar a casa da família",
-   "adiar": "Deixar para depois"
+   "comprar-e-festejar": "Comprar e fazer a festa de inauguração",
+   "comprar-financiado": "Comprar financiado e deixar o dinheiro rendendo"
   }
  },
  "investir": {
   "titulo": "Proposta de investimento",
   "opcoes": {
    "investir": "Investir",
-   "guardar": "Guardar o dinheiro"
+   "guardar": "Guardar o dinheiro",
+   "pedir-conselho": "Ouvir quem entende antes de decidir"
   }
  },
  "amadurecimento": {
@@ -138,42 +149,48 @@
   "titulo": "O clube que te revelou quer você de volta",
   "opcoes": {
    "aceitar": "Voltar para casa e encerrar a carreira lá",
-   "recusar": "Agradecer e seguir onde está"
+   "recusar": "Agradecer e seguir onde está",
+   "pedir-mais-um-ano": "Dizer que ainda tem lenha para queimar: mais um ano"
   }
  },
  "realizar-sonho": {
   "titulo": "O clube do coração quer a sua despedida",
   "opcoes": {
    "aceitar": "Realizar o sonho",
-   "recusar": "Agradecer e seguir onde está"
+   "recusar": "Agradecer e seguir onde está",
+   "aceitar-pedindo-a-faixa": "Aceitar e pedir a faixa de capitão na despedida"
   }
  },
  "copa-sacrificio": {
   "titulo": "No sacrifício pela Seleção",
   "opcoes": {
    "jogar": "Jogar mesmo sentindo dor",
-   "poupar": "Ficar fora e se recuperar"
+   "poupar": "Ficar fora e se recuperar",
+   "entrar-no-segundo-tempo": "Pedir para entrar só no segundo tempo"
   }
  },
  "copa-fora-posicao": {
   "titulo": "O treinador pede você fora de posição",
   "opcoes": {
    "aceitar": "Jogar onde o time precisa",
-   "recusar": "Dizer que só rende na sua posição"
+   "recusar": "Dizer que só rende na sua posição",
+   "aceitar-e-cobrar": "Aceitar agora e pedir a sua posição no próximo jogo"
   }
  },
  "copa-penalti": {
   "titulo": "O pênalti decisivo",
   "opcoes": {
    "bater": "Pegar a bola e bater",
-   "deixar": "Deixar para um companheiro"
+   "deixar": "Deixar para um companheiro",
+   "encher-o-pe": "Tomar a bola e encher o pé"
   }
  },
  "dupla-nacionalidade": {
   "titulo": "Outra seleção quer você",
   "opcoes": {
    "aceitar": "Aceitar (decisão definitiva)",
-   "recusar": "Esperar a Seleção Brasileira"
+   "recusar": "Esperar a Seleção Brasileira",
+   "pedir-tempo": "Pedir um tempo para pensar"
   }
  }
 }
