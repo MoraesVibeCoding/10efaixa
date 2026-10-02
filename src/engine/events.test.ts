@@ -1,4 +1,4 @@
-import { applyOption, autoChoice, eligibleEvents, jeitoOf, pickEvent, validateEvents } from './events';
+import { applyOption, autoChoice, eligibleEvents, heartSalaryFactor, jeitoOf, pickEvent, validateEvents } from './events';
 import { createPrng } from './prng';
 import raw from '../data/events.json';
 import scenes from '../data/scenes.json';
@@ -50,7 +50,7 @@ describe('motor de eventos e dilemas (T25)', () => {
 
   it('efeitos aplicados de forma pura, com limites', () => {
     const s = ctx({ moral: 0.98 });
-    const out = applyOption(s, 'estirao-grande', 'seguir');
+    const out = applyOption(s, 'estirao-grande', 'tirar-onda');
     expect(out.moral).toBe(1);
     expect(s.moral).toBe(0.98);
     expect(applyOption(ctx(), 'proposta-coracao', 'aceitar-por-amor')).toMatchObject({ aceitarProposta: true, salarioFator: 0.7, idolatriaCoracao: 10 });
@@ -95,7 +95,7 @@ describe('motor de eventos e dilemas (T25)', () => {
       const fourth = ALL_TEMPERAMENTS.find((tmp) => !(e.opcoes as { jeito: string }[]).some((o) => o.jeito === tmp))!;
       expect(autoChoice(e.id, fourth), e.id).toBe(e.politica.padrao);
     }
-    expect(jeitoOf('estirao-grande', 'seguir')).toBeNull();
+    expect(jeitoOf('estirao-grande', 'opcao-que-nao-existe')).toBeNull();
   });
 
   it('configuração inválida é recusada: duas opções, jeito repetido ou jeito desconhecido', () => {
@@ -106,5 +106,14 @@ describe('motor de eventos e dilemas (T25)', () => {
     const dup = clone(); dup.eventos[idx]!.opcoes[1]!.jeito = dup.eventos[idx]!.opcoes[0]!.jeito;
     const unk = clone(); unk.eventos[idx]!.opcoes[0]!.jeito = 'zen';
     for (const bad of [two, dup, unk]) expect(validateEvents(bad, scenes)).not.toEqual([]);
+  });
+});
+
+describe('clube do coração (v2.23): o desconto no salário vem dos dados da opção', () => {
+  it('assinar = −15%, jogar por amor = −30%, recusar = sem desconto; quem não tem opção própria segue o padrão', () => {
+    expect(heartSalaryFactor('lider')).toBe(0.85);
+    expect(heartSalaryFactor('resenha')).toBe(0.7);
+    expect(heartSalaryFactor('frio')).toBe(1);
+    expect(heartSalaryFactor('esquentado')).toBe(0.7);
   });
 });

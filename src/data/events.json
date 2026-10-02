@@ -1,5 +1,5 @@
 {
- "_nota": "Eventos e dilemas (SPEC 6.13, 6.18; T25). Condições: campo op valor. Efeitos: add ou mul (com limites de 'campos') ou set. v2.17: toda decisão tem 3 opções, cada uma com o 'jeito' (temperamento) a que remete; a escolha automática é a opção do jeito do jogador, e o temperamento sem opção própria segue 'politica.padrao'.",
+ "_nota": "Eventos e dilemas (SPEC 6.13, 6.18; T25). Condições: campo op valor. Efeitos: add ou mul (com limites de 'campos') ou set. v2.17/v2.23: toda decisão (inclusive os antigos avisos) tem 3 opções, cada uma com o 'jeito' (temperamento) a que remete; a escolha automática é a opção do jeito do jogador, e o temperamento sem opção própria segue 'politica.padrao'.",
  "campos": {
   "moral": [
    0,
@@ -65,18 +65,61 @@
    ],
    "opcoes": [
     {
-     "id": "seguir",
+     "id": "ficar-depois-do-treino",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "disciplina",
+       "add",
+       0.05
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       0.05
+      ],
+      [
+       "moral",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "seguir-o-preparador",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "disciplina",
+       "add",
+       0.03
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "tirar-onda",
+     "jeito": "resenha",
      "efeitos": [
       [
        "moral",
        "add",
-       0.05
+       0.08
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.03
       ]
      ]
     }
    ],
    "politica": {
-    "padrao": "seguir"
+    "padrao": "seguir-o-preparador"
    }
   },
   {
@@ -92,18 +135,66 @@
    ],
    "opcoes": [
     {
-     "id": "comemorar",
+     "id": "ensinar-os-mais-novos",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.05
+      ],
+      [
+       "disciplina",
+       "add",
+       0.03
+      ],
+      [
+       "moral",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "guardar-o-segredo",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "disciplina",
+       "add",
+       0.05
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "postar-o-lance",
+     "jeito": "resenha",
      "efeitos": [
       [
        "moral",
        "add",
-       0.05
+       0.08
+      ],
+      [
+       "idolatria",
+       "add",
+       3
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.05
       ]
      ]
     }
    ],
    "politica": {
-    "padrao": "comemorar"
+    "padrao": "guardar-o-segredo"
    }
   },
   {
@@ -119,18 +210,61 @@
    ],
    "opcoes": [
     {
-     "id": "conhecer",
+     "id": "chegar-primeiro",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "set",
+       0.6
+      ],
+      [
+       "moral",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "esperar-a-chance",
+     "jeito": "frio",
      "efeitos": [
       [
        "relacaoTecnico",
        "set",
        0.5
+      ],
+      [
+       "disciplina",
+       "add",
+       0.03
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "cobrar-explicacao",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "set",
+       0.4
+      ],
+      [
+       "moral",
+       "add",
+       0.05
       ]
      ]
     }
    ],
    "politica": {
-    "padrao": "conhecer"
+    "padrao": "esperar-a-chance"
    }
   },
   {
@@ -147,6 +281,7 @@
    "opcoes": [
     {
      "id": "aceitar",
+     "jeito": "esquentado",
      "efeitos": [
       [
        "irParaRival",
@@ -158,40 +293,44 @@
        "set",
        true
       ]
-     ],
-     "jeito": "esquentado"
+     ]
     },
     {
      "id": "recusar",
+     "jeito": "lider",
      "efeitos": [
       [
        "idolatria",
        "add",
-       5
+       8
       ],
       [
        "moral",
        "add",
        -0.05
       ]
-     ],
-     "jeito": "lider"
+     ]
     },
     {
      "id": "usar-como-trunfo",
+     "jeito": "frio",
      "efeitos": [
+      [
+       "salarioFator",
+       "mul",
+       1.1
+      ],
+      [
+       "idolatria",
+       "add",
+       -5
+      ],
       [
        "relacaoTecnico",
        "add",
        -0.03
-      ],
-      [
-       "moral",
-       "add",
-       0.02
       ]
-     ],
-     "jeito": "frio"
+     ]
     }
    ],
    "politica": {
@@ -200,7 +339,7 @@
   },
   {
    "id": "salario-atrasado",
-   "cena": "sala-empresario",
+   "cena": "vestiario",
    "peso": 6,
    "condicoes": [
     [
@@ -212,6 +351,7 @@
    "opcoes": [
     {
      "id": "pedir-saida",
+     "jeito": "frio",
      "efeitos": [
       [
        "pedirSaida",
@@ -223,11 +363,11 @@
        "add",
        -0.1
       ]
-     ],
-     "jeito": "frio"
+     ]
     },
     {
      "id": "ficar",
+     "jeito": "lider",
      "efeitos": [
       [
        "moral",
@@ -239,11 +379,11 @@
        "add",
        5
       ]
-     ],
-     "jeito": "lider"
+     ]
     },
     {
      "id": "cobrar-a-diretoria",
+     "jeito": "esquentado",
      "efeitos": [
       [
        "relacaoTecnico",
@@ -260,8 +400,7 @@
        "add",
        -0.02
       ]
-     ],
-     "jeito": "esquentado"
+     ]
     }
    ],
    "politica": {
@@ -282,17 +421,7 @@
    "opcoes": [
     {
      "id": "aceitar",
-     "efeitos": [
-      [
-       "aceitarProposta",
-       "set",
-       true
-      ]
-     ],
-     "jeito": "lider"
-    },
-    {
-     "id": "aceitar-por-amor",
+     "jeito": "lider",
      "efeitos": [
       [
        "aceitarProposta",
@@ -301,27 +430,57 @@
       ],
       [
        "salarioFator",
+       "mul",
+       0.85
+      ],
+      [
+       "idolatriaCoracao",
+       "add",
+       5
+      ]
+     ]
+    },
+    {
+     "id": "aceitar-por-amor",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "aceitarProposta",
        "set",
+       true
+      ],
+      [
+       "salarioFator",
+       "mul",
        0.7
       ],
       [
        "idolatriaCoracao",
        "add",
        10
+      ],
+      [
+       "moral",
+       "add",
+       0.05
       ]
-     ],
-     "jeito": "resenha"
+     ]
     },
     {
      "id": "recusar",
+     "jeito": "frio",
      "efeitos": [
       [
        "moral",
        "add",
        -0.05
+      ],
+      [
+       "idolatriaCoracao",
+       "add",
+       -5
       ]
-     ],
-     "jeito": "frio"
+     ]
     }
    ],
    "politica": {
@@ -342,6 +501,7 @@
    "opcoes": [
     {
      "id": "aceitar",
+     "jeito": "frio",
      "efeitos": [
       [
        "aceitarProposta",
@@ -353,22 +513,27 @@
        "add",
        -40
       ]
-     ],
-     "jeito": "frio"
+     ]
     },
     {
      "id": "recusar",
+     "jeito": "lider",
      "efeitos": [
+      [
+       "idolatriaCoracao",
+       "add",
+       3
+      ],
       [
        "moral",
        "add",
-       -0.05
+       -0.03
       ]
-     ],
-     "jeito": "lider"
+     ]
     },
     {
      "id": "recusar-em-publico",
+     "jeito": "esquentado",
      "efeitos": [
       [
        "idolatriaCoracao",
@@ -378,10 +543,9 @@
       [
        "disciplina",
        "add",
-       -0.02
+       -0.05
       ]
-     ],
-     "jeito": "esquentado"
+     ]
     }
    ],
    "politica": {
@@ -402,6 +566,7 @@
    "opcoes": [
     {
      "id": "comemorar",
+     "jeito": "esquentado",
      "efeitos": [
       [
        "idolatriaCoracao",
@@ -413,11 +578,11 @@
        "add",
        5
       ]
-     ],
-     "jeito": "esquentado"
+     ]
     },
     {
      "id": "nao-comemorar",
+     "jeito": "lider",
      "efeitos": [
       [
        "idolatriaCoracao",
@@ -429,11 +594,11 @@
        "add",
        -3
       ]
-     ],
-     "jeito": "lider"
+     ]
     },
     {
      "id": "comemorar-discreto",
+     "jeito": "frio",
      "efeitos": [
       [
        "idolatriaCoracao",
@@ -445,8 +610,7 @@
        "add",
        2
       ]
-     ],
-     "jeito": "frio"
+     ]
     }
    ],
    "politica": {
@@ -467,17 +631,23 @@
    "opcoes": [
     {
      "id": "aceitar-venda",
+     "jeito": "frio",
      "efeitos": [
       [
        "aceitarProposta",
        "set",
        true
+      ],
+      [
+       "moral",
+       "add",
+       -0.03
       ]
-     ],
-     "jeito": "frio"
+     ]
     },
     {
      "id": "bater-o-pe",
+     "jeito": "lider",
      "efeitos": [
       [
        "moral",
@@ -489,19 +659,23 @@
        "add",
        0.05
       ]
-     ],
-     "jeito": "lider"
+     ]
     },
     {
      "id": "trocar-empresario",
+     "jeito": "esquentado",
      "efeitos": [
       [
        "trocarEmpresario",
        "set",
        true
+      ],
+      [
+       "moral",
+       "add",
+       0.03
       ]
-     ],
-     "jeito": "esquentado"
+     ]
     }
    ],
    "politica": {
@@ -522,6 +696,7 @@
    "opcoes": [
     {
      "id": "trocar-empresario",
+     "jeito": "frio",
      "efeitos": [
       [
        "trocarEmpresario",
@@ -533,35 +708,39 @@
        "add",
        -0.05
       ]
-     ],
-     "jeito": "frio"
+     ]
     },
     {
      "id": "dar-outra-chance",
+     "jeito": "resenha",
      "efeitos": [
       [
        "moral",
        "add",
-       -0.1
-      ]
-     ],
-     "jeito": "resenha"
-    },
-    {
-     "id": "cobrar-cara-a-cara",
-     "efeitos": [
-      [
-       "moral",
-       "add",
-       -0.03
+       -0.02
       ],
       [
        "disciplina",
        "add",
        -0.02
       ]
-     ],
-     "jeito": "esquentado"
+     ]
+    },
+    {
+     "id": "cobrar-cara-a-cara",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.02
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.05
+      ]
+     ]
     }
    ],
    "politica": {
@@ -582,17 +761,23 @@
    "opcoes": [
     {
      "id": "apoiar-empresario",
+     "jeito": "esquentado",
      "efeitos": [
       [
        "relacaoTecnico",
        "add",
        -0.1
+      ],
+      [
+       "moral",
+       "add",
+       0.03
       ]
-     ],
-     "jeito": "esquentado"
+     ]
     },
     {
      "id": "ficar-com-o-clube",
+     "jeito": "lider",
      "efeitos": [
       [
        "relacaoTecnico",
@@ -604,19 +789,23 @@
        "add",
        -0.03
       ]
-     ],
-     "jeito": "lider"
+     ]
     },
     {
      "id": "nao-se-meter",
+     "jeito": "frio",
      "efeitos": [
       [
-       "moral",
+       "relacaoTecnico",
        "add",
        -0.02
+      ],
+      [
+       "disciplina",
+       "add",
+       0.02
       ]
-     ],
-     "jeito": "frio"
+     ]
     }
    ],
    "politica": {
@@ -637,17 +826,23 @@
    "opcoes": [
     {
      "id": "renovar",
+     "jeito": "lider",
      "efeitos": [
       [
        "renovar",
        "set",
        true
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       0.03
       ]
-     ],
-     "jeito": "lider"
+     ]
     },
     {
      "id": "pedir-aumento",
+     "jeito": "esquentado",
      "efeitos": [
       [
        "renovar",
@@ -662,13 +857,13 @@
       [
        "relacaoTecnico",
        "add",
-       -0.03
+       -0.05
       ]
-     ],
-     "jeito": "esquentado"
+     ]
     },
     {
      "id": "nao-renovar",
+     "jeito": "frio",
      "efeitos": [
       [
        "renovar",
@@ -679,9 +874,13 @@
        "moral",
        "add",
        -0.02
+      ],
+      [
+       "idolatria",
+       "add",
+       -5
       ]
-     ],
-     "jeito": "frio"
+     ]
     }
    ],
    "politica": {
@@ -702,6 +901,7 @@
    "opcoes": [
     {
      "id": "operar",
+     "jeito": "frio",
      "efeitos": [
       [
        "decisaoLesao",
@@ -713,11 +913,11 @@
        "add",
        -0.1
       ]
-     ],
-     "jeito": "frio"
+     ]
     },
     {
      "id": "conservador",
+     "jeito": "resenha",
      "efeitos": [
       [
        "decisaoLesao",
@@ -729,11 +929,11 @@
        "add",
        -0.05
       ]
-     ],
-     "jeito": "resenha"
+     ]
     },
     {
      "id": "voltar-antes",
+     "jeito": "lider",
      "efeitos": [
       [
        "decisaoLesao",
@@ -745,8 +945,7 @@
        "add",
        5
       ]
-     ],
-     "jeito": "lider"
+     ]
     }
    ],
    "politica": {
@@ -767,28 +966,7 @@
    "opcoes": [
     {
      "id": "aceitar",
-     "efeitos": [
-      [
-       "mudarPosicao",
-       "set",
-       true
-      ]
-     ],
-     "jeito": "lider"
-    },
-    {
-     "id": "recusar",
-     "efeitos": [
-      [
-       "relacaoTecnico",
-       "add",
-       -0.05
-      ]
-     ],
-     "jeito": "esquentado"
-    },
-    {
-     "id": "aceitar-com-garantia",
+     "jeito": "lider",
      "efeitos": [
       [
        "mudarPosicao",
@@ -798,10 +976,51 @@
       [
        "relacaoTecnico",
        "add",
+       0.08
+      ],
+      [
+       "moral",
+       "add",
        -0.03
       ]
-     ],
-     "jeito": "frio"
+     ]
+    },
+    {
+     "id": "recusar",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       -0.08
+      ],
+      [
+       "moral",
+       "add",
+       0.03
+      ]
+     ]
+    },
+    {
+     "id": "aceitar-com-garantia",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "mudarPosicao",
+       "set",
+       true
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.02
+      ],
+      [
+       "moral",
+       "add",
+       0.02
+      ]
+     ]
     }
    ],
    "politica": {
@@ -822,6 +1041,7 @@
    "opcoes": [
     {
      "id": "ir",
+     "jeito": "resenha",
      "efeitos": [
       [
        "moral",
@@ -833,11 +1053,11 @@
        "add",
        -0.1
       ]
-     ],
-     "jeito": "resenha"
+     ]
     },
     {
      "id": "ficar-em-casa",
+     "jeito": "frio",
      "efeitos": [
       [
        "moral",
@@ -849,11 +1069,11 @@
        "add",
        0.03
       ]
-     ],
-     "jeito": "frio"
+     ]
     },
     {
      "id": "dar-uma-passada",
+     "jeito": "lider",
      "efeitos": [
       [
        "moral",
@@ -865,8 +1085,7 @@
        "add",
        -0.03
       ]
-     ],
-     "jeito": "lider"
+     ]
     }
    ],
    "politica": {
@@ -887,6 +1106,7 @@
    "opcoes": [
     {
      "id": "postar",
+     "jeito": "esquentado",
      "efeitos": [
       [
        "disciplina",
@@ -896,29 +1116,34 @@
       [
        "idolatria",
        "add",
-       3
+       6
       ],
       [
        "relacaoTecnico",
        "add",
        -0.05
       ]
-     ],
-     "jeito": "esquentado"
+     ]
     },
     {
      "id": "deixar-pra-la",
+     "jeito": "frio",
      "efeitos": [
       [
        "disciplina",
        "add",
        0.02
+      ],
+      [
+       "idolatria",
+       "add",
+       -3
       ]
-     ],
-     "jeito": "frio"
+     ]
     },
     {
      "id": "responder-na-zoeira",
+     "jeito": "resenha",
      "efeitos": [
       [
        "idolatria",
@@ -930,8 +1155,7 @@
        "add",
        -0.03
       ]
-     ],
-     "jeito": "resenha"
+     ]
     }
    ],
    "politica": {
@@ -952,6 +1176,7 @@
    "opcoes": [
     {
      "id": "comprar",
+     "jeito": "lider",
      "efeitos": [
       [
        "patrimonio",
@@ -968,37 +1193,11 @@
        "set",
        true
       ]
-     ],
-     "jeito": "lider"
-    },
-    {
-     "id": "comprar-e-festejar",
-     "efeitos": [
-      [
-       "patrimonio",
-       "mul",
-       0.82
-      ],
-      [
-       "moral",
-       "add",
-       0.1
-      ],
-      [
-       "casaComprada",
-       "set",
-       true
-      ],
-      [
-       "disciplina",
-       "add",
-       -0.02
-      ]
-     ],
-     "jeito": "resenha"
+     ]
     },
     {
      "id": "comprar-financiado",
+     "jeito": "frio",
      "efeitos": [
       [
        "patrimonio",
@@ -1015,8 +1214,28 @@
        "set",
        true
       ]
-     ],
-     "jeito": "frio"
+     ]
+    },
+    {
+     "id": "ainda-nao",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "patrimonio",
+       "mul",
+       0.97
+      ],
+      [
+       "moral",
+       "add",
+       0.03
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.03
+      ]
+     ]
     }
    ],
    "politica": {
@@ -1037,30 +1256,41 @@
    "opcoes": [
     {
      "id": "investir",
+     "jeito": "esquentado",
      "efeitos": [
       [
        "investir",
        "set",
        true
       ]
-     ],
-     "jeito": "esquentado"
+     ]
     },
     {
      "id": "guardar",
-     "efeitos": [],
-     "jeito": "frio"
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "disciplina",
+       "add",
+       0.03
+      ]
+     ]
     },
     {
      "id": "pedir-conselho",
+     "jeito": "lider",
      "efeitos": [
       [
-       "moral",
+       "patrimonio",
+       "mul",
+       0.99
+      ],
+      [
+       "disciplina",
        "add",
-       0.02
+       0.05
       ]
-     ],
-     "jeito": "lider"
+     ]
     }
    ],
    "politica": {
@@ -1080,23 +1310,61 @@
    ],
    "opcoes": [
     {
-     "id": "seguir",
+     "id": "assumir-a-voz",
+     "jeito": "lider",
      "efeitos": [
       [
-       "moral",
+       "disciplina",
+       "add",
+       0.08
+      ],
+      [
+       "relacaoTecnico",
        "add",
        0.05
       ],
       [
+       "moral",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "seguir-quieto",
+     "jeito": "frio",
+     "efeitos": [
+      [
        "disciplina",
        "add",
        0.1
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "comemorar-a-fase",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.08
+      ],
+      [
+       "disciplina",
+       "add",
+       0.03
       ]
      ]
     }
    ],
    "politica": {
-    "padrao": "seguir"
+    "padrao": "seguir-quieto"
    }
   },
   {
@@ -1113,6 +1381,7 @@
    "opcoes": [
     {
      "id": "aceitar",
+     "jeito": "lider",
      "efeitos": [
       [
        "despedida",
@@ -1129,30 +1398,34 @@
        "add",
        15
       ]
-     ],
-     "jeito": "lider"
+     ]
     },
     {
      "id": "recusar",
+     "jeito": "frio",
      "efeitos": [
       [
        "moral",
        "add",
-       -0.03
+       -0.02
       ]
-     ],
-     "jeito": "frio"
+     ]
     },
     {
      "id": "pedir-mais-um-ano",
+     "jeito": "esquentado",
      "efeitos": [
       [
        "moral",
        "add",
-       0.02
+       0.05
+      ],
+      [
+       "idolatria",
+       "add",
+       -5
       ]
-     ],
-     "jeito": "esquentado"
+     ]
     }
    ],
    "politica": {
@@ -1173,6 +1446,7 @@
    "opcoes": [
     {
      "id": "aceitar",
+     "jeito": "resenha",
      "efeitos": [
       [
        "despedida",
@@ -1189,22 +1463,22 @@
        "add",
        15
       ]
-     ],
-     "jeito": "resenha"
+     ]
     },
     {
      "id": "recusar",
+     "jeito": "frio",
      "efeitos": [
       [
        "moral",
        "add",
        -0.03
       ]
-     ],
-     "jeito": "frio"
+     ]
     },
     {
      "id": "aceitar-pedindo-a-faixa",
+     "jeito": "lider",
      "efeitos": [
       [
        "despedida",
@@ -1219,15 +1493,14 @@
       [
        "idolatria",
        "add",
-       15
+       20
       ],
       [
        "relacaoTecnico",
        "add",
-       -0.03
+       -0.05
       ]
-     ],
-     "jeito": "lider"
+     ]
     }
    ],
    "politica": {
@@ -1248,36 +1521,36 @@
    "opcoes": [
     {
      "id": "jogar",
+     "jeito": "lider",
      "efeitos": [
       [
        "moral",
        "add",
        0.05
       ]
-     ],
-     "jeito": "lider"
+     ]
     },
     {
      "id": "poupar",
+     "jeito": "frio",
      "efeitos": [
       [
        "moral",
        "add",
        -0.05
       ]
-     ],
-     "jeito": "frio"
+     ]
     },
     {
      "id": "entrar-no-segundo-tempo",
+     "jeito": "resenha",
      "efeitos": [
       [
        "moral",
        "add",
        0.02
       ]
-     ],
-     "jeito": "resenha"
+     ]
     }
    ],
    "politica": {
@@ -1298,36 +1571,36 @@
    "opcoes": [
     {
      "id": "aceitar",
+     "jeito": "lider",
      "efeitos": [
       [
        "moral",
        "add",
        0.02
       ]
-     ],
-     "jeito": "lider"
+     ]
     },
     {
      "id": "recusar",
+     "jeito": "esquentado",
      "efeitos": [
       [
        "moral",
        "add",
-       -0.05
+       0.05
       ]
-     ],
-     "jeito": "esquentado"
+     ]
     },
     {
      "id": "aceitar-e-cobrar",
+     "jeito": "frio",
      "efeitos": [
       [
        "moral",
        "add",
-       0.01
+       0.04
       ]
-     ],
-     "jeito": "frio"
+     ]
     }
    ],
    "politica": {
@@ -1348,24 +1621,46 @@
    "opcoes": [
     {
      "id": "bater",
-     "efeitos": [],
-     "jeito": "lider"
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.02
+      ]
+     ]
     },
     {
      "id": "deixar",
+     "jeito": "resenha",
      "efeitos": [
       [
        "moral",
        "add",
        -0.02
+      ],
+      [
+       "disciplina",
+       "add",
+       0.03
       ]
-     ],
-     "jeito": "resenha"
+     ]
     },
     {
      "id": "encher-o-pe",
-     "efeitos": [],
-     "jeito": "esquentado"
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.05
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.05
+      ]
+     ]
     }
    ],
    "politica": {
@@ -1386,6 +1681,7 @@
    "opcoes": [
     {
      "id": "aceitar",
+     "jeito": "frio",
      "efeitos": [
       [
        "trocarSelecao",
@@ -1397,30 +1693,39 @@
        "add",
        0.05
       ]
-     ],
-     "jeito": "frio"
+     ]
     },
     {
      "id": "recusar",
+     "jeito": "lider",
      "efeitos": [
       [
        "moral",
        "add",
        0.02
       ]
-     ],
-     "jeito": "lider"
+     ]
     },
     {
      "id": "pedir-tempo",
+     "jeito": "resenha",
      "efeitos": [
       [
        "moral",
        "add",
-       -0.02
+       0.02
+      ],
+      [
+       "idolatria",
+       "add",
+       5
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.03
       ]
-     ],
-     "jeito": "resenha"
+     ]
     }
    ],
    "politica": {

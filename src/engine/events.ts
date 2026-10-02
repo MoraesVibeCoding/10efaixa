@@ -102,3 +102,7 @@ export const jeitoOf = (eventId: string, optionId: string): string | null =>
   BY_ID.get(eventId)?.opcoes.find((o) => o.id === optionId)?.jeito ?? null;
 
 export const sceneOf = (eventId: string) => BY_ID.get(eventId)!.cena;
+
+/** Fração do salário que o jogador aceita ao assinar com o clube do coração, pela opção do seu jeito (v2.23: o número mora em events.json). */
+export const heartSalaryFactor = (temperament: string): number =>
+  applyOption({ salarioFator: 1 }, 'proposta-coracao', autoChoice('proposta-coracao', temperament)).salarioFator as number;

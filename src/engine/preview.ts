@@ -26,6 +26,14 @@ export function previewOf(eventId: string, optionId: string): Preview[] {
   });
 }
 
+export type RiskBand = 'baixo' | 'medio' | 'alto' | 'muitoAlto';
+
+/** Probabilidade (0–1) em faixa de palavras (SPEC v2.23): o jogador nunca vê o percentual. */
+export function riskBand(p: number): RiskBand {
+  const r = cfg.risco;
+  return p < r.baixo ? 'baixo' : p < r.medio ? 'medio' : p < r.alto ? 'alto' : 'muitoAlto';
+}
+
 export interface OfferPreview { minutos: number; salario: 'menor' | 'parecido' | 'maior' | 'muitoMaior'; anos: number }
 
 /** Prévia de uma proposta: minutos e espaço no elenco pelo papel, salário em faixa contra o atual (sem contrato, qualquer salário é maior). */

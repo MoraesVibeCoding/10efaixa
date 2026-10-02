@@ -8,7 +8,7 @@ import { addToWealth, makeContract, renew, seasonEarnings, toBRL, type Contract 
 import { brazilQualifiers, copaDoBrasil, copaDoBrasilEntrants, copaDoNordeste, foreignQualifiers, libertadores, nordesteGroups, sulAmericana } from './cups';
 import { EUROPE, areEuroRivals, effectiveRep } from './europe';
 import { initialEuroTables, simulateEuropeSeason, type EuroTables } from './europeSeason';
-import { applyOption, autoChoice } from './events';
+import { applyOption, autoChoice, heartSalaryFactor } from './events';
 import { callUp, coachFor, isPrincipal, selectionEffect, updatePrestige, visibility, type CallUp, type Rung } from './nationalTeam';
 import { evolveSemester, type EvoState } from './evolution';
 import { mentalityEffects } from './mentality';
@@ -314,7 +314,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         if (flags.conviteInvestir) st8 = applyOption(st8, 'investir', autoChoice('investir', temp));
         // Amadurecimento do temperamento por idade ou suspensão longa (evento narrado).
         const matured = matureTemperament(temp, evo.age, cd.longSuspension);
-        if (matured !== temp) { temp = matured; st8 = applyOption(st8, 'amadurecimento', 'seguir'); }
+        if (matured !== temp) { temp = matured; st8 = applyOption(st8, 'amadurecimento', autoChoice('amadurecimento', matured)); }
         morale = st8.moral as number;
         discipline = st8.disciplina as number;
         coachRelation = clamp((st8.relacaoTecnico as number) - (discipline < 0.3 ? 0.03 : 0), 0, 1);
@@ -481,8 +481,9 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       // Em despedida, o jogador não sai mais: só renova.
       const pick = goingHome || farewell ? null : chooseOffer(me, offers, current);
       if (goingHome) { /* contrato novo já assinado */ } else if (pick) {
-        const love = pick.heartClub && autoChoice('proposta-coracao', temp) === 'aceitar-por-amor';
-        join(pick.clubId, false, yr, love ? { ...pick, annualSalary: Math.round(pick.annualSalary * 0.7) } : pick);
+        // clube do coração: o desconto aceito vem da opção do jeito do jogador (events.json)
+        const factor = pick.heartClub ? heartSalaryFactor(temp) : 1;
+        join(pick.clubId, false, yr, factor === 1 ? pick : { ...pick, annualSalary: Math.round(pick.annualSalary * factor) });
         salaryDelays = 0;
       } else if (c) {
         c.years -= 1;

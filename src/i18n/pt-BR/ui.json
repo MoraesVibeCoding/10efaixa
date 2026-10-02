@@ -70,5 +70,12 @@
   "colClube": "Clube",
   "colOver": "OVR",
   "atributos": "Atributos"
+ },
+ "risco": {
+  "frase": "risco {faixa}",
+  "baixo": "baixo",
+  "medio": "médio",
+  "alto": "alto",
+  "muitoAlto": "muito alto"
  }
 }

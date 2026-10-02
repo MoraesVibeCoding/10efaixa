@@ -1,82 +1,97 @@
 {
  "estirao-grande": {
   "titulo": "Esticou de vez!",
+  "texto": "Em seis meses você passou o seu irmão mais velho e a calça do uniforme virou bermuda. O corpo ainda não sabe o que fazer com tanta perna: a bola, que era amiga, agora foge do pé.",
   "opcoes": {
-   "seguir": "Bora pro treino"
+   "ficar-depois-do-treino": "Ficar depois do treino para reaprender o corpo",
+   "seguir-o-preparador": "Seguir o plano do preparador, sem pressa",
+   "tirar-onda": "Tirar onda com a altura nova na escola"
   }
  },
  "traco-desbloqueado": {
   "titulo": "Treino que vira talento",
+  "texto": "Aquele movimento que você repetiu mil vezes no fim do treino saiu no jogo, sem pensar. O auxiliar anotou na prancheta. No vestiário, já tem gente pedindo para você ensinar.",
   "opcoes": {
-   "comemorar": "Comemorar a evolução"
+   "ensinar-os-mais-novos": "Ensinar o lance aos mais novos depois do treino",
+   "guardar-o-segredo": "Guardar o segredo e seguir repetindo",
+   "postar-o-lance": "Postar o lance em câmera lenta nas redes"
   }
  },
  "troca-tecnico": {
   "titulo": "Técnico novo no CT",
+  "texto": "A diretoria demitiu o técnico depois da terceira derrota seguida. O novo chegou de agasalho fechado até o pescoço e avisou que ninguém tem lugar garantido. Quem era reserva voltou a sonhar.",
   "opcoes": {
-   "conhecer": "Se apresentar ao novo técnico"
+   "chegar-primeiro": "Chegar primeiro ao CT e se apresentar",
+   "esperar-a-chance": "Esperar a chance e mostrar serviço no treino",
+   "cobrar-explicacao": "Cobrar explicação se for para o banco"
   }
  },
  "proposta-rival": {
   "titulo": "O rival bateu na porta",
+  "texto": "O maior rival do seu clube fez uma proposta que dobra o seu salário. A notícia vazou antes de você atender o telefone. No treino, a torcida pendurou uma faixa na grade: \"Aqui não tem traidor\".",
   "opcoes": {
-   "aceitar": "Aceitar e ir para o rival",
-   "recusar": "Recusar e ficar",
-   "usar-como-trunfo": "Usar a proposta como trunfo e pedir valorização"
+   "aceitar": "Aceitar e vestir a camisa do rival",
+   "recusar": "Recusar e beijar o escudo no próximo jogo",
+   "usar-como-trunfo": "Usar a proposta para pedir aumento aqui"
   }
  },
  "salario-atrasado": {
   "titulo": "Salário atrasado de novo",
+  "texto": "Dois meses sem ver a cor do dinheiro. O elenco está dividido, o roupeiro já pediu dinheiro emprestado e a diretoria só pede paciência.",
   "opcoes": {
-   "pedir-saida": "Pedir para sair",
-   "ficar": "Ficar e esperar",
-   "cobrar-a-diretoria": "Cobrar a diretoria na frente do elenco"
-  },
-  "texto": "Dois meses sem ver a cor do dinheiro. O elenco está dividido e a diretoria pede paciência."
+   "pedir-saida": "Pedir para sair na próxima janela",
+   "ficar": "Ficar e segurar o elenco junto",
+   "cobrar-a-diretoria": "Cobrar a diretoria na frente de todo mundo"
+  }
  },
  "proposta-coracao": {
   "titulo": "O clube do coração chamou",
+  "texto": "O clube que você via da arquibancada ligou. O salário é menor que o das outras propostas, mas a camisa é aquela. Seu empresário torce o nariz; sua mãe já chorou.",
   "opcoes": {
-   "aceitar": "Aceitar a proposta",
-   "aceitar-por-amor": "Jogar por amor (salário menor)",
-   "recusar": "Recusar"
-  },
-  "texto": "O clube que você via da arquibancada ligou. O salário é menor que o das outras propostas, mas a camisa é aquela. Seu empresário torce o nariz; sua mãe já chorou."
+   "aceitar": "Assinar pelo salário que eles podem pagar",
+   "aceitar-por-amor": "Jogar por amor, ganhando bem menos",
+   "recusar": "Agradecer e seguir onde está"
+  }
  },
  "traicao-coracao": {
-  "titulo": "Proposta do rival do seu clube do coração",
+  "titulo": "O rival do seu clube do coração",
+  "texto": "O rival do time que você torce desde criança quer te contratar, e paga bem. No bairro onde você cresceu, a notícia chegou antes do almoço. Seu tio avisou: se vestir aquela camisa, nem precisa aparecer no Natal.",
   "opcoes": {
-   "aceitar": "Aceitar mesmo assim",
-   "recusar": "Recusar",
-   "recusar-em-publico": "Recusar e avisar em público que essa camisa não veste"
+   "aceitar": "Aceitar: futebol é profissão",
+   "recusar": "Recusar em silêncio",
+   "recusar-em-publico": "Recusar e dizer em público que não veste essa"
   }
  },
  "jogo-contra-coracao": {
   "titulo": "Gol contra o clube do coração",
+  "texto": "Bola na área, você chega primeiro e estufa a rede contra o time que aprendeu a amar na arquibancada. Os companheiros vêm correndo. No setor visitante, tem gente que você conhece pelo nome.",
   "opcoes": {
-   "comemorar": "Comemorar",
+   "comemorar": "Comemorar com a torcida do seu clube",
    "nao-comemorar": "Não comemorar, por respeito",
-   "comemorar-discreto": "Gol é gol: comemorar discreto, com os companheiros"
+   "comemorar-discreto": "Comemorar discreto, só com os companheiros"
   }
  },
  "empresario-forca-venda": {
-  "titulo": "Empresário fechou venda sem avisar",
+  "titulo": "Venda fechada sem você saber",
+  "texto": "Você soube pelo jornal: seu empresário acertou a sua venda e já recebeu a parte dele. A diretoria diz que o negócio está fechado. Ninguém perguntou o que você queria.",
   "opcoes": {
-   "aceitar-venda": "Aceitar a transferência",
-   "bater-o-pe": "Bater o pé e ficar",
-   "trocar-empresario": "Trocar de empresário"
+   "aceitar-venda": "Aceitar a transferência e fazer as malas",
+   "bater-o-pe": "Bater o pé e ficar no clube",
+   "trocar-empresario": "Romper com o empresário"
   }
  },
  "empresario-some-dinheiro": {
   "titulo": "Sumiu dinheiro da conta",
+  "texto": "O extrato chegou e a conta não fecha: falta uma parte do que você juntou. Seu empresário fala em \"taxa de investimento\" e muda de assunto. Seu pai, que nunca reclama, ficou calado no almoço.",
   "opcoes": {
-   "trocar-empresario": "Trocar de empresário",
-   "dar-outra-chance": "Dar outra chance",
-   "cobrar-cara-a-cara": "Cobrar cara a cara e exigir o dinheiro de volta"
+   "trocar-empresario": "Trocar de empresário e chamar um advogado",
+   "dar-outra-chance": "Acreditar na explicação e seguir com ele",
+   "cobrar-cara-a-cara": "Cobrar cara a cara o dinheiro de volta"
   }
  },
  "empresario-briga-clube": {
   "titulo": "Empresário brigou com a diretoria",
+  "texto": "Seu empresário e o presidente bateram boca por causa da sua renovação. O técnico, que ficou no meio, quer saber de que lado você está antes do próximo jogo.",
   "opcoes": {
    "apoiar-empresario": "Ficar do lado do empresário",
    "ficar-com-o-clube": "Ficar do lado do clube",
@@ -85,112 +100,128 @@
  },
  "renovacao": {
   "titulo": "Hora de renovar o contrato",
+  "texto": "Falta um ano de contrato e a diretoria chamou para conversar. A proposta traz um aumento pelo que você evoluiu. Seu empresário acha que dá para pedir mais; o técnico quer saber se pode contar com você.",
   "opcoes": {
-   "renovar": "Renovar",
-   "pedir-aumento": "Renovar pedindo aumento",
-   "nao-renovar": "Não renovar"
+   "renovar": "Renovar nas condições oferecidas",
+   "pedir-aumento": "Renovar, mas pedir um aumento maior",
+   "nao-renovar": "Não renovar e sair livre no fim do contrato"
   }
  },
  "lesao-grave": {
   "titulo": "Lesão grave",
+  "texto": "O joelho fez um barulho que você nunca tinha ouvido. O médico do clube mostra a ressonância e explica três caminhos. Seu empresário quer você em campo logo; sua mãe quer você inteiro.",
   "opcoes": {
-   "operar": "Operar e voltar com calma",
-   "conservador": "Tratamento conservador",
-   "voltar-antes": "Voltar antes da hora, no sacrifício"
+   "operar": "Operar e parar um ano: risco baixo de recaída",
+   "conservador": "Tratar sem cirurgia, seis meses: risco médio",
+   "voltar-antes": "Voltar no sacrifício: risco muito alto"
   }
  },
  "mudanca-posicao": {
   "titulo": "O técnico quer você em outra posição",
+  "texto": "O técnico te chamou no canto do campo com a prancheta na mão. Falta gente na outra posição e ele acha que você rende lá. Pode ser o caminho para jogar mais, ou para virar quebra-galho.",
   "opcoes": {
-   "aceitar": "Aceitar a nova posição",
-   "recusar": "Recusar e seguir onde está",
-   "aceitar-com-garantia": "Aceitar, mas pedir garantia de sequência no time"
+   "aceitar": "Topar e aprender a nova função",
+   "recusar": "Recusar: seu lugar é onde sempre jogou",
+   "aceitar-com-garantia": "Topar, mas pedir sequência na nova posição"
   }
  },
  "festa": {
   "titulo": "Convite para a festa",
+  "texto": "Sábado tem aniversário do lateral, numa casa com piscina e som alto. Domingo tem jogo às quatro da tarde. Metade do elenco já confirmou presença no grupo.",
   "opcoes": {
-   "ir": "Ir pra resenha",
-   "ficar-em-casa": "Ficar em casa e descansar",
-   "dar-uma-passada": "Dar uma passada, só para marcar presença"
+   "ir": "Ir e ficar até o fim",
+   "ficar-em-casa": "Ficar em casa e dormir cedo",
+   "dar-uma-passada": "Dar uma passada e sair antes da meia-noite"
   }
  },
  "polemica-redes": {
   "titulo": "Polêmica nas redes",
+  "texto": "Um corte de dez segundos da sua entrevista viralizou fora de contexto. Nos comentários, já tem gente pedindo a sua saída. No grupo do elenco, silêncio.",
   "opcoes": {
-   "postar": "Postar a resposta",
-   "deixar-pra-la": "Deixar pra lá",
-   "responder-na-zoeira": "Responder na zoeira e virar a página"
+   "postar": "Postar a sua versão, sem filtro",
+   "deixar-pra-la": "Ficar quieto e esperar a poeira baixar",
+   "responder-na-zoeira": "Rir de si mesmo num vídeo e virar a página"
   }
  },
  "casa-da-familia": {
   "titulo": "A casa da família",
+  "texto": "Pela primeira vez, a conta tem dinheiro para tirar a família do aluguel. Sua mãe já escolheu o bairro, mas não pede nada. O corretor manda fotos todo dia.",
   "opcoes": {
-   "comprar": "Comprar a casa da família",
-   "comprar-e-festejar": "Comprar e fazer a festa de inauguração",
-   "comprar-financiado": "Comprar financiado e deixar o dinheiro rendendo"
+   "comprar": "Comprar a casa à vista",
+   "comprar-financiado": "Comprar financiada e deixar o dinheiro rendendo",
+   "ainda-nao": "Ainda não: primeiro curtir um pouco o dinheiro"
   }
  },
  "investir": {
   "titulo": "Proposta de investimento",
+  "texto": "Um conhecido do seu empresário oferece sociedade numa rede de academias que \"não tem como dar errado\". O retorno pode ser grande; o prejuízo também. Ele quer resposta até sexta.",
   "opcoes": {
-   "investir": "Investir",
-   "guardar": "Guardar o dinheiro",
-   "pedir-conselho": "Ouvir quem entende antes de decidir"
+   "investir": "Entrar com uma parte grande do que você tem",
+   "guardar": "Guardar o dinheiro onde está",
+   "pedir-conselho": "Pagar um consultor para analisar antes"
   }
  },
  "amadurecimento": {
   "titulo": "Mudou de postura",
+  "texto": "Teve um jogo em que você perdeu a cabeça e o time pagou. Teve outro em que você segurou a onda e decidiu. Os mais velhos do elenco perceberam a diferença antes de você.",
   "opcoes": {
-   "seguir": "Seguir em frente, mais maduro"
+   "assumir-a-voz": "Assumir a voz no vestiário",
+   "seguir-quieto": "Seguir quieto e deixar o jogo falar",
+   "comemorar-a-fase": "Comemorar a fase com a família e os amigos"
   }
  },
  "retorno-formador": {
-  "titulo": "O clube que te revelou quer você de volta",
+  "titulo": "O clube que te revelou te quer de volta",
+  "texto": "O clube que te revelou quer você de volta para encerrar a carreira em casa. O salário é bem menor, mas o estádio onde você estreou ainda tem a sua foto na parede. Seus filhos nunca te viram jogar lá.",
   "opcoes": {
    "aceitar": "Voltar para casa e encerrar a carreira lá",
    "recusar": "Agradecer e seguir onde está",
-   "pedir-mais-um-ano": "Dizer que ainda tem lenha para queimar: mais um ano"
+   "pedir-mais-um-ano": "Recusar: ainda tem lenha para um clube grande"
   }
  },
  "realizar-sonho": {
   "titulo": "O clube do coração quer a sua despedida",
+  "texto": "O clube do seu coração quer que você encerre a carreira lá, com estádio cheio e camisa com o seu nome. É o sonho do menino da arquibancada. O corpo pede descanso; a cabeça ainda pede jogo.",
   "opcoes": {
    "aceitar": "Realizar o sonho",
    "recusar": "Agradecer e seguir onde está",
-   "aceitar-pedindo-a-faixa": "Aceitar e pedir a faixa de capitão na despedida"
+   "aceitar-pedindo-a-faixa": "Aceitar e pedir a faixa de capitão"
   }
  },
  "copa-sacrificio": {
   "titulo": "No sacrifício pela Seleção",
+  "texto": "A coxa ainda reclama do último jogo e o médico da Seleção fez cara feia. É jogo decisivo e o treinador espera a sua resposta. O país inteiro vai assistir.",
   "opcoes": {
-   "jogar": "Jogar mesmo sentindo dor",
-   "poupar": "Ficar fora e se recuperar",
-   "entrar-no-segundo-tempo": "Pedir para entrar só no segundo tempo"
+   "jogar": "Jogar desde o início: risco alto de lesão",
+   "poupar": "Ficar fora e se recuperar para a próxima fase",
+   "entrar-no-segundo-tempo": "Entrar no segundo tempo: risco médio de lesão"
   }
  },
  "copa-fora-posicao": {
-  "titulo": "O treinador pede você fora de posição",
+  "titulo": "Fora de posição na Seleção",
+  "texto": "Faltou um jogador na outra posição e o treinador da Seleção quer você lá, na véspera do jogo. Não é onde você brilha. Mas é a Seleção, e a fila de quem quer o seu lugar é grande.",
   "opcoes": {
    "aceitar": "Jogar onde o time precisa",
-   "recusar": "Dizer que só rende na sua posição",
-   "aceitar-e-cobrar": "Aceitar agora e pedir a sua posição no próximo jogo"
+   "recusar": "Recusar e ficar fora do resto do torneio",
+   "aceitar-e-cobrar": "Jogar lá, mas do seu jeito, sem mudar o estilo"
   }
  },
  "copa-penalti": {
   "titulo": "O pênalti decisivo",
+  "texto": "Disputa de pênaltis, última cobrança. Se fizer, a Seleção avança; se errar, o país inteiro lembra o seu nome por anos. O capitão olha para você com a bola na mão.",
   "opcoes": {
-   "bater": "Pegar a bola e bater",
-   "deixar": "Deixar para um companheiro",
-   "encher-o-pe": "Tomar a bola e encher o pé"
+   "bater": "Pedir a bola ao capitão e bater",
+   "deixar": "Deixar para quem treinou as cobranças",
+   "encher-o-pe": "Tomar a bola de quem ia bater e encher o pé"
   }
  },
  "dupla-nacionalidade": {
   "titulo": "Outra seleção quer você",
+  "texto": "A federação do país dos seus avós mandou uma carta: querem você na próxima convocação, e lá você seria titular. A Seleção Brasileira ainda nem sabe o seu nome. Aceitar é para sempre.",
   "opcoes": {
-   "aceitar": "Aceitar (decisão definitiva)",
-   "recusar": "Esperar a Seleção Brasileira",
-   "pedir-tempo": "Pedir um tempo para pensar"
+   "aceitar": "Aceitar e defender outro país para sempre",
+   "recusar": "Recusar e esperar a camisa amarela",
+   "pedir-tempo": "Recusar e se oferecer à Seleção nas redes"
   }
  }
 }
