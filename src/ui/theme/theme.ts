@@ -23,7 +23,7 @@ const colors = (t: Theme) => vars('cor', t);
 /** Claro por padrão; escuro pela preferência do aparelho; `data-tema` força um dos dois (telas com cena usam "escuro"). */
 export function themeCss(): string {
   const { claro, escuro } = tokens.temas;
-  const fixed = [vars('fonte', tokens.fontes), vars('tipo', tokens.tipo), vars('espaco', tokens.espaco), vars('toque', tokens.toque)].join(' ');
+  const fixed = [vars('fonte', tokens.fontes), vars('tipo', tokens.tipo), vars('espaco', tokens.espaco), vars('toque', tokens.toque), vars('forma', tokens.forma)].join(' ');
   const medals = Object.entries(tokens.medalha).filter(([k]) => !k.startsWith('_')).map(([, m]) => m as { nome: string; clara: string; escura: string; aro: string; texto: string });
   return [
     `:root { ${fixed} ${colors(claro)} color-scheme: light; }`,
@@ -32,6 +32,7 @@ export function themeCss(): string {
     `[data-tema="escuro"] { ${colors(escuro)} color-scheme: dark; }`,
     // a página inteira acompanha a tela escura com cena, para não sobrar moldura clara em volta dela
     `body:has([data-tema="escuro"]) { background: ${escuro.fundo}; }`,
+    `body:has([data-tema="claro"]) { background: ${claro.fundo}; }`,
     // moeda do Over: as cores vêm da medalha da faixa de overall, iguais nos dois temas
     ...medals.map((m) => `[data-medalha="${m.nome}"] { --medalha-clara: ${m.clara}; --medalha-escura: ${m.escura}; --medalha-aro: ${m.aro}; --medalha-texto: ${m.texto}; }`),
   ].join('\n');

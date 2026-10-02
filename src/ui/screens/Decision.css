@@ -1,4 +1,5 @@
-/* Tela de decisão: a cena em cima, o painel continua o escuro da pintura. Opções são faixas de largura inteira. */
+/* Tela de decisão (SPEC v2.19): papel creme, tinta marinho e verde como cor de base.
+   Tudo que se toca ou se lê em bloco é uma caixa de borda grossa com sombra dura, sem desfoque. */
 .decisao {
   display: flex;
   flex-direction: column;
@@ -10,40 +11,43 @@
   color: var(--cor-texto);
 }
 
+.caixa {
+  border: var(--forma-borda) solid var(--cor-linha);
+  border-radius: var(--forma-raio);
+  background: var(--cor-superficie);
+  box-shadow: var(--forma-sombra) var(--forma-sombra) 0 var(--cor-destaque);
+}
+
 .decisao__cena {
   inline-size: 100%;
-  /* a pintura é 4:5 com os 40% de baixo escuros; entra cortada por baixo e, em tela baixa, encolhe para as opções caberem sem rolagem */
-  flex: 0 1 calc(min(100vw, 30rem) * 0.5);
-  min-block-size: 7rem;
+  /* a pintura é 4:5 com os 40% de baixo escuros; entra cortada por baixo e, em tela baixa, encolhe para as opções caberem */
+  flex: 0 1 calc(min(100vw, 30rem) * 0.46);
+  min-block-size: 6.5rem;
   object-fit: cover;
-  object-position: 50% 16%;
-  /* a máscara só costura a emenda com o painel */
-  -webkit-mask-image: linear-gradient(to bottom, #000 84%, transparent);
-  mask-image: linear-gradient(to bottom, #000 84%, transparent);
+  object-position: 50% 19%;
 }
+
+/* progresso da carreira: a linha de tinta que fecha a cena */
+.faixa { flex: none; block-size: 8px; background: var(--cor-trilho); border-block: var(--forma-borda) solid var(--cor-linha); box-sizing: content-box; }
+.faixa__feito { display: block; block-size: 100%; min-inline-size: 8px; background: var(--cor-destaque); }
 
 .decisao__painel {
   flex: 1 0 auto;
   display: grid;
-  /* faixa e cabeça em cima; a sobra de altura fica entre o texto e as opções, que encostam no polegar */
-  /* jogador, braçadeira de progresso e cabeça em cima; a sobra de altura fica entre a história e as opções */
-  grid-template-rows: auto auto auto minmax(var(--espaco-2), 1fr) auto;
-  padding-block-end: env(safe-area-inset-bottom);
+  /* jogador e cabeça em cima; a sobra de altura fica entre a história e as opções, que encostam no polegar */
+  grid-template-rows: auto auto minmax(var(--espaco-2), 1fr) auto;
+  gap: var(--espaco-3);
+  padding: var(--espaco-3) var(--espaco-4) calc(var(--espaco-3) + env(safe-area-inset-bottom));
 }
-.decisao__opcoes { grid-row: 5; }
 
-.faixa { block-size: 6px; background: var(--cor-trilho); }
-.faixa__feito { display: block; block-size: 100%; min-inline-size: 6px; background: var(--cor-destaque); }
-
-/* Quem decide: uma tira com as duas cores do clube, o jogador e o Over; embaixo, a ficha em três células, como um placar. */
-.jogador { background: var(--cor-superficie); }
-.jogador__cores { display: block; block-size: 4px; }
+/* ---------- quem decide */
+.jogador { display: grid; }
 .jogador__topo {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   column-gap: var(--espaco-3);
-  padding: var(--espaco-3) var(--espaco-4);
+  padding: var(--espaco-2) var(--espaco-3);
 }
 .escudo { color: var(--cor-texto); }
 .escudo__sigla {
@@ -59,71 +63,44 @@
 .jogador__nome {
   font-family: var(--fonte-titulo);
   font-size: var(--tipo-nome);
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: 0.01em;
+  font-weight: 900;
+  line-height: 1;
   text-transform: uppercase;
   overflow-wrap: break-word;
 }
-.jogador__clube { font-size: var(--tipo-apoio); line-height: 1.3; color: var(--cor-texto-suave); }
-.jogador__over { display: flex; align-items: center; gap: var(--espaco-2); font-family: var(--fonte-titulo); line-height: 1; }
-.jogador__over-rotulo { font-size: var(--tipo-apoio); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cor-texto-suave); }
-/* O Over mora numa moeda de metal: borda serrilhada, aro, disco com brilho e o número em relevo.
-   As cores vêm da medalha da faixa de overall (bronze, prata, ouro, platina, esmeralda, diamante). */
-.moeda {
-  position: relative;
-  isolation: isolate;
+.jogador__clube { margin-block-start: 2px; font-size: var(--tipo-apoio); line-height: 1.3; color: var(--cor-texto-suave); }
+
+/* cartão do Over: a cor é a da faixa de overall, do bronze ao diamante */
+.over {
   display: grid;
-  place-items: center;
-  inline-size: 3.75rem;
+  justify-items: center;
+  align-content: center;
+  gap: 1px;
+  inline-size: 3.5rem;
   block-size: 3.75rem;
-  border-radius: 50%;
-  /* serrilha da borda */
-  background: repeating-conic-gradient(var(--medalha-aro) 0 3deg, var(--medalha-escura) 3deg 6deg);
-  box-shadow: 0 2px 5px rgb(0 0 0 / 0.5), 0 0 0 1px rgb(0 0 0 / 0.35);
+  border: var(--forma-borda) solid var(--medalha-aro);
+  border-radius: var(--forma-raio-cartao);
+  background: linear-gradient(160deg, var(--medalha-clara), var(--medalha-escura));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.45);
   color: var(--medalha-texto);
-  font-size: var(--tipo-over);
-  font-weight: 900;
+  font-family: var(--fonte-titulo);
   line-height: 1;
-  letter-spacing: -0.01em;
-  font-variant-numeric: tabular-nums;
-  /* número cunhado: luz por baixo, sombra por cima */
-  text-shadow: 0 1px 0 rgb(255 255 255 / 0.55), 0 -1px 0 rgb(0 0 0 / 0.18);
 }
-/* aro polido, com o reflexo girando como em metal escovado */
-.moeda::before {
-  content: '';
-  position: absolute;
-  inset: 3px;
-  z-index: -2;
-  border-radius: 50%;
-  background: conic-gradient(from 215deg, var(--medalha-escura), var(--medalha-clara) 14%, var(--medalha-escura) 30%, var(--medalha-aro) 50%, var(--medalha-escura) 66%, var(--medalha-clara) 84%, var(--medalha-escura));
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.35);
-}
-/* disco central rebaixado, com o brilho no alto à esquerda */
-.moeda::after {
-  content: '';
-  position: absolute;
-  inset: 8px;
-  z-index: -1;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 30% 22%, rgb(255 255 255 / 0.85) 0, rgb(255 255 255 / 0) 34%),
-    radial-gradient(circle at 50% 45%, var(--medalha-clara) 0 45%, var(--medalha-escura) 100%);
-  box-shadow: inset 0 2px 3px rgb(0 0 0 / 0.35), 0 1px 0 rgb(255 255 255 / 0.5);
-}
+.over__rotulo { font-size: var(--tipo-apoio); font-weight: 800; letter-spacing: 0.08em; }
+.over__numero { font-size: var(--tipo-over); font-weight: 900; font-variant-numeric: tabular-nums; }
 
 .ficha {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* a idade é curta e fica com a largura do próprio texto; tempo de jogo e salário dividem o resto, sem quebrar o rótulo */
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
   margin: 0;
-  border-block-start: 1px solid var(--cor-linha);
+  border-block-start: var(--forma-borda) solid var(--cor-linha);
 }
-.ficha > div { display: grid; align-content: start; gap: var(--espaco-1); padding: var(--espaco-2) var(--espaco-3) var(--espaco-3); }
-.ficha > div:first-child { padding-inline-start: var(--espaco-4); }
-.ficha > div:last-child { padding-inline-end: var(--espaco-4); }
-.ficha > div + div { border-inline-start: 1px solid var(--cor-linha); }
-.ficha dt {
+.ficha > div { display: grid; align-content: start; gap: 1px; padding: var(--espaco-1) var(--espaco-3) var(--espaco-2); }
+.ficha > div + div { border-inline-start: var(--forma-borda) solid var(--cor-linha); }
+.ficha dt { white-space: nowrap; }
+.ficha dt,
+.jogador__titulos-rotulo {
   font-family: var(--fonte-titulo);
   font-size: var(--tipo-apoio);
   font-weight: 700;
@@ -132,82 +109,62 @@
   text-transform: uppercase;
   color: var(--cor-texto-suave);
 }
-.ficha dd { margin: 0; min-block-size: 1.6rem; display: flex; align-items: center; font-weight: 700; line-height: 1.2; white-space: nowrap; }
+.ficha dd { margin: 0; font-weight: 700; line-height: 1.25; white-space: nowrap; }
 
-.trofeus { display: flex; align-items: center; gap: var(--espaco-3); margin: 0; padding: 0; list-style: none; }
-.trofeu--resto { font-family: var(--fonte-titulo); font-size: var(--tipo-opcao); font-weight: 800; }
+.jogador__titulos {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-4);
+  min-block-size: 2.75rem;
+  padding: var(--espaco-1) var(--espaco-3) var(--espaco-2);
+  border-block-start: var(--forma-borda) solid var(--cor-linha);
+}
+.jogador__sem-titulos { font-size: var(--tipo-apoio); color: var(--cor-texto-suave); }
+.trofeus { display: flex; align-items: center; gap: var(--espaco-4); margin: 0; padding: 0; list-style: none; }
 .trofeu { position: relative; display: grid; color: var(--cor-texto); }
-.trofeu:has(.trofeu__vezes) { margin-inline-end: 0.5rem; }
+.trofeu--resto { font-family: var(--fonte-titulo); font-size: var(--tipo-opcao); font-weight: 800; }
+/* quantas vezes ganhou: etiqueta escura no canto de baixo do troféu */
 .trofeu__vezes {
   position: absolute;
-  /* canto de cima do troféu, sem cobrir a taça nem encostar no rótulo da célula */
-  inset-block-start: -0.15rem;
-  inset-inline-end: -0.7rem;
-  min-inline-size: 1.15rem;
-  padding-inline: 0.2rem;
-  border-radius: 1rem;
-  /* balão translúcido: deixa ver o troféu por baixo sem perder a leitura do número */
-  background: color-mix(in srgb, var(--cor-fundo) 74%, transparent);
-  box-shadow: inset 0 0 0 1px var(--cor-linha);
-  color: var(--cor-texto);
+  inset-block-end: -0.35rem;
+  inset-inline-end: -0.95rem;
+  padding: 0 0.3rem;
+  border-radius: var(--forma-raio-etiqueta);
+  background: color-mix(in srgb, var(--cor-texto) 88%, transparent);
+  color: var(--cor-superficie);
   font-family: var(--fonte-titulo);
   font-size: var(--tipo-apoio);
   font-weight: 800;
-  line-height: 1.15rem;
-  text-align: center;
+  line-height: 1.2rem;
   font-variant-numeric: tabular-nums;
 }
+.trofeu:has(.trofeu__vezes) { margin-inline-end: 0.6rem; }
 
-.decisao__cabeca {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: start;
-  gap: var(--espaco-3) var(--espaco-4);
-  padding: var(--espaco-4) var(--espaco-4) var(--espaco-3);
-}
-
-.decisao__idade { display: grid; justify-items: start; font-family: var(--fonte-titulo); }
-.decisao__numero {
-  font-size: var(--tipo-numero);
-  font-weight: 900;
-  line-height: 0.8;
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
-}
-.decisao__anos {
-  margin-block-start: var(--espaco-2);
-  font-size: var(--tipo-apoio);
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--cor-texto-suave);
-}
-
+/* ---------- o que aconteceu */
+.decisao__cabeca { display: grid; gap: var(--espaco-2); }
 .decisao__cabeca h1 {
-  /* o alto das letras do título alinha com o alto do número da idade */
-  align-self: start;
-  margin-block-start: -2px;
   font-size: var(--tipo-titulo);
-  font-weight: 800;
-  line-height: 1.02;
-  letter-spacing: 0.01em;
+  font-weight: 900;
+  line-height: 1;
   text-transform: uppercase;
 }
-.decisao__historia { grid-column: 1 / -1; max-inline-size: 44ch; font-size: var(--tipo-historia); line-height: 1.45; }
+.decisao__historia { max-inline-size: 44ch; font-size: var(--tipo-historia); line-height: 1.45; color: var(--cor-texto-suave); }
 
+/* ---------- o que você faz */
+.decisao__opcoes { grid-row: 4; display: grid; gap: 0.625rem; }
 .opcao {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  column-gap: var(--espaco-4);
+  column-gap: var(--espaco-3);
   row-gap: var(--espaco-1);
   inline-size: 100%;
   min-block-size: var(--toque-minimo);
-  padding: var(--espaco-3) var(--espaco-4);
-  border: 0;
-  border-block-start: 1px solid var(--cor-linha);
-  border-radius: 0;
-  background: transparent;
+  padding: 0.375rem var(--espaco-3);
+  border: var(--forma-borda) solid var(--cor-linha);
+  border-radius: var(--forma-raio);
+  background: var(--cor-superficie);
+  box-shadow: var(--forma-sombra) var(--forma-sombra) 0 var(--cor-destaque);
   text-align: start;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -218,31 +175,46 @@
   grid-column: 1;
   display: flex;
   flex-wrap: wrap;
-  gap: var(--espaco-1) var(--espaco-4);
+  align-items: center;
+  gap: var(--espaco-1) var(--espaco-3);
   font-size: var(--tipo-apoio);
   line-height: 1.3;
   color: var(--cor-texto-suave);
 }
-.opcao__seta { grid-column: 2; grid-row: 1 / span 2; align-self: center; color: var(--cor-texto-suave); }
+.opcao__seta { grid-column: 2; grid-row: 1 / span 2; align-self: center; color: var(--cor-texto); }
 
 .previa { display: inline-flex; align-items: center; gap: var(--espaco-2); }
 .previa__setas { display: inline-flex; gap: 1px; }
-.previa--meu { color: var(--cor-texto); font-weight: 700; }
 .previa--sobe .previa__setas { color: var(--cor-positivo); }
 .previa--desce .previa__setas { color: var(--cor-negativo); }
+/* o jeito a que a opção remete: etiqueta de tinta; a do próprio jogador vem cheia, em verde */
+.previa--jeito {
+  padding: 0 var(--espaco-2);
+  border: 1px solid var(--cor-linha);
+  border-radius: var(--forma-raio);
+  color: var(--cor-texto);
+  font-weight: 700;
+}
+.previa--meu { border-color: var(--cor-destaque); background: var(--cor-destaque); color: var(--cor-sobre-destaque); }
 
 @media (hover: hover) {
-  .opcao:hover { background: var(--cor-superficie); }
+  .opcao:hover { background: var(--cor-fundo); }
 }
-.opcao:focus-visible { outline-offset: -3px; }
+.opcao:focus-visible { outline-offset: 3px; }
 
-/* a faixa de capitão: a opção escolhida vira o amarelo da braçadeira */
+/* escolher é apertar: a caixa desce sobre a própria sombra e enche de verde */
 .opcao[aria-pressed='true'],
-.opcao:active { background: var(--cor-destaque); color: var(--cor-sobre-destaque); }
-.opcao[aria-pressed='true'] :is(.opcao__previa, .opcao__seta, .previa__setas),
-.opcao:active :is(.opcao__previa, .opcao__seta, .previa__setas) { color: var(--cor-sobre-destaque); }
-.opcao[aria-pressed='true']:focus-visible { outline-color: var(--cor-sobre-destaque); }
+.opcao:active {
+  transform: translate(var(--forma-sombra), var(--forma-sombra));
+  box-shadow: none;
+  background: var(--cor-destaque);
+  color: var(--cor-sobre-destaque);
+}
+.opcao[aria-pressed='true'] :is(.opcao__previa, .opcao__seta, .previa__setas, .previa--jeito),
+.opcao:active :is(.opcao__previa, .opcao__seta, .previa__setas, .previa--jeito) { color: var(--cor-sobre-destaque); border-color: var(--cor-sobre-destaque); }
+.opcao[aria-pressed='true'] .previa--meu,
+.opcao:active .previa--meu { background: var(--cor-sobre-destaque); color: var(--cor-destaque); }
 
 @media (min-width: 40rem) {
-  .decisao { border-inline: 1px solid var(--cor-linha); }
+  .decisao { border-inline: var(--forma-borda) solid var(--cor-linha); }
 }

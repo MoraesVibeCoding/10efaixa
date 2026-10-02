@@ -44,9 +44,9 @@ Um simulador de carreira rápido e compartilhável na língua do torcedor brasil
 ## Brand Commitments
 
 - Nome: **10eFaixa**. O número gigante é o elemento memorável; a faixa horizontal carrega informação (progresso, faixas de atributo, veredito).
-- Paleta fixa (SPEC 7): Cal de campo `#F2F4EF`, Marinho de vestiário `#14213D`, Amarelo braçadeira `#FFC21A` (único destaque), Verde gramado `#1E7B4F` (só evolução positiva), Vermelho cartão `#D62839` (só lesão, queda e alerta), Cinza de linha `#C9CFC6`.
+- Paleta fixa (SPEC 7): Papel `#EEE9DF`, Marinho de vestiário `#14213D`, Verde gramado `#1E7B4F` (cor de base), Amarelo braçadeira `#FFC21A` (marca: abertura e faixa de capitão), Vermelho cartão `#D62839` (só lesão, queda e alerta), Cinza de linha `#C9CFC6`.
 - Tipografia fixa: Big Shoulders Display (números e títulos) e Atkinson Hyperlegible (texto), sempre com fonte reserva.
-- Tema: escuro nas telas com cena, em cinza neutro para não disputar com as cores dos clubes; nas telas de formulário, a preferência do aparelho.
+- Tema claro: papel creme, tinta marinho e verde gramado como cor de base, com caixas de borda grossa e sombra dura (referência do usuário: o jogo 7a0 no modo claro, com verde no lugar do laranja).
 - Movimento: um único momento animado (o número "carimbando" na abertura).
 - Tom de voz: direto, coloquial, frases curtas, sabor de narração de rádio. Botões dizem o que acontece ("Aceitar proposta", "Ficar no clube"). Zoeira só com o próprio jogador.
 - Sem escudos oficiais, sem marcas, sem imagem de pessoa real.

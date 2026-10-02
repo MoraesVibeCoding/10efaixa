@@ -10,15 +10,13 @@ describe('tokens visuais (T49, SPEC 7)', () => {
     expect(contrast('#14213D', '#14213D')).toBe(1);
   });
 
-  it('a paleta é a do SPEC, sem cor nova nos papéis de marca', () => {
+  it('a paleta é a do SPEC (v2.19): papel, marinho e verde como base', () => {
     expect(tokens.paleta).toEqual({
-      cal: '#F2F4EF', marinho: '#14213D', amarelo: '#FFC21A', verde: '#1E7B4F', vermelho: '#D62839', linha: '#C9CFC6',
+      papel: '#EEE9DF', marinho: '#14213D', verde: '#1E7B4F', amarelo: '#FFC21A', vermelho: '#D62839', linha: '#C9CFC6',
     });
-    for (const t of THEMES) expect(tokens.temas[t].destaque).toBe(tokens.paleta.amarelo);
-    expect(tokens.temas.claro.fundo).toBe(tokens.paleta.cal);
-    // pedido do usuário (T49): fundo cinza neutro nas telas com cena, para não brigar com as cores dos clubes
-    const [r, g, b] = [1, 3, 5].map((i) => parseInt(tokens.temas.escuro.fundo.slice(i, i + 2), 16)) as [number, number, number];
-    expect(Math.max(r, g, b) - Math.min(r, g, b)).toBeLessThanOrEqual(12);
+    expect(tokens.temas.claro.fundo).toBe(tokens.paleta.papel);
+    expect(tokens.temas.claro.texto).toBe(tokens.paleta.marinho);
+    expect(tokens.temas.claro.destaque).toBe(tokens.paleta.verde);
   });
 
   it('todo par de texto passa em AA (4,5:1) e todo par gráfico em 3:1, nos dois temas', () => {
@@ -72,5 +70,7 @@ describe('tokens visuais (T49, SPEC 7)', () => {
     expect(css).toContain('--fonte-titulo:');
     expect(css).toContain('--espaco-4:');
     expect(css).toContain(`body:has([data-tema="escuro"]) { background: ${tokens.temas.escuro.fundo}`);
+    expect(css).toContain(`body:has([data-tema="claro"]) { background: ${tokens.temas.claro.fundo}`);
+    expect(css).toContain('--forma-borda:');
   });
 });

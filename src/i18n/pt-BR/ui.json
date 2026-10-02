@@ -12,7 +12,7 @@
   "jogador": "Seu jogador",
   "escudo": "Escudo estilizado do {clube}",
   "clubePosicao": "{posicao} · {clube}",
-  "over": "Over",
+  "over": "OVR",
   "titulosLista": "Títulos conquistados",
   "trofeu": "{titulo}",
   "trofeuVarios": "{titulo}, {n} vezes",
@@ -22,7 +22,9 @@
   "nenhumTitulo": "Nenhum ainda",
   "faixaOver": " ({faixa})",
   "maisTitulos": "+{n}",
-  "maisTitulosLeitor": "e mais {n} títulos de outras competições"
+  "maisTitulosLeitor": "e mais {n} títulos de outras competições",
+  "idadeRotulo": "Idade",
+  "vezes": "×{n}"
  },
  "amostra": {
   "clube": "clube do coração"

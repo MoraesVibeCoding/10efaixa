@@ -69,10 +69,10 @@ function Crest({ clubId }: { clubId: string }) {
   );
 }
 
-/** A célula comporta três itens: três troféus, ou dois e o contador do resto. */
+/** A linha comporta cinco itens: cinco troféus, ou quatro e o contador do resto. */
 function shownTitles(titles: string[]) {
   const all = rankTitles(titles);
-  const ranked = all.length > 3 ? all.slice(0, 2) : all;
+  const ranked = all.length > 5 ? all.slice(0, 4) : all;
   let shown = 0;
   for (const [, count] of ranked) shown += count;
   return { ranked, rest: titles.length - shown };
@@ -87,12 +87,12 @@ function Trophies({ titles }: { titles: string[] }) {
       {ranked.map(([id, n]) => (
         <li key={id} className="trofeu">
           <svg
-            viewBox="0 0 24 24" width="22" height="22" role="img" focusable="false"
+            viewBox="0 0 24 24" width="30" height="30" role="img" focusable="false"
             aria-label={n > 1 ? t('ui.decisao.trofeuVarios', { titulo: t(`ui.titulo.${id}`), n }) : t('ui.decisao.trofeu', { titulo: t(`ui.titulo.${id}`) })}
           >
             <path d="M7 3h10v2h3.5v3.2A4.3 4.3 0 0 1 16.6 12 5.2 5.2 0 0 1 13 14.4V17h3v4H8v-4h3v-2.6A5.2 5.2 0 0 1 7.4 12 4.3 4.3 0 0 1 3.5 8.2V5H7zm0 4H5.5v1.2c0 .9.6 1.7 1.5 2zm10 0v3.2c.9-.3 1.5-1.1 1.5-2V7z" fill="currentColor" />
           </svg>
-          {n > 1 && <span className="trofeu__vezes" aria-hidden="true">{n}</span>}
+          {n > 1 && <span className="trofeu__vezes" aria-hidden="true">{t('ui.decisao.vezes', { n })}</span>}
         </li>
       ))}
       {rest > 0 && (
@@ -114,26 +114,35 @@ export function Decision({ eventId, age, progress, scene, player, temperament, o
   const text = hasText(eventId) ? t(`events.${eventId}.texto`) : null;
 
   return (
-    <main className="decisao" data-tema="escuro">
+    <main className="decisao" data-tema="claro">
       <img className="decisao__cena" src={scene.src} alt={scene.alt} />
+      <div
+        className="faixa" role="progressbar" aria-label={t('ui.decisao.progresso')}
+        aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent} aria-valuetext={t('ui.decisao.idade', { idade: age })}
+      >
+        <span className="faixa__feito" style={{ inlineSize: `${percent}%` }} />
+      </div>
       <div className="decisao__painel">
-        <section className="jogador" aria-label={t('ui.decisao.jogador')}>
-          {club && <span className="jogador__cores" aria-hidden="true" style={{ background: `linear-gradient(90deg, ${club.cores[0]} 50%, ${club.cores[1]} 50%)` }} />}
+        <section className="jogador caixa" aria-label={t('ui.decisao.jogador')}>
           <div className="jogador__topo">
             <Crest clubId={player.clubId} />
             <div className="jogador__quem">
               <p className="jogador__nome">{player.name}</p>
               <p className="jogador__clube">{t('ui.decisao.clubePosicao', { posicao: t(`positions.${player.position}`), clube: club?.nome ?? '' })}</p>
             </div>
-            <p className="jogador__over">
-              <span className="jogador__over-rotulo">
+            <p className="over" data-medalha={MEDALS[band]!.nome}>
+              <span className="over__rotulo">
                 {t('ui.decisao.over')}
                 <span className="sr-only">{t('ui.decisao.faixaOver', { faixa: t(`attributes.band.${band}`) })}</span>
               </span>
-              <span className="moeda" data-medalha={MEDALS[band]!.nome}>{player.overall}</span>
+              <span className="over__numero">{player.overall}</span>
             </p>
           </div>
           <dl className="ficha">
+            <div>
+              <dt>{t('ui.decisao.idadeRotulo')}</dt>
+              <dd><span>{age}</span>&nbsp;{t('ui.decisao.anos')}</dd>
+            </div>
             <div>
               <dt>{t('ui.decisao.tempoDeJogo')}</dt>
               <dd>{t(`ui.papel.${player.role}`)}</dd>
@@ -142,23 +151,13 @@ export function Decision({ eventId, age, progress, scene, player, temperament, o
               <dt>{t('ui.decisao.salario')}</dt>
               <dd>{money(player.monthlySalary.amount, player.monthlySalary.currency)}</dd>
             </div>
-            <div>
-              <dt>{t('ui.decisao.titulosRotulo')}</dt>
-              <dd>{player.titles.length ? <Trophies titles={player.titles} /> : t('ui.decisao.nenhumTitulo')}</dd>
-            </div>
           </dl>
+          <div className="jogador__titulos">
+            <p className="jogador__titulos-rotulo">{t('ui.decisao.titulosRotulo')}</p>
+            {player.titles.length ? <Trophies titles={player.titles} /> : <p className="jogador__sem-titulos">{t('ui.decisao.nenhumTitulo')}</p>}
+          </div>
         </section>
-        <div
-          className="faixa" role="progressbar" aria-label={t('ui.decisao.progresso')}
-          aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent} aria-valuetext={t('ui.decisao.idade', { idade: age })}
-        >
-          <span className="faixa__feito" style={{ inlineSize: `${percent}%` }} />
-        </div>
         <header className="decisao__cabeca">
-          <p className="decisao__idade" aria-hidden="true">
-            <span className="decisao__numero">{age}</span>
-            <span className="decisao__anos">{t('ui.decisao.anos')}</span>
-          </p>
           <h1>{t(`events.${eventId}.titulo`)}</h1>
           {text && <p className="decisao__historia">{text}</p>}
         </header>

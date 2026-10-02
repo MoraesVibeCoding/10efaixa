@@ -30,9 +30,9 @@ describe('perfil de cada opção (pedido do usuário na T49)', () => {
 });
 
 describe('tela de decisão (T49: amostra; T51 completa)', () => {
-  it('tema escuro, região principal e o título do evento como título da tela', () => {
+  it('tema claro (SPEC v2.19), região principal e o título do evento como título da tela', () => {
     setup();
-    expect(screen.getByRole('main')).toHaveAttribute('data-tema', 'escuro');
+    expect(screen.getByRole('main')).toHaveAttribute('data-tema', 'claro');
     expect(screen.getByRole('heading', { level: 1, name: t(`events.${EVENT}.titulo`) })).toBeInTheDocument();
   });
 
@@ -41,7 +41,7 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
     expect(screen.getByRole('img', { name: 'O jogador na sala do empresário' })).toBeInTheDocument();
   });
 
-  it('idade em número gigante e a faixa de progresso da carreira com nome acessível', () => {
+  it('idade na ficha e a faixa de progresso da carreira com nome acessível', () => {
     setup();
     expect(screen.getByText('17')).toBeInTheDocument();
     const bar = screen.getByRole('progressbar', { name: t('ui.decisao.progresso') });
@@ -56,20 +56,21 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
     expect(within(who).getByText(new RegExp(`${t('positions.meia')}.*Flamengo`))).toBeInTheDocument();
     expect(within(who).getByRole('img', { name: t('ui.decisao.escudo', { clube: 'Flamengo' }) })).toBeInTheDocument();
     expect(within(who).getByText(t('ui.decisao.over'))).toBeInTheDocument();
-    const coin = within(who).getByText('78');
-    expect(coin).toHaveAttribute('data-medalha', 'platina');
+    const card = within(who).getByText('78').closest('[data-medalha]');
+    expect(card).toHaveAttribute('data-medalha', 'platina');
     expect(within(who).getByText(new RegExp(t('attributes.band.muitoBom')))).toBeInTheDocument();
   });
 
-  it('ficha do jogador: tempo de jogo, salário do mês e títulos, em três células', () => {
+  it('ficha do jogador: idade, tempo de jogo e salário do mês em três células; os títulos ficam logo abaixo', () => {
     setup();
     const who = screen.getByRole('region', { name: t('ui.decisao.jogador') });
     expect(within(who).getByText(t('ui.decisao.tempoDeJogo'))).toBeInTheDocument();
     expect(within(who).getByText(t('ui.papel.titular'))).toBeInTheDocument();
     expect(within(who).getByText(t('ui.decisao.salario'))).toBeInTheDocument();
     expect(within(who).getByText(/R\$\s180\smil/)).toBeInTheDocument();
-    expect(within(who).getByText(t('ui.decisao.titulosRotulo'))).toBeInTheDocument();
+    expect(within(who).getByText(t('ui.decisao.idadeRotulo'))).toBeInTheDocument();
     expect(within(who).getAllByRole('term')).toHaveLength(3);
+    expect(within(who).getByText(t('ui.decisao.titulosRotulo'))).toBeInTheDocument();
   });
 
   it('salário em euro quando o contrato é no exterior', () => {
@@ -82,18 +83,18 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
     const list = screen.getByRole('list', { name: t('ui.decisao.titulosLista') });
     expect(within(list).getAllByRole('listitem')).toHaveLength(2);
     const state = within(list).getByRole('img', { name: t('ui.decisao.trofeuVarios', { titulo: t('ui.titulo.estadual'), n: 2 }) });
-    expect(state.parentElement).toHaveTextContent('2');
+    expect(state.parentElement).toHaveTextContent(t('ui.decisao.vezes', { n: 2 }));
     const cup = within(list).getByRole('img', { name: t('ui.decisao.trofeu', { titulo: t('ui.titulo.copaDoBrasil') }) });
     expect(cup.parentElement).not.toHaveTextContent(/\d/);
   });
 
-  it('muitas competições: cabem dois troféus e o resto vira um contador', () => {
-    const titles = ['estadual', 'estadual', 'copaDoBrasil', 'serieA', 'libertadores', 'serieB'];
+  it('muitas competições: cabem quatro troféus e o resto vira um contador', () => {
+    const titles = ['estadual', 'estadual', 'copaDoBrasil', 'serieA', 'libertadores', 'serieB', 'serieC'];
     render(<Decision eventId={EVENT} age={30} progress={0.7} player={{ ...PLAYER, titles }} scene={{ src: 'c.webp', alt: 'cena' }} />);
     const list = screen.getByRole('list', { name: t('ui.decisao.titulosLista') });
-    expect(within(list).getAllByRole('img')).toHaveLength(2);
-    expect(within(list).getByText(t('ui.decisao.maisTitulos', { n: 4 }))).toBeInTheDocument();
-    expect(within(list).getByText(t('ui.decisao.maisTitulosLeitor', { n: 4 }))).toBeInTheDocument();
+    expect(within(list).getAllByRole('img')).toHaveLength(4);
+    expect(within(list).getByText(t('ui.decisao.maisTitulos', { n: 3 }))).toBeInTheDocument();
+    expect(within(list).getByText(t('ui.decisao.maisTitulosLeitor', { n: 3 }))).toBeInTheDocument();
   });
 
   it('sem título ainda: a ficha diz isso, sem lista de troféus', () => {
