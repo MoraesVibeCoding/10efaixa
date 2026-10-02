@@ -57,6 +57,14 @@ Lote 2 completo em 2026-10-02: 6 de 6 retratos aprovados, todos em 1856×2304. R
 - `trofeus/<id>/`: 18 troféus de desenho original, quadrados (1:1), em fundo azul-marinho chapado. **Confira um a um se não lembra o troféu real.**
 - `abertura/`: a tela de abertura, com o jogador em silhueta no túnel e a faixa de capitão amarela.
 
+## Ressalvas aceitas (decisão do usuário em 2026-10-02: pequenos defeitos não pedem nova geração)
+
+- Cenas 15 a 18 (20 imagens) estão em 825×1024, não em 1856×2304. O jogo serve as cenas em cerca de 1080 px de largura, então a diferença é pequena; se as conversas do Gemini ainda existirem, vale baixar de novo em tamanho cheio.
+- `15-entrevista/careca`: um repórter ao fundo saiu sem rosto, e os repórteres usam roupas coloridas.
+- `17-rua-do-bairro/liso-medio`: placa de loja com texto fictício; apagar por código.
+- `12-gol`: parte da torcida em tons azulados; `13-hospital`: borda reta na faixa escura em três cortes; `06/liso-grande`: encosto da cadeira; `07/cacheado-grande`: bolinhas no quadro tático.
+- Tudo o que é cor fora do lugar (torcida, casas, roupas de figurantes) se resolve com a máscara por região no código de arte (T43b).
+
 ## Como os prompts dos lotes 3 a 5 são feitos
 
 Saem de `gerar-lotes-3-5.py` (os textos das cenas ficam no próprio script). Para ajustar uma cena, edite o script e rode `python3 docs/arte/gerar-lotes-3-5.py`: ele reescreve só os `prompt.md` desses lotes e não toca em imagens nem nos lotes 1 e 2.
