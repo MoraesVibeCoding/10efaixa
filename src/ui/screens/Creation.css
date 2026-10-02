@@ -1,13 +1,13 @@
-/* T50 (SPEC 6.1): assistente de criação. Cabeçalho com o passo, o conteúdo do passo e as ações sempre embaixo. */
+/* T50 (SPEC 6.1, v2.30): criação em telas curtas. Cabeçalho com o passo, o conteúdo e as ações sempre embaixo; sem rolar em 390×844. */
 .criacao { min-block-size: 100dvh; display: grid; grid-template-columns: minmax(0, 1fr); }
 .criacao__form {
-  /* coluna: só o conteúdo do passo estica; a figurinha só existe a partir da aparência */
+  /* coluna: só o conteúdo do passo estica, e as ações ficam no pé da tela */
   display: flex;
   flex-direction: column;
   gap: var(--espaco-2);
   inline-size: min(100%, 30rem);
   margin-inline: auto;
-  padding: var(--espaco-4) var(--espaco-3) var(--espaco-3);
+  padding: var(--espaco-3);
 }
 .criacao__topo { display: grid; gap: var(--espaco-2); }
 .criacao__progresso { font-size: var(--tipo-apoio); color: var(--cor-texto-suave); }
@@ -18,10 +18,11 @@
 .criacao__titulo:focus-visible { outline: 3px solid var(--cor-foco); outline-offset: 2px; }
 
 .criacao__passo { flex: 1; align-content: start; display: grid; gap: var(--espaco-2); min-inline-size: 0; }
-.criacao__campo { display: grid; gap: var(--espaco-1); }
-.criacao__campo label { font-weight: 700; }
-.criacao__campo input {
-  min-block-size: var(--toque-minimo);
+.criacao__campo { display: grid; gap: 2px; min-inline-size: 0; }
+.criacao__campo label, .escolhas__rotulo { font-family: var(--fonte-texto); font-size: var(--tipo-apoio); font-weight: 700; }
+.criacao__campo input, .criacao__campo select {
+  inline-size: 100%;
+  min-block-size: var(--toque-compacto);
   padding: 0 var(--espaco-3);
   border: var(--forma-borda) solid var(--cor-linha);
   border-radius: var(--forma-raio);
@@ -30,7 +31,7 @@
   font: inherit;
   font-size: var(--tipo-opcao);
 }
-.criacao__campo input[aria-invalid='true'] { border-color: var(--cor-negativo); }
+.criacao__campo [aria-invalid='true'] { border-color: var(--cor-negativo); }
 .criacao__dica { font-size: var(--tipo-apoio); color: var(--cor-texto-suave); }
 .criacao__erro { font-size: var(--tipo-apoio); font-weight: 700; color: var(--cor-negativo); }
 
@@ -56,23 +57,43 @@
   .criacao__botao--principal:hover { background: var(--cor-positivo); }
 }
 
-/* figurinha ao vivo (T50b): centrada no topo, a mesma da tela de decisão */
-.criacao__previa { display: grid; justify-items: center; gap: var(--espaco-1); text-align: center; }
+/* tela 1: figurinha ao vivo ao lado dos campos de identidade */
+.quem { display: grid; gap: 0.375rem; min-inline-size: 0; }
+.quem__topo { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--espaco-3); align-items: start; }
+.quem__campos { display: grid; gap: var(--espaco-1); min-inline-size: 0; }
+.quem__linha { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); gap: var(--espaco-2); }
+.criacao__previa { display: grid; justify-items: center; }
 
-/* grupos de escolha: rádio nativo escondido, a marca é o alvo de toque (mínimo 44 px) */
-.criacao__grupos { display: grid; gap: var(--espaco-1); min-inline-size: 0; }
-.escolhas { margin: 0; padding: 0; border: 0; min-inline-size: 0; }
-.escolhas legend { padding: 0; font-weight: 700; font-size: var(--tipo-apoio); }
+/* visual: título com "Sortear" ao lado (v2.30) */
+.criacao__secao { display: grid; gap: 2px; min-inline-size: 0; }
+.criacao__secao h2 { font-size: 1.25rem; line-height: 1; }
+.criacao__secao-topo { display: flex; align-items: center; justify-content: space-between; gap: var(--espaco-2); }
+.criacao__sortear {
+  min-block-size: var(--toque-compacto);
+  padding: 0 var(--espaco-3);
+  border: var(--forma-borda) solid var(--cor-linha);
+  border-radius: var(--forma-raio);
+  background: var(--cor-superficie);
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+@media (hover: hover) { .criacao__sortear:hover { border-color: var(--cor-destaque); } }
+
+/* grupos de escolha: rótulo à esquerda, faixa à direita; rádio nativo escondido, a marca é o alvo de toque (48 px) */
+.escolhas { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); align-items: center; min-inline-size: 0; }
+.escolhas__erro { grid-column: 1 / -1; }
 /* uma faixa por grupo, que desliza para o lado: a tela inteira cabe em 390×844 sem rolar (o foco do teclado rola a faixa) */
 .escolhas__lista {
   display: flex;
   gap: var(--espaco-1);
+  position: relative; /* referência do offsetLeft das opções (revealChecked) */
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x proximity;
   scrollbar-width: none;
-  margin-inline: calc(-1 * var(--espaco-3));
-  padding: 4px var(--espaco-3);
+  margin-inline-end: calc(-1 * var(--espaco-3));
+  padding: 2px var(--espaco-3) 2px 2px;
 }
 .escolhas__lista::-webkit-scrollbar { display: none; }
 .escolha { scroll-snap-align: start; flex: none; position: relative; } /* prende o rádio escondido (absoluto) dentro da faixa */
@@ -92,6 +113,7 @@
 .escolha--cor .escolha__marca { padding: 0; border-radius: 50%; }
 .escolha__amostra { inline-size: 1.5rem; block-size: 1.5rem; border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.25); }
 .escolha__input:checked + .escolha__marca { background: var(--cor-destaque); color: var(--cor-sobre-destaque); box-shadow: var(--forma-sombra) var(--forma-sombra) 0 var(--cor-linha); }
-.escolha--cor .escolha__input:checked + .escolha__marca { background: var(--cor-superficie); outline: 3px solid var(--cor-destaque); outline-offset: 2px; }
-.escolha__input:focus-visible + .escolha__marca { outline: 3px solid var(--cor-foco); outline-offset: 2px; }
+/* anéis desenhados para dentro: a faixa rola (overflow) e cortaria um contorno para fora */
+.escolha--cor .escolha__input:checked + .escolha__marca { background: var(--cor-superficie); box-shadow: inset 0 0 0 4px var(--cor-destaque); }
+.escolha__input:focus-visible + .escolha__marca { outline: 3px solid var(--cor-foco); outline-offset: -5px; }
 @media (hover: hover) { .escolha:hover .escolha__marca { border-color: var(--cor-destaque); } }

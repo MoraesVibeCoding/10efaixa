@@ -207,6 +207,11 @@
     "id": "vermelha",
     "hex": "#D62839"
    }
-  ]
+  ],
+  "sorteio": {
+   "_nota": "Chance de o visual sorteado vir com barba e com faixa de cabelo.",
+   "barba": 0.35,
+   "faixa": 0.2
+  }
  }
 }

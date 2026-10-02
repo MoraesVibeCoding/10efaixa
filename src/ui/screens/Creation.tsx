@@ -1,34 +1,48 @@
-import { useEffect, useId, useMemo, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useId, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import type { AvatarSpec } from '../../art/avatar';
 import avatarData from '../../data/avatar.json';
+import creationData from '../../data/creation.json';
+import { CLUBS } from '../../engine/clubs';
 import { checkName } from '../../engine/nameFilter';
+import { createPrng } from '../../engine/prng';
 import { t } from '../../i18n';
 import { CREATION_STEPS, transition, type FlowState } from '../../state/flow';
 import { Figurinha } from './Figurinha';
+import { PICKS, previewAvatar, randomLook, type Look } from './look';
+import { revealChecked } from './reveal';
 import './Creation.css';
 
-// T50 (SPEC 6.1): assistente de criação, um passo por tela, na ordem de flow.json. A navegação usa a máquina da T48.
-// Passos sem tela ainda mostram um aviso e deixam seguir; cada fatia da T50 troca um aviso pela tela de verdade.
-/** Aparência (6.17): só visual. Nunca entra em CreationInput nem no motor. */
-export interface Look { skin: string; hairStyle: string; hairColor: string; beard: string | null; headband: string | null; boots: string }
-export interface CreationDraft { name: string; look: Look }
-export interface CreationProps { onExit: () => void; onFinish: (draft: CreationDraft) => void }
+// T50 (SPEC 6.1, v2.30): criação em duas telas + tipo de início, na ordem de flow.json e pela máquina da T48.
+// Tela 1 "quem é ele": identidade e visual (nada aqui mexe nos atributos). As outras telas chegam nas próximas fatias.
+export interface Identity { name: string; number: string; state: string; heartClub: string; celebration: string | null }
+export interface CreationDraft { identity: Identity; look: Look }
+export interface CreationProps {
+  onExit: () => void; onFinish: (draft: CreationDraft) => void;
+  /** Semente do sorteio do visual (o desafio diário passa a do dia). */
+  seed?: number;
+}
+type Errors = Partial<Record<keyof Identity, string>>;
 
 const TOTAL = CREATION_STEPS.length;
-const LOOK_FROM = CREATION_STEPS.indexOf('aparencia');
-const PICKS = avatarData.escolhas;
 const NONE = 'nenhuma';
-/** A figurinha ao vivo aparece do passo da aparência em diante. */
-function showsPreview(step: number) { return step >= LOOK_FROM; }
-const hexOf = (list: { id: string; hex: string }[], id: string | null) => list.find((o) => o.id === id)?.hex ?? null;
+const BY_NAME = [...CLUBS].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+/** Ordem do foco quando há erro: o primeiro campo inválido recebe o foco. */
+const FIELD_ORDER: (keyof Identity)[] = ['name', 'number', 'state', 'celebration'];
 
-/** Avatar da prévia: a aparência escolhida sobre um corpo padrão (altura e compleição chegam no passo do biotipo). */
-function previewAvatar(look: Look): AvatarSpec {
-  return {
-    skin: look.skin, hairStyle: look.hairStyle, hairColor: look.hairColor, beard: look.beard, expression: 'neutra',
-    heightCm: 178, build: 'atletico', age: 16, uniform1: '#000000', uniform2: '#000000',
-    boots: hexOf(PICKS.chuteiras, look.boots)!, headband: hexOf(PICKS.faixas, look.headband),
-  };
+/** Erros da tela 1, como chaves de i18n de creation.error. */
+function identityErrors(id: Identity): Errors {
+  const errors: Errors = {};
+  const name = checkName(id.name);
+  if (name !== 'ok') errors.name = `creation.error.name.${name}`;
+  const n = Number(id.number);
+  if (!/^\d{1,2}$/.test(id.number.trim()) || n < 1 || n > 99) errors.number = 'creation.error.shirtNumber.invalid';
+  if (!creationData.states.includes(id.state)) errors.state = 'creation.error.state.invalid';
+  if (!id.celebration) errors.celebration = 'creation.error.celebration.invalid';
+  return errors;
+}
+
+function progressText(step: number) {
+  return t('ui.criacao.progresso', { passo: step + 1, total: TOTAL });
 }
 
 /** Frase da prévia para o leitor de tela. */
@@ -40,50 +54,50 @@ function describeLook(look: Look) {
   });
 }
 
-/** Chave de i18n do erro do passo, ou null quando o passo pode avançar. */
-function stepError(step: string, draft: CreationDraft): string | null {
-  if (step !== 'nome') return null;
-  const check = checkName(draft.name);
-  return check === 'ok' ? null : `creation.error.name.${check}`;
-}
-
-function progressText(step: number) {
-  return t('ui.criacao.progresso', { passo: step + 1, total: TOTAL });
-}
-
-export function Creation({ onExit, onFinish }: CreationProps) {
+export function Creation({ onExit, onFinish, seed = Date.now() }: CreationProps) {
+  const rng = useRef(null as ReturnType<typeof createPrng> | null);
+  rng.current ??= createPrng(seed);
   const [flow, setFlow] = useState({ screen: 'criacao', step: 0 } as FlowState);
-  const [draft, setDraft] = useState({ name: '', look: { ...PICKS.padrao } } as CreationDraft);
-  const [error, setError] = useState(null as string | null);
+  const [identity, setIdentity] = useState({ name: '', number: '10', state: '', heartClub: '', celebration: null } as Identity);
+  const [look, setLook] = useState(() => { return randomLook(rng.current!); });
+  const [errors, setErrors] = useState({} as Errors);
   const titleRef = useRef(null as HTMLHeadingElement | null);
-  const inputRef = useRef(null as HTMLInputElement | null);
   const shown = useRef(flow.step);
   const ids = useId();
   const step = CREATION_STEPS[flow.step]!;
+  const avatar = useMemo(() => { return previewAvatar(look); }, [look]);
 
-  // Passo novo: o foco vai para o título, e o leitor de tela anuncia onde a pessoa está (não roda na abertura).
+  // Tela nova: o foco vai para o título, e o leitor de tela anuncia onde a pessoa está (não roda na abertura).
   useEffect(() => {
     if (shown.current === flow.step) return;
     shown.current = flow.step;
     titleRef.current?.focus();
   }, [flow.step]);
 
-  const submit = (e: FormEvent) => {
+  const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const err = stepError(step, draft);
-    if (err) { setError(err); inputRef.current?.focus(); return; }
-    if (flow.step === TOTAL - 1) { onFinish(draft); return; }
+    const found = step === 'quemE' ? identityErrors(identity) : {};
+    const first = FIELD_ORDER.find((k) => found[k]);
+    if (first) {
+      setErrors(found);
+      e.currentTarget.querySelector<HTMLElement>(`[data-campo="${first}"]`)?.focus();
+      return;
+    }
+    if (flow.step === TOTAL - 1) { onFinish({ identity, look }); return; }
     setFlow(transition(flow, 'AVANCAR'));
   };
   const back = () => {
     const next = transition(flow, 'VOLTAR');
     if (next.screen !== 'criacao') { onExit(); return; }
-    setError(null);
+    setErrors({});
     setFlow(next);
   };
-  const changeName = (name: string) => { setDraft({ ...draft, name }); setError(null); };
-  const changeLook = (look: Look) => setDraft({ ...draft, look });
-  const avatar = useMemo(() => { return previewAvatar(draft.look); }, [draft.look]);
+  const change = (k: keyof Identity, v: string) => {
+    setIdentity({ ...identity, [k]: v });
+    const { [k]: _, ...rest } = errors;
+    setErrors(rest);
+  };
+  const ctx = { ids, identity, look, avatar, errors, change, setLook, reroll: () => setLook(randomLook(rng.current!)) };
 
   return (
     <main className="criacao">
@@ -93,8 +107,7 @@ export function Creation({ onExit, onFinish }: CreationProps) {
           <span className="criacao__trilho" aria-hidden="true"><span style={{ inlineSize: `${((flow.step + 1) / TOTAL) * 100}%` }} /></span>
           <h1 className="criacao__titulo" ref={titleRef} tabIndex={-1}>{t(`ui.criacao.passos.${step}`)}</h1>
         </header>
-        {showsPreview(flow.step) ? <LivePreview name={draft.name} avatar={avatar} look={draft.look} /> : null}
-        <div className="criacao__passo">{stepBody(step, { ids, draft, error, inputRef, changeName, changeLook })}</div>
+        <div className="criacao__passo">{stepBody(step, ctx)}</div>
         <footer className="criacao__acoes">
           <button type="button" className="criacao__botao" onClick={back}>{t('ui.criacao.voltar')}</button>
           <button type="submit" className="criacao__botao criacao__botao--principal">{t('ui.criacao.avancar')}</button>
@@ -104,49 +117,86 @@ export function Creation({ onExit, onFinish }: CreationProps) {
   );
 }
 
-interface NameStepProps {
-  ids: string; value: string; error: string | null;
-  inputRef: React.RefObject<HTMLInputElement | null>; onChange: (v: string) => void;
+interface StepCtx {
+  ids: string; identity: Identity; look: Look; avatar: AvatarSpec; errors: Errors;
+  change: (k: keyof Identity, v: string) => void; setLook: (l: Look) => void; reroll: () => void;
 }
 
-/** Nome: a dica descreve o campo; com erro, a mensagem do filtro passa a ser a descrição. */
-function NameStep({ ids, value, error, inputRef, onChange }: NameStepProps) {
-  const hint = `${ids}-dica`;
-  const err = `${ids}-erro`;
+/** Conteúdo de cada tela; as que ainda não existem mostram o aviso. */
+function stepBody(step: string, c: StepCtx) {
+  if (step === 'quemE') { return <IdentityStep c={c} />; }
+  return <p className="criacao__dica">{t('ui.criacao.pendente')}</p>;
+}
+
+/** Erro do campo, ou null; com erro, a mensagem passa a ser a descrição do campo. */
+function errorProps(c: StepCtx, k: keyof Identity) {
+  const key = c.errors[k];
+  return { 'aria-invalid': key ? true : undefined, 'aria-describedby': key ? `${c.ids}-${k}-erro` : undefined, 'data-campo': k };
+}
+
+function FieldError({ c, k }: { c: StepCtx; k: keyof Identity }) {
+  const key = c.errors[k];
+  return <p id={`${c.ids}-${k}-erro`} className="criacao__erro" hidden={!key}>{key ? t(key) : null}</p>;
+}
+
+function IdentityStep({ c }: { c: StepCtx }) {
+  const { ids, identity: id, change } = c;
   return (
-    <div className="criacao__campo">
-      <label htmlFor={`${ids}-nome`}>{t('ui.criacao.nome.rotulo')}</label>
-      <input
-        id={`${ids}-nome`} ref={inputRef} type="text" value={value} autoComplete="off" spellCheck={false}
-        enterKeyHint="next" aria-invalid={error ? true : undefined} aria-describedby={error ? err : hint}
-        onChange={(e) => onChange(e.target.value)}
-      />
-      <p id={hint} className="criacao__dica" hidden={!!error}>{t('ui.criacao.nome.dica')}</p>
-      <p id={err} className="criacao__erro" role="alert" hidden={!error}>{error ? t(error) : null}</p>
+    <div className="quem">
+      <div className="quem__topo">
+        <div className="criacao__previa">
+          <Figurinha name={id.name} avatar={c.avatar} />
+          <p className="sr-only" role="status">{describeLook(c.look)}</p>
+        </div>
+        <div className="quem__campos">
+          <Field id={`${ids}-nome`} label={t('ui.criacao.quemE.nome')}>
+            <input id={`${ids}-nome`} type="text" value={id.name} autoComplete="off" spellCheck={false} maxLength={24}
+              {...errorProps(c, 'name')} onChange={(e) => change('name', e.target.value)} />
+            <FieldError c={c} k="name" />
+          </Field>
+          <div className="quem__linha">
+            <Field id={`${ids}-numero`} label={t('ui.criacao.quemE.numero')}>
+              <input id={`${ids}-numero`} type="text" inputMode="numeric" value={id.number} maxLength={2} autoComplete="off"
+                {...errorProps(c, 'number')} onChange={(e) => change('number', e.target.value)} />
+              <FieldError c={c} k="number" />
+            </Field>
+            <Field id={`${ids}-estado`} label={t('ui.criacao.quemE.estado')}>
+              <select id={`${ids}-estado`} value={id.state} {...errorProps(c, 'state')} onChange={(e) => change('state', e.target.value)}>
+                <option value="">{t('ui.criacao.quemE.escolhaEstado')}</option>
+                {creationData.states.map((uf) => <option key={uf} value={uf}>{t(`creation.state.${uf}`)}</option>)}
+              </select>
+              <FieldError c={c} k="state" />
+            </Field>
+          </div>
+          <Field id={`${ids}-clube`} label={t('ui.criacao.quemE.clube')}>
+            <select id={`${ids}-clube`} value={id.heartClub} onChange={(e) => change('heartClub', e.target.value)}>
+              <option value="">{t('ui.criacao.quemE.nenhum')}</option>
+              <ClubOptions state={id.state} />
+            </select>
+          </Field>
+        </div>
+      </div>
+      <Choices id={`${ids}-comemoracao`} legend={t('ui.criacao.quemE.comemoracao')} name="celebration" value={id.celebration ?? ''}
+        options={named(creationData.celebrations, 'creation.celebration')} onChange={(v) => change('celebration', v)}
+        error={c.errors.celebration ? t(c.errors.celebration) : null} />
+      <LookSection c={c} />
     </div>
   );
 }
 
-interface StepCtx {
-  ids: string; draft: CreationDraft; error: string | null;
-  inputRef: React.RefObject<HTMLInputElement | null>; changeName: (v: string) => void; changeLook: (l: Look) => void;
+function Field({ id, label, children }: { id: string; label: string; children: ReactNode }) {
+  return <div className="criacao__campo"><label htmlFor={id}>{label}</label>{children}</div>;
 }
 
-/** Conteúdo de cada passo; os que ainda não têm tela mostram o aviso. */
-function stepBody(step: string, c: StepCtx) {
-  if (step === 'nome') { return <NameStep ids={c.ids} value={c.draft.name} error={c.error} inputRef={c.inputRef} onChange={c.changeName} />; }
-  if (step === 'aparencia') { return <LookStep look={c.draft.look} onChange={c.changeLook} />; }
-  return <p className="criacao__dica">{t('ui.criacao.pendente')}</p>;
-}
-
-/** Figurinha ao vivo (T50): muda a cada escolha; a frase da prévia é anunciada com educação (role="status"). */
-function LivePreview({ name, avatar, look }: { name: string; avatar: AvatarSpec; look: Look }) {
+/** Clubes de coração: os do estado natal primeiro (6.1), em ordem alfabética. */
+function ClubOptions({ state }: { state: string }) {
+  const option = (club: { id: string; nome: string }) => <option key={club.id} value={club.id}>{club.nome}</option>;
+  if (!state) { return <>{BY_NAME.map(option)}</>; }
   return (
-    <div className="criacao__previa">
-      <Figurinha name={name} avatar={avatar} />
-      <p className="criacao__dica">{t('ui.criacao.aparencia.aviso')}</p>
-      <p className="sr-only" role="status">{describeLook(look)}</p>
-    </div>
+    <>
+      <optgroup label={t('ui.criacao.quemE.doEstado')}>{BY_NAME.filter((k) => k.uf === state).map(option)}</optgroup>
+      <optgroup label={t('ui.criacao.quemE.outros')}>{BY_NAME.filter((k) => k.uf !== state).map(option)}</optgroup>
+    </>
   );
 }
 
@@ -154,12 +204,13 @@ interface Option { id: string; label: string; swatch?: string }
 
 const swatches = (list: { id: string; hex: string }[], prefix: string): Option[] =>
   list.map((o) => ({ id: o.id, label: t(`${prefix}.${o.id}`), swatch: o.hex }));
-const named = (ids: string[], prefix: string): Option[] => ids.map((id) => ({ id, label: t(`${prefix}.${id}`) }));
+const named = (list: string[], prefix: string): Option[] => list.map((id) => ({ id, label: t(`${prefix}.${id}`) }));
 const withNone = (opts: Option[], prefix: string): Option[] => [{ id: NONE, label: t(`${prefix}.${NONE}`) }, ...opts];
 
-/** Aparência: grupos de rádio nativos (setas do teclado trocam a opção; Tab passa de grupo). */
-function LookStep({ look, onChange }: { look: Look; onChange: (l: Look) => void }) {
-  const set = (k: keyof Look, v: string) => onChange({ ...look, [k]: (k === 'beard' || k === 'headband') && v === NONE ? null : v });
+/** Visual (v2.30): na própria tela, sorteado ao abrir, "Sortear" ao lado do título e tudo editável. */
+function LookSection({ c }: { c: StepCtx }) {
+  const { ids, look, setLook } = c;
+  const set = (k: keyof Look, v: string) => setLook({ ...look, [k]: (k === 'beard' || k === 'headband') && v === NONE ? null : v });
   const groups: { key: keyof Look; legend: string; options: Option[] }[] = [
     { key: 'skin', legend: 'pele', options: swatches(avatarData.skinTones, 'creation.skin') },
     { key: 'hairStyle', legend: 'cabelo', options: named(avatarData.styles.hair, 'creation.hairStyle') },
@@ -169,28 +220,42 @@ function LookStep({ look, onChange }: { look: Look; onChange: (l: Look) => void 
     { key: 'boots', legend: 'chuteira', options: swatches(PICKS.chuteiras, 'creation.boots') },
   ];
   return (
-    <div className="criacao__grupos">
+    <section className="criacao__secao" aria-labelledby={`${ids}-visual`}>
+      <div className="criacao__secao-topo">
+        <h2 id={`${ids}-visual`}>{t('ui.criacao.quemE.visual')}</h2>
+        <button type="button" className="criacao__sortear" onClick={c.reroll}>{t('ui.criacao.quemE.sortear')}</button>
+      </div>
       {groups.map((g) => (
-        <Choices key={g.key} name={g.key} legend={t(`ui.criacao.aparencia.${g.legend}`)} options={g.options}
+        <Choices key={g.key} id={`${ids}-${g.key}`} name={g.key} legend={t(`ui.criacao.aparencia.${g.legend}`)} options={g.options}
           value={look[g.key] ?? NONE} onChange={(v) => set(g.key, v)} />
       ))}
-    </div>
+    </section>
   );
 }
 
-function Choices({ name, legend, options, value, onChange }: { name: string; legend: string; options: Option[]; value: string; onChange: (v: string) => void }) {
+interface ChoicesProps {
+  id: string; name: string; legend: string; options: Option[]; value: string; onChange: (v: string) => void; error?: string | null;
+}
+
+/** Grupo de rádio nativo numa faixa que desliza: setas trocam a opção, Tab passa de grupo. */
+function Choices({ id, name, legend, options, value, onChange, error = null }: ChoicesProps) {
+  const list = useRef(null as HTMLDivElement | null);
+  useEffect(() => { revealChecked(list.current); }, [value]);
   return (
-    <fieldset className="escolhas">
-      <legend>{legend}</legend>
-      <div className="escolhas__lista">
-        {options.map((o) => (
+    <div className="escolhas">
+      <span id={`${id}-rotulo`} className="escolhas__rotulo">{legend}</span>
+      <div className="escolhas__lista" ref={list} role="radiogroup" aria-labelledby={`${id}-rotulo`}
+        aria-describedby={error ? `${id}-erro` : undefined} aria-invalid={error ? true : undefined}>
+        {options.map((o, i) => (
           <label key={o.id} className={o.swatch ? 'escolha escolha--cor' : 'escolha'}>
-            <input className="escolha__input sr-only" type="radio" name={name} value={o.id} checked={value === o.id} onChange={() => onChange(o.id)} />
+            <input className="escolha__input sr-only" type="radio" name={name} value={o.id} checked={value === o.id}
+              data-campo={i === 0 ? name : undefined} onChange={() => onChange(o.id)} />
             <ChoiceMark option={o} />
           </label>
         ))}
       </div>
-    </fieldset>
+      <p id={`${id}-erro`} className="criacao__erro escolhas__erro" hidden={!error}>{error}</p>
+    </div>
   );
 }
 

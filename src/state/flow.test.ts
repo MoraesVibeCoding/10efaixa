@@ -51,7 +51,7 @@ describe('fluxo de telas (T48)', () => {
   });
 
   it('criação: passos na ordem da SPEC 6.1, avançar e voltar; voltar no primeiro passo sai para a abertura', () => {
-    expect(CREATION_STEPS).toEqual(['nome', 'numero', 'estado', 'clubeDeCoracao', 'posicao', 'arquetipo', 'aparencia', 'biotipo', 'temperamento', 'mentalidade', 'comemoracao', 'origem', 'pernaBoa']);
+    expect(CREATION_STEPS).toEqual(['quemE', 'emCampo', 'origem']); // v2.30: duas telas + tipo de início
     let s = transition(initialFlow(), 'NOVA_CARREIRA');
     expect(s).toEqual(at('criacao', 0));
     for (let i = 1; i < CREATION_STEPS.length; i++) { s = transition(s, 'AVANCAR'); expect(s).toEqual(at('criacao', i)); }
@@ -61,7 +61,7 @@ describe('fluxo de telas (T48)', () => {
   });
 
   it('criação só conclui no último passo; nova carreira sempre recomeça do passo 0', () => {
-    expect(transition(at('criacao', 3), 'CONCLUIR')).toEqual(at('criacao', 3));
+    expect(transition(at('criacao', 1), 'CONCLUIR')).toEqual(at('criacao', 1)); // passo do meio não conclui
     expect(transition(at('criacao', CREATION_STEPS.length - 1), 'CONCLUIR')).toEqual(at('sorteio'));
     expect(transition(at('cartao'), 'NOVA_CARREIRA')).toEqual(at('criacao', 0));
     expect(transition(at('saveInvalido'), 'RECOMECAR')).toEqual(at('criacao', 0));
