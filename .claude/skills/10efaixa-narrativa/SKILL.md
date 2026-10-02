@@ -56,7 +56,7 @@ Os antigos avisos de um botão só (estirão, traço novo, técnico novo, amadur
 3. **Cada opção é um caminho diferente**, não a mesma coisa em intensidades diferentes. Duas opções que levam ao mesmo resultado no motor (ex.: `bater` e `encher-o-pe` no pênalti) viram uma, ou ganham efeitos distintos.
 4. **O texto da opção diz o que o jogador faz, sem esconder o custo principal.** Se aceitar corta o salário, a palavra "salário" aparece. Nunca duas opções que o leitor não consegue distinguir ("Aceitar" × "Jogar por amor").
 5. **Promessa cumprida.** Se a situação diz que algo aconteceu (sumiu dinheiro), o efeito acontece (patrimônio cai). Se uma opção adia ("pedir um tempo", "mais um ano"), o motor precisa trazer o evento de volta — senão a opção mente.
-6. **Risco em palavras, nunca em percentual** (SPEC v2.23). Use a escala `baixo`, `médio`, `alto`, `muito alto`, derivada do número nos dados por uma tabela em config (não fixa no código). Ex.: "Risco alto de recaída", "Fica fora o resto do torneio". Tempo também em palavras: "fica fora um semestre".
+6. **Risco em palavras, nunca em percentual** (SPEC v2.23). Desde a v2.26 o risco aparece na **tarja da opção** ("Risco de recaída: alto", com medidor), calculado por `riskOf` a partir da tabela do motor e da faixa de `preview.json`; o tempo fora sai por `timeOutOf` ("Fora por um ano"). **O rótulo da opção não repete o risco nem traz número** (teste em `narrative.test.ts`). Evento novo com risco: registre a fonte em `RISK_SOURCES` (`src/engine/preview.ts`).
 7. **Nenhum número de atributo** (SPEC 6.3). Fale "a perna pesa", "o fôlego cai", nunca "−3 de físico".
 
 ## Regras que nunca se quebram

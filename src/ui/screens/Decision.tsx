@@ -6,7 +6,7 @@ import { ATTRIBUTES, toBand, type Attributes } from '../../engine/attributes';
 import bands from '../../data/bands.json';
 import { CLUBS } from '../../engine/clubs';
 import { applyOption, type Ctx } from '../../engine/events';
-import { outcomeOf, outcomeVerdict, previewOf, type Outcome, type Preview } from '../../engine/preview';
+import { outcomeOf, outcomeVerdict, previewOf, riskOf, RISK_BANDS, timeOutOf, type Outcome, type Preview, type Risk } from '../../engine/preview';
 import previewCfg from '../../data/preview.json';
 import { t } from '../../i18n';
 import tokens from '../theme/tokens.json';
@@ -213,6 +213,26 @@ function Career({ player, onClose }: { player: DecisionProps['player']; onClose:
 // as cenas são pintadas em 4:5 (docs/briefing-arte.md); largura e altura reservam o espaço antes de a imagem chegar
 const SCENE_SIZE = [1856, 2304] as const;
 
+/** Tarja de risco da opção: a faixa em palavras e um medidor de 4 segmentos num tom só (o medidor repete o texto, por isso fica oculto ao leitor de tela). */
+function RiskBanner({ risk }: { risk: Risk }) {
+  const lit = RISK_BANDS.indexOf(risk.faixa) + 1;
+  return (
+    <span className="opcao__risco">
+      {t('ui.risco.tarja', { tipo: t(`ui.risco.tipo.${risk.tipo}`), faixa: t(`ui.risco.${risk.faixa}`) })}
+      <span className="medidor" aria-hidden="true">
+        {RISK_BANDS.map((b, i) => <s key={b} data-cheio={i < lit ? '' : undefined} />)}
+      </span>
+    </span>
+  );
+}
+
+/** Tempo fora de campo em palavras: semestres viram meses, e 12 meses viram um ano. */
+function timeOutText(semesters: number): string {
+  const months = Math.round(semesters * 6);
+  if (months % 12 !== 0) return t('ui.fora.meses', { n: months });
+  return months === 12 ? t('ui.fora.ano') : t('ui.fora.anos', { n: months / 12 });
+}
+
 const SENSES = [['sobe', 'ganha'], ['desce', 'emTroca'], ['muda', 'muda']] as const;
 
 /** Em todo campo, subir é ganho e descer é custo (engine/preview): a prévia sai em linhas, uma por sentido que a opção tem. */
@@ -362,14 +382,17 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, ri
         <div className="decisao__opcoes" role="group" aria-label={t('ui.decisao.opcoes')}>
           {options.map((o) => {
             const preview = previewOf(eventId, o.id);
+            const risk = riskOf(eventId, o.id);
+            const out = timeOutOf(eventId, o.id);
             return (
               <button
                 key={o.id} type="button" className="opcao" aria-pressed={chosen === o.id} disabled={chosen !== null && chosen !== o.id}
                 onClick={() => { if (chosen === null) { setChosen(o.id); onChoose?.(o.id); } }}
               >
+                {risk && <RiskBanner risk={risk} />}
                 <span className="opcao__rotulo">{t(`events.${eventId}.opcoes.${o.id}`)}</span>
                 <span className="opcao__previa">
-                  {preview.length === 0 && <span className="previa">{t('ui.decisao.semPrevia')}</span>}
+                  {preview.length === 0 && out === null && <span className="previa">{t('ui.decisao.semPrevia')}</span>}
                   {previewLines(preview).map((line) => (
                     <span key={line.sentido} className={`previa__linha previa--${line.sentido}`}>
                       <span className="previa__rotulo">{t(`ui.decisao.${line.rotulo}`)}</span>
@@ -388,6 +411,7 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, ri
                       </span>
                     </span>
                   ))}
+                  {out !== null && <span className="opcao__fora">{timeOutText(out)}</span>}
                 </span>
               </button>
             );

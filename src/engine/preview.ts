@@ -29,6 +29,8 @@ export function previewOf(eventId: string, optionId: string): Preview[] {
 }
 
 export type RiskBand = 'baixo' | 'medio' | 'alto' | 'muitoAlto';
+/** As faixas em ordem crescente: a posição dá quantos segmentos do medidor acendem. */
+export const RISK_BANDS: readonly RiskBand[] = ['baixo', 'medio', 'alto', 'muitoAlto'];
 
 /** Probabilidade (0–1) em faixa de palavras (SPEC v2.23): o jogador nunca vê o percentual. */
 export function riskBand(p: number): RiskBand {

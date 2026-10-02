@@ -76,6 +76,16 @@
   "baixo": "baixo",
   "medio": "médio",
   "alto": "alto",
-  "muitoAlto": "muito alto"
+  "muitoAlto": "muito alto",
+  "tarja": "Risco de {tipo}: {faixa}",
+  "tipo": {
+   "recaida": "recaída",
+   "lesao": "lesão"
+  }
+ },
+ "fora": {
+  "ano": "Fora por um ano",
+  "anos": "Fora por {n} anos",
+  "meses": "Fora por {n} meses"
  }
 }

@@ -1,10 +1,9 @@
 import { applyOption, type Ctx } from './events';
-import { riskBand } from './preview';
+import { riskBand, riskOf } from './preview';
 import raw from '../data/events.json';
 import injuries from '../data/injuries.json';
 import tournaments from '../data/nationalTournaments.json';
 import ptBR from '../i18n/pt-BR/events.json';
-import { t } from '../i18n';
 
 // Regras da skill 10efaixa-narrativa (SPEC v2.23): toda decisão conta uma situação, tem 3 saídas que pesam e diz o risco em palavras.
 type Text = { titulo: string; texto?: string; opcoes: Record<string, string> };
@@ -73,18 +72,18 @@ describe('narrativa dos eventos (skill 10efaixa-narrativa)', () => {
     }
   });
 
-  it('risco em palavras, nunca em percentual: o texto da opção traz a faixa que os dados dão', () => {
-    const cases: [string, string, number][] = [
-      ...Object.entries(injuries.grave).map(([k, v]) => ['lesao-grave', k, v.recaida] as [string, string, number]),
-      ...Object.entries(tournaments.momentos['copa-sacrificio'])
-        .filter(([, v]) => (v as { riscoLesao?: number }).riscoLesao)
-        .map(([k, v]) => ['copa-sacrificio', k, (v as { riscoLesao: number }).riscoLesao] as [string, string, number]),
-    ];
-    for (const [ev, opt, p] of cases) {
-      const label = TEXT[ev]!.opcoes[opt]!;
-      expect(label, `${ev}/${opt}`).toContain(t('ui.risco.frase', { faixa: t(`ui.risco.${riskBand(p)}`) }));
-      expect(label).not.toMatch(/%|\d/);
+  // v2.26: o risco aparece na tarja da opção (riskOf), em palavras; o rótulo não repete o risco nem traz número
+  it('opção com risco: a faixa sai das tabelas pela tarja; o rótulo não repete o risco nem tem número ou %', () => {
+    let withRisk = 0;
+    for (const e of EVENTS) {
+      for (const o of e.opcoes) {
+        if (!riskOf(e.id, o.id)) continue;
+        withRisk++;
+        const label = TEXT[e.id]!.opcoes[o.id]!;
+        expect(label, `${e.id}/${o.id}`).not.toMatch(/risco|%|\d/i);
+      }
     }
+    expect(withRisk).toBe(5);
   });
 
   it('faixa de risco vem dos limites em preview.json', () => {

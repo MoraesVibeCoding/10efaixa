@@ -290,3 +290,35 @@ describe('detalhes de navegador (T49b)', () => {
     expect(html).toMatch(/<meta name="color-scheme" content="light"/);
   });
 });
+
+describe('tarja de risco nas opções (T49c, SPEC v2.26)', () => {
+  const show = (eventId: string) => render(<Decision eventId={eventId} age={24} progress={0.4} player={PLAYER} scene={{ src: 'c.webp', alt: 'cena' }} />);
+  const option = (eventId: string, id: string) => screen.getByRole('button', { name: new RegExp(t(`events.${eventId}.opcoes.${id}`)) });
+
+  it('lesão grave: cada opção diz o risco de recaída em palavras, com o medidor de 4 segmentos, e o tempo fora', () => {
+    show('lesao-grave');
+    const operar = option('lesao-grave', 'operar');
+    expect(operar).toHaveTextContent(t('ui.risco.tarja', { tipo: t('ui.risco.tipo.recaida'), faixa: t('ui.risco.baixo') }));
+    expect(operar.querySelectorAll('.medidor s[data-cheio]')).toHaveLength(1);
+    expect(operar).toHaveTextContent(t('ui.fora.ano'));
+    const voltar = option('lesao-grave', 'voltar-antes');
+    expect(voltar).toHaveTextContent(t('ui.risco.tarja', { tipo: t('ui.risco.tipo.recaida'), faixa: t('ui.risco.muitoAlto') }));
+    expect(voltar.querySelectorAll('.medidor s[data-cheio]')).toHaveLength(4);
+    expect(voltar).toHaveTextContent(t('ui.fora.meses', { n: 3 }));
+    expect(option('lesao-grave', 'conservador')).toHaveTextContent(t('ui.fora.meses', { n: 6 }));
+  });
+
+  it('Copa: risco de lesão; quem poupa não tem tarja', () => {
+    show('copa-sacrificio');
+    expect(option('copa-sacrificio', 'jogar')).toHaveTextContent(t('ui.risco.tarja', { tipo: t('ui.risco.tipo.lesao'), faixa: t('ui.risco.alto') }));
+    expect(option('copa-sacrificio', 'poupar').querySelector('.opcao__risco')).toBeNull();
+  });
+
+  it('evento sem risco não mostra tarja nem tempo fora', () => {
+    show('festa');
+    for (const b of within(screen.getByRole('group', { name: t('ui.decisao.opcoes') })).getAllByRole('button')) {
+      expect(b.querySelector('.opcao__risco')).toBeNull();
+      expect(b.querySelector('.opcao__fora')).toBeNull();
+    }
+  });
+});

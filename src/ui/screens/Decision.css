@@ -354,3 +354,25 @@
   .decisao { border-inline: var(--forma-borda) solid var(--cor-linha); }
 }
 .trofeu__arte { flex: none; inline-size: 32px; block-size: 32px; }
+
+/* ---------- tarja de risco (T49c): palavra e medidor de 4 segmentos num tom só; risco é custo, então vermelho */
+.opcao { overflow: hidden; }
+.opcao__risco {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--espaco-3);
+  margin: -0.375rem calc(var(--espaco-3) * -1) var(--espaco-1);
+  padding: var(--espaco-1) var(--espaco-3);
+  border-block-end: var(--forma-borda) solid var(--cor-linha);
+  background: var(--cor-fundo);
+  font-family: var(--fonte-titulo);
+  font-size: var(--tipo-apoio);
+  font-weight: 800;
+  line-height: 1.2;
+}
+.medidor { display: inline-grid; grid-template-columns: repeat(4, 0.875rem); gap: 3px; }
+.medidor s { block-size: 0.5rem; border: 1.5px solid var(--cor-linha); border-radius: 1px; }
+.medidor s[data-cheio] { background: var(--cor-negativo); border-color: var(--cor-negativo); }
+.opcao__fora { color: var(--cor-texto-suave); }
+.opcao[aria-pressed='true'] .opcao__risco, .opcao:active .opcao__risco { background: transparent; color: var(--cor-sobre-destaque); border-color: var(--cor-sobre-destaque); }

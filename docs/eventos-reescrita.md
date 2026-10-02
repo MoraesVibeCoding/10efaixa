@@ -1,6 +1,6 @@
 # Eventos reescritos — para aprovação
 
-Reescrita dos 25 eventos com a skill `10efaixa-narrativa` (SPEC v2.23). **Gerado a partir de `src/data/events.json` e `src/i18n/pt-BR/events.json`**: o que está aqui é exatamente o que o jogo faz.
+Reescrita dos 25 eventos com a skill `10efaixa-narrativa` (SPEC v2.23). **Gerado a partir de `src/data/events.json` e `src/i18n/pt-BR/events.json`**: o que está aqui é exatamente o que o jogo faz. Desde a v2.26 o risco das opções de lesão e Copa aparece numa tarja, e os rótulos ficaram curtos.
 
 A coluna *Consequência (dados)* mostra os números internos só para a sua revisão. **O jogador nunca vê percentual**: ele vê setas na opção, o risco em palavras e o ganho e a perda no cartão de resultado.
 
@@ -132,9 +132,9 @@ Jeito = o temperamento que escolhe aquela opção sozinho na simulação; ★ ma
 
 | Opção | Jeito | Consequência (dados) |
 |---|---|---|
-| Operar e parar um ano: risco baixo de recaída | Frio | 2 semestre(s) fora, recaída 5%, perda física 1; Moral −10 |
-| Tratar sem cirurgia, seis meses: risco médio | Resenha | 1 semestre(s) fora, recaída 20%, perda física 2; Moral −5 |
-| Voltar no sacrifício: risco muito alto | Líder ★ | 0.5 semestre(s) fora, recaída 45%, perda física 3; Torcida +5 |
+| Operar e voltar com calma | Frio | 2 semestre(s) fora, recaída 5%, perda física 1; Moral −10 |
+| Tratar sem cirurgia | Resenha | 1 semestre(s) fora, recaída 20%, perda física 2; Moral −5 |
+| Voltar no sacrifício | Líder ★ | 0.5 semestre(s) fora, recaída 45%, perda física 3; Torcida +5 |
 
 ## O técnico quer você em outra posição  ·  `mudanca-posicao`
 
@@ -222,9 +222,9 @@ Jeito = o temperamento que escolhe aquela opção sozinho na simulação; ★ ma
 
 | Opção | Jeito | Consequência (dados) |
 |---|---|---|
-| Jogar desde o início: risco alto de lesão | Líder ★ | Moral +5; time +2 de força; risco de lesão 25% |
+| Jogar desde o início | Líder ★ | Moral +5; time +2 de força; risco de lesão 25% |
 | Ficar fora e se recuperar para a próxima fase | Frio | Moral −5 |
-| Entrar no segundo tempo: risco médio de lesão | Resenha | Moral +2; time +1 de força; risco de lesão 12% |
+| Entrar só no segundo tempo | Resenha | Moral +2; time +1 de força; risco de lesão 12% |
 
 ## Fora de posição na Seleção  ·  `copa-fora-posicao`
 

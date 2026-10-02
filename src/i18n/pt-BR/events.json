@@ -111,9 +111,9 @@
   "titulo": "Lesão grave",
   "texto": "O joelho fez um barulho que você nunca tinha ouvido. O médico do clube mostra a ressonância e explica três caminhos. Seu empresário quer você em campo logo; sua mãe quer você inteiro.",
   "opcoes": {
-   "operar": "Operar e parar um ano: risco baixo de recaída",
-   "conservador": "Tratar sem cirurgia, seis meses: risco médio",
-   "voltar-antes": "Voltar no sacrifício: risco muito alto"
+   "operar": "Operar e voltar com calma",
+   "conservador": "Tratar sem cirurgia",
+   "voltar-antes": "Voltar no sacrifício"
   }
  },
  "mudanca-posicao": {
@@ -192,9 +192,9 @@
   "titulo": "No sacrifício pela Seleção",
   "texto": "A coxa ainda reclama do último jogo e o médico da Seleção fez cara feia. É jogo decisivo e o treinador espera a sua resposta. O país inteiro vai assistir.",
   "opcoes": {
-   "jogar": "Jogar desde o início: risco alto de lesão",
+   "jogar": "Jogar desde o início",
    "poupar": "Ficar fora e se recuperar para a próxima fase",
-   "entrar-no-segundo-tempo": "Entrar no segundo tempo: risco médio de lesão"
+   "entrar-no-segundo-tempo": "Entrar só no segundo tempo"
   }
  },
  "copa-fora-posicao": {
