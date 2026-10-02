@@ -17,17 +17,17 @@ O uniforme sai nessas duas cores chapadas para o código pintar com as cores e o
 
 | Pasta | Cena | Usada em | curto | cacheado-medio | liso-medio | cacheado-grande | liso-grande | careca |
 |---|---|---|---|---|---|---|---|---|
-| `cenas/01-titulo/` | Título | Evento de título (estadual, copa, liga). Jogador de costas apontando para o céu, taça ao fundo. | feita | pendente | pendente | pendente | pendente | pendente |
-| `cenas/02-vestiario/` | Vestiário | Decisões de elenco e conversa com o técnico. Jogador sentado de costas no banco do vestiário. | feita | pendente | pendente | pendente | pendente | pendente |
-| `cenas/03-assinatura-contrato/` | Assinatura de contrato | Propostas, renovação e transferência. Jogador de costas à mesa, diante do contrato. | feita | pendente | pendente | pendente | pendente | pendente |
-| `cenas/04-penalti/` | Pênalti | Momento de decisão em jogo grande (o pênalti decisivo). Jogador de costas diante da bola e do gol. | feita | pendente | pendente | pendente | pendente | pendente |
-| `cenas/05-varzea/` | Várzea | Início de carreira na várzea e na rua do bairro. Jogador de costas no campinho de terra. | feita | pendente | pendente | pendente | pendente | pendente |
+| `cenas/01-titulo/` | Título | Evento de título (estadual, copa, liga). Jogador de costas apontando para o céu, taça ao fundo. | feita | feita | feita | feita | feita | feita |
+| `cenas/02-vestiario/` | Vestiário | Decisões de elenco e conversa com o técnico. Jogador sentado de costas no banco do vestiário. | feita | feita | feita | feita | feita | feita |
+| `cenas/03-assinatura-contrato/` | Assinatura de contrato | Propostas, renovação e transferência. Jogador de costas à mesa, diante do contrato. | feita | feita | feita | feita | feita | feita |
+| `cenas/04-penalti/` | Pênalti | Momento de decisão em jogo grande (o pênalti decisivo). Jogador de costas diante da bola e do gol. | feita | feita | feita | feita | feita | feita |
+| `cenas/05-varzea/` | Várzea | Início de carreira na várzea e na rua do bairro. Jogador de costas no campinho de terra. | feita | feita | feita | feita | feita | feita |
 
-A cena 02 (vestiário) saiu em metade da resolução das outras; vale gerar a base de novo antes das edições.
+Lote 1 completo em 2026-10-02: 30 de 30 imagens aprovadas, todas em 1856×2304. Ressalva: `02-vestiario/liso-grande` saiu com rabo de cavalo (nas outras cenas o liso grande é solto).
 
 ## Lote 2 — retratos de frente
 
-`retratos/<corte>/`: seis retratos da cintura para cima, para a criação, a apresentação no clube e o cartão final. Gere primeiro o `curto` e use-o como base das edições.
+`retratos/<corte>/`: seis retratos de frente, da cintura para cima, para a criação, a apresentação no clube e o cartão final. Camisa magenta lisa e fundo verde chapado (`#00B140`) para o recorte. Cada pasta tem um prompt completo, gerado do zero. Gere primeiro o `curto`, aprove o rosto e anexe-o como referência nos outros cinco, para o rosto ficar igual.
 
 ## Depois
 
