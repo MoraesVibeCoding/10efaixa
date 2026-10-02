@@ -1,6 +1,6 @@
 # 10eFaixa — Especificação do Produto (SPEC.md)
 
-> Versão 2.30 (criação em duas telas + tipo de início; v2.29: marcos da carreira: primeiras vezes na carreira, em cada clube e na Seleção; v2.28: papel em campo, minutos e nível do clube na proposta, momento e "isso vai pesar", decisões por ritmo e catálogo ampliado) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
+> Versão 2.31 (motor de histórias: memória da carreira, eventos modulares, idolatria em faixas, retorno da evolução, "Sua história", último jogo, sonho da carreira; 2ª divisão nas 6 ligas europeias; v2.30: criação em duas telas + tipo de início; v2.29: marcos da carreira: primeiras vezes na carreira, em cada clube e na Seleção; v2.28: papel em campo, minutos e nível do clube na proposta, momento e "isso vai pesar", decisões por ritmo e catálogo ampliado) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
 > Este documento é a fonte da verdade para o Claude Code. Nenhuma mudança de escopo sem atualizar este arquivo primeiro.
 
 ---
@@ -32,7 +32,7 @@ O objetivo máximo simbólico dá nome ao jogo: **vestir a camisa 10 e usar a fa
 - **Contas, login, multiplayer e ranking online:** fora; save local no navegador.
 - **App nativo:** fora; v1 é site (PWA).
 - **Partidas lance a lance:** fora; simulação por semestre com momentos de decisão.
-- **Divisões inferiores da Europa:** fora; só a 1ª divisão das 6 ligas.
+- **Divisões inferiores da Europa:** só a 1ª e a 2ª divisão das 6 ligas (v2.31); 3ª divisão em diante, fora.
 - **Futebol feminino:** fora da v1, registrado como futuro (motor preparado, ver 5).
 - **Outros idiomas:** fora; v1 só em português do Brasil, com textos preparados para tradução.
 
@@ -69,7 +69,7 @@ Detalhes de aparência, biotipo, temperamento, apelido e cenas na seção 6.17.
 **Telas da criação (v2.30, decisão do usuário):** os campos acima ficam em **duas telas, sem rolar no celular a partir de 390×844**; no computador (≥ 64rem) as duas viram uma só, lado a lado.
 1. **Quem é ele** (nada aqui mexe nos atributos): figurinha ao vivo; nome; número; estado natal; clube de coração; comemoração; **visual** na própria tela, já **sorteado** ao abrir (PRNG com semente), com o botão **"Sortear"** ao lado do título "Visual"; tudo continua editável depois do sorteio.
 2. **Em campo e cabeça** (tudo que pesa no jogo): posição (campinho), estilo (arquétipos da posição), perna boa, altura (só a faixa da posição), compleição, temperamento e mentalidade.
-3. **Tipo de início:** origem (base, peneira ou várzea). Depois vêm o sorteio e o primeiro clube; ao assinar, a figurinha ganha o uniforme e o emblema do clube (apresentação).
+3. **Tipo de início:** origem (base, peneira ou várzea) e **sonho da carreira** (v2.31): Seleção, virar ídolo, jogar na Europa ou um clube só. O sonho muda o peso de alguns eventos e o veredito final diz se ele se realizou; não mexe em atributos. Depois vêm o sorteio e o primeiro clube; ao assinar, a figurinha ganha o uniforme e o emblema do clube (apresentação).
 
 - **Nome:** passa por **filtro de palavras bloqueadas** (palavrões, ofensas e nomes de pessoas reais conhecidas). Nome recusado mostra mensagem clara pedindo outro.
 - **Estado natal:** qualquer um dos 27 estados.
@@ -167,6 +167,8 @@ Aplicada **a cada semestre**, com metade do ganho anual por vez (constantes em c
 
 **Invariantes (viram testes):** nenhum atributo passa do teto nem sai de 1–99; sem minutos e sem foco, jogador de 30+ não evolui fisicamente.
 
+**Retorno da evolução (v2.31):** no fim de cada semestre, até duas frases sobre o que mais mudou, **sem número** ("Você está ficando mais rápido", "Seu passe melhorou bastante", "O físico começou a pesar"). Limiares e frases em dados.
+
 ### 6.5 Reunião com a comissão técnica (meio da temporada do clube)
 
 - O jogador propõe **1 foco principal e 1 secundário** (10 atributos, "Bola parada" ou "Perna ruim").
@@ -209,9 +211,11 @@ Aplicada **a cada semestre**, com metade do ganho anual por vez (constantes em c
 - **Vida de clube:** troca de técnicos, **salário atrasado** (dá direito de pedir para sair), empréstimos.
 - **Datas FIFA:** o Brasileirão não para; convocado desfalca o clube e pode gerar atrito.
 
-**Dados de clubes:** nomes reais, **emblemas originais** (seção 11; v2.26). Reputação (1–100) é **dado próprio**, calibrado com referências públicas; bases como a do FM26 são só referência de ordem de grandeza e não devem ser copiadas.
+**Dados de clubes:** nomes reais, **emblemas originais** (seção 11; v2.26). Reputação (1–100) é **dado próprio**, calibrado com referências públicas; bases como a do FM26 são só referência de ordem de grandeza e não devem ser copiadas. **Uso combinado (v2.31):** o FM26 pode servir de **pista** para fatos públicos (nome, cidade, estádio, divisão, formato), sempre confirmados e citados na fonte oficial; e de **conferência** de ordem de grandeza de reputação, salário e valor. Nenhum arquivo, número ou dado de atleta do FM entra no repositório.
 
 ### 6.10 Mundo: Europa (simulação média)
+
+- **2ª divisão (v2.31):** Championship, LaLiga 2, Serie B, 2. Bundesliga, Ligue 2 e Liga Portugal 2, com acesso e rebaixamento entre a 1ª e a 2ª (formato, número de clubes, vagas e playoffs conferidos no regulamento oficial, com fonte e data). Clubes da 2ª usam o escudo genérico nas cores do clube.
 
 - **Ligas (1ª divisão):** Inglaterra (Premier League, 20), Espanha (LaLiga, 20), Itália (Serie A, 20), Alemanha (Bundesliga, 18), França (Ligue 1, 18), Portugal (Primeira Liga, 18). Conferir na fonte oficial ao montar os dados.
 - **Competições:** liga + copa nacional + Champions League e Europa League.
@@ -310,6 +314,15 @@ Momentos de **primeira vez** viram cena com 3 opções (uma por jeito), como os 
 - Variações pelo contexto (ex.: primeiro gol num clássico ≠ num jogo comum).
 - Cada marco vira figurinha no **álbum da carreira** ("Primeiro gol · Fluminense · 2027") e pode alimentar a manchete do cartão final (6.15).
 
+### 6.13c Motor de histórias (v2.31)
+
+O jogo conta histórias com continuidade: o passado volta, o contexto muda o texto e a personalidade muda o que acontece.
+
+- **Memória da carreira:** o motor guarda memórias com ano, clube e idade (ex.: `perdeuFinal`, `recusouEuropa`, `trocouPeloRival`, `lesaoGrave`, `foiCapitao`, `primeiroGol` e os marcos da 6.13b). Eventos podem exigir ou evitar memórias nas condições e citar o passado no texto ("Sete anos depois daquela final..."). Memórias vão no save.
+- **Eventos modulares:** um evento-base ganha variações pelo contexto. O motor marca a situação com etiquetas (jovem, veterano, no banco, ídolo, vilão, moral baixa, salário atrasado, convocado, subindo de divisão, fora do eixo, empresário que pressiona, posição disputada, memórias). O texto é montado em camadas: **abertura** pela etiqueta mais forte, **até duas frases de contexto** e **consequências das opções ajustadas** ao contexto. Inclui a **proposta com contexto** (idade, posição, clube, divisão, nível, moral, empresário, torcida, clube de coração, rivalidade, salário, titularidade, Seleção, temperamento). Regras e frases em dados; teste sorteia 10 mil contextos e garante texto completo, coerente e dentro do tamanho da tela.
+- **Temperamento muda o tipo de história:** o peso de sorteio dos eventos varia por temperamento (esquentado: clássicos, cartões, brigas, protagonismo; líder: vestiário, braçadeira, entrevistas; resenha: elenco, festas, imprensa; frio: pressão, pênaltis, decisões calmas). Pesos em dados.
+- **Idolatria em faixas:** a idolatria em cada clube aparece **só em palavras**: Desconhecido → Promessa → Titular → Querido → Ídolo → Lenda (e o lado negativo: Contestado → Vilão). Alimenta eventos, despedida, retorno, transferência e rivalidade.
+
 ### 6.14 Aposentadoria
 
 A carreira termina no primeiro destes gatilhos:
@@ -317,6 +330,8 @@ A carreira termina no primeiro destes gatilhos:
 2. **Lesão ou queda física** força a aposentadoria.
 3. O **overall cai ao nível do overall inicial** da criação (decisão consciente: faz parte da história de cada origem).
 4. **40 anos** (limite absoluto).
+
+**O último jogo (v2.31):** antes do veredito, uma cena especial com a última partida (começar jogando, entrar no segundo tempo, usar a braçadeira, ficar no banco, anunciar a despedida depois do jogo), e depois a tela **"Obrigado por tudo"**. A escolha entra na história e na manchete.
 
 ### 6.15 Veredito, prêmios, rótulos e cartão
 
@@ -342,6 +357,8 @@ A carreira termina no primeiro destes gatilhos:
 > Exemplo: **"Do terrão de Madureira à faixa de capitão no Maracanã"** — *Perna ruim? Nunca vimos. Folga? Também não.*
 
 **Cartão (1080×1350):** o **avatar do jogador no auge** com a camisa e o número gigante, nome e apelido; faixa amarela com veredito e rótulo; clubes com cores estilizadas; jogos, gols, assistências, títulos e patrimônio; radar dos 10 atributos com os números do **pico** revelados; **código da carreira**; texto alternativo.
+
+**"Sua história" e duas versões do cartão (v2.31):** antes do cartão, uma linha do tempo em frases montada da memória da carreira ("Começou na várzea aos 16", "Recusado em duas peneiras", "Virou ídolo onde passou nove temporadas", "Recusou a Europa aos 24"). O cartão tem duas versões: **narrativo** (manchete, rótulo, sonho realizado ou não e as 3 a 4 frases mais marcantes; é o padrão para compartilhar) e **estatístico** (os números da carreira e o radar).
 
 **Compartilhamento:** compartilhamento nativo do celular com a imagem (verificar suporte na documentação oficial, com fallback), texto pronto para WhatsApp, download como alternativa.
 
@@ -594,12 +611,15 @@ Cada tarefa é atômica, com teste escrito antes do código e **um commit por ta
 | ID | Tarefa | Critério de aceitação |
 |---|---|---|
 | T25 | Motor de eventos e dilemas (cada evento aponta para uma cena) | Condições e efeitos determinísticos; evento sem cena falha no teste |
-| T25b | Catálogo ampliado de eventos (v2.28) | **Pelo menos 80 eventos** escritos com a skill `10efaixa-narrativa`, em lotes de ~15 aprovados pelo usuário; todo evento com `momento` e cena; inclui os que faltam da v2.23 (peneira, primeiro contrato, estreia, banco, convocação, exterior, aposentadoria) e os de papel em campo; nenhum evento repete na carreira salvo os recorrentes; nenhuma opção domina outra (`narrative.test.ts`) ⛳ por lote |
+| T25d | Memória da carreira (v2.31, 6.13c) | Memórias com ano, clube e idade; condições de evento por memória; citação do passado no texto; no save; integra os marcos da T25c |
+| T25e | Eventos modulares e proposta com contexto (v2.31, 6.13c) | Etiquetas de contexto em dados; texto em camadas (abertura, contexto, consequências); temperamento muda o peso de sorteio; teste de 10 mil contextos sem frase faltando nem texto longo demais |
+| T25b | Catálogo ampliado de eventos (v2.28; escrito já no formato modular da T25e) | **Pelo menos 80 eventos** escritos com a skill `10efaixa-narrativa`, em lotes de ~15 aprovados pelo usuário; todo evento com `momento` e cena; inclui os que faltam da v2.23 (peneira, primeiro contrato, estreia, banco, convocação, exterior, aposentadoria) e os de papel em campo; nenhum evento repete na carreira salvo os recorrentes; nenhuma opção domina outra (`narrative.test.ts`) ⛳ por lote |
 | T25c | Motor de marcos da carreira (v2.29, 6.13b) | Detecta as primeiras vezes (carreira, clube, Seleção) a partir do motor; cada marco uma vez por carreira ou por clube, registrado no save; prioridade na vaga de decisão; marcos de carreira também no Rápido; cobrador de linha (gols em `stats`, progresso de "Bola parada"); efeitos sobretudo em Mental, moral, idolatria e relação; ~20 marcos escritos com a skill de narrativa (lote próprio, ⛳), contados nos 80 da T25b; figurinha no álbum |
 | T26 | Empresário | 3 perfis; eventos; troca com custo |
 | T27 | Contratos, bicho, multa e renovação | Moedas corretas; patrimônio em R$; € 1 = R$ 6,00 configurável |
 | T28 | Valor de mercado, salários, propostas e janelas | Faixas com fonte e data; salário como % do valor |
 | T29 | Dados das 6 ligas europeias + rivais | Número de clubes conferido na fonte oficial |
+| T29b | 2ª divisão das 6 ligas europeias (v2.31) | Clubes, formato, acesso, rebaixamento e playoffs com fonte e data; faixas de valor e salário da 2ª; simulação da 9.3 sem desvio do auge |
 | T30 | Temporada europeia | Classificações e campanhas coerentes |
 | T31 | Lesões e decisão de lesão grave | Três opções; compleição influencia o risco |
 | T32 | Mudança de posição | Proposta e pedido; overall recalculado; altura mantida |
@@ -641,12 +661,15 @@ Cada tarefa é atômica, com teste escrito antes do código e **um commit por ta
 | T49c | Figurinha e novo layout da decisão (v2.26) | Figurinha com fundo de faixas do clube e recorte de álbum no lugar da caixa do jogador; opções com tarja de risco (palavra e medidor de 4 segmentos, faixa de `preview.json`); "Álbum da carreira" com conquistas e espaços vazios; computador em duas colunas; rótulos sem caixa alta; contraste AA conferido por teste; **sem rolagem a partir de 390×844** nos 25 eventos; em tela mais baixa a rolagem é aceita, sem opção cortada pela metade (v2.27) ⛳ |
 | T49d | Emblemas dos clubes (v2.26) | Emblemas originais de Flamengo, Santos, Palmeiras e Coritiba em SVG provisório (completo e simplificado) e escudo genérico para os demais; prompts dos 20 da Série A em `docs/arte/emblemas/`; nenhum elemento de escudo oficial (checklist por clube) |
 | T50 | Telas de criação (aparência, biotipo, temperamento, comemoração, filtro) | Operáveis por teclado e leitor de tela; faixa de altura por posição |
+| T50f | Sonho da carreira (v2.31, 6.1) | Escolhido no tipo de início; muda pesos de eventos; veredito diz se realizou; sem efeito em atributos |
 | T51 | Tela de semestre/temporada e decisões com cena | Uma decisão por tela; cena ao fundo; só faixas e estrelas; **selo de momento**; resultado com **"isso vai pesar"** e **efeitos em setas**; faixa de competições (liga · copa · continental); cartões de mercado com **minutos previstos e nível do clube em faixa**; resumo da virada de temporada que se pula (v2.28) |
+| T51b | Retorno da evolução e idolatria em faixas (v2.31) | Até duas frases por semestre sem número; faixas de idolatria em palavras na tela e nos eventos |
 | T52 | Tela da reunião com a comissão | Foco principal e secundário; resposta exibida |
 | T52b | Papel em campo (v2.28, 6.2) | Papel começa igual ao arquétipo; muda só para arquétipo da mesma posição (técnico, reunião ou evento); menos minutos e bônus de evolução enquanto se adapta, em dados; selo na figurinha; recomeça na mudança de posição; save migrado; simulação da 9.3 sem desvio de auge por posição |
 | T53 | Ritmos Rápido, Normal e Completo | Durações dentro das metas em E2E cronometrado; decisões por temporada da 6.16 (Rápido até 1, Normal 2–3, Completo ≥ 6) lidas de `flow.json` |
 | T54 | Save e load versionados | Invariante de save da 9.2 |
-| T55 | Geração do cartão 1080×1350 | Avatar no auge, radar de 10 atributos, elementos da 6.15 (com as honrarias da v2.28), texto alternativo ⛳ |
+| T54b | Último jogo e "Obrigado por tudo" (v2.31, 6.14) | Cena com as opções da 6.14; escolha entra na história e na manchete |
+| T55 | Geração do cartão 1080×1350 | Avatar no auge, radar de 10 atributos, elementos da 6.15 (com as honrarias da v2.28), **versões narrativa e estatística** e tela "Sua história" (v2.31), texto alternativo ⛳ |
 | T56 | Compartilhamento com fallback | Nativo quando suportado; download; texto para WhatsApp |
 | T57 | Desafio diário | Mesma semente do dia; sem ranking online |
 | T58 | Apoio (Apoia.se), aviso legal e página de privacidade | Botão só na tela de resultado |
@@ -810,3 +833,4 @@ Decisões aprovadas durante a implementação. Complementam as seções acima.
 | 2026-10-02 | v2.29 | **Marcos da carreira** (pedido e aprovação do usuário): primeiras vezes na carreira, em cada clube e na Seleção (estreia, titular, gol, assistência, bola parada, pênaltis, finais, título, clássico, capitão, convocação, Copa, exterior), com efeito sobretudo mental; tarefa T25c | O motor já tinha papel, capitão (clube e Seleção), gols, finais e pênaltis; faltava o registro das primeiras vezes e o cobrador de linha (só o goleiro tinha) |
 | 2026-10-02 | T50 (v2.30) | **Criação em duas telas + tipo de início** (decisão do usuário, depois da proposta de tela única): tela 1 "quem é ele" (identidade e visual, nada mexe em atributos), tela 2 "em campo e cabeça" (tudo que pesa no jogo), tela 3 origem. Sem rolar a partir de 390×844; uma tela só no computador. Visual na própria tela (sem gaveta), sorteado ao abrir, botão "Sortear" ao lado do título e editável | Físico foi para a tela 2 porque a faixa de altura depende da posição (6.17) e o físico pesa no jogo. O assistente de 13 passos das fatias T50a/T50b vira 3 passos; campo de nome, grupos de escolha e figurinha ao vivo são reaproveitados |
 | 2026-10-02 | T50 | **Criação concluída (v2.30):** tela 1 "quem é ele" (figurinha ao vivo, nome com filtro, número, estado, clube de coração com os do estado primeiro, comemoração, visual sorteado pela semente com "Sortear" e editável); tela 2 "em campo e cabeça" (campinho, estilo da posição com traço e inspiração, perna, altura na faixa da posição, compleição, temperamento e mentalidade, com frases de efeito e sem números); tela 3 tipo de início (três cartões). Entrega `CreationInput` validado pelo `createPlayer`; o visual vai à parte. No computador, telas 1 e 2 numa página (1280×800 sem rolar) | Conferido no Chromium: 390×844 sem rolar nas três telas; 360×640 rola (aceito). Token `toque.compacto` (48 px) nas faixas de escolha. **Pendente:** ligar a criação ao app (a abertura ainda mostra a amostra da decisão) junto com a T51; mentalidade é opcional (neutra) |
+| 2026-10-02 | v2.31 | **Análise do produto (`Analise_10eFaixa.pdf`, enviada pelo usuário) e escolhas do usuário para a v1:** memória da carreira (T25d), eventos modulares com proposta com contexto (T25e, antes do catálogo T25b), idolatria em faixas e retorno da evolução (T51b), temperamento muda o peso dos eventos, "Sua história" e cartão narrativo + estatístico (T55), último jogo (T54b), sonho da carreira (T50f). **2ª divisão** nas 6 ligas europeias (T29b). FM26 só como pista de fatos e conferência de ordem de grandeza, nada copiado | Ficaram fora da v1 (não escolhidos): desafio diário com o mesmo jogador inicial e regra explícita de monetização. Comparar histórias com amigos fica para a Fase 2 (precisa de ligação entre aparelhos) |
