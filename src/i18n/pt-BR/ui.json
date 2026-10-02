@@ -109,7 +109,6 @@
   "progresso": "Passo {passo} de {total}",
   "avancar": "Avançar",
   "voltar": "Voltar",
-  "pendente": "Este passo chega nas próximas entregas. Por enquanto, siga em frente.",
   "passos": {
    "quemE": "Quem é ele?",
    "emCampo": "Em campo e na cabeça",
@@ -157,6 +156,13 @@
     "meia": "MEI",
     "atacante": "ATA"
    }
+  },
+  "origem": {
+   "titulo": "Tipo de início",
+   "baseGrande": "Começa mais pronto, nas categorias de base, com ofertas de clubes da região.",
+   "peneira": "Encara peneiras no seu estado: passa de primeira, tenta de novo ou vai para um clube menor. Mais sorte, mais risco.",
+   "varzea": "Começa no time do bairro até um olheiro aparecer. Sai de trás, mas cresce mais rápido e pode ser um diamante bruto.",
+   "teto": "O teto é o mesmo para todos: a origem muda o caminho, não o destino."
   }
  }
 }

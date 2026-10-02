@@ -8,6 +8,8 @@ export interface Option {
   id: string; label: string; swatch?: string;
   /** Nome completo para o leitor de tela quando o texto visível é uma sigla ("GOL" → "Goleiro"). */
   full?: string;
+  /** Frase dentro do cartão (variante "cartoes"), lida como descrição da opção. */
+  detail?: string;
 }
 
 export const NONE = 'nenhuma';
@@ -21,7 +23,7 @@ export interface ChoicesProps {
   error?: string | null;
   /** Frase sobre a opção escolhida (efeito, traço); vira descrição do grupo. */
   hint?: string | null;
-  variant?: 'faixa' | 'campo';
+  variant?: 'faixa' | 'campo' | 'cartoes';
 }
 
 /** Ids das descrições do grupo: o erro primeiro, depois a frase da escolha. */
@@ -41,8 +43,9 @@ export function Choices({ id, name, legend, options, value, onChange, error = nu
         {options.map((o, i) => (
           <label key={o.id} className={o.swatch ? 'escolha escolha--cor' : 'escolha'} data-opcao={o.id}>
             <input className="escolha__input sr-only" type="radio" name={name} value={o.id} checked={value === o.id}
-              data-campo={i === 0 ? name : undefined} onChange={() => onChange(o.id)} />
-            <ChoiceMark option={o} />
+              data-campo={i === 0 ? name : undefined} onChange={() => onChange(o.id)} {...detailProps(`${id}-${o.id}`, o)} />
+            <ChoiceMark option={o} id={`${id}-${o.id}-nome`} />
+            <OptionDetail option={o} id={`${id}-${o.id}-detalhe`} />
           </label>
         ))}
       </div>
@@ -52,8 +55,19 @@ export function Choices({ id, name, legend, options, value, onChange, error = nu
   );
 }
 
+/** Com frase, o nome do rádio é só o nome do cartão e a frase vira a descrição (clicar na frase ainda marca a opção). */
+function detailProps(base: string, o: Option) {
+  if (!o.detail) return {};
+  return { 'aria-labelledby': `${base}-nome`, 'aria-describedby': `${base}-detalhe` };
+}
+
+function OptionDetail({ option, id }: { option: Option; id: string }) {
+  if (!option.detail) { return null; }
+  return <span id={id} className="escolha__detalhe">{option.detail}</span>;
+}
+
 /** Cor vira amostra e sigla vira texto curto, com o nome completo escondido para o leitor de tela. */
-function ChoiceMark({ option }: { option: Option }) {
+function ChoiceMark({ option, id }: { option: Option; id: string }) {
   if (option.full) {
     return (
       <span className="escolha__marca">
@@ -62,7 +76,7 @@ function ChoiceMark({ option }: { option: Option }) {
       </span>
     );
   }
-  if (!option.swatch) { return <span className="escolha__marca">{option.label}</span>; }
+  if (!option.swatch) { return <span id={id} className="escolha__marca">{option.label}</span>; }
   return (
     <span className="escolha__marca" title={option.label}>
       <span className="escolha__amostra" style={{ background: option.swatch }} aria-hidden="true" />

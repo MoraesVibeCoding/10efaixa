@@ -154,3 +154,44 @@
 .altura { display: flex; align-items: center; gap: var(--espaco-2); min-block-size: var(--toque-compacto); }
 .altura input { flex: 1; min-inline-size: 0; accent-color: var(--cor-destaque); }
 .altura__valor { min-inline-size: 3.5rem; font-weight: 700; font-variant-numeric: tabular-nums; text-align: end; }
+
+/* tela 3 (T50e): tipo de início em cartões empilhados, nome em cima e a frase embaixo */
+.origem { display: grid; gap: var(--espaco-2); }
+.escolhas--cartoes { grid-template-columns: minmax(0, 1fr); gap: var(--espaco-1); }
+.escolhas--cartoes .escolhas__lista { display: grid; gap: var(--espaco-2); overflow: visible; margin: 0; padding: 0; }
+.escolhas--cartoes .escolhas__erro { grid-column: 1; }
+.escolhas--cartoes .escolha {
+  display: grid;
+  gap: 2px;
+  padding: var(--espaco-3);
+  border: var(--forma-borda) solid var(--cor-linha);
+  border-radius: var(--forma-raio);
+  background: var(--cor-superficie);
+}
+.escolhas--cartoes .escolha__marca { all: unset; font-family: var(--fonte-titulo); font-size: 1.25rem; font-weight: 900; }
+.escolhas--cartoes .escolha__detalhe { font-size: var(--tipo-apoio); line-height: 1.35; color: var(--cor-texto-suave); }
+/* no cartão, a marcação é a borda: o nome não ganha o fundo de opção marcada das faixas */
+.escolhas--cartoes .escolha__input:checked + .escolha__marca { background: none; color: inherit; box-shadow: none; }
+.escolhas--cartoes .escolha:has(.escolha__input:checked) { border-color: var(--cor-destaque); box-shadow: inset 0 0 0 2px var(--cor-destaque), var(--forma-sombra) var(--forma-sombra) 0 var(--cor-destaque); }
+.escolhas--cartoes .escolha:has(.escolha__input:focus-visible) { outline: 3px solid var(--cor-foco); outline-offset: 2px; }
+
+/* computador (T50e, v2.30): "quem é ele" e "em campo" lado a lado numa página só */
+.criacao__coluna { display: grid; gap: var(--espaco-2); align-content: start; min-inline-size: 0; }
+.criacao__subtitulo { font-size: var(--tipo-titulo); line-height: 1.1; }
+/* os botões ficam sob a coluna da direita (mais curta): a página inteira cabe em 1280×800 */
+@media (min-width: 64rem) {
+  .criacao__form--larga {
+    display: grid;
+    inline-size: min(100%, 64rem);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas: "topo topo" "c1 c2" "c1 acoes";
+    column-gap: var(--espaco-6);
+    row-gap: var(--espaco-2);
+  }
+  .criacao__form--larga .criacao__topo { grid-area: topo; }
+  .criacao__form--larga .criacao__passo { display: contents; }
+  .criacao__form--larga .criacao__coluna:first-child { grid-area: c1; }
+  .criacao__form--larga .criacao__coluna + .criacao__coluna { grid-area: c2; }
+  .criacao__form--larga .criacao__acoes { grid-area: acoes; align-self: end; }
+}

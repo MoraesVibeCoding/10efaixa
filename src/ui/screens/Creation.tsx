@@ -3,33 +3,39 @@ import type { AvatarSpec } from '../../art/avatar';
 import avatarData from '../../data/avatar.json';
 import creationData from '../../data/creation.json';
 import { CLUBS } from '../../engine/clubs';
+import type { CreationInput } from '../../engine/player';
 import { checkName } from '../../engine/nameFilter';
 import { createPrng } from '../../engine/prng';
 import { t } from '../../i18n';
-import { CREATION_STEPS, transition, type FlowState } from '../../state/flow';
+import { transition, type FlowState } from '../../state/flow';
 import { Choices, NONE, named, swatches, withNone, type Option } from './Choices';
 import { Figurinha } from './Figurinha';
 import { PICKS, previewAvatar, randomLook, type Look } from './look';
 import { DEFAULT_FIELD, FIELD_ERROR_ORDER, fieldErrors, type OnField } from './onField';
 import { OnFieldStep } from './OnFieldStep';
+import { toCreationInput } from './draft';
+import { firstStepOf, pageOf, pagesFor } from './pages';
+import { useWide } from './useWide';
 import './Creation.css';
 
 // T50 (SPEC 6.1, v2.30): criação em duas telas + tipo de início, na ordem de flow.json e pela máquina da T48.
 // Tela 1 "quem é ele": identidade e visual (nada aqui mexe nos atributos). Tela 2 "em campo e cabeça": OnFieldStep.
+// Tela 3: tipo de início (origem). No computador, as telas 1 e 2 são uma página só (pages.ts).
 export interface Identity { name: string; number: string; state: string; heartClub: string; celebration: string | null }
-export interface CreationDraft { identity: Identity; look: Look; field: OnField }
+/** O que a criação entrega: o motor recebe só o CreationInput; o visual vai à parte (aparência nunca mexe no jogo). */
+export interface CreationResult { input: CreationInput; look: Look }
 export interface CreationProps {
-  onExit: () => void; onFinish: (draft: CreationDraft) => void;
+  onExit: () => void; onFinish: (result: CreationResult) => void;
   /** Semente do sorteio do visual (o desafio diário passa a do dia). */
   seed?: number;
 }
 type Errors = Partial<Record<string, string>>;
 
-const TOTAL = CREATION_STEPS.length;
 function byName(a: { nome: string }, b: { nome: string }) { return a.nome.localeCompare(b.nome, 'pt-BR'); }
 const BY_NAME = [...CLUBS].sort(byName);
 /** Ordem do foco quando há erro, por tela: o primeiro campo inválido recebe o foco. */
-const FIELD_ORDER: Record<string, readonly string[]> = { quemE: ['name', 'number', 'state', 'celebration'], emCampo: FIELD_ERROR_ORDER };
+const FIELD_ORDER: Record<string, readonly string[]> = { quemE: ['name', 'number', 'state', 'celebration'], emCampo: FIELD_ERROR_ORDER, origem: ['origin'] };
+const ORIGINS = Object.keys(creationData.origins);
 
 /** Erros da tela 1, como chaves de i18n de creation.error. */
 function identityErrors(id: Identity): Errors {
@@ -43,8 +49,8 @@ function identityErrors(id: Identity): Errors {
   return errors;
 }
 
-function progressText(step: number) {
-  return t('ui.criacao.progresso', { passo: step + 1, total: TOTAL });
+function progressText(page: number, total: number) {
+  return t('ui.criacao.progresso', { passo: page + 1, total });
 }
 
 /** Frase da prévia para o leitor de tela. */
@@ -63,38 +69,49 @@ export function Creation({ onExit, onFinish, seed = Date.now() }: CreationProps)
   const [identity, setIdentity] = useState({ name: '', number: '10', state: '', heartClub: '', celebration: null } as Identity);
   const [look, setLook] = useState(() => { return randomLook(rng.current!); });
   const [field, setField] = useState(DEFAULT_FIELD);
+  const [origin, setOrigin] = useState(null as string | null);
   const [errors, setErrors] = useState({} as Errors);
+  const wide = useWide();
+  const pages = pagesFor(wide);
+  const pageIndex = pageOf(flow.step, wide);
+  const page = pages[pageIndex]!;
   const titleRef = useRef(null as HTMLHeadingElement | null);
-  const shown = useRef(flow.step);
+  const shown = useRef(pageIndex);
   const ids = useId();
-  const step = CREATION_STEPS[flow.step]!;
   const avatar = useMemo(() => { return previewAvatar(look); }, [look]);
 
-  // Tela nova: o foco vai para o título, e o leitor de tela anuncia onde a pessoa está (não roda na abertura).
+  // Página nova: o foco vai para o título, e o leitor de tela anuncia onde a pessoa está (não roda na abertura).
   useEffect(() => {
-    if (shown.current === flow.step) return;
-    shown.current = flow.step;
+    if (shown.current === pageIndex) return;
+    shown.current = pageIndex;
     titleRef.current?.focus();
-  }, [flow.step]);
+  }, [pageIndex]);
+
+  /** Anda na máquina da T48 até o começo da página pedida (no computador, uma página pula dois passos). */
+  const goTo = (target: number, event: 'AVANCAR' | 'VOLTAR') => {
+    let next = flow;
+    while (next.screen === 'criacao' && next.step !== target) next = transition(next, event);
+    setFlow(next);
+  };
 
   const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const found = stepErrors(step, identity, field);
-    const first = (FIELD_ORDER[step] ?? []).find((k) => found[k]);
+    const found = Object.assign({}, ...page.map((s) => stepErrors(s, identity, field, origin))) as Errors;
+    const first = page.flatMap((s) => FIELD_ORDER[s] ?? []).find((k) => found[k]);
     if (first) {
       setErrors(found);
       e.currentTarget.querySelector<HTMLElement>(`[data-campo="${first}"]`)?.focus();
       return;
     }
-    if (flow.step === TOTAL - 1) { onFinish({ identity, look, field }); return; }
-    setFlow(transition(flow, 'AVANCAR'));
+    if (pageIndex === pages.length - 1) { onFinish({ input: toCreationInput(identity, field, origin!), look }); return; }
+    goTo(firstStepOf(pages[pageIndex + 1]!), 'AVANCAR');
   };
   const back = () => {
-    const next = transition(flow, 'VOLTAR');
-    if (next.screen !== 'criacao') { onExit(); return; }
+    if (pageIndex === 0) { onExit(); return; }
     setErrors({});
-    setFlow(next);
+    goTo(firstStepOf(pages[pageIndex - 1]!), 'VOLTAR');
   };
+  const chooseOrigin = (v: string) => { setOrigin(v); setErrors({}); };
   const change = (k: keyof Identity, v: string) => {
     setIdentity({ ...identity, [k]: v });
     const { [k]: _, ...rest } = errors;
@@ -104,17 +121,19 @@ export function Creation({ onExit, onFinish, seed = Date.now() }: CreationProps)
     setErrors(Object.fromEntries(Object.entries(errors).filter(([k]) => next[k as keyof OnField] === field[k as keyof OnField])));
     setField(next);
   };
-  const ctx = { ids, identity, look, avatar, errors, change, setLook, reroll: () => setLook(randomLook(rng.current!)), field, changeField };
+  const ctx = {
+    ids, identity, look, avatar, errors, change, setLook, reroll: () => setLook(randomLook(rng.current!)), field, changeField, origin, chooseOrigin,
+  };
 
   return (
     <main className="criacao">
-      <form className="criacao__form" onSubmit={submit} noValidate>
+      <form className={page.length > 1 ? 'criacao__form criacao__form--larga' : 'criacao__form'} onSubmit={submit} noValidate>
         <header className="criacao__topo">
-          <p className="criacao__progresso">{progressText(flow.step)}</p>
-          <span className="criacao__trilho" aria-hidden="true"><span style={{ inlineSize: `${((flow.step + 1) / TOTAL) * 100}%` }} /></span>
-          <h1 className="criacao__titulo" ref={titleRef} tabIndex={-1}>{t(`ui.criacao.passos.${step}`)}</h1>
+          <p className="criacao__progresso">{progressText(pageIndex, pages.length)}</p>
+          <span className="criacao__trilho" aria-hidden="true"><span style={{ inlineSize: `${((pageIndex + 1) / pages.length) * 100}%` }} /></span>
+          <h1 className="criacao__titulo" ref={titleRef} tabIndex={-1}>{t(`ui.criacao.passos.${page[0]}`)}</h1>
         </header>
-        <div className="criacao__passo">{stepBody(step, ctx)}</div>
+        <div className="criacao__passo">{page.map((s, i) => <PageColumn key={s} step={s} sub={i > 0} c={ctx} />)}</div>
         <footer className="criacao__acoes">
           <button type="button" className="criacao__botao" onClick={back}>{t('ui.criacao.voltar')}</button>
           <button type="submit" className="criacao__botao criacao__botao--principal">{t('ui.criacao.avancar')}</button>
@@ -127,21 +146,45 @@ export function Creation({ onExit, onFinish, seed = Date.now() }: CreationProps)
 interface StepCtx {
   ids: string; identity: Identity; look: Look; avatar: AvatarSpec; errors: Errors;
   change: (k: keyof Identity, v: string) => void; setLook: (l: Look) => void; reroll: () => void;
-  field: OnField; changeField: (f: OnField) => void;
+  field: OnField; changeField: (f: OnField) => void; origin: string | null; chooseOrigin: (v: string) => void;
 }
 
-/** Erros da tela atual (as que não validam nada devolvem vazio). */
-function stepErrors(step: string, identity: Identity, field: OnField): Errors {
+/** Erros de um passo, como chaves de i18n de creation.error. */
+function stepErrors(step: string, identity: Identity, field: OnField, origin: string | null): Errors {
   if (step === 'quemE') return identityErrors(identity);
   if (step === 'emCampo') return fieldErrors(field);
+  if (step === 'origem' && !origin) return { origin: 'creation.error.origin.invalid' };
   return {};
 }
 
-/** Conteúdo de cada tela; as que ainda não existem mostram o aviso. */
+/** Um passo dentro da página; o segundo passo de uma página (computador) ganha o próprio título. */
+function PageColumn({ step, sub, c }: { step: string; sub: boolean; c: StepCtx }) {
+  if (!sub) { return <div className="criacao__coluna">{stepBody(step, c)}</div>; }
+  return (
+    <section className="criacao__coluna" aria-labelledby={`${c.ids}-${step}-titulo`}>
+      <h2 id={`${c.ids}-${step}-titulo`} className="criacao__subtitulo">{t(`ui.criacao.passos.${step}`)}</h2>
+      {stepBody(step, c)}
+    </section>
+  );
+}
+
+/** Conteúdo de cada passo. */
 function stepBody(step: string, c: StepCtx) {
   if (step === 'quemE') { return <IdentityStep c={c} />; }
   if (step === 'emCampo') { return <OnFieldStep ids={c.ids} field={c.field} errors={c.errors} onChange={c.changeField} />; }
-  return <p className="criacao__dica">{t('ui.criacao.pendente')}</p>;
+  return <OriginStep c={c} />;
+}
+
+/** Tipo de início (6.1): três cartões com a frase de cada origem, sem números; o teto é o mesmo para todos. */
+function OriginStep({ c }: { c: StepCtx }) {
+  const options = ORIGINS.map((id) => ({ id, label: t(`creation.origin.${id}`), detail: t(`ui.criacao.origem.${id}`) }));
+  return (
+    <div className="origem">
+      <Choices id={`${c.ids}-origem`} name="origin" legend={t('ui.criacao.origem.titulo')} options={options} variant="cartoes"
+        value={c.origin ?? ''} onChange={c.chooseOrigin} error={c.errors.origin ? t(c.errors.origin) : null} />
+      <p className="criacao__dica">{t('ui.criacao.origem.teto')}</p>
+    </div>
+  );
 }
 
 /** Erro do campo, ou null; com erro, a mensagem passa a ser a descrição do campo. */

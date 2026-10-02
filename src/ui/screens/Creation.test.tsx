@@ -3,6 +3,8 @@ import avatarData from '../../data/avatar.json';
 import biotypeData from '../../data/biotype.json';
 import { ARCHETYPES, archetypesFor } from '../../engine/archetypes';
 import { CLUBS } from '../../engine/clubs';
+import { createPlayer } from '../../engine/player';
+import { createPrng } from '../../engine/prng';
 import { CREATION_STEPS } from '../../state/flow';
 import { t } from '../../i18n';
 import { Creation } from './Creation';
@@ -238,5 +240,79 @@ describe('tela 2: em campo e cabeça (T50d, v2.30)', () => {
     fireEvent.click(screen.getByRole('button', { name: t('ui.criacao.voltar') }));
     expect(radio('emCampo.posicao', t('positions.atacante'))).toBeChecked();
     expect(radio('emCampo.estilo', t('archetypes.archetype.matador'))).toBeChecked();
+  });
+});
+
+describe('tela 3: tipo de início e fim da criação (T50e, v2.30)', () => {
+  const toOrigin = () => {
+    const view = setup();
+    fillIdentity();
+    advance();
+    fireEvent.click(within(group('emCampo.posicao')).getByRole('radio', { name: t('positions.atacante') }));
+    fireEvent.click(within(group('emCampo.estilo')).getByRole('radio', { name: t('archetypes.archetype.matador') }));
+    fireEvent.click(within(group('emCampo.temperamento')).getByRole('radio', { name: t('creation.temperament.frio') }));
+    advance();
+    return view;
+  };
+
+  it('mostra as três origens com uma frase cada, sem números', () => {
+    toOrigin();
+    expect(title('origem')).toBeInTheDocument();
+    const radios = within(group('origem.titulo')).getAllByRole('radio');
+    expect(radios.map((r) => (r as HTMLInputElement).value)).toEqual(['baseGrande', 'peneira', 'varzea']);
+    for (const id of ['baseGrande', 'peneira', 'varzea']) {
+      const text = t(`ui.criacao.origem.${id}`);
+      expect(screen.getByText(text)).toBeInTheDocument();
+      expect(text).not.toMatch(/\d/);
+    }
+  });
+
+  it('sem origem não conclui', () => {
+    const { onFinish } = toOrigin();
+    advance();
+    expect(group('origem.titulo')).toHaveAccessibleDescription(t('creation.error.origin.invalid'));
+    expect(onFinish).not.toHaveBeenCalled();
+  });
+
+  it('conclui com um CreationInput que o motor aceita; o visual vai à parte e não entra no motor', () => {
+    const { onFinish } = toOrigin();
+    fireEvent.click(within(group('origem.titulo')).getByRole('radio', { name: t('creation.origin.varzea') }));
+    advance();
+    expect(onFinish).toHaveBeenCalledOnce();
+    const { input, look } = onFinish.mock.calls[0]![0];
+    expect(createPlayer(input, createPrng(1)).ok).toBe(true);
+    expect(input).toMatchObject({ name: 'Dudu Maestro', shirtNumber: 10, state: 'BA', heartClub: null, position: 'atacante', archetypeId: 'matador', temperament: 'frio', celebration: 'aviaozinho', origin: 'varzea' });
+    for (const k of Object.keys(look)) expect(input).not.toHaveProperty(k);
+    expect(look).toHaveProperty('skin');
+  });
+});
+
+describe('computador (≥ 64rem): telas 1 e 2 juntas (T50e, v2.30)', () => {
+  const desktop = (matches: boolean) => vi.stubGlobal('matchMedia', (q: string) => ({ matches, media: q, addEventListener() {}, removeEventListener() {} }));
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('mostra identidade e "em campo" na mesma tela, em 2 passos', () => {
+    desktop(true);
+    setup();
+    expect(screen.getByText(t('ui.criacao.progresso', { passo: 1, total: 2 }))).toBeInTheDocument();
+    expect(field('nome')).toBeInTheDocument();
+    expect(group('emCampo.posicao')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2, name: t('ui.criacao.passos.emCampo') })).toBeInTheDocument();
+  });
+
+  it('valida as duas metades e, completas, vai direto ao tipo de início', () => {
+    desktop(true);
+    setup();
+    fillIdentity();
+    advance();
+    expect(group('emCampo.posicao')).toHaveAccessibleDescription(t('creation.error.position.invalid'));
+    fireEvent.click(within(group('emCampo.posicao')).getByRole('radio', { name: t('positions.atacante') }));
+    fireEvent.click(within(group('emCampo.estilo')).getByRole('radio', { name: t('archetypes.archetype.matador') }));
+    fireEvent.click(within(group('emCampo.temperamento')).getByRole('radio', { name: t('creation.temperament.frio') }));
+    advance();
+    expect(title('origem')).toBeInTheDocument();
+    expect(screen.getByText(t('ui.criacao.progresso', { passo: 2, total: 2 }))).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: t('ui.criacao.voltar') }));
+    expect(field('nome')).toHaveValue('Dudu Maestro');
   });
 });
