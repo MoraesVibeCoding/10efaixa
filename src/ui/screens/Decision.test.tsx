@@ -89,9 +89,12 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
     expect(card).toHaveAttribute('data-medalha', 'platina');
     expect((card as HTMLElement).style.backgroundImage).toMatch(/platina/);
     expect(within(who).getByText(new RegExp(t('attributes.band.muitoBom')))).toBeInTheDocument();
-    expect(within(who).getByText(t('ui.decisao.resumo', { idade: 17, papel: t('ui.papel.titular') }))).toBeInTheDocument();
-    // salário, títulos e trajetória saíram da tela (SPEC v2.21): ficam na gaveta
-    expect(within(who).queryByRole('term')).not.toBeInTheDocument();
+    // a ficha fica sempre à vista (SPEC v2.22): idade, tempo de jogo e salário do mês
+    expect(within(who).getAllByRole('term')).toHaveLength(3);
+    expect(within(who).getByText(t('ui.decisao.idade', { idade: 17 }))).toBeInTheDocument();
+    expect(within(who).getByText(t('ui.papel.titular'))).toBeInTheDocument();
+    expect(within(who).getByText(/R\$\s180\smil/)).toBeInTheDocument();
+    // títulos, atributos e trajetória ficam na gaveta
     expect(screen.queryByRole('list', { name: t('ui.decisao.titulosLista') })).not.toBeInTheDocument();
   });
 
@@ -112,16 +115,22 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
       expect(screen.getByRole('dialog', { name: t('ui.carreira.titulo') })).toBeInTheDocument();
     });
 
-    it('ficha: idade, tempo de jogo e salário do mês', () => {
-      const drawer = openDrawer();
-      expect(within(drawer).getAllByRole('term')).toHaveLength(3);
-      expect(within(drawer).getByText(t('ui.papel.titular'))).toBeInTheDocument();
-      expect(within(drawer).getByText(/R\$\s180\smil/)).toBeInTheDocument();
+    it('atributos do momento: os dez, cada um com a faixa em palavra e em barra, sem número (SPEC v2.22)', () => {
+      const attributes = { finalizacao: 80, passe: 86, habilidade: 78, drible: 74, forca: 60, velocidade: 70, fisico: 66, marcacao: 45, mental: 96, jogoAereo: 52 };
+      const drawer = openDrawer({ attributes });
+      const items = within(within(drawer).getByRole('list', { name: t('ui.carreira.atributos') })).getAllByRole('listitem');
+      expect(items).toHaveLength(10);
+      expect(items[0]).toHaveTextContent(t('attributes.attribute.finalizacao'));
+      expect(items[0]).toHaveTextContent(t('attributes.band.muitoBom'));
+      expect(items[8]).toHaveTextContent(t('attributes.band.lendario'));
+      expect(items[0]!.querySelectorAll('.nivel i[data-cheio]')).toHaveLength(4);
+      for (const li of items) expect(li.textContent).not.toMatch(/\d/);
+      expect(within(drawer).queryByRole('term')).not.toBeInTheDocument();
     });
 
     it('salário em euro quando o contrato é no exterior', () => {
-      const drawer = openDrawer({ monthlySalary: { amount: 1_250_000, currency: 'EUR' } });
-      expect(within(drawer).getByText(/€\s1,3\smi/)).toBeInTheDocument();
+      render(<Decision eventId={EVENT} age={25} progress={0.5} player={{ ...PLAYER, monthlySalary: { amount: 1_250_000, currency: 'EUR' } }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+      expect(screen.getByText(/€\s1,3\smi/)).toBeInTheDocument();
     });
 
     it('títulos: todas as competições pelo nome, da mais pesada para a mais leve, com ×N só quando ganhou mais de uma vez', () => {

@@ -17,7 +17,6 @@
   "faixaOver": " ({faixa})",
   "idadeRotulo": "Idade",
   "vezes": "×{n}",
-  "resumo": "{idade} anos · {papel}",
   "ganha": "Você ganha",
   "emTroca": "Em troca",
   "muda": "Muda"
@@ -69,6 +68,7 @@
   "semTrajetoria": "A primeira temporada ainda está em andamento.",
   "colIdade": "Idade",
   "colClube": "Clube",
-  "colOver": "OVR"
+  "colOver": "OVR",
+  "atributos": "Atributos"
  }
 }

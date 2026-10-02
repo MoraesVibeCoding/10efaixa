@@ -108,22 +108,11 @@
 .over__rotulo { font-size: var(--tipo-apoio); font-weight: 800; letter-spacing: 0.08em; }
 .over__numero { font-size: var(--tipo-over); font-weight: 900; font-variant-numeric: tabular-nums; }
 
-/* rodapé da caixa: idade e papel de um lado, o convite para abrir a carreira do outro */
-.jogador__resumo {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--espaco-3);
-  padding: var(--espaco-1) var(--espaco-3);
-  border-block-start: var(--forma-borda) solid var(--cor-linha);
-  font-size: var(--tipo-apoio);
-  font-weight: 700;
-  line-height: 1.5;
-}
 .jogador__mais,
 .previa__rotulo,
 .ficha dt,
 .gaveta__bloco h3,
+.niveis__faixa,
 .trajetoria th {
   font-family: var(--fonte-titulo);
   font-size: var(--tipo-apoio);
@@ -132,12 +121,25 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-.jogador__mais { display: inline-flex; align-items: center; gap: var(--espaco-2); color: var(--cor-destaque); white-space: nowrap; }
+.jogador__mais { display: inline-flex; align-items: center; gap: var(--espaco-2); margin-block-start: 3px; color: var(--cor-destaque); }
 @media (hover: hover) {
-  .jogador__abrir:hover .jogador__resumo { background: var(--cor-fundo); }
+  .jogador__abrir:hover { background: var(--cor-fundo); }
 }
-.jogador__abrir:active .jogador__resumo { background: var(--cor-destaque); color: var(--cor-sobre-destaque); }
-.jogador__abrir:active .jogador__mais { color: inherit; }
+.jogador__abrir:active { background: var(--cor-destaque); color: var(--cor-sobre-destaque); }
+.jogador__abrir:active :is(.jogador__mais, .jogador__clube, .escudo) { color: inherit; }
+
+/* a ficha fica sempre à vista, no pé da caixa */
+.ficha {
+  display: grid;
+  /* a idade é curta e fica com a largura do próprio texto; tempo de jogo e salário dividem o resto, sem quebrar o rótulo */
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
+  margin: 0;
+  border-block-start: var(--forma-borda) solid var(--cor-linha);
+}
+.ficha > div { display: grid; align-content: start; padding: 3px var(--espaco-3) var(--espaco-1); }
+.ficha > div + div { border-inline-start: var(--forma-borda) solid var(--cor-linha); }
+.ficha dt { white-space: nowrap; color: var(--cor-texto-suave); }
+.ficha dd { margin: 0; font-weight: 700; line-height: 1.25; white-space: nowrap; }
 
 /* ---------- o que aconteceu */
 .decisao__cabeca { display: grid; gap: var(--espaco-2); }
@@ -296,20 +298,18 @@
 }
 .gaveta__fechar:active { background: var(--cor-destaque); color: var(--cor-sobre-destaque); }
 
-.ficha {
-  display: grid;
-  /* a idade é curta e fica com a largura do próprio texto; tempo de jogo e salário dividem o resto, sem quebrar o rótulo */
-  grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
-  margin: 0;
-}
-.ficha > div { display: grid; align-content: start; gap: 2px; padding: var(--espaco-2) var(--espaco-3); }
-.ficha > div + div { border-inline-start: var(--forma-borda) solid var(--cor-linha); }
-.ficha dt { white-space: nowrap; color: var(--cor-texto-suave); }
-.ficha dd { margin: 0; font-weight: 700; line-height: 1.25; white-space: nowrap; }
-
 .gaveta__bloco { display: grid; gap: var(--espaco-2); }
 .gaveta__bloco h3 { color: var(--cor-texto-suave); }
 .gaveta__vazio { color: var(--cor-texto-suave); line-height: 1.4; }
+
+/* um atributo por linha: nome, barra de seis degraus e a faixa por extenso */
+.niveis { display: grid; gap: var(--espaco-2); margin: 0; padding: 0; list-style: none; }
+.niveis li { display: grid; grid-template-columns: 6.25rem minmax(0, 1fr) 5.5rem; align-items: center; column-gap: var(--espaco-3); }
+.niveis__nome { font-weight: 700; line-height: 1.25; }
+.niveis__faixa { order: 1; color: var(--cor-destaque); text-align: end; white-space: nowrap; }
+.nivel { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; block-size: 10px; }
+.nivel i { border: 1px solid var(--cor-linha); background: var(--cor-superficie); }
+.nivel i[data-cheio] { background: var(--cor-destaque); }
 
 .trofeus { display: flex; flex-wrap: wrap; gap: var(--espaco-2); margin: 0; padding: 0; list-style: none; }
 .trofeu {
@@ -337,7 +337,10 @@
 /* celular baixo: a história aperta um pouco para as três opções caberem sem rolar */
 @media (max-height: 42.5rem) {
   .decisao__painel { gap: var(--espaco-2); padding-block-start: var(--espaco-2); }
-  .decisao__historia { font-size: var(--tipo-corpo); line-height: 1.4; }
+  .decisao__historia { font-size: var(--tipo-corpo); line-height: 1.35; }
+  .jogador__topo { padding-block: var(--espaco-1); }
+  .decisao__opcoes { gap: 0.4375rem; }
+  .decisao__painel { padding-block-end: calc(var(--espaco-2) + env(safe-area-inset-bottom)); }
 }
 
 @media (min-width: 40rem) {

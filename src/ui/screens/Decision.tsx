@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import events from '../../data/events.json';
 import legacy from '../../data/legacy.json';
-import { toBand } from '../../engine/attributes';
+import { ATTRIBUTES, toBand, type Attributes } from '../../engine/attributes';
+import bands from '../../data/bands.json';
 import { CLUBS } from '../../engine/clubs';
 import { applyOption, type Ctx } from '../../engine/events';
 import { outcomeOf, outcomeVerdict, previewOf, type Outcome, type Preview } from '../../engine/preview';
@@ -25,6 +26,8 @@ export interface DecisionProps {
     monthlySalary: { amount: number; currency: 'BRL' | 'EUR' };
     /** Temporadas já fechadas, da mais antiga para a mais recente: a trajetória da gaveta "Minha carreira". */
     seasons?: Season[];
+    /** Atributos de agora. Na gaveta aparecem só em faixa (palavra e barra), nunca em número. */
+    attributes?: Attributes;
   };
   /** Situação atual do jogador (moral, torcida, patrimônio…): o resultado da escolha mostra o ganho e a perda reais sobre ela. */
   state?: Ctx;
@@ -106,12 +109,35 @@ function Trophies({ titles }: { titles: string[] }) {
   );
 }
 
+const BAND_KEYS = bands.map((b) => { return b.key; });
+
+/** Os dez atributos em faixa: a palavra e uma barra de seis degraus, um por faixa. Nenhum número (SPEC 6.3). */
+function Levels({ attributes }: { attributes: Attributes }) {
+  return (
+    <ul className="niveis" aria-labelledby="gaveta-atributos">
+      {ATTRIBUTES.map((id) => {
+        const band = toBand(attributes[id]).key;
+        const filled = BAND_KEYS.indexOf(band) + 1;
+        return (
+          <li key={id}>
+            <span className="niveis__nome">{t(`attributes.attribute.${id}`)}</span>
+            <span className="niveis__faixa">{t(`attributes.band.${band}`)}</span>
+            <span className="nivel" aria-hidden="true">
+              {bands.map((b, i) => <i key={b.key} data-cheio={i < filled ? '' : undefined} />)}
+            </span>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 function recentFirst(seasons: Season[]) {
   return [...seasons].reverse();
 }
 
 /** Gaveta "Minha carreira" (SPEC v2.21): o que saiu da tela de decisão para ela caber no celular. Fecha pelo botão, por Esc ou tocando fora. */
-function Career({ player, age, onClose }: { player: DecisionProps['player']; age: number; onClose: () => void }) {
+function Career({ player, onClose }: { player: DecisionProps['player']; onClose: () => void }) {
   const close = useRef<HTMLButtonElement>(null);
   useEffect(() => { close.current?.focus(); }, []);
   const seasons = recentFirst(player.seasons ?? []);
@@ -127,20 +153,12 @@ function Career({ player, age, onClose }: { player: DecisionProps['player']; age
             <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><path d="M2 2l12 12M14 2 2 14" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="square" /></svg>
           </button>
         </header>
-        <dl className="ficha caixa">
-          <div>
-            <dt>{t('ui.decisao.idadeRotulo')}</dt>
-            <dd>{t('ui.decisao.idade', { idade: age })}</dd>
-          </div>
-          <div>
-            <dt>{t('ui.decisao.tempoDeJogo')}</dt>
-            <dd>{t(`ui.papel.${player.role}`)}</dd>
-          </div>
-          <div>
-            <dt>{t('ui.decisao.salario')}</dt>
-            <dd>{money(player.monthlySalary.amount, player.monthlySalary.currency)}</dd>
-          </div>
-        </dl>
+        {player.attributes && (
+          <section className="gaveta__bloco">
+            <h3 id="gaveta-atributos">{t('ui.carreira.atributos')}</h3>
+            <Levels attributes={player.attributes} />
+          </section>
+        )}
         <section className="gaveta__bloco">
           <h3>{t('ui.carreira.titulos')}</h3>
           {player.titles.length ? <Trophies titles={player.titles} /> : <p className="gaveta__vazio">{t('ui.decisao.nenhumTitulo')}</p>}
@@ -266,6 +284,12 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, on
               <span className="jogador__quem">
                 <span className="jogador__nome">{player.name}</span>
                 <span className="jogador__clube">{t('ui.decisao.clubePosicao', { posicao: t(`positions.${player.position}`), clube: club?.nome ?? '' })}</span>
+                <span className="jogador__mais">
+                  {t('ui.carreira.titulo')}
+                  <svg viewBox="0 0 10 16" width="7" height="11" aria-hidden="true" focusable="false">
+                    <path d="M1.5 1.5 8 8l-6.5 6.5" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="square" />
+                  </svg>
+                </span>
               </span>
               <span className="over" data-medalha={medal} style={cardArt(medal) ? { backgroundImage: `url(${cardArt(medal)})` } : undefined}>
                 <span className="over__rotulo">
@@ -275,16 +299,21 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, on
                 <span className="over__numero">{player.overall}</span>
               </span>
             </span>
-            <span className="jogador__resumo">
-              <span>{t('ui.decisao.resumo', { idade: age, papel: t(`ui.papel.${player.role}`) })}</span>
-              <span className="jogador__mais">
-                {t('ui.carreira.titulo')}
-                <svg viewBox="0 0 10 16" width="8" height="13" aria-hidden="true" focusable="false">
-                  <path d="M1.5 1.5 8 8l-6.5 6.5" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="square" />
-                </svg>
-              </span>
-            </span>
           </button>
+          <dl className="ficha">
+            <div>
+              <dt>{t('ui.decisao.idadeRotulo')}</dt>
+              <dd>{t('ui.decisao.idade', { idade: age })}</dd>
+            </div>
+            <div>
+              <dt>{t('ui.decisao.tempoDeJogo')}</dt>
+              <dd>{t(`ui.papel.${player.role}`)}</dd>
+            </div>
+            <div>
+              <dt>{t('ui.decisao.salario')}</dt>
+              <dd>{money(player.monthlySalary.amount, player.monthlySalary.currency)}</dd>
+            </div>
+          </dl>
         </section>
         <header className="decisao__cabeca">
           <h1>{t(`events.${eventId}.titulo`)}</h1>
@@ -325,7 +354,7 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, on
           })}
         </div>
       </div>
-      {career && <Career player={player} age={age} onClose={() => { setCareer(false); opener.current?.focus(); }} />}
+      {career && <Career player={player} onClose={() => { setCareer(false); opener.current?.focus(); }} />}
       {chosen !== null && <Result eventId={eventId} optionId={chosen} state={state} onDone={onDone} />}
     </main>
   );

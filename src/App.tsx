@@ -11,6 +11,7 @@ const SAMPLE = {
   player: {
     name: 'Dudu Maestro', position: 'meia', clubId: 'flamengo', overall: 78, titles: ['estadual', 'estadual', 'copaDoBrasil'],
     role: 'titular', monthlySalary: { amount: 180_000, currency: 'BRL' as const },
+    attributes: { finalizacao: 80, passe: 86, habilidade: 82, drible: 77, forca: 61, velocidade: 72, fisico: 68, marcacao: 47, mental: 79, jogoAereo: 55 },
     seasons: [
       { age: 16, clubId: 'bahia', overall: 52 }, { age: 17, clubId: 'bahia', overall: 57 }, { age: 18, clubId: 'bahia', overall: 62 }, { age: 19, clubId: 'bahia', overall: 66 },
       { age: 20, clubId: 'bahia', overall: 69 }, { age: 21, clubId: 'flamengo', overall: 72 }, { age: 22, clubId: 'flamengo', overall: 75 }, { age: 23, clubId: 'flamengo', overall: 77 },
