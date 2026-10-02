@@ -16,7 +16,7 @@
   flex: 0 1 calc(min(100vw, 30rem) * 0.5);
   min-block-size: 7rem;
   object-fit: cover;
-  object-position: 50% 6%;
+  object-position: 50% 10%;
   /* a máscara só costura a emenda com o painel */
   -webkit-mask-image: linear-gradient(to bottom, #000 84%, transparent);
   mask-image: linear-gradient(to bottom, #000 84%, transparent);
