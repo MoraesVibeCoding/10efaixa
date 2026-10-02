@@ -614,41 +614,22 @@ After the sixth image, write: "All 6 images done." If any image was skipped, say
 '''
 
 
-def multi_md(scenes):
-    """Várias cenas numa conversa só (o Gemini aceita até 20 imagens por pedido): 6 cortes por cena."""
+def multi_parts(scenes, base='cenas'):
+    """Tabela "onde salvar" e texto do pedido para várias cenas numa conversa só (até 20 imagens): 6 cortes por cena."""
     total = len(scenes) * len(CUTS)
     nl = '\n'
     blocks, table, i = [], [], 0
     for s in scenes:
         for cut in CUTS:
             i += 1
-            table.append(f"| {i} | `{s['folder']}/{cut}/` | {s['nome']} | {CUTS[cut][0]} |")
+            table.append(f"| {i} | `{base}/{s['folder']}/{cut}/` | {s['nome']} | {CUTS[cut][0]} |")
             blocks.append(f"=============== IMAGE {i} OF {total} — scene: {s['folder']} — hair: {cut} — file name: {s['folder']}__{cut}.jpeg ===============\n"
                           + scene_prompt(s, cut).strip('`').strip())
     summary = nl.join(f"- Images {k * 6 + 1} to {k * 6 + 6}: scene \"{s['folder']}\". {s['setting'].split('.')[0]}." for k, s in enumerate(scenes))
-    names = ', '.join(s['folder'] for s in scenes)
-    changes = ' and '.join(str(k * 6) for k in range(1, len(scenes)))
-    return f"""# Cenas {' · '.join(s['folder'] for s in scenes)} — {total} imagens de uma vez
-
-**O que é:** um pedido único para o Gemini gerar as {total} imagens das cenas {names}, seis cortes de cabelo por cena.
-
-**Como usar**
-1. Abra uma conversa **nova** no Gemini.
-2. Opcional, para aproximar o traço do lote 1: anexe `cenas/04-penalti/curto/imagem.jpeg` e acrescente no fim do texto colado: `Use the attached image only as a reference for the painting style. Do not copy its scene.`
-3. Cole tudo o que está dentro do bloco "Prompt" e envie.
-4. Se ele parar antes da imagem {total}, responda `Continue with the next image.` até completar.
-5. Salve cada imagem na pasta da tabela abaixo, com o nome `imagem.jpeg`.
-
-**Onde salvar cada imagem**
-
-| # | Pasta (dentro de `docs/arte/cenas/`) | Cena | Corte |
-|--:|---|---|---|
-{nl.join(table)}
-
-## Prompt
-
-````
-You will generate {total} SEPARATE images in this conversation. Start from a clean slate: ignore everything from any earlier conversation.
+    changes = ' and '.join(str(k * 6) for k in range(1, len(scenes))) or 'none'
+    gk_note = (' The one exception is the main character himself: in this job he is a GOALKEEPER and wears a rose-pink (#F0569B) long-sleeved shirt, rose-pink shorts and socks and vivid orange gloves, exactly as each prompt says. His team-mates wear magenta and cyan.'
+               if any(s['clothing'] == 'gk' for s in scenes) else '')
+    return nl.join(table), f"""You will generate {total} SEPARATE images in this conversation. Start from a clean slate: ignore everything from any earlier conversation.
 
 WHAT THIS JOB IS
 A set of illustrations for a mobile football career game. There are {len(scenes)} different scenes, and each scene is painted 6 times, once for each hairstyle of the main character:
@@ -660,7 +641,7 @@ RULES FOR THE WHOLE JOB
 2. Each image is a separate, complete, full-size picture in vertical 4:5 format. Never combine images into one picture: no grid, no collage, no contact sheet, no split screen, no character sheet, no before-and-after.
 3. Treat each prompt as independent. For each image, use only the text of its own prompt. Never carry an object, a person or a background from one scene into another scene.
 4. Inside one scene, the ONLY difference between its 6 images is the hair of the main character. Keep the room or place, the camera, the pose, the other people, the colours and the painting style as close as possible across those 6 images.
-5. When the scene changes (after images {changes}), start that scene fresh from its own prompt.
+5. When the scene changes (after image number: {changes}), start that scene fresh from its own prompt.
 6. Before each image, write one short line outside the image with its number and file name, exactly as given in its heading, for example: "Image 1 of {total} - {scenes[0]['folder']}__curto.jpeg".
 7. If you cannot generate all {total} in one reply, generate as many as you can and stop. When I write "Continue with the next image.", carry on from the next number. Never start again from image 1 and never skip a number.
 
@@ -668,7 +649,7 @@ RULES THAT APPLY TO EVERY IMAGE
 A. PAINTING STYLE. Semi-realistic painted illustration: soft blended shading, visible brush texture and only very thin, subtle linework. Not a comic, not a cartoon, no thick black outlines, no cel shading. All {total} images must look painted by the same artist.
 B. THE MAIN CHARACTER IS SEEN FROM BEHIND. His face is never visible. He is horizontally centred and is the largest figure in the image.
 C. THE BACK OF HIS SHIRT IS EMPTY AND UNCOVERED from the shoulders to the waist: one smooth, evenly lit surface. No number, no name, no print, and no arm, hand, strap, chair back, person or object in front of it. Software will write a number there afterwards.
-D. KEY COLOURS. Bright magenta is used only for the football shirt (and the shirts of team-mates, when the prompt mentions team-mates). Cyan is used only for football shorts and socks, and only when the prompt asks for them. Software will recolour these two colours afterwards, so nothing else in the image may be magenta, pink, purple or cyan.
+D. KEY COLOURS. Bright magenta is used only for the football shirt (and the shirts of team-mates, when the prompt mentions team-mates). Cyan is used only for football shorts and socks, and only when the prompt asks for them. Software will recolour these two colours afterwards, so nothing else in the image may be magenta, pink, purple or cyan.{gk_note}
 E. EVERYONE ELSE IS NEUTRAL. Crowds, flags, opponents and bystanders are in light grey, mid grey, navy, beige or off-white, exactly as each prompt says.
 F. PLAIN CLOTHES AND OBJECTS. No badge, crest, emblem, logo, brand mark, sponsor or stripes on any clothing or object: shirts, tracksuits, jackets, coats, polo shirts, boots, trainers, balls, bags, glasses, speakers, screens and walls are completely plain.
 G. NO WRITING. No text, letters, numbers, signs, labels, captions or watermarks anywhere inside any image. Papers, screens and boards are blank.
@@ -678,18 +659,70 @@ I. ORIGINAL PEOPLE. Every person is an original fictional character who does not
 {(nl + nl).join(blocks)}
 
 =============== END OF THE {total} PROMPTS ===============
-After image {total}, write: "All {total} images done." If any image was skipped or could not be generated, say exactly which numbers.
-````
+After image {total}, write: "All {total} images done." If any image was skipped or could not be generated, say exactly which numbers."""
 
-## Conferência (nota para revisão humana)
 
-- [ ] {total} imagens separadas, nenhuma em grade ou colagem, todas em 4:5 e na resolução maior
-- [ ] Ordem dos cortes em cada cena: curto, cacheado médio, liso médio, cacheado grande, liso grande, careca
-- [ ] Dentro de cada cena, só o cabelo muda
-- [ ] Nenhum distintivo, listra, logo ou texto em roupa, objeto ou parede
-- [ ] Traço pintado, sem contorno preto grosso
-- [ ] Cada imagem passa na conferência do `prompt.md` da sua pasta
-"""
+def trophy_parts(items):
+    """O mesmo para os troféus: imagens quadradas, uma por troféu."""
+    total = len(items)
+    nl = '\n'
+    table = nl.join(f"| {i} | `trofeus/{tid}/` | {nome} | — |" for i, (tid, nome, _) in enumerate(items, 1))
+    blocks = (nl + nl).join(
+        f"=============== IMAGE {i} OF {total} — file name: trofeu__{tid}.jpeg ===============\n{TROPHY_HEAD}\nDESIGN\n{design}\n{TROPHY_TAIL}"
+        for i, (tid, _, design) in enumerate(items, 1))
+    return table, f"""You will generate {total} SEPARATE images in this conversation. Start from a clean slate: ignore everything from any earlier conversation.
+
+WHAT THIS JOB IS
+A set of {total} trophy illustrations for a mobile football career game. Each image shows ONE different trophy of original, invented design on a flat navy background.
+
+RULES FOR THE WHOLE JOB
+1. Generate exactly {total} images, one for each prompt below, in the order given: image 1, then image 2, and so on up to image {total}.
+2. Each image is a separate, complete, full-size SQUARE (1:1) picture with one single trophy. Never combine trophies into one picture: no grid, no collage, no line-up, no shelf of trophies.
+3. Treat each prompt as independent. Every trophy has a different design: never repeat the shape of an earlier trophy and never mix two designs.
+4. Before each image, write one short line outside the image with its number and file name, exactly as given in its heading.
+5. If you cannot generate all {total} in one reply, generate as many as you can and stop. When I write "Continue with the next image.", carry on from the next number. Never start again from image 1 and never skip a number.
+
+RULES THAT APPLY TO EVERY IMAGE
+A. ORIGINAL DESIGN. Every trophy is an invented object. It must not copy or closely resemble the trophy of any real competition or award. Follow the DESIGN text literally.
+B. SAME STYLE. Semi-realistic painted illustration with soft shading and visible brush texture, not a photograph and not a 3D render. All {total} images must look painted by the same artist, with the same light and the same navy background (#14213D).
+C. NO WRITING AND NO SYMBOLS. No text, numbers, dates, inscriptions, logos, crests, flags or country symbols anywhere, including on bases and plaques.
+D. NOTHING ELSE IN THE PICTURE. No people, no hands, no table, no confetti, no ribbons unless the DESIGN text asks for them.
+
+{blocks}
+
+=============== END OF THE {total} PROMPTS ===============
+After image {total}, write: "All {total} images done." If any image was skipped or could not be generated, say exactly which numbers."""
+
+
+def blocks_md(title, intro, parts):
+    """Um MD com vários pedidos em sequência; cada pedido é uma conversa nova no Gemini."""
+    nl = '\n'
+    index = nl.join(f"| {k} | {name} | {t.count(nl) + 1} |" for k, (name, t, _) in enumerate(parts, 1))
+    out = [f"# {title}", '', intro, '', '**Como usar cada pedido**',
+           '1. Abra uma conversa **nova** no Gemini para cada pedido (não reaproveite a conversa do pedido anterior).',
+           '2. Opcional, para aproximar o traço do lote 1: anexe `cenas/04-penalti/curto/imagem.jpeg` e acrescente no fim do texto colado: `Use the attached image only as a reference for the painting style. Do not copy its scene.` (não use nos troféus).',
+           '3. Cole tudo o que está dentro do bloco do pedido e envie.',
+           '4. Se ele parar antes da última imagem, responda `Continue with the next image.` até completar.',
+           '5. Salve cada imagem na pasta indicada na tabela do pedido, com o nome `imagem.jpeg`.', '',
+           '## Índice', '', '| Pedido | Conteúdo | Imagens |', '|--:|---|--:|', index, '']
+    for k, (name, table, prompt) in enumerate(parts, 1):
+        out += [f"## Pedido {k} — {name}", '', '**Onde salvar cada imagem** (pastas dentro de `docs/arte/`)', '',
+                '| # | Pasta | Cena | Corte |', '|--:|---|---|---|', table, '', '````', prompt, '````', '']
+    out += ['## Conferência (nota para revisão humana)', '',
+            '- [ ] Imagens separadas, nenhuma em grade ou colagem, na resolução maior',
+            '- [ ] Em cada cena, os cortes na ordem: curto, cacheado médio, liso médio, cacheado grande, liso grande, careca',
+            '- [ ] Dentro de cada cena, só o cabelo muda',
+            '- [ ] Nenhum distintivo, listra, logo ou texto em roupa, objeto ou parede',
+            '- [ ] Traço pintado, sem contorno preto grosso',
+            '- [ ] Troféus: desenho original, não lembra o troféu real', '']
+    return nl.join(out)
+
+
+def multi_md(scenes):
+    table, prompt = multi_parts(scenes)
+    names = ' · '.join(s['folder'] for s in scenes)
+    return blocks_md(f"Cenas {names} — {len(scenes) * len(CUTS)} imagens de uma vez",
+                     f"Um pedido único para o Gemini gerar os seis cortes de cada cena: {names}.", [(names, table, prompt)])
 
 
 MULTI = [['12-gol', '13-hospital', '14-festa']]  # até 20 imagens por pedido: 3 cenas × 6 cortes
@@ -720,4 +753,21 @@ by_folder = {s['folder']: s for s in LOTE3 + LOTE4}
 for group in MULTI:
     nums = '-'.join(f[:2] for f in group)
     write(f'cenas/prompt-{len(group) * len(CUTS)}-imagens-cenas-{nums}.md', multi_md([by_folder[f] for f in group])); n += 1
+# todas as imagens que faltam, em pedidos de até 18 imagens, num arquivo só
+gk_by_folder = {s['folder']: s for s in GK}
+NEXT = [('cenas', by_folder, ['15-entrevista', '16-convocacao', '17-rua-do-bairro']),
+        ('cenas', by_folder, ['18-peneira', '19-banco-de-reservas', '20-aeroporto']),
+        ('cenas', by_folder, ['21-estadio', '22-cabecada', '23-fisioterapia']),
+        ('cenas', by_folder, ['24-classico', '25-vaia']),
+        ('cenas-goleiro', gk_by_folder, ['01-titulo', '04-penalti', '12-defesa']),
+        ('cenas-goleiro', gk_by_folder, ['22-saida-do-gol', '21-estadio', '24-classico']),
+        ('cenas-goleiro', gk_by_folder, ['10-copa', '25-vaia', '11-treino']),
+        ('cenas-goleiro', gk_by_folder, ['09-despedida'])]
+parts = []
+for base, table, folders in NEXT:
+    label = ('Goleiro: ' if base == 'cenas-goleiro' else 'Cenas: ') + ' · '.join(folders)
+    parts.append((label, *multi_parts([table[f] for f in folders], base)))
+parts.append(('Troféus (18)', *trophy_parts(TROPHIES)))
+write('proximos-pedidos.md', blocks_md('Arte — todos os pedidos que faltam',
+      'Todas as imagens que ainda faltam dos lotes 3, 4 e 5, divididas em pedidos de até 18 imagens (o limite do Gemini é 20 por pedido).', parts)); n += 1
 print(n, 'arquivos')

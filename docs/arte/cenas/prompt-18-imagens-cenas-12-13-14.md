@@ -1,38 +1,44 @@
 # Cenas 12-gol · 13-hospital · 14-festa — 18 imagens de uma vez
 
-**O que é:** um pedido único para o Gemini gerar as 18 imagens das cenas 12-gol, 13-hospital, 14-festa, seis cortes de cabelo por cena.
+Um pedido único para o Gemini gerar os seis cortes de cada cena: 12-gol · 13-hospital · 14-festa.
 
-**Como usar**
-1. Abra uma conversa **nova** no Gemini.
-2. Opcional, para aproximar o traço do lote 1: anexe `cenas/04-penalti/curto/imagem.jpeg` e acrescente no fim do texto colado: `Use the attached image only as a reference for the painting style. Do not copy its scene.`
-3. Cole tudo o que está dentro do bloco "Prompt" e envie.
-4. Se ele parar antes da imagem 18, responda `Continue with the next image.` até completar.
-5. Salve cada imagem na pasta da tabela abaixo, com o nome `imagem.jpeg`.
+**Como usar cada pedido**
+1. Abra uma conversa **nova** no Gemini para cada pedido (não reaproveite a conversa do pedido anterior).
+2. Opcional, para aproximar o traço do lote 1: anexe `cenas/04-penalti/curto/imagem.jpeg` e acrescente no fim do texto colado: `Use the attached image only as a reference for the painting style. Do not copy its scene.` (não use nos troféus).
+3. Cole tudo o que está dentro do bloco do pedido e envie.
+4. Se ele parar antes da última imagem, responda `Continue with the next image.` até completar.
+5. Salve cada imagem na pasta indicada na tabela do pedido, com o nome `imagem.jpeg`.
 
-**Onde salvar cada imagem**
+## Índice
 
-| # | Pasta (dentro de `docs/arte/cenas/`) | Cena | Corte |
+| Pedido | Conteúdo | Imagens |
+|--:|---|--:|
+| 1 | 12-gol · 13-hospital · 14-festa | 18 |
+
+## Pedido 1 — 12-gol · 13-hospital · 14-festa
+
+**Onde salvar cada imagem** (pastas dentro de `docs/arte/`)
+
+| # | Pasta | Cena | Corte |
 |--:|---|---|---|
-| 1 | `12-gol/curto/` | Gol | Curto |
-| 2 | `12-gol/cacheado-medio/` | Gol | Cacheado médio |
-| 3 | `12-gol/liso-medio/` | Gol | Liso médio |
-| 4 | `12-gol/cacheado-grande/` | Gol | Cacheado grande |
-| 5 | `12-gol/liso-grande/` | Gol | Liso grande |
-| 6 | `12-gol/careca/` | Gol | Careca |
-| 7 | `13-hospital/curto/` | Hospital | Curto |
-| 8 | `13-hospital/cacheado-medio/` | Hospital | Cacheado médio |
-| 9 | `13-hospital/liso-medio/` | Hospital | Liso médio |
-| 10 | `13-hospital/cacheado-grande/` | Hospital | Cacheado grande |
-| 11 | `13-hospital/liso-grande/` | Hospital | Liso grande |
-| 12 | `13-hospital/careca/` | Hospital | Careca |
-| 13 | `14-festa/curto/` | Festa | Curto |
-| 14 | `14-festa/cacheado-medio/` | Festa | Cacheado médio |
-| 15 | `14-festa/liso-medio/` | Festa | Liso médio |
-| 16 | `14-festa/cacheado-grande/` | Festa | Cacheado grande |
-| 17 | `14-festa/liso-grande/` | Festa | Liso grande |
-| 18 | `14-festa/careca/` | Festa | Careca |
-
-## Prompt
+| 1 | `cenas/12-gol/curto/` | Gol | Curto |
+| 2 | `cenas/12-gol/cacheado-medio/` | Gol | Cacheado médio |
+| 3 | `cenas/12-gol/liso-medio/` | Gol | Liso médio |
+| 4 | `cenas/12-gol/cacheado-grande/` | Gol | Cacheado grande |
+| 5 | `cenas/12-gol/liso-grande/` | Gol | Liso grande |
+| 6 | `cenas/12-gol/careca/` | Gol | Careca |
+| 7 | `cenas/13-hospital/curto/` | Hospital | Curto |
+| 8 | `cenas/13-hospital/cacheado-medio/` | Hospital | Cacheado médio |
+| 9 | `cenas/13-hospital/liso-medio/` | Hospital | Liso médio |
+| 10 | `cenas/13-hospital/cacheado-grande/` | Hospital | Cacheado grande |
+| 11 | `cenas/13-hospital/liso-grande/` | Hospital | Liso grande |
+| 12 | `cenas/13-hospital/careca/` | Hospital | Careca |
+| 13 | `cenas/14-festa/curto/` | Festa | Curto |
+| 14 | `cenas/14-festa/cacheado-medio/` | Festa | Cacheado médio |
+| 15 | `cenas/14-festa/liso-medio/` | Festa | Liso médio |
+| 16 | `cenas/14-festa/cacheado-grande/` | Festa | Cacheado grande |
+| 17 | `cenas/14-festa/liso-grande/` | Festa | Liso grande |
+| 18 | `cenas/14-festa/careca/` | Festa | Careca |
 
 ````
 You will generate 18 SEPARATE images in this conversation. Start from a clean slate: ignore everything from any earlier conversation.
@@ -49,7 +55,7 @@ RULES FOR THE WHOLE JOB
 2. Each image is a separate, complete, full-size picture in vertical 4:5 format. Never combine images into one picture: no grid, no collage, no contact sheet, no split screen, no character sheet, no before-and-after.
 3. Treat each prompt as independent. For each image, use only the text of its own prompt. Never carry an object, a person or a background from one scene into another scene.
 4. Inside one scene, the ONLY difference between its 6 images is the hair of the main character. Keep the room or place, the camera, the pose, the other people, the colours and the painting style as close as possible across those 6 images.
-5. When the scene changes (after images 6 and 12), start that scene fresh from its own prompt.
+5. When the scene changes (after image number: 6 and 12), start that scene fresh from its own prompt.
 6. Before each image, write one short line outside the image with its number and file name, exactly as given in its heading, for example: "Image 1 of 18 - 12-gol__curto.jpeg".
 7. If you cannot generate all 18 in one reply, generate as many as you can and stop. When I write "Continue with the next image.", carry on from the next number. Never start again from image 1 and never skip a number.
 
@@ -862,9 +868,9 @@ After image 18, write: "All 18 images done." If any image was skipped or could n
 
 ## Conferência (nota para revisão humana)
 
-- [ ] 18 imagens separadas, nenhuma em grade ou colagem, todas em 4:5 e na resolução maior
-- [ ] Ordem dos cortes em cada cena: curto, cacheado médio, liso médio, cacheado grande, liso grande, careca
+- [ ] Imagens separadas, nenhuma em grade ou colagem, na resolução maior
+- [ ] Em cada cena, os cortes na ordem: curto, cacheado médio, liso médio, cacheado grande, liso grande, careca
 - [ ] Dentro de cada cena, só o cabelo muda
 - [ ] Nenhum distintivo, listra, logo ou texto em roupa, objeto ou parede
 - [ ] Traço pintado, sem contorno preto grosso
-- [ ] Cada imagem passa na conferência do `prompt.md` da sua pasta
+- [ ] Troféus: desenho original, não lembra o troféu real
