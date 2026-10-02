@@ -614,6 +614,87 @@ After the sixth image, write: "All 6 images done." If any image was skipped, say
 '''
 
 
+def multi_md(scenes):
+    """Várias cenas numa conversa só (o Gemini aceita até 20 imagens por pedido): 6 cortes por cena."""
+    total = len(scenes) * len(CUTS)
+    nl = '\n'
+    blocks, table, i = [], [], 0
+    for s in scenes:
+        for cut in CUTS:
+            i += 1
+            table.append(f"| {i} | `{s['folder']}/{cut}/` | {s['nome']} | {CUTS[cut][0]} |")
+            blocks.append(f"=============== IMAGE {i} OF {total} — scene: {s['folder']} — hair: {cut} — file name: {s['folder']}__{cut}.jpeg ===============\n"
+                          + scene_prompt(s, cut).strip('`').strip())
+    summary = nl.join(f"- Images {k * 6 + 1} to {k * 6 + 6}: scene \"{s['folder']}\". {s['setting'].split('.')[0]}." for k, s in enumerate(scenes))
+    names = ', '.join(s['folder'] for s in scenes)
+    changes = ' and '.join(str(k * 6) for k in range(1, len(scenes)))
+    return f"""# Cenas {' · '.join(s['folder'] for s in scenes)} — {total} imagens de uma vez
+
+**O que é:** um pedido único para o Gemini gerar as {total} imagens das cenas {names}, seis cortes de cabelo por cena.
+
+**Como usar**
+1. Abra uma conversa **nova** no Gemini.
+2. Opcional, para aproximar o traço do lote 1: anexe `cenas/04-penalti/curto/imagem.jpeg` e acrescente no fim do texto colado: `Use the attached image only as a reference for the painting style. Do not copy its scene.`
+3. Cole tudo o que está dentro do bloco "Prompt" e envie.
+4. Se ele parar antes da imagem {total}, responda `Continue with the next image.` até completar.
+5. Salve cada imagem na pasta da tabela abaixo, com o nome `imagem.jpeg`.
+
+**Onde salvar cada imagem**
+
+| # | Pasta (dentro de `docs/arte/cenas/`) | Cena | Corte |
+|--:|---|---|---|
+{nl.join(table)}
+
+## Prompt
+
+````
+You will generate {total} SEPARATE images in this conversation. Start from a clean slate: ignore everything from any earlier conversation.
+
+WHAT THIS JOB IS
+A set of illustrations for a mobile football career game. There are {len(scenes)} different scenes, and each scene is painted 6 times, once for each hairstyle of the main character:
+{summary}
+The 6 hairstyles always come in this order: curto (short), cacheado-medio (medium curly), liso-medio (medium straight), cacheado-grande (long curly), liso-grande (long straight), careca (bald).
+
+RULES FOR THE WHOLE JOB
+1. Generate exactly {total} images, one for each prompt below, in the order given: image 1, then image 2, and so on up to image {total}.
+2. Each image is a separate, complete, full-size picture in vertical 4:5 format. Never combine images into one picture: no grid, no collage, no contact sheet, no split screen, no character sheet, no before-and-after.
+3. Treat each prompt as independent. For each image, use only the text of its own prompt. Never carry an object, a person or a background from one scene into another scene.
+4. Inside one scene, the ONLY difference between its 6 images is the hair of the main character. Keep the room or place, the camera, the pose, the other people, the colours and the painting style as close as possible across those 6 images.
+5. When the scene changes (after images {changes}), start that scene fresh from its own prompt.
+6. Before each image, write one short line outside the image with its number and file name, exactly as given in its heading, for example: "Image 1 of {total} - {scenes[0]['folder']}__curto.jpeg".
+7. If you cannot generate all {total} in one reply, generate as many as you can and stop. When I write "Continue with the next image.", carry on from the next number. Never start again from image 1 and never skip a number.
+
+RULES THAT APPLY TO EVERY IMAGE
+A. PAINTING STYLE. Semi-realistic painted illustration: soft blended shading, visible brush texture and only very thin, subtle linework. Not a comic, not a cartoon, no thick black outlines, no cel shading. All {total} images must look painted by the same artist.
+B. THE MAIN CHARACTER IS SEEN FROM BEHIND. His face is never visible. He is horizontally centred and is the largest figure in the image.
+C. THE BACK OF HIS SHIRT IS EMPTY AND UNCOVERED from the shoulders to the waist: one smooth, evenly lit surface. No number, no name, no print, and no arm, hand, strap, chair back, person or object in front of it. Software will write a number there afterwards.
+D. KEY COLOURS. Bright magenta is used only for the football shirt (and the shirts of team-mates, when the prompt mentions team-mates). Cyan is used only for football shorts and socks, and only when the prompt asks for them. Software will recolour these two colours afterwards, so nothing else in the image may be magenta, pink, purple or cyan.
+E. EVERYONE ELSE IS NEUTRAL. Crowds, flags, opponents and bystanders are in light grey, mid grey, navy, beige or off-white, exactly as each prompt says.
+F. PLAIN CLOTHES AND OBJECTS. No badge, crest, emblem, logo, brand mark, sponsor or stripes on any clothing or object: shirts, tracksuits, jackets, coats, polo shirts, boots, trainers, balls, bags, glasses, speakers, screens and walls are completely plain.
+G. NO WRITING. No text, letters, numbers, signs, labels, captions or watermarks anywhere inside any image. Papers, screens and boards are blank.
+H. THE LOWER 40% IS DARK AND EMPTY. In every image the bottom 40% fades into deep navy shadow with no people, no objects and no detail, because interface panels will cover it. The main character and all the action stay in the upper 60%.
+I. ORIGINAL PEOPLE. Every person is an original fictional character who does not resemble any real person.
+
+{(nl + nl).join(blocks)}
+
+=============== END OF THE {total} PROMPTS ===============
+After image {total}, write: "All {total} images done." If any image was skipped or could not be generated, say exactly which numbers.
+````
+
+## Conferência (nota para revisão humana)
+
+- [ ] {total} imagens separadas, nenhuma em grade ou colagem, todas em 4:5 e na resolução maior
+- [ ] Ordem dos cortes em cada cena: curto, cacheado médio, liso médio, cacheado grande, liso grande, careca
+- [ ] Dentro de cada cena, só o cabelo muda
+- [ ] Nenhum distintivo, listra, logo ou texto em roupa, objeto ou parede
+- [ ] Traço pintado, sem contorno preto grosso
+- [ ] Cada imagem passa na conferência do `prompt.md` da sua pasta
+"""
+
+
+MULTI = [['12-gol', '13-hospital', '14-festa']]  # até 20 imagens por pedido: 3 cenas × 6 cortes
+
+
 def write(path, text):
     full = os.path.join(HERE, path)
     os.makedirs(os.path.dirname(full), exist_ok=True)
@@ -635,4 +716,8 @@ write('abertura/prompt.md', OPENING); n += 1
 for base, scenes in (('cenas', LOTE3 + LOTE4), ('cenas-goleiro', GK)):
     for s in scenes:
         write(f"{base}/{s['folder']}/prompt-6-cortes.md", batch_md(s)); n += 1
+by_folder = {s['folder']: s for s in LOTE3 + LOTE4}
+for group in MULTI:
+    nums = '-'.join(f[:2] for f in group)
+    write(f'cenas/prompt-{len(group) * len(CUTS)}-imagens-cenas-{nums}.md', multi_md([by_folder[f] for f in group])); n += 1
 print(n, 'arquivos')
