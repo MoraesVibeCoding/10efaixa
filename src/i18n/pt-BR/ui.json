@@ -1,0 +1,16 @@
+{
+ "decisao": {
+  "progresso": "Progresso da carreira",
+  "idade": "{idade} anos",
+  "anos": "anos",
+  "opcoes": "O que você faz?",
+  "semPrevia": "Sem efeito imediato",
+  "previa": ": {sentido} {intensidade}",
+  "jeito": "Jeito",
+  "seuJeito": "Seu jeito",
+  "perfis": "{rotulo}: {perfis}"
+ },
+ "amostra": {
+  "clube": "clube do coração"
+ }
+}

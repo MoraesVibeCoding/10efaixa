@@ -1,4 +1,4 @@
-import { applyOption, autoChoice, eligibleEvents, pickEvent, validateEvents } from './events';
+import { applyOption, autoChoice, eligibleEvents, pickEvent, temperamentsFor, validateEvents } from './events';
 import { createPrng } from './prng';
 import raw from '../data/events.json';
 import scenes from '../data/scenes.json';
@@ -10,6 +10,8 @@ const ctx = (over: Record<string, number | string | boolean> = {}) => ({
   moral: 0.5, relacaoTecnico: 0.6, idolatria: 10, idolatriaCoracao: 0, patrimonio: 0, salarioFator: 1,
   pedirSaida: false, irParaRival: false, aceitarProposta: false, ...over,
 });
+
+const ALL_TEMPERAMENTS = ['frio', 'esquentado', 'lider', 'resenha'];
 
 describe('motor de eventos e dilemas (T25)', () => {
   it('catálogo válido: toda cena existe, campos conhecidos, políticas apontam para opções', () => {
@@ -72,5 +74,12 @@ describe('motor de eventos e dilemas (T25)', () => {
       expect(t.titulo).toBeTruthy();
       for (const o of e.opcoes) expect(t.opcoes[o.id as keyof typeof t.opcoes]).toBeTruthy();
     }
+  });
+
+  it('temperamentos de cada opção: quem a escolheria sozinho; o padrão fica com os que não têm regra própria', () => {
+    expect(temperamentsFor('proposta-coracao', 'aceitar-por-amor', ALL_TEMPERAMENTS)).toEqual(['lider', 'resenha']);
+    expect(temperamentsFor('proposta-coracao', 'aceitar', ALL_TEMPERAMENTS)).toEqual(['frio', 'esquentado']);
+    expect(temperamentsFor('proposta-coracao', 'recusar', ALL_TEMPERAMENTS)).toEqual([]);
+    for (const tmp of ALL_TEMPERAMENTS) expect(temperamentsFor('proposta-coracao', autoChoice('proposta-coracao', tmp), ALL_TEMPERAMENTS)).toContain(tmp);
   });
 });

@@ -90,4 +90,8 @@ export function autoChoice(eventId: string, temperament: string): string {
   return p.temperamento?.[temperament] ?? p.padrao;
 }
 
+/** Temperamentos que escolheriam esta opção sozinhos (a política do evento): é o "jeito" a que a opção remete na tela de decisão. */
+export const temperamentsFor = (eventId: string, optionId: string, all: string[]): string[] =>
+  all.filter((tmp) => autoChoice(eventId, tmp) === optionId);
+
 export const sceneOf = (eventId: string) => BY_ID.get(eventId)!.cena;

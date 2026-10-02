@@ -29,7 +29,8 @@
   "opcoes": {
    "pedir-saida": "Pedir para sair",
    "ficar": "Ficar e esperar"
-  }
+  },
+  "texto": "Dois meses sem ver a cor do dinheiro. O elenco está dividido e a diretoria pede paciência."
  },
  "proposta-coracao": {
   "titulo": "O clube do coração chamou",
@@ -37,7 +38,8 @@
    "aceitar": "Aceitar a proposta",
    "aceitar-por-amor": "Jogar por amor (salário menor)",
    "recusar": "Recusar"
-  }
+  },
+  "texto": "O clube que você via da arquibancada ligou. O salário é menor que o das outras propostas, mas a camisa é aquela. Seu empresário torce o nariz; sua mãe já chorou."
  },
  "traicao-coracao": {
   "titulo": "Proposta do rival do seu clube do coração",
