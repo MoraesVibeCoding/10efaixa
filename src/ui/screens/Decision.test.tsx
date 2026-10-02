@@ -89,6 +89,7 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
     expect(within(who).getByText(t('ui.decisao.over'))).toBeInTheDocument();
     const card = within(who).getByText('78').closest('[data-medalha]');
     expect(card).toHaveAttribute('data-medalha', 'platina');
+    expect((card as HTMLElement).style.backgroundImage).toMatch(/platina/);
     expect(within(who).getByText(new RegExp(t('attributes.band.muitoBom')))).toBeInTheDocument();
   });
 

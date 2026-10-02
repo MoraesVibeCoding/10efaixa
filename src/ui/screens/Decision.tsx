@@ -49,6 +49,9 @@ const TITLE_WEIGHT = legacy.titulos.pontos as Record<string, number>;
 const money = (amount: number, currency: string) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency, notation: 'compact', maximumFractionDigits: 1 }).format(amount);
 const MEDALS = tokens.medalha as unknown as Record<string, { nome: string }>;
+// arte pintada de cada cartão (docs/arte/cartoes-over); sem a imagem, vale o degradê dos tokens
+const CARD_ART = import.meta.glob('../../assets/cartoes-over/*.webp', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
+const cardArt = (medal: string) => CARD_ART[`../../assets/cartoes-over/${medal}.webp`];
 const clubOf = (id: string) => CLUBS.find((c) => c.id === id);
 
 /** Títulos agrupados por competição, da mais pesada para a mais leve. */
@@ -153,6 +156,7 @@ function Result({ eventId, optionId, state, onDone }: { eventId: string; optionI
 export function Decision({ eventId, age, progress, scene, player, state = {}, onChoose, onContinue }: DecisionProps) {
   const club = clubOf(player.clubId);
   const band = toBand(player.overall).key;
+  const medal = MEDALS[band]!.nome;
   const [chosen, setChosen] = useState<string | null>(null);
   // o resultado fecha uma vez só, venha do tempo ou do botão
   const done = useRef(false);
@@ -184,7 +188,7 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, on
               <p className="jogador__nome">{player.name}</p>
               <p className="jogador__clube">{t('ui.decisao.clubePosicao', { posicao: t(`positions.${player.position}`), clube: club?.nome ?? '' })}</p>
             </div>
-            <p className="over" data-medalha={MEDALS[band]!.nome}>
+            <p className="over" data-medalha={medal} style={cardArt(medal) ? { backgroundImage: `url(${cardArt(medal)})` } : undefined}>
               <span className="over__rotulo">
                 {t('ui.decisao.over')}
                 <span className="sr-only">{t('ui.decisao.faixaOver', { faixa: t(`attributes.band.${band}`) })}</span>
