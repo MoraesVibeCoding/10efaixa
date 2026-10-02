@@ -1,6 +1,6 @@
 # 10eFaixa — Especificação do Produto (SPEC.md)
 
-> Versão 2.26 (figurinha do jogador, tarja de risco, álbum da carreira e emblemas originais dos clubes) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
+> Versão 2.28 (papel em campo, minutos e nível do clube na proposta, momento e "isso vai pesar" nas decisões, decisões por ritmo e catálogo ampliado) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
 > Este documento é a fonte da verdade para o Claude Code. Nenhuma mudança de escopo sem atualizar este arquivo primeiro.
 
 ---
@@ -109,6 +109,8 @@ O arquétipo define a **distribuição dos pontos** entre os atributos e **1 tra
 | Goleiro | Paredão | Marcos | Reflexo, posicionamento | Milagre |
 | Goleiro | Goleiro-líbero | Rogério Ceni | Jogo com os pés, saída do gol | Saída rápida + cobrador latente |
 | Goleiro | Pegador de pênalti | Taffarel | Reflexo, Mental | Pegador de pênalti |
+
+**Papel em campo (v2.28):** o arquétipo é **como o jogador nasceu** (distribuição e traço, fixos); o **papel em campo** é **como o técnico o usa**. Começa igual ao arquétipo e pode virar outro arquétipo **da mesma posição** (ex.: 10 clássico usado como Regente) por troca de técnico, pela reunião com a comissão (6.5) ou por evento próprio ("O novo técnico quer você mais recuado"). Fora do papel de origem: **menos minutos no início** e **bônus de evolução nos destaques do novo papel**, que somem com a adaptação (semestres no papel). Aparece como selo na figurinha ("10 clássico · jogando de Regente"). Na mudança de posição (6.6) o papel recomeça na posição nova. Números em dados, calibrados na 9.3. Não altera atributos diretamente nem o traço.
 
 **Bola parada para goleiro:** o Goleiro-líbero nasce com o traço latente "Cobrador". Com "Bola parada" como foco de treino, evolui ao longo das temporadas; desbloqueado, vira cobrador de faltas e pênaltis e os gols contam na carreira. Outros goleiros podem tentar, com evolução bem mais lenta. Conquista: "Goleiro artilheiro".
 
@@ -255,6 +257,8 @@ visibilidade = overall + forma + minutos
 
 **Propostas e janelas:** cada proposta mostra clube, liga, salário, **papel prometido** (titular, rodízio, aposta) e qualidade da comissão. Opções: aceitar, recusar, mandar o empresário negociar (pode melhorar ou sumir), forçar saída (dinheiro, risco de virar vilão). Inclui a **tentação do dinheiro fácil** (ligas fora do eixo: muito salário, pouca visibilidade).
 
+**Minutos e nível do clube na proposta (v2.28):** cada proposta mostra, **em faixa de texto e sem número**, os **minutos previstos** (pelo papel prometido e o nível do jogador no elenco, `minutes.json`; "muitos minutos", "rodízio", "poucos minutos") e o **nível do clube** (pela reputação). Legenda: "os dois pesam na sua evolução". É a regra que já existe em 6.4: **mais minutos, mais evolução** (`fatorMinutos`), mas **clube de nível baixo evolui menos** (`qualidadeComissão`). Os minutos são previsão, não promessa: podem mudar com forma, lesão e técnico.
+
 **Vida fora de campo:** comprar a casa da família, festas, investir. Afeta patrimônio, moral e disciplina.
 
 ### 6.13 Dilemas e eventos de carreira
@@ -271,6 +275,12 @@ visibilidade = overall + forma + minutos
 | Mudança de posição | Ver 6.6 | Estende carreira, muda overall |
 
 Para quem veio da várzea ou peneira, "clube formador" = primeiro clube profissional.
+
+**Momento e consequência (v2.28):**
+- **Selo de momento na cena:** semestre + momento do calendário ("1º semestre · Estadual", "Janela do meio do ano", "Reta final do Brasileirão"). Campo `momento` nos dados do evento; o motor escolhe um coerente com o semestre (6.8). Sem "rodada": o motor simula por semestre.
+- **"Isso vai pesar":** quando a opção escolhida mexe num medidor que outra parte do motor lê, o resultado diz **onde** pesa (relação com o técnico → "vai pesar na próxima reunião com a comissão"; disciplina → "a Seleção vai lembrar disso"; idolatria → "a torcida não esquece"). Mapa medidor → frase em dados; teste garante que todo medidor citado é lido pelo motor.
+- **Efeitos do resultado com setas, sem número** ("Minutos ↑", "Valor ↓", "Moral ↓").
+- **Catálogo e repetição:** um evento não se repete na mesma carreira, salvo os recorrentes marcados nos dados (janela, renovação, lesão).
 
 ### 6.14 Aposentadoria
 
@@ -298,6 +308,8 @@ A carreira termina no primeiro destes gatilhos:
 
 **Rótulos (1 principal no cartão, raridade comum → lendária):** Ídolo de um clube só, Rodado (6+ clubes), Rei do estadual, Carrasco de clássico, Torcedor que virou ídolo, Diamante da várzea, Oriundo campeão, Goleiro artilheiro, Craque esquecido, Ganhou muito e gastou tudo, Aposentadoria tranquila, Herói da Copa, Vilão da Copa e o mais raro: **10eFaixa**. Quem não conquista nenhum recebe um **rótulo de reserva** (Operário da bola, Casca-grossa ou Boleiro raiz), para todo cartão ter rótulo (v2.14).
 
+**Honrarias (v2.28):** conquistas de carreira com nome bem-humorado, escritas pelo projeto, **zoando só o próprio jogador** (ex.: "Rodou mais que mala de rodoviária" por 6+ clubes, "Fiel até o último contrato" por um clube só); critérios e textos em dados, nomes passam pelo filtro de palavras; aparecem no álbum da carreira e no cartão final.
+
 **Tom:** manchete **séria** + comentário com **zoeira**, sempre mirando o próprio jogador, nunca clubes, torcidas ou pessoas reais.
 > Exemplo: **"Do terrão de Madureira à faixa de capitão no Maracanã"** — *Perna ruim? Nunca vimos. Folga? Também não.*
 
@@ -311,9 +323,12 @@ A carreira termina no primeiro destes gatilhos:
 
 | Ritmo | Duração alvo | Decisões |
 |---|---|---|
-| Rápido | ~5 min | Só momentos-chave; reunião automática |
-| Normal | ~15 min | Momentos-chave + reunião anual |
-| Completo | livre | Todas as reuniões e dilemas |
+| Rápido | ~5 min | Só momentos-chave (**até 1 por temporada**); reunião automática |
+| Normal | ~20 min | **2 a 3 decisões por temporada** + reunião anual |
+| Completo | livre | **Pelo menos 6 decisões por temporada** (3 por semestre) + todas as reuniões e dilemas |
+
+- **v2.28:** quantidade por temporada em dados (`flow.json`), por ritmo. Normal passa de ~15 para ~20 min pelo número maior de decisões. Fora do Completo, os eventos que não aparecem são decididos pela escolha automática do temperamento (como no Rápido).
+- **Virada de temporada:** resumo curto (posição final e troféus) que se pula com um toque; no Rápido fecha sozinho.
 
 - **Salvamento automático a cada temporada**, com versão do schema e migração. Uma carreira ativa por vez.
 - Save corrompido ou incompatível: mensagem clara e opção de recomeçar, sem travar o jogo.
@@ -551,6 +566,7 @@ Cada tarefa é atômica, com teste escrito antes do código e **um commit por ta
 | ID | Tarefa | Critério de aceitação |
 |---|---|---|
 | T25 | Motor de eventos e dilemas (cada evento aponta para uma cena) | Condições e efeitos determinísticos; evento sem cena falha no teste |
+| T25b | Catálogo ampliado de eventos (v2.28) | **Pelo menos 80 eventos** escritos com a skill `10efaixa-narrativa`, em lotes de ~15 aprovados pelo usuário; todo evento com `momento` e cena; inclui os que faltam da v2.23 (peneira, primeiro contrato, estreia, banco, convocação, exterior, aposentadoria) e os de papel em campo; nenhum evento repete na carreira salvo os recorrentes; nenhuma opção domina outra (`narrative.test.ts`) ⛳ por lote |
 | T26 | Empresário | 3 perfis; eventos; troca com custo |
 | T27 | Contratos, bicho, multa e renovação | Moedas corretas; patrimônio em R$; € 1 = R$ 6,00 configurável |
 | T28 | Valor de mercado, salários, propostas e janelas | Faixas com fonte e data; salário como % do valor |
@@ -596,11 +612,12 @@ Cada tarefa é atômica, com teste escrito antes do código e **um commit por ta
 | T49c | Figurinha e novo layout da decisão (v2.26) | Figurinha com fundo de faixas do clube e recorte de álbum no lugar da caixa do jogador; opções com tarja de risco (palavra e medidor de 4 segmentos, faixa de `preview.json`); "Álbum da carreira" com conquistas e espaços vazios; computador em duas colunas; rótulos sem caixa alta; contraste AA conferido por teste; **sem rolagem a partir de 390×844** nos 25 eventos; em tela mais baixa a rolagem é aceita, sem opção cortada pela metade (v2.27) ⛳ |
 | T49d | Emblemas dos clubes (v2.26) | Emblemas originais de Flamengo, Santos, Palmeiras e Coritiba em SVG provisório (completo e simplificado) e escudo genérico para os demais; prompts dos 20 da Série A em `docs/arte/emblemas/`; nenhum elemento de escudo oficial (checklist por clube) |
 | T50 | Telas de criação (aparência, biotipo, temperamento, comemoração, filtro) | Operáveis por teclado e leitor de tela; faixa de altura por posição |
-| T51 | Tela de semestre/temporada e decisões com cena | Uma decisão por tela; cena ao fundo; só faixas e estrelas |
+| T51 | Tela de semestre/temporada e decisões com cena | Uma decisão por tela; cena ao fundo; só faixas e estrelas; **selo de momento**; resultado com **"isso vai pesar"** e **efeitos em setas**; faixa de competições (liga · copa · continental); cartões de mercado com **minutos previstos e nível do clube em faixa**; resumo da virada de temporada que se pula (v2.28) |
 | T52 | Tela da reunião com a comissão | Foco principal e secundário; resposta exibida |
-| T53 | Ritmos Rápido, Normal e Completo | Durações dentro das metas em E2E cronometrado |
+| T52b | Papel em campo (v2.28, 6.2) | Papel começa igual ao arquétipo; muda só para arquétipo da mesma posição (técnico, reunião ou evento); menos minutos e bônus de evolução enquanto se adapta, em dados; selo na figurinha; recomeça na mudança de posição; save migrado; simulação da 9.3 sem desvio de auge por posição |
+| T53 | Ritmos Rápido, Normal e Completo | Durações dentro das metas em E2E cronometrado; decisões por temporada da 6.16 (Rápido até 1, Normal 2–3, Completo ≥ 6) lidas de `flow.json` |
 | T54 | Save e load versionados | Invariante de save da 9.2 |
-| T55 | Geração do cartão 1080×1350 | Avatar no auge, radar de 10 atributos, elementos da 6.15, texto alternativo ⛳ |
+| T55 | Geração do cartão 1080×1350 | Avatar no auge, radar de 10 atributos, elementos da 6.15 (com as honrarias da v2.28), texto alternativo ⛳ |
 | T56 | Compartilhamento com fallback | Nativo quando suportado; download; texto para WhatsApp |
 | T57 | Desafio diário | Mesma semente do dia; sem ranking online |
 | T58 | Apoio (Apoia.se), aviso legal e página de privacidade | Botão só na tela de resultado |
@@ -760,3 +777,4 @@ Decisões aprovadas durante a implementação. Complementam as seções acima.
 | 2026-10-02 | T49 | **Arte dos cartões do Over** gerada pelo usuário (6 imagens em `docs/arte/cartoes-over/`) e em uso na tela: recortadas para a face do cartão e reduzidas para 256×256 em `src/assets/cartoes-over/`. Bronze e esmeralda saíram mais escuros que o previsto, então o número é branco neles (e no diamante); nos outros três, escuro | Legibilidade medida no centro de cada arte: contraste mediano de 5 ou mais em todas. O ouro veio com margem branca e a esmeralda sobre fundo preto com um "1" solto na borda: os dois saem no recorte |
 | 2026-09-30 | T14 | Sedes reais conferidas: Copa 2026 (EUA, Canadá, México), 2030 (Marrocos, Portugal, Espanha + centenário), 2034 (Arábia Saudita) — FIFA; Olimpíadas 2028 LA, 2032 Brisbane — COI. Demais sedes sorteadas por semente | Fontes e data em src/data/calendar.json |
 | 2026-09-30 | T14 | **Não verificado:** a CONMEBOL não anunciou a próxima Copa América masculina; ciclo assumido a cada 4 anos a partir de 2028 ("entre as Copas", 6.11). Sedes futuras repetem as 5 últimas reais em ordem (2015 Chile, 2016 EUA, 2019 Brasil, 2021 Brasil, 2024 EUA), decisão do usuário. Janelas de transferência modeladas por momento do semestre; datas exatas a conferir na T28 | Marcado `verificado: false` no JSON; revisar quando houver anúncio oficial |
+| 2026-10-02 | v2.28 | **Ideias do copero.net incorporadas** (`docs/referencias/copero-net-observacoes.md`; aprovadas pelo usuário): (1) proposta mostra **minutos previstos e nível do clube em faixa**: a regra já existia na 6.4 (mais minutos, mais evolução; clube fraco, menos evolução) e agora aparece na escolha; (2) **selo de momento** na cena; (3) **"isso vai pesar"** no resultado, dizendo onde a escolha pesa; (6) **papel em campo** junto com o arquétipo (6.2, T52b). Também: efeitos em setas, faixa de competições, resumo da virada que se pula e **honrarias bem-humoradas** (6.15). **Decisões por temporada** (pedido do usuário): Completo ≥ 6, Normal 2–3, Rápido até 1; Normal passa a ~20 min. Para não repetir, **catálogo ampliado para ≥ 80 eventos** (T25b) | No copero.net o modo narrativo teve ~6 decisões por temporada e 116 eventos distintos numa carreira; com os 25 eventos atuais, 6 por temporada repetiriam cada evento ~5 vezes. |
