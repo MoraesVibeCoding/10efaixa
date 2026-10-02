@@ -25,7 +25,7 @@ export function Emblema({ clubId, size, label = false }: { clubId: string; size:
       role={label ? 'img' : undefined} aria-label={label ? name : undefined} aria-hidden={label ? undefined : true}
     >
       <img src={src} alt="" width={size} height={size} />
-      {id === 'generico' && version === 'completo' && <span className="emblema__sigla" aria-hidden="true">{sigla}</span>}
+      {id === 'generico' && version === 'completo' && <span className="emblema__sigla" aria-hidden="true" style={{ fontSize: Math.round(size * 0.24) }}>{sigla}</span>}
     </span>
   );
 }

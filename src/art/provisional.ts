@@ -190,7 +190,7 @@ const FLAME = 'M50 16c4 12 16 18 14 34-1 10-8 16-14 18-8-2-15-9-14-20 1-9 7-12 8
 const HEX = 'M50 4 92 28v44L50 96 8 72V28z';
 const EMBLEM: Record<string, { completo: string; simples: string }> = {
   flamengo: {
-    completo: `<path d="${SHIELD}" fill="${K.u2}"/><path d="M14 74 86 52v8L14 82zM20 88 82 66v6L28 92z" fill="${K.u1}"/><path d="${FLAME}" fill="${K.u1}"/>`
+    completo: `<clipPath id="flamengo-escudo"><path d="${SHIELD}"/></clipPath><path d="${SHIELD}" fill="${K.u2}"/><g clip-path="url(#flamengo-escudo)"><path d="M0 76 100 50v8L0 84zM0 90 100 64v7L0 97z" fill="${K.u1}"/></g><path d="${FLAME}" fill="${K.u1}"/>`
       + `<path d="M50 38c3 6 8 9 7 17-1 5-4 8-7 9-4-1-7-5-7-10 0-5 4-7 5-11 1 2 1 4 3 5 0-3-2-6-1-10z" fill="${P.cal}"/><path d="${SHIELD}" fill="none" stroke="${K.u1}" stroke-width="6"/>`,
     simples: `<path d="${SHIELD}" fill="${K.u2}" stroke="${K.u1}" stroke-width="9"/><path d="${FLAME}" fill="${K.u1}"/>`,
   },

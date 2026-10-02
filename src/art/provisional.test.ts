@@ -62,3 +62,19 @@ describe('arte provisória (T47)', () => {
   });
 });
 
+
+describe('prompts dos emblemas (T49d)', () => {
+  it('todo clube da Série A tem prompt em docs/arte/emblemas, com o que evitar e o aviso de conferir; sem pedir texto ou estrela', async () => {
+    const { readFileSync, existsSync } = await import('node:fs');
+    const clubs = (await import('../data/clubs.json')).default.clubs.filter((c: { divisao: string | null }) => c.divisao === 'A');
+    expect(clubs).toHaveLength(20);
+    for (const c of clubs as { id: string }[]) {
+      const path = `docs/arte/emblemas/${c.id}/prompt.md`;
+      expect(existsSync(path), path).toBe(true);
+      const md = readFileSync(path, 'utf8');
+      expect(md, c.id).toContain('**Evitar');
+      expect(md, c.id).toContain('**Conferir antes de gerar:**');
+      expect(md, c.id).toContain('No letters, no numbers, no text, no stars');
+    }
+  });
+});

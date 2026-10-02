@@ -5,7 +5,6 @@
   position: absolute;
   inset-block-start: 38%;
   font-family: var(--fonte-titulo);
-  font-size: 0.95rem;
   font-weight: 900;
   line-height: 1;
   color: var(--cor-texto);
