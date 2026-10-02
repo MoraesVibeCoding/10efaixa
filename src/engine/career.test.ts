@@ -84,6 +84,7 @@ describe('integração da carreira (T24b)', () => {
   });
 
   it('uma carreira em menos de 150 ms no teste (meta do SPEC: 50 ms no CI, medida no relatório)', () => {
+    simulateCareer(input(), 0); // aquece: a primeira chamada mede a compilação do motor, não a carreira
     const t0 = performance.now();
     simulateCareer(input(), 1);
     expect(performance.now() - t0).toBeLessThan(150);

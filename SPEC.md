@@ -1,6 +1,6 @@
 # 10eFaixa — Especificação do Produto (SPEC.md)
 
-> Versão 2.13 (arte: cenas com o jogador de costas, 6 cortes de cabelo e troca de cor por código) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
+> Versão 2.14 (rótulos de reserva, vereditos redistribuídos, prévia de consequências nas decisões e tema escuro nas telas com cena) · Status: **aprovado para implementação**. Todas as decisões de produto e design estão fechadas.
 > Este documento é a fonte da verdade para o Claude Code. Nenhuma mudança de escopo sem atualizar este arquivo primeiro.
 
 ---
@@ -296,7 +296,7 @@ A carreira termina no primeiro destes gatilhos:
 
 **Prêmios (nomes descritivos):** Melhor do Mundo, Craque da Copa, Artilheiro, Seleção do Campeonato, Revelação, Craque do Brasileirão, Craque do Estadual.
 
-**Rótulos (1 principal no cartão, raridade comum → lendária):** Ídolo de um clube só, Rodado (6+ clubes), Rei do estadual, Carrasco de clássico, Torcedor que virou ídolo, Diamante da várzea, Oriundo campeão, Goleiro artilheiro, Craque esquecido, Ganhou muito e gastou tudo, Aposentadoria tranquila, Herói da Copa, Vilão da Copa e o mais raro: **10eFaixa**.
+**Rótulos (1 principal no cartão, raridade comum → lendária):** Ídolo de um clube só, Rodado (6+ clubes), Rei do estadual, Carrasco de clássico, Torcedor que virou ídolo, Diamante da várzea, Oriundo campeão, Goleiro artilheiro, Craque esquecido, Ganhou muito e gastou tudo, Aposentadoria tranquila, Herói da Copa, Vilão da Copa e o mais raro: **10eFaixa**. Quem não conquista nenhum recebe um **rótulo de reserva** (Operário da bola, Casca-grossa ou Boleiro raiz), para todo cartão ter rótulo (v2.14).
 
 **Tom:** manchete **séria** + comentário com **zoeira**, sempre mirando o próprio jogador, nunca clubes, torcidas ou pessoas reais.
 > Exemplo: **"Do terrão de Madureira à faixa de capitão no Maracanã"** — *Perna ruim? Nunca vimos. Folga? Também não.*
@@ -571,6 +571,7 @@ Cada tarefa é atômica, com teste escrito antes do código e **um commit por ta
 | T39 | Prêmios | Nomes descritivos |
 | T40 | Nota de legado, veredito e rótulos | Pesos da 6.15; sanidade 9.3 ⛳ |
 | T41 | Manchetes e comentários (com apelido e comemoração) | Manchete séria + zoeira sobre o próprio jogador ⛳ |
+| T41b | Prévia de consequências por opção de decisão (estilo Copero) | Cada opção informa, em faixas e estrelas, os efeitos prováveis (minutos, espaço no elenco, salário, contrato); nenhum número de atributo; requisito da T51 |
 
 ### Marco 5 — Avatar, cenas e arte
 | ID | Tarefa | Critério de aceitação |
@@ -727,5 +728,10 @@ Decisões aprovadas durante a implementação. Complementam as seções acima.
 | 2026-10-01 | Arte (v2.13) | **Geração:** Gemini (Nano Banana 2), manual, pelo plano Google AI Pro do usuário; a API fica como alternativa quando o faturamento for ativado. Uniforme gerado em magenta (camisa) e ciano (calção e meião), torcida e bandeiras em cinza, para a troca por código. Estilo aprovado: o traço das 5 cenas de teste. Um prompt por pasta em `docs/arte/` | ~175 imagens: 25 cenários × 6 cortes, 6 retratos, 18 troféus, 1 abertura; mais as versões de goleiro |
 | 2026-10-01 | Arte (v2.13) | **Uniformes:** `src/data/kits.json` com padrão e cores dos 20 clubes da Série A (lisa, listras verticais, listras finas, faixas horizontais, listras diagonais, faixa diagonal, faixa no peito); demais clubes usam camisa lisa nas cores de clubs.json. **Goleiro:** um uniforme só para todos os clubes — rosa, manga longa, luvas laranja. Das imagens de referência só entram padrão e cores: nenhum escudo, patrocinador, marca de fornecedor nem aparência de pessoa real | Referência do usuário em docs/referencias/camisas-serie-a-2026-10-01.jpg |
 | 2026-10-01 | Arte (v2.13) | **Pendente:** termos de uso comercial das imagens geradas no aplicativo Gemini e validação jurídica antes do lançamento; retrabalho do código de arte (T43b–T45b) para o novo formato: máscaras de troca por cena, pele, cabelo, padrões de uniforme e número; T42b (lote piloto) considerada cumprida pelas 5 cenas de teste | O protótipo de troca de cor é só de teste (docs/arte-teste/teste-troca-de-cor.py) |
+| 2026-10-01 | T40 (v2.14) | **Rótulos de reserva** (decisão do usuário): quem não conquista nenhum dos 14 rótulos recebe o primeiro que couber de `rotulosReserva` em `legacy.json`: Operário da bola (700+ jogos), Casca-grossa (18+ anos de carreira), Boleiro raiz (sem requisito). Raridade comum; nunca aparecem junto de um rótulo conquistado; cada um tem comentário próprio | Antes, ~30% dos cartões saíam sem rótulo |
+| 2026-10-01 | T40 (v2.14) | **Vereditos redistribuídos** (decisão do usuário: "espalhar o meio"): Ídolo de clube passa a pedir nota 22 e idolatria ≥ 55 (era 26 e 75); Titular de Série A passa a pedir 10+ temporadas na elite (era 8). O topo não muda. Novo critério no relatório: nenhuma faixa acima de 35% | Titular de Série A era 47,9% das carreiras; números novos em docs/simulacao-legado.md |
+| 2026-10-01 | T41b (v2.14) | **Estilo Copero confirmado** (decisão do usuário): prévia em faixas e estrelas das consequências prováveis de cada opção, e tela de "o que aconteceu" depois da escolha. Vira a T41b, antes da T51 | Só mecânica; nada do Copero é copiado |
+| 2026-10-01 | T49 (v2.14) | **Tema** (decisão do usuário): escuro nas telas com cena (decisão, temporada, veredito, cartão); as telas de formulário seguem a preferência do aparelho (`prefers-color-scheme`) | Combina com os 40% de baixo escuros das cenas |
+| 2026-10-01 | T41b | Prévia em `src/engine/preview.ts`: para cada opção, os efeitos numéricos viram **campo + sentido (sobe, desce, muda) + intensidade (1 a 3)**, pela fração do efeito sobre a faixa do campo (limites em `src/data/preview.json`). Escolhas que são a própria ação (aceitar, renovar, operar) não entram. Proposta de clube: minutos previstos pelo papel (titular, rodízio, aposta), salário em faixa contra o atual (menor, parecido, maior, muito maior) e anos de contrato. Textos em `i18n/pt-BR/preview.json` | Nenhum número de atributo nem valor exato aparece; a tela é da T51 |
 | 2026-09-30 | T14 | Sedes reais conferidas: Copa 2026 (EUA, Canadá, México), 2030 (Marrocos, Portugal, Espanha + centenário), 2034 (Arábia Saudita) — FIFA; Olimpíadas 2028 LA, 2032 Brisbane — COI. Demais sedes sorteadas por semente | Fontes e data em src/data/calendar.json |
 | 2026-09-30 | T14 | **Não verificado:** a CONMEBOL não anunciou a próxima Copa América masculina; ciclo assumido a cada 4 anos a partir de 2028 ("entre as Copas", 6.11). Sedes futuras repetem as 5 últimas reais em ordem (2015 Chile, 2016 EUA, 2019 Brasil, 2021 Brasil, 2024 EUA), decisão do usuário. Janelas de transferência modeladas por momento do semestre; datas exatas a conferir na T28 | Marcado `verificado: false` no JSON; revisar quando houver anúncio oficial |

@@ -141,12 +141,12 @@
   },
   {
    "id": "idoloDeClube",
-   "notaMin": 26,
+   "notaMin": 22,
    "condicoes": [
     [
      "idolatriaMax",
      ">=",
-     75
+     55
     ]
    ]
   },
@@ -157,7 +157,7 @@
     [
      "temporadasElite",
      ">=",
-     8
+     10
     ]
    ]
   },
@@ -389,5 +389,35 @@
     ]
    ]
   }
- ]
+ ],
+ "rotulosReserva": [
+  {
+   "id": "operarioDaBola",
+   "raridade": "comum",
+   "condicoes": [
+    [
+     "jogos",
+     ">=",
+     700
+    ]
+   ]
+  },
+  {
+   "id": "cascaGrossa",
+   "raridade": "comum",
+   "condicoes": [
+    [
+     "anos",
+     ">=",
+     18
+    ]
+   ]
+  },
+  {
+   "id": "boleiroRaiz",
+   "raridade": "comum",
+   "condicoes": []
+  }
+ ],
+ "_notaReserva": "rotulosReserva (v2.14): só para quem não conquistou nenhum rótulo; o primeiro que couber. O último não tem requisito, para todo cartão ter rótulo."
 }

@@ -117,6 +117,15 @@
     ],
     "rodado": [
       "{apelido} rodou tanto que a comemoração “{comemoracao}” já tem sotaque de vários cantos do país."
+    ],
+    "operarioDaBola": [
+      "{apelido} bateu ponto em tanto jogo que a comemoração “{comemoracao}” virou hora extra."
+    ],
+    "cascaGrossa": [
+      "{apelido} durou mais que muito gramado, e a comemoração “{comemoracao}” envelheceu junto, sem reclamar."
+    ],
+    "boleiroRaiz": [
+      "{apelido} não ganhou apelido de craque, mas a comemoração “{comemoracao}” nunca faltou ao serviço."
     ]
   }
 }

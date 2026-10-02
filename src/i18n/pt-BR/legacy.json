@@ -23,7 +23,10 @@
   "carrascoDeClassico": "Carrasco de clássico",
   "reiDoEstadual": "Rei do estadual",
   "aposentadoriaTranquila": "Aposentadoria tranquila",
-  "rodado": "Rodado"
+  "rodado": "Rodado",
+  "operarioDaBola": "Operário da bola",
+  "cascaGrossa": "Casca-grossa",
+  "boleiroRaiz": "Boleiro raiz"
  },
  "raridade": { "comum": "Comum", "incomum": "Incomum", "rara": "Rara", "epica": "Épica", "lendaria": "Lendária" }
 }

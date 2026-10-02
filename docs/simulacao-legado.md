@@ -7,6 +7,7 @@
 | --- | --: | --: | --: |
 | "Lenda mundial" | 0.47% | ≤ 1% | ✅ |
 | Faixas de veredito que aparecem | 8 de 8 | 8 | ✅ |
+| Maior faixa de veredito | 30.0% | ≤ 35% | ✅ |
 | Auge, todas as origens | 5.1 · 10.4 · 59.7 · 24.2 | 5 · 10 · 60 · 25 (±2) | ✅ |
 | Auge, baseGrande | 5.2 · 10.5 · 60.6 · 23.5 | 5 · 10 · 60 · 25 (±2) | ✅ |
 | Auge, peneira | 4.4 · 10.8 · 58.8 · 25.2 | 5 · 10 · 60 · 25 (±2) | ✅ |
@@ -14,23 +15,23 @@
 | Diamante bruto (várzea) | 3.0% | 2% a 4% | ✅ |
 | Idade média de aposentadoria por origem | 35.2 · 35.2 · 35.3 | 30 a 39 | ✅ |
 | "Lenda do futebol brasileiro" ou mais, por posição | 4.8 · 5.6 · 5.1 · 6.1 · 6.6 · 6.5 | comparável (menor ≥ metade da maior) | ✅ |
-| Tempo por carreira | 21.0 ms | < 50 ms | ✅ |
+| Tempo por carreira | 38.3 ms | < 50 ms | ✅ |
 
 Altura (efeito mensurável e equilibrado): medida no relatório da T13, `docs/simulacao-T13.md`.
 
 ## Veredito (% das carreiras)
 | Grupo | lendaMundial | lendaDoFutebolBrasileiro | craqueDaSelecao | idoloDeClube | titularDeSerieA | promessaQueNaoVingou | rodadoDoInterior | jogadorDeSerieB | Nota média |
 | --- | --: | --: | --: | --: | --: | --: | --: | --: | --: |
-| todas | 0.5% | 5.3% | 4.8% | 10.2% | 47.9% | 12.0% | 7.1% | 12.2% | 29.2 |
-| baseGrande | 0.6% | 5.7% | 4.7% | 9.2% | 49.8% | 21.5% | 2.1% | 6.4% | 29.6 |
-| peneira | 0.3% | 4.6% | 4.5% | 10.5% | 47.9% | 8.4% | 8.5% | 15.3% | 28.6 |
-| varzea | 0.5% | 5.7% | 5.2% | 11.0% | 45.9% | 6.2% | 10.6% | 15.0% | 29.4 |
-| goleiro | 0.3% | 4.5% | 4.8% | 8.9% | 45.0% | 6.6% | 11.7% | 18.3% | 27.2 |
-| zagueiro | 0.4% | 5.2% | 5.1% | 8.9% | 47.5% | 9.5% | 9.3% | 14.1% | 28.7 |
-| lateral | 0.4% | 4.7% | 4.8% | 8.0% | 48.0% | 11.6% | 8.6% | 13.9% | 27.8 |
-| volante | 0.6% | 5.5% | 4.5% | 11.0% | 48.9% | 13.3% | 5.5% | 10.8% | 29.7 |
-| meia | 0.6% | 6.0% | 4.6% | 11.3% | 49.3% | 14.4% | 4.7% | 9.1% | 30.1 |
-| atacante | 0.5% | 6.0% | 5.0% | 13.5% | 48.5% | 16.8% | 2.6% | 7.2% | 31.7 |
+| todas | 0.5% | 5.3% | 4.8% | 23.7% | 30.0% | 12.6% | 9.5% | 13.7% | 29.2 |
+| baseGrande | 0.6% | 5.7% | 4.7% | 21.5% | 33.5% | 22.8% | 3.1% | 8.2% | 29.6 |
+| peneira | 0.3% | 4.6% | 4.5% | 24.5% | 29.2% | 8.7% | 11.4% | 16.8% | 28.6 |
+| varzea | 0.5% | 5.7% | 5.2% | 25.1% | 27.2% | 6.4% | 13.9% | 16.1% | 29.4 |
+| goleiro | 0.3% | 4.5% | 4.8% | 20.7% | 26.7% | 7.1% | 15.3% | 20.6% | 27.2 |
+| zagueiro | 0.4% | 5.2% | 5.1% | 22.2% | 29.1% | 10.1% | 12.2% | 15.7% | 28.7 |
+| lateral | 0.4% | 4.7% | 4.8% | 20.2% | 30.0% | 12.4% | 11.8% | 15.7% | 27.8 |
+| volante | 0.6% | 5.5% | 4.5% | 24.7% | 30.8% | 14.1% | 7.6% | 12.3% | 29.7 |
+| meia | 0.6% | 6.0% | 4.6% | 25.6% | 32.1% | 15.0% | 6.1% | 10.0% | 30.1 |
+| atacante | 0.5% | 6.0% | 5.0% | 28.8% | 31.1% | 16.9% | 3.8% | 7.8% | 31.7 |
 
 ## Componentes da nota (média, 0–1) por posição
 | Posição | selecao | titulos | premios | numeros | idolatria | longevidade |
@@ -59,7 +60,9 @@ Altura (efeito mensurável e equilibrado): medida no relatório da T13, `docs/si
 | reiDoEstadual | 25.4% | 18.3% |
 | aposentadoriaTranquila | 41.2% | 21.3% |
 | rodado | 29.1% | 10.7% |
-| (nenhum rótulo) | 30.3% | — |
+| operarioDaBola | 13.7% | 13.7% |
+| cascaGrossa | 5.9% | 5.9% |
+| boleiroRaiz | 10.7% | 10.7% |
 
 ## Diagnóstico: do teto ao auge
 | Grupo | Teto (potencial) | Auge | Teto − auge | Idade do auge | Minutos 16–24 | Minutos na carreira | Convocado para a principal | Prêmios (média) | Títulos (média) |
