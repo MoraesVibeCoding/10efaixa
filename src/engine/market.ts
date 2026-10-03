@@ -65,6 +65,8 @@ const WINDOW_POOLS = {
   europa: [...EUROPE.map((c) => c.id), ...europe.outros.clubs.map((c) => c.id)],
 };
 const OFF_IDS = europe.foraDoEixo.clubs.map((c) => c.id);
+/** Todo clube que o mercado pode oferecer (a tela precisa do nome de cada um). */
+export const MARKET_CLUB_IDS = [...WINDOW_POOLS.brasil, ...WINDOW_POOLS.europa, ...OFF_IDS];
 
 function makeOffer(p: MarketPlayer, id: string, agent: Agent, rng: Prng, div: DivOf | undefined, offAxis: boolean): Offer {
   const league = leagueOf(id, div);

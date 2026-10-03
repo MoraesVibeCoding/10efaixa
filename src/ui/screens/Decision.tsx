@@ -6,11 +6,11 @@ import type { AvatarSpec } from '../../art/avatar';
 import trophyArt from '../../data/trophyArt.json';
 import { ATTRIBUTES, toBand, type Attributes } from '../../engine/attributes';
 import bands from '../../data/bands.json';
-import { CLUBS } from '../../engine/clubs';
 import { applyOption, type Ctx } from '../../engine/events';
 import { outcomeOf, outcomeVerdict, previewOf, riskOf, RISK_BANDS, timeOutOf, type Outcome, type Preview, type Risk } from '../../engine/preview';
 import previewCfg from '../../data/preview.json';
 import { t } from '../../i18n';
+import { clubName } from './clubText';
 import { Emblema } from './Emblema';
 import { Figurinha } from './Figurinha';
 import './Decision.css';
@@ -68,7 +68,6 @@ function Arrows({ sentido, intensidade }: Pick<Preview, 'sentido' | 'intensidade
 const TITLE_WEIGHT = legacy.titulos.pontos as Record<string, number>;
 const money = (amount: number, currency: string) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency, notation: 'compact', minimumFractionDigits: 0, maximumFractionDigits: 1 }).format(amount);
-const clubOf = (id: string) => CLUBS.find((c) => c.id === id);
 
 /** Títulos agrupados por competição, da mais pesada para a mais leve. */
 function rankTitles(titles: string[]) {
@@ -212,7 +211,7 @@ function Career({ player, onClose }: { player: DecisionProps['player']; onClose:
                 {seasons.map((s) => (
                   <tr key={s.age}>
                     <td>{s.age}</td>
-                    <td><span className="trajetoria__clube"><Emblema clubId={s.clubId} size={20} />{clubOf(s.clubId)?.nome}</span></td>
+                    <td><span className="trajetoria__clube"><Emblema clubId={s.clubId} size={20} />{clubName(s.clubId).nome}</span></td>
                     <td>{s.overall}</td>
                   </tr>
                 ))}
