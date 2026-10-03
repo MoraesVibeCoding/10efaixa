@@ -165,5 +165,15 @@
    "varzea": "Começa no time do bairro até um olheiro aparecer. Sai de trás, mas cresce mais rápido e pode ser um diamante bruto.",
    "teto": "O teto é o mesmo para todos: a origem muda o caminho, não o destino."
   }
- }
+ },
+ "fim": {
+  "titulo": "Fim de carreira",
+  "veredito": "Veredito",
+  "apelido": "Apelido: {apelido}",
+  "clubes": "Clubes",
+  "titulos": "Títulos",
+  "nenhumTitulo": "Nenhum título na carreira.",
+  "novaCarreira": "Nova carreira"
+ },
+ "varzea": "time da várzea"
 }

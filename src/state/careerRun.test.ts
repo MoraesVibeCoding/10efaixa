@@ -46,6 +46,11 @@ describe('motor interativo (T51a)', () => {
     expect(v.seasons.length).toBe(v.year - 2026); // temporadas já fechadas; a idade anda de meio em meio ano
     // valor de mercado em € (v2.33): a mesma regra do mercado, com o efeito Seleção (que só aumenta)
     expect(v.marketValueEUR).toBeGreaterThanOrEqual(marketValue(v.overall, v.age));
+    // T51 (b): o que a tela mostra vem daqui — salário do mês, número da camisa e atributos (na tela, só em faixas)
+    expect(v.monthlySalary.amount).toBeGreaterThanOrEqual(0);
+    expect(['BRL', 'EUR']).toContain(v.monthlySalary.currency);
+    expect(v.number).toBeGreaterThanOrEqual(1);
+    expect(Object.keys(v.attributes)).toHaveLength(10);
   });
 
   it('respondendo sempre o automático, a carreira termina igual à simulada', () => {

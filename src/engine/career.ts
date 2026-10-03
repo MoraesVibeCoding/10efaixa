@@ -73,6 +73,12 @@ export interface DecisionView {
   year: number; age: number; clubId: string | null; position: Position; overall: number; role: Role; temperament: string;
   /** Valor de mercado em € (v2.33): a regra do mercado, com o efeito Seleção. */
   marketValueEUR: number;
+  /** Salário do mês pelo contrato atual (sem contrato, na várzea: zero). */
+  monthlySalary: { amount: number; currency: 'BRL' | 'EUR' };
+  /** Número da camisa no clube atual. */
+  number: number;
+  /** Atributos de agora; a tela mostra só em faixas (CLAUDE.md). */
+  attributes: EvoState['attributes'];
   /** Estado que o evento lê e muda (moral, idolatria, patrimônio...), já com o que aconteceu neste semestre. */
   state: Record<string, number | string | boolean>;
   seasons: CareerResult['seasons']; titles: Title[];
@@ -169,6 +175,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   const ask = (eventId: string, state: Record<string, number | string | boolean> = {}, who = temp) => decide(eventId, who, () => ({
     year: curYear, age: evo.age, clubId, position, overall: ov(evo), role: curRole, temperament: who,
     marketValueEUR: Math.round(marketValue(ov(evo), evo.age) * selectionEffect(prestige, sel, sel.rung).marketMultiplier),
+    monthlySalary: contract ? { amount: Math.round(contract.annualSalary / 12), currency: contract.currency } : { amount: 0, currency: 'BRL' },
+    number: spells.at(-1)?.number ?? input.shirtNumber, attributes: { ...evo.attributes },
     state: {
       moral: morale, disciplina: discipline, relacaoTecnico: coachRelation, patrimonio: wealth, salarioFator: 1,
       idolatria: clubId ? idol[clubId] ?? 0 : 0, idolatriaCoracao: input.heartClub ? idol[input.heartClub] ?? 0 : 0, ...state,

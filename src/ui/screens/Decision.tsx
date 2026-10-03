@@ -340,7 +340,7 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, ri
   }, [overlay, career, onDone]);
 
   return (
-    <main className="decisao" data-tema="claro" data-resultado={chosen === null ? 'fechado' : 'aberto'}>
+    <main className="decisao" data-tema="claro" data-evento={eventId} data-resultado={chosen === null ? 'fechado' : 'aberto'}>
       <img className="decisao__cena" src={scene.src} alt={scene.alt} width={SCENE_SIZE[0]} height={SCENE_SIZE[1]} fetchPriority="high" inert={overlay} />
       <div
         inert={overlay} className="faixa" role="progressbar" aria-label={t('ui.decisao.progresso')}
@@ -373,7 +373,7 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, ri
             const out = timeOutOf(eventId, o.id);
             return (
               <button
-                key={o.id} type="button" className="opcao" aria-pressed={chosen === o.id} disabled={chosen !== null && chosen !== o.id}
+                key={o.id} type="button" className="opcao" data-opcao-id={o.id} aria-pressed={chosen === o.id} disabled={chosen !== null && chosen !== o.id}
                 onClick={() => { if (chosen === null) { setChosen(o.id); onChoose?.(o.id); } }}
               >
                 {risk && <RiskBanner risk={risk} />}
