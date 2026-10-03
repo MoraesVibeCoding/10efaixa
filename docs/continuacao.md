@@ -1,11 +1,11 @@
 # Continuação: estado do projeto e próximos passos
 
-Atualizado em 2026-10-02. Leia antes de continuar numa sessão nova. A fonte da verdade continua sendo o `SPEC.md`, hoje na **v2.33**, e as regras de trabalho estão no `CLAUDE.md`.
+Atualizado em 2026-10-03. Leia antes de continuar numa sessão nova. A fonte da verdade continua sendo o `SPEC.md`, hoje na **v2.33**, e as regras de trabalho estão no `CLAUDE.md`.
 
 ## Onde estamos
 
 - **Branch de trabalho:** `marco-6-produto-bvkf7j`. Tudo enviado ao GitHub.
-- **Verificação:** 741 testes, typecheck e build passando.
+- **Verificação:** 751 testes, typecheck e build passando.
 - **Feito no Marco 6:**
   - **T48:** máquina de estados das telas.
   - **T49, T49b, T49c e T49d:** visual, acessibilidade, figurinha, layout da decisão e emblemas.
@@ -13,10 +13,15 @@ Atualizado em 2026-10-02. Leia antes de continuar numa sessão nova. A fonte da 
   - **T51 (a):** o motor para em cada decisão. `src/state/careerRun.ts` refaz a carreira com as escolhas já feitas, porque o motor é determinístico. O save será criação + semente + escolhas.
   - **v2.32:** competições com nomes não oficiais (`src/i18n/pt-BR/competitions.json`), com teste de guarda.
   - **v2.33:** valor de mercado em € nos selos da decisão.
+  - **T51 (b):** o jogo roda de ponta a ponta: criação → carreira com as decisões (`Career`, `careerView.ts`) → resumo do fim com "Nova carreira". O `App` deixou de ser a amostra da T49. A cena ainda é a amostra (assinatura de contrato) em toda decisão.
 
-## Próximo passo: T51 (b)
+## Próximo passo: T51 (resto)
 
-Ligar o app de ponta a ponta: abertura → criação (`Creation`) → carreira com as decisões (`Decision`, alimentada por `runUntilDecision`) → resumo simples no fim. Hoje o `App.tsx` ainda mostra a amostra da decisão da T49.
+Pendências anotadas na T51 (b):
+- **Abertura, sorteio e ritmo** (fluxo da T48) ainda não têm tela: hoje "Voltar" no 1º passo e "Nova carreira" voltam à criação limpa.
+- **Bundle** principal com 534 kB (171 kB gzip): passou do aviso de 500 kB ao trazer o motor; dividir na tarefa de desempenho.
+- **favicon.ico** dá 404 (já antes da T51 b); entra com os ícones.
+- Nomes "Copa nacional" (copa de liga estrangeira) e "Copa Nacional" (Brasil) podem aparecer juntos no resumo; vale rever os nomes.
 
 Depois, na ordem:
 1. **T51:** selo de momento, "isso vai pesar", efeitos em setas, faixa de competições, cartões de mercado com minutos e nível em faixa (o mercado ainda é automático: `chooseOffer` em `career.ts`), resumo da virada de temporada.
