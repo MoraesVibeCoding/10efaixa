@@ -26,6 +26,8 @@ export interface ChoicesProps {
   /** Frase sobre a opção escolhida (efeito, traço); vira descrição do grupo. */
   hint?: string | null;
   variant?: 'faixa' | 'campo' | 'cartoes' | 'miniaturas';
+  /** Grupo de cores sem o nome visível da escolhida (tom de pele: só a cor); o nome continua para o leitor de tela. */
+  semNome?: boolean;
 }
 
 /** Opção marcada de um grupo de cores (só grupos com amostra mostram o nome ao lado do rótulo). Função declarada: o guarda do i18n lê "=>" entre tags JSX como texto solto. */
@@ -40,10 +42,10 @@ function describedBy(id: string, error: string | null, hint: string | null) {
   return ids || undefined;
 }
 
-export function Choices({ id, name, legend, options, value, onChange, error = null, hint = null, variant = 'faixa' }: ChoicesProps) {
+export function Choices({ id, name, legend, options, value, onChange, error = null, hint = null, variant = 'faixa', semNome = false }: ChoicesProps) {
   const list = useRef(null as HTMLDivElement | null);
   useEffect(() => { revealChecked(list.current); }, [value]);
-  const chosen = chosenSwatch(options, value);
+  const chosen = semNome ? undefined : chosenSwatch(options, value);
   return (
     <div className={`escolhas escolhas--${variant}`}>
       <span className="escolhas__cabeca">

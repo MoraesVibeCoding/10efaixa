@@ -147,16 +147,19 @@ describe('criação (T50, v2.30)', () => {
       expect(screen.getByRole('status')).toHaveTextContent(new RegExp(t('creation.hairStyle.black-power'), 'i'));
     });
 
-    it('grupos de cor mostram o nome da escolhida sob o rótulo e acompanham a escolha (sem ocupar linha nova)', () => {
+    it('grupos de cor (cabelo, faixa, chuteira) mostram o nome da escolhida sob o rótulo; o tom de pele mostra só a cor', () => {
       const { container } = toVisual();
       const shown = (k: string) => group(k).closest('.escolhas')!.querySelector('.escolhas__escolhida');
-      expect(shown('aparencia.pele')).toHaveTextContent(t(`creation.skin.${checkedIn('aparencia.pele')[0]}`));
-      const other = within(group('aparencia.pele')).getAllByRole('radio').find((r) => !(r as HTMLInputElement).checked)!;
+      expect(shown('aparencia.corDoCabelo')).toHaveTextContent(t(`creation.hairColor.${checkedIn('aparencia.corDoCabelo')[0]}`));
+      const other = within(group('aparencia.corDoCabelo')).getAllByRole('radio').find((r) => !(r as HTMLInputElement).checked)!;
       fireEvent.click(other);
-      expect(shown('aparencia.pele')).toHaveTextContent(t(`creation.skin.${(other as HTMLInputElement).value}`));
-      expect(shown('aparencia.pele')).toHaveAttribute('aria-hidden', 'true');
+      expect(shown('aparencia.corDoCabelo')).toHaveTextContent(t(`creation.hairColor.${(other as HTMLInputElement).value}`));
+      expect(shown('aparencia.corDoCabelo')).toHaveAttribute('aria-hidden', 'true');
       // o nome do grupo para o leitor de tela continua só o rótulo
-      expect(screen.getByRole('radiogroup', { name: t('ui.criacao.aparencia.pele') })).toBeInTheDocument();
+      expect(screen.getByRole('radiogroup', { name: t('ui.criacao.aparencia.corDoCabelo') })).toBeInTheDocument();
+      // tom de pele: só a cor (decisão do usuário), mas o nome continua para o leitor de tela
+      expect(group('aparencia.pele').closest('.escolhas')!.querySelector('.escolhas__escolhida')).toBeNull();
+      expect(within(group('aparencia.pele')).getAllByRole('radio').every((r) => (r as HTMLInputElement).labels![0]!.textContent!.length > 0)).toBe(true);
       // barba (texto, não cor) não ganha o nome repetido
       expect(group('aparencia.barba').closest('.escolhas')!.querySelector('.escolhas__escolhida')).toBeNull();
       expect(container.querySelectorAll('.escolhas__escolhida').length).toBeGreaterThan(0);

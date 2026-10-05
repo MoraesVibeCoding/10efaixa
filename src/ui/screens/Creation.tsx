@@ -290,7 +290,7 @@ function LookSection({ c }: { c: StepCtx }) {
       </div>
       {groups.map((g) => (
         <Choices key={g.key} id={`${ids}-${g.key}`} name={g.key} legend={t(`ui.criacao.aparencia.${g.legend}`)} options={g.options}
-          value={look[g.key] ?? NONE} onChange={(v) => set(g.key, v)} />
+          value={look[g.key] ?? NONE} onChange={(v) => set(g.key, v)} semNome={g.key === 'skin'} />
       ))}
     </section>
   );
