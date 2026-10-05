@@ -1,5 +1,6 @@
 import type { AvatarSpec } from '../../art/avatar';
 import avatarData from '../../data/avatar.json';
+import visuaisData from '../../data/visuais.json';
 import type { Prng } from '../../engine/prng';
 
 // T50 (SPEC 6.17, v2.30): o visual do jogador na criação. Só visual: nunca entra em CreationInput nem no motor.
@@ -34,4 +35,13 @@ export function previewAvatar(look: Look): AvatarSpec {
 /** Próximo item da lista em círculo (`step` de -1 a 1): depois do último vem o primeiro, e antes do primeiro vem o último. */
 export function cycle<T>(list: readonly T[], current: T, step: number): T {
   return list[(list.indexOf(current) + step + list.length) % list.length]!;
+}
+
+/** Os 10 visuais prontos da criação (SPEC v2.36): id, número ("Visual N") e as peças da arte provisória. */
+export const VISUAIS = visuaisData.visuais as unknown as { id: string; n: number; look: Look }[];
+export const visualOf = (id: string) => VISUAIS.find((v) => v.id === id)!;
+export const lookOf = (id: string): Look => visualOf(id).look;
+/** Visual inicial sorteado pelo PRNG com semente: mesma semente, mesmo visual. */
+export function randomVisual(rng: Prng): string {
+  return VISUAIS[rng.int(0, VISUAIS.length - 1)]!.id;
 }

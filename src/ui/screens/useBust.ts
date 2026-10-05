@@ -21,17 +21,3 @@ export function useBust(avatar: AvatarSpec | undefined, clubId: string) {
   }, [avatar, clubId]);
   return avatar ? uri : null;
 }
-
-/** Vários bustos de uma vez (miniaturas), na mesma ordem; `null` enquanto cada um não carrega. */
-export function useBusts(avatars: readonly AvatarSpec[], clubId: string) {
-  const [uris, setUris] = useState([] as (string | null)[]);
-  const key = JSON.stringify(avatars);
-  useEffect(() => {
-    let alive = true;
-    void Promise.all(avatars.map((a) => bustSvg(dressed(a, clubId)).then(svgUri))).then((all) => { if (alive) setUris(all); });
-    return () => { alive = false; };
-    // `avatars` muda de identidade a cada render; a chave por conteúdo evita remontar as miniaturas à toa
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key, clubId]);
-  return avatars.map((_, i) => uris[i] ?? null);
-}

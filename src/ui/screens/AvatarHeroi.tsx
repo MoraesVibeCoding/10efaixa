@@ -1,12 +1,15 @@
-import { cycle, previewAvatar, type Look } from './look';
+import { VISUAIS, cycle, visualOf } from './look';
 import { Choices, type Option } from './Choices';
-import { useBust, useBusts } from './useBust';
 import { t } from '../../i18n';
 import './AvatarHeroi.css';
 
-// T50g (SPEC 7, v2.35): avatar-herói da criação. O busto grande, o nome do cabelo, as setas e a fileira de miniaturas.
-// O cabelo continua um grupo de rádio (as miniaturas): as setas só andam por ele. Só visual: nunca entra no motor.
-export interface AvatarHeroiProps { id: string; look: Look; number: string; styles: readonly string[]; onChange: (hairStyle: string) => void }
+// T50g (SPEC 7, v2.35; v2.36): avatar-herói da criação. A imagem pintada do visual escolhido, o nome ("Visual N"),
+// as setas e a fileira de miniaturas. Os 10 visuais são um grupo de rádio; as setas só andam por ele. Só visual: nunca entra no motor.
+const ART = import.meta.glob('../../assets/visuais/*.webp', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
+const artOf = (id: string) => ART[`../../assets/visuais/${id}.webp`];
+const IDS = VISUAIS.map((v) => v.id);
+
+export interface AvatarHeroiProps { id: string; value: string; number: string; onChange: (visualId: string) => void }
 
 function Chevron({ left }: { left?: boolean }) {
   return (
@@ -16,29 +19,28 @@ function Chevron({ left }: { left?: boolean }) {
   );
 }
 
-export function AvatarHeroi({ id, look, number, styles, onChange }: AvatarHeroiProps) {
-  const bust = useBust(previewAvatar(look), '');
-  const thumbs = useBusts(styles.map((h) => previewAvatar({ ...look, hairStyle: h })), '');
-  const options: Option[] = styles.map((h, i) => ({ id: h, label: t(`creation.hairStyle.${h}`), thumb: thumbs[i] }));
+export function AvatarHeroi({ id, value, number, onChange }: AvatarHeroiProps) {
+  const current = visualOf(value);
+  const options: Option[] = VISUAIS.map((v) => ({ id: v.id, label: t('ui.criacao.visuais.nome', { n: v.n }), thumb: artOf(v.id) ?? null }));
   /** Função declarada (não seta): o guarda do i18n lê "=>" entre tags JSX como texto solto. */
-  function go(step: number) { onChange(cycle(styles, look.hairStyle, step)); }
+  function go(step: number) { onChange(cycle(IDS, value, step)); }
   return (
     <div className="heroi">
       <div className="heroi__palco">
+        <img className="heroi__retrato" src={artOf(value)} alt="" />
         {/^\d{1,2}$/.test(number) ? <span className="heroi__numero" aria-hidden="true">{number}</span> : null}
-        {bust && <img className="heroi__busto" src={bust} alt="" />}
         <div className="heroi__legenda">
           <div>
             <span className="heroi__rotulo">{t('ui.criacao.aparencia.seuAvatar')}</span>
-            <strong className="heroi__nome">{t(`creation.hairStyle.${look.hairStyle}`)}</strong>
+            <strong className="heroi__nome">{t('ui.criacao.visuais.nome', { n: current.n })}</strong>
           </div>
           <div className="heroi__setas">
-            <button type="button" className="heroi__seta" aria-label={t('ui.criacao.aparencia.cabeloAnterior')} onClick={() => go(-1)}><Chevron left /></button>
-            <button type="button" className="heroi__seta" aria-label={t('ui.criacao.aparencia.cabeloProximo')} onClick={() => go(1)}><Chevron /></button>
+            <button type="button" className="heroi__seta" aria-label={t('ui.criacao.visuais.anterior')} onClick={() => go(-1)}><Chevron left /></button>
+            <button type="button" className="heroi__seta" aria-label={t('ui.criacao.visuais.proximo')} onClick={() => go(1)}><Chevron /></button>
           </div>
         </div>
       </div>
-      <Choices id={`${id}-hairStyle`} name="hairStyle" legend={t('ui.criacao.aparencia.cabelo')} options={options} value={look.hairStyle}
+      <Choices id={`${id}-visual`} name="visual" legend={t('ui.criacao.visuais.titulo')} options={options} value={value}
         onChange={onChange} variant="miniaturas" />
     </div>
   );

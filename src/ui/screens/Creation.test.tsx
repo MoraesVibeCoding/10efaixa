@@ -1,8 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import avatarData from '../../data/avatar.json';
 import biotypeData from '../../data/biotype.json';
+import visuais from '../../data/visuais.json';
 import { ARCHETYPES, archetypesFor } from '../../engine/archetypes';
 import { CLUBS } from '../../engine/clubs';
 import { createPlayer } from '../../engine/player';
@@ -112,102 +113,62 @@ describe('criação (T50, v2.30)', () => {
     expect(onExit).toHaveBeenCalledOnce();
   });
 
-  describe('visual (tela própria; sorteado ao abrir, editável)', () => {
+  describe('visual (tela própria; 10 visuais prontos, T50g v2.36)', () => {
     const toVisual = (seed = 7) => { const view = setup(seed); fillIdentity(); advance(); return view; };
-    const LOOK = ['pele', 'cabelo', 'corDoCabelo', 'barba', 'faixa', 'chuteira'].map((k) => `aparencia.${k}`);
-    const snapshot = () => LOOK.map(checkedIn);
+    const LIST = visuais.visuais;
+    const checkedVisual = () => checkedIn('visuais.titulo')[0]!;
+    const arrow = (name: string) => screen.getByRole('button', { name: t(`ui.criacao.visuais.${name}`) });
 
-    it('seis grupos de rádio, cada um com exatamente um valor marcado', () => {
+    it('um grupo de rádio com os 10 visuais ("Visual 1" a "Visual 10"), um marcado, sem nomes de pessoas', () => {
       toVisual();
-      for (const k of LOOK) expect(checkedIn(k)).toHaveLength(1);
-      expect(within(group('aparencia.pele')).getAllByRole('radio')).toHaveLength(avatarData.skinTones.length);
-      expect(within(group('aparencia.cabelo')).getAllByRole('radio')).toHaveLength(avatarData.styles.hair.length);
+      const radios = within(group('visuais.titulo')).getAllByRole('radio');
+      expect(radios.map((r) => (r as HTMLInputElement).value)).toEqual(LIST.map((v) => v.id));
+      for (const v of LIST) expect(within(group('visuais.titulo')).getByRole('radio', { name: t('ui.criacao.visuais.nome', { n: v.n }) })).toBeInTheDocument();
+      expect(checkedIn('visuais.titulo')).toHaveLength(1);
     });
 
-    it('o sorteio inicial vem da semente: mesma semente, mesmo visual', () => {
-      const a = toVisual(42); const first = snapshot(); a.unmount();
+    it('o visual inicial vem da semente: mesma semente, mesmo visual; sementes diferentes variam', () => {
+      const a = toVisual(42); const first = checkedVisual(); a.unmount();
       toVisual(42);
-      expect(snapshot()).toEqual(first);
+      expect(checkedVisual()).toBe(first);
+      cleanup();
+      const seen = new Set<string>();
+      for (let seed = 1; seed <= 12; seed++) { const v = toVisual(seed); seen.add(checkedVisual()); v.unmount(); }
+      expect(seen.size).toBeGreaterThan(1);
     });
 
-    it('"Sortear" fica junto do título do visual e troca o visual; a escolha continua editável', () => {
-      toVisual(42);
-      const before = snapshot();
-      const sortear = screen.getByRole('button', { name: t('ui.criacao.quemE.sortear') });
-      expect(sortear.closest('.criacao__secao')).toHaveTextContent(t('ui.criacao.quemE.visual'));
-      for (let i = 0; i < 5 && JSON.stringify(snapshot()) === JSON.stringify(before); i++) fireEvent.click(sortear);
-      expect(snapshot()).not.toEqual(before);
-      fireEvent.click(within(group('aparencia.barba')).getByRole('radio', { name: t('creation.beard.cavanhaque') }));
-      expect(checkedIn('aparencia.barba')).toEqual(['cavanhaque']);
-    });
-
-    it('a prévia é anunciada ao leitor de tela quando o visual muda', () => {
-      toVisual();
-      fireEvent.click(within(group('aparencia.cabelo')).getByRole('radio', { name: t('creation.hairStyle.black-power') }));
-      expect(screen.getByRole('status')).toHaveTextContent(new RegExp(t('creation.hairStyle.black-power'), 'i'));
-    });
-
-    it('grupos de cor (cabelo, faixa, chuteira) mostram o nome da escolhida sob o rótulo; o tom de pele mostra só a cor', () => {
+    it('o herói mostra a imagem pintada do visual marcado e o nome "Visual N" (a imagem é decorativa)', () => {
       const { container } = toVisual();
-      const shown = (k: string) => group(k).closest('.escolhas')!.querySelector('.escolhas__escolhida');
-      expect(shown('aparencia.corDoCabelo')).toHaveTextContent(t(`creation.hairColor.${checkedIn('aparencia.corDoCabelo')[0]}`));
-      const other = within(group('aparencia.corDoCabelo')).getAllByRole('radio').find((r) => !(r as HTMLInputElement).checked)!;
-      fireEvent.click(other);
-      expect(shown('aparencia.corDoCabelo')).toHaveTextContent(t(`creation.hairColor.${(other as HTMLInputElement).value}`));
-      expect(shown('aparencia.corDoCabelo')).toHaveAttribute('aria-hidden', 'true');
-      // o nome do grupo para o leitor de tela continua só o rótulo
-      expect(screen.getByRole('radiogroup', { name: t('ui.criacao.aparencia.corDoCabelo') })).toBeInTheDocument();
-      // tom de pele: só a cor (decisão do usuário), mas o nome continua para o leitor de tela
-      expect(group('aparencia.pele').closest('.escolhas')!.querySelector('.escolhas__escolhida')).toBeNull();
-      expect(within(group('aparencia.pele')).getAllByRole('radio').every((r) => (r as HTMLInputElement).labels![0]!.textContent!.length > 0)).toBe(true);
-      // barba (texto, não cor) não ganha o nome repetido
-      expect(group('aparencia.barba').closest('.escolhas')!.querySelector('.escolhas__escolhida')).toBeNull();
-      expect(container.querySelectorAll('.escolhas__escolhida').length).toBeGreaterThan(0);
+      const v = LIST.find((x) => x.id === checkedVisual())!;
+      const img = container.querySelector('.heroi__retrato')!;
+      expect(img).toHaveAttribute('src', expect.stringContaining(v.id));
+      expect(img).toHaveAttribute('alt', '');
+      expect(container.querySelector('.heroi')).toHaveTextContent(t('ui.criacao.visuais.nome', { n: v.n }));
     });
 
-    describe('avatar-herói (T50g, v2.35)', () => {
-      const HAIR = avatarData.styles.hair;
-      const hairNow = () => checkedIn('aparencia.cabelo')[0]!;
-      const arrow = (name: string) => screen.getByRole('button', { name: t(`ui.criacao.aparencia.${name}`) });
+    it('as setas passam de um visual ao outro e voltam ao começo no fim da lista (nos dois sentidos)', () => {
+      toVisual();
+      const ids = LIST.map((v) => v.id);
+      const start = ids.indexOf(checkedVisual());
+      fireEvent.click(arrow('proximo'));
+      expect(checkedVisual()).toBe(ids[(start + 1) % ids.length]);
+      fireEvent.click(arrow('anterior'));
+      fireEvent.click(arrow('anterior'));
+      expect(checkedVisual()).toBe(ids[(start - 1 + ids.length) % ids.length]);
+    });
 
-      it('mostra o busto grande, o rótulo "Seu avatar" e o nome do cabelo atual', async () => {
-        const { container } = toVisual();
-        await waitFor(() => expect(container.querySelector('.heroi__busto')).toHaveAttribute('src', expect.stringMatching(/^data:image\/svg\+xml,/)));
-        const heroi = container.querySelector('.heroi')!;
-        expect(heroi).toHaveTextContent(t('ui.criacao.aparencia.seuAvatar'));
-        expect(heroi).toHaveTextContent(t(`creation.hairStyle.${hairNow()}`));
-        expect(container.querySelector('.heroi__busto')).toHaveAttribute('alt', '');
-      });
+    it('escolher uma miniatura atualiza o herói e a frase para o leitor de tela ("Visual N de 10")', () => {
+      const { container } = toVisual();
+      const other = LIST.find((v) => v.id !== checkedVisual())!;
+      fireEvent.click(within(group('visuais.titulo')).getByRole('radio', { name: t('ui.criacao.visuais.nome', { n: other.n }) }));
+      expect(container.querySelector('.heroi__retrato')).toHaveAttribute('src', expect.stringContaining(other.id));
+      expect(screen.getByRole('status')).toHaveTextContent(t('ui.criacao.visuais.descricao', { n: other.n, total: LIST.length }));
+    });
 
-      it('as setas trocam o cabelo em ordem e voltam ao começo no fim da lista (nos dois sentidos)', () => {
-        toVisual();
-        const start = HAIR.indexOf(hairNow());
-        fireEvent.click(arrow('cabeloProximo'));
-        expect(hairNow()).toBe(HAIR[(start + 1) % HAIR.length]);
-        fireEvent.click(arrow('cabeloAnterior'));
-        fireEvent.click(arrow('cabeloAnterior'));
-        expect(hairNow()).toBe(HAIR[(start - 1 + HAIR.length) % HAIR.length]);
-      });
-
-      it('uma miniatura por cabelo, como rádios do mesmo grupo, cada uma com a imagem do penteado', async () => {
-        const { container } = toVisual();
-        const radios = within(group('aparencia.cabelo')).getAllByRole('radio');
-        expect(radios.map((r) => (r as HTMLInputElement).value)).toEqual(HAIR);
-        await waitFor(() => expect(container.querySelectorAll('.escolha__miniatura').length).toBe(HAIR.length));
-        for (const img of container.querySelectorAll('.escolha__miniatura')) expect(img).toHaveAttribute('alt', '');
-      });
-
-      it('escolher uma miniatura atualiza o herói', () => {
-        const { container } = toVisual();
-        const other = HAIR.find((h) => h !== hairNow())!;
-        fireEvent.click(within(group('aparencia.cabelo')).getByRole('radio', { name: t(`creation.hairStyle.${other}`) }));
-        expect(container.querySelector('.heroi')).toHaveTextContent(t(`creation.hairStyle.${other}`));
-      });
-
-      it('o cabelo só existe no herói: não há um segundo grupo de cabelo na tela', () => {
-        toVisual();
-        expect(screen.getAllByRole('radiogroup', { name: t('ui.criacao.aparencia.cabelo') })).toHaveLength(1);
-      });
+    it('não há mais escolha peça por peça nem "Sortear" na tela', () => {
+      toVisual();
+      for (const k of ['pele', 'cabelo', 'corDoCabelo', 'barba', 'faixa', 'chuteira']) expect(screen.queryByRole('radiogroup', { name: t(`ui.criacao.aparencia.${k}`) }), k).toBeNull();
+      expect(screen.queryByRole('button', { name: t('ui.criacao.quemE.sortear') })).toBeNull();
     });
 
     it('a aparência padrão e as chances do sorteio (avatar.json) são válidas', () => {
@@ -350,6 +311,9 @@ describe('tela 3: tipo de início e fim da criação (T50e, v2.30)', () => {
     expect(input).toMatchObject({ name: 'Dudu Maestro', shirtNumber: 10, state: 'BA', heartClub: null, position: 'atacante', archetypeId: 'matador', temperament: 'frio', celebration: 'aviaozinho', origin: 'varzea' });
     for (const k of Object.keys(look)) expect(input).not.toHaveProperty(k);
     expect(look).toHaveProperty('skin');
+    const { visual } = onFinish.mock.calls[0]![0];
+    expect(visuais.visuais.find((v) => v.id === visual)!.look).toEqual(look);
+    expect(input).not.toHaveProperty('visual');
   });
 });
 
@@ -362,7 +326,7 @@ describe('computador (≥ 64rem): identidade e visual juntos (T50e, v2.30; v2.35
     setup();
     expect(screen.getByText(t('ui.criacao.progresso', { passo: 1, total: 3 }))).toBeInTheDocument();
     expect(field('nome')).toBeInTheDocument();
-    expect(group('aparencia.pele')).toBeInTheDocument();
+    expect(group('visuais.titulo')).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: t('ui.criacao.passos.visual') })).toBeInTheDocument();
   });
 

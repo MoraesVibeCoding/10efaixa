@@ -1,6 +1,5 @@
 import { useEffect, useId, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import type { AvatarSpec } from '../../art/avatar';
-import avatarData from '../../data/avatar.json';
 import creationData from '../../data/creation.json';
 import { CLUBS } from '../../engine/clubs';
 import type { CreationInput } from '../../engine/player';
@@ -8,10 +7,10 @@ import { checkName } from '../../engine/nameFilter';
 import { createPrng } from '../../engine/prng';
 import { t } from '../../i18n';
 import { transition, type FlowState } from '../../state/flow';
-import { Choices, NONE, named, swatches, withNone, type Option } from './Choices';
+import { Choices, named } from './Choices';
 import { AvatarHeroi } from './AvatarHeroi';
 import { Figurinha } from './Figurinha';
-import { PICKS, previewAvatar, randomLook, type Look } from './look';
+import { VISUAIS, lookOf, previewAvatar, randomVisual, visualOf, type Look } from './look';
 import { DEFAULT_FIELD, FIELD_ERROR_ORDER, fieldErrors, type OnField } from './onField';
 import { OnFieldStep } from './OnFieldStep';
 import { toCreationInput } from './draft';
@@ -24,7 +23,7 @@ import './Creation.css';
 // Tela 4: tipo de início (origem). No computador, as telas 1 e 2 são uma página só (pages.ts).
 export interface Identity { name: string; number: string; state: string; heartClub: string; celebration: string | null }
 /** O que a criação entrega: o motor recebe só o CreationInput; o visual vai à parte (aparência nunca mexe no jogo). */
-export interface CreationResult { input: CreationInput; look: Look }
+export interface CreationResult { input: CreationInput; look: Look; /** Id do visual escolhido (visuais.json): a arte pintada. `look` são as peças da arte provisória dele. */ visual: string }
 export interface CreationProps {
   onExit: () => void; onFinish: (result: CreationResult) => void;
   /** Semente do sorteio do visual (o desafio diário passa a do dia). */
@@ -54,21 +53,12 @@ function progressText(page: number, total: number) {
   return t('ui.criacao.progresso', { passo: page + 1, total });
 }
 
-/** Frase da prévia para o leitor de tela. */
-function describeLook(look: Look) {
-  return t('ui.criacao.aparencia.descricao', {
-    pele: t(`creation.skin.${look.skin}`).toLowerCase(), cabelo: t(`creation.hairStyle.${look.hairStyle}`).toLowerCase(),
-    cor: t(`creation.hairColor.${look.hairColor}`).toLowerCase(), barba: t(`creation.beard.${look.beard ?? NONE}`).toLowerCase(),
-    faixa: t(`creation.headband.${look.headband ?? NONE}`).toLowerCase(), chuteira: t(`creation.boots.${look.boots}`).toLowerCase(),
-  });
-}
-
 export function Creation({ onExit, onFinish, seed = Date.now() }: CreationProps) {
   const rng = useRef(null as ReturnType<typeof createPrng> | null);
   rng.current ??= createPrng(seed);
   const [flow, setFlow] = useState({ screen: 'criacao', step: 0 } as FlowState);
   const [identity, setIdentity] = useState({ name: '', number: '10', state: '', heartClub: '', celebration: null } as Identity);
-  const [look, setLook] = useState(() => { return randomLook(rng.current!); });
+  const [visualId, setVisualId] = useState(() => { return randomVisual(rng.current!); });
   const [field, setField] = useState(DEFAULT_FIELD);
   const [origin, setOrigin] = useState(null as string | null);
   const [errors, setErrors] = useState({} as Errors);
@@ -79,7 +69,8 @@ export function Creation({ onExit, onFinish, seed = Date.now() }: CreationProps)
   const titleRef = useRef(null as HTMLHeadingElement | null);
   const shown = useRef(pageIndex);
   const ids = useId();
-  const avatar = useMemo(() => { return previewAvatar(look); }, [look]);
+  const look = lookOf(visualId);
+  const avatar = useMemo(() => { return previewAvatar(lookOf(visualId)); }, [visualId]);
 
   // Página nova: o foco vai para o título, e o leitor de tela anuncia onde a pessoa está (não roda na abertura).
   useEffect(() => {
@@ -104,7 +95,7 @@ export function Creation({ onExit, onFinish, seed = Date.now() }: CreationProps)
       e.currentTarget.querySelector<HTMLElement>(`[data-campo="${first}"]`)?.focus();
       return;
     }
-    if (pageIndex === pages.length - 1) { onFinish({ input: toCreationInput(identity, field, origin!), look }); return; }
+    if (pageIndex === pages.length - 1) { onFinish({ input: toCreationInput(identity, field, origin!), look, visual: visualId }); return; }
     goTo(firstStepOf(pages[pageIndex + 1]!), 'AVANCAR');
   };
   const back = () => {
@@ -123,7 +114,7 @@ export function Creation({ onExit, onFinish, seed = Date.now() }: CreationProps)
     setField(next);
   };
   const ctx = {
-    ids, identity, look, avatar, errors, change, setLook, reroll: () => setLook(randomLook(rng.current!)), field, changeField, origin, chooseOrigin,
+    ids, identity, visualId, avatar, errors, change, setVisualId, field, changeField, origin, chooseOrigin,
   };
 
   return (
@@ -145,8 +136,8 @@ export function Creation({ onExit, onFinish, seed = Date.now() }: CreationProps)
 }
 
 interface StepCtx {
-  ids: string; identity: Identity; look: Look; avatar: AvatarSpec; errors: Errors;
-  change: (k: keyof Identity, v: string) => void; setLook: (l: Look) => void; reroll: () => void;
+  ids: string; identity: Identity; visualId: string; avatar: AvatarSpec; errors: Errors;
+  change: (k: keyof Identity, v: string) => void; setVisualId: (id: string) => void;
   field: OnField; changeField: (f: OnField) => void; origin: string | null; chooseOrigin: (v: string) => void;
 }
 
@@ -243,14 +234,13 @@ function IdentityStep({ c }: { c: StepCtx }) {
   );
 }
 
-/** Tela 2 (v2.35): o visual, com a figurinha ao vivo. */
+/** Tela 2 (v2.35; v2.36): escolha entre os 10 visuais prontos, com o avatar-herói. */
 function VisualStep({ c }: { c: StepCtx }) {
+  const n = visualOf(c.visualId).n;
   return (
     <div className="quem">
-      <AvatarHeroi id={c.ids} look={c.look} number={c.identity.number} styles={avatarData.styles.hair}
-        onChange={(hairStyle) => c.setLook({ ...c.look, hairStyle })} />
-      <p className="sr-only" role="status">{describeLook(c.look)}</p>
-      <LookSection c={c} />
+      <AvatarHeroi id={c.ids} value={c.visualId} number={c.identity.number} onChange={c.setVisualId} />
+      <p className="sr-only" role="status">{t('ui.criacao.visuais.descricao', { n, total: VISUAIS.length })}</p>
     </div>
   );
 }
@@ -268,30 +258,5 @@ function ClubOptions({ state }: { state: string }) {
       <optgroup label={t('ui.criacao.quemE.doEstado')}>{BY_NAME.filter((k) => k.uf === state).map(option)}</optgroup>
       <optgroup label={t('ui.criacao.quemE.outros')}>{BY_NAME.filter((k) => k.uf !== state).map(option)}</optgroup>
     </>
-  );
-}
-
-/** Visual (v2.30): na própria tela, sorteado ao abrir, "Sortear" ao lado do título e tudo editável. */
-function LookSection({ c }: { c: StepCtx }) {
-  const { ids, look, setLook } = c;
-  const set = (k: keyof Look, v: string) => setLook({ ...look, [k]: (k === 'beard' || k === 'headband') && v === NONE ? null : v });
-  const groups: { key: keyof Look; legend: string; options: Option[] }[] = [
-    { key: 'skin', legend: 'pele', options: swatches(avatarData.skinTones, 'creation.skin') },
-    { key: 'hairColor', legend: 'corDoCabelo', options: swatches(avatarData.hairColors, 'creation.hairColor') },
-    { key: 'beard', legend: 'barba', options: withNone(named(avatarData.styles.beards, 'creation.beard'), 'creation.beard') },
-    { key: 'headband', legend: 'faixa', options: withNone(swatches(PICKS.faixas, 'creation.headband'), 'creation.headband') },
-    { key: 'boots', legend: 'chuteira', options: swatches(PICKS.chuteiras, 'creation.boots') },
-  ];
-  return (
-    <section className="criacao__secao" aria-labelledby={`${ids}-visual`}>
-      <div className="criacao__secao-topo">
-        <h2 id={`${ids}-visual`}>{t('ui.criacao.quemE.visual')}</h2>
-        <button type="button" className="criacao__sortear" onClick={c.reroll}>{t('ui.criacao.quemE.sortear')}</button>
-      </div>
-      {groups.map((g) => (
-        <Choices key={g.key} id={`${ids}-${g.key}`} name={g.key} legend={t(`ui.criacao.aparencia.${g.legend}`)} options={g.options}
-          value={look[g.key] ?? NONE} onChange={(v) => set(g.key, v)} semNome={g.key === 'skin'} />
-      ))}
-    </section>
   );
 }
