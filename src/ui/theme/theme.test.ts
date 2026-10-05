@@ -1,6 +1,6 @@
 import bands from '../../data/bands.json';
 import tokens from './tokens.json';
-import { contrast, themeCss } from './theme';
+import { compose, contrast, themeCss } from './theme';
 
 const THEMES = Object.keys(tokens.temas) as (keyof typeof tokens.temas)[];
 
@@ -74,5 +74,43 @@ describe('tokens visuais (T49, SPEC 7)', () => {
     expect(css).toContain(`body:has([data-tema="escuro"]) { background: ${tokens.temas.escuro.fundo}`);
     expect(css).toContain(`body:has([data-tema="claro"]) { background: ${tokens.temas.claro.fundo}`);
     expect(css).toContain('--forma-borda:');
+  });
+});
+
+describe('vidro (T49f, SPEC 7 v2.34)', () => {
+  const glass = tokens.vidro as unknown as Record<string, { cor: string; alfa: number; borda: string; bordaAlfa: number; scrim: string; scrimAlfa: number }> & { maxCamadas: number; desfoque: string; saturacao: string };
+  const roles = (t: string) => tokens.temas[t as keyof typeof tokens.temas] as Record<string, string>;
+
+  it('compose: mistura a cor com o fundo pela opacidade (#RRGGBB)', () => {
+    expect(compose('#FFFFFF', 0.5, '#000000')).toBe('#808080');
+    expect(compose('#123456', 1, '#FFFFFF')).toBe('#123456');
+    expect(compose('#123456', 0, '#FFFFFF')).toBe('#FFFFFF');
+  });
+
+  it('texto sobre o vidro passa em AA no pior fundo (preto e branco por trás), nos dois temas', () => {
+    for (const t of THEMES) {
+      for (const backdrop of ['#000000', '#FFFFFF']) {
+        const base = compose(glass[t]!.cor, glass[t]!.alfa, backdrop);
+        for (const fg of ['texto', 'textoSuave']) expect.soft(contrast(roles(t)[fg]!, base), `${t}: ${fg} sobre vidro com ${backdrop} atrás`).toBeGreaterThanOrEqual(4.5);
+      }
+    }
+  });
+
+  it('o vidro é exceção: no máximo 2 camadas por tela e blur declarado nos tokens', () => {
+    expect(glass.maxCamadas).toBe(2);
+    expect(parseFloat(glass.desfoque)).toBeGreaterThan(0);
+    expect(parseFloat(glass.saturacao)).toBeGreaterThanOrEqual(1);
+  });
+
+  it('CSS: cada tema traz fundo, borda e scrim do vidro; borda fina e sombra suave existem', () => {
+    const css = themeCss();
+    for (const t of THEMES) {
+      const g = glass[t]!;
+      const [r, gr, b] = [1, 3, 5].map((i) => parseInt(g.cor.slice(i, i + 2), 16));
+      expect(css, `${t} fundo do vidro`).toContain(`--vidro-fundo: rgb(${r} ${gr} ${b} / ${g.alfa});`);
+      expect(css).toContain('--vidro-borda: rgb(');
+      expect(css).toContain('--vidro-scrim: rgb(');
+    }
+    for (const v of ['--vidro-desfoque:', '--vidro-saturacao:', '--forma-borda-fina:', '--forma-sombra-suave:']) expect(css).toContain(v);
   });
 });
