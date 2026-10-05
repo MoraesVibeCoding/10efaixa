@@ -32,6 +32,8 @@ describe('App (T51b): criação → carreira', () => {
     createPlayer();
     expect(container.querySelector('main[data-evento]')).not.toBeNull();
     expect(screen.getByText('Dudu Maestro', { selector: '.figurinha__nome' })).toBeInTheDocument();
+    // a figurinha da decisão usa o retrato pintado do visual escolhido na criação
+    expect(container.querySelector('.figurinha img.figurinha__retrato--pintado')).toHaveAttribute('src', expect.stringMatching(/visual-\d\d/));
   });
 
   it('sem tela de abertura ainda, "Voltar" no primeiro passo recomeça a criação limpa', () => {

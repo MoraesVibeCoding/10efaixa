@@ -13,9 +13,9 @@ import './Career.css';
 
 // T51 (b): a carreira jogada de verdade. Cada escolha entra na lista e o motor refaz a carreira até a próxima decisão
 // (careerRun.ts). A cena ainda é a amostra da T49 até as cenas pintadas entrarem por evento (Frente 2).
-export interface CareerProps { input: CreationInput; look: Look; seed: number; onRestart: () => void }
+export interface CareerProps { input: CreationInput; look: Look; /** Id do visual escolhido (v2.36). */ visual?: string; seed: number; onRestart: () => void }
 
-export function Career({ input, look, seed, onRestart }: CareerProps) {
+export function Career({ input, look, visual, seed, onRestart }: CareerProps) {
   const [choices, setChoices] = useState([] as string[]);
   const step = useMemo(() => runUntilDecision(input, seed, choices), [input, seed, choices]);
   const box = useRef(null as HTMLDivElement | null);
@@ -30,7 +30,7 @@ export function Career({ input, look, seed, onRestart }: CareerProps) {
 
   if (step.kind === 'done') return <div ref={box} className="carreira"><CareerEnd result={step.result} onRestart={onRestart} /></div>;
   const { view, eventId, index } = step;
-  const player = toDecisionPlayer(view, input, look);
+  const player = toDecisionPlayer(view, input, look, visual);
   const clube = view.clubId ? clubName(view.clubId).nome : t('ui.varzea');
   return (
     <div ref={box} className="carreira" data-temperamento={view.temperament}>

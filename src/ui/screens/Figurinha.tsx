@@ -16,12 +16,16 @@ export interface FigurinhaProps {
   overall?: number; position?: string; clubId?: string;
   /** Aparência do jogador; o uniforme vem do clube. Sem ela, a figurinha fica só com o fundo. */
   avatar?: AvatarSpec;
+  /** v2.36: id do visual escolhido (visuais.json). Com ele, a figurinha usa o retrato pintado, não o busto em desenho. */
+  visual?: string;
   /** v2.34: moldura metálica pela faixa de overall (precisa de `overall`; sem ele vale a figurinha comum). */
   moldura?: boolean;
   tamanho?: 'pequena' | 'grande';
 }
 
 const MEDALS = tokens.medalha as unknown as Record<string, { nome: string }>;
+const PAINTED = import.meta.glob('../../assets/visuais/*.webp', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
+const paintedOf = (id: string | undefined) => (id ? PAINTED[`../../assets/visuais/${id}.webp`] : undefined);
 const CARD_ART = import.meta.glob('../../assets/cartoes-over/*.webp', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
 
 function clubLine(position: string, clubId: string) {
@@ -29,17 +33,20 @@ function clubLine(position: string, clubId: string) {
   return t('ui.figurinha.posicaoNoClube', { posicao: t(`positions.${position}`), prep, clube: nome });
 }
 
-export function Figurinha({ name, number, overall, position, clubId = '', avatar, moldura = false, tamanho = 'pequena' }: FigurinhaProps) {
+export function Figurinha({ name, number, overall, position, clubId = '', avatar, visual, moldura = false, tamanho = 'pequena' }: FigurinhaProps) {
   const kit = kitOf(clubId);
-  const bust = useBust(avatar, clubId);
+  const painted = paintedOf(visual);
+  const drawn = useBust(painted ? undefined : avatar, clubId);
+  const bust = painted ?? drawn;
+  const portraitClass = painted ? 'figurinha__retrato figurinha__retrato--pintado' : 'figurinha__retrato';
   const stripes = { '--faixa1': kit.camisa[0], '--faixa2': kit.camisa[1] ?? kit.detalhe } as React.CSSProperties;
   if (moldura && overall !== undefined) {
-    return <Moldurada {...{ name, number, overall, bust, stripes, tamanho }} />;
+    return <Moldurada {...{ name, number, overall, bust, stripes, tamanho, portraitClass }} />;
   }
   const comum = (
     <span className="figurinha">
       <span className="figurinha__foto" style={stripes}>
-        {bust && <img className="figurinha__retrato" src={bust} alt="" width="220" height="220" />}
+        {bust && <img className={portraitClass} src={bust} alt="" width="220" height="220" />}
         {number !== undefined && <span className="figurinha__numero" aria-hidden="true">{number}</span>}
         {clubId ? <span className="figurinha__emblema"><Emblema clubId={clubId} size={30} /></span> : null}
         {overall === undefined ? null : <OverCard overall={overall} />}
@@ -63,14 +70,14 @@ function OverCard({ overall }: { overall: number }) {
 }
 
 // v2.34: a figurinha dentro da moldura do metal da faixa; a arte vem de `medalha` (tokens) pela faixa de bands.json.
-function Moldurada({ name, number, overall, bust, stripes, tamanho }: { name: string; number?: number; overall: number; bust: string | null; stripes: React.CSSProperties; tamanho: 'pequena' | 'grande' }) {
+function Moldurada({ name, number, overall, bust, stripes, tamanho, portraitClass }: { name: string; number?: number; overall: number; bust: string | null; stripes: React.CSSProperties; tamanho: 'pequena' | 'grande'; portraitClass: string }) {
   const band = toBand(overall);
   const medal = MEDALS[band.key]!.nome;
   const art = CARD_ART[`../../assets/cartoes-over/${medal}.webp`];
   return (
     <span className={`figurinha figurinha--moldura figurinha--${tamanho}`} data-medalha={medal} style={art ? { backgroundImage: `url(${art})` } : undefined}>
       <span className="figurinha__foto" style={stripes}>
-        {bust && <img className="figurinha__retrato" src={bust} alt="" width="220" height="220" />}
+        {bust && <img className={portraitClass} src={bust} alt="" width="220" height="220" />}
         <span className="sr-only">{t('ui.figurinha.over')} {overall}{t('ui.decisao.faixaOver', { faixa: t(`attributes.band.${band.key}`) })}</span>
         <span className="figurinha__over-grande" aria-hidden="true">{overall}</span>
       </span>

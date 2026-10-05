@@ -13,8 +13,9 @@ export function careerProgress(age: number): number {
   return Math.min(1, Math.max(0, (age - START_AGE) / (END_AGE - START_AGE)));
 }
 
-export function toDecisionPlayer(view: DecisionView, input: CreationInput, look: Look): DecisionProps['player'] {
+export function toDecisionPlayer(view: DecisionView, input: CreationInput, look: Look, visual?: string): DecisionProps['player'] {
   return {
+    visual,
     name: input.name, position: view.position, clubId: view.clubId ?? '', overall: view.overall,
     titles: view.titles.map((x) => x.competition), role: view.role,
     monthlySalary: view.monthlySalary, marketValueEUR: view.marketValueEUR, number: view.number, attributes: view.attributes,

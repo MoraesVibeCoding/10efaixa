@@ -130,3 +130,6 @@
 .figurinha--pequena .figurinha__tarja { justify-content: center; }
 .figurinha__tarja-nome { flex: 1; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.92em; text-transform: uppercase; }
 .figurinha__tarja-numero { font-size: 1.6em; font-variant-numeric: tabular-nums; }
+
+/* v2.36: retrato pintado do visual (transparente) dentro do recorte de álbum: enche o quadrado, do topo da cabeça ao peito */
+.figurinha__retrato--pintado { object-fit: cover; object-position: 50% 6%; }

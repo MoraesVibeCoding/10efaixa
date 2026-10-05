@@ -63,4 +63,9 @@ describe('careerView (T51b): do motor para a tela de decisão', () => {
     expect(careerProgress(45)).toBe(1);
     expect(careerProgress(15)).toBe(0);
   });
+
+  it('leva o id do visual até a ficha da decisão (arte pintada); sem ele, só o busto em desenho', () => {
+    expect(toDecisionPlayer(viewAt(0), INPUT, LOOK, 'visual-07').visual).toBe('visual-07');
+    expect(toDecisionPlayer(viewAt(0), INPUT, LOOK).visual).toBeUndefined();
+  });
 });

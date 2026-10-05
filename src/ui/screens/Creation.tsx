@@ -197,7 +197,7 @@ function IdentityStep({ c }: { c: StepCtx }) {
     <div className="quem">
       <div className="quem__topo">
         <div className="criacao__previa">
-          <Figurinha name={id.name} avatar={c.avatar} />
+          <Figurinha name={id.name} avatar={c.avatar} visual={c.visualId} />
         </div>
         <div className="quem__campos">
           <Field id={`${ids}-nome`} label={t('ui.criacao.quemE.nome')}>

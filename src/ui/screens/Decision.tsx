@@ -37,6 +37,8 @@ export interface DecisionProps {
     /** Número da camisa e aparência: a figurinha (v2.26). */
     number?: number;
     avatar?: AvatarSpec;
+    /** Id do visual escolhido na criação (v2.36): a figurinha usa o retrato pintado dele. */
+    visual?: string;
     /** Marcos já alcançados ("selecao", "camisa10"): saem dos espaços vazios do álbum. */
     milestones?: string[];
   };
@@ -349,7 +351,7 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, ri
       </div>
       <div className="decisao__painel" inert={overlay}>
         <button ref={opener} type="button" className="jogador__abrir" aria-haspopup="dialog" aria-expanded={career} onClick={() => { setCareer(true); }}>
-          <Figurinha name={player.name} number={player.number} overall={player.overall} position={player.position} clubId={player.clubId} avatar={player.avatar} />
+          <Figurinha name={player.name} number={player.number} overall={player.overall} position={player.position} clubId={player.clubId} avatar={player.avatar} visual={player.visual} />
           <span className="jogador__mais">
             {t('ui.carreira.titulo')}
             <svg viewBox="0 0 10 16" width="7" height="11" aria-hidden="true" focusable="false">

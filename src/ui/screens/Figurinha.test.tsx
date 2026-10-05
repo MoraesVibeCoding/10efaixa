@@ -85,3 +85,25 @@ describe('figurinha com moldura por faixa (T49h, SPEC v2.34)', () => {
     expect(container.querySelector('.figurinha')).not.toBeNull();
   });
 });
+
+describe('figurinha com o retrato pintado do visual (T50g, SPEC v2.36)', () => {
+  it('com `visual`, mostra a imagem pintada dele (decorativa) no lugar do busto em desenho', () => {
+    const { container } = render(<Figurinha name="Zé" number={8} overall={60} position="meia" clubId="palmeiras" avatar={AVATAR} visual="visual-03" />);
+    const img = container.querySelector('img.figurinha__retrato')!;
+    expect(img).toHaveAttribute('src', expect.stringContaining('visual-03'));
+    expect(img).not.toHaveAttribute('src', expect.stringMatching(/^data:/));
+    expect(img).toHaveAttribute('alt', '');
+    expect(img).toHaveClass('figurinha__retrato--pintado');
+  });
+
+  it('o retrato aparece de imediato (sem esperar o busto em desenho) e a moldura por faixa também o usa', () => {
+    const { container } = render(<Figurinha name="Zé" number={8} overall={60} moldura tamanho="grande" visual="visual-05" />);
+    expect(container.querySelector('.figurinha--moldura img.figurinha__retrato')).toHaveAttribute('src', expect.stringContaining('visual-05'));
+  });
+
+  it('sem `visual`, continua como antes: busto em desenho quando há avatar', async () => {
+    const { container } = render(<Figurinha name="Zé" number={8} overall={60} position="meia" clubId="palmeiras" avatar={AVATAR} />);
+    await waitFor(() => expect(container.querySelector('img.figurinha__retrato')).not.toBeNull());
+    expect(container.querySelector('img.figurinha__retrato')).not.toHaveClass('figurinha__retrato--pintado');
+  });
+});

@@ -10,7 +10,7 @@ export function App({ seed }: { seed?: number }) {
   const [phase, setPhase] = useState({ kind: 'criacao', round: 0 } as Phase);
   const restart = () => setPhase({ kind: 'criacao', round: phase.round + 1 });
   if (phase.kind === 'carreira') {
-    return <Career key={phase.round} input={phase.created.input} look={phase.created.look} seed={phase.seed} onRestart={restart} />;
+    return <Career key={phase.round} input={phase.created.input} look={phase.created.look} visual={phase.created.visual} seed={phase.seed} onRestart={restart} />;
   }
   return (
     <Creation
