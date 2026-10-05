@@ -1,0 +1,50 @@
+{
+ "_nota": "Nomes das competições no jogo (v2.32, docs/competicoes-nomes.md): descritivos, sem marcas nem imitação. Os dados citam a competição real só como referência.",
+ "brasil": {
+  "serieA": "Nacional · Série A",
+  "serieB": "Nacional · Série B",
+  "serieC": "Nacional · Série C",
+  "serieD": "Nacional · Série D",
+  "copaDoBrasil": "Copa Nacional",
+  "copaDoNordeste": "Copa Regional do Nordeste",
+  "copaJuniores": "Copa de Juniores",
+  "estadual": "Estadual {uf}"
+ },
+ "continental": {
+  "libertadores": "Copa Continental",
+  "sulAmericana": "Copa Continental 2"
+ },
+ "selecoes": {
+  "copaDoMundo": "Mundial de Seleções",
+  "copaAmerica": "Continental de Seleções",
+  "olimpiadas": "Torneio Sub-23 dos Jogos",
+  "eliminatorias": "Eliminatórias"
+ },
+ "europa": {
+  "liga": {
+   "ENG": "Liga Inglesa",
+   "ESP": "Liga Espanhola",
+   "ITA": "Liga Italiana",
+   "GER": "Liga Alemã",
+   "FRA": "Liga Francesa",
+   "POR": "Liga Portuguesa"
+  },
+  "copa": {
+   "ENG": "Copa da Inglaterra",
+   "ESP": "Copa da Espanha",
+   "ITA": "Copa da Itália",
+   "GER": "Copa da Alemanha",
+   "FRA": "Copa da França",
+   "POR": "Copa de Portugal"
+  },
+  "copaEuropeia": "Copa Europeia",
+  "copaEuropeia2": "Copa Europeia 2"
+ },
+ "foraDoEixo": {
+  "SAU": "Liga Saudita",
+  "USA": "Liga Norte-Americana",
+  "JPN": "Liga Japonesa",
+  "QAT": "Liga do Catar",
+  "CHN": "Liga Chinesa"
+ }
+}

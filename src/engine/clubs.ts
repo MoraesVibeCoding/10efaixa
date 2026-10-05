@@ -12,6 +12,8 @@ export interface Club {
   /** Série nacional em 2026, ou null = só estadual (elite ou divisão de acesso). */
   divisao: string | null;
   rivais: string[];
+  /** "a" para clube de nome feminino ("da Portuguesa"); ausente = masculino. */
+  artigo?: 'a';
 }
 
 const HEX = /^#[0-9A-F]{6}$/i;
@@ -38,6 +40,7 @@ export function validateClubs(data: unknown, states: string[]): string[] {
     if (!Array.isArray(c.cores) || c.cores.length !== 2 || !c.cores.every((x) => HEX.test(String(x)))) errors.push(`${at}: cores precisam ser 2 hex`);
     if (!Number.isInteger(c.reputacao) || (c.reputacao as number) < 1 || (c.reputacao as number) > 100) errors.push(`${at}: reputação fora de 1–100`);
     if (c.divisao !== null && !divisions.includes(c.divisao as string)) errors.push(`${at}: divisão desconhecida`);
+    if ('artigo' in c && c.artigo !== 'a') errors.push(`${at}: artigo só pode ser "a" (ausente = masculino)`);
     if (!Array.isArray(c.rivais) || !c.rivais.every(isStr)) errors.push(`${at}: rivais inválido`);
     else if (LOWER.includes(c.divisao as string | null) && c.rivais.length) errors.push(`${at}: rivais manuais só nas Séries A/B (C/D são por cidade)`);
   });

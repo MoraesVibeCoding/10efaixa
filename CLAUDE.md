@@ -47,17 +47,17 @@ Pare e peça minha aprovação nos pontos da seção 15 do SPEC: após T13, T40,
 
 ## Regras que nunca podem ser quebradas
 - **Aparência** (tom de pele, cabelo, barba, acessórios) **nunca** altera atributos ou eventos. Só altura e compleição afetam o jogo.
-- **Nenhum número de atributo** aparece ao jogador antes do cartão final (só estrelas e faixas).
-- **Sem escudos oficiais** de clubes nem da CBF; usar escudos estilizados (cores e iniciais).
+- **Nenhum número dos 10 atributos** aparece ao jogador antes do cartão final (só estrelas e faixas). A única exceção é o **overall geral**, mostrado em número na tela de decisão (SPEC v2.16, decisão do usuário).
+- **Sem escudos oficiais** de clubes nem da CBF. Clubes usam **emblemas originais** que evocam o nome ou a cidade (SPEC v2.26): nunca o escudo oficial nem elemento, forma ou disposição dele, monograma, mascote oficial, estrelas ou ano de fundação. Revisão jurídica antes do lançamento.
 - **Lendas reais** só como texto descritivo no campo `inspiracao`, controlado pela flag `inspiracaoLendas`. Nunca imagem, rosto ou visual característico de pessoa real.
 - **Todos os atletas da carreira são fictícios.** Nome e apelido passam pelo filtro de palavras bloqueadas.
-- **Prêmios com nomes descritivos**, nunca marcas registradas.
+- **Prêmios e competições com nomes descritivos** (SPEC v2.32, `src/i18n/pt-BR/competitions.json`), nunca nomes oficiais ou marcas registradas (Brasileirão, Libertadores, Copa do Mundo, Olimpíadas, Champions...).
 - **Zoeira só com o próprio jogador**, nunca com clubes, torcidas ou pessoas reais.
 - **Dados oficiais** (formatos de campeonatos, número de clubes, calendários, valores de mercado) sempre com **fonte e data** no arquivo de dados. Transfermarkt só por consulta manual, sem raspagem.
 - **Privacidade:** nenhum dado pessoal em analytics, Sentry, URLs ou logs. Sem cookies de rastreamento.
 - **Segredos** (chaves do Sentry, tokens) nunca no repositório; só em variáveis de ambiente.
 - **Acessibilidade WCAG 2.1 AA** em toda tela: teclado, foco visível, contraste, leitor de tela, `prefers-reduced-motion`. Toda cena tem texto alternativo.
-- **Arte:** enquanto o ilustrador não entrega, usar a arte provisória gerada pela skill, sempre no formato final de camadas. O lançamento só acontece com a arte final validada.
+- **Arte:** a arte final é pintada e gerada por IA (SPEC v2.12). Enquanto ela não está pronta, usar a arte provisória gerada pela skill, sempre no formato de camadas. O lançamento só acontece com a arte final validada (inclusive juridicamente).
 
 ## Definição de pronto
 Uma tarefa só está concluída quando: os critérios de aceitação do SPEC são atendidos, os testes novos existem e passaram depois de falhar, typecheck e build passam, o commit está feito e o log foi apresentado.

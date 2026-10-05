@@ -1,4 +1,4 @@
-import { applyOption, autoChoice, eligibleEvents, pickEvent, validateEvents } from './events';
+import { applyOption, autoChoice, eligibleEvents, heartSalaryFactor, jeitoOf, pickEvent, validateEvents } from './events';
 import { createPrng } from './prng';
 import raw from '../data/events.json';
 import scenes from '../data/scenes.json';
@@ -10,6 +10,8 @@ const ctx = (over: Record<string, number | string | boolean> = {}) => ({
   moral: 0.5, relacaoTecnico: 0.6, idolatria: 10, idolatriaCoracao: 0, patrimonio: 0, salarioFator: 1,
   pedirSaida: false, irParaRival: false, aceitarProposta: false, ...over,
 });
+
+const ALL_TEMPERAMENTS = ['frio', 'esquentado', 'lider', 'resenha'];
 
 describe('motor de eventos e dilemas (T25)', () => {
   it('catálogo válido: toda cena existe, campos conhecidos, políticas apontam para opções', () => {
@@ -48,7 +50,7 @@ describe('motor de eventos e dilemas (T25)', () => {
 
   it('efeitos aplicados de forma pura, com limites', () => {
     const s = ctx({ moral: 0.98 });
-    const out = applyOption(s, 'estirao-grande', 'seguir');
+    const out = applyOption(s, 'estirao-grande', 'tirar-onda');
     expect(out.moral).toBe(1);
     expect(s.moral).toBe(0.98);
     expect(applyOption(ctx(), 'proposta-coracao', 'aceitar-por-amor')).toMatchObject({ aceitarProposta: true, salarioFator: 0.7, idolatriaCoracao: 10 });
@@ -61,7 +63,7 @@ describe('motor de eventos e dilemas (T25)', () => {
 
   it('escolha automática por temperamento (política)', () => {
     expect(autoChoice('proposta-rival', 'esquentado')).toBe('aceitar');
-    expect(autoChoice('proposta-rival', 'frio')).toBe('recusar');
+    expect(autoChoice('proposta-rival', 'lider')).toBe('recusar');
     expect(autoChoice('salario-atrasado', 'frio')).toBe('pedir-saida');
     expect(autoChoice('jogo-contra-coracao', 'resenha')).toBe('nao-comemorar');
   });
@@ -72,5 +74,46 @@ describe('motor de eventos e dilemas (T25)', () => {
       expect(t.titulo).toBeTruthy();
       for (const o of e.opcoes) expect(t.opcoes[o.id as keyof typeof t.opcoes]).toBeTruthy();
     }
+  });
+
+  it('três opções por decisão, cada uma com o seu jeito (SPEC v2.17); eventos só narrados têm uma opção', () => {
+    for (const e of raw.eventos) {
+      expect([1, 3], e.id).toContain(e.opcoes.length);
+      const jeitos = (e.opcoes as { jeito?: string }[]).map((o) => o.jeito);
+      if (e.opcoes.length === 1) { expect(jeitos, e.id).toEqual([undefined]); continue; }
+      expect(new Set(jeitos).size, e.id).toBe(3);
+      for (const j of jeitos) expect(ALL_TEMPERAMENTS, e.id).toContain(j);
+    }
+  });
+
+  it('escolha automática: a opção do jeito do jogador; o temperamento sem opção própria segue o padrão', () => {
+    for (const e of raw.eventos.filter((x) => x.opcoes.length === 3)) {
+      for (const o of e.opcoes as { id: string; jeito: string }[]) {
+        expect(jeitoOf(e.id, o.id)).toBe(o.jeito);
+        expect(autoChoice(e.id, o.jeito), e.id).toBe(o.id);
+      }
+      const fourth = ALL_TEMPERAMENTS.find((tmp) => !(e.opcoes as { jeito: string }[]).some((o) => o.jeito === tmp))!;
+      expect(autoChoice(e.id, fourth), e.id).toBe(e.politica.padrao);
+    }
+    expect(jeitoOf('estirao-grande', 'opcao-que-nao-existe')).toBeNull();
+  });
+
+  it('configuração inválida é recusada: duas opções, jeito repetido ou jeito desconhecido', () => {
+    const scenes = [...new Set(raw.eventos.map((e) => e.cena))];
+    const clone = () => structuredClone(raw) as unknown as { eventos: { opcoes: { id: string; jeito?: string }[] }[] };
+    const idx = raw.eventos.findIndex((e) => e.opcoes.length === 3);
+    const two = clone(); two.eventos[idx]!.opcoes.pop();
+    const dup = clone(); dup.eventos[idx]!.opcoes[1]!.jeito = dup.eventos[idx]!.opcoes[0]!.jeito;
+    const unk = clone(); unk.eventos[idx]!.opcoes[0]!.jeito = 'zen';
+    for (const bad of [two, dup, unk]) expect(validateEvents(bad, scenes)).not.toEqual([]);
+  });
+});
+
+describe('clube do coração (v2.23): o desconto no salário vem dos dados da opção', () => {
+  it('assinar = −15%, jogar por amor = −30%, recusar = sem desconto; quem não tem opção própria segue o padrão', () => {
+    expect(heartSalaryFactor('lider')).toBe(0.85);
+    expect(heartSalaryFactor('resenha')).toBe(0.7);
+    expect(heartSalaryFactor('frio')).toBe(1);
+    expect(heartSalaryFactor('esquentado')).toBe(0.7);
   });
 });

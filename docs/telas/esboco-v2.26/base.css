@@ -1,0 +1,6 @@
+@font-face { font-family: 'Big Shoulders'; src: url('file:///home/user/10efaixa/node_modules/@fontsource-variable/big-shoulders-display/files/big-shoulders-display-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; }
+@font-face { font-family: 'Atkinson'; src: url('file:///home/user/10efaixa/node_modules/@fontsource/atkinson-hyperlegible/files/atkinson-hyperlegible-latin-400-normal.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'Atkinson'; src: url('file:///home/user/10efaixa/node_modules/@fontsource/atkinson-hyperlegible/files/atkinson-hyperlegible-latin-700-normal.woff2') format('woff2'); font-weight: 700; }
+:root { --papel:#EEE9DF; --sup:#F8F5EE; --tinta:#14213D; --suave:#4E5968; --trilho:#D5CEC0; --verde:#1E7B4F; --pos:#18683F; --neg:#B81E2E; --ouro:#FFC21A; }
+*,*::before,*::after{box-sizing:border-box} body{margin:0;font-family:Atkinson,sans-serif;font-size:17px;line-height:1.45;color:var(--tinta);-webkit-font-smoothing:antialiased}
+h1,h2,h3,p{margin:0} .t{font-family:'Big Shoulders',sans-serif}

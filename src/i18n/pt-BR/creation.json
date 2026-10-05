@@ -73,12 +73,97 @@
     "celebration.invalid": "Escolha uma comemoração da lista.",
     "foot.invalid": "Escolha a perna boa.",
     "origin.invalid": "Escolha uma origem da lista.",
-    "heartClub.invalid": "Escolha um clube da lista ou \"Nenhum\"."
+    "heartClub.invalid": "Escolha um clube da lista ou \"Nenhum\".",
+    "mentality.invalid": "Escolha uma mentalidade da lista.",
+    "position.invalid": "Escolha uma posição.",
+    "archetype.empty": "Escolha um estilo de jogo."
   },
   "heartClubNone": "Nenhum / não torcia",
   "agent": {
     "paiTio": "Pai ou tio",
     "agenteLocal": "Agente local",
     "grandeAgencia": "Grande agência"
+  },
+  "mentality": {
+    "fominha": "Fominha",
+    "capitao": "Capitão",
+    "professor": "Professor",
+    "maquina": "Máquina"
+  },
+  "skin": {
+    "t1": "Tom 1",
+    "t2": "Tom 2",
+    "t3": "Tom 3",
+    "t4": "Tom 4",
+    "t5": "Tom 5",
+    "t6": "Tom 6",
+    "t7": "Tom 7",
+    "t8": "Tom 8",
+    "t9": "Tom 9",
+    "t10": "Tom 10"
+  },
+  "hairStyle": {
+    "raspado": "Raspado",
+    "curto": "Curto",
+    "cacheado": "Cacheado",
+    "crespo": "Crespo",
+    "black-power": "Black power",
+    "dread": "Dread",
+    "moicano": "Moicano",
+    "longo": "Longo"
+  },
+  "hairColor": {
+    "preto": "Preto",
+    "castanhoEscuro": "Castanho-escuro",
+    "castanho": "Castanho",
+    "castanhoClaro": "Castanho-claro",
+    "loiroEscuro": "Loiro-escuro",
+    "loiro": "Loiro",
+    "ruivo": "Ruivo",
+    "descolorido": "Descolorido"
+  },
+  "beard": {
+    "nenhuma": "Sem barba",
+    "rala": "Rala",
+    "cavanhaque": "Cavanhaque",
+    "bigode": "Bigode",
+    "cheia": "Cheia"
+  },
+  "headband": {
+    "nenhuma": "Sem faixa",
+    "branca": "Branca",
+    "preta": "Preta",
+    "amarela": "Amarela",
+    "vermelha": "Vermelha"
+  },
+  "boots": {
+    "preta": "Preta",
+    "branca": "Branca",
+    "amarela": "Amarela",
+    "vermelha": "Vermelha",
+    "azul": "Azul",
+    "laranja": "Laranja"
+  },
+  "build": {
+    "franzino": "Franzino",
+    "atletico": "Atlético",
+    "forte": "Forte"
+  },
+  "buildDica": {
+    "franzino": "Mais agilidade, menos força e mais lesões por choque.",
+    "atletico": "Equilibrado.",
+    "forte": "Mais força, menos velocidade."
+  },
+  "temperamentDica": {
+    "frio": "Menos cartões e frieza no pênalti; a torcida demora a se apegar.",
+    "esquentado": "Raça em clássico, mais cartões e polêmicas.",
+    "lider": "Caminho curto para a braçadeira; atrito com o técnico na fase ruim.",
+    "resenha": "Querido no elenco, mais tentação de festas."
+  },
+  "mentalityDica": {
+    "fominha": "Vive para o gol: cresce rápido no ataque, mas oscila mais.",
+    "capitao": "Cabeça e liderança crescem mais rápido.",
+    "professor": "Técnica e leitura de jogo; envelhece devagar.",
+    "maquina": "Físico e marcação, rendimento constante."
   }
 }

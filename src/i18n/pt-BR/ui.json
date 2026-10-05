@@ -1,0 +1,179 @@
+{
+ "decisao": {
+  "progresso": "Progresso da carreira",
+  "idade": "{idade} anos",
+  "anos": "anos",
+  "opcoes": "O que você faz?",
+  "semPrevia": "Sem efeito imediato",
+  "previa": ": {sentido} {intensidade}",
+  "titulosLista": "Títulos conquistados",
+  "nenhumTitulo": "Nenhum ainda",
+  "faixaOver": " ({faixa})",
+  "vezes": "×{n}",
+  "ganha": "Você ganha",
+  "emTroca": "Em troca",
+  "muda": "Muda",
+  "ficha": "Ficha do jogador",
+  "porMes": "{valor}/mês",
+  "valor": "Valor {valor}"
+ },
+ "amostra": {
+  "clube": "clube do coração"
+ },
+ "titulo": {
+  "copaDoMundo": "Mundial de Seleções",
+  "champions": "Copa Europeia",
+  "libertadores": "Copa Continental",
+  "serieA": "Série A",
+  "ligaNacional": "Liga nacional",
+  "copaAmerica": "Continental de Seleções",
+  "europaLeague": "Copa Europeia 2",
+  "olimpiadas": "Ouro no Sub-23",
+  "sulAmericana": "Copa Continental 2",
+  "copaDoBrasil": "Copa Nacional",
+  "copaNacional": "Copa nacional",
+  "copaDoNordeste": "Copa Regional do Nordeste",
+  "serieB": "Série B",
+  "serieC": "Série C",
+  "serieD": "Série D",
+  "estadual": "Estadual"
+ },
+ "papel": {
+  "titular": "Titular",
+  "rodizio": "Rodízio",
+  "reserva": "Reserva",
+  "promessa": "Promessa",
+  "aposta": "Aposta"
+ },
+ "resultado": {
+  "positivo": "Deu certo",
+  "negativo": "Saiu caro",
+  "misto": "Ganhou de um lado, perdeu de outro",
+  "neutro": "Decisão tomada",
+  "semEfeito": "Nada mudou por enquanto.",
+  "seguir": "Seguir",
+  "pontos": "{sinal}{n} pontos",
+  "porcento": "{sinal}{n}%",
+  "dinheiro": "{sinal}{valor}"
+ },
+ "carreira": {
+  "titulo": "Minha carreira",
+  "fechar": "Fechar",
+  "titulos": "Títulos",
+  "trajetoria": "Trajetória",
+  "semTrajetoria": "A primeira temporada ainda está em andamento.",
+  "colIdade": "Idade",
+  "colClube": "Clube",
+  "colOver": "OVR",
+  "atributos": "Atributos"
+ },
+ "risco": {
+  "frase": "risco {faixa}",
+  "baixo": "baixo",
+  "medio": "médio",
+  "alto": "alto",
+  "muitoAlto": "muito alto",
+  "tarja": "Risco de {tipo}: {faixa}",
+  "tipo": {
+   "recaida": "recaída",
+   "lesao": "lesão"
+  }
+ },
+ "fora": {
+  "ano": "Fora por um ano",
+  "anos": "Fora por {n} anos",
+  "meses": "Fora por {n} meses"
+ },
+ "figurinha": {
+  "posicaoNoClube": "{posicao} {prep} {clube}",
+  "prep": {
+   "o": "do",
+   "a": "da"
+  },
+  "over": "OVR"
+ },
+ "album": {
+  "titulo": "Álbum da carreira",
+  "conquistas": "Conquistas",
+  "faltam": "Ainda faltam",
+  "meta": {
+   "serieA": "Série A",
+   "libertadores": "Copa Continental",
+   "selecao": "Seleção",
+   "camisa10": "Camisa 10"
+  }
+ },
+ "emblema": {
+  "de": "Emblema {prep} {clube}"
+ },
+ "criacao": {
+  "progresso": "Passo {passo} de {total}",
+  "avancar": "Avançar",
+  "voltar": "Voltar",
+  "passos": {
+   "quemE": "Quem é ele?",
+   "emCampo": "Em campo e na cabeça",
+   "origem": "De onde ele vem?"
+  },
+  "aparencia": {
+   "pele": "Tom de pele",
+   "cabelo": "Cabelo",
+   "corDoCabelo": "Cor do cabelo",
+   "barba": "Barba",
+   "faixa": "Faixa de cabelo",
+   "chuteira": "Chuteira",
+   "descricao": "Prévia: pele {pele}, cabelo {cabelo} {cor}, {barba}, {faixa}, chuteira {chuteira}"
+  },
+  "quemE": {
+   "nome": "Nome",
+   "numero": "Número",
+   "estado": "Estado natal",
+   "escolhaEstado": "Escolha",
+   "clube": "Clube de coração",
+   "nenhum": "Nenhum",
+   "doEstado": "Do seu estado",
+   "outros": "Outros estados",
+   "comemoracao": "Comemoração",
+   "visual": "Visual",
+   "sortear": "Sortear"
+  },
+  "emCampo": {
+   "posicao": "Posição",
+   "estilo": "Estilo",
+   "estiloPrimeiro": "Escolha a posição primeiro.",
+   "traco": "Traço: {traco}",
+   "perna": "Perna boa",
+   "altura": "Altura",
+   "metros": "{altura} m",
+   "alturaDica": "Mais alto: mais jogo aéreo, menos velocidade e drible.",
+   "compleicao": "Compleição",
+   "temperamento": "Temperamento",
+   "mentalidade": "Mentalidade",
+   "sigla": {
+    "goleiro": "GOL",
+    "zagueiro": "ZAG",
+    "lateral": "LAT",
+    "volante": "VOL",
+    "meia": "MEI",
+    "atacante": "ATA"
+   }
+  },
+  "origem": {
+   "titulo": "Tipo de início",
+   "baseGrande": "Começa mais pronto, nas categorias de base, com ofertas de clubes da região.",
+   "peneira": "Encara peneiras no seu estado: passa de primeira, tenta de novo ou vai para um clube menor. Mais sorte, mais risco.",
+   "varzea": "Começa no time do bairro até um olheiro aparecer. Sai de trás, mas cresce mais rápido e pode ser um diamante bruto.",
+   "teto": "O teto é o mesmo para todos: a origem muda o caminho, não o destino."
+  }
+ },
+ "fim": {
+  "titulo": "Fim de carreira",
+  "veredito": "Veredito",
+  "apelido": "Apelido: {apelido}",
+  "clubes": "Clubes",
+  "titulos": "Títulos",
+  "nenhumTitulo": "Nenhum título na carreira.",
+  "novaCarreira": "Nova carreira"
+ },
+ "varzea": "time da várzea"
+}

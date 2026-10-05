@@ -26,5 +26,253 @@
   "copa",
   "casa-familia",
   "despedida"
+ ],
+ "poses": [
+  "em-pe",
+  "correndo",
+  "chutando",
+  "cabeceando",
+  "comemorando",
+  "goleiro-mergulhando",
+  "sentado",
+  "aperto-de-mao",
+  "erguendo-taca",
+  "cabisbaixo"
+ ],
+ "expressoes": [
+  "neutra",
+  "alegre",
+  "triste",
+  "concentrada"
+ ],
+ "detalhes": [
+  "taca",
+  "bola",
+  "placar",
+  "faixa-capitao",
+  "bandeirao",
+  "microfone",
+  "celular",
+  "maca",
+  "contrato-caneta",
+  "mala"
+ ],
+ "definicoes": {
+  "varzea": {
+   "pose": "correndo",
+   "expressao": "alegre",
+   "detalhes": [
+    "bola"
+   ],
+   "companheiros": 3
+  },
+  "rua-do-bairro": {
+   "pose": "em-pe",
+   "expressao": "neutra",
+   "detalhes": [
+    "bola"
+   ],
+   "companheiros": 1
+  },
+  "peneira": {
+   "pose": "correndo",
+   "expressao": "concentrada",
+   "detalhes": [
+    "bola"
+   ],
+   "companheiros": 4
+  },
+  "treino": {
+   "pose": "correndo",
+   "expressao": "concentrada",
+   "detalhes": [
+    "bola"
+   ],
+   "companheiros": 3
+  },
+  "vestiario": {
+   "pose": "sentado",
+   "expressao": "neutra",
+   "detalhes": [],
+   "companheiros": 3
+  },
+  "banco-de-reservas": {
+   "pose": "sentado",
+   "expressao": "triste",
+   "detalhes": [],
+   "companheiros": 2
+  },
+  "reuniao-comissao": {
+   "pose": "sentado",
+   "expressao": "concentrada",
+   "detalhes": [],
+   "companheiros": 2
+  },
+  "sala-empresario": {
+   "pose": "aperto-de-mao",
+   "expressao": "neutra",
+   "detalhes": [
+    "contrato-caneta"
+   ],
+   "companheiros": 1
+  },
+  "assinatura-contrato": {
+   "pose": "aperto-de-mao",
+   "expressao": "alegre",
+   "detalhes": [
+    "contrato-caneta"
+   ],
+   "companheiros": 1
+  },
+  "aeroporto": {
+   "pose": "em-pe",
+   "expressao": "neutra",
+   "detalhes": [
+    "mala"
+   ],
+   "companheiros": 0
+  },
+  "estadio": {
+   "pose": "correndo",
+   "expressao": "concentrada",
+   "detalhes": [
+    "bola",
+    "placar"
+   ],
+   "companheiros": 4
+  },
+  "gol": {
+   "pose": "comemorando",
+   "expressao": "alegre",
+   "detalhes": [
+    "bola",
+    "placar"
+   ],
+   "companheiros": 3
+  },
+  "cabecada": {
+   "pose": "cabeceando",
+   "expressao": "concentrada",
+   "detalhes": [
+    "bola"
+   ],
+   "companheiros": 3
+  },
+  "penalti": {
+   "pose": "chutando",
+   "expressao": "concentrada",
+   "detalhes": [
+    "bola"
+   ],
+   "companheiros": 1,
+   "poseGoleiro": "goleiro-mergulhando"
+  },
+  "titulo": {
+   "pose": "erguendo-taca",
+   "expressao": "alegre",
+   "detalhes": [
+    "taca"
+   ],
+   "companheiros": 4
+  },
+  "convocacao": {
+   "pose": "em-pe",
+   "expressao": "alegre",
+   "detalhes": [
+    "celular"
+   ],
+   "companheiros": 1
+  },
+  "hospital": {
+   "pose": "sentado",
+   "expressao": "triste",
+   "detalhes": [
+    "maca"
+   ],
+   "companheiros": 1
+  },
+  "fisioterapia": {
+   "pose": "sentado",
+   "expressao": "concentrada",
+   "detalhes": [
+    "maca"
+   ],
+   "companheiros": 1
+  },
+  "festa": {
+   "pose": "comemorando",
+   "expressao": "alegre",
+   "detalhes": [
+    "bandeirao"
+   ],
+   "companheiros": 4
+  },
+  "entrevista": {
+   "pose": "em-pe",
+   "expressao": "neutra",
+   "detalhes": [
+    "microfone"
+   ],
+   "companheiros": 1
+  },
+  "classico": {
+   "pose": "correndo",
+   "expressao": "concentrada",
+   "detalhes": [
+    "bola",
+    "bandeirao"
+   ],
+   "companheiros": 4
+  },
+  "vaia": {
+   "pose": "cabisbaixo",
+   "expressao": "triste",
+   "detalhes": [],
+   "companheiros": 2
+  },
+  "copa": {
+   "pose": "correndo",
+   "expressao": "concentrada",
+   "detalhes": [
+    "bola",
+    "bandeirao",
+    "placar"
+   ],
+   "companheiros": 4
+  },
+  "casa-familia": {
+   "pose": "em-pe",
+   "expressao": "alegre",
+   "detalhes": [],
+   "companheiros": 2
+  },
+  "despedida": {
+   "pose": "cabisbaixo",
+   "expressao": "neutra",
+   "detalhes": [
+    "bola"
+   ],
+   "companheiros": 2
+  }
+ },
+ "trofeus": [
+  "estadual",
+  "serie-a",
+  "serie-b",
+  "serie-c",
+  "serie-d",
+  "copa-do-brasil",
+  "copa-do-nordeste",
+  "continental-principal",
+  "continental-secundaria",
+  "copa-do-mundo",
+  "copa-america",
+  "olimpiadas-medalha",
+  "liga-europeia",
+  "copa-europeia",
+  "premio-melhor-jogador",
+  "premio-artilheiro",
+  "premio-melhor-goleiro",
+  "premio-revelacao"
  ]
 }

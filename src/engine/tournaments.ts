@@ -85,7 +85,7 @@ export function playTournament(i: TournamentInput, decide: Decide, rng: Prng): T
       const offered = !r.decisions.some((x) => x.event === 'copa-penalti');
       const option = offered ? decide('copa-penalti') : 'deixar';
       if (offered) r.decisions.push({ event: 'copa-penalti', option });
-      if (option === 'bater') {
+      if (option !== 'deixar') {
         const pk = m['copa-penalti'];
         won = rng.next() < clamp(pk.acertoBase + (i.mental - pk.refMental) * pk.porPontoMental, pk.limites[0]!, pk.limites[1]!);
         if (won) scoredDecisive = true; else r.villain = true;

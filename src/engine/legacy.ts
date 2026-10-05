@@ -8,14 +8,16 @@ export type Component = keyof typeof cfg.pesos;
 export interface Legacy { score: number; components: Record<Component, number>; verdict: string; labels: { id: string; rarity: string }[] }
 export const VERDICTS = cfg.veredito.map((v) => v.id);
 export const LABELS = cfg.rotulos.map((l) => l.id);
+export const RESERVE_LABELS = cfg.rotulosReserva.map((l) => l.id);
 
 
 /** A última faixa precisa aceitar qualquer carreira (invariante 9.2: toda carreira termina com veredito válido). */
-export function validateLegacyConfig(c: { pesos: Record<string, number>; veredito: { notaMin: number; condicoes: unknown[] }[] }): string[] {
+export function validateLegacyConfig(c: { pesos: Record<string, number>; veredito: { notaMin: number; condicoes: unknown[] }[]; rotulosReserva: { condicoes: unknown[] }[] }): string[] {
   const errors: string[] = [];
   if (Object.values(c.pesos).reduce((a, b) => a + b, 0) !== 100) errors.push('pesos devem somar 100');
   const last = c.veredito.at(-1);
   if (!last || last.notaMin > 0 || last.condicoes.length) errors.push('a última faixa de veredito não pode ter nota mínima nem requisito');
+  if (c.rotulosReserva.at(-1)?.condicoes.length !== 0) errors.push('o último rótulo de reserva não pode ter requisito');
   return errors;
 }
 const cfgErrors = validateLegacyConfig(cfg);
@@ -51,15 +53,17 @@ const all = (f: Ctx, conds: unknown) => (conds as Cond[]).every((c) => holds(f, 
 export const verdictOf = (f: Ctx, score: number): string =>
   cfg.veredito.find((v) => score >= v.notaMin && all(f, v.condicoes))!.id;
 
-/** Rótulos conquistados, do mais raro ao mais comum; o primeiro é o principal do cartão. */
-export const labelsOf = (f: Ctx): { id: string; rarity: string }[] =>
-  cfg.rotulos.filter((l) => all(f, l.condicoes)).map((l) => ({ id: l.id, rarity: l.raridade }));
+/** Rótulos conquistados, do mais raro ao mais comum; o primeiro é o principal do cartão. Sem nenhum, vale o primeiro rótulo de reserva que couber. */
+export function labelsOf(f: Ctx): { id: string; rarity: string }[] {
+  const won = cfg.rotulos.filter((l) => all(f, l.condicoes));
+  return (won.length ? won : [cfg.rotulosReserva.find((l) => all(f, l.condicoes))!]).map((l) => ({ id: l.id, rarity: l.raridade }));
+}
 
 const count = (xs: string[]) => xs.reduce<Record<string, number>>((m, x) => ({ ...m, [x]: (m[x] ?? 0) + 1 }), {});
 const prefixed = (prefix: string, m: Record<string, number>) => Object.fromEntries(Object.entries(m).map(([k, v]) => [prefix + k, v]));
 
 /** Fatos da carreira usados pela nota, pelo veredito e pelos rótulos (um contexto plano, como o dos eventos). */
-export function legacyFacts(r: Omit<CareerResult, 'legacy'>): Ctx {
+export function legacyFacts(r: Omit<CareerResult, 'legacy' | 'nickname' | 'headline' | 'comment'>): Ctx {
   const sel = r.selection;
   const played = r.seasons.filter((s) => s.minutes >= cfg.elite.minutosMin);
   const worldCups = sel.tournaments.filter((t) => t.tournament === 'copaDoMundo');
@@ -83,7 +87,7 @@ export function legacyFacts(r: Omit<CareerResult, 'legacy'>): Ctx {
   };
 }
 
-export function legacyOf(r: Omit<CareerResult, 'legacy'>): Legacy {
+export function legacyOf(r: Omit<CareerResult, 'legacy' | 'nickname' | 'headline' | 'comment'>): Legacy {
   const facts = legacyFacts(r);
   const { score, components } = legacyScore(facts);
   return { score, components, verdict: verdictOf(facts, score), labels: labelsOf(facts) };

@@ -1,0 +1,42 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="layout.css"><style>
+.app{display:grid;gap:18px;padding:18px var(--g) 24px}
+.topo{display:flex;justify-content:space-between;align-items:center}
+.fechar{display:grid;place-items:center;width:44px;height:44px;font-size:1.4rem;font-weight:700}
+.quem{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center}
+.quem .fig{width:132px}
+.bloco{display:grid;gap:8px}
+.bloco h2{font-size:1.1rem;color:var(--suave)}
+.niveis{display:grid;gap:7px}.niveis div{display:grid;grid-template-columns:96px 1fr 76px;gap:10px;align-items:center;font-size:.95rem}
+.niveis i{display:grid;grid-template-columns:repeat(6,1fr);gap:2px;height:9px}.niveis i s{border:1px solid var(--tinta)}.niveis i s.c{background:var(--verde)}
+.niveis em{font-style:normal;font-weight:700;color:var(--pos);text-align:right;font-size:.88rem}
+.trofeus{display:flex;flex-wrap:wrap;gap:8px}.trofeu{display:flex;gap:6px;align-items:center;padding:4px 10px 4px 6px;font-weight:700}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:.95rem}
+th{text-align:left;font-size:.82rem;color:var(--suave);font-weight:700;border-bottom:2px solid var(--tinta);padding:4px}
+td{padding:7px 4px;border-bottom:1px solid var(--trilho)}td:nth-child(n+3),th:nth-child(n+3){text-align:right}
+.clube{display:flex;gap:8px;align-items:center;font-weight:700}
+tr.agora td{background:#E3EFE7;font-weight:700}
+</style></head><body><div class="app">
+<div class="topo"><h1>Minha carreira</h1><button class="fechar caixa" aria-label="Fechar">✕</button></div>
+<div class="quem"><div class="fig"><div class="foto" style="--c1:#C8102E;--c2:#111"><img class="ret" data-retrato="#C8102E" alt=""><span class="num">10</span><span class="ovr">78</span></div><b>Dudu Maestro</b><small>Meia do Flamengo</small></div>
+ <div class="selos"><span class="selo">24 anos</span><span class="selo">Titular</span><span class="selo">R$ 180 mil/mês</span><span class="selo">Contrato até 2028</span></div></div>
+<section class="bloco"><h2>Atributos</h2><div class="niveis">
+ <div>Finalização<i><s class=c></s><s class=c></s><s class=c></s><s class=c></s><s></s><s></s></i><em>Muito bom</em></div>
+ <div>Passe<i><s class=c></s><s class=c></s><s class=c></s><s class=c></s><s class=c></s><s></s></i><em>Excelente</em></div>
+ <div>Drible<i><s class=c></s><s class=c></s><s class=c></s><s class=c></s><s></s><s></s></i><em>Muito bom</em></div>
+ <div>Velocidade<i><s class=c></s><s class=c></s><s class=c></s><s></s><s></s><s></s></i><em>Bom</em></div>
+ <div>Mental<i><s class=c></s><s class=c></s><s class=c></s><s class=c></s><s></s><s></s></i><em>Muito bom</em></div>
+</div></section>
+<section class="bloco"><h2>Títulos</h2><div class="trofeus">
+ <span class="trofeu caixa"><img src="file:///home/user/10efaixa/src/assets/art/provisoria/detalhe/detalhe__trofeu-copa-do-brasil.svg" width=28 height=28 alt="">Copa do Brasil</span>
+ <span class="trofeu caixa"><img src="file:///home/user/10efaixa/src/assets/art/provisoria/detalhe/detalhe__trofeu-estadual.svg" width=28 height=28 alt="">Estadual ×2</span></div></section>
+<section class="bloco"><h2>Trajetória</h2><table>
+ <tr><th>Idade</th><th>Clube</th><th>OVR</th><th>Jogos</th><th>Gols</th></tr>
+ <tr class="agora"><td>24</td><td><span class="clube"><svg class="em" width="20" height="20"><use href="#fla-s"/></svg>Flamengo</span></td><td>78</td><td>31</td><td>9</td></tr>
+ <tr><td>23</td><td><span class="clube"><svg class="em" width="20" height="20"><use href="#fla-s"/></svg>Flamengo</span></td><td>77</td><td>48</td><td>12</td></tr>
+ <tr><td>22</td><td><span class="clube"><svg class="em" width="20" height="20"><use href="#fla-s"/></svg>Flamengo</span></td><td>75</td><td>44</td><td>10</td></tr>
+ <tr><td>21</td><td><span class="clube"><svg class="em" width="20" height="20"><use href="#fla-s"/></svg>Flamengo</span></td><td>72</td><td>39</td><td>7</td></tr>
+ <tr><td>20</td><td><span class="clube"><svg class="em" width="20" height="20"><use href="#bah-s"/></svg>Bahia</span></td><td>69</td><td>45</td><td>8</td></tr>
+ <tr><td>19</td><td><span class="clube"><svg class="em" width="20" height="20"><use href="#bah-s"/></svg>Bahia</span></td><td>66</td><td>41</td><td>5</td></tr>
+</table></section>
+</div><script src="pecas.js"></script></body></html>

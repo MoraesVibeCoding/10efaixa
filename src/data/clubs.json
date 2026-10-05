@@ -1,5 +1,5 @@
 {
- "_nota": "Clubes 2026 (SPEC 6.9, 11: nomes reais, escudo estilizado com sigla e cores). 'reputacao' (1–100) é estimativa de balanceamento, não dado oficial; 'cores' são aproximações para o uniforme (Série D: marinho/branco provisório até conferência). Rivais manuais só nas Séries A e B; rivais por cidade das Séries C e D são calculados pelo motor (cidade null = incerta, sem rival automático). Série D é divisão aberta, remontada pelos estaduais (T18). Clubes com divisao null disputam só o estadual (elite ou divisão de acesso); cores provisórias.",
+ "_nota": "Clubes 2026 (SPEC 6.9, 11: nomes reais, escudo estilizado com sigla e cores). 'reputacao' (1–100) é estimativa de balanceamento, não dado oficial; 'cores' são aproximações para o uniforme (Série D: marinho/branco provisório até conferência). Rivais manuais só nas Séries A e B; rivais por cidade das Séries C e D são calculados pelo motor (cidade null = incerta, sem rival automático). Série D é divisão aberta, remontada pelos estaduais (T18). Clubes com divisao null disputam só o estadual (elite ou divisão de acesso); cores provisórias. artigo: \"a\" nos clubes de nome feminino (\"meia da Portuguesa\"); sem o campo, masculino (T49c).",
  "fonte": {
   "serieA": "https://www.cbf.com.br/futebol-brasileiro/tabelas/campeonato-brasileiro/serie-a/2026",
   "serieB": "https://www.cbf.com.br/futebol-brasileiro/tabelas/campeonato-brasileiro/serie-b/2026",
@@ -338,7 +338,8 @@
    ],
    "reputacao": 65,
    "divisao": "A",
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "vila-nova",
@@ -638,7 +639,8 @@
    ],
    "reputacao": 60,
    "divisao": "B",
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "botafogo-pb",
@@ -680,7 +682,8 @@
    ],
    "reputacao": 48,
    "divisao": "C",
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "maringa",
@@ -722,7 +725,8 @@
    ],
    "reputacao": 44,
    "divisao": "C",
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "paysandu",
@@ -1170,7 +1174,8 @@
    ],
    "reputacao": 34,
    "divisao": "D",
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "capital-df",
@@ -1296,7 +1301,8 @@
    ],
    "reputacao": 34,
    "divisao": "D",
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "aguia-de-maraba",
@@ -1954,7 +1960,8 @@
    ],
    "reputacao": 32,
    "divisao": "D",
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "america-rj",
@@ -1982,7 +1989,8 @@
    ],
    "reputacao": 46,
    "divisao": "D",
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "agua-santa",
@@ -2626,7 +2634,8 @@
    ],
    "reputacao": 30,
    "divisao": null,
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "taubate",
@@ -2850,7 +2859,8 @@
    ],
    "reputacao": 22,
    "divisao": null,
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "olaria",
@@ -3060,7 +3070,8 @@
    ],
    "reputacao": 22,
    "divisao": null,
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "coimbra",

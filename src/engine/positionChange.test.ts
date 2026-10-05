@@ -50,6 +50,8 @@ describe('mudança de posição (T32)', () => {
   it('dilema no catálogo: proposta de mudança com cena e política', () => {
     expect(eligibleEvents({ propostaMudancaPosicao: 'volante' })).toContain('mudanca-posicao');
     expect(eligibleEvents({ propostaMudancaPosicao: '' })).not.toContain('mudanca-posicao');
-    expect(autoChoice('mudanca-posicao', 'frio')).toBe('aceitar');
+    expect(autoChoice('mudanca-posicao', 'lider')).toBe('aceitar');
+    expect(autoChoice('mudanca-posicao', 'frio')).toBe('aceitar-com-garantia');
+    expect(autoChoice('mudanca-posicao', 'esquentado')).toBe('recusar');
   });
 });

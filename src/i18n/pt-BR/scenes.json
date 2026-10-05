@@ -1,0 +1,34 @@
+{
+ "jogadorPadrao": "O jogador",
+ "alt": {
+  "varzea": "{nome} num campinho de terra de várzea, bola nos pés, em jogo de {clube}",
+  "rua-do-bairro": "{nome} na rua do bairro, sob o olhar de um olheiro",
+  "peneira": "{nome} numa peneira, entre dezenas de garotos, tentando uma vaga no {clube}",
+  "treino": "{nome} em treino com o elenco do {clube}",
+  "vestiario": "{nome} no vestiário do {clube}, entre armários e azulejos",
+  "banco-de-reservas": "{nome} no banco de reservas do {clube}, esperando a vez",
+  "reuniao-comissao": "{nome} em reunião com a comissão técnica do {clube}",
+  "sala-empresario": "{nome} na sala do empresário, conversando sobre o futuro",
+  "assinatura-contrato": "{nome} assinando contrato com o {clube}",
+  "aeroporto": "{nome} no aeroporto, de mala pronta para uma nova etapa da carreira",
+  "estadio": "{nome} entrando no estádio para jogar pelo {clube}",
+  "gol": "{nome} comemorando um gol pelo {clube}",
+  "cabecada": "{nome} no ar, subindo mais que todos para uma cabeçada pelo {clube}",
+  "penalti": "{nome} sozinho diante da bola, prestes a bater um pênalti pelo {clube}",
+  "titulo": "{nome} erguendo a taça de campeão pelo {clube}",
+  "convocacao": "{nome} recebendo a notícia da convocação para a Seleção",
+  "hospital": "{nome} no hospital, cuidando de uma lesão",
+  "fisioterapia": "{nome} na fisioterapia, em recuperação",
+  "festa": "{nome} numa festa com amigos e companheiros do {clube}",
+  "entrevista": "{nome} dando entrevista para a imprensa e as redes sociais",
+  "classico": "{nome} em campo num clássico pelo {clube}",
+  "vaia": "{nome} cabisbaixo, ouvindo as vaias da arquibancada",
+  "copa": "{nome} em campo num Mundial, com a camisa da Seleção",
+  "casa-familia": "{nome} em casa, com a família",
+  "despedida": "{nome} se despedindo dos gramados"
+ },
+ "companheiros": {
+  "um": "Ao lado, 1 companheiro de equipe.",
+  "varios": "Ao lado, {n} companheiros de equipe."
+ }
+}

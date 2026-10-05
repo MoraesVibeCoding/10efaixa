@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { simulateCareer, type CareerResult } from './career';
-import { LABELS, VERDICTS, legacyFacts } from './legacy';
+import { LABELS, RESERVE_LABELS, VERDICTS, legacyFacts } from './legacy';
 import { POSITIONS } from './overall';
 import { createPrng } from './prng';
 import { randomInput } from './simulation';
@@ -41,6 +41,7 @@ it.skipIf(!N)(`sanidade 9.3: ${N} carreiras por origem × posição em docs/simu
   const ages = ORIGINS.map((o) => mean(by('origin', o).map((r) => r.endAge)));
   const legends = POSITIONS.map((p) => legend(by('position', p)));
   const perCareer = ms / rs.length;
+  const biggest = Math.max(...VERDICTS.map((v) => pctN(rs.map((r) => r.legacy.verdict === v))));
 
   const lines = [
     '# Sanidade da simulação — SPEC 9.3 (T40)', '',
@@ -49,6 +50,7 @@ it.skipIf(!N)(`sanidade 9.3: ${N} carreiras por origem × posição em docs/simu
     ...head(['Critério', 'Medido', 'Meta', 'Ok']),
     row(['"Lenda mundial"', `${world.toFixed(2)}%`, '≤ 1%', ok(world <= 1)]),
     row(['Faixas de veredito que aparecem', `${seen.length} de 8`, '8', ok(seen.length === 8)]),
+    row(['Maior faixa de veredito', `${biggest.toFixed(1)}%`, '≤ 35%', ok(biggest <= 35)]),
     row(['Auge, todas as origens', tiers(rs).map((v) => v.toFixed(1)).join(' · '), '5 · 10 · 60 · 25 (±2)', ok(tiersOk(rs))]),
     ...ORIGINS.map((o) => row([`Auge, ${o}`, tiers(by('origin', o)).map((v) => v.toFixed(1)).join(' · '), '5 · 10 · 60 · 25 (±2)', ok(tiersOk(by('origin', o)))])),
     row(['Diamante bruto (várzea)', `${diamond.toFixed(1)}%`, '2% a 4%', ok(diamond >= 2 && diamond <= 4)]),
@@ -65,8 +67,8 @@ it.skipIf(!N)(`sanidade 9.3: ${N} carreiras por origem × posição em docs/simu
     ...POSITIONS.map((p) => row([p, ...(['selecao', 'titulos', 'premios', 'numeros', 'idolatria', 'longevidade'] as const).map((c) => mean(by('position', p).map((r) => r.legacy.components[c])).toFixed(2))])), '',
     '## Rótulos (% das carreiras; "principal" = o que vai no cartão)',
     ...head(['Rótulo', 'Tem', 'Principal']),
-    ...LABELS.map((l) => row([l, pct(rs.map((r) => r.legacy.labels.some((x) => x.id === l))), pct(rs.map((r) => r.legacy.labels[0]?.id === l))])),
-    row(['(nenhum rótulo)', pct(rs.map((r) => r.legacy.labels.length === 0)), '—']), '',
+    ...[...LABELS, ...RESERVE_LABELS].map((l) => row([l, pct(rs.map((r) => r.legacy.labels.some((x) => x.id === l))), pct(rs.map((r) => r.legacy.labels[0]?.id === l))])),
+    '',
     '## Diagnóstico: do teto ao auge',
     ...head(['Grupo', 'Teto (potencial)', 'Auge', 'Teto − auge', 'Idade do auge', 'Minutos 16–24', 'Minutos na carreira', 'Convocado para a principal', 'Prêmios (média)', 'Títulos (média)']),
     ...[...ORIGINS.map((o) => [o, by('origin', o)] as [string, R[]]), ...POSITIONS.map((p) => [p, by('position', p)] as [string, R[]])].map(([g, x]) => row([g,

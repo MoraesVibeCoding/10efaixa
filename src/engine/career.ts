@@ -8,9 +8,10 @@ import { addToWealth, makeContract, renew, seasonEarnings, toBRL, type Contract 
 import { brazilQualifiers, copaDoBrasil, copaDoBrasilEntrants, copaDoNordeste, foreignQualifiers, libertadores, nordesteGroups, sulAmericana } from './cups';
 import { EUROPE, areEuroRivals, effectiveRep } from './europe';
 import { initialEuroTables, simulateEuropeSeason, type EuroTables } from './europeSeason';
-import { applyOption, autoChoice } from './events';
+import { applyOption, autoChoice, heartSalaryFactor } from './events';
 import { callUp, coachFor, isPrincipal, selectionEffect, updatePrestige, visibility, type CallUp, type Rung } from './nationalTeam';
 import { evolveSemester, type EvoState } from './evolution';
+import { mentalityEffects } from './mentality';
 import { afterClassico, afterSemester, afterTransfer, type Idolatry } from './idolatry';
 import { decayRelapse, graveDecision, semesterInjury } from './injuries';
 import { chooseOffer, generateOffers, leagueOf, marketValue, salaryFor, type Offer } from './market';
@@ -27,7 +28,9 @@ import { cutOffset, invited, residenceCountry, teamName, teamStrength } from './
 import dual from '../data/dualNationality.json';
 import { seasonAwards, type Award } from './awards';
 import { ZERO_STATS, addStats, seasonStats, type SeasonStats } from './stats';
+import { headlineOf } from './headline';
 import { legacyOf, type Legacy } from './legacy';
+import { generateNickname } from './nickname';
 import { farewellOffer, retirementCheck, type RetireReason } from './retirement';
 import { simulateSeason, type ClubInfo, type Div, type Divisions, type Row } from './season';
 import { assignNumber, canGetArmband, canGetTen, rosterNumbers } from './shirt';
@@ -58,10 +61,31 @@ export interface CareerResult {
   /** Tudo o que entrou no bolso (antes de gastos e perdas) e clássicos decisivos — usados pelos rótulos (T40). */
   earnedBRL: number; decisiveDerbies: number;
   legacy: Legacy;
+  /** T41: apelido dado pelo jogo, manchete séria e comentário com zoeira. */
+  nickname: string; headline: string; comment: string;
   retirement: RetireReason; farewell: 'formador' | 'coracao' | null;
   cards: { yellows: number; reds: number }; finalTemperament: string; houseBought: boolean; discipline: number;
   seasons: { year: number; clubId: string; division: string | null; minutes: number; overall: number }[];
 }
+
+/** T51: o momento de uma decisão, para a tela mostrar o jogador como ele está ali. */
+export interface DecisionView {
+  year: number; age: number; clubId: string | null; position: Position; overall: number; role: Role; temperament: string;
+  /** Valor de mercado em € (v2.33): a regra do mercado, com o efeito Seleção. */
+  marketValueEUR: number;
+  /** Salário do mês pelo contrato atual (sem contrato, na várzea: zero). */
+  monthlySalary: { amount: number; currency: 'BRL' | 'EUR' };
+  /** Número da camisa no clube atual. */
+  number: number;
+  /** Atributos de agora; a tela mostra só em faixas (CLAUDE.md). */
+  attributes: EvoState['attributes'];
+  /** Estado que o evento lê e muda (moral, idolatria, patrimônio...), já com o que aconteceu neste semestre. */
+  state: Record<string, number | string | boolean>;
+  seasons: CareerResult['seasons']; titles: Title[];
+}
+/** Quem decide: o temperamento (simulação, ritmo Rápido) ou o jogador (tela). `view` só é montada se pedida. */
+export type Decider = (eventId: string, temperament: string, view: () => DecisionView) => string;
+const AUTO: Decider = (eventId, temperament) => autoChoice(eventId, temperament);
 
 const UF = new Map(CLUBS.map((c) => [c.id, c.uf]));
 const BRAZIL = new Set(CLUBS.map((c) => c.id));
@@ -78,7 +102,7 @@ function roleFor(ov: number, squad: number, age: number): Role {
   return age <= cfg.papel.promessaIdadeMax ? 'promessa' : 'reserva';
 }
 
-export function simulateCareer(input: CreationInput, seed: number, startYear = 2026): CareerResult {
+export function simulateCareer(input: CreationInput, seed: number, startYear = 2026, decide: Decider = AUTO): CareerResult {
   const rng = createPrng(seed);
   const created = createPlayer(input, rng);
   if (!created.ok) throw new RangeError(`criação inválida: ${created.errors.join(', ')}`);
@@ -104,7 +128,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let evo: EvoState = {
     age: 16, attributes: player.attributes, baseCaps: player.baseCaps, caps: player.caps,
     predictedHeightCm: player.biotype.heightCm, growth: player.growth, build: player.biotype.build,
-    originalBuild: player.biotype.build, buildPush: 0, growthBonus: player.growthBonus,
+    originalBuild: player.biotype.build, buildPush: 0, growthBonus: player.growthBonus, ...mentalityEffects(input.mentality).evo,
   };
   let traits: TraitState = { position: input.position, traits: [...arch.traits.slice(0, 1)], latentTrait: arch.latentTrait, progress: {} };
   let agent: Agent = createAgent((cfg.empresarioPorTemperamento as Record<string, string>)[temp] ?? 'agenteLocal', rng);
@@ -145,6 +169,20 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let stats: SeasonStats = ZERO_STATS;
   let earned = 0;
   let decisiveDerbies = 0;
+  let curYear = startYear;
+  let curRole: Role = 'promessa';
+  /** Toda decisão passa por aqui (T51): o padrão é a escolha do temperamento, como antes. */
+  const ask = (eventId: string, state: Record<string, number | string | boolean> = {}, who = temp) => decide(eventId, who, () => ({
+    year: curYear, age: evo.age, clubId, position, overall: ov(evo), role: curRole, temperament: who,
+    marketValueEUR: Math.round(marketValue(ov(evo), evo.age) * selectionEffect(prestige, sel, sel.rung).marketMultiplier),
+    monthlySalary: contract ? { amount: Math.round(contract.annualSalary / 12), currency: contract.currency } : { amount: 0, currency: 'BRL' },
+    number: spells.at(-1)?.number ?? input.shirtNumber, attributes: { ...evo.attributes },
+    state: {
+      moral: morale, disciplina: discipline, relacaoTecnico: coachRelation, patrimonio: wealth, salarioFator: 1,
+      idolatria: clubId ? idol[clubId] ?? 0 : 0, idolatriaCoracao: input.heartClub ? idol[input.heartClub] ?? 0 : 0, ...state,
+    },
+    seasons: [...seasons], titles: [...titles],
+  }));
   const earn = (amount: number, currency: Contract['currency']) => { const before = wealth; wealth = addToWealth(wealth, amount, currency, agent); earned += Math.max(0, wealth - before); };
   const awards: CareerResult['awards'] = [];
 
@@ -188,6 +226,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   }
 
   for (let year = startYear, k = 0; ; year++, k++) {
+    curYear = year;
     const yr = createPrng(Math.imul(seed + 1, 0x9e3779b1) ^ Math.imul(k + 1, 0x85ebca6b));
     const ySeed = (seed * 1009 + k) >>> 0;
 
@@ -241,6 +280,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         const rep = effectiveRep(clubId!);
         staffQuality = clamp(0.8 + (rep / 100) * 0.4, 0.8, 1.2);
         role = roleFor(ov(evo), squadLevel(rep), evo.age);
+        curRole = role;
         minutes = inYouth ? cfg.minutosBase : minutesShare({ overall: ov(evo), clubRep: rep, role, form }, yr);
         form = updateForm(form, ov(evo), rep, yr);
       }
@@ -258,7 +298,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
           injuries[inj.severity]++;
           minutes *= 1 - inj.minutesLost;
           if (inj.severity === 'grave') {
-            const d = graveDecision(autoChoice('lesao-grave', temp));
+            const d = graveDecision(ask('lesao-grave'));
             outLeft = Math.max(0, d.semestersOut - 1);
             relapseRisk = d.relapseRisk;
             const attrs = { ...evo.attributes };
@@ -292,7 +332,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         const life = semesterClubLife({ clubId, coachRelation, salaryDelays, age: evo.age, minutes, expectedRank, actualRank }, yr);
         coachRelation = life.coachRelation;
         salaryDelays = life.salaryDelays;
-        if (life.canRequestLeave && autoChoice('salario-atrasado', temp) === 'pedir-saida') wantsOut = true;
+        if (life.canRequestLeave && ask('salario-atrasado') === 'pedir-saida') wantsOut = true;
         if (life.loanOffer && !parent && !loanTarget) loanTarget = life.loanOffer;
 
         // Disciplina: cartões pelo temperamento; suspensão tira minutos do próximo semestre.
@@ -303,13 +343,13 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         // Vida fora de campo: dilemas resolvidos pela política do temperamento, com efeitos do catálogo.
         const flags = offFieldFlags({ temperament: temp, wealthBRL: wealth, houseBought }, yr);
         let st8 = { moral: morale, disciplina: discipline, idolatria: idol[clubId] ?? 0, relacaoTecnico: coachRelation, patrimonio: wealth, casaComprada: houseBought, investir: false } as Record<string, number | string | boolean>;
-        if (flags.conviteFesta) st8 = applyOption(st8, 'festa', autoChoice('festa', temp));
-        if (flags.polemica) st8 = applyOption(st8, 'polemica-redes', autoChoice('polemica-redes', temp));
-        if (flags.podeComprarCasa) st8 = applyOption(st8, 'casa-da-familia', autoChoice('casa-da-familia', temp));
-        if (flags.conviteInvestir) st8 = applyOption(st8, 'investir', autoChoice('investir', temp));
+        if (flags.conviteFesta) st8 = applyOption(st8, 'festa', ask('festa', st8));
+        if (flags.polemica) st8 = applyOption(st8, 'polemica-redes', ask('polemica-redes', st8));
+        if (flags.podeComprarCasa) st8 = applyOption(st8, 'casa-da-familia', ask('casa-da-familia', st8));
+        if (flags.conviteInvestir) st8 = applyOption(st8, 'investir', ask('investir', st8));
         // Amadurecimento do temperamento por idade ou suspensão longa (evento narrado).
         const matured = matureTemperament(temp, evo.age, cd.longSuspension);
-        if (matured !== temp) { temp = matured; st8 = applyOption(st8, 'amadurecimento', 'seguir'); }
+        if (matured !== temp) { temp = matured; st8 = applyOption(st8, 'amadurecimento', ask('amadurecimento', st8, matured)); }
         morale = st8.moral as number;
         discipline = st8.disciplina as number;
         coachRelation = clamp((st8.relacaoTecnico as number) - (discipline < 0.3 ? 0.03 : 0), 0, 1);
@@ -322,14 +362,14 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         const ag = agentSemester(agent, yr);
         if (ag.event === 'someDinheiro') {
           wealth = Math.max(0, Math.round(wealth * (1 - ag.moneyLossFraction)));
-          if (autoChoice('empresario-some-dinheiro', temp) === 'trocar-empresario') {
+          if (ask('empresario-some-dinheiro') === 'trocar-empresario') {
             const ch = changeAgent(wealth, 'agenteLocal', yr);
             agent = ch.agent; wealth -= ch.cost; morale = clamp(morale + ch.moraleDelta, 0, 1);
           }
         } else if (ag.event === 'brigaClube') {
-          coachRelation = clamp(coachRelation + (autoChoice('empresario-briga-clube', temp) === 'apoiar-empresario' ? -0.1 : 0.05), 0, 1);
+          coachRelation = applyOption({ relacaoTecnico: coachRelation }, 'empresario-briga-clube', ask('empresario-briga-clube')).relacaoTecnico as number;
         } else if (ag.event === 'forcaVenda') {
-          const choice = autoChoice('empresario-forca-venda', temp);
+          const choice = ask('empresario-forca-venda');
           if (choice === 'aceitar-venda') wantsOut = true;
           else if (choice === 'trocar-empresario') {
             const ch = changeAgent(wealth, 'paiTio', yr);
@@ -345,7 +385,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         // Dupla nacionalidade (6.11): convite único, só enquanto o Brasil não convocou; aceitar é definitivo.
         const country = heritage ?? Object.keys(dual.residencia.ligas).map((lg) => residenceCountry(lg, seasons.filter((x) => x.division === lg).length)).find(Boolean) ?? null;
         if (!nation && !isPrincipal(next.rung) && invited({ age: evo.age, brazilCaps: selection.caps, visibility: vis, country, decided: selection.dual !== null })) {
-          const out = applyOption({ moral: morale, trocarSelecao: false }, 'dupla-nacionalidade', autoChoice('dupla-nacionalidade', temp));
+          const out = applyOption({ moral: morale, trocarSelecao: false }, 'dupla-nacionalidade', ask('dupla-nacionalidade'));
           morale = out.moral as number;
           selection.dual = out.trocarSelecao ? 'aceitou' : 'recusou';
           if (out.trocarSelecao) { nation = country; selection.nationality = country!; next = call(); }
@@ -363,7 +403,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         for (const t of TOURNAMENTS) {
           if (!isEditionYear(t, year) || !eligible(t, sel.rung, evo.age, nation ? teamName(nation) : undefined)) continue;
           const tr = createPrng(Math.imul(seed + 7, 0x9e3779b1) ^ Math.imul(year, 0x85ebca6b) ^ TOURNAMENTS.indexOf(t));
-          const res = playTournament({ tournament: t, rung: sel.rung, overall: ov(evo), mental: evo.attributes.mental, teamStrength: nation ? teamStrength(nation) : undefined }, (e) => autoChoice(e, temp), tr);
+          const res = playTournament({ tournament: t, rung: sel.rung, overall: ov(evo), mental: evo.attributes.mental, teamStrength: nation ? teamStrength(nation) : undefined }, (e) => ask(e), tr);
           const fxT = tcfg.efeitos;
           for (const d of res.decisions) morale = applyOption({ moral: morale }, d.event, d.option).moral as number;
           if (res.champion) { titles.push({ year, competition: t, clubId: 'selecao' }); morale = clamp(morale + fxT.titulo.moral, 0, 1); }
@@ -432,7 +472,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     // Mudança de posição proposta pelo técnico (6.6), decidida pela política do temperamento.
     if (clubId && !inYouth) {
       const target = coachProposal({ position, age: evo.age, attributes: evo.attributes });
-      if (target && autoChoice('mudanca-posicao', temp) === 'aceitar') {
+      if (target && ask('mudanca-posicao') !== 'recusar') {
         position = target;
         positionChanges++;
         traits = { ...traits, position };
@@ -463,7 +503,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       if (fw) {
         farewellAsked = true;
         const event = fw.kind === 'coracao' ? 'realizar-sonho' : 'retorno-formador';
-        const out = applyOption({ moral: morale, idolatria: idol[fw.clubId] ?? 0, despedida: false }, event, autoChoice(event, temp));
+        const out = applyOption({ moral: morale, idolatria: idol[fw.clubId] ?? 0, despedida: false }, event, ask(event));
         morale = out.moral as number;
         if (out.despedida) {
           goingHome = true;
@@ -476,13 +516,14 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       // Em despedida, o jogador não sai mais: só renova.
       const pick = goingHome || farewell ? null : chooseOffer(me, offers, current);
       if (goingHome) { /* contrato novo já assinado */ } else if (pick) {
-        const love = pick.heartClub && autoChoice('proposta-coracao', temp) === 'aceitar-por-amor';
-        join(pick.clubId, false, yr, love ? { ...pick, annualSalary: Math.round(pick.annualSalary * 0.7) } : pick);
+        // clube do coração: o desconto aceito vem da opção do jeito do jogador (events.json)
+        const factor = pick.heartClub ? heartSalaryFactor(temp) : 1;
+        join(pick.clubId, false, yr, factor === 1 ? pick : { ...pick, annualSalary: Math.round(pick.annualSalary * factor) });
         salaryDelays = 0;
       } else if (c) {
         c.years -= 1;
         if (c.years <= 1) {
-          const choice = autoChoice('renovacao', temp);
+          const choice = ask('renovacao');
           if (choice !== 'nao-renovar') { contract = renew(c, ov(evo) - contractOverall, choice === 'pedir-aumento'); contractOverall = ov(evo); contracts++; }
           else c.years = 1;
         }
@@ -513,5 +554,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     player, spells, titles, peakOverall, peakAge, endAge: evo.age, wearsTen, captain, idolatry: idol,
     wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, selection, stats, awards, retirement, farewell, cards, finalTemperament: temp, houseBought, discipline, seasons, earnedBRL: earned, decisiveDerbies,
   };
-  return { ...result, legacy: legacyOf(result) };
+  // Sorteios novos ficam por último para não alterar nenhum resultado anterior da mesma semente.
+  const nickname = generateNickname(player, rng);
+  const legacy = legacyOf(result);
+  return { ...result, nickname, legacy, ...headlineOf({ player, nickname, legacy }, rng) };
 }
