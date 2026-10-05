@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import type { AvatarSpec } from '../../art/avatar';
 import { kitOf } from '../../art/kits';
 import { toBand } from '../../engine/attributes';
@@ -6,7 +5,7 @@ import { t } from '../../i18n';
 import tokens from '../theme/tokens.json';
 import { clubName } from './clubText';
 import { Emblema } from './Emblema';
-import { bustSvg, svgUri } from './portrait';
+import { useBust } from './useBust';
 import './Figurinha.css';
 
 // T49c (SPEC v2.26): o jogador como figurinha de álbum. Fundo creme com as faixas do clube nos ombros;
@@ -28,18 +27,6 @@ const CARD_ART = import.meta.glob('../../assets/cartoes-over/*.webp', { eager: t
 function clubLine(position: string, clubId: string) {
   const { nome, prep } = clubName(clubId);
   return t('ui.figurinha.posicaoNoClube', { posicao: t(`positions.${position}`), prep, clube: nome });
-}
-
-function useBust(avatar: AvatarSpec | undefined, clubId: string) {
-  const [uri, setUri] = useState(null as string | null);
-  useEffect(() => {
-    if (!avatar) return undefined;
-    const kit = kitOf(clubId);
-    let alive = true;
-    void bustSvg({ ...avatar, uniform1: kit.camisa[0]!, uniform2: kit.camisa[1] ?? kit.detalhe }).then((svg) => { if (alive) setUri(svgUri(svg)); });
-    return () => { alive = false; };
-  }, [avatar, clubId]);
-  return avatar ? uri : null;
 }
 
 export function Figurinha({ name, number, overall, position, clubId = '', avatar, moldura = false, tamanho = 'pequena' }: FigurinhaProps) {

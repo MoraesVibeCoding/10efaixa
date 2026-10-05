@@ -10,6 +10,8 @@ export interface Option {
   full?: string;
   /** Frase dentro do cartão (variante "cartoes"), lida como descrição da opção. */
   detail?: string;
+  /** Variante "miniaturas": a imagem do busto (`null` enquanto carrega). Só a presença da chave liga a miniatura. */
+  thumb?: string | null;
 }
 
 export const NONE = 'nenhuma';
@@ -23,7 +25,7 @@ export interface ChoicesProps {
   error?: string | null;
   /** Frase sobre a opção escolhida (efeito, traço); vira descrição do grupo. */
   hint?: string | null;
-  variant?: 'faixa' | 'campo' | 'cartoes';
+  variant?: 'faixa' | 'campo' | 'cartoes' | 'miniaturas';
 }
 
 /** Ids das descrições do grupo: o erro primeiro, depois a frase da escolha. */
@@ -68,6 +70,14 @@ function OptionDetail({ option, id }: { option: Option; id: string }) {
 
 /** Cor vira amostra e sigla vira texto curto, com o nome completo escondido para o leitor de tela. */
 function ChoiceMark({ option, id }: { option: Option; id: string }) {
+  if ('thumb' in option) {
+    return (
+      <span className="escolha__marca escolha__marca--miniatura" title={option.label}>
+        {option.thumb ? <img className="escolha__miniatura" src={option.thumb} alt="" /> : <span className="escolha__espera" aria-hidden="true" />}
+        <span className="sr-only">{option.label}</span>
+      </span>
+    );
+  }
   if (option.full) {
     return (
       <span className="escolha__marca">

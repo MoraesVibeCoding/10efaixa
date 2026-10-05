@@ -9,6 +9,7 @@ import { createPrng } from '../../engine/prng';
 import { t } from '../../i18n';
 import { transition, type FlowState } from '../../state/flow';
 import { Choices, NONE, named, swatches, withNone, type Option } from './Choices';
+import { AvatarHeroi } from './AvatarHeroi';
 import { Figurinha } from './Figurinha';
 import { PICKS, previewAvatar, randomLook, type Look } from './look';
 import { DEFAULT_FIELD, FIELD_ERROR_ORDER, fieldErrors, type OnField } from './onField';
@@ -246,10 +247,9 @@ function IdentityStep({ c }: { c: StepCtx }) {
 function VisualStep({ c }: { c: StepCtx }) {
   return (
     <div className="quem">
-      <div className="criacao__previa">
-        <Figurinha name={c.identity.name} avatar={c.avatar} />
-        <p className="sr-only" role="status">{describeLook(c.look)}</p>
-      </div>
+      <AvatarHeroi id={c.ids} look={c.look} number={c.identity.number} styles={avatarData.styles.hair}
+        onChange={(hairStyle) => c.setLook({ ...c.look, hairStyle })} />
+      <p className="sr-only" role="status">{describeLook(c.look)}</p>
       <LookSection c={c} />
     </div>
   );
@@ -277,7 +277,6 @@ function LookSection({ c }: { c: StepCtx }) {
   const set = (k: keyof Look, v: string) => setLook({ ...look, [k]: (k === 'beard' || k === 'headband') && v === NONE ? null : v });
   const groups: { key: keyof Look; legend: string; options: Option[] }[] = [
     { key: 'skin', legend: 'pele', options: swatches(avatarData.skinTones, 'creation.skin') },
-    { key: 'hairStyle', legend: 'cabelo', options: named(avatarData.styles.hair, 'creation.hairStyle') },
     { key: 'hairColor', legend: 'corDoCabelo', options: swatches(avatarData.hairColors, 'creation.hairColor') },
     { key: 'beard', legend: 'barba', options: withNone(named(avatarData.styles.beards, 'creation.beard'), 'creation.beard') },
     { key: 'headband', legend: 'faixa', options: withNone(swatches(PICKS.faixas, 'creation.headband'), 'creation.headband') },

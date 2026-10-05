@@ -30,3 +30,8 @@ export function previewAvatar(look: Look): AvatarSpec {
     boots: hexOf(PICKS.chuteiras, look.boots)!, headband: hexOf(PICKS.faixas, look.headband),
   };
 }
+
+/** Próximo item da lista em círculo (`step` de -1 a 1): depois do último vem o primeiro, e antes do primeiro vem o último. */
+export function cycle<T>(list: readonly T[], current: T, step: number): T {
+  return list[(list.indexOf(current) + step + list.length) % list.length]!;
+}

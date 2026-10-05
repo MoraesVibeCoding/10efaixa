@@ -119,6 +119,9 @@
   "aparencia": {
    "pele": "Tom de pele",
    "cabelo": "Cabelo",
+   "seuAvatar": "Seu avatar",
+   "cabeloAnterior": "Cabelo anterior",
+   "cabeloProximo": "Próximo cabelo",
    "corDoCabelo": "Cor do cabelo",
    "barba": "Barba",
    "faixa": "Faixa de cabelo",

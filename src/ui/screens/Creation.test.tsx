@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import avatarData from '../../data/avatar.json';
 import biotypeData from '../../data/biotype.json';
 import { ARCHETYPES, archetypesFor } from '../../engine/archetypes';
@@ -139,11 +139,55 @@ describe('criação (T50, v2.30)', () => {
       expect(checkedIn('aparencia.barba')).toEqual(['cavanhaque']);
     });
 
-    it('a figurinha ao vivo mostra o nome e a prévia é anunciada', () => {
+    it('a prévia é anunciada ao leitor de tela quando o visual muda', () => {
       toVisual();
-      expect(screen.getByText('Dudu Maestro', { selector: '.figurinha__nome' })).toBeInTheDocument();
       fireEvent.click(within(group('aparencia.cabelo')).getByRole('radio', { name: t('creation.hairStyle.black-power') }));
       expect(screen.getByRole('status')).toHaveTextContent(new RegExp(t('creation.hairStyle.black-power'), 'i'));
+    });
+
+    describe('avatar-herói (T50g, v2.35)', () => {
+      const HAIR = avatarData.styles.hair;
+      const hairNow = () => checkedIn('aparencia.cabelo')[0]!;
+      const arrow = (name: string) => screen.getByRole('button', { name: t(`ui.criacao.aparencia.${name}`) });
+
+      it('mostra o busto grande, o rótulo "Seu avatar" e o nome do cabelo atual', async () => {
+        const { container } = toVisual();
+        await waitFor(() => expect(container.querySelector('.heroi__busto')).toHaveAttribute('src', expect.stringMatching(/^data:image\/svg\+xml,/)));
+        const heroi = container.querySelector('.heroi')!;
+        expect(heroi).toHaveTextContent(t('ui.criacao.aparencia.seuAvatar'));
+        expect(heroi).toHaveTextContent(t(`creation.hairStyle.${hairNow()}`));
+        expect(container.querySelector('.heroi__busto')).toHaveAttribute('alt', '');
+      });
+
+      it('as setas trocam o cabelo em ordem e voltam ao começo no fim da lista (nos dois sentidos)', () => {
+        toVisual();
+        const start = HAIR.indexOf(hairNow());
+        fireEvent.click(arrow('cabeloProximo'));
+        expect(hairNow()).toBe(HAIR[(start + 1) % HAIR.length]);
+        fireEvent.click(arrow('cabeloAnterior'));
+        fireEvent.click(arrow('cabeloAnterior'));
+        expect(hairNow()).toBe(HAIR[(start - 1 + HAIR.length) % HAIR.length]);
+      });
+
+      it('uma miniatura por cabelo, como rádios do mesmo grupo, cada uma com a imagem do penteado', async () => {
+        const { container } = toVisual();
+        const radios = within(group('aparencia.cabelo')).getAllByRole('radio');
+        expect(radios.map((r) => (r as HTMLInputElement).value)).toEqual(HAIR);
+        await waitFor(() => expect(container.querySelectorAll('.escolha__miniatura').length).toBe(HAIR.length));
+        for (const img of container.querySelectorAll('.escolha__miniatura')) expect(img).toHaveAttribute('alt', '');
+      });
+
+      it('escolher uma miniatura atualiza o herói', () => {
+        const { container } = toVisual();
+        const other = HAIR.find((h) => h !== hairNow())!;
+        fireEvent.click(within(group('aparencia.cabelo')).getByRole('radio', { name: t(`creation.hairStyle.${other}`) }));
+        expect(container.querySelector('.heroi')).toHaveTextContent(t(`creation.hairStyle.${other}`));
+      });
+
+      it('o cabelo só existe no herói: não há um segundo grupo de cabelo na tela', () => {
+        toVisual();
+        expect(screen.getAllByRole('radiogroup', { name: t('ui.criacao.aparencia.cabelo') })).toHaveLength(1);
+      });
     });
 
     it('a aparência padrão e as chances do sorteio (avatar.json) são válidas', () => {
