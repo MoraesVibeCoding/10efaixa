@@ -116,6 +116,13 @@
    "emCampo": "Em campo e na cabeça",
    "origem": "De onde ele vem?"
   },
+  "visuais": {
+   "titulo": "Visual",
+   "nome": "Visual {n}",
+   "descricao": "Visual {n} de {total}",
+   "anterior": "Visual anterior",
+   "proximo": "Próximo visual"
+  },
   "aparencia": {
    "pele": "Tom de pele",
    "cabelo": "Cabelo",

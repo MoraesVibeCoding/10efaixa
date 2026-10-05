@@ -1,0 +1,125 @@
+{
+ "_nota": "Os 10 visuais prontos da criação (SPEC v2.36). Cada um tem a imagem pintada em src/assets/visuais/visual-NN.webp e as peças da arte provisória em SVG (look), usadas onde o jogo ainda monta o busto por código. Os personagens são originais e ficcionais; o nome na tela é só 'Visual N' (i18n). Imagens provisórias: Visual 01 em 928x1152 e Visual 02 a 10 em 412x512; trocar por 1856x2304 quando chegarem (docs/arte/visuais). Aparência é só cosmética.",
+ "visuais": [
+  {
+   "id": "visual-01",
+   "n": 1,
+   "look": {
+    "skin": "t3",
+    "hairStyle": "curto",
+    "hairColor": "castanho",
+    "beard": null,
+    "headband": null,
+    "boots": "preta"
+   }
+  },
+  {
+   "id": "visual-02",
+   "n": 2,
+   "look": {
+    "skin": "t5",
+    "hairStyle": "cacheado",
+    "hairColor": "preto",
+    "beard": "rala",
+    "headband": null,
+    "boots": "preta"
+   }
+  },
+  {
+   "id": "visual-03",
+   "n": 3,
+   "look": {
+    "skin": "t6",
+    "hairStyle": "raspado",
+    "hairColor": "preto",
+    "beard": "cavanhaque",
+    "headband": null,
+    "boots": "preta"
+   }
+  },
+  {
+   "id": "visual-04",
+   "n": 4,
+   "look": {
+    "skin": "t8",
+    "hairStyle": "crespo",
+    "hairColor": "preto",
+    "beard": null,
+    "headband": null,
+    "boots": "preta"
+   }
+  },
+  {
+   "id": "visual-05",
+   "n": 5,
+   "look": {
+    "skin": "t10",
+    "hairStyle": "black-power",
+    "hairColor": "preto",
+    "beard": "cheia",
+    "headband": null,
+    "boots": "preta"
+   }
+  },
+  {
+   "id": "visual-06",
+   "n": 6,
+   "look": {
+    "skin": "t1",
+    "hairStyle": "longo",
+    "hairColor": "castanhoEscuro",
+    "beard": null,
+    "headband": null,
+    "boots": "preta"
+   }
+  },
+  {
+   "id": "visual-07",
+   "n": 7,
+   "look": {
+    "skin": "t4",
+    "hairStyle": "cacheado",
+    "hairColor": "castanhoEscuro",
+    "beard": "bigode",
+    "headband": null,
+    "boots": "preta"
+   }
+  },
+  {
+   "id": "visual-08",
+   "n": 8,
+   "look": {
+    "skin": "t7",
+    "hairStyle": "dread",
+    "hairColor": "preto",
+    "beard": "cheia",
+    "headband": null,
+    "boots": "preta"
+   }
+  },
+  {
+   "id": "visual-09",
+   "n": 9,
+   "look": {
+    "skin": "t9",
+    "hairStyle": "curto",
+    "hairColor": "preto",
+    "beard": "cavanhaque",
+    "headband": null,
+    "boots": "preta"
+   }
+  },
+  {
+   "id": "visual-10",
+   "n": 10,
+   "look": {
+    "skin": "t2",
+    "hairStyle": "curto",
+    "hairColor": "castanhoEscuro",
+    "beard": "cheia",
+    "headband": null,
+    "boots": "preta"
+   }
+  }
+ ]
+}
