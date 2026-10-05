@@ -7,7 +7,7 @@ código 1 se alguma imagem reprovar. Só mede o que dá para medir sem reconhece
 com alguém" continuam sendo conferência humana (lista no fim de cada prompt.md).
 
 Uso:  python3 docs/arte/conferir-visuais.py [pasta]   (padrão: docs/arte/visuais)
-Precisa de Pillow e numpy.  Aceita Image.jpeg, imagem.jpeg, .jpg e .png em cada pasta visual-NN.
+Precisa de Pillow e numpy.  Aceita Image.jpeg, imagem.jpeg, "Image 2.jpeg", .jpg e .png em cada pasta visual-NN.
 """
 import glob
 import os
@@ -98,11 +98,13 @@ def analyse(path):
 
 
 def find_image(folder):
-    for pat in ('Image.jpeg', 'imagem.jpeg', 'Image.jpg', 'imagem.jpg', 'Image.png', 'imagem.png'):
-        p = os.path.join(folder, pat)
-        if os.path.exists(p):
-            return p
-    return None
+    """Primeira imagem da pasta: aceita Image.jpeg, imagem.jpeg, "Image 2.jpeg" (cópia do Mac), .jpg e .png; se houver
+    mais de uma, usa a mais recente."""
+    found = []
+    for ext in ('jpeg', 'jpg', 'png'):
+        for pat in (f'[Ii]mage*.{ext}', f'[Ii]magem*.{ext}'):
+            found.extend(glob.glob(os.path.join(folder, pat)))
+    return max(found, key=os.path.getmtime) if found else None
 
 
 def main():
