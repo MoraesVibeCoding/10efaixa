@@ -13,7 +13,7 @@ Os 10 personagens são **originais e ficcionais**. Os prompts não citam nem se 
 | Visual 03 | pele parda; rosto alongado; cabeça raspada; cavanhaque | 26 anos |
 | Visual 04 | pele escura; rosto quadrado; cabelo crespo curto preto; sem barba | 21 anos |
 | Visual 05 | pele muito escura; rosto oval; black power médio preto; barba cheia e curta | 24 anos |
-| Visual 06 | pele clara; rosto redondo; cabelo médio-longo liso castanho-escuro atrás das orelhas; sem barba | 22 anos |
+| Visual 06 | pele clara; rosto redondo; cabelo liso castanho-escuro até a linha da mandíbula, atrás das orelhas; sem barba | 22 anos |
 | Visual 07 | pele morena clara; rosto triangular; cabelo cacheado médio castanho-escuro; bigode fino | 22 anos |
 | Visual 08 | pele média; rosto largo; dreads curtos pretos; barba cheia | 27 anos |
 | Visual 09 | pele escura-parda; rosto oval; cabelo preto com laterais baixas; cavanhaque rala | 19 anos |
@@ -22,6 +22,10 @@ Os 10 personagens são **originais e ficcionais**. Os prompts não citam nem se 
 ## Por que são idênticos fora do bloco CHARACTER
 
 Estilo, linha, fundo, camisa, luz, plano de cores e composição são **iguais** nos 10, para formarem um conjunto coerente e o pós-processamento tratar todos do mesmo jeito. Só o bloco CHARACTER muda.
+
+## Reforços (Visuais 01, 06 e 10)
+
+Três prompts têm um bloco extra "CRITICAL FOR THIS IMAGE", porque na primeira rodada o resultado fugiu da ficha: Visual 01 (cabeça perto demais do topo), Visual 06 (cabelo cobrindo as orelhas e descendo até os ombros; agora é até a linha da mandíbula) e Visual 10 (fios grisalhos ausentes). Os outros sete ficam como estavam.
 
 ## Especificação técnica (o que o pós-processamento espera)
 

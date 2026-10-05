@@ -29,11 +29,16 @@ CHARACTER (this image only)
 - Eyes: DARK BROWN iris (a deep brown, close to black-brown). The iris must NOT be green, blue, grey, hazel or yellow. Both eyes fully visible, looking straight into the camera.
 - Eyebrows: soft, medium-thick, dark brown.
 - Nose and lips: small, slightly rounded nose; medium lips.
-- Hair: medium-long, straight, dark-brown hair, parted in the middle, tucked BEHIND both ears and ending at the base of the neck above the shirt collar. The hair does not touch the shirt or the shoulders. Both ears visible.
+- Hair: straight dark-brown hair, parted in the middle, cut to the jaw line (chin-length, a "bob" length), tucked BEHIND both ears. The hair stops at the jaw line: it does NOT reach the neck, the collar, the shoulders or the shirt.
 - Facial hair: clean-shaven: no beard, no moustache, no stubble.
 - Expression: calm and confident, mouth closed, with a very slight smile. Not laughing, not serious, not angry.
 - No glasses, no earrings, no necklace, no headband, no cap, no hair accessories.
 - Both ears fully visible (hair never covers them).
+
+CRITICAL FOR THIS IMAGE (previous attempts got this wrong - follow exactly)
+- EARS: both ears are completely visible and uncovered. Show the full outline of each ear; the hair passes behind the top and back of each ear and never in front of it.
+- LENGTH: the hair ends at the jaw line. Below the jaw line there is only neck and skin, with no hair on the neck, collar or shoulders. The hair never touches the shirt.
+- Keep the hair dark brown; no highlights.
 
 BODY AND POSE
 Athletic build with relaxed, level shoulders. Both arms hang naturally at the sides, close to the body; the hands are below the bottom edge of the image and are not visible. The head is upright, not tilted and not turned. The body is perfectly symmetrical to the camera.

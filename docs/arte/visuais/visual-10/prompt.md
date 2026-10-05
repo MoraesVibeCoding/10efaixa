@@ -35,6 +35,11 @@ CHARACTER (this image only)
 - No glasses, no earrings, no necklace, no headband, no cap, no hair accessories.
 - Both ears fully visible (hair never covers them).
 
+CRITICAL FOR THIS IMAGE (previous attempts got this wrong - follow exactly)
+- GREY HAIR MUST BE CLEARLY VISIBLE: about 15% to 20% of the hair at the temples and sideburns is silver-grey (clearly lighter than the dark brown), blending upward into the dark-brown top.
+- The beard has several clearly visible silver-grey strands, concentrated on the chin and on both sides of the mouth (about 10% to 15% of the beard).
+- The grey is a neutral silver-grey, never yellow or blue. Eyebrows stay dark brown.
+
 BODY AND POSE
 Athletic build with relaxed, level shoulders. Both arms hang naturally at the sides, close to the body; the hands are below the bottom edge of the image and are not visible. The head is upright, not tilted and not turned. The body is perfectly symmetrical to the camera.
 

@@ -35,6 +35,11 @@ CHARACTER (this image only)
 - No glasses, no earrings, no necklace, no headband, no cap, no hair accessories.
 - Both ears fully visible (hair never covers them).
 
+CRITICAL FOR THIS IMAGE (previous attempts got this wrong - follow exactly)
+- FRAMING: zoom OUT. The whole head, from the top of the hair to the chin, occupies only about 21% of the image height (about 480 px of 2304).
+- The top of the hair is at about 12% from the top edge (about 275 px): a wide band of empty flat green is visible above the head. It must NEVER be less than 8% (185 px).
+- Do not crop or crowd the head against the top edge. The eyes are at about 30% down from the top.
+
 BODY AND POSE
 Athletic build with relaxed, level shoulders. Both arms hang naturally at the sides, close to the body; the hands are below the bottom edge of the image and are not visible. The head is upright, not tilted and not turned. The body is perfectly symmetrical to the camera.
 
