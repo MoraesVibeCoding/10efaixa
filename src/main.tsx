@@ -6,6 +6,7 @@ import '@fontsource/atkinson-hyperlegible/latin-700.css';
 import { App } from './App';
 import { themeCss } from './ui/theme/theme';
 import './ui/base.css';
+import './ui/glass.css';
 
 const theme = document.createElement('style');
 theme.textContent = themeCss();
