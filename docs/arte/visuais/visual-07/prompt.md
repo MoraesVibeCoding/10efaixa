@@ -65,7 +65,7 @@ COMPOSITION (strict; measured on a 1856 x 2304 canvas)
 
 ## Conferência (human reviewer, depois de gerar)
 
-- [ ] 4:5, lado maior de pelo menos 2000 px. Sem pixelização nem blocos na camisa e nos braços.
+- [ ] 4:5, lado maior de pelo menos 1152 px (ideal 2304). Sem pixelização nem blocos na camisa e nos braços.
 - [ ] Fundo verde uniforme, igual em todos os cantos, sem manchas.
 - [ ] Nenhuma linha preta de contorno na camisa, braços ou cabelo.
 - [ ] Faixa verde livre acima da cabeça (8% a 12% da altura). Olhos entre 26% e 34%.

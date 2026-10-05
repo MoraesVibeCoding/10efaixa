@@ -18,7 +18,8 @@ from PIL import Image
 
 BG = np.array([0, 177, 64], dtype=float)        # #00B140
 SHIRT = np.array([204, 0, 170], dtype=float)    # #CC00AA (aproximado)
-MIN_LONG_SIDE = 2000
+MIN_LONG_SIDE = 1152      # abaixo disso reprova (928x1152 é o mínimo aceito, provisório)
+WARN_LONG_SIDE = 1800     # entre o mínimo e este valor: aviso (ideal é 1856x2304)
 ASPECT = 4 / 5
 TOL = {'aspect': 0.01, 'corner': 22, 'corner_spread': 14, 'head_top': (6.0, 14.0), 'side_margin_min': 8.0, 'shirt': 70}
 
@@ -38,6 +39,8 @@ def analyse(path):
         r['fail'].append(f'proporção {w}x{h} (esperado 4:5)')
     if max(w, h) < MIN_LONG_SIDE:
         r['fail'].append(f'resolução {w}x{h}: lado maior < {MIN_LONG_SIDE}px')
+    elif max(w, h) < WARN_LONG_SIDE:
+        r['warn'].append(f'resolução {w}x{h}: serve como provisório; o ideal é 1856x2304')
 
     n = max(8, w // 60)
     corners = [a[:n, :n], a[:n, -n:], a[-n:, :n], a[-n:, -n:]]

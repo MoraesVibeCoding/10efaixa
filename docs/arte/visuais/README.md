@@ -31,7 +31,7 @@ Três prompts têm um bloco extra "CRITICAL FOR THIS IMAGE", porque na primeira 
 
 | Item | Valor |
 |---|---|
-| Proporção e tamanho | 4:5 vertical, alvo 1856 x 2304 px, resolução nativa (sem ampliar) |
+| Proporção e tamanho | 4:5 vertical. Ideal 1856 x 2304 px nativo. **Mínimo aceito 928 x 1152** (serve de provisório); abaixo disso reprova |
 | Fundo | verde chapado exato `#00B140` (RGB 0, 177, 64), igual nos quatro cantos |
 | Camisa | magenta lisa (~`#CC00AA`), sem estampa e sem contorno escuro |
 | Olhos | castanho-escuros (verde, azul, cinza, mel e amarelo conflitam com as cores-chave do recolor) |
