@@ -17,6 +17,9 @@ export interface FigurinhaProps {
   overall?: number; position?: string; clubId?: string;
   /** Aparência do jogador; o uniforme vem do clube. Sem ela, a figurinha fica só com o fundo. */
   avatar?: AvatarSpec;
+  /** v2.34: moldura metálica pela faixa de overall (precisa de `overall`; sem ele vale a figurinha comum). */
+  moldura?: boolean;
+  tamanho?: 'pequena' | 'grande';
 }
 
 const MEDALS = tokens.medalha as unknown as Record<string, { nome: string }>;
@@ -39,11 +42,14 @@ function useBust(avatar: AvatarSpec | undefined, clubId: string) {
   return avatar ? uri : null;
 }
 
-export function Figurinha({ name, number, overall, position, clubId = '', avatar }: FigurinhaProps) {
+export function Figurinha({ name, number, overall, position, clubId = '', avatar, moldura = false, tamanho = 'pequena' }: FigurinhaProps) {
   const kit = kitOf(clubId);
   const bust = useBust(avatar, clubId);
   const stripes = { '--faixa1': kit.camisa[0], '--faixa2': kit.camisa[1] ?? kit.detalhe } as React.CSSProperties;
-  return (
+  if (moldura && overall !== undefined) {
+    return <Moldurada {...{ name, number, overall, bust, stripes, tamanho }} />;
+  }
+  const comum = (
     <span className="figurinha">
       <span className="figurinha__foto" style={stripes}>
         {bust && <img className="figurinha__retrato" src={bust} alt="" width="220" height="220" />}
@@ -55,6 +61,7 @@ export function Figurinha({ name, number, overall, position, clubId = '', avatar
       {clubId && position ? <span className="figurinha__clube">{clubLine(position, clubId)}</span> : null}
     </span>
   );
+  return comum;
 }
 
 function OverCard({ overall }: { overall: number }) {
@@ -64,6 +71,26 @@ function OverCard({ overall }: { overall: number }) {
     <span className="figurinha__over over" data-medalha={medal} style={art ? { backgroundImage: `url(${art})` } : undefined}>
       <span className="sr-only">{t('ui.figurinha.over')}{t('ui.decisao.faixaOver', { faixa: t(`attributes.band.${toBand(overall).key}`) })}</span>
       <span className="over__numero">{overall}</span>
+    </span>
+  );
+}
+
+// v2.34: a figurinha dentro da moldura do metal da faixa; a arte vem de `medalha` (tokens) pela faixa de bands.json.
+function Moldurada({ name, number, overall, bust, stripes, tamanho }: { name: string; number?: number; overall: number; bust: string | null; stripes: React.CSSProperties; tamanho: 'pequena' | 'grande' }) {
+  const band = toBand(overall);
+  const medal = MEDALS[band.key]!.nome;
+  const art = CARD_ART[`../../assets/cartoes-over/${medal}.webp`];
+  return (
+    <span className={`figurinha figurinha--moldura figurinha--${tamanho}`} data-medalha={medal} style={art ? { backgroundImage: `url(${art})` } : undefined}>
+      <span className="figurinha__foto" style={stripes}>
+        {bust && <img className="figurinha__retrato" src={bust} alt="" width="220" height="220" />}
+        <span className="sr-only">{t('ui.figurinha.over')} {overall}{t('ui.decisao.faixaOver', { faixa: t(`attributes.band.${band.key}`) })}</span>
+        <span className="figurinha__over-grande" aria-hidden="true">{overall}</span>
+      </span>
+      <span className="figurinha__tarja">
+        <span className={tamanho === 'pequena' ? 'figurinha__tarja-nome sr-only' : 'figurinha__tarja-nome'}>{name}</span>
+        {number !== undefined && <span className="figurinha__tarja-numero">{number}</span>}
+      </span>
     </span>
   );
 }

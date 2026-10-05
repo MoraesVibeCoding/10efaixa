@@ -1,5 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { kitOf } from '../../art/kits';
+import bands from '../../data/bands.json';
+import tokens from '../theme/tokens.json';
 import { t } from '../../i18n';
 import { Figurinha } from './Figurinha';
 
@@ -42,5 +44,44 @@ describe('figurinha do jogador (T49c, SPEC v2.26)', () => {
     expect(src).toContain('viewBox="90 88 220 220"');
     expect(src.toUpperCase()).toContain(kitOf('palmeiras').camisa[0]!.toUpperCase());
     expect(container.querySelector('img.figurinha__retrato')).toHaveAttribute('alt', '');
+  });
+});
+
+describe('figurinha com moldura por faixa (T49h, SPEC v2.34)', () => {
+  const MEDALS = tokens.medalha as unknown as Record<string, { nome: string }>;
+
+  it('uma moldura por faixa de overall: o nome do metal e a arte vêm de bands.json e tokens, nas duas pontas de cada faixa', () => {
+    for (const band of bands) {
+      for (const overall of [band.min, band.max]) {
+        const { container, unmount } = render(<Figurinha name="Zé" number={10} overall={overall} position="meia" clubId="flamengo" moldura />);
+        const frame = container.querySelector<HTMLElement>('.figurinha--moldura')!;
+        expect(frame, `overall ${overall}`).not.toBeNull();
+        expect(frame.dataset.medalha).toBe(MEDALS[band.key]!.nome);
+        expect(frame.style.backgroundImage).toContain(`${MEDALS[band.key]!.nome}.webp`);
+        unmount();
+      }
+    }
+  });
+
+  it('nome acessível: "OVR n (faixa)" para o leitor de tela; o número do Over aparece uma vez para quem vê', () => {
+    render(<Figurinha name="Dudu Maestro" number={10} overall={78} position="meia" clubId="flamengo" moldura tamanho="grande" />);
+    expect(screen.getByText(new RegExp(`${t('ui.figurinha.over')} 78`))).toHaveClass('sr-only');
+    expect(screen.getByText('Dudu Maestro')).toBeInTheDocument();
+    expect(screen.getAllByText('78')).toHaveLength(1);
+  });
+
+  it('dois tamanhos: pequena (padrão, só o número na tarja) e grande (nome na tarja)', () => {
+    const { container, rerender } = render(<Figurinha name="Zé" number={10} overall={60} moldura />);
+    expect(container.querySelector('.figurinha--pequena')).not.toBeNull();
+    expect(container.querySelector('.figurinha__tarja-nome')).toHaveClass('sr-only');
+    rerender(<Figurinha name="Zé" number={10} overall={60} moldura tamanho="grande" />);
+    expect(container.querySelector('.figurinha--grande')).not.toBeNull();
+    expect(container.querySelector('.figurinha__tarja-nome')).not.toHaveClass('sr-only');
+  });
+
+  it('sem overall (criação) não há faixa, então não há moldura: vale a figurinha comum', () => {
+    const { container } = render(<Figurinha name="Zé" moldura />);
+    expect(container.querySelector('.figurinha--moldura')).toBeNull();
+    expect(container.querySelector('.figurinha')).not.toBeNull();
   });
 });
