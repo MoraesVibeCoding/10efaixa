@@ -1,0 +1,11 @@
+# Ferramentas de terceiros instaladas no repositório: não fazem parte do jogo e inflam o grafo
+.agents/
+.github/skills/
+.github/agents/
+.github/hooks/
+.claude/skills/impeccable/
+.claude/skills/baoyu-image-gen/
+.claude/skills/graphify/
+.claude/skills/vercel-react-best-practices/
+.claude/skills/vercel-web-design-guidelines/
+.impeccable/
