@@ -47,8 +47,8 @@ Um simulador de carreira rápido e compartilhável na língua do torcedor brasil
 - Nome: **10eFaixa**. O número gigante é o elemento memorável; a faixa horizontal carrega informação (progresso, faixas de atributo, veredito).
 - Paleta fixa (SPEC 7): Papel `#EEE9DF`, Marinho de vestiário `#14213D`, Verde gramado `#1E7B4F` (cor de base), Amarelo braçadeira `#FFC21A` (marca: abertura e faixa de capitão), Vermelho cartão `#D62839` (só lesão, queda e alerta), Cinza de linha `#C9CFC6`.
 - Tipografia fixa: Big Shoulders Display (números e títulos) e Atkinson Hyperlegible (texto), sempre com fonte reserva.
-- Tema claro: papel creme, tinta marinho e verde gramado como cor de base, com caixas de borda grossa e sombra dura (referência do usuário: o jogo 7a0 no modo claro, com verde no lugar do laranja).
-- Movimento: um único momento animado (o número "carimbando" na abertura).
+- Tema claro (e escuro): papel creme, tinta marinho e verde gramado como cor de base. **Desde a v2.34**, superfícies sólidas com borda fina e sombra suave, e vidro fosco só em sobreposições (prévia da criação, caixa do jogador e faixa de baixo da decisão, revelação do overall), com fallback sólido. A figurinha com moldura por faixa de overall é a unidade visual do jogador. Dourado e metais só como cor de raridade.
+- Movimento: dois momentos animados (o número "carimbando" na abertura e a figurinha "colando" na revelação do overall), ambos desligados com `prefers-reduced-motion`.
 - Tom de voz: direto, coloquial, frases curtas, sabor de narração de rádio. Botões dizem o que acontece ("Aceitar proposta", "Ficar no clube"). Zoeira só com o próprio jogador.
 - Sem escudos oficiais, sem marcas, sem imagem de pessoa real.
 

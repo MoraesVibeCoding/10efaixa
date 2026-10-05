@@ -1,6 +1,6 @@
 # Proposta v2.34: visual "Álbum com vidro"
 
-Estado: **aguardando "DE ACORDO" do usuário.** Nada foi implementado e o `SPEC.md` ainda não foi alterado.
+Estado: **aprovada pelo usuário em 2026-10-05 ("de acordo"); as 5 decisões em aberto seguiram as propostas deste documento.** Registrada na SPEC v2.34 (T49e). Implementação nas tarefas T49f em diante.
 
 Exemplo visual aprovado em 2026-10-05: criação (tela 1), revelação do overall (tela 2) e decisão na variação **B** (cena inteira, opções enxutas). Fonte do exemplo: https://claude.ai/artifact/9rMNZKWhDc9t8S9cpbWrS8
 
@@ -42,7 +42,7 @@ Todas dependem do "DE ACORDO" desta proposta. Cada uma termina com testes, typec
 
 | ID | Tarefa | Critério de aceitação |
 |---|---|---|
-| T49e | Registrar a v2.34 no SPEC (seção 7 e log), `DESIGN.md` e `PRODUCT.md`; corrigir o `DESIGN.md`, desatualizado em relação ao `tokens.json` | Documentos coerentes com os tokens; nenhuma divergência de cor ou fonte |
+| T49e | Registrar a v2.34 no SPEC (seção 7 e log) e no `PRODUCT.md`; cores do `DESIGN.md` alinhadas ao `tokens.json` e nota de estado (feita) | Documentos coerentes com os tokens; nenhuma divergência de cor ou fonte. O `DESIGN.md` é regenerado na T49j |
 | T49f | Tokens do álbum: vidro, borda do vidro, scrim, sombra suave, nos temas claro e escuro | Teste de contraste de texto sobre vidro no pior fundo (preto e branco por trás) ≥ 4,5:1 nos dois temas |
 | T49g | Superfície de vidro (componente/classe) com fallback sólido | Teste: sem `backdrop-filter`, a superfície fica opaca; no máximo 2 camadas de vidro por tela; **confirmar na documentação oficial** o uso de `backdrop-filter` e de `prefers-reduced-transparency` antes de implementar |
 | T49h | Figurinha com moldura por faixa (estender `Figurinha.tsx`), tamanhos pequeno e grande | Faixa vem de `bands.json` (nada fixo no código); nome acessível com Over e faixa; teste das 6 faixas |

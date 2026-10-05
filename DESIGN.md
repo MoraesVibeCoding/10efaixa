@@ -6,23 +6,23 @@ colors:
   escuro-superficie: "#2C2D2D"
   escuro-texto: "#F2F4EF"
   escuro-textoSuave: "#C4C6C6"
-  escuro-linha: "#414242"
+  escuro-linha: "#8A8C8C"
   escuro-trilho: "#505151"
-  escuro-destaque: "#FFC21A"
-  escuro-sobreDestaque: "#14213D"
+  escuro-destaque: "#4CC38A"
+  escuro-sobreDestaque: "#10261B"
   escuro-positivo: "#63D7A0"
   escuro-negativo: "#FF8E97"
   escuro-foco: "#FFC21A"
   escuro-siglaTexto: "#FFFFFF"
   escuro-siglaContorno: "#14213D"
-  claro-fundo: "#F2F4EF"
-  claro-superficie: "#E5E9E0"
+  claro-fundo: "#EEE9DF"
+  claro-superficie: "#F8F5EE"
   claro-texto: "#14213D"
-  claro-textoSuave: "#414D69"
-  claro-linha: "#C9CFC6"
-  claro-trilho: "#14213D"
-  claro-destaque: "#FFC21A"
-  claro-sobreDestaque: "#14213D"
+  claro-textoSuave: "#4E5968"
+  claro-linha: "#14213D"
+  claro-trilho: "#D5CEC0"
+  claro-destaque: "#1E7B4F"
+  claro-sobreDestaque: "#FFFFFF"
   claro-positivo: "#18683F"
   claro-negativo: "#B81E2E"
   claro-foco: "#14213D"
@@ -143,6 +143,8 @@ components:
 ---
 
 # Design System: 10eFaixa
+
+> **Estado deste documento (2026-10-05).** Descreve a build anterior à v2.19 (tela de decisão única, em grafite, sem sombra nem desfoque). Os valores de cor do frontmatter já seguem o `tokens.json` atual. A direção vigente é a **v2.34 "Álbum com vidro"** (SPEC seção 7 e `docs/proposta-visual-v2.34.md`): superfícies com borda fina e sombra suave, vidro só em sobreposições, figurinha com moldura por faixa, decisão com cena inteira. Onde este texto disser "sem sombra, sem desfoque, sem animação", vale a SPEC. O documento será **regenerado ao fim da T49j**, com as telas já construídas.
 
 Registro do sistema **como construído**. A fonte dos tokens é `src/ui/theme/tokens.json`; `src/ui/theme/theme.ts` transforma cada chave em variável CSS (`--cor-*`, `--fonte-*`, `--tipo-*`, `--espaco-*`, `--toque-minimo`). Os nomes aqui são os do `tokens.json`; no frontmatter as cores levam o prefixo do tema (`escuro-`, `claro-`) porque o formato não tem temas. Até agora existe uma única tela construída, a de decisão (`src/ui/screens/Decision.tsx`), e ela força o tema escuro. O tema claro existe nos tokens e é o padrão de `:root`, mas ainda não foi visto em nenhuma tela: trate os valores claros como tokens conferidos por teste de contraste, não como composição validada.
 
