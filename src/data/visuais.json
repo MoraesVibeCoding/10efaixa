@@ -1,5 +1,5 @@
 {
- "_nota": "Os 10 visuais prontos da criação (SPEC v2.36). Cada um tem a imagem pintada em src/assets/visuais/visual-NN.webp e as peças da arte provisória em SVG (look), usadas onde o jogo ainda monta o busto por código. Os personagens são originais e ficcionais; o nome na tela é só 'Visual N' (i18n). Imagens provisórias: Visual 01 em 928x1152 e Visual 02 a 10 em 412x512; trocar por 1856x2304 quando chegarem (docs/arte/visuais). Aparência é só cosmética.",
+ "_nota": "Os 10 visuais prontos da criação (SPEC v2.36). Cada um tem a imagem pintada em src/assets/visuais/visual-NN.webp e as peças da arte provisória em SVG (look), usadas onde o jogo ainda monta o busto por código. Os personagens são originais e ficcionais; o nome na tela é só 'Visual N' (i18n). Imagens provisórias, geradas pelo usuário (fontes em docs/arte/visuais/visual-NN/Image.jpeg: Visual 01 em 928x1152 e 02 a 10 em 412x512) e processadas por docs/arte/processar_visuais.py: fundo verde removido (transparência), tela 4:5, cabeça a 10% do topo. Trocar as fontes por 1856x2304 quando chegarem e rodar o script de novo. Aparência é só cosmética.",
  "visuais": [
   {
    "id": "visual-01",

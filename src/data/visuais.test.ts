@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import avatarData from './avatar.json';
 import visuais from './visuais.json';
 import { t } from '../i18n';
@@ -40,5 +42,22 @@ describe('visuais prontos (T50g, v2.36)', () => {
   it('cada visual tem a imagem provisória visual-NN.webp, em 4:5', () => {
     for (const v of LIST) expect(Object.keys(ART), v.id).toContain(`../assets/visuais/${v.id}.webp`);
     expect(Object.keys(ART)).toHaveLength(10);
+  });
+
+  // pós-processamento (docs/arte/processar_visuais.py): fundo transparente e tela 4:5, lidos do cabeçalho do WebP
+  const header = (id: string) => {
+    const b = readFileSync(join(__dirname, '..', 'assets', 'visuais', `${id}.webp`));
+    const riff = b.toString('ascii', 0, 4) === 'RIFF' && b.toString('ascii', 8, 12) === 'WEBP';
+    const vp8x = b.toString('ascii', 12, 16) === 'VP8X';
+    return { riff, vp8x, alpha: vp8x && (b[20]! & 0x10) !== 0, w: vp8x ? b.readUIntLE(24, 3) + 1 : 0, h: vp8x ? b.readUIntLE(27, 3) + 1 : 0 };
+  };
+
+  it('os retratos são WebP com canal alfa (fundo verde removido) e proporção 4:5', () => {
+    for (const v of LIST) {
+      const h = header(v.id);
+      expect(h.riff, `${v.id} é WebP`).toBe(true);
+      expect(h.alpha, `${v.id} tem transparência`).toBe(true);
+      expect(Math.abs(h.w / h.h - 0.8), `${v.id} ${h.w}x${h.h}`).toBeLessThan(0.01);
+    }
   });
 });

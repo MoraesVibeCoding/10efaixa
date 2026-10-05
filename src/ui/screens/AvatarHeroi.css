@@ -6,7 +6,7 @@
   block-size: min(54dvh, 30rem);
   border: var(--forma-borda-fina) solid var(--cor-linha);
   border-radius: var(--forma-raio-cartao);
-  background: var(--cor-trilho);
+  background: var(--cor-destaque); /* o retrato é transparente (fundo removido): o palco é o gramado */
   box-shadow: var(--forma-sombra-suave);
 }
 .heroi__numero {
@@ -66,9 +66,9 @@
   padding: 0;
   overflow: hidden;
   border-radius: var(--forma-raio);
-  background: var(--cor-superficie);
+  background: var(--cor-destaque);
 }
 .escolha__miniatura { inline-size: 100%; block-size: 100%; object-fit: cover; object-position: center top; }
 .escolha__espera { display: block; inline-size: 100%; block-size: 100%; background: var(--cor-trilho); }
-.escolhas--miniaturas .escolha__input:checked + .escolha__marca--miniatura { background: var(--cor-superficie); box-shadow: none; outline: 3px solid var(--cor-destaque); outline-offset: -3px; }
+.escolhas--miniaturas .escolha__input:checked + .escolha__marca--miniatura { background: var(--cor-destaque); box-shadow: none; outline: 3px solid var(--cor-destaque); outline-offset: -3px; }
 .escolhas--miniaturas .escolha__input:focus-visible + .escolha__marca--miniatura { outline: 3px solid var(--cor-foco); outline-offset: 1px; }
