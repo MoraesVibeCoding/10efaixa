@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import avatarData from '../../data/avatar.json';
 import biotypeData from '../../data/biotype.json';
@@ -143,6 +145,21 @@ describe('criação (T50, v2.30)', () => {
       toVisual();
       fireEvent.click(within(group('aparencia.cabelo')).getByRole('radio', { name: t('creation.hairStyle.black-power') }));
       expect(screen.getByRole('status')).toHaveTextContent(new RegExp(t('creation.hairStyle.black-power'), 'i'));
+    });
+
+    it('grupos de cor mostram o nome da escolhida sob o rótulo e acompanham a escolha (sem ocupar linha nova)', () => {
+      const { container } = toVisual();
+      const shown = (k: string) => group(k).closest('.escolhas')!.querySelector('.escolhas__escolhida');
+      expect(shown('aparencia.pele')).toHaveTextContent(t(`creation.skin.${checkedIn('aparencia.pele')[0]}`));
+      const other = within(group('aparencia.pele')).getAllByRole('radio').find((r) => !(r as HTMLInputElement).checked)!;
+      fireEvent.click(other);
+      expect(shown('aparencia.pele')).toHaveTextContent(t(`creation.skin.${(other as HTMLInputElement).value}`));
+      expect(shown('aparencia.pele')).toHaveAttribute('aria-hidden', 'true');
+      // o nome do grupo para o leitor de tela continua só o rótulo
+      expect(screen.getByRole('radiogroup', { name: t('ui.criacao.aparencia.pele') })).toBeInTheDocument();
+      // barba (texto, não cor) não ganha o nome repetido
+      expect(group('aparencia.barba').closest('.escolhas')!.querySelector('.escolhas__escolhida')).toBeNull();
+      expect(container.querySelectorAll('.escolhas__escolhida').length).toBeGreaterThan(0);
     });
 
     describe('avatar-herói (T50g, v2.35)', () => {
@@ -363,5 +380,18 @@ describe('computador (≥ 64rem): identidade e visual juntos (T50e, v2.30; v2.35
     fireEvent.click(screen.getByRole('button', { name: t('ui.criacao.voltar') }));
     fireEvent.click(screen.getByRole('button', { name: t('ui.criacao.voltar') }));
     expect(field('nome')).toHaveValue('Dudu Maestro');
+  });
+});
+
+describe('criação com superfícies suaves (T50g, SPEC 7 v2.34)', () => {
+  const css = readFileSync(join(__dirname, 'Creation.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+  it('sem borda grossa nem sombra dura: borda fina e sombra suave dos tokens', () => {
+    expect(css).not.toContain('var(--forma-borda)');
+    expect(css).not.toMatch(/var\(--forma-sombra\)\s+var\(--forma-sombra\)/);
+    expect(css).toContain('var(--forma-borda-fina)');
+    expect(css).toContain('var(--forma-sombra-suave)');
+  });
+  it('opção curta (barba, faixa de texto) é pílula', () => {
+    expect(css).toMatch(/\.escolha__marca\s*\{[^}]*border-radius:\s*999px/);
   });
 });

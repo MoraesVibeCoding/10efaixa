@@ -59,7 +59,7 @@
 .escolhas.escolhas--miniaturas { grid-template-columns: minmax(0, 1fr); } /* classe dobrada: a regra base .escolhas (7rem + 1fr) vem depois no CSS */
 .escolhas--miniaturas .escolhas__rotulo { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .escolhas--miniaturas .escolhas__lista { margin-inline-end: 0; padding: 3px; }
-.escolha__marca--miniatura {
+.escolhas--miniaturas .escolha__marca--miniatura {
   inline-size: 3.25rem;
   block-size: 3.5rem;
   min-inline-size: 0;

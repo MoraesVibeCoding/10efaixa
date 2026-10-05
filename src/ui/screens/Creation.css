@@ -24,8 +24,8 @@
   inline-size: 100%;
   min-block-size: var(--toque-compacto);
   padding: 0 var(--espaco-3);
-  border: var(--forma-borda) solid var(--cor-linha);
-  border-radius: var(--forma-raio);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
+  border-radius: var(--forma-raio-cartao);
   background: var(--cor-superficie);
   color: var(--cor-texto);
   font: inherit;
@@ -39,8 +39,8 @@
 .criacao__botao {
   min-block-size: var(--toque-minimo);
   padding: 0 var(--espaco-3);
-  border: var(--forma-borda) solid var(--cor-linha);
-  border-radius: var(--forma-raio);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
+  border-radius: var(--forma-raio-cartao);
   background: var(--cor-superficie);
   font-weight: 700;
   cursor: pointer;
@@ -50,7 +50,7 @@
 .criacao__botao--principal {
   background: var(--cor-destaque);
   color: var(--cor-sobre-destaque);
-  box-shadow: var(--forma-sombra) var(--forma-sombra) 0 var(--cor-linha);
+  box-shadow: var(--forma-sombra-suave);
 }
 @media (hover: hover) {
   .criacao__botao:hover { background: var(--cor-fundo); }
@@ -71,8 +71,8 @@
 .criacao__sortear {
   min-block-size: var(--toque-compacto);
   padding: 0 var(--espaco-3);
-  border: var(--forma-borda) solid var(--cor-linha);
-  border-radius: var(--forma-raio);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
+  border-radius: var(--forma-raio-cartao);
   background: var(--cor-superficie);
   font-weight: 700;
   cursor: pointer;
@@ -84,6 +84,8 @@
 .escolhas { display: grid; grid-template-columns: 7rem minmax(0, 1fr); align-items: center; min-inline-size: 0; }
 .escolhas__erro { grid-column: 1 / -1; }
 /* uma faixa por grupo, que desliza para o lado: a tela inteira cabe em 390×844 sem rolar (o foco do teclado rola a faixa) */
+.escolhas__cabeca { display: grid; align-content: center; min-inline-size: 0; }
+.escolhas__escolhida { font-size: 0.8125rem; line-height: 1.15; color: var(--cor-texto-suave); }
 .escolhas__lista {
   display: flex;
   gap: var(--espaco-1);
@@ -104,15 +106,16 @@
   min-block-size: var(--toque-compacto);
   min-inline-size: var(--toque-compacto);
   padding: 0 var(--espaco-2);
-  border: var(--forma-borda) solid var(--cor-linha);
-  border-radius: var(--forma-raio);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
+  border-radius: var(--forma-raio-cartao);
   background: var(--cor-superficie);
   font-size: var(--tipo-apoio);
   font-weight: 700;
+  border-radius: 999px; /* opção curta (barba, faixa de texto): pílula */
 }
 .escolha--cor .escolha__marca { padding: 0; border-radius: 50%; }
 .escolha__amostra { inline-size: 1.5rem; block-size: 1.5rem; border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.25); }
-.escolha__input:checked + .escolha__marca { background: var(--cor-destaque); color: var(--cor-sobre-destaque); box-shadow: var(--forma-sombra) var(--forma-sombra) 0 var(--cor-linha); }
+.escolha__input:checked + .escolha__marca { background: var(--cor-destaque); border-color: var(--cor-destaque); color: var(--cor-sobre-destaque); }
 /* anéis desenhados para dentro: a faixa rola (overflow) e cortaria um contorno para fora */
 .escolha--cor .escolha__input:checked + .escolha__marca { background: var(--cor-superficie); box-shadow: inset 0 0 0 4px var(--cor-destaque); }
 .escolha__input:focus-visible + .escolha__marca { outline: 3px solid var(--cor-foco); outline-offset: -5px; }
@@ -131,8 +134,8 @@
   margin: 0;
   padding: 0;
   overflow: visible;
-  border-radius: var(--forma-raio);
-  border: var(--forma-borda) solid var(--cor-linha);
+  border-radius: var(--forma-raio-cartao);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
   /* gramado em faixas, linha do meio e grande área: só fundo, sem informação */
   background:
     linear-gradient(90deg, transparent calc(50% - 1px), rgb(255 255 255 / 0.55) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
@@ -164,15 +167,15 @@
   display: grid;
   gap: 2px;
   padding: var(--espaco-3);
-  border: var(--forma-borda) solid var(--cor-linha);
-  border-radius: var(--forma-raio);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
+  border-radius: var(--forma-raio-cartao);
   background: var(--cor-superficie);
 }
 .escolhas--cartoes .escolha__marca { all: unset; font-family: var(--fonte-titulo); font-size: 1.25rem; font-weight: 900; }
 .escolhas--cartoes .escolha__detalhe { font-size: var(--tipo-apoio); line-height: 1.35; color: var(--cor-texto-suave); }
 /* no cartão, a marcação é a borda: o nome não ganha o fundo de opção marcada das faixas */
 .escolhas--cartoes .escolha__input:checked + .escolha__marca { background: none; color: inherit; box-shadow: none; }
-.escolhas--cartoes .escolha:has(.escolha__input:checked) { border-color: var(--cor-destaque); box-shadow: inset 0 0 0 2px var(--cor-destaque), var(--forma-sombra) var(--forma-sombra) 0 var(--cor-destaque); }
+.escolhas--cartoes .escolha:has(.escolha__input:checked) { border-color: var(--cor-destaque); box-shadow: inset 0 0 0 2px var(--cor-destaque), var(--forma-sombra-suave); }
 .escolhas--cartoes .escolha:has(.escolha__input:focus-visible) { outline: 3px solid var(--cor-foco); outline-offset: 2px; }
 
 /* computador (T50e, v2.30): "quem é ele" e "em campo" lado a lado numa página só */

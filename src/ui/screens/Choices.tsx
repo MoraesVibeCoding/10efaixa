@@ -37,9 +37,13 @@ function describedBy(id: string, error: string | null, hint: string | null) {
 export function Choices({ id, name, legend, options, value, onChange, error = null, hint = null, variant = 'faixa' }: ChoicesProps) {
   const list = useRef(null as HTMLDivElement | null);
   useEffect(() => { revealChecked(list.current); }, [value]);
+  const chosen = options.some((o) => o.swatch) ? options.find((o) => o.id === value) : undefined;
   return (
     <div className={`escolhas escolhas--${variant}`}>
-      <span id={`${id}-rotulo`} className="escolhas__rotulo">{legend}</span>
+      <span className="escolhas__cabeca">
+        <span id={`${id}-rotulo`} className="escolhas__rotulo">{legend}</span>
+        {chosen ? <span className="escolhas__escolhida" aria-hidden="true">{chosen.label}</span> : null}
+      </span>
       <div className="escolhas__lista" ref={list} role="radiogroup" aria-labelledby={`${id}-rotulo`}
         aria-describedby={describedBy(id, error, hint)} aria-invalid={error ? true : undefined}>
         {options.map((o, i) => (
