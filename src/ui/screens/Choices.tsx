@@ -28,6 +28,12 @@ export interface ChoicesProps {
   variant?: 'faixa' | 'campo' | 'cartoes' | 'miniaturas';
 }
 
+/** Opção marcada de um grupo de cores (só grupos com amostra mostram o nome ao lado do rótulo). Função declarada: o guarda do i18n lê "=>" entre tags JSX como texto solto. */
+function chosenSwatch(options: Option[], value: string) {
+  if (!options.some((o) => o.swatch)) return undefined;
+  return options.find((o) => o.id === value);
+}
+
 /** Ids das descrições do grupo: o erro primeiro, depois a frase da escolha. */
 function describedBy(id: string, error: string | null, hint: string | null) {
   const ids = [error ? `${id}-erro` : '', hint ? `${id}-dica` : ''].filter(Boolean).join(' ');
@@ -37,7 +43,7 @@ function describedBy(id: string, error: string | null, hint: string | null) {
 export function Choices({ id, name, legend, options, value, onChange, error = null, hint = null, variant = 'faixa' }: ChoicesProps) {
   const list = useRef(null as HTMLDivElement | null);
   useEffect(() => { revealChecked(list.current); }, [value]);
-  const chosen = options.some((o) => o.swatch) ? options.find((o) => o.id === value) : undefined;
+  const chosen = chosenSwatch(options, value);
   return (
     <div className={`escolhas escolhas--${variant}`}>
       <span className="escolhas__cabeca">
