@@ -70,7 +70,7 @@ Detalhes de aparência, biotipo, temperamento, apelido e cenas na seção 6.17.
 1. **Quem é ele** (nada aqui mexe nos atributos): figurinha ao vivo; nome; número; estado natal; clube de coração; comemoração.
 2. **Seu visual** (v2.35; nada aqui mexe nos atributos): o visual já vem **sorteado** ao abrir (PRNG com semente), com o botão **"Sortear"** ao lado do título; tudo continua editável depois do sorteio (avatar-herói, miniaturas e cores: T50g).
 3. **Em campo e cabeça** (tudo que pesa no jogo): posição (campinho), estilo (arquétipos da posição), perna boa, altura (só a faixa da posição), compleição, temperamento e mentalidade.
-3. **Tipo de início:** origem (base, peneira ou várzea) e **sonho da carreira** (v2.31): Seleção, virar ídolo, jogar na Europa ou um clube só. O sonho muda o peso de alguns eventos e o veredito final diz se ele se realizou; não mexe em atributos. Depois vêm o sorteio e o primeiro clube; ao assinar, a figurinha ganha o uniforme e o emblema do clube (apresentação).
+4. **Tipo de início:** origem (base, peneira ou várzea) e **sonho da carreira** (v2.31): Seleção, virar ídolo, jogar na Europa ou um clube só. O sonho muda o peso de alguns eventos e o veredito final diz se ele se realizou; não mexe em atributos. Depois vêm o sorteio e o primeiro clube; ao assinar, a figurinha ganha o uniforme e o emblema do clube (apresentação).
 
 - **Nome:** passa por **filtro de palavras bloqueadas** (palavrões, ofensas e nomes de pessoas reais conhecidas). Nome recusado mostra mensagem clara pedindo outro.
 - **Estado natal:** qualquer um dos 27 estados.
