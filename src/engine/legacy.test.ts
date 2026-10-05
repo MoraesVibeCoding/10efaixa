@@ -100,6 +100,9 @@ describe('veredito e rótulos (T40, SPEC 6.15)', () => {
     expect(verdictOf(f({ temporadasElite: Number(req('titularDeSerieA').temporadasElite) - 1 }), min('titularDeSerieA'))).toBe('jogadorDeSerieB');
     expect(verdictOf(f({ convocacoesBase: 3 }), 5)).toBe('promessaQueNaoVingou');
     expect(verdictOf(f({ convocacoesBase: 3, convocacoes: 2 }), 5)).not.toBe('promessaQueNaoVingou');
+    // uma única convocação de base não faz uma "promessa" (mantém o veredito abaixo de 15% em toda origem)
+    expect(verdictOf(f({ convocacoesBase: 1 }), 5)).not.toBe('promessaQueNaoVingou');
+    expect(verdictOf(f({ convocacoesBase: 2 }), 5)).toBe('promessaQueNaoVingou');
     expect(verdictOf(f({ clubes: 7 }), 2)).toBe('rodadoDoInterior');
     expect(verdictOf(f(), 2)).toBe('jogadorDeSerieB');
   });
@@ -123,6 +126,16 @@ describe('veredito e rótulos (T40, SPEC 6.15)', () => {
       expect((headlines.comentarioRotulo as Record<string, string[]>)[l]?.length).toBeGreaterThan(0);
     }
     expect(validateLegacyConfig({ ...cfg, rotulosReserva: cfg.rotulosReserva.slice(0, -1) })).not.toEqual([]);
+  });
+
+  it('rótulos raros: fronteiras calibradas na T40', () => {
+    const has = (id: string, facts: Ctx) => labelsOf(f(facts)).some((l) => l.id === id);
+    // clube formador + um profissional contam como "um clube só"
+    expect(has('idoloDeUmClubeSo', { clubes: 2, idolatriaMax: 75 })).toBe(true);
+    expect(has('idoloDeUmClubeSo', { clubes: 3, idolatriaMax: 90 })).toBe(false);
+    expect(has('idoloDeUmClubeSo', { clubes: 2, idolatriaMax: 74 })).toBe(false);
+    expect(has('ganhouMuitoEGastouTudo', { ganhoBRL: 2e7, fracaoGuardada: 0.75 })).toBe(true);
+    expect(has('ganhouMuitoEGastouTudo', { ganhoBRL: 2e7, fracaoGuardada: 0.76 })).toBe(false);
   });
 
   it('cada rótulo tem uma carreira que o ganha', () => {
