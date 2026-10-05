@@ -9,7 +9,7 @@ import { CREATION_STEPS } from '../../state/flow';
 import { t } from '../../i18n';
 import { Creation } from './Creation';
 
-// T50 (SPEC 6.1, v2.30): criação em duas telas + tipo de início. Tela 1 "quem é ele": identidade e visual.
+// T50 (SPEC 6.1, v2.30; v2.35): criação em três telas + tipo de início. Tela 1 "quem é ele": identidade. Tela 2 "seu visual".
 const setup = (seed = 7) => {
   const onExit = vi.fn();
   const onFinish = vi.fn();
@@ -34,7 +34,7 @@ describe('criação (T50, v2.30)', () => {
     for (const step of CREATION_STEPS) expect(() => t(`ui.criacao.passos.${step}`)).not.toThrow();
   });
 
-  it('abre na tela 1 de 3 com os campos de identidade rotulados', () => {
+  it('abre na tela 1 com os campos de identidade rotulados', () => {
     setup();
     expect(title('quemE')).toBeInTheDocument();
     expect(screen.getByText(t('ui.criacao.progresso', { passo: 1, total: CREATION_STEPS.length }))).toBeInTheDocument();
@@ -93,12 +93,12 @@ describe('criação (T50, v2.30)', () => {
     expect(within(field('clube')).getByRole('option', { name: t('ui.criacao.quemE.nenhum') })).toHaveValue('');
   });
 
-  it('com a tela 1 válida, avança com Enter e o Voltar mantém o que foi preenchido', () => {
+  it('com a tela 1 válida, avança com Enter para o visual e o Voltar mantém o que foi preenchido', () => {
     setup();
     fillIdentity();
     fireEvent.submit(field('nome').closest('form')!);
-    expect(title('emCampo')).toBeInTheDocument();
-    expect(title('emCampo')).toHaveFocus();
+    expect(title('visual')).toBeInTheDocument();
+    expect(title('visual')).toHaveFocus();
     fireEvent.click(screen.getByRole('button', { name: t('ui.criacao.voltar') }));
     expect(field('nome')).toHaveValue('Dudu Maestro');
     expect(field('estado')).toHaveValue('BA');
@@ -110,25 +110,26 @@ describe('criação (T50, v2.30)', () => {
     expect(onExit).toHaveBeenCalledOnce();
   });
 
-  describe('visual (só visual; sorteado ao abrir, editável)', () => {
+  describe('visual (tela própria; sorteado ao abrir, editável)', () => {
+    const toVisual = (seed = 7) => { const view = setup(seed); fillIdentity(); advance(); return view; };
     const LOOK = ['pele', 'cabelo', 'corDoCabelo', 'barba', 'faixa', 'chuteira'].map((k) => `aparencia.${k}`);
     const snapshot = () => LOOK.map(checkedIn);
 
     it('seis grupos de rádio, cada um com exatamente um valor marcado', () => {
-      setup();
+      toVisual();
       for (const k of LOOK) expect(checkedIn(k)).toHaveLength(1);
       expect(within(group('aparencia.pele')).getAllByRole('radio')).toHaveLength(avatarData.skinTones.length);
       expect(within(group('aparencia.cabelo')).getAllByRole('radio')).toHaveLength(avatarData.styles.hair.length);
     });
 
     it('o sorteio inicial vem da semente: mesma semente, mesmo visual', () => {
-      const a = setup(42); const first = snapshot(); a.unmount();
-      setup(42);
+      const a = toVisual(42); const first = snapshot(); a.unmount();
+      toVisual(42);
       expect(snapshot()).toEqual(first);
     });
 
     it('"Sortear" fica junto do título do visual e troca o visual; a escolha continua editável', () => {
-      setup(42);
+      toVisual(42);
       const before = snapshot();
       const sortear = screen.getByRole('button', { name: t('ui.criacao.quemE.sortear') });
       expect(sortear.closest('.criacao__secao')).toHaveTextContent(t('ui.criacao.quemE.visual'));
@@ -139,8 +140,7 @@ describe('criação (T50, v2.30)', () => {
     });
 
     it('a figurinha ao vivo mostra o nome e a prévia é anunciada', () => {
-      setup();
-      fireEvent.change(field('nome'), { target: { value: 'Dudu Maestro' } });
+      toVisual();
       expect(screen.getByText('Dudu Maestro', { selector: '.figurinha__nome' })).toBeInTheDocument();
       fireEvent.click(within(group('aparencia.cabelo')).getByRole('radio', { name: t('creation.hairStyle.black-power') }));
       expect(screen.getByRole('status')).toHaveTextContent(new RegExp(t('creation.hairStyle.black-power'), 'i'));
@@ -164,6 +164,7 @@ describe('tela 2: em campo e cabeça (T50d, v2.30)', () => {
   const toField = () => {
     const view = setup();
     fillIdentity();
+    advance();
     advance();
     return view;
   };
@@ -248,6 +249,7 @@ describe('tela 3: tipo de início e fim da criação (T50e, v2.30)', () => {
     const view = setup();
     fillIdentity();
     advance();
+    advance();
     fireEvent.click(within(group('emCampo.posicao')).getByRole('radio', { name: t('positions.atacante') }));
     fireEvent.click(within(group('emCampo.estilo')).getByRole('radio', { name: t('archetypes.archetype.matador') }));
     fireEvent.click(within(group('emCampo.temperamento')).getByRole('radio', { name: t('creation.temperament.frio') }));
@@ -287,23 +289,25 @@ describe('tela 3: tipo de início e fim da criação (T50e, v2.30)', () => {
   });
 });
 
-describe('computador (≥ 64rem): telas 1 e 2 juntas (T50e, v2.30)', () => {
+describe('computador (≥ 64rem): identidade e visual juntos (T50e, v2.30; v2.35)', () => {
   const desktop = (matches: boolean) => vi.stubGlobal('matchMedia', (q: string) => ({ matches, media: q, addEventListener() {}, removeEventListener() {} }));
   afterEach(() => vi.unstubAllGlobals());
 
-  it('mostra identidade e "em campo" na mesma tela, em 2 passos', () => {
+  it('mostra identidade e visual na mesma tela, em 3 páginas no total', () => {
     desktop(true);
     setup();
-    expect(screen.getByText(t('ui.criacao.progresso', { passo: 1, total: 2 }))).toBeInTheDocument();
+    expect(screen.getByText(t('ui.criacao.progresso', { passo: 1, total: 3 }))).toBeInTheDocument();
     expect(field('nome')).toBeInTheDocument();
-    expect(group('emCampo.posicao')).toBeInTheDocument();
-    expect(screen.getByRole('heading', { level: 2, name: t('ui.criacao.passos.emCampo') })).toBeInTheDocument();
+    expect(group('aparencia.pele')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2, name: t('ui.criacao.passos.visual') })).toBeInTheDocument();
   });
 
-  it('valida as duas metades e, completas, vai direto ao tipo de início', () => {
+  it('valida a identidade e, completa, vai a "em campo"; depois ao tipo de início', () => {
     desktop(true);
     setup();
     fillIdentity();
+    advance();
+    expect(title('emCampo')).toBeInTheDocument();
     advance();
     expect(group('emCampo.posicao')).toHaveAccessibleDescription(t('creation.error.position.invalid'));
     fireEvent.click(within(group('emCampo.posicao')).getByRole('radio', { name: t('positions.atacante') }));
@@ -311,7 +315,8 @@ describe('computador (≥ 64rem): telas 1 e 2 juntas (T50e, v2.30)', () => {
     fireEvent.click(within(group('emCampo.temperamento')).getByRole('radio', { name: t('creation.temperament.frio') }));
     advance();
     expect(title('origem')).toBeInTheDocument();
-    expect(screen.getByText(t('ui.criacao.progresso', { passo: 2, total: 2 }))).toBeInTheDocument();
+    expect(screen.getByText(t('ui.criacao.progresso', { passo: 3, total: 3 }))).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: t('ui.criacao.voltar') }));
     fireEvent.click(screen.getByRole('button', { name: t('ui.criacao.voltar') }));
     expect(field('nome')).toHaveValue('Dudu Maestro');
   });

@@ -9,10 +9,12 @@ describe('páginas da criação (T50e, v2.30)', () => {
 
   it('computador: "quem é ele" e "em campo" na mesma página; todo passo aparece uma vez', () => {
     const pages = pagesFor(true);
-    expect(pages[0]).toEqual(['quemE', 'emCampo']);
+    expect(pages[0]).toEqual(['quemE', 'visual']);
+    expect(pages).toHaveLength(3);
     expect(pages.flat()).toEqual(CREATION_STEPS);
     expect(pageOf(1, true)).toBe(0);
     expect(pageOf(2, true)).toBe(1);
+    expect(pageOf(3, true)).toBe(2);
     expect(firstStepOf(pages[1]!)).toBe(2);
   });
 });

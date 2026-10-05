@@ -51,7 +51,7 @@ describe('fluxo de telas (T48)', () => {
   });
 
   it('criação: passos na ordem da SPEC 6.1, avançar e voltar; voltar no primeiro passo sai para a abertura', () => {
-    expect(CREATION_STEPS).toEqual(['quemE', 'emCampo', 'origem']); // v2.30: duas telas + tipo de início
+    expect(CREATION_STEPS).toEqual(['quemE', 'visual', 'emCampo', 'origem']); // v2.35: o visual ganhou tela própria
     let s = transition(initialFlow(), 'NOVA_CARREIRA');
     expect(s).toEqual(at('criacao', 0));
     for (let i = 1; i < CREATION_STEPS.length; i++) { s = transition(s, 'AVANCAR'); expect(s).toEqual(at('criacao', i)); }

@@ -18,9 +18,9 @@ import { firstStepOf, pageOf, pagesFor } from './pages';
 import { useWide } from './useWide';
 import './Creation.css';
 
-// T50 (SPEC 6.1, v2.30): criação em duas telas + tipo de início, na ordem de flow.json e pela máquina da T48.
-// Tela 1 "quem é ele": identidade e visual (nada aqui mexe nos atributos). Tela 2 "em campo e cabeça": OnFieldStep.
-// Tela 3: tipo de início (origem). No computador, as telas 1 e 2 são uma página só (pages.ts).
+// T50 (SPEC 6.1, v2.30; v2.35): criação em quatro telas, na ordem de flow.json e pela máquina da T48.
+// Tela 1 "quem é ele": identidade. Tela 2 "seu visual" (nada aqui mexe nos atributos). Tela 3 "em campo e cabeça": OnFieldStep.
+// Tela 4: tipo de início (origem). No computador, as telas 1 e 2 são uma página só (pages.ts).
 export interface Identity { name: string; number: string; state: string; heartClub: string; celebration: string | null }
 /** O que a criação entrega: o motor recebe só o CreationInput; o visual vai à parte (aparência nunca mexe no jogo). */
 export interface CreationResult { input: CreationInput; look: Look }
@@ -34,7 +34,7 @@ type Errors = Partial<Record<string, string>>;
 function byName(a: { nome: string }, b: { nome: string }) { return a.nome.localeCompare(b.nome, 'pt-BR'); }
 const BY_NAME = [...CLUBS].sort(byName);
 /** Ordem do foco quando há erro, por tela: o primeiro campo inválido recebe o foco. */
-const FIELD_ORDER: Record<string, readonly string[]> = { quemE: ['name', 'number', 'state', 'celebration'], emCampo: FIELD_ERROR_ORDER, origem: ['origin'] };
+const FIELD_ORDER: Record<string, readonly string[]> = { quemE: ['name', 'number', 'state', 'celebration'], visual: [], emCampo: FIELD_ERROR_ORDER, origem: ['origin'] };
 const ORIGINS = Object.keys(creationData.origins);
 
 /** Erros da tela 1, como chaves de i18n de creation.error. */
@@ -171,6 +171,7 @@ function PageColumn({ step, sub, c }: { step: string; sub: boolean; c: StepCtx }
 /** Conteúdo de cada passo. */
 function stepBody(step: string, c: StepCtx) {
   if (step === 'quemE') { return <IdentityStep c={c} />; }
+  if (step === 'visual') { return <VisualStep c={c} />; }
   if (step === 'emCampo') { return <OnFieldStep ids={c.ids} field={c.field} errors={c.errors} onChange={c.changeField} />; }
   return <OriginStep c={c} />;
 }
@@ -205,7 +206,6 @@ function IdentityStep({ c }: { c: StepCtx }) {
       <div className="quem__topo">
         <div className="criacao__previa">
           <Figurinha name={id.name} avatar={c.avatar} />
-          <p className="sr-only" role="status">{describeLook(c.look)}</p>
         </div>
         <div className="quem__campos">
           <Field id={`${ids}-nome`} label={t('ui.criacao.quemE.nome')}>
@@ -238,6 +238,18 @@ function IdentityStep({ c }: { c: StepCtx }) {
       <Choices id={`${ids}-comemoracao`} legend={t('ui.criacao.quemE.comemoracao')} name="celebration" value={id.celebration ?? ''}
         options={named(creationData.celebrations, 'creation.celebration')} onChange={(v) => change('celebration', v)}
         error={c.errors.celebration ? t(c.errors.celebration) : null} />
+    </div>
+  );
+}
+
+/** Tela 2 (v2.35): o visual, com a figurinha ao vivo. */
+function VisualStep({ c }: { c: StepCtx }) {
+  return (
+    <div className="quem">
+      <div className="criacao__previa">
+        <Figurinha name={c.identity.name} avatar={c.avatar} />
+        <p className="sr-only" role="status">{describeLook(c.look)}</p>
+      </div>
       <LookSection c={c} />
     </div>
   );
