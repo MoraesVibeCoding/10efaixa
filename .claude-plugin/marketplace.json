@@ -1,0 +1,13 @@
+{
+  "name": "10efaixa",
+  "owner": {
+    "name": "MoraesVibeCoding"
+  },
+  "description": "Plugins do Claude Code usados no projeto 10eFaixa",
+  "plugins": [
+    {
+      "name": "previsao-do-contexto",
+      "source": "./previsao-do-contexto"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "previsao-do-contexto",
+  "version": "0.1.0",
+  "description": "Previsão do tempo da janela de contexto, numa faixa acima do prompt",
+  "author": { "name": "MoraesVibeCoding" },
+  "types": "./types/index.d.ts"
+}
