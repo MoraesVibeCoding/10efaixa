@@ -1,0 +1,27 @@
+/* v2.47: carimbo do momento. Brilho e partículas só no título; base.css zera a animação com reduced motion. */
+.carimbo { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; pointer-events: none; }
+.carimbo__selo {
+  position: relative;
+  margin: 0; padding: 0.4em 0.9em;
+  font-family: var(--fonte-titulo); font-size: clamp(1.75rem, 8vw, 3rem); line-height: 1; text-align: center; max-inline-size: calc(100vw - 48px); font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--cor-texto); background: var(--cor-superficie);
+  border: 4px solid currentColor; border-radius: var(--forma-raio);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.25);
+  transform: rotate(-6deg);
+  animation: carimbo-bate 450ms cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+.carimbo__selo[data-momento='titulo'] { border-color: var(--paleta-ouro); animation: carimbo-bate 450ms cubic-bezier(0.2, 1.4, 0.4, 1) both, carimbo-brilho 1100ms ease-out 200ms both; }
+.carimbo__selo[data-momento='acesso'] { color: var(--cor-positivo); }
+.carimbo__selo[data-momento='rebaixamento'] { color: var(--cor-negativo); }
+/* partículas: dois pontilhados dourados que se abrem a partir do selo */
+.carimbo__selo[data-momento='titulo']::before, .carimbo__selo[data-momento='titulo']::after {
+  content: ''; position: absolute; inset: -30%; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, var(--paleta-ouro) 0 3px, transparent 4px) 0 0 / 22px 22px;
+  mask-image: radial-gradient(circle, transparent 35%, #000 36% 60%, transparent 62%);
+  animation: carimbo-particulas 900ms ease-out 150ms both;
+}
+.carimbo__selo[data-momento='titulo']::after { inset: -55%; background-size: 30px 30px; animation-delay: 300ms; }
+.carimbo__sub { display: block; margin-block-start: 0.25em; font-size: 0.45em; letter-spacing: 0.06em; }
+@keyframes carimbo-bate { from { opacity: 0; transform: rotate(-6deg) scale(2.2); } to { opacity: 1; transform: rotate(-6deg) scale(1); } }
+@keyframes carimbo-brilho { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--paleta-ouro) 90%, transparent); } 100% { box-shadow: 0 0 0 28px transparent, 0 10px 30px rgb(0 0 0 / 0.25); } }
+@keyframes carimbo-particulas { from { opacity: 1; transform: scale(0.5); } to { opacity: 0; transform: scale(1.3); } }

@@ -380,3 +380,10 @@
   /* sobre a cena o álbum precisa de chão próprio: superfície sólida (o vidro já tem as duas camadas da tela) */
   .album { grid-area: album; align-self: end; display: grid; gap: var(--espaco-3); padding: var(--espaco-3); border: var(--forma-borda-fina) solid var(--cor-linha); border-radius: var(--forma-raio); background: var(--cor-superficie); box-shadow: var(--forma-sombra-suave); }
 }
+
+/* v2.47: a decisão nova entra com fade e leve subida; a escolhida realça e as outras apagam (base.css zera com reduced motion) */
+.decisao__topo, .decisao__painel { animation: decisao-entra var(--transicao, 300ms) ease-out both; }
+.decisao__painel { animation-delay: calc(var(--transicao, 300ms) / 3); }
+.opcao { transition: background-color var(--transicao, 300ms) ease, border-color var(--transicao, 300ms) ease, opacity var(--transicao, 300ms) ease, transform var(--transicao, 300ms) ease; }
+.decisao[data-resultado='aberto'] .opcao[aria-pressed='true'] { transform: scale(1.02); }
+@keyframes decisao-entra { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }

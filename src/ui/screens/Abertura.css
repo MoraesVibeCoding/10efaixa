@@ -125,3 +125,6 @@
   cursor: pointer;
 }
 .abertura__confirmar-acoes .abertura__apagar { border-color: var(--cor-negativo); background: var(--cor-negativo); color: var(--cor-sobre-destaque); }
+
+/* v2.47: aviso legal discreto, no pé, sobre o marinho (papel sobre marinho passa folgado de 4,5:1) */
+.abertura__aviso { max-inline-size: 22rem; margin: var(--espaco-2) 0 0; font-size: var(--tipo-apoio); line-height: 1.35; text-align: center; color: var(--paleta-papel); opacity: 0.85; }

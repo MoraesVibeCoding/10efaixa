@@ -25,6 +25,11 @@
  "amostra": {
   "clube": "clube do coração"
  },
+ "momento": {
+  "titulo": "Campeão",
+  "acesso": "Acesso!",
+  "rebaixamento": "Rebaixamento"
+ },
  "titulo": {
   "copaDoMundo": "Mundial de Seleções",
   "champions": "Copa Europeia",
@@ -217,6 +222,7 @@
   "novaCarreira": "Nova carreira",
   "continuar": "Continuar a carreira de {nome}",
   "continuarSemNome": "Continuar a carreira salva",
+  "avisoLegal": "Jogo de ficção. Nomes de clubes aparecem só para identificação, sem vínculo com os clubes; os emblemas são originais, não os escudos oficiais.",
   "confirmar": {
    "titulo": "Começar outra carreira?",
    "texto": "Começar outra apaga a carreira de {nome}. Só existe uma carreira salva por vez.",

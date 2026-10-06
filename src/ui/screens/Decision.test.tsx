@@ -550,3 +550,27 @@ describe('evolução do semestre e idolatria (T51b, v2.41)', () => {
     expect(rows[2]).toHaveTextContent(t('ui.idolatria.faixa.idolo'));
   });
 });
+
+// v2.47: o overall, a idade e o valor rolam do valor anterior ao novo; o leitor de tela recebe só o valor final
+describe('números que rolam (v2.47)', () => {
+  afterEach(() => { vi.unstubAllGlobals(); });
+  const ANTES = { overall: 70, age: 16, marketValueEUR: 1_000_000 };
+  const show = () => render(<Decision eventId={EVENT} age={17} progress={0.05} player={PLAYER} anterior={ANTES} scene={{ src: 'cena.webp', alt: 'cena' }} />);
+
+  it('com movimento, começa no valor anterior e o texto acessível já é o final', () => {
+    vi.stubGlobal('matchMedia', (q: string) => ({ matches: false, media: q }));
+    vi.stubGlobal('requestAnimationFrame', () => 0);
+    vi.stubGlobal('cancelAnimationFrame', () => {});
+    const { container } = show();
+    expect(container.querySelector('.decisao__over-numero')).toHaveTextContent('70');
+    expect(screen.getByText(t('ui.decisao.idade', { idade: 17 }))).toHaveClass('sr-only');
+    expect(screen.getByText(t('ui.decisao.idade', { idade: 16 }))).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  it('com prefers-reduced-motion, mostra o valor final direto', () => {
+    vi.stubGlobal('matchMedia', (q: string) => ({ matches: q.includes('reduce'), media: q }));
+    const { container } = show();
+    expect(container.querySelector('.decisao__over-numero')).toHaveTextContent('78');
+    expect(screen.queryByText(t('ui.decisao.idade', { idade: 16 }))).not.toBeInTheDocument();
+  });
+});
