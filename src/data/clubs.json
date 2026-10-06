@@ -926,7 +926,7 @@
   },
   {
    "id": "nacional-am",
-   "nome": "Nacional",
+   "nome": "Nacional-AM",
    "sigla": "NAC",
    "uf": "AM",
    "cidade": "Manaus",
@@ -1136,7 +1136,7 @@
   },
   {
    "id": "primavera-mt",
-   "nome": "Primavera",
+   "nome": "Primavera-MT",
    "sigla": "PRI",
    "uf": "MT",
    "cidade": "Primavera do Leste",
@@ -1852,7 +1852,7 @@
   },
   {
    "id": "porto-ba",
-   "nome": "Porto",
+   "nome": "Porto-BA",
    "sigla": "POT",
    "uf": "BA",
    "cidade": null,
@@ -2288,7 +2288,7 @@
   },
   {
    "id": "primavera-sp",
-   "nome": "Primavera",
+   "nome": "Primavera-SP",
    "sigla": "PRM",
    "uf": "SP",
    "cidade": "Indaiatuba",
@@ -2512,7 +2512,7 @@
   },
   {
    "id": "barcelona-ba",
-   "nome": "Barcelona",
+   "nome": "Barcelona-BA",
    "sigla": "BAC",
    "uf": "BA",
    "cidade": null,
@@ -2709,7 +2709,7 @@
   },
   {
    "id": "juventus-sp",
-   "nome": "Juventus",
+   "nome": "Juventus-SP",
    "sigla": "JUE",
    "uf": "SP",
    "cidade": "São Paulo",

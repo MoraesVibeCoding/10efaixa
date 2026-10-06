@@ -28,3 +28,16 @@ describe('cores dos clubes (T50j)', () => {
     }
   });
 });
+
+describe('nomes dos clubes (v2.38)', () => {
+  it('nenhum nome se repete entre todos os clubes do jogo (homônimos levam o estado: "Barcelona-BA")', () => {
+    const seen = new Map<string, string>();
+    const dup: string[] = [];
+    for (const c of ALL) {
+      const other = seen.get(c.nome);
+      if (other) dup.push(`${c.nome}: ${other} e ${c.id}`);
+      seen.set(c.nome, c.id);
+    }
+    expect(dup).toEqual([]);
+  });
+});

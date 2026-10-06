@@ -176,7 +176,7 @@
   },
   {
    "id": "liverpool-uru",
-   "nome": "Liverpool",
+   "nome": "Liverpool-URU",
    "sigla": "LIV",
    "pais": "URU",
    "cores": [
@@ -231,7 +231,7 @@
   },
   {
    "id": "racing-uru",
-   "nome": "Racing",
+   "nome": "Racing-URU",
    "sigla": "RAI",
    "pais": "URU",
    "cores": [
@@ -440,7 +440,7 @@
   },
   {
    "id": "barcelona-sc",
-   "nome": "Barcelona",
+   "nome": "Barcelona-ECU",
    "sigla": "BAL",
    "pais": "ECU",
    "cores": [
@@ -451,7 +451,7 @@
   },
   {
    "id": "universidad-catolica-ecu",
-   "nome": "Universidad Católica",
+   "nome": "Universidad Católica-ECU",
    "sigla": "UNR",
    "pais": "ECU",
    "cores": [
@@ -495,7 +495,7 @@
   },
   {
    "id": "libertad-ecu",
-   "nome": "Libertad",
+   "nome": "Libertad-ECU",
    "sigla": "LIB",
    "pais": "ECU",
    "cores": [
@@ -550,7 +550,7 @@
   },
   {
    "id": "nacional-par",
-   "nome": "Nacional",
+   "nome": "Nacional-PAR",
    "sigla": "NAN",
    "pais": "PAR",
    "cores": [
