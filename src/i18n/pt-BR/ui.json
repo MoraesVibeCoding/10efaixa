@@ -172,7 +172,17 @@
     "volante": "VOL",
     "meia": "MEI",
     "ponta": "PON",
-    "atacante": "ATA"
+    "atacante": "ATA",
+    "lateral-esquerdo": "LE",
+    "lateral-direito": "LD",
+    "ponta-esquerda": "PE",
+    "ponta-direita": "PD"
+   },
+   "vaga": {
+    "lateral-esquerdo": "Lateral esquerdo",
+    "lateral-direito": "Lateral direito",
+    "ponta-esquerda": "Ponta esquerda",
+    "ponta-direita": "Ponta direita"
    }
   },
   "origem": {

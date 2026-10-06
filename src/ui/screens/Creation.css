@@ -83,20 +83,20 @@
 /* grupos de escolha: rótulo à esquerda, faixa à direita; rádio nativo escondido, a marca é o alvo de toque (48 px) */
 .escolhas { display: grid; grid-template-columns: 7rem minmax(0, 1fr); align-items: center; min-inline-size: 0; }
 .escolhas__erro { grid-column: 1 / -1; }
-/* uma faixa por grupo, que desliza para o lado: a tela inteira cabe em 390×844 sem rolar (o foco do teclado rola a faixa) */
+/* v2.46 (decisão do usuário): as pílulas quebram linha, tudo à vista, sem deslizar. Antes era uma faixa que deslizava para o
+   passo caber em 390×844 sem rolar; agora o passo "em campo" pode rolar dentro do painel, que é a troca escolhida. */
 .escolhas__cabeca { display: grid; align-content: center; min-inline-size: 0; }
 .escolhas__escolhida { font-size: 0.8125rem; line-height: 1.15; color: var(--cor-texto-suave); }
 .escolhas__lista {
   display: flex;
-  gap: var(--espaco-1);
-  position: relative; /* referência do offsetLeft das opções (revealChecked) */
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x proximity;
-  scrollbar-width: none;
-  margin-inline-end: calc(-1 * var(--espaco-3));
-  padding: 2px var(--espaco-3) 2px 2px;
+  flex-wrap: wrap;
+  gap: var(--espaco-2);
+  position: relative;
+  padding: 2px;
 }
+/* rótulo em cima, pílulas embaixo usando a largura toda */
+.escolhas--faixa { grid-template-columns: minmax(0, 1fr); row-gap: var(--espaco-1); }
+.escolhas--faixa .escolhas__dica { grid-column: 1; }
 .escolhas__lista::-webkit-scrollbar { display: none; }
 .escolha { scroll-snap-align: start; flex: none; position: relative; } /* prende o rádio escondido (absoluto) dentro da faixa */
 .escolha { display: inline-flex; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
@@ -129,29 +129,61 @@
 .escolhas--campo { grid-template-columns: minmax(0, 1fr); gap: 2px; }
 .escolhas--campo .escolhas__dica, .escolhas--campo .escolhas__erro { grid-column: 1; }
 .escolhas--campo .escolhas__lista {
+  /* v2.46: campo em pé (ataque em cima), maior, com 9 camisas */
+  position: relative;
   display: block;
-  block-size: 7rem;
+  block-size: min(24rem, 56dvh);
   margin: 0;
   padding: 0;
   overflow: visible;
   border-radius: var(--forma-raio-cartao);
-  border: var(--forma-borda-fina) solid var(--cor-linha);
-  /* gramado em faixas, linha do meio e grande área: só fundo, sem informação */
+  border: 3px solid rgb(255 255 255 / 0.35);
+  /* gramado em faixas, linha do meio, círculo e grandes áreas: só fundo, sem informação */
   background:
-    linear-gradient(90deg, transparent calc(50% - 1px), rgb(255 255 255 / 0.55) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
-    radial-gradient(circle at 50% 50%, transparent 1.4rem, rgb(255 255 255 / 0.55) 1.4rem calc(1.4rem + 2px), transparent calc(1.4rem + 2px)),
-    repeating-linear-gradient(90deg, var(--cor-destaque) 0 12.5%, var(--cor-positivo) 12.5% 25%);
+    linear-gradient(180deg, transparent calc(50% - 1px), rgb(255 255 255 / 0.55) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
+    radial-gradient(circle at 50% 50%, transparent 2.6rem, rgb(255 255 255 / 0.55) 2.6rem calc(2.6rem + 2px), transparent calc(2.6rem + 2px)),
+    linear-gradient(rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.55)) 50% 0 / 56% 2px no-repeat,
+    linear-gradient(rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.55)) 50% 100% / 56% 2px no-repeat,
+    repeating-linear-gradient(180deg, #0E7A3F 0 10%, #11864A 10% 20%);
 }
 .escolhas--campo .escolha { position: absolute; transform: translate(-50%, -50%); }
-.escolhas--campo [data-opcao='goleiro'] { left: 8%; top: 50%; }
-.escolhas--campo [data-opcao='zagueiro'] { left: 24%; top: 50%; }
-.escolhas--campo [data-opcao='lateral'] { left: 39%; top: 24%; }
-.escolhas--campo [data-opcao='volante'] { left: 52%; top: 66%; }
-.escolhas--campo [data-opcao='meia'] { left: 69%; top: 36%; }
-.escolhas--campo [data-opcao='ponta'] { left: 86%; top: 22%; }
-.escolhas--campo [data-opcao='atacante'] { left: 89%; top: 66%; }
-.escolhas--campo .escolha__marca { border-radius: 50%; padding: 0; font-family: var(--fonte-titulo); font-size: 0.95rem; }
-.escolhas--campo .escolha__input:checked + .escolha__marca { background: var(--cor-texto); color: var(--cor-superficie); box-shadow: 0 0 0 3px var(--cor-superficie); }
+.escolhas--campo [data-opcao='goleiro'] { left: 50%; top: 90%; }
+.escolhas--campo [data-opcao='zagueiro'] { left: 50%; top: 74%; }
+.escolhas--campo [data-opcao='lateral-esquerdo'] { left: 14%; top: 64%; }
+.escolhas--campo [data-opcao='lateral-direito'] { left: 86%; top: 64%; }
+.escolhas--campo [data-opcao='volante'] { left: 50%; top: 56%; }
+.escolhas--campo [data-opcao='meia'] { left: 50%; top: 38%; }
+.escolhas--campo [data-opcao='ponta-esquerda'] { left: 16%; top: 22%; }
+.escolhas--campo [data-opcao='ponta-direita'] { left: 84%; top: 22%; }
+.escolhas--campo [data-opcao='atacante'] { left: 50%; top: 12%; }
+/* a camisa: forma por máscara (SVG embutido), sigla dentro; a marcada fica dourada com o número */
+.escolhas--campo .escolha__marca {
+  display: grid;
+  place-items: center;
+  inline-size: 3.25rem;
+  block-size: 3.25rem;
+  min-block-size: 0;
+  padding: 0.5rem 0 0;
+  border: 0;
+  border-radius: 0;
+  background: #FFFFFF;
+  color: #004D2B;
+  font-family: var(--fonte-titulo);
+  font-size: 0.85rem;
+  font-weight: 700;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cpath d='M20 4 L6 11 L0 26 L11 30 L13 24 L13 57 L47 57 L47 24 L49 30 L60 26 L54 11 L40 4 C38 11 22 11 20 4Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cpath d='M20 4 L6 11 L0 26 L11 30 L13 24 L13 57 L47 57 L47 24 L49 30 L60 26 L54 11 L40 4 C38 11 22 11 20 4Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  filter: drop-shadow(0 3px 4px rgb(0 0 0 / 0.3));
+}
+.escolhas--campo .escolha__input:checked + .escolha__marca {
+  inline-size: 3.9rem;
+  block-size: 3.9rem;
+  background: #DA942C;
+  color: #091A11;
+  font-size: 1.15rem;
+}
+/* o foco do teclado fica num anel em volta da camisa (a máscara cortaria o contorno) */
+.escolhas--campo .escolha:has(.escolha__input:focus-visible) { outline: 3px solid #FFFFFF; outline-offset: 2px; border-radius: 0.75rem; }
 
 /* altura: controle deslizante com o valor ao lado */
 .escolhas--altura { row-gap: 0; }

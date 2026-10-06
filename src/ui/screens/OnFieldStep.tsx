@@ -2,24 +2,30 @@ import creationData from '../../data/creation.json';
 import { archetypesFor } from '../../engine/archetypes';
 import { BUILDS } from '../../engine/biotype';
 import { MENTALITIES } from '../../engine/mentality';
-import type { Position } from '../../engine/overall';
 import { t } from '../../i18n';
 import { Choices, named, type Option } from './Choices';
-import { POSITIONS, RANGES, hintOf, meters, styleHint, withPosition, type OnField } from './onField';
+import { FIELD_SLOTS, POSITIONS, RANGES, hintOf, meters, slotOf, styleHint, withSlot, type OnField } from './onField';
 
 // T50d (SPEC 6.1, 6.2, 6.17, v2.30): tela 2 "em campo e cabeça". A lógica pura fica em onField.ts.
 export interface OnFieldStepProps {
   ids: string; field: OnField; errors: Partial<Record<string, string>>; onChange: (f: OnField) => void;
+  /** v2.46: número da camisa, que aparece na camisa marcada do campo. */
+  number?: string;
 }
 
-export function OnFieldStep({ ids, field: f, errors, onChange }: OnFieldStepProps) {
+export function OnFieldStep({ ids, field: f, errors, onChange, number = '' }: OnFieldStepProps) {
   const err = (k: string) => (errors[k] ? t(errors[k]!) : null);
-  const positions: Option[] = POSITIONS.map((p) => ({ id: p, label: t(`ui.criacao.emCampo.sigla.${p}`), full: t(`positions.${p}`) }));
+  // v2.46: 9 camisas; a marcada leva o número do jogador e o leitor de tela ouve a vaga por extenso
+  const slot = slotOf(f);
+  const positions: Option[] = FIELD_SLOTS.map((s) => ({
+    id: s.id, label: s.id === slot && number ? number : t(`ui.criacao.emCampo.sigla.${s.id}`),
+    full: s.side ? t(`ui.criacao.emCampo.vaga.${s.id}`) : t(`positions.${s.position}`),
+  }));
   const range = f.position ? RANGES[f.position] : { min: Math.min(...POSITIONS.map((p) => RANGES[p].min)), max: Math.max(...POSITIONS.map((p) => RANGES[p].max)) };
   return (
     <div className="campo">
       <Choices id={`${ids}-posicao`} name="position" legend={t('ui.criacao.emCampo.posicao')} options={positions} variant="campo"
-        value={f.position ?? ''} onChange={(v) => onChange(withPosition(f, v as Position))} error={err('position')} />
+        value={slot} onChange={(v) => onChange(withSlot(f, v))} error={err('position')} />
       <StyleChoices ids={ids} field={f} error={err('archetypeId')} onChange={onChange} />
       <Choices id={`${ids}-perna`} name="foot" legend={t('ui.criacao.emCampo.perna')} options={named(creationData.feet, 'creation.foot')}
         value={f.foot} onChange={(v) => onChange({ ...f, foot: v })} />

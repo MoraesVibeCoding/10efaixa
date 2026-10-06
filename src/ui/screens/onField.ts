@@ -9,11 +9,42 @@ import { t } from '../../i18n';
 export interface OnField {
   position: Position | null; archetypeId: string | null; foot: string; heightCm: number; build: string;
   temperament: string | null; mentality: string | null;
+  /** v2.46: lado do lateral e da ponta (só figurinha e narrativa, nunca atributo); null nas outras posições. */
+  side: Side | null;
 }
+export type Side = 'esquerdo' | 'direito';
 export const DEFAULT_FIELD: OnField = {
   position: null, archetypeId: null, foot: creationData.feet[0]!, heightCm: biotypeData.referenceHeightCm - 2, build: 'atletico',
-  temperament: null, mentality: null,
+  temperament: null, mentality: null, side: null,
 };
+
+/** v2.46: as 9 vagas do campo, da defesa ao ataque (também a ordem das setas do teclado). */
+export const FIELD_SLOTS: { id: string; position: Position; side: Side | null }[] = [
+  { id: 'goleiro', position: 'goleiro', side: null },
+  { id: 'zagueiro', position: 'zagueiro', side: null },
+  { id: 'lateral-esquerdo', position: 'lateral', side: 'esquerdo' },
+  { id: 'lateral-direito', position: 'lateral', side: 'direito' },
+  { id: 'volante', position: 'volante', side: null },
+  { id: 'meia', position: 'meia', side: null },
+  { id: 'ponta-esquerda', position: 'ponta', side: 'esquerdo' },
+  { id: 'ponta-direita', position: 'ponta', side: 'direito' },
+  { id: 'atacante', position: 'atacante', side: null },
+];
+const hasSide = (p: Position) => FIELD_SLOTS.some((s) => s.position === p && s.side);
+
+/** Vaga marcada no campo; lateral ou ponta sem lado (save antigo) vale como direito. */
+export function slotOf(f: OnField): string {
+  if (!f.position) return '';
+  const side = hasSide(f.position) ? f.side ?? 'direito' : null;
+  return FIELD_SLOTS.find((s) => s.position === f.position && s.side === side)?.id ?? '';
+}
+
+/** Marca uma vaga: posição (com as regras de withPosition) e lado. */
+export function withSlot(f: OnField, slotId: string): OnField {
+  const slot = FIELD_SLOTS.find((s) => s.id === slotId);
+  if (!slot) return f;
+  return { ...withPosition(f, slot.position), side: slot.side };
+}
 export const FIELD_ERROR_ORDER = ['position', 'archetypeId', 'temperament'] as const;
 
 /** Ordem das posições no campinho, da esquerda para a direita: é também a ordem das setas do teclado. */

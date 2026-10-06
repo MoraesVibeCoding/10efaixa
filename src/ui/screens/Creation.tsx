@@ -167,7 +167,7 @@ function PageColumn({ step, sub, c }: { step: string; sub: boolean; c: StepCtx }
 function stepBody(step: string, c: StepCtx) {
   if (step === 'quemE') { return <IdentityStep c={c} />; }
   if (step === 'visual') { return <VisualStep c={c} />; }
-  if (step === 'emCampo') { return <OnFieldStep ids={c.ids} field={c.field} errors={c.errors} onChange={c.changeField} />; }
+  if (step === 'emCampo') { return <OnFieldStep ids={c.ids} field={c.field} errors={c.errors} onChange={c.changeField} number={c.identity.number} />; }
   return <OriginStep c={c} />;
 }
 

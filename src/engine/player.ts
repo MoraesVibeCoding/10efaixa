@@ -22,6 +22,8 @@ export interface CreationInput {
   foot: string;
   /** Clube de coração (6.18): id de clube brasileiro ou null = "Nenhum". */
   heartClub: string | null;
+  /** v2.46: lado do lateral e da ponta; só figurinha e narrativa, nunca atributo. Ausente nas outras posições e em saves antigos. */
+  side?: 'esquerdo' | 'direito';
   /** Mentalidade (fominha, capitão, professor, máquina); ausente = neutra. */
   mentality?: string;
 }
