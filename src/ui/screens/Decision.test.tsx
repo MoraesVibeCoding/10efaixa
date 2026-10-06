@@ -467,3 +467,21 @@ describe('uniforme na caixa do jogador (T50k, SPEC v2.37)', () => {
     expect(topo.querySelector('.jogador__clube .emblema')).toHaveAttribute('data-emblema', 'flamengo');
   });
 });
+
+describe('tela pequena (T49j): nada fica cortado', () => {
+  // achado na verificação: em 360x640 o "Confirmar escolha" ficava abaixo da borda, sem como rolar (overflow: hidden)
+  const css = readFileSync(resolve(__dirname, 'Decision.css'), 'utf8');
+  const rule = (sel: string) => new RegExp(`\\n\\${sel} \\{([^}]*)\\}`).exec(css)?.[1] ?? '';
+
+  it('a tela de decisão cresce e rola quando falta altura (nunca esconde o que passa da borda)', () => {
+    expect(rule('.decisao')).not.toMatch(/overflow:\s*hidden/);
+    expect(rule('.decisao')).not.toMatch(/(^|[^-])block-size:\s*100dvh/);
+    expect(rule('.decisao')).toMatch(/min-block-size:\s*100dvh/);
+  });
+
+  it('a cena fica fixa ao fundo; gaveta e resultado ficam presos à tela, não ao meio de uma página alta', () => {
+    expect(rule('.decisao__cena')).toMatch(/position:\s*fixed/);
+    expect(rule('.gaveta')).toMatch(/position:\s*fixed/);
+    expect(rule('.resultado')).toMatch(/position:\s*fixed/);
+  });
+});

@@ -7,12 +7,11 @@
   display: flex;
   flex-direction: column;
   gap: var(--espaco-2);
-  block-size: 100dvh;
-  min-block-size: 100dvh;
+  min-block-size: 100dvh; /* T49j: em tela baixa (360x640) a página cresce e rola; nunca corta o "Confirmar escolha" */
   max-inline-size: 30rem;
   margin-inline: auto;
   padding: var(--espaco-2) var(--espaco-3) calc(var(--espaco-3) + env(safe-area-inset-bottom));
-  overflow: hidden;
+  overflow-x: clip;
   background: var(--cor-fundo);
   color: var(--cor-texto);
 }
@@ -24,9 +23,10 @@
   box-shadow: var(--forma-sombra-suave);
 }
 
-/* a pintura é 4:5: cobre a tela inteira, com o rosto do jogador na faixa que fica entre o topo e a faixa de baixo */
+/* a pintura é 4:5: cobre a tela inteira, com o rosto do jogador na faixa que fica entre o topo e a faixa de baixo;
+   fixa ao fundo, para continuar atrás quando a página rola numa tela baixa */
 .decisao__cena {
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: -1;
   inline-size: 100%;
@@ -199,7 +199,7 @@
 
 /* ---------- o que a escolha rendeu: um cartão menor por cima da tela, que fica levemente desfocada */
 .resultado {
-  position: absolute;
+  position: fixed; /* presa à tela: numa página que rola, não some no meio dela */
   inset: 0;
   z-index: 2; /* acima da caixa do jogador e da faixa de baixo (z-index 1) */
   display: grid;
@@ -264,7 +264,7 @@
 
 /* ---------- gaveta "Minha carreira": sobe do pé da tela; o que está atrás fica levemente desfocado, como no resultado */
 .gaveta {
-  position: absolute;
+  position: fixed; /* presa à tela: numa página que rola, não some no meio dela */
   inset: 0;
   z-index: 2; /* acima da caixa do jogador e da faixa de baixo (z-index 1) */
   display: grid;
