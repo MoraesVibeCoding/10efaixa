@@ -91,7 +91,7 @@ describe('vidro (T49f, SPEC 7 v2.34)', () => {
     for (const t of THEMES) {
       for (const backdrop of ['#000000', '#FFFFFF']) {
         const base = compose(glass[t]!.cor, glass[t]!.alfa, backdrop);
-        for (const fg of ['texto', 'textoSuave']) expect.soft(contrast(roles(t)[fg]!, base), `${t}: ${fg} sobre vidro com ${backdrop} atrás`).toBeGreaterThanOrEqual(4.5);
+        for (const fg of ['texto', 'textoSuave', 'positivo', 'negativo']) expect.soft(contrast(roles(t)[fg]!, base), `${t}: ${fg} sobre vidro com ${backdrop} atrás`).toBeGreaterThanOrEqual(4.5);
       }
     }
   });
