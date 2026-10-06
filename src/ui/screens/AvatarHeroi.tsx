@@ -1,6 +1,7 @@
 import { VISUAIS, cycle, visualOf } from './look';
 import { Choices, type Option } from './Choices';
 import { t } from '../../i18n';
+import { Camisa } from './Camisa';
 import './AvatarHeroi.css';
 
 // T50g (SPEC 7, v2.35; v2.36): avatar-herói da criação. A imagem pintada do visual escolhido, o nome ("Visual N"),
@@ -28,6 +29,7 @@ export function AvatarHeroi({ id, value, number, onChange }: AvatarHeroiProps) {
     <div className="heroi">
       <div className="heroi__palco">
         <img className="heroi__retrato" src={artOf(value)} alt="" />
+        <Camisa visual={value} className="heroi__camisa" />
         {/^\d{1,2}$/.test(number) ? <span className="heroi__numero" aria-hidden="true">{number}</span> : null}
         <div className="heroi__legenda">
           <div>

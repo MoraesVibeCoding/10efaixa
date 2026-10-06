@@ -133,3 +133,5 @@
 
 /* v2.36: retrato pintado do visual (transparente) dentro do recorte de álbum: enche o quadrado, do topo da cabeça ao peito */
 .figurinha__retrato--pintado { object-fit: cover; object-position: 50% 6%; }
+/* T50h: a camada da camisa repete o enquadramento do retrato pintado (object-position acima) */
+.figurinha__camisa { --camisa-posicao: 50% 6%; }

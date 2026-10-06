@@ -4,6 +4,7 @@ import { toBand } from '../../engine/attributes';
 import { t } from '../../i18n';
 import tokens from '../theme/tokens.json';
 import { clubLine } from './clubText';
+import { Camisa } from './Camisa';
 import { Emblema } from './Emblema';
 import { useBust } from './useBust';
 import './Figurinha.css';
@@ -36,12 +37,13 @@ export function Figurinha({ name, number, overall, position, clubId = '', avatar
   const portraitClass = painted ? 'figurinha__retrato figurinha__retrato--pintado' : 'figurinha__retrato';
   const stripes = { '--faixa1': kit.camisa[0], '--faixa2': kit.camisa[1] ?? kit.detalhe } as React.CSSProperties;
   if (moldura && overall !== undefined) {
-    return <Moldurada {...{ name, number, overall, bust, stripes, tamanho, portraitClass }} />;
+    return <Moldurada {...{ name, number, overall, bust, stripes, tamanho, portraitClass }} camisa={painted && visual ? <Camisa visual={visual} clubId={clubId} className="figurinha__camisa" /> : null} />;
   }
   const comum = (
     <span className="figurinha">
       <span className="figurinha__foto" style={stripes}>
         {bust && <img className={portraitClass} src={bust} alt="" width="220" height="220" />}
+        {painted && visual ? <Camisa visual={visual} clubId={clubId} className="figurinha__camisa" /> : null}
         {number !== undefined && <span className="figurinha__numero" aria-hidden="true">{number}</span>}
         {clubId ? <span className="figurinha__emblema"><Emblema clubId={clubId} size={30} /></span> : null}
         {overall === undefined ? null : <OverCard overall={overall} />}
@@ -65,7 +67,7 @@ function OverCard({ overall }: { overall: number }) {
 }
 
 // v2.34: a figurinha dentro da moldura do metal da faixa; a arte vem de `medalha` (tokens) pela faixa de bands.json.
-function Moldurada({ name, number, overall, bust, stripes, tamanho, portraitClass }: { name: string; number?: number; overall: number; bust: string | null; stripes: React.CSSProperties; tamanho: 'pequena' | 'grande'; portraitClass: string }) {
+function Moldurada({ name, number, overall, bust, stripes, tamanho, portraitClass, camisa }: { name: string; number?: number; overall: number; bust: string | null; stripes: React.CSSProperties; tamanho: 'pequena' | 'grande'; portraitClass: string; camisa: React.ReactNode }) {
   const band = toBand(overall);
   const medal = MEDALS[band.key]!.nome;
   const art = CARD_ART[`../../assets/cartoes-over/${medal}.webp`];
@@ -73,6 +75,7 @@ function Moldurada({ name, number, overall, bust, stripes, tamanho, portraitClas
     <span className={`figurinha figurinha--moldura figurinha--${tamanho}`} data-medalha={medal} style={art ? { backgroundImage: `url(${art})` } : undefined}>
       <span className="figurinha__foto" style={stripes}>
         {bust && <img className={portraitClass} src={bust} alt="" width="220" height="220" />}
+        {camisa}
         <span className="sr-only">{t('ui.figurinha.over')} {overall}{t('ui.decisao.faixaOver', { faixa: t(`attributes.band.${band.key}`) })}</span>
         <span className="figurinha__over-grande" aria-hidden="true">{overall}</span>
       </span>

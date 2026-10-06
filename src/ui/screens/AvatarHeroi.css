@@ -72,3 +72,5 @@
 .escolha__espera { display: block; inline-size: 100%; block-size: 100%; background: var(--cor-trilho); }
 .escolhas--miniaturas .escolha__input:checked + .escolha__marca--miniatura { background: var(--cor-destaque); box-shadow: none; outline: 3px solid var(--cor-destaque); outline-offset: -3px; }
 .escolhas--miniaturas .escolha__input:focus-visible + .escolha__marca--miniatura { outline: 3px solid var(--cor-foco); outline-offset: 1px; }
+/* T50h: a camada da camisa repete o enquadramento do retrato (object-position: center top) */
+.heroi__camisa { --camisa-posicao: 50% 0%; }
