@@ -194,7 +194,7 @@
  "varzea": "time da várzea",
  "revelacao": {
   "titulo": "Nasce um jogador",
-  "subtitulo": "{nome}, este é o seu ponto de partida. O resto, a carreira decide.",
+  "subtitulo": "{nome}, este é o seu ponto de partida.",
   "atributos": "Como ele começa",
   "diamante": "Diamante bruto",
   "diamanteFrase": "A várzea escondia um craque: o teto dele é maior que o normal.",

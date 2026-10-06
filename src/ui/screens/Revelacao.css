@@ -4,7 +4,7 @@
 
 .revelacao {
   inline-size: min(100% - 2rem, 24rem);
-  max-block-size: calc(100dvh - 2rem);
+  max-block-size: calc(100dvh - 1rem);
   overflow-y: auto;
   padding: var(--espaco-4);
   border-radius: var(--forma-raio-cartao);
@@ -16,10 +16,10 @@
 .revelacao__titulo { font-size: var(--tipo-titulo); font-weight: 900; line-height: 1; text-transform: uppercase; text-align: center; }
 .revelacao__sub { color: var(--cor-texto-suave); line-height: 1.35; text-align: center; }
 .revelacao__rotulo { justify-self: stretch; font-family: var(--fonte-titulo); font-size: var(--tipo-apoio); font-weight: 800; color: var(--cor-texto-suave); }
-.revelacao .niveis { justify-self: stretch; }
+.revelacao .niveis { justify-self: stretch; gap: 6px; }
 
 /* a figurinha chega de cima, girada, e assenta com um leve aperto: colar no álbum */
-.revelacao__figurinha { inline-size: 13rem; transform-origin: 50% 90%; animation: colar 700ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
+.revelacao__figurinha { inline-size: min(13rem, 18dvh); /* limitada pela altura: com o selo do diamante ainda cabe sem rolar */ transform-origin: 50% 90%; animation: colar 700ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
 @keyframes colar {
   0% { opacity: 0; transform: translateY(-1.5rem) rotate(-9deg) scale(1.12); }
   60% { opacity: 1; transform: translateY(0) rotate(1.5deg) scale(0.97); }
@@ -56,6 +56,24 @@
   touch-action: manipulation;
 }
 .revelacao__comecar:focus-visible { outline-offset: 3px; }
+
+/* computador: figurinha e selo à esquerda, atributos e o botão à direita */
+@media (min-width: 64rem) {
+  .revelacao { inline-size: min(100% - 4rem, 46rem); }
+  .revelacao[open] {
+    grid-template-columns: 15rem minmax(0, 1fr);
+    grid-template-areas: "titulo titulo" "sub sub" "fig rotulo" "fig niveis" "selo niveis" "selo comecar";
+    column-gap: var(--espaco-6);
+    align-items: start;
+  }
+  .revelacao__titulo { grid-area: titulo; }
+  .revelacao__sub { grid-area: sub; }
+  .revelacao__figurinha { grid-area: fig; inline-size: 13rem; justify-self: center; }
+  .revelacao__selo { grid-area: selo; }
+  .revelacao__rotulo { grid-area: rotulo; }
+  .revelacao .niveis { grid-area: niveis; }
+  .revelacao__comecar { grid-area: comecar; align-self: end; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .revelacao__figurinha { animation: none; transform: rotate(-1deg); }

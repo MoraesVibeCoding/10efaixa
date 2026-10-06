@@ -87,6 +87,12 @@ describe('revelação do jogador (T49i)', () => {
     expect(screen.getByRole('dialog', { name: t('ui.revelacao.titulo') })).toHaveAttribute('open');
   });
 
+  it('CSS: cabe sem rolar mesmo com o selo do diamante (medido: até 91 px a mais): figurinha limitada pela altura; no computador, duas colunas', () => {
+    const css = readFileSync(resolve(__dirname, 'Revelacao.css'), 'utf8');
+    expect(css).toMatch(/\.revelacao__figurinha\s*\{[^}]*inline-size:\s*min\([^)]*dvh\)/);
+    expect(css).toMatch(/@media\s*\(min-width:\s*64rem\)\s*\{[^@]*grid-template-areas/);
+  });
+
   it('CSS: a figurinha "cola" com animação, que some com prefers-reduced-motion; o fundo usa o scrim do vidro', () => {
     const css = readFileSync(resolve(__dirname, 'Revelacao.css'), 'utf8');
     expect(css).toMatch(/@keyframes\s+colar/);
