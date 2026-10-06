@@ -3,7 +3,7 @@ import { kitOf } from '../../art/kits';
 import { toBand } from '../../engine/attributes';
 import { t } from '../../i18n';
 import tokens from '../theme/tokens.json';
-import { clubName } from './clubText';
+import { clubLine } from './clubText';
 import { Emblema } from './Emblema';
 import { useBust } from './useBust';
 import './Figurinha.css';
@@ -27,11 +27,6 @@ const MEDALS = tokens.medalha as unknown as Record<string, { nome: string }>;
 const PAINTED = import.meta.glob('../../assets/visuais/*.webp', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
 const paintedOf = (id: string | undefined) => (id ? PAINTED[`../../assets/visuais/${id}.webp`] : undefined);
 const CARD_ART = import.meta.glob('../../assets/cartoes-over/*.webp', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
-
-function clubLine(position: string, clubId: string) {
-  const { nome, prep } = clubName(clubId);
-  return t('ui.figurinha.posicaoNoClube', { posicao: t(`positions.${position}`), prep, clube: nome });
-}
 
 export function Figurinha({ name, number, overall, position, clubId = '', avatar, visual, moldura = false, tamanho = 'pequena' }: FigurinhaProps) {
   const kit = kitOf(clubId);

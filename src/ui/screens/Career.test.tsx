@@ -17,7 +17,7 @@ describe('carreira na tela (T51b)', () => {
   it('mostra a primeira decisão com o jogador de verdade', () => {
     render(<Career input={INPUT} look={LOOK} seed={11} onRestart={() => {}} />);
     expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
-    expect(screen.getByText('Dudu Maestro', { selector: '.figurinha__nome' })).toBeInTheDocument();
+    expect(screen.getByText('Dudu Maestro', { selector: '.figurinha__tarja-nome' })).toBeInTheDocument();
     expect(screen.getByRole('list', { name: t('ui.decisao.ficha') })).toBeInTheDocument();
   });
 
@@ -28,6 +28,7 @@ describe('carreira na tela (T51b)', () => {
       const eventId = document.querySelector('[data-evento]')!.getAttribute('data-evento')!;
       const choice = autoChoice(eventId, document.querySelector('[data-temperamento]')!.getAttribute('data-temperamento')!);
       fireEvent.click(document.querySelector(`[data-opcao-id="${choice}"]`)!);
+      fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
       fireEvent.click(screen.getByRole('button', { name: t('ui.resultado.seguir') }));
     }
     const result = simulateCareer(INPUT, 11);

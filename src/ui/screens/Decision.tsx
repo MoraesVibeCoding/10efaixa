@@ -10,7 +10,7 @@ import { applyOption, type Ctx } from '../../engine/events';
 import { outcomeOf, outcomeVerdict, previewOf, riskOf, RISK_BANDS, timeOutOf, type Outcome, type Preview, type Risk } from '../../engine/preview';
 import previewCfg from '../../data/preview.json';
 import { t } from '../../i18n';
-import { clubName } from './clubText';
+import { clubLine, clubName } from './clubText';
 import { Emblema } from './Emblema';
 import { Figurinha } from './Figurinha';
 import './Decision.css';
@@ -229,12 +229,16 @@ function Career({ player, onClose }: { player: DecisionProps['player']; onClose:
 // as cenas são pintadas em 4:5 (docs/briefing-arte.md); largura e altura reservam o espaço antes de a imagem chegar
 const SCENE_SIZE = [1856, 2304] as const;
 
-/** Tarja de risco da opção: a faixa em palavras e um medidor de 4 segmentos num tom só (o medidor repete o texto, por isso fica oculto ao leitor de tela). */
-function RiskBanner({ risk }: { risk: Risk }) {
+function riskText(risk: Risk): string {
+  return t('ui.risco.tarja', { tipo: t(`ui.risco.tipo.${risk.tipo}`), faixa: t(`ui.risco.${risk.faixa}`) });
+}
+
+/** Medidor de risco da opção (v2.34): 4 segmentos num tom só; a faixa em palavras vai para o leitor de tela aqui e, por escrito, para o detalhe da marcada. */
+function RiskMeter({ risk }: { risk: Risk }) {
   const lit = RISK_BANDS.indexOf(risk.faixa) + 1;
   return (
     <span className="opcao__risco">
-      {t('ui.risco.tarja', { tipo: t(`ui.risco.tipo.${risk.tipo}`), faixa: t(`ui.risco.${risk.faixa}`) })}
+      <span className="sr-only">{riskText(risk)}</span>
       <span className="medidor" aria-hidden="true">
         {RISK_BANDS.map((b, i) => <s key={b} data-cheio={i < lit ? '' : undefined} />)}
       </span>
@@ -304,11 +308,95 @@ function Result({ eventId, optionId, state, auto, onDone }: { eventId: string; o
   );
 }
 
+/** Contagem de títulos na ficha do topo (v2.34): a lista completa fica na gaveta. */
+function titlesCount(n: number): string {
+  if (n === 0) return t('ui.decisao.semTitulos');
+  return n === 1 ? t('ui.decisao.tituloUm') : t('ui.decisao.titulosQtd', { n });
+}
+
+/** O que o leitor de tela ouve no botão da opção: cada consequência em palavras, o risco e o tempo fora (a tela mostra isso só no detalhe da marcada). */
+function optionSpeech(eventId: string, optionId: string): string {
+  const preview = previewOf(eventId, optionId);
+  const out = timeOutOf(eventId, optionId);
+  const parts = preview.map((p) => `${t(`preview.campo.${p.campo}`)}${t('ui.decisao.previa', { sentido: t(`preview.sentido.${p.sentido}`), intensidade: p.sentido === 'muda' ? '' : t(`preview.intensidade.${p.intensidade}`) })}`.trim());
+  if (out !== null) parts.push(timeOutText(out));
+  if (!parts.length) parts.push(t('ui.decisao.semPrevia'));
+  return parts.join('. ');
+}
+
+/** Detalhe da opção marcada (v2.34): risco e tempo fora por escrito, depois "Você ganha / Em troca" com as setas. */
+function Detail({ eventId, optionId }: { eventId: string; optionId: string }) {
+  const preview = previewOf(eventId, optionId);
+  const risk = riskOf(eventId, optionId);
+  const out = timeOutOf(eventId, optionId);
+  return (
+    <section className="decisao__detalhe" aria-label={t(`events.${eventId}.opcoes.${optionId}`)}>
+      {(risk || out !== null) && (
+        <p className="detalhe__risco">
+          {risk && <span>{riskText(risk)}</span>}
+          {out !== null && <span className="opcao__fora">{timeOutText(out)}</span>}
+        </p>
+      )}
+      {preview.length === 0 && out === null && <p className="previa">{t('ui.decisao.semPrevia')}</p>}
+      {previewLines(preview).map((line) => (
+        <p key={line.sentido} className={`previa__linha previa--${line.sentido}`}>
+          <span className="previa__rotulo">{t(`ui.decisao.${line.rotulo}`)}</span>
+          <span className="previa__itens">
+            {line.itens.map((p) => (
+              <span key={p.campo} className="previa">
+                <span>{t(`preview.campo.${p.campo}`)}</span>
+                <Arrows sentido={p.sentido} intensidade={p.intensidade} />
+              </span>
+            ))}
+          </span>
+        </p>
+      ))}
+    </section>
+  );
+}
+
+/** Caixa do jogador no topo (v2.34, variação B): figurinha pequena com moldura (abre "Minha carreira"), o Over grande e a ficha. */
+function PlayerBox({ player, age, open, opener, onOpen, inert }: {
+  player: DecisionProps['player']; age: number; open: boolean; opener: React.RefObject<HTMLButtonElement | null>; onOpen: () => void; inert: boolean;
+}) {
+  return (
+    <header className="decisao__topo vidro" inert={inert}>
+      <button ref={opener} type="button" className="jogador__abrir" aria-haspopup="dialog" aria-expanded={open} onClick={onOpen}>
+        <Figurinha moldura tamanho="pequena" name={player.name} number={player.number} overall={player.overall} position={player.position} clubId={player.clubId} avatar={player.avatar} visual={player.visual} />
+        <span className="jogador__quem">
+          <span className="jogador__nome" aria-hidden="true">{player.name}</span>
+          <span className="jogador__clube"><Emblema clubId={player.clubId} size={18} />{clubLine(player.position, player.clubId)}</span>
+          <span className="jogador__mais">
+            {t('ui.carreira.titulo')}
+            <svg viewBox="0 0 10 16" width="7" height="11" aria-hidden="true" focusable="false">
+              <path d="M1.5 1.5 8 8l-6.5 6.5" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="square" />
+            </svg>
+          </span>
+        </span>
+      </button>
+      <p className="decisao__over" aria-hidden="true">
+        <span className="decisao__over-rotulo">{t('ui.figurinha.over')}</span>
+        <span className="decisao__over-numero">{player.overall}</span>
+      </p>
+      <ul className="selos" aria-label={t('ui.decisao.ficha')}>
+        <li>{t('ui.decisao.idade', { idade: age })}</li>
+        <li>{t(`ui.papel.${player.role}`)}</li>
+        <li>{t('ui.decisao.porMes', { valor: money(player.monthlySalary.amount, player.monthlySalary.currency) })}</li>
+        {player.marketValueEUR === undefined ? null : <li>{t('ui.decisao.valor', { valor: money(player.marketValueEUR, 'EUR') })}</li>}
+        <li>{titlesCount(player.titles.length)}</li>
+      </ul>
+    </header>
+  );
+}
+
 export function Decision({ eventId, age, progress, scene, player, state = {}, ritmo = 'normal', onChoose, onContinue }: DecisionProps) {
   const [career, setCareer] = useState(false);
   // sem genérico aqui: a guarda de texto fora do i18n confunde o genérico com JSX
   const opener = useRef(null as HTMLButtonElement | null);
+  // v2.34: no Normal tocar marca e "Confirmar escolha" decide; no Rápido tocar já decide
+  const [marked, setMarked] = useState(null as string | null);
   const [chosen, setChosen] = useState<string | null>(null);
+  const rapido = ritmo === 'rapido';
   // o resultado fecha uma vez só, venha do tempo ou do botão
   const done = useRef(false);
   const finish = useRef(() => {});
@@ -318,9 +406,15 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, ri
     onContinue?.(chosen, applyOption(state, eventId, chosen));
   };
   const [onDone] = useState(() => () => finish.current());
+  function decide(id: string) {
+    if (chosen !== null) return;
+    setChosen(id);
+    onChoose?.(id);
+  }
   const options = events.eventos.find((e) => e.id === eventId)?.opcoes ?? [];
   const percent = Math.round(Math.min(1, Math.max(0, progress)) * 100);
   const text = hasText(eventId) ? t(`events.${eventId}.texto`) : null;
+  const pressed = chosen ?? marked;
   // gaveta ou resultado abertos: o resto da tela fica inerte e o Esc vale de qualquer ponto (T49b)
   const overlay = career || chosen !== null;
   // o foco volta para a caixa do jogador só depois que o painel deixou de ser inerte: o navegador recusa foco em inerte
@@ -349,66 +443,36 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, ri
       >
         <span className="faixa__feito" style={{ inlineSize: `${percent}%` }} />
       </div>
-      <div className="decisao__painel" inert={overlay}>
-        <button ref={opener} type="button" className="jogador__abrir" aria-haspopup="dialog" aria-expanded={career} onClick={() => { setCareer(true); }}>
-          <Figurinha name={player.name} number={player.number} overall={player.overall} position={player.position} clubId={player.clubId} avatar={player.avatar} visual={player.visual} />
-          <span className="jogador__mais">
-            {t('ui.carreira.titulo')}
-            <svg viewBox="0 0 10 16" width="7" height="11" aria-hidden="true" focusable="false">
-              <path d="M1.5 1.5 8 8l-6.5 6.5" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="square" />
-            </svg>
-          </span>
-        </button>
+      <PlayerBox player={player} age={age} open={career} opener={opener} onOpen={() => { setCareer(true); }} inert={overlay} />
+      <div className="decisao__painel vidro" inert={overlay}>
         <h1 className="decisao__titulo">{t(`events.${eventId}.titulo`)}</h1>
-        <ul className="selos" aria-label={t('ui.decisao.ficha')}>
-          <li>{t('ui.decisao.idade', { idade: age })}</li>
-          <li>{t(`ui.papel.${player.role}`)}</li>
-          <li>{t('ui.decisao.porMes', { valor: money(player.monthlySalary.amount, player.monthlySalary.currency) })}</li>
-          {player.marketValueEUR === undefined ? null : <li>{t('ui.decisao.valor', { valor: money(player.marketValueEUR, 'EUR') })}</li>}
-        </ul>
         {text && <p className="decisao__historia">{text}</p>}
         <div className="decisao__opcoes" role="group" aria-label={t('ui.decisao.opcoes')}>
           {options.map((o) => {
-            const preview = previewOf(eventId, o.id);
             const risk = riskOf(eventId, o.id);
-            const out = timeOutOf(eventId, o.id);
             return (
               <button
-                key={o.id} type="button" className="opcao" data-opcao-id={o.id} aria-pressed={chosen === o.id} disabled={chosen !== null && chosen !== o.id}
-                onClick={() => { if (chosen === null) { setChosen(o.id); onChoose?.(o.id); } }}
+                key={o.id} type="button" className="opcao" data-opcao-id={o.id} aria-pressed={pressed === o.id} disabled={chosen !== null && chosen !== o.id}
+                onClick={() => { if (rapido) { decide(o.id); } else if (chosen === null) { setMarked(o.id); } }}
               >
-                {risk && <RiskBanner risk={risk} />}
                 <span className="opcao__rotulo">{t(`events.${eventId}.opcoes.${o.id}`)}</span>
-                <span className="opcao__previa">
-                  {preview.length === 0 && out === null && <span className="previa">{t('ui.decisao.semPrevia')}</span>}
-                  {previewLines(preview).map((line) => (
-                    <span key={line.sentido} className={`previa__linha previa--${line.sentido}`}>
-                      <span className="previa__rotulo">{t(`ui.decisao.${line.rotulo}`)}</span>
-                      <span className="previa__itens">
-                      {line.itens.map((p) => (
-                        <span key={p.campo} className="previa">
-                          <span>
-                            {t(`preview.campo.${p.campo}`)}
-                            <span className="sr-only">
-                              {t('ui.decisao.previa', { sentido: t(`preview.sentido.${p.sentido}`), intensidade: p.sentido === 'muda' ? '' : t(`preview.intensidade.${p.intensidade}`) })}
-                            </span>
-                          </span>
-                          <Arrows sentido={p.sentido} intensidade={p.intensidade} />
-                        </span>
-                      ))}
-                      </span>
-                    </span>
-                  ))}
-                  {out !== null && <span className="opcao__fora">{timeOutText(out)}</span>}
-                </span>
+                <span className="sr-only">{optionSpeech(eventId, o.id)}</span>
+                {risk && <RiskMeter risk={risk} />}
               </button>
             );
           })}
         </div>
-        <Album titles={player.titles} milestones={player.milestones ?? []} />
+        {!rapido && marked === null && <p className="decisao__detalhe decisao__detalhe--vazio">{t('ui.decisao.marque')}</p>}
+        {!rapido && marked !== null && <Detail eventId={eventId} optionId={marked} />}
+        {!rapido && (
+          <button type="button" className="decisao__confirmar" disabled={marked === null || chosen !== null} onClick={() => { if (marked !== null) { decide(marked); } }}>
+            {t('ui.decisao.confirmar')}
+          </button>
+        )}
       </div>
+      <Album titles={player.titles} milestones={player.milestones ?? []} />
       {career && <Career player={player} onClose={() => { setCareer(false); }} />}
-      {chosen !== null && <Result eventId={eventId} optionId={chosen} state={state} auto={ritmo === 'rapido'} onDone={onDone} />}
+      {chosen !== null && <Result eventId={eventId} optionId={chosen} state={state} auto={rapido} onDone={onDone} />}
     </main>
   );
 }

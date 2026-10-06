@@ -15,3 +15,9 @@ export function clubName(clubId: string): { nome: string; sigla: string; prep: s
   const club = ALL.get(clubId);
   return { nome: club?.nome ?? '', sigla: club?.sigla ?? '', prep: t(`ui.figurinha.prep.${club?.artigo ?? 'o'}`) };
 }
+
+/** "Meia do Flamengo": posição e clube numa linha (figurinha e caixa do jogador na decisão). */
+export function clubLine(position: string, clubId: string): string {
+  const { nome, prep } = clubName(clubId);
+  return t('ui.figurinha.posicaoNoClube', { posicao: t(`positions.${position}`), prep, clube: nome });
+}

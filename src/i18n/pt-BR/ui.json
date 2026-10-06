@@ -15,7 +15,12 @@
   "muda": "Muda",
   "ficha": "Ficha do jogador",
   "porMes": "{valor}/mês",
-  "valor": "Valor {valor}"
+  "valor": "Valor {valor}",
+  "confirmar": "Confirmar escolha",
+  "marque": "Toque numa opção para ver o que você ganha e o que dá em troca.",
+  "titulosQtd": "{n} títulos",
+  "tituloUm": "1 título",
+  "semTitulos": "Sem títulos"
  },
  "amostra": {
   "clube": "clube do coração"

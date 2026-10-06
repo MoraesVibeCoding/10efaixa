@@ -1,64 +1,66 @@
-/* Tela de decisão (SPEC v2.19): papel creme, tinta marinho e verde como cor de base.
-   Tudo que se toca ou se lê em bloco é uma caixa de borda grossa com sombra dura, sem desfoque. */
+/* Tela de decisão (SPEC v2.34, variação B): a cena ocupa a tela; por cima, duas camadas de vidro (glass.css):
+   a caixa do jogador no topo, sempre à vista, e a faixa de baixo com o evento, as opções e o detalhe da marcada.
+   Superfícies com borda fina e sombra suave; a borda grossa e a sombra dura da v2.19 saíram. */
 .decisao {
   position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
+  gap: var(--espaco-2);
   block-size: 100dvh;
   min-block-size: 100dvh;
   max-inline-size: 30rem;
   margin-inline: auto;
+  padding: var(--espaco-2) var(--espaco-3) calc(var(--espaco-3) + env(safe-area-inset-bottom));
+  overflow: hidden;
   background: var(--cor-fundo);
   color: var(--cor-texto);
 }
 
 .caixa {
-  border: var(--forma-borda) solid var(--cor-linha);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
   border-radius: var(--forma-raio);
   background: var(--cor-superficie);
-  box-shadow: var(--forma-sombra) var(--forma-sombra) 0 var(--cor-destaque);
+  box-shadow: var(--forma-sombra-suave);
 }
 
+/* a pintura é 4:5: cobre a tela inteira, com o rosto do jogador na faixa que fica entre o topo e a faixa de baixo */
 .decisao__cena {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   inline-size: 100%;
-  /* a pintura é 4:5 com os 40% de baixo escuros: no celular só a parte de cima aparece;
-     quando falta altura, a cena encolhe (até 6,5rem, que ainda recebe a figurinha; era 7,5rem até o selo do valor de mercado, v2.33) para as opções caberem */
-  flex: 0 1 calc(min(100vw, 30rem) * 0.55);
-  min-block-size: 6.5rem;
+  block-size: 100%;
   object-fit: cover;
-  object-position: 50% 10%;
+  object-position: 50% 30%;
 }
 
-/* progresso da carreira: a linha de tinta que fecha a cena */
-.faixa { flex: none; block-size: 8px; background: var(--cor-trilho); border-block: var(--forma-borda) solid var(--cor-linha); box-sizing: content-box; }
-.faixa__feito { display: block; block-size: 100%; min-inline-size: 8px; background: var(--cor-destaque); }
+/* progresso da carreira: um fio no alto da tela */
+.faixa { flex: none; block-size: 4px; border-radius: 999px; background: var(--cor-trilho); overflow: hidden; }
+.faixa__feito { display: block; block-size: 100%; min-inline-size: 4px; background: var(--cor-destaque); }
 
-/* celular (v2.26): a figurinha sobe sobre a cena; título e selos ao lado dela; a sobra de altura fica antes das opções */
-.decisao__painel {
-  flex: 1 0 auto;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  grid-template-areas: "fig titulo" "fig selos" "hist hist" "sobra sobra" "op op";
-  /* só a sobra é flexível: com duas linhas 1fr o navegador as iguala e abre um vão mesmo sem espaço */
-  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
-  column-gap: var(--espaco-3);
-  row-gap: var(--espaco-2);
-  padding: 0 var(--espaco-4) calc(var(--espaco-4) + env(safe-area-inset-bottom));
-}
-
-/* ---------- quem decide: a figurinha é o botão que abre a gaveta "Minha carreira" */
-.jogador__abrir {
-  grid-area: fig;
-  align-self: start;
+/* ---------- caixa do jogador (topo, vidro): figurinha que abre "Minha carreira", o Over grande e a ficha */
+.decisao__topo {
   position: relative;
   z-index: 1;
+  flex: none;
   display: grid;
-  justify-items: start;
-  gap: var(--espaco-1);
-  margin-block-start: -4rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "quem over" "selos selos";
+  align-items: center;
+  gap: var(--espaco-2) var(--espaco-3);
+  padding: var(--espaco-2) var(--espaco-3) var(--espaco-3);
+  border-radius: var(--forma-raio);
+}
+.jogador__abrir {
+  grid-area: quem;
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-3);
+  min-inline-size: 0;
   padding: 0;
   border: 0;
-  border-radius: 6px;
+  border-radius: var(--forma-raio);
   background: none;
   color: inherit;
   font: inherit;
@@ -68,10 +70,14 @@
   touch-action: manipulation;
 }
 .jogador__abrir:focus-visible { outline-offset: 4px; }
+.jogador__abrir .figurinha { flex: none; --w: 4.25rem; }
+.jogador__quem { display: grid; gap: 2px; min-inline-size: 0; }
+.jogador__nome { font-family: var(--fonte-titulo); font-size: var(--tipo-opcao); font-weight: 900; line-height: 1.05; text-transform: uppercase; }
+.jogador__clube { display: flex; align-items: center; gap: var(--espaco-1); font-size: var(--tipo-apoio); line-height: 1.25; color: var(--cor-texto-suave); }
+.jogador__clube .emblema { flex: none; }
 @media (hover: hover) {
-  .jogador__abrir:hover .figurinha { translate: -1px -1px; box-shadow: calc(var(--forma-sombra) + 1px) calc(var(--forma-sombra) + 1px) 0 var(--cor-destaque); }
+  .jogador__abrir:hover .jogador__mais { text-decoration: underline; }
 }
-.jogador__abrir:active .figurinha { translate: var(--forma-sombra) var(--forma-sombra); box-shadow: none; }
 
 /* rótulos pequenos em caixa normal (v2.26): a caixa alta fica para os títulos */
 .jogador__mais,
@@ -87,20 +93,15 @@
 }
 .jogador__mais { display: inline-flex; align-items: center; gap: var(--espaco-2); color: var(--cor-positivo); }
 
-/* ---------- o que aconteceu */
-.decisao__titulo {
-  grid-area: titulo;
-  align-self: end;
-  padding-block-start: var(--espaco-3);
-  font-size: var(--tipo-titulo);
-  font-weight: 900;
-  line-height: 1;
-  text-transform: uppercase;
-}
-.selos { grid-area: selos; align-self: start; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+/* o Over em número (v2.16): o único número de atributo da tela, grande ao lado da figurinha */
+.decisao__over { grid-area: over; display: grid; justify-items: center; line-height: 1; font-family: var(--fonte-titulo); font-variant-numeric: tabular-nums; }
+.decisao__over-rotulo { font-size: var(--tipo-apoio); font-weight: 800; letter-spacing: 0.08em; color: var(--cor-texto-suave); }
+.decisao__over-numero { font-size: 3rem; font-weight: 900; }
+
+.selos { grid-area: selos; display: flex; flex-wrap: wrap; gap: 4px; margin: 0; padding: 0; list-style: none; }
 .selos li {
-  padding: 1px 9px;
-  border: var(--forma-borda) solid var(--cor-linha);
+  padding: 1px 8px;
+  border: var(--forma-borda-fina) solid var(--cor-linha);
   border-radius: 999px;
   background: var(--cor-superficie);
   font-size: var(--tipo-apoio);
@@ -108,64 +109,100 @@
   line-height: 1.35;
   white-space: nowrap;
 }
-.decisao__historia { grid-area: hist; max-inline-size: 44ch; padding-block-start: var(--espaco-1); font-size: var(--tipo-historia); line-height: 1.45; color: var(--cor-texto-suave); }
 
-/* ---------- o que você faz */
-.decisao__opcoes { grid-area: op; display: grid; gap: 0.625rem; padding-block-start: var(--espaco-2); }
-.opcao {
+/* ---------- faixa de baixo (vidro): o que aconteceu e o que você faz; a sobra de altura fica para a cena */
+.decisao__painel {
+  position: relative;
+  z-index: 1;
+  flex: none;
   display: grid;
-  align-content: center;
-  row-gap: var(--espaco-1);
+  gap: var(--espaco-2);
+  margin-block-start: auto;
+  padding: var(--espaco-3);
+  border-radius: var(--forma-raio);
+}
+.decisao__titulo {
+  font-size: var(--tipo-titulo);
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.decisao__historia { font-size: var(--tipo-historia); line-height: 1.4; color: var(--cor-texto-suave); }
+
+/* opções de uma linha: o texto e, à direita, o medidor de risco */
+.decisao__opcoes { display: grid; gap: var(--espaco-2); }
+.opcao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espaco-3);
   inline-size: 100%;
-  min-block-size: var(--toque-minimo);
-  padding: 0.375rem var(--espaco-3);
-  border: var(--forma-borda) solid var(--cor-linha);
+  min-block-size: var(--toque-compacto); /* v2.34: opção de uma linha; 48 px, acima dos 44 px do WCAG 2.5.5 */
+  padding: var(--espaco-1) var(--espaco-3);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
   border-radius: var(--forma-raio);
   background: var(--cor-superficie);
-  box-shadow: var(--forma-sombra) var(--forma-sombra) 0 var(--cor-destaque);
+  color: var(--cor-texto);
+  font: inherit;
   text-align: start;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 .opcao__rotulo { font-size: var(--tipo-opcao); font-weight: 700; line-height: 1.2; }
-.opcao__previa {
-  display: grid;
-  gap: 1px;
-  font-size: var(--tipo-apoio);
-  line-height: 1.3;
-  color: var(--cor-texto-suave);
+@media (hover: hover) {
+  .opcao:hover { background: var(--cor-fundo); }
 }
+.opcao:focus-visible { outline-offset: 3px; }
 
-/* "Você ganha" em cima, "Em troca" embaixo: os rótulos ocupam a mesma coluna e os itens alinham */
+/* marcada: verde cheio, como na criação */
+.opcao[aria-pressed='true'] { background: var(--cor-destaque); border-color: var(--cor-destaque); color: var(--cor-sobre-destaque); }
+.opcao:active { transform: translateY(1px); }
+.opcao:disabled { cursor: default; opacity: 0.55; }
+
+/* medidor de risco (T49c): 4 segmentos num tom só; risco é custo, então vermelho */
+.opcao__risco { flex: none; display: inline-flex; }
+.medidor { display: inline-grid; grid-template-columns: repeat(4, 0.75rem); gap: 3px; }
+.medidor s { block-size: 0.5rem; border: 1.5px solid var(--cor-linha); border-radius: 1px; }
+.medidor s[data-cheio] { background: var(--cor-negativo); border-color: var(--cor-negativo); }
+.opcao[aria-pressed='true'] .medidor s { border-color: var(--cor-sobre-destaque); }
+.opcao[aria-pressed='true'] .medidor s[data-cheio] { background: var(--cor-sobre-destaque); }
+
+/* detalhe da marcada: risco e tempo fora por escrito, depois "Você ganha" em cima e "Em troca" embaixo */
+.decisao__detalhe { display: grid; gap: 2px; min-block-size: 2.6rem; align-content: center; font-size: var(--tipo-apoio); line-height: 1.3; color: var(--cor-texto-suave); }
+.detalhe__risco { display: flex; flex-wrap: wrap; gap: 0 var(--espaco-3); font-weight: 700; color: var(--cor-negativo); }
+.opcao__fora { color: var(--cor-texto-suave); }
 .previa__linha { display: grid; grid-template-columns: 5.25rem minmax(0, 1fr); align-items: baseline; column-gap: var(--espaco-3); }
 .previa__itens { display: flex; flex-wrap: wrap; gap: 0 var(--espaco-3); }
 .previa { display: inline-flex; align-items: center; gap: var(--espaco-2); }
 .previa__setas { display: inline-flex; gap: 1px; }
 .previa--sobe :is(.previa__rotulo, .previa__setas) { color: var(--cor-positivo); }
 .previa--desce :is(.previa__rotulo, .previa__setas) { color: var(--cor-negativo); }
-@media (hover: hover) {
-  .opcao:hover { background: var(--cor-fundo); }
-}
-.opcao:focus-visible { outline-offset: 3px; }
 
-/* escolher é apertar: a caixa desce sobre a própria sombra e enche de verde */
-.opcao[aria-pressed='true'],
-.opcao:active {
-  transform: translate(var(--forma-sombra), var(--forma-sombra));
-  box-shadow: none;
-  background: var(--cor-destaque);
-  color: var(--cor-sobre-destaque);
+.decisao__confirmar {
+  min-block-size: var(--toque-compacto);
+  padding: 0 var(--espaco-5);
+  border: 0;
+  border-radius: 999px;
+  background: var(--cor-texto);
+  color: var(--cor-superficie);
+  font-family: var(--fonte-titulo);
+  font-size: var(--tipo-opcao);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  touch-action: manipulation;
 }
-.opcao[aria-pressed='true'] :is(.opcao__previa, .previa__setas, .previa__rotulo),
-.opcao:active :is(.opcao__previa, .previa__setas, .previa__rotulo) { color: var(--cor-sobre-destaque); border-color: var(--cor-sobre-destaque); }
-.opcao:disabled { cursor: default; }
+.decisao__confirmar:focus-visible { outline-offset: 3px; }
+.decisao__confirmar:disabled { cursor: default; background: var(--cor-trilho); color: var(--cor-texto-suave); }
 
 /* ---------- o que a escolha rendeu: um cartão menor por cima da tela, que fica levemente desfocada */
 .resultado {
   position: absolute;
   inset: 0;
-  z-index: 2; /* acima da figurinha, que sobe sobre a cena com z-index 1 */
+  z-index: 2; /* acima da caixa do jogador e da faixa de baixo (z-index 1) */
   display: grid;
   place-items: center;
   padding: var(--espaco-5);
@@ -191,7 +228,7 @@
 .resultado--negativo .resultado__veredito { color: var(--cor-negativo); }
 .resultado__escolha { color: var(--cor-texto-suave); line-height: 1.3; }
 .resultado__vazio { line-height: 1.4; }
-.resultado__lista { display: grid; margin: 0; padding: 0; list-style: none; border-block-start: var(--forma-borda) solid var(--cor-linha); }
+.resultado__lista { display: grid; margin: 0; padding: 0; list-style: none; border-block-start: var(--forma-borda-fina) solid var(--cor-linha); }
 .resultado__lista li {
   display: flex;
   justify-content: space-between;
@@ -208,7 +245,7 @@
   justify-self: end;
   min-block-size: 2.75rem;
   padding: 0 var(--espaco-5);
-  border: var(--forma-borda) solid var(--cor-linha);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
   border-radius: var(--forma-raio);
   background: var(--cor-destaque);
   color: var(--cor-sobre-destaque);
@@ -230,7 +267,7 @@
 .gaveta {
   position: absolute;
   inset: 0;
-  z-index: 2; /* acima da figurinha, que sobe sobre a cena com z-index 1 */
+  z-index: 2; /* acima da caixa do jogador e da faixa de baixo (z-index 1) */
   display: grid;
   align-items: end;
   background: color-mix(in srgb, var(--cor-fundo) 35%, transparent);
@@ -245,9 +282,9 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: var(--espaco-3) var(--espaco-4) calc(var(--espaco-5) + env(safe-area-inset-bottom));
-  border-block-start: var(--forma-borda) solid var(--cor-linha);
+  border-block-start: var(--forma-borda-fina) solid var(--cor-linha);
   background: var(--cor-fundo);
-  box-shadow: 0 calc(var(--forma-sombra) * -1) 0 var(--cor-destaque);
+  box-shadow: var(--forma-sombra-suave);
   scrollbar-color: var(--cor-destaque) var(--cor-fundo);
 }
 .gaveta__topo { display: flex; justify-content: space-between; align-items: center; gap: var(--espaco-3); }
@@ -257,7 +294,7 @@
   place-items: center;
   inline-size: 2.75rem;
   block-size: 2.75rem;
-  border: var(--forma-borda) solid var(--cor-linha);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
   border-radius: var(--forma-raio);
   background: var(--cor-superficie);
   color: var(--cor-texto);
@@ -285,7 +322,7 @@
   align-items: center;
   gap: var(--espaco-2);
   padding: var(--espaco-1) var(--espaco-3) var(--espaco-1) var(--espaco-2);
-  border: var(--forma-borda) solid var(--cor-linha);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
   border-radius: var(--forma-raio);
   background: var(--cor-superficie);
   font-weight: 700;
@@ -295,39 +332,14 @@
 .trofeu strong { font-family: var(--fonte-titulo); font-size: var(--tipo-opcao); font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
 
 .trajetoria { inline-size: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
-.trajetoria th { padding: 0 var(--espaco-2) var(--espaco-1); border-block-end: var(--forma-borda) solid var(--cor-linha); color: var(--cor-texto-suave); text-align: start; }
+.trajetoria th { padding: 0 var(--espaco-2) var(--espaco-1); border-block-end: var(--forma-borda-fina) solid var(--cor-linha); color: var(--cor-texto-suave); text-align: start; }
 .trajetoria td { padding: var(--espaco-2); border-block-end: 1px solid var(--cor-trilho); line-height: 1.3; }
 .trajetoria :is(th, td):first-child { inline-size: 3.5rem; padding-inline-start: 0; }
 .trajetoria :is(th, td):last-child { inline-size: 3rem; padding-inline-end: 0; text-align: end; }
 .trajetoria td:last-child { font-family: var(--fonte-titulo); font-size: var(--tipo-opcao); font-weight: 900; }
 .trajetoria__clube { display: flex; align-items: center; gap: var(--espaco-2); font-weight: 700; }
 
-@media (min-width: 40rem) {
-  .decisao { border-inline: var(--forma-borda) solid var(--cor-linha); }
-}
 .trofeu__arte { flex: none; inline-size: 32px; block-size: 32px; }
-
-/* ---------- tarja de risco (T49c): palavra e medidor de 4 segmentos num tom só; risco é custo, então vermelho */
-.opcao { overflow: hidden; }
-.opcao__risco {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--espaco-3);
-  margin: -0.375rem calc(var(--espaco-3) * -1) var(--espaco-1);
-  padding: var(--espaco-1) var(--espaco-3);
-  border-block-end: var(--forma-borda) solid var(--cor-linha);
-  background: var(--cor-fundo);
-  font-family: var(--fonte-titulo);
-  font-size: var(--tipo-apoio);
-  font-weight: 800;
-  line-height: 1.2;
-}
-.medidor { display: inline-grid; grid-template-columns: repeat(4, 0.875rem); gap: 3px; }
-.medidor s { block-size: 0.5rem; border: 1.5px solid var(--cor-linha); border-radius: 1px; }
-.medidor s[data-cheio] { background: var(--cor-negativo); border-color: var(--cor-negativo); }
-.opcao__fora { color: var(--cor-texto-suave); }
-.opcao[aria-pressed='true'] .opcao__risco, .opcao:active .opcao__risco { background: transparent; color: var(--cor-sobre-destaque); border-color: var(--cor-sobre-destaque); }
 
 /* ---------- álbum da carreira (v2.26): só no computador; no celular os títulos ficam na gaveta */
 .album { display: none; }
@@ -345,36 +357,26 @@
   line-height: 1.2;
   text-align: center;
 }
-.album__cromo { border: var(--forma-borda) solid var(--cor-linha); background: var(--cor-superficie); box-shadow: 2px 2px 0 var(--cor-destaque); font-weight: 700; }
+.album__cromo { border: var(--forma-borda-fina) solid var(--cor-linha); background: var(--cor-superficie); box-shadow: var(--forma-sombra-suave); font-weight: 700; }
 .album__cromo strong { font-family: var(--fonte-titulo); font-weight: 900; }
-.album__vazio { border: var(--forma-borda) dashed var(--cor-texto-suave); color: var(--cor-texto-suave); }
+.album__vazio { border: var(--forma-borda-fina) dashed var(--cor-texto-suave); color: var(--cor-texto-suave); }
 
-/* ---------- computador (v2.26): figurinha e álbum à esquerda; cena, título, história e as três opções lado a lado à direita */
+/* ---------- computador (v2.34): a cena continua cobrindo a tela; caixa do jogador e álbum à esquerda, a faixa de baixo com as três opções lado a lado */
 @media (min-width: 64rem) {
   .decisao {
     display: grid;
-    grid-template-columns: 18rem minmax(0, 1fr) auto;
-    grid-template-areas: "fig cena cena" "album faixa faixa" "album titulo selos" "album hist hist" "album op op" "album . .";
-    grid-template-rows: auto auto auto auto auto 1fr;
-    column-gap: 1.75rem;
-    max-inline-size: 77.5rem;
-    block-size: auto;
+    grid-template-columns: 20rem minmax(0, 1fr);
+    grid-template-areas: "faixa faixa" "topo ." "album ." "album painel";
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    gap: var(--espaco-4) 1.75rem;
+    max-inline-size: none;
     padding: 1.75rem;
-    border-inline: 0;
   }
-  .decisao__painel { display: contents; }
-  .decisao__cena { grid-area: cena; block-size: 24rem; min-block-size: 0; border: var(--forma-borda) solid var(--cor-linha); border-block-end: 0; border-radius: var(--forma-raio) var(--forma-raio) 0 0; object-position: 50% 26%; }
-  .faixa { grid-area: faixa; border-inline: var(--forma-borda) solid var(--cor-linha); }
-  .jogador__abrir { margin: 0; }
-  .jogador__abrir .figurinha { inline-size: 100%; padding: 8px 8px 12px; }
-  .jogador__abrir .figurinha__numero { font-size: 3.2rem; }
-  .jogador__abrir .figurinha__over { inline-size: 3.5rem; block-size: 3.875rem; inset-inline-start: 8px; inset-block-end: 12px; }
-  .jogador__abrir .figurinha__over .over__numero { font-size: 2rem; }
-  .jogador__abrir .figurinha__nome { margin-block-start: 10px; font-size: 1.6rem; }
-  .jogador__abrir .figurinha__clube { font-size: var(--tipo-apoio); }
-  .decisao__titulo { align-self: end; padding-block-start: var(--espaco-4); }
-  .selos { align-self: end; justify-content: end; }
-  .decisao__historia { max-inline-size: none; padding-block-start: var(--espaco-2); }
-  .decisao__opcoes { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; padding-block-start: var(--espaco-2); }
-  .album { display: grid; grid-area: album; align-content: start; gap: var(--espaco-3); padding-block-start: var(--espaco-4); }
+  .faixa { grid-area: faixa; }
+  .decisao__topo { grid-area: topo; }
+  .decisao__painel { grid-area: painel; margin: 0; }
+  .decisao__opcoes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .decisao__confirmar { justify-self: end; }
+  /* sobre a cena o álbum precisa de chão próprio: superfície sólida (o vidro já tem as duas camadas da tela) */
+  .album { grid-area: album; align-self: end; display: grid; gap: var(--espaco-3); padding: var(--espaco-3); border: var(--forma-borda-fina) solid var(--cor-linha); border-radius: var(--forma-raio); background: var(--cor-superficie); box-shadow: var(--forma-sombra-suave); }
 }

@@ -28,6 +28,7 @@ describe('resultado da escolha (SPEC v2.20)', () => {
   const open = (onContinue = vi.fn()) => {
     render(<Decision eventId="salario-atrasado" age={24} progress={0.4} player={{ name: 'Zé', position: 'meia', clubId: 'flamengo', overall: 60, titles: [], role: 'reserva', monthlySalary: { amount: 4_000, currency: 'BRL' } }} state={STATE} scene={{ src: 'c.webp', alt: 'cena' }} onContinue={onContinue} />);
     fireEvent.click(screen.getByRole('button', { name: new RegExp(t('events.salario-atrasado.opcoes.ficar')) }));
+    fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
     return onContinue;
   };
 
@@ -73,7 +74,7 @@ describe('resultado da escolha (SPEC v2.20)', () => {
   it('com o resultado aberto, o resto da tela fica inerte (sem foco nem clique por trás)', () => {
     open();
     const main = screen.getByRole('main');
-    for (const el of main.querySelectorAll('.decisao__cena, .faixa, .decisao__painel')) expect(el).toHaveAttribute('inert');
+    for (const el of main.querySelectorAll('.decisao__cena, .faixa, .decisao__topo, .decisao__painel')) expect(el).toHaveAttribute('inert');
     expect(screen.getByRole('dialog')).not.toHaveAttribute('inert');
   });
 
@@ -109,7 +110,7 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
     setup();
     const card = screen.getByRole('button', { name: new RegExp(t('ui.carreira.titulo')) });
     expect(card.querySelector('.figurinha')).not.toBeNull();
-    expect(within(card).getByText('Dudu Maestro')).toBeInTheDocument();
+    expect(card).toHaveAccessibleName(/Dudu Maestro/);
     expect(within(card).getByText(t('ui.figurinha.posicaoNoClube', { posicao: t('positions.meia'), prep: t('ui.figurinha.prep.o'), clube: 'Flamengo' }))).toBeInTheDocument();
     const over = within(card).getByText('78').closest('[data-medalha]');
     expect(over).toHaveAttribute('data-medalha', 'platina');
@@ -162,11 +163,11 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
     it('aberta, deixa o resto da tela inerte; Esc fecha de qualquer ponto e o foco volta para a caixa do jogador (T49b)', () => {
       openDrawer();
       const main = screen.getByRole('main');
-      for (const el of main.querySelectorAll('.decisao__cena, .faixa, .decisao__painel')) expect(el).toHaveAttribute('inert');
+      for (const el of main.querySelectorAll('.decisao__cena, .faixa, .decisao__topo, .decisao__painel')) expect(el).toHaveAttribute('inert');
       (document.activeElement as HTMLElement).blur();
       fireEvent.keyDown(document, { key: 'Escape' });
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-      for (const el of main.querySelectorAll('.decisao__cena, .faixa, .decisao__painel')) expect(el).not.toHaveAttribute('inert');
+      for (const el of main.querySelectorAll('.decisao__cena, .faixa, .decisao__topo, .decisao__painel')) expect(el).not.toHaveAttribute('inert');
       expect(opener()).toHaveFocus();
     });
 
@@ -254,11 +255,12 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
     });
   });
 
-  it('cada opção separa o que se ganha do que se dá em troca (SPEC v2.21)', () => {
+  it('a opção marcada separa o que se ganha do que se dá em troca (SPEC v2.21, v2.34)', () => {
     setup();
-    const stay = screen.getByRole('button', { name: new RegExp(t(`events.${EVENT}.opcoes.ficar`)) });
-    const gain = within(stay).getByText(t('ui.decisao.ganha')).parentElement!;
-    const cost = within(stay).getByText(t('ui.decisao.emTroca')).parentElement!;
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(t(`events.${EVENT}.opcoes.ficar`)) }));
+    const detail = screen.getByRole('region', { name: t(`events.${EVENT}.opcoes.ficar`) });
+    const gain = within(detail).getByText(t('ui.decisao.ganha')).parentElement!;
+    const cost = within(detail).getByText(t('ui.decisao.emTroca')).parentElement!;
     expect(gain).toHaveTextContent(t('preview.campo.idolatria'));
     expect(gain).not.toHaveTextContent(t('preview.campo.moral'));
     expect(cost).toHaveTextContent(t('preview.campo.moral'));
@@ -284,12 +286,14 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
     }
   });
 
-  it('escolher uma opção marca a faixa e avisa quem chamou', () => {
+  it('escolher uma opção marca a opção; só "Confirmar escolha" avisa quem chamou (v2.34)', () => {
     const onChoose = setup();
     const [first] = within(screen.getByRole('group', { name: t('ui.decisao.opcoes') })).getAllByRole('button');
     expect(first).toHaveAttribute('aria-pressed', 'false');
     fireEvent.click(first!);
     expect(first).toHaveAttribute('aria-pressed', 'true');
+    expect(onChoose).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
     expect(onChoose).toHaveBeenCalledWith(def.opcoes[0]!.id);
   });
 });
@@ -359,12 +363,13 @@ describe('contraste das cores de texto (T49c)', () => {
 });
 
 describe('camadas (T49c)', () => {
-  it('gaveta e resultado ficam acima da figurinha, que sobe sobre a cena com z-index', () => {
+  it('gaveta e resultado ficam acima da caixa do jogador e da faixa de baixo, que ficam sobre a cena', () => {
     const css = readFileSync(resolve(__dirname, 'Decision.css'), 'utf8');
     const z = (sel: string) => Number(new RegExp(`\\n\\${sel} \\{[^}]*z-index:\\s*(\\d+)`).exec(css)?.[1] ?? 0);
-    expect(z('.jogador__abrir')).toBeGreaterThan(0);
-    expect(z('.gaveta')).toBeGreaterThan(z('.jogador__abrir'));
-    expect(z('.resultado')).toBeGreaterThan(z('.jogador__abrir'));
+    for (const over of ['.gaveta', '.resultado']) {
+      for (const under of ['.decisao__topo', '.decisao__painel']) expect(z(over)).toBeGreaterThan(z(under));
+    }
+    expect(z('.decisao__topo')).toBeGreaterThan(0);
   });
 });
 
@@ -379,9 +384,76 @@ describe('emblemas na tela (T49d)', () => {
     expect(rows[0]!.querySelector('.emblema')).toHaveAttribute('data-versao', 'simples');
   });
 
-  it('a figurinha traz o emblema do clube no canto', () => {
+  it('a caixa do jogador traz o emblema do clube ao lado da linha "meia do Flamengo" (v2.34)', () => {
     setup();
     const card = screen.getByRole('button', { name: new RegExp(t('ui.carreira.titulo')) });
-    expect(card.querySelector('.figurinha .emblema')).toHaveAttribute('data-emblema', 'flamengo');
+    expect(card.querySelector('.jogador__clube .emblema')).toHaveAttribute('data-emblema', 'flamengo');
+  });
+});
+
+describe('variação B (T51c, SPEC v2.34)', () => {
+  const show = (eventId = EVENT, extra: Record<string, unknown> = {}) => {
+    const onChoose = vi.fn();
+    render(<Decision eventId={eventId} age={24} progress={0.4} player={PLAYER} scene={{ src: 'c.webp', alt: 'cena' }} onChoose={onChoose} {...extra} />);
+    return onChoose;
+  };
+  const option = (eventId: string, id: string) => screen.getByRole('button', { name: new RegExp(t(`events.${eventId}.opcoes.${id}`)) });
+  const confirm = () => screen.getByRole('button', { name: t('ui.decisao.confirmar') });
+
+  it('a cena ocupa a tela; caixa do jogador no topo e faixa de baixo em vidro (as duas camadas da tela)', () => {
+    show();
+    const main = screen.getByRole('main');
+    expect(main.querySelector('.decisao__topo')).toHaveClass('vidro');
+    expect(main.querySelector('.decisao__painel')).toHaveClass('vidro');
+    expect(main.querySelectorAll('.vidro')).toHaveLength(2);
+  });
+
+  it('a caixa do topo mostra a figurinha com moldura, o Over grande e a contagem de títulos', () => {
+    show();
+    const topo = screen.getByRole('main').querySelector('.decisao__topo') as HTMLElement;
+    expect(topo.querySelector('.figurinha--moldura')).not.toBeNull();
+    expect(topo.querySelector('.decisao__over')).toHaveTextContent('78');
+    expect(within(topo).getByRole('list', { name: t('ui.decisao.ficha') })).toHaveTextContent(t('ui.decisao.titulosQtd', { n: 3 }));
+  });
+
+  it('nada marcado: confirmar fica desligado e a caixa de detalhe convida a tocar numa opção', () => {
+    show();
+    expect(confirm()).toBeDisabled();
+    expect(screen.getByText(t('ui.decisao.marque'))).toBeInTheDocument();
+  });
+
+  it('dá para trocar a marcada antes de confirmar; só uma fica marcada', () => {
+    const onChoose = show();
+    const [a, b] = def.opcoes.map((o) => option(EVENT, o.id));
+    fireEvent.click(a!);
+    fireEvent.click(b!);
+    expect(a).toHaveAttribute('aria-pressed', 'false');
+    expect(b).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    fireEvent.click(confirm());
+    expect(onChoose).toHaveBeenCalledWith(def.opcoes[1]!.id);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+  });
+
+  it('o detalhe da marcada traz o risco em palavras e o tempo fora', () => {
+    show('lesao-grave');
+    fireEvent.click(option('lesao-grave', 'operar'));
+    const detail = screen.getByRole('region', { name: t('events.lesao-grave.opcoes.operar') });
+    expect(detail).toHaveTextContent(t('ui.risco.tarja', { tipo: t('ui.risco.tipo.recaida'), faixa: t('ui.risco.baixo') }));
+    expect(detail).toHaveTextContent(t('ui.fora.ano'));
+  });
+
+  it('no ritmo Rápido tocar já decide: sem confirmar e sem caixa de detalhe', () => {
+    const onChoose = show(EVENT, { ritmo: 'rapido' });
+    expect(screen.queryByRole('button', { name: t('ui.decisao.confirmar') })).not.toBeInTheDocument();
+    expect(screen.queryByText(t('ui.decisao.marque'))).not.toBeInTheDocument();
+    fireEvent.click(option(EVENT, def.opcoes[0]!.id));
+    expect(onChoose).toHaveBeenCalledWith(def.opcoes[0]!.id);
+  });
+
+  it('superfícies sem sombra dura nem borda grossa (v2.34)', () => {
+    const css = readFileSync(resolve(__dirname, 'Decision.css'), 'utf8');
+    expect(css).not.toContain('var(--forma-sombra) var(--forma-sombra) 0');
+    expect(css).not.toMatch(/border[\w-]*:\s*var\(--forma-borda\)/);
   });
 });
