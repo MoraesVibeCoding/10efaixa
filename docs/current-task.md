@@ -22,12 +22,13 @@
 - **T55b** (`b288982`): `storyOf` e `storyHighlights` (`src/engine/story.ts`, pesos em `story.json`), tela `Historia` antes do resumo do fim.
 
 - **T55c:** `cardModel(result, codigo)` em `src/share/cardModel.ts` (contrato: `nome, apelido, numero, posicao, clubeAuge, overall, veredito, rotulo, manchete, comentario, honrarias[≤3], frases[≤4], clubes[], numeros[5], radar[10 {id, nome, valor}], codigo, alt {narrativa, estatistica}`); textos `ui.cartao.*`; `storyText` em `src/ui/screens/storyText.ts`.
+- **T55d:** `drawCard` (Canvas 2D, 1080×1350, duas versões) e tela `Cartao` no lugar do resumo do fim; medido no Chromium (axe 0, sem rolagem em 390×844).
 
 ## Pendente
 
-- **T55d:** desenho em Canvas 2D 1080×1350 nas duas versões, com o "10"/número bem enquadrado nas costas; tela do cartão no lugar do resumo atual (`CareerEnd`).
-- ⛳ Capturas do cartão para aprovação.
+- ⛳ **Aprovação do usuário** das capturas do cartão (narrativa e estatística).
+- Depois: T56 (compartilhar: imagem, download, texto para WhatsApp e link com os dados para refazer a carreira).
 
-## Validação (último commit, T55c)
+## Validação (último commit, T55d)
 
-- `npm test`: 930 passando, 4 pulados · typecheck limpo · build OK.
+- `npm test`: 933 passando, 4 pulados · typecheck limpo · build OK.

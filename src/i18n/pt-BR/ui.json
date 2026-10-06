@@ -272,6 +272,13 @@
   "cartao": {
     "numero": { "jogos": "Jogos", "gols": "Gols", "assistencias": "Assistências", "titulos": "Títulos", "patrimonio": "Patrimônio" },
     "altNarrativa": "Cartão de carreira de {nome}, {apelido}. Veredito: {veredito}. Rótulo: {rotulo}. {manchete} {frases}.",
+    "overMax": "Over máximo",
+    "honrarias": "Honrarias",
+    "codigo": "Código",
+    "titulo": "Seu cartão",
+    "versoes": "Versão do cartão",
+    "narrativa": "História",
+    "estatistica": "Números",
     "altEstatistica": "Cartão de carreira de {nome} em números. Overall máximo {over}. {numeros}. Atributos no auge: {atributos}."
   }
 }

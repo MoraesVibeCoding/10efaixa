@@ -40,9 +40,14 @@ describe('carreira na tela (T51b)', () => {
     // T55b: "Sua história" antes do resumo
     fireEvent.click(screen.getByRole('button', { name: t('ui.historia.verCartao') }));
     const result = simulateCareer(INPUT, 11);
-    expect(screen.getByRole('heading', { level: 1, name: t('ui.fim.titulo') })).toBeInTheDocument();
-    expect(screen.getByText(t(`legacy.veredito.${result.legacy.verdict}`))).toBeInTheDocument();
-    expect(screen.getByText(result.headline)).toBeInTheDocument();
+    // T55d: o cartão (canvas) com o texto alternativo da versão narrativa, que abre primeiro
+    expect(screen.getByRole('heading', { level: 1, name: t('ui.cartao.titulo') })).toBeInTheDocument();
+    const card = screen.getByRole('img', { name: /Cartão de carreira/ });
+    expect(card.getAttribute('aria-label')).toContain(t(`legacy.veredito.${result.legacy.verdict}`));
+    expect(card.getAttribute('aria-label')).toContain(result.headline);
+    fireEvent.click(screen.getByRole('button', { name: t('ui.cartao.estatistica') }));
+    expect(screen.getByRole('button', { name: t('ui.cartao.estatistica') })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('img', { name: /em números/ })).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: t('ui.fim.novaCarreira') }));
     expect(onRestart).toHaveBeenCalledOnce();
     // T54: salvou ao começar e a cada decisão; no fim avisa que terminou (o App apaga o save)

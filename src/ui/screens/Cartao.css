@@ -1,0 +1,42 @@
+/* T55d: o cartão ocupa a largura da coluna e mantém 1080×1350 (4:5) em qualquer tela. */
+.cartao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-4);
+  min-block-size: 100dvh;
+  max-inline-size: 30rem;
+  margin-inline: auto;
+  padding: var(--espaco-5) var(--espaco-4);
+  box-sizing: border-box;
+  background: var(--cor-fundo);
+  color: var(--cor-texto);
+}
+.cartao__titulo { margin: 0; font-family: var(--fonte-titulo); font-size: var(--tipo-titulo); text-transform: uppercase; }
+.cartao__versoes { display: flex; gap: var(--espaco-2); }
+.cartao__versoes button {
+  flex: 1;
+  min-block-size: var(--toque-compacto);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
+  border-radius: 999px;
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  font-family: var(--fonte-titulo);
+  font-size: var(--tipo-opcao);
+  font-weight: 700;
+  cursor: pointer;
+}
+.cartao__versoes button[aria-pressed='true'] { background: var(--cor-texto); color: var(--cor-fundo); border-color: var(--cor-texto); }
+.cartao__imagem { inline-size: 100%; block-size: auto; aspect-ratio: 4 / 5; border-radius: var(--forma-raio); box-shadow: var(--forma-sombra-suave); }
+.cartao__nova {
+  align-self: stretch;
+  min-block-size: var(--toque-minimo);
+  border: 0;
+  border-radius: 999px;
+  background: var(--cor-destaque);
+  color: var(--cor-sobre-destaque);
+  font-family: var(--fonte-titulo);
+  font-size: var(--tipo-opcao);
+  font-weight: 700;
+  cursor: pointer;
+}
+.cartao button:focus-visible { outline: 3px solid var(--cor-destaque); outline-offset: 3px; }
