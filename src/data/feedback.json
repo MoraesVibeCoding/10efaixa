@@ -1,0 +1,7 @@
+{
+ "_nota": "Retorno da evolução (SPEC 6.13, v2.31, T51b): até duas frases por semestre sobre os atributos que mais mudaram, sem número. Calibrado em 1.508 semestres simulados (40 carreiras): a maioria muda 0 ou ±1 (ruído, sem frase); 'muda' a partir de 2; 'bastante' a partir de +5 ou −4 (quedas são mais raras).",
+ "muda": 2,
+ "bastanteSobe": 5,
+ "bastanteDesce": 4,
+ "maxFrases": 2
+}

@@ -1,9 +1,19 @@
 {
- "_nota": "Idolatria por clube, −100 a 100 (SPEC 6.9, 6.13, 6.17, 6.18; T22). Calibrar com npm run sim.",
+ "_nota": "Idolatria por clube, −100 a 100 (SPEC 6.9, 6.13, 6.17, 6.18; T22). Calibrar com npm run sim. faixas (T51b, v2.41): a idolatria na tela só em palavras; cada faixa vai até 'max' (vilão e ídolo casam com 'limites').",
  "limites": {
   "idolo": 75,
   "vilao": -50
  },
+ "faixas": [
+  { "key": "vilao", "max": -50 },
+  { "key": "contestado", "max": -15 },
+  { "key": "desconhecido", "max": 9 },
+  { "key": "promessa", "max": 29 },
+  { "key": "conhecido", "max": 49 },
+  { "key": "querido", "max": 74 },
+  { "key": "idolo", "max": 89 },
+  { "key": "lenda", "max": 100 }
+ ],
  "semestre": {
   "peso": 5
  },
