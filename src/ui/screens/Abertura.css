@@ -18,7 +18,16 @@
   aspect-ratio: 4 / 5;
   translate: -50% 0;
 }
-.abertura__arte img { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; }
+.abertura__arte img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  /* v2.39: no computador a arte não cobre a largura; as laterais somem em degradê para o marinho, sem borda.
+     No celular essas pontas ficam fora da tela (a caixa é mais larga que ela), então nada muda lá. */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+}
 
 /* o número da camisa, como estampado: claro, condensado, um pouco abaixo dos ombros */
 .abertura__numero {

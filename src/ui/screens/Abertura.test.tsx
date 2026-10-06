@@ -34,4 +34,11 @@ describe('abertura (T48)', () => {
     expect(css).toMatch(/\.abertura__numero\s*\{[^}]*animation:[^;]*carimbar/);
     expect(css).toMatch(/@media\s*\(prefers-reduced-motion:\s*reduce\)\s*\{[^@]*\.abertura__numero\s*\{[^}]*animation:\s*none/);
   });
+
+  it('CSS: a arte some em degradê nas laterais (sem borda visível no computador, v2.39)', () => {
+    const css = readFileSync(resolve(__dirname, 'Abertura.css'), 'utf8');
+    for (const p of ['-webkit-mask-image', 'mask-image']) {
+      expect(css).toMatch(new RegExp(`\\.abertura__arte img\\s*\\{[^}]*(^|[^-])${p}:\\s*linear-gradient\\(to right, transparent`, 'm'));
+    }
+  });
 });
