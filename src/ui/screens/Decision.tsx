@@ -13,6 +13,7 @@ import { clubLine, clubName } from './clubText';
 import { Emblema } from './Emblema';
 import { Figurinha } from './Figurinha';
 import { Niveis } from './Niveis';
+import { CenaPintada } from './CenaPintada';
 import './Decision.css';
 
 // T49 (amostra aprovada) e T51: uma decisão por tela, com a cena ao fundo. Só faixas e setas, nunca números de atributo.
@@ -21,7 +22,8 @@ export interface DecisionProps {
   age: number;
   /** Fração da carreira já vivida, de 0 a 1. */
   progress: number;
-  scene: { src: string; alt: string };
+  /** T60a: com `pintada`, a cena é a pintura em camadas (uniforme do clube e número); sem ela, a imagem `src`. */
+  scene: { src?: string; alt: string; pintada?: { scene: string; cut: string; clubId: string; number?: number } };
   /** Quem decide. O overall aparece em número (SPEC v2.16); os atributos, um a um, seguem só em faixas e estrelas. */
   player: {
     name: string; position: string; clubId: string; overall: number; titles: string[];
@@ -446,7 +448,9 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, ri
 
   return (
     <main className="decisao" data-tema="claro" data-evento={eventId} data-resultado={chosen === null ? 'fechado' : 'aberto'}>
-      <img className="decisao__cena" src={scene.src} alt={scene.alt} width={SCENE_SIZE[0]} height={SCENE_SIZE[1]} fetchPriority="high" inert={overlay} />
+      {scene.pintada
+        ? <CenaPintada {...scene.pintada} alt={scene.alt} inert={overlay} />
+        : <img className="decisao__cena" src={scene.src} alt={scene.alt} width={SCENE_SIZE[0]} height={SCENE_SIZE[1]} fetchPriority="high" inert={overlay} />}
       <div
         inert={overlay} className="faixa" role="progressbar" aria-label={t('ui.decisao.progresso')}
         aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent} aria-valuetext={t('ui.decisao.idade', { idade: age })}

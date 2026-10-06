@@ -1,0 +1,39 @@
+/* T60a: o quadro tem a proporção da pintura e cobre a tela (como object-fit: cover, ancorado a 30% da altura, igual
+   à cena antiga); camadas e número usam porcentagens da imagem. Máscara raster no alfa, com prefixo WebKit (MDN). */
+.cena {
+  --cena-largura: max(100vw, calc(100dvh * var(--cena-razao)));
+  position: fixed;
+  z-index: -1;
+  inline-size: var(--cena-largura);
+  aspect-ratio: var(--cena-proporcao);
+  inset-inline-start: calc((100vw - var(--cena-largura)) / 2);
+  inset-block-start: calc((100dvh - var(--cena-largura) / var(--cena-razao)) * 0.3);
+  container-type: size;
+  overflow: hidden;
+}
+.cena__pintura { display: block; inline-size: 100%; block-size: 100%; }
+.cena__camisa, .cena__calcao {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  -webkit-mask-image: var(--mascara);
+  mask-image: var(--mascara);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+.cena__camisa { background-color: var(--camisa-cor); background-image: var(--camisa-desenho); }
+.cena__calcao { background-color: var(--calcao-cor); }
+/* o número nas costas, na cor de detalhe do clube, com contorno escuro fino para ler sobre qualquer padrão */
+.cena__numero {
+  position: absolute;
+  translate: -50% -50%;
+  font-family: var(--fonte-titulo);
+  font-size: calc(var(--numero-altura) * 100cqh);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--numero-cor);
+  -webkit-text-stroke: 0.02em rgba(20, 20, 20, 0.6);
+  opacity: 0.92;
+  pointer-events: none;
+}
