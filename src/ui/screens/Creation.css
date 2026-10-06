@@ -198,3 +198,12 @@
   .criacao__form--larga .criacao__coluna + .criacao__coluna { grid-area: c2; }
   .criacao__form--larga .criacao__acoes { grid-area: acoes; align-self: end; }
 }
+
+/* T60b (referência de layout da v2.12): a cena pintada ao fundo e o passo num painel de vidro encostado no pé da tela.
+   Passo curto deixa a cena à mostra em cima; passo longo ocupa a tela, sem forçar rolagem. */
+.criacao { position: relative; isolation: isolate; align-content: end; }
+.criacao__form.vidro {
+  margin-block: var(--espaco-3) 0;
+  border-radius: var(--forma-raio-cartao) var(--forma-raio-cartao) 0 0;
+  padding-block-end: calc(var(--espaco-3) + env(safe-area-inset-bottom));
+}

@@ -15,6 +15,7 @@ import { DEFAULT_FIELD, FIELD_ERROR_ORDER, fieldErrors, type OnField } from './o
 import { OnFieldStep } from './OnFieldStep';
 import { toCreationInput } from './draft';
 import { firstStepOf, pageOf, pagesFor } from './pages';
+import { CenaPintada, creationScene, cutForVisual } from './CenaPintada';
 import { useWide } from './useWide';
 import './Creation.css';
 
@@ -119,7 +120,9 @@ export function Creation({ onExit, onFinish, seed = Date.now() }: CreationProps)
 
   return (
     <main className="criacao">
-      <form className={page.length > 1 ? 'criacao__form criacao__form--larga' : 'criacao__form'} onSubmit={submit} noValidate>
+      {/* T60b: cena pintada ao fundo do passo (decorativa), uniforme neutro: ainda não há clube */}
+      <CenaPintada scene={creationScene(page[0]!, origin)} cut={cutForVisual(visualId)} clubId="" alt="" decorativa />
+      <form className={page.length > 1 ? 'criacao__form criacao__form--larga vidro' : 'criacao__form vidro'} onSubmit={submit} noValidate>
         <header className="criacao__topo">
           <p className="criacao__progresso">{progressText(pageIndex, pages.length)}</p>
           <span className="criacao__trilho" aria-hidden="true"><span style={{ inlineSize: `${((pageIndex + 1) / pages.length) * 100}%` }} /></span>

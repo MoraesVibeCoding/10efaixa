@@ -2,6 +2,7 @@ import type { Kit } from '../../art/kits';
 import cfg from '../../data/cortes.json';
 import arte from '../../data/cenasArte.json';
 import visuais from '../../data/visuais.json';
+import cenasCriacao from '../../data/cenasCriacao.json';
 
 // T60a: as cenas pintadas (docs/arte/processar_cenas.py): a pintura com o uniforme em cinza, as máscaras da camisa e
 // do calção e onde fica o número nas costas. Cada arquivo só é baixado quando a cena aparece.
@@ -49,4 +50,11 @@ const contrast = (a: string, b: string) => {
 export function numberColor(kit: Kit): string {
   const shirt = kit.camisa[0]!;
   return [kit.detalhe, '#FFFFFF', '#14213D'].reduce((best, c) => (contrast(c, shirt) > contrast(best, shirt) ? c : best));
+}
+
+const CREATION = cenasCriacao as { passos: Record<string, string>; origem: Record<string, string> };
+
+/** Cena ao fundo de um passo da criação; no tipo de início, a da origem marcada (T60b). */
+export function creationScene(step: string, origin: string | null): string {
+  return (step === 'origem' && origin && CREATION.origem[origin]) || CREATION.passos[step] || CREATION.passos.quemE!;
 }
