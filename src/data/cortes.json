@@ -1,0 +1,15 @@
+{
+ "_nota": "T60a: corte de cabelo das cenas pintadas (docs/arte/cenas/<cena>/<corte>) para cada cabelo da criação (avatar.json → styles.hair). As cenas mostram o jogador de costas: vale o volume e o comprimento.",
+ "cortes": ["curto", "cacheado-medio", "liso-medio", "cacheado-grande", "liso-grande", "careca"],
+ "porCabelo": {
+  "raspado": "careca",
+  "curto": "curto",
+  "moicano": "curto",
+  "cacheado": "cacheado-medio",
+  "crespo": "cacheado-medio",
+  "black-power": "cacheado-grande",
+  "dread": "cacheado-grande",
+  "longo": "liso-grande"
+ },
+ "padrao": "curto"
+}

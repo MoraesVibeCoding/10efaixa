@@ -7,13 +7,14 @@ import { t } from '../../i18n';
 import { runUntilDecision } from '../../state/careerRun';
 import { clubName } from './clubText';
 import { careerProgress, semesterLines, toDecisionPlayer } from './careerView';
+import { cutForVisual } from './cenaArte';
 import { Decision } from './Decision';
+import events from '../../data/events.json';
 import { Cartao } from './Cartao';
 import { Historia } from './Historia';
 import { Reuniao, ReuniaoResposta } from './Reuniao';
 import type { Look } from './look';
 import type { RitmoId } from './Ritmo';
-import scene from '../../assets/amostra/assinatura-contrato.webp';
 import './Career.css';
 
 // T51 (b): a carreira jogada de verdade. Cada escolha entra na lista e o motor refaz a carreira até a próxima decisão
@@ -85,7 +86,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
         eventId={eventId}
         age={Math.floor(view.age)}
         progress={careerProgress(view.age)}
-        scene={{ src: scene, alt: t('scenes.alt.assinatura-contrato', { nome: input.name, clube }) }}
+        scene={sceneFor(eventId, player, visual, input.name, clube)}
         player={player}
         state={view.state}
         ritmo={ritmo}
@@ -102,4 +103,13 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
 function answerOf(meetings: DecisionView['meetings'], asked: { year: number; semestre: number } | null) {
   if (!asked) return undefined;
   return meetings.find(function same(m) { return m.year === asked.year && m.semestre === asked.semestre; });
+}
+
+/** T60a: a cena pintada do evento, no corte de cabelo do visual, com o uniforme da vez (clube ou seleção) e o número. */
+function sceneFor(eventId: string, player: ReturnType<typeof toDecisionPlayer>, visual: string | undefined, nome: string, clube: string) {
+  const cena = events.eventos.find(function byId(e) { return e.id === eventId; })?.cena ?? 'assinatura-contrato';
+  return {
+    alt: t(`scenes.alt.${cena}`, { nome, clube }),
+    pintada: { scene: cena, cut: cutForVisual(visual), clubId: player.uniforme ?? player.clubId, number: player.number },
+  };
 }
