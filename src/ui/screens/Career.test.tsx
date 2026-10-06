@@ -26,7 +26,7 @@ describe('carreira na tela (T51b)', () => {
     const onRestart = vi.fn();
     const onProgress = vi.fn();
     render(<Career input={INPUT} look={LOOK} seed={11} onRestart={onRestart} onProgress={onProgress} />);
-    for (let guard = 0; guard < 400 && !screen.queryByRole('heading', { level: 1, name: t('ui.fim.titulo') }); guard++) {
+    for (let guard = 0; guard < 400 && !screen.queryByRole('heading', { level: 1, name: t('ui.historia.titulo') }); guard++) {
       // T52: resposta da comissão por cima da tela; reunião aceita a sugestão do preparador (o mesmo do automático)
       const resposta = document.querySelector('dialog.reuniao__resposta');
       if (resposta) { fireEvent.click(resposta.querySelector('button')!); continue; }
@@ -37,6 +37,8 @@ describe('carreira na tela (T51b)', () => {
       fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
       fireEvent.click(screen.getByRole('button', { name: t('ui.resultado.seguir') }));
     }
+    // T55b: "Sua história" antes do resumo
+    fireEvent.click(screen.getByRole('button', { name: t('ui.historia.verCartao') }));
     const result = simulateCareer(INPUT, 11);
     expect(screen.getByRole('heading', { level: 1, name: t('ui.fim.titulo') })).toBeInTheDocument();
     expect(screen.getByText(t(`legacy.veredito.${result.legacy.verdict}`))).toBeInTheDocument();

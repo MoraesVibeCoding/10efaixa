@@ -8,6 +8,7 @@ import { clubName } from './clubText';
 import { careerProgress, semesterLines, toDecisionPlayer } from './careerView';
 import { Decision } from './Decision';
 import { Emblema } from './Emblema';
+import { Historia } from './Historia';
 import { Reuniao, ReuniaoResposta } from './Reuniao';
 import type { Look } from './look';
 import type { RitmoId } from './Ritmo';
@@ -32,6 +33,8 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
   const [asked, setAsked] = useState(null as { year: number; semestre: number } | null);
   // T51b: o semestre cujas frases o jogador já viu; a linha "Neste semestre" só aparece na primeira decisão depois dele
   const [seenSemester, setSeenSemester] = useState('');
+  // T55b: no fim, "Sua história" vem antes do cartão
+  const [showCard, setShowCard] = useState(false);
   const step = useMemo(() => runUntilDecision(input, seed, choices, ritmo), [input, seed, choices, ritmo]);
   const done = step.kind === 'done';
   useEffect(() => { onProgress?.(choices, done); }, [choices, done, onProgress]);
@@ -43,9 +46,15 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
     if (!h1) return;
     h1.tabIndex = -1;
     h1.focus();
-  }, [choices.length]);
+  }, [choices.length, showCard]);
 
-  if (step.kind === 'done') return <div ref={box} className="carreira"><CareerEnd result={step.result} onRestart={onRestart} /></div>;
+  if (step.kind === 'done') {
+    return (
+      <div ref={box} className="carreira">
+        {showCard ? <CareerEnd result={step.result} onRestart={onRestart} /> : <Historia result={step.result} onContinue={() => { setShowCard(true); }} />}
+      </div>
+    );
+  }
   const { view, eventId, index } = step;
   const semKey = view.ultimoSemestre ? `${view.ultimoSemestre.year}-${view.ultimoSemestre.semestre}` : '';
   const semestre = semKey !== seenSemester && view.ultimoSemestre ? semesterLines(view.ultimoSemestre.frases) : undefined;

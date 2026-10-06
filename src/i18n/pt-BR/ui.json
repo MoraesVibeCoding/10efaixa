@@ -267,5 +267,6 @@
   "normal": { "nome": "Normal", "detalhe": "Uns 20 minutos. Duas ou três decisões por temporada, com tempo para pensar." },
   "completo": { "nome": "Completo", "detalhe": "Sem pressa. Todas as decisões, reuniões e dilemas da carreira." },
   "comecar": "Começar carreira"
- }
+ },
+  "historia": { "titulo": "Sua história", "verCartao": "Ver meu cartão" }
 }
