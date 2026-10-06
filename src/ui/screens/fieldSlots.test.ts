@@ -29,7 +29,7 @@ describe('lado na entrada da carreira (v2.46)', () => {
   it('lateral e ponta levam o lado; as outras posições não', async () => {
     const { toCreationInput } = await import('./draft');
     const id = { name: 'Zé', number: '7', state: 'SP', heartClub: '', celebration: 'aviaozinho' } as Parameters<typeof toCreationInput>[0];
-    const base = { ...DEFAULT_FIELD, archetypeId: 'pontaDriblador', temperament: 'frio' };
+    const base = { ...DEFAULT_FIELD, archetypeId: 'ousado', temperament: 'frio' };
     expect(toCreationInput(id, withSlot(base, 'ponta-esquerda'), 'varzea').side).toBe('esquerdo');
     expect(toCreationInput(id, withSlot(base, 'meia'), 'varzea').side).toBeUndefined();
   });

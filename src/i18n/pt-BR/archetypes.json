@@ -5,7 +5,7 @@
     "arrancador": "Arrancador",
     "magico": "Mágico",
     "centroavanteForca": "Centroavante de força",
-    "classico10": "10 clássico",
+    "classico10": "Maestro",
     "regente": "Regente",
     "volanteRaiz": "Volante raiz",
     "motorzinho": "Motorzinho",
@@ -16,9 +16,12 @@
     "lateralConstrutor": "Lateral construtor",
     "paredao": "Paredão",
     "goleiroLibero": "Goleiro-líbero",
-    "pegadorPenalti": "Pegador de pênalti",
-    "pontaDriblador": "Ponta driblador",
-    "pontaInvertido": "Ponta invertido"
+    "goleiroSeguro": "Goleiro seguro",
+    "ousado": "Ousado",
+    "pontaArtilheiro": "Ponta artilheiro",
+    "pontaTrabalhador": "Ponta trabalhador",
+    "enganche": "Enganche",
+    "zagueiroCobertura": "Zagueiro de cobertura"
   },
   "trait": {
     "faroDeGol": "Faro de gol",
@@ -38,6 +41,11 @@
     "milagre": "Milagre",
     "saidaRapida": "Saída rápida",
     "cobrador": "Cobrador",
-    "pegadorDePenalti": "Pegador de pênalti"
+    "firula": "Firula",
+    "chuteDeFora": "Chute de fora",
+    "vaiEVolta": "Vai e volta",
+    "conducao": "Condução",
+    "leituraDeJogo": "Leitura de jogo",
+    "posicionamento": "Posicionamento"
   }
 }
