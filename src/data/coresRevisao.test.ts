@@ -9,16 +9,30 @@ const ALL = [...clubs.clubs, ...foreign.clubs, ...europe.clubs, ...europe.outros
 const ids = new Set(ALL.map((c) => c.id));
 
 describe('cores dos clubes (T50j)', () => {
-  it('só os clubes de cor desconhecida continuam com o marinho e branco provisório, e estão listados para revisão', () => {
-    const left = ALL.filter((c) => c.cores[0] === PROVISORIO[0] && c.cores[1] === PROVISORIO[1]).map((c) => c.id).sort();
-    expect(left).toEqual([...revisao.desconhecida].sort());
+  it('nenhum clube continua no marinho e branco provisório (v2.38: os sem informação foram sorteados)', () => {
+    const left = ALL.filter((c) => c.cores[0] === PROVISORIO[0] && c.cores[1] === PROVISORIO[1]).map((c) => c.id);
+    expect(left).toEqual([]);
   });
 
-  it('a revisão tem data, nota e só ids que existem; um clube não é provável e desconhecido ao mesmo tempo', () => {
+  it('as prováveis foram aprovadas pelo usuário; as sorteadas usam duas cores diferentes da bandeira do estado ou do país', () => {
+    expect(revisao.provavel).toEqual([]);
+    expect(revisao.aprovadasEm).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    const byId = new Map(ALL.map((c) => [c.id, c as { id: string; cores: string[]; uf?: string; pais?: string }]));
+    const flags = revisao.bandeiras as Record<string, string[]>;
+    expect(revisao.sorteada.length).toBeGreaterThan(0);
+    for (const id of revisao.sorteada) {
+      const c = byId.get(id)!;
+      const place = c.uf ?? c.pais ?? '';
+      expect(flags[place], `${id}: sem bandeira de ${place}`).toBeDefined();
+      expect(flags[place], id).toEqual(expect.arrayContaining(c.cores));
+      expect(c.cores[0], id).not.toBe(c.cores[1]);
+    }
+  });
+
+  it('a revisão tem data, nota e só ids que existem', () => {
     expect(revisao.data).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(revisao._nota).toMatch(/estimativa/i);
-    for (const id of [...revisao.provavel, ...revisao.desconhecida]) expect(ids.has(id), id).toBe(true);
-    expect(revisao.provavel.filter((id) => revisao.desconhecida.includes(id))).toEqual([]);
+    for (const id of revisao.sorteada) expect(ids.has(id), id).toBe(true);
   });
 
   it('cores em #RRGGBB, duas por clube', () => {

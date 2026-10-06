@@ -499,8 +499,8 @@
    "sigla": "LIB",
    "pais": "ECU",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#FFD100"
    ],
    "reputacao": 60
   },
@@ -565,7 +565,7 @@
    "sigla": "DEA",
    "pais": "PAR",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 60
@@ -576,8 +576,8 @@
    "sigla": "REC",
    "pais": "PAR",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#C8102E"
    ],
    "reputacao": 60
   },
@@ -587,7 +587,7 @@
    "sigla": "SPO",
    "pais": "PAR",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 60
@@ -642,7 +642,7 @@
    "sigla": "CUS",
    "pais": "PER",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 64
@@ -675,8 +675,8 @@
    "sigla": "DEI",
    "pais": "PER",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 60
   },
@@ -730,8 +730,8 @@
    "sigla": "NAL",
    "pais": "BOL",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#00843D"
    ],
    "reputacao": 62
   },
@@ -741,8 +741,8 @@
    "sigla": "INO",
    "pais": "BOL",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#FFD100"
    ],
    "reputacao": 60
   },
@@ -763,8 +763,8 @@
    "sigla": "SAI",
    "pais": "BOL",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#FFD100"
    ],
    "reputacao": 56
   },
@@ -818,8 +818,8 @@
    "sigla": "UND",
    "pais": "VEN",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#C8102E"
    ],
    "reputacao": 60
   },
@@ -829,8 +829,8 @@
    "sigla": "ACA",
    "pais": "VEN",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#C8102E"
    ],
    "reputacao": 60
   },
@@ -851,8 +851,8 @@
    "sigla": "MER",
    "pais": "VEN",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#C8102E"
    ],
    "reputacao": 58
   }

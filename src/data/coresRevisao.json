@@ -1,69 +1,9 @@
 {
- "_nota": "Cores dos clubes (SPEC v2.37, T50j): estimativa do assistente em 2026-10-06, sem fonte conferida (sites de consulta bloqueados nesta sessão). 'provavel': cores preenchidas, a conferir. 'desconhecida': o assistente não sabe; seguem no marinho/branco provisório até o usuário informar. As demais foram preenchidas com segurança, mas também entram na revisão jurídica e de dados antes do lançamento. Lista legível em docs/revisao-cores-clubes.md.",
+ "_nota": "Cores dos clubes (SPEC v2.37/v2.38, T50j). Preenchidas pelo assistente em 2026-10-06, sem fonte conferida (estimativa). As 60 prováveis foram aprovadas pelo usuário em 2026-10-06. 'sorteada': clubes sem informação, com duas cores da bandeira do estado ou do país, sorteadas por hash do id (docs/dados/sortear-cores.py); trocar pelas reais quando o usuário informar. Lista legível em docs/revisao-cores-clubes.md.",
  "data": "2026-10-06",
- "provavel": [
-  "nacional-am",
-  "luverdense",
-  "sampaio-correa",
-  "ferroviario-ce",
-  "central-pe",
-  "asa",
-  "operario-ms",
-  "rio-branco-es",
-  "vitoria-es",
-  "madureira",
-  "portuguesa-rj",
-  "noroeste",
-  "guarany-de-bage",
-  "inter-sm",
-  "galicia",
-  "taubate",
-  "americano",
-  "olaria",
-  "villa-nova-mg",
-  "caldense",
-  "bage",
-  "laranja-mecanica",
-  "parana-clube",
-  "independiente-rivadavia",
-  "barracas-central",
-  "deportivo-riestra",
-  "juventud-uru",
-  "boston-river",
-  "racing-uru",
-  "palestino",
-  "cobresal",
-  "universidad-catolica-ecu",
-  "deportivo-cuenca",
-  "macara",
-  "orense",
-  "nacional-par",
-  "alianza-atletico",
-  "always-ready",
-  "blooming",
-  "guabira",
-  "deportivo-la-guaira",
-  "carabobo",
-  "monagas",
-  "freiburg",
-  "augsburg",
-  "paderborn",
-  "elversberg",
-  "paris-fc",
-  "le-mans",
-  "famalicao",
-  "gil-vicente",
-  "arouca",
-  "estrela-amadora",
-  "alverca",
-  "academico-viseu",
-  "viking",
-  "celje",
-  "al-qadsiah",
-  "al-duhail",
-  "al-rayyan"
- ],
- "desconhecida": [
+ "aprovadasEm": "2026-10-06",
+ "provavel": [],
+ "sorteada": [
   "manaus-fc",
   "manauara",
   "gas-rr",
@@ -254,5 +194,175 @@
   "sabah",
   "ararat-armenia",
   "torreense"
- ]
+ ],
+ "bandeiras": {
+  "AC": [
+   "#FFD100",
+   "#00843D"
+  ],
+  "AL": [
+   "#C8102E",
+   "#FFFFFF",
+   "#0047AB"
+  ],
+  "AP": [
+   "#0047AB",
+   "#00843D",
+   "#FFD100"
+  ],
+  "AM": [
+   "#0047AB",
+   "#FFFFFF",
+   "#C8102E"
+  ],
+  "BA": [
+   "#C8102E",
+   "#FFFFFF",
+   "#0047AB"
+  ],
+  "CE": [
+   "#00843D",
+   "#FFD100",
+   "#FFFFFF"
+  ],
+  "DF": [
+   "#FFFFFF",
+   "#00843D",
+   "#FFD100"
+  ],
+  "ES": [
+   "#0047AB",
+   "#FFFFFF"
+  ],
+  "GO": [
+   "#00843D",
+   "#FFD100",
+   "#0047AB"
+  ],
+  "MA": [
+   "#C8102E",
+   "#FFFFFF",
+   "#000000"
+  ],
+  "MT": [
+   "#0047AB",
+   "#FFFFFF",
+   "#00843D",
+   "#FFD100"
+  ],
+  "MS": [
+   "#00843D",
+   "#FFFFFF",
+   "#0047AB"
+  ],
+  "MG": [
+   "#FFFFFF",
+   "#C8102E"
+  ],
+  "PA": [
+   "#C8102E",
+   "#FFFFFF",
+   "#0047AB"
+  ],
+  "PB": [
+   "#000000",
+   "#C8102E"
+  ],
+  "PR": [
+   "#00843D",
+   "#FFFFFF"
+  ],
+  "PE": [
+   "#0047AB",
+   "#FFFFFF",
+   "#C8102E",
+   "#FFD100"
+  ],
+  "PI": [
+   "#00843D",
+   "#FFD100",
+   "#0047AB"
+  ],
+  "RJ": [
+   "#0047AB",
+   "#FFFFFF"
+  ],
+  "RN": [
+   "#00843D",
+   "#FFFFFF"
+  ],
+  "RS": [
+   "#00843D",
+   "#C8102E",
+   "#FFD100"
+  ],
+  "RO": [
+   "#0047AB",
+   "#00843D",
+   "#FFD100"
+  ],
+  "RR": [
+   "#0047AB",
+   "#FFFFFF",
+   "#00843D"
+  ],
+  "SC": [
+   "#C8102E",
+   "#FFFFFF",
+   "#00843D"
+  ],
+  "SP": [
+   "#000000",
+   "#FFFFFF",
+   "#C8102E"
+  ],
+  "SE": [
+   "#00843D",
+   "#FFD100",
+   "#0047AB"
+  ],
+  "TO": [
+   "#0047AB",
+   "#FFD100",
+   "#FFFFFF"
+  ],
+  "ECU": [
+   "#FFD100",
+   "#0047AB",
+   "#C8102E"
+  ],
+  "PAR": [
+   "#C8102E",
+   "#FFFFFF",
+   "#0047AB"
+  ],
+  "PER": [
+   "#C8102E",
+   "#FFFFFF"
+  ],
+  "BOL": [
+   "#C8102E",
+   "#FFD100",
+   "#00843D"
+  ],
+  "VEN": [
+   "#FFD100",
+   "#0047AB",
+   "#C8102E"
+  ],
+  "AZE": [
+   "#0047AB",
+   "#C8102E",
+   "#00843D"
+  ],
+  "ARM": [
+   "#C8102E",
+   "#0047AB",
+   "#F37021"
+  ],
+  "POR": [
+   "#00843D",
+   "#C8102E"
+  ]
+ }
 }
