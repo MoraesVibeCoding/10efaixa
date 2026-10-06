@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { render } from '@testing-library/react';
-import { kitOf } from '../../art/kits';
+import { kitOf, shirtPaint } from '../../art/kits';
 import { AvatarHeroi } from './AvatarHeroi';
 import { Figurinha } from './Figurinha';
 
@@ -16,6 +16,12 @@ describe('camisa pela cor do clube (T50h)', () => {
     expect(camisa).toHaveAttribute('aria-hidden', 'true');
     expect(camisa.style.getPropertyValue('--camisa-cor')).toBe(kitOf('palmeiras').camisa[0]);
     expect(camisa.style.getPropertyValue('--camisa-mascara')).toMatch(/^url\(.*visual-03-camisa.*\)$/);
+  });
+
+  it('o desenho da camisa segue o padrão do clube (v2.37): Flamengo em faixas horizontais', () => {
+    const { container } = render(<Figurinha name="Zé" number={8} overall={80} clubId="flamengo" moldura tamanho="grande" visual="visual-05" />);
+    const camisa = container.querySelector('.camisa') as HTMLElement;
+    expect(camisa.style.getPropertyValue('--camisa-desenho')).toBe(shirtPaint(kitOf('flamengo')));
   });
 
   it('a figurinha com moldura também pinta a camisa', () => {
@@ -40,6 +46,7 @@ describe('camisa pela cor do clube (T50h)', () => {
     const css = readFileSync(resolve(__dirname, 'Camisa.css'), 'utf8');
     expect(css).toMatch(/mix-blend-mode:\s*multiply/);
     expect(css).toMatch(/background(-color)?:\s*var\(--camisa-cor\)/);
+    expect(css).toMatch(/background-image:\s*var\(--camisa-desenho\)/);
     for (const p of ['-webkit-mask-image', 'mask-image']) expect(css).toMatch(new RegExp(`(^|[^-])${p}:\\s*var\\(--camisa-mascara\\)`, 'm'));
     expect(css).toMatch(/mask-size:\s*cover/);
     expect(css).toMatch(/mask-repeat:\s*no-repeat/);

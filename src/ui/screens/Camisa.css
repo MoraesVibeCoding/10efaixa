@@ -6,6 +6,7 @@
   position: absolute;
   inset: 0;
   background-color: var(--camisa-cor);
+  background-image: var(--camisa-desenho); /* v2.37: padrão do clube; sem ele, a cor principal */
   mix-blend-mode: multiply;
   pointer-events: none;
   -webkit-mask-image: var(--camisa-mascara);
