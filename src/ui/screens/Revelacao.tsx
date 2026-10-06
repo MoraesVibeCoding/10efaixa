@@ -41,7 +41,7 @@ export function Revelacao({ name, number, visual, reveal, onContinue }: Revelaca
         {reveal.isDiamond ? <Diamante /> : null}
         <h2 id="revelacao-atributos" className="revelacao__rotulo">{t('ui.revelacao.atributos')}</h2>
         <Niveis items={reveal.bands} labelledBy="revelacao-atributos" />
-        <button type="button" className="revelacao__comecar" autoFocus onClick={finish}>{t('ui.revelacao.comecar')}</button>
+        <button type="button" className="revelacao__comecar" autoFocus onClick={finish}>{t('ui.revelacao.seguir')}</button>
       </dialog>
     </div>
   );

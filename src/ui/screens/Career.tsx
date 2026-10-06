@@ -8,14 +8,19 @@ import { careerProgress, toDecisionPlayer } from './careerView';
 import { Decision } from './Decision';
 import { Emblema } from './Emblema';
 import type { Look } from './look';
+import type { RitmoId } from './Ritmo';
 import scene from '../../assets/amostra/assinatura-contrato.webp';
 import './Career.css';
 
 // T51 (b): a carreira jogada de verdade. Cada escolha entra na lista e o motor refaz a carreira até a próxima decisão
 // (careerRun.ts). A cena ainda é a amostra da T49 até as cenas pintadas entrarem por evento (Frente 2).
-export interface CareerProps { input: CreationInput; look: Look; /** Id do visual escolhido (v2.36). */ visual?: string; seed: number; onRestart: () => void }
+export interface CareerProps {
+  input: CreationInput; look: Look; /** Id do visual escolhido (v2.36). */ visual?: string; seed: number; onRestart: () => void;
+  /** Ritmo escolhido depois da revelação (T53a): no Rápido um toque decide e o resultado fecha sozinho. */
+  ritmo?: RitmoId;
+}
 
-export function Career({ input, look, visual, seed, onRestart }: CareerProps) {
+export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal' }: CareerProps) {
   const [choices, setChoices] = useState([] as string[]);
   const step = useMemo(() => runUntilDecision(input, seed, choices), [input, seed, choices]);
   const box = useRef(null as HTMLDivElement | null);
@@ -42,6 +47,7 @@ export function Career({ input, look, visual, seed, onRestart }: CareerProps) {
         scene={{ src: scene, alt: t('scenes.alt.assinatura-contrato', { nome: input.name, clube }) }}
         player={player}
         state={view.state}
+        ritmo={ritmo}
         onContinue={(choice) => setChoices([...choices, choice])}
       />
     </div>

@@ -198,6 +198,19 @@
   "atributos": "Como ele começa",
   "diamante": "Diamante bruto",
   "diamanteFrase": "A várzea escondia um craque: o teto dele é maior que o normal.",
+  "seguir": "Escolher o ritmo"
+ },
+ "abertura": {
+  "titulo": "10eFaixa",
+  "lema": "Da várzea à aposentadoria. Uma carreira, as suas escolhas.",
+  "novaCarreira": "Nova carreira",
+  "arteAlt": "Um jogador de costas caminha pelo túnel em direção ao gramado iluminado, com a braçadeira de capitão no braço."
+ },
+ "ritmo": {
+  "titulo": "Como você quer jogar?",
+  "rapido": { "nome": "Rápido", "detalhe": "Uns 5 minutos. Só os momentos-chave, e um toque já decide." },
+  "normal": { "nome": "Normal", "detalhe": "Uns 20 minutos. Duas ou três decisões por temporada, com tempo para pensar." },
+  "completo": { "nome": "Completo", "detalhe": "Sem pressa. Todas as decisões, reuniões e dilemas da carreira." },
   "comecar": "Começar carreira"
  }
 }

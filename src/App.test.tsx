@@ -16,7 +16,10 @@ vi.mock('./ui/screens/revealView', async (original) => {
 const group = (k: string) => screen.getByRole('radiogroup', { name: t(`ui.criacao.${k}`) });
 const advance = () => fireEvent.click(screen.getByRole('button', { name: t('ui.criacao.avancar') }));
 
+const startNew = () => fireEvent.click(screen.getByRole('button', { name: t('ui.abertura.novaCarreira') }));
+
 function createPlayer() {
+  startNew();
   fireEvent.change(screen.getByLabelText(t('ui.criacao.quemE.nome')), { target: { value: 'Dudu Maestro' } });
   fireEvent.change(screen.getByLabelText(t('ui.criacao.quemE.estado')), { target: { value: 'BA' } });
   fireEvent.click(within(group('quemE.comemoracao')).getByRole('radio', { name: t('creation.celebration.aviaozinho') }));
@@ -30,9 +33,11 @@ function createPlayer() {
   advance();
 }
 
-describe('App (T51b): criação → carreira', () => {
-  it('abre na criação, no passo "quem é ele"', () => {
+describe('App (T51b, T48): abertura → criação → revelação → ritmo → carreira', () => {
+  it('abre na abertura; "Nova carreira" leva à criação, no passo "quem é ele"', () => {
     render(<App />);
+    expect(screen.getByRole('heading', { level: 1, name: t('ui.abertura.titulo') })).toBeInTheDocument();
+    startNew();
     expect(screen.getByRole('heading', { level: 1, name: t('ui.criacao.passos.quemE') })).toBeInTheDocument();
   });
 
@@ -47,21 +52,45 @@ describe('App (T51b): criação → carreira', () => {
     expect(dialog.querySelector('.figurinha__over-grande')).toHaveTextContent(String(last.out.overall));
   });
 
-  it('ao concluir a criação e começar a carreira, ela abre na primeira decisão do jogador criado', () => {
+  it('depois da revelação vem a escolha do ritmo; com o Normal, a carreira abre na primeira decisão do jogador criado', () => {
     const { container } = render(<App seed={11} />);
     createPlayer();
-    fireEvent.click(screen.getByRole('button', { name: t('ui.revelacao.comecar') }));
+    fireEvent.click(screen.getByRole('button', { name: t('ui.revelacao.seguir') }));
+    expect(screen.getByRole('heading', { level: 1, name: t('ui.ritmo.titulo') })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: t('ui.ritmo.comecar') }));
     expect(container.querySelector('main[data-evento]')).not.toBeNull();
     expect(screen.getByText('Dudu Maestro', { selector: '.figurinha__tarja-nome' })).toBeInTheDocument();
     // a figurinha da decisão usa o retrato pintado do visual escolhido na criação
     expect(container.querySelector('.figurinha img.figurinha__retrato--pintado')).toHaveAttribute('src', expect.stringMatching(/visual-\d\d/));
+    expect(screen.getByRole('button', { name: t('ui.decisao.confirmar') })).toBeInTheDocument();
   });
 
-  it('sem tela de abertura ainda, "Voltar" no primeiro passo recomeça a criação limpa', () => {
+  it('o ritmo escolhido chega à decisão: no Rápido não há "Confirmar escolha" (um toque decide)', () => {
+    render(<App seed={11} />);
+    createPlayer();
+    fireEvent.click(screen.getByRole('button', { name: t('ui.revelacao.seguir') }));
+    fireEvent.click(screen.getByRole('radio', { name: t('ui.ritmo.rapido.nome') }));
+    fireEvent.click(screen.getByRole('button', { name: t('ui.ritmo.comecar') }));
+    expect(screen.queryByRole('button', { name: t('ui.decisao.confirmar') })).not.toBeInTheDocument();
+    expect(document.querySelector('.opcao__resumo')).not.toBeNull();
+  });
+
+  it('"Voltar" no ritmo volta para a revelação do mesmo jogador', () => {
+    render(<App seed={11} />);
+    createPlayer();
+    fireEvent.click(screen.getByRole('button', { name: t('ui.revelacao.seguir') }));
+    fireEvent.click(screen.getByRole('button', { name: t('ui.criacao.voltar') }));
+    expect(screen.getByRole('dialog', { name: t('ui.revelacao.titulo') })).toBeInTheDocument();
+  });
+
+  it('"Voltar" no primeiro passo volta à abertura; "Nova carreira" recomeça a criação limpa', () => {
     render(<App />);
+    startNew();
     const nome = screen.getByLabelText(t('ui.criacao.quemE.nome'));
     fireEvent.change(nome, { target: { value: 'Dudu Maestro' } });
     fireEvent.click(screen.getByRole('button', { name: t('ui.criacao.voltar') }));
+    expect(screen.getByRole('heading', { level: 1, name: t('ui.abertura.titulo') })).toBeInTheDocument();
+    startNew();
     expect(screen.getByLabelText(t('ui.criacao.quemE.nome'))).toHaveValue('');
   });
 });

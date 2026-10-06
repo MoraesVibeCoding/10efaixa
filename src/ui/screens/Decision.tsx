@@ -47,7 +47,7 @@ export interface DecisionProps {
   /** Situação atual do jogador (moral, torcida, patrimônio…): o resultado da escolha mostra o ganho e a perda reais sobre ela. */
   state?: Ctx;
   /** Ritmo da carreira (T49b): no normal o resultado espera o jogador; no rápido segue sozinho depois de `resultadoMs`. */
-  ritmo?: 'normal' | 'rapido';
+  ritmo?: 'normal' | 'rapido' | 'completo';
   onChoose?: (optionId: string) => void;
   /** Chamado quando o resultado fecha, sozinho ou pelo botão, com a situação já atualizada. */
   onContinue?: (optionId: string, state: Ctx) => void;

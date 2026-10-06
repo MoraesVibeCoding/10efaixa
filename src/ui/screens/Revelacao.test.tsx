@@ -26,12 +26,12 @@ beforeEach(() => {
 afterEach(() => { Reflect.deleteProperty(HTMLDialogElement.prototype, 'showModal'); });
 
 describe('revelação do jogador (T49i)', () => {
-  it('abre como modal, com o título como nome e o foco no botão de começar', () => {
+  it('abre como modal, com o título como nome e o foco no botão de seguir para o ritmo', () => {
     show();
     const dialog = screen.getByRole('dialog', { name: t('ui.revelacao.titulo') });
     expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled();
     expect(dialog).toHaveClass('vidro');
-    expect(within(dialog).getByRole('button', { name: t('ui.revelacao.comecar') })).toHaveFocus();
+    expect(within(dialog).getByRole('button', { name: t('ui.revelacao.seguir') })).toHaveFocus();
   });
 
   it('a figurinha com moldura traz o Over do sorteio; a camisa é neutra (ainda sem clube)', () => {
@@ -70,14 +70,14 @@ describe('revelação do jogador (T49i)', () => {
     expect(selo).toHaveTextContent(t('ui.revelacao.diamanteFrase'));
   });
 
-  it('"Começar carreira" segue; Esc (cancel do dialog) também segue, uma vez só', () => {
+  it('"Escolher o ritmo" segue; Esc (cancel do dialog) também segue, uma vez só', () => {
     const onContinue = show();
     const dialog = screen.getByRole('dialog');
     const esc = new Event('cancel', { cancelable: true });
     dialog.dispatchEvent(esc);
     expect(esc.defaultPrevented).toBe(true);
     expect(onContinue).toHaveBeenCalledTimes(1);
-    fireEvent.click(within(dialog).getByRole('button', { name: t('ui.revelacao.comecar') }));
+    fireEvent.click(within(dialog).getByRole('button', { name: t('ui.revelacao.seguir') }));
     expect(onContinue).toHaveBeenCalledTimes(1);
   });
 
