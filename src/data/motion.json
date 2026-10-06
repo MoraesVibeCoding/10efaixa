@@ -1,0 +1,7 @@
+{
+ "_nota": "Tempos das animações da v2.47 (fluidez, pesquisa no copero.com.ar). Tudo some com prefers-reduced-motion.",
+ "rolarMs": 700,
+ "transicaoMs": 300,
+ "carimboMs": 1500,
+ "celebracaoMs": 1800
+}

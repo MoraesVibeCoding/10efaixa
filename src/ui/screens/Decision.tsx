@@ -14,6 +14,8 @@ import { Emblema } from './Emblema';
 import { Figurinha } from './Figurinha';
 import { Niveis } from './Niveis';
 import { CenaPintada } from './CenaPintada';
+import { useRolling } from '../useRolling';
+import { MOTION } from '../motion';
 import './Decision.css';
 
 // T49 (amostra aprovada) e T51: uma decisão por tela, com a cena ao fundo. Só faixas e setas, nunca números de atributo.
@@ -48,6 +50,8 @@ export interface DecisionProps {
     /** T51b: a faixa da torcida no clube atual (idolatria em palavras, idolatry.json). */
     torcida?: string;
   };
+  /** v2.47: os números da decisão anterior; o overall, a idade e o valor rolam deles até os de agora. */
+  anterior?: Anterior;
   /** Situação atual do jogador (moral, torcida, patrimônio…): o resultado da escolha mostra o ganho e a perda reais sobre ela. */
   state?: Ctx;
   /** T51b: as frases do último semestre ("Seu passe melhorou."), só na primeira decisão depois dele. */
@@ -58,6 +62,8 @@ export interface DecisionProps {
   /** Chamado quando o resultado fecha, sozinho ou pelo botão, com a situação já atualizada. */
   onContinue?: (optionId: string, state: Ctx) => void;
 }
+
+export interface Anterior { overall: number; age: number; marketValueEUR?: number }
 
 interface Season { age: number; clubId: string; overall: number; /** T51b: faixa da torcida naquele clube. */ torcida?: string }
 
@@ -367,9 +373,20 @@ function ShortPreview({ eventId, optionId }: { eventId: string; optionId: string
 }
 
 /** Caixa do jogador no topo (v2.34, variação B): figurinha pequena com moldura (abre "Minha carreira"), o Over grande e a ficha. */
-function PlayerBox({ player, age, open, opener, onOpen, inert }: {
-  player: DecisionProps['player']; age: number; open: boolean; opener: React.RefObject<HTMLButtonElement | null>; onOpen: () => void; inert: boolean;
+function ageText(idade: number) { return t('ui.decisao.idade', { idade }); }
+function valueText(valor: number) { return t('ui.decisao.valor', { valor: money(valor, 'EUR') }); }
+
+/** v2.47: o texto que rola fica escondido do leitor de tela, que recebe só o valor final. */
+function Rolled({ final, shown }: { final: string; shown: string }) {
+  return shown === final ? final : <><span aria-hidden="true">{shown}</span><span className="sr-only">{final}</span></>;
+}
+
+function PlayerBox({ player, age, anterior, open, opener, onOpen, inert }: {
+  player: DecisionProps['player']; age: number; anterior?: Anterior; open: boolean; opener: React.RefObject<HTMLButtonElement | null>; onOpen: () => void; inert: boolean;
 }) {
+  const over = useRolling(player.overall, anterior?.overall);
+  const idade = useRolling(age, anterior?.age);
+  const valor = useRolling(player.marketValueEUR ?? 0, anterior?.marketValueEUR);
   return (
     <header className="decisao__topo vidro" inert={inert}>
       <button ref={opener} type="button" className="jogador__abrir" aria-haspopup="dialog" aria-expanded={open} onClick={onOpen}>
@@ -387,13 +404,13 @@ function PlayerBox({ player, age, open, opener, onOpen, inert }: {
       </button>
       <p className="decisao__over" aria-hidden="true">
         <span className="decisao__over-rotulo">{t('ui.figurinha.over')}</span>
-        <span className="decisao__over-numero">{player.overall}</span>
+        <span className="decisao__over-numero">{over}</span>
       </p>
       <ul className="selos" aria-label={t('ui.decisao.ficha')}>
-        <li>{t('ui.decisao.idade', { idade: age })}</li>
+        <li><Rolled final={ageText(age)} shown={ageText(idade)} /></li>
         <li>{t(`ui.papel.${player.role}`)}</li>
         <li>{t('ui.decisao.porMes', { valor: money(player.monthlySalary.amount, player.monthlySalary.currency) })}</li>
-        {player.marketValueEUR === undefined ? null : <li>{t('ui.decisao.valor', { valor: money(player.marketValueEUR, 'EUR') })}</li>}
+        {player.marketValueEUR === undefined ? null : <li><Rolled final={valueText(player.marketValueEUR)} shown={valueText(valor)} /></li>}
         <li>{titlesCount(player.titles.length)}</li>
         {player.torcida ? <li>{t('ui.idolatria.selo', { faixa: t(`ui.idolatria.faixa.${player.torcida}`) })}</li> : null}
       </ul>
@@ -401,7 +418,7 @@ function PlayerBox({ player, age, open, opener, onOpen, inert }: {
   );
 }
 
-export function Decision({ eventId, age, progress, scene, player, state = {}, ritmo = 'normal', semestre, onChoose, onContinue }: DecisionProps) {
+export function Decision({ eventId, age, progress, scene, player, anterior, state = {}, ritmo = 'normal', semestre, onChoose, onContinue }: DecisionProps) {
   const [career, setCareer] = useState(false);
   // sem genérico aqui: a guarda de texto fora do i18n confunde o genérico com JSX
   const opener = useRef(null as HTMLButtonElement | null);
@@ -447,7 +464,7 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, ri
   }, [overlay, career, onDone]);
 
   return (
-    <main className="decisao" data-tema="claro" data-evento={eventId} data-resultado={chosen === null ? 'fechado' : 'aberto'}>
+    <main className="decisao" style={TRANSITION} data-tema="claro" data-evento={eventId} data-resultado={chosen === null ? 'fechado' : 'aberto'}>
       {scene.pintada
         ? <CenaPintada {...scene.pintada} alt={scene.alt} inert={overlay} />
         : <img className="decisao__cena" src={scene.src} alt={scene.alt} width={SCENE_SIZE[0]} height={SCENE_SIZE[1]} fetchPriority="high" inert={overlay} />}
@@ -457,7 +474,7 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, ri
       >
         <span className="faixa__feito" style={{ inlineSize: `${percent}%` }} />
       </div>
-      <PlayerBox player={player} age={age} open={career} opener={opener} onOpen={() => { setCareer(true); }} inert={overlay} />
+      <PlayerBox player={player} age={age} anterior={anterior} open={career} opener={opener} onOpen={() => { setCareer(true); }} inert={overlay} />
       <div className="decisao__painel vidro" inert={overlay}>
         {semestre && semestre.length > 0 ? <p className="decisao__semestre"><strong>{t('ui.evolucao.titulo')}:</strong> {semestre.join(' ')}</p> : null}
         <h1 className="decisao__titulo">{t(`events.${eventId}.titulo`)}</h1>
@@ -494,6 +511,9 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, ri
     </main>
   );
 }
+
+/** v2.47: a duração das transições vem dos dados (motion.json). */
+const TRANSITION = { '--transicao': `${MOTION.transicaoMs}ms` } as React.CSSProperties;
 
 function hasText(eventId: string): boolean {
   try { t(`events.${eventId}.texto`); return true; } catch { return false; }

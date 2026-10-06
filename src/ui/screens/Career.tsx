@@ -8,7 +8,7 @@ import { runUntilDecision } from '../../state/careerRun';
 import { clubName } from './clubText';
 import { careerProgress, semesterLines, toDecisionPlayer } from './careerView';
 import { cutForVisual } from './cenaArte';
-import { Decision } from './Decision';
+import { Decision, type Anterior } from './Decision';
 import events from '../../data/events.json';
 import { Cartao } from './Cartao';
 import { Historia } from './Historia';
@@ -37,6 +37,8 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
   const [seenSemester, setSeenSemester] = useState('');
   // T55b: no fim, "Sua história" vem antes do cartão
   const [showCard, setShowCard] = useState(false);
+  // v2.47: os números da última decisão; na próxima, o overall, a idade e o valor rolam deles
+  const [anterior, setAnterior] = useState(undefined as Anterior | undefined);
   const step = useMemo(() => runUntilDecision(input, seed, choices, ritmo), [input, seed, choices, ritmo]);
   const done = step.kind === 'done';
   useEffect(() => { onProgress?.(choices, done); }, [choices, done, onProgress]);
@@ -91,7 +93,11 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
         state={view.state}
         ritmo={ritmo}
         semestre={semestre}
-        onContinue={decide}
+        anterior={anterior}
+        onContinue={(choice) => {
+          setAnterior({ overall: player.overall, age: Math.floor(view.age), marketValueEUR: player.marketValueEUR });
+          decide(choice);
+        }}
       />
       {respostaEl}
     </div>
