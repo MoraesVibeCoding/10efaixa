@@ -22,7 +22,7 @@
 - **T55b** (`b288982`): `storyOf` e `storyHighlights` (`src/engine/story.ts`, pesos em `story.json`), tela `Historia` antes do resumo do fim.
 
 - **T55c:** `cardModel(result, codigo)` em `src/share/cardModel.ts` (contrato: `nome, apelido, numero, posicao, clubeAuge, overall, veredito, rotulo, manchete, comentario, honrarias[≤3], frases[≤4], clubes[], numeros[5], radar[10 {id, nome, valor}], codigo, alt {narrativa, estatistica}`); textos `ui.cartao.*`; `storyText` em `src/ui/screens/storyText.ts`.
-- **T55d:** `drawCard` (Canvas 2D, 1080×1350, duas versões) e tela `Cartao` no lugar do resumo do fim; medido no Chromium (axe 0, sem rolagem em 390×844).
+- **T55d:** `drawCard` (Canvas 2D, 1080×1350, duas versões) e tela `Cartao` no lugar do resumo do fim; refeito no padrão "Álbum com vidro" (figurinha grande + painel de vidro), a pedido do usuário; imagens em `src/ui/screens/cardImages.ts`; medido no Chromium (axe 0).
 
 ## Pendente
 

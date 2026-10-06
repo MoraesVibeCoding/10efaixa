@@ -3,12 +3,10 @@ import type { CareerResult } from '../../engine/career';
 import { t } from '../../i18n';
 import { cardModel } from '../../share/cardModel';
 import { CARD_SIZE, drawCard, type CardImages, type CardVersion } from '../../share/drawCard';
-import { loadImage } from '../../share/loadImage';
+import { loadCardImages } from './cardImages';
 import './Cartao.css';
 
 // T55d (SPEC 6.15, v2.42): o cartão final em Canvas 2D, versão narrativa primeiro; o texto alternativo descreve a versão à vista.
-const PORTRAITS = import.meta.glob('../../assets/visuais/visual-[0-9][0-9].webp', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
-const MASKS = import.meta.glob('../../assets/visuais/*-camisa.webp', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
 const VERSIONS: CardVersion[] = ['narrativa', 'estatistica'];
 
 export function Cartao({ result, code, visual, onRestart }: { result: CareerResult; code: string; visual?: string; onRestart: () => void }) {
@@ -18,13 +16,9 @@ export function Cartao({ result, code, visual, onRestart }: { result: CareerResu
   const [images, setImages] = useState({} as CardImages);
   useEffect(() => {
     let live = true;
-    const base = '../../assets/visuais/';
-    void Promise.all([loadImage(visual && PORTRAITS[`${base}${visual}.webp`]), loadImage(visual && MASKS[`${base}${visual}-camisa.webp`]), document.fonts?.ready])
-      .then(([portrait, mask]) => {
-        if (live) setImages({ portrait, mask, makeCanvas: (w, h) => Object.assign(document.createElement('canvas'), { width: w, height: h }) });
-      });
+    void loadCardImages(result, visual).then((imgs) => { if (live) setImages(imgs); });
     return () => { live = false; };
-  }, [visual]);
+  }, [visual, result]);
   useEffect(() => {
     // o jsdom não desenha (getContext devolve null); o desenho é testado em drawCard.test.ts
     const ctx = canvas.current?.getContext('2d');

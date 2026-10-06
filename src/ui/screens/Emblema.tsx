@@ -1,23 +1,11 @@
-import { recolor, uniformColors } from '../../art/avatar';
-import { kitOf } from '../../art/kits';
-import emblems from '../../data/emblems.json';
 import { t } from '../../i18n';
 import { clubName } from './clubText';
-import { svgUri } from './portrait';
+import { emblemArt } from './emblemArt';
 import './Emblema.css';
 
-// T49d (SPEC v2.26): emblema original do clube, ou o escudo genérico. As peças usam as cores-chave do uniforme,
-// trocadas aqui pelas cores do clube (kits.json); abaixo de `simplesAbaixoDePx` entra a versão simplificada.
-const PIECES = import.meta.glob('../../assets/art/provisoria/emblema/*.svg', { eager: true, query: '?raw', import: 'default' }) as Record<string, string>;
-const piece = (id: string, version: string) => PIECES[`../../assets/art/provisoria/emblema/emblema__${id}-${version}.svg`]!;
-const OWN = new Set(Object.keys(emblems.clubes));
-
 export function Emblema({ clubId, size, label = false }: { clubId: string; size: number; label?: boolean }) {
-  const kit = kitOf(clubId);
-  const id = OWN.has(clubId) ? clubId : 'generico';
-  const version = size < emblems.simplesAbaixoDePx ? 'simples' : 'completo';
-  const src = svgUri(recolor(piece(id, version), uniformColors(kit.camisa[0]!, kit.camisa[1] ?? kit.detalhe)));
-  const { nome, sigla, prep } = clubName(clubId);
+  const { id, version, src, sigla } = emblemArt(clubId, size);
+  const { nome, prep } = clubName(clubId);
   const name = t('ui.emblema.de', { prep, clube: nome });
   return (
     <span
