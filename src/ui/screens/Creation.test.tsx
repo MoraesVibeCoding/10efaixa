@@ -201,7 +201,7 @@ describe('tela 2: em campo e cabeça (T50d, v2.30)', () => {
     expect(title('emCampo')).toBeInTheDocument();
     const order = within(group('emCampo.posicao')).getAllByRole('radio').map((r) => (r as HTMLInputElement).value);
     // ordem do teclado = ordem visual do campinho, e todas as posições com faixa de altura aparecem
-    expect(order).toEqual(['goleiro', 'zagueiro', 'lateral', 'volante', 'meia', 'atacante']);
+    expect(order).toEqual(['goleiro', 'zagueiro', 'lateral', 'volante', 'meia', 'ponta', 'atacante']);
     expect([...order].sort()).toEqual(Object.keys(biotypeData.heightRangesCm).sort());
     expect(within(group('emCampo.perna')).getAllByRole('radio')).toHaveLength(2);
     expect(within(group('emCampo.compleicao')).getAllByRole('radio')).toHaveLength(3);

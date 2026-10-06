@@ -148,7 +148,8 @@
 .escolhas--campo [data-opcao='lateral'] { left: 39%; top: 24%; }
 .escolhas--campo [data-opcao='volante'] { left: 52%; top: 66%; }
 .escolhas--campo [data-opcao='meia'] { left: 69%; top: 36%; }
-.escolhas--campo [data-opcao='atacante'] { left: 89%; top: 54%; }
+.escolhas--campo [data-opcao='ponta'] { left: 86%; top: 22%; }
+.escolhas--campo [data-opcao='atacante'] { left: 89%; top: 66%; }
 .escolhas--campo .escolha__marca { border-radius: 50%; padding: 0; font-family: var(--fonte-titulo); font-size: 0.95rem; }
 .escolhas--campo .escolha__input:checked + .escolha__marca { background: var(--cor-texto); color: var(--cor-superficie); box-shadow: 0 0 0 3px var(--cor-superficie); }
 

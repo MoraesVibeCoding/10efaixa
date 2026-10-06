@@ -17,7 +17,7 @@ export const DEFAULT_FIELD: OnField = {
 export const FIELD_ERROR_ORDER = ['position', 'archetypeId', 'temperament'] as const;
 
 /** Ordem das posições no campinho, da esquerda para a direita: é também a ordem das setas do teclado. */
-export const POSITIONS: Position[] = ['goleiro', 'zagueiro', 'lateral', 'volante', 'meia', 'atacante'];
+export const POSITIONS: Position[] = ['goleiro', 'zagueiro', 'lateral', 'volante', 'meia', 'ponta', 'atacante'];
 export const RANGES = biotypeData.heightRangesCm as Record<Position, { min: number; max: number }>;
 const clamp = (v: number, { min, max }: { min: number; max: number }) => Math.min(max, Math.max(min, v));
 

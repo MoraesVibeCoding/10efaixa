@@ -23,6 +23,12 @@
  "porPontoAcimaDaLiga": 0.025,
  "ruido": 0.25,
  "porJogo": {
+  "ponta": {
+   "gols": 0.26,
+   "assistencias": 0.22,
+   "desarmes": 0.7,
+   "semSofrerGol": 0
+  },
   "atacante": {
    "gols": 0.42,
    "assistencias": 0.14,

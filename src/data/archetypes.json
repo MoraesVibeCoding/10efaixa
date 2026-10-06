@@ -1,9 +1,9 @@
 [
   { "id": "matador", "positions": ["atacante"], "traits": ["faroDeGol"], "inspiracao": "Romário",
     "distribution": { "finalizacao": 24, "passe": 6, "habilidade": 10, "drible": 10, "forca": 5, "velocidade": 10, "fisico": 5, "marcacao": 6, "mental": 16, "jogoAereo": 8 } },
-  { "id": "arrancador", "positions": ["atacante"], "traits": ["arrancada"], "inspiracao": "Ronaldo",
+  { "id": "arrancador", "positions": ["atacante", "ponta"], "traits": ["arrancada"], "inspiracao": "Ronaldo",
     "distribution": { "finalizacao": 18, "passe": 5, "habilidade": 10, "drible": 18, "forca": 8, "velocidade": 20, "fisico": 8, "marcacao": 2, "mental": 6, "jogoAereo": 5 } },
-  { "id": "magico", "positions": ["atacante", "meia"], "traits": ["ambidestro", "bolaParada"], "inspiracao": "Neymar",
+  { "id": "magico", "positions": ["atacante", "ponta", "meia"], "traits": ["ambidestro", "bolaParada"], "inspiracao": "Neymar",
     "distribution": { "finalizacao": 12, "passe": 16, "habilidade": 20, "drible": 20, "forca": 3, "velocidade": 10, "fisico": 5, "marcacao": 3, "mental": 8, "jogoAereo": 3 } },
   { "id": "centroavanteForca", "positions": ["atacante"], "traits": ["bomba"], "inspiracao": "Adriano",
     "overallWeightBonus": { "jogoAereo": 10 },
@@ -31,5 +31,9 @@
   { "id": "goleiroLibero", "positions": ["goleiro"], "traits": ["saidaRapida"], "latentTrait": "cobrador", "inspiracao": "Rogério Ceni",
     "distribution": { "finalizacao": 2, "passe": 22, "habilidade": 16, "drible": 1, "forca": 4, "velocidade": 16, "fisico": 5, "marcacao": 0, "mental": 12, "jogoAereo": 22 } },
   { "id": "pegadorPenalti", "positions": ["goleiro"], "traits": ["pegadorDePenalti"], "inspiracao": "Taffarel",
-    "distribution": { "finalizacao": 0, "passe": 6, "habilidade": 20, "drible": 1, "forca": 5, "velocidade": 26, "fisico": 5, "marcacao": 1, "mental": 22, "jogoAereo": 14 } }
+    "distribution": { "finalizacao": 0, "passe": 6, "habilidade": 20, "drible": 1, "forca": 5, "velocidade": 26, "fisico": 5, "marcacao": 1, "mental": 22, "jogoAereo": 14 } },
+  { "id": "pontaDriblador", "positions": ["ponta"], "traits": ["arrancada"], "inspiracao": "Garrincha",
+    "distribution": { "finalizacao": 12, "passe": 8, "habilidade": 14, "drible": 24, "forca": 4, "velocidade": 20, "fisico": 8, "marcacao": 2, "mental": 6, "jogoAereo": 2 } },
+  { "id": "pontaInvertido", "positions": ["ponta"], "traits": ["ambidestro"], "inspiracao": "Jairzinho",
+    "distribution": { "finalizacao": 20, "passe": 10, "habilidade": 14, "drible": 18, "forca": 6, "velocidade": 16, "fisico": 6, "marcacao": 2, "mental": 6, "jogoAereo": 2 } }
 ]

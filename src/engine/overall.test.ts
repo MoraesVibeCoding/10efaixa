@@ -7,8 +7,8 @@ const flat = (v: number): Attributes =>
   Object.fromEntries(ATTRIBUTES.map((a) => [a, v])) as Attributes;
 
 describe('overall por posição', () => {
-  it('são as 6 posições da seção 6.1', () => {
-    expect(POSITIONS).toEqual(['goleiro', 'zagueiro', 'lateral', 'volante', 'meia', 'atacante']);
+  it('são as 7 posições da seção 6.1 (v2.46: ponta)', () => {
+    expect(POSITIONS).toEqual(['goleiro', 'zagueiro', 'lateral', 'volante', 'meia', 'ponta', 'atacante']);
   });
 
   it.each(POSITIONS)('%s: atributos todos iguais → overall igual', (pos) => {
