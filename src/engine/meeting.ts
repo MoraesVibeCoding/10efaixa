@@ -7,6 +7,17 @@ import evo from '../data/evolution.json';
 import cfg from '../data/meeting.json';
 
 // Seção 6.5. Determinística; quem chama garante uma reunião por temporada (máquina de estados, T48).
+
+/** T52: a reunião vista como decisão da carreira. A escolha é "principal|secundário". */
+export const MEETING_EVENT = 'reuniao';
+export const encodeProposal = (p: { main: Focus; secondary: Focus }): string => `${p.main}|${p.secondary}`;
+/** "principal|secundário" com dois focos válidos e diferentes; senão null. */
+export function parseProposal(s: string): { main: Focus; secondary: Focus } | null {
+  const [main, secondary, extra] = s.split('|');
+  if (extra !== undefined || !main || !secondary || main === secondary) return null;
+  if (!FOCI.includes(main) || !FOCI.includes(secondary)) return null;
+  return { main: main as Focus, secondary: secondary as Focus };
+}
 export interface MeetingInput {
   proposal: { main: Focus; secondary: Focus };
   morale: number;

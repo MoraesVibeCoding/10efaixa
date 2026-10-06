@@ -1,0 +1,217 @@
+{
+ "_nota": "Motor do avatar (T44; SPEC 6.17). Tons, cores e escalas ficam aqui; a arte só usa cores-chave (src/art/format.json).",
+ "base": {
+  "heightCm": 180,
+  "centerX": 200,
+  "feetY": 780
+ },
+ "shadowFactor": 0.78,
+ "skinTones": [
+  {
+   "id": "t1",
+   "hex": "#F9DCC4"
+  },
+  {
+   "id": "t2",
+   "hex": "#F1C8A5"
+  },
+  {
+   "id": "t3",
+   "hex": "#E5B48A"
+  },
+  {
+   "id": "t4",
+   "hex": "#D29C6E"
+  },
+  {
+   "id": "t5",
+   "hex": "#BC8458"
+  },
+  {
+   "id": "t6",
+   "hex": "#A66E45"
+  },
+  {
+   "id": "t7",
+   "hex": "#8D5A38"
+  },
+  {
+   "id": "t8",
+   "hex": "#734629"
+  },
+  {
+   "id": "t9",
+   "hex": "#5A351F"
+  },
+  {
+   "id": "t10",
+   "hex": "#402415"
+  }
+ ],
+ "hairColors": [
+  {
+   "id": "preto",
+   "hex": "#1C1C1C"
+  },
+  {
+   "id": "castanhoEscuro",
+   "hex": "#3B2616"
+  },
+  {
+   "id": "castanho",
+   "hex": "#5C3A21"
+  },
+  {
+   "id": "castanhoClaro",
+   "hex": "#8A5A32"
+  },
+  {
+   "id": "loiroEscuro",
+   "hex": "#B58A4B"
+  },
+  {
+   "id": "loiro",
+   "hex": "#D9B568"
+  },
+  {
+   "id": "ruivo",
+   "hex": "#9C4A24"
+  },
+  {
+   "id": "descolorido",
+   "hex": "#EFE3A3"
+  }
+ ],
+ "build": {
+  "franzino": {
+   "tronco": 0.88,
+   "braco": 0.85,
+   "perna": 0.92
+  },
+  "atletico": {
+   "tronco": 1,
+   "braco": 1,
+   "perna": 1
+  },
+  "forte": {
+   "tronco": 1.18,
+   "braco": 1.2,
+   "perna": 1.08
+  }
+ },
+ "aging": {
+  "grayFrom": 30,
+  "grayFull": 45,
+  "grayMax": 0.85,
+  "gray": "#B5B5B5",
+  "entradasFrom": 35,
+  "rugasFrom": 36
+ },
+ "styles": {
+  "hair": [
+   "raspado",
+   "curto",
+   "cacheado",
+   "crespo",
+   "black-power",
+   "dread",
+   "moicano",
+   "longo"
+  ],
+  "beards": [
+   "rala",
+   "cavanhaque",
+   "bigode",
+   "cheia"
+  ],
+  "expressions": [
+   "neutra",
+   "alegre",
+   "triste",
+   "concentrada"
+  ]
+ },
+ "mates": {
+  "heightCm": [
+   168,
+   190
+  ],
+  "age": [
+   18,
+   34
+  ],
+  "beardChance": 0.2,
+  "builds": {
+   "franzino": 2,
+   "atletico": 6,
+   "forte": 2
+  },
+  "boots": [
+   "#14213D",
+   "#F2F4EF",
+   "#FFC21A",
+   "#D62839"
+  ],
+  "max": 4
+ },
+ "escolhas": {
+  "_nota": "T50 (6.17): opções do jogador na criação. Só visual: nunca entra no motor.",
+  "padrao": {
+   "skin": "t6",
+   "hairStyle": "curto",
+   "hairColor": "preto",
+   "beard": null,
+   "headband": null,
+   "boots": "preta"
+  },
+  "chuteiras": [
+   {
+    "id": "preta",
+    "hex": "#1C1C1C"
+   },
+   {
+    "id": "branca",
+    "hex": "#F2F4EF"
+   },
+   {
+    "id": "amarela",
+    "hex": "#FFC21A"
+   },
+   {
+    "id": "vermelha",
+    "hex": "#D62839"
+   },
+   {
+    "id": "azul",
+    "hex": "#1F5FBF"
+   },
+   {
+    "id": "laranja",
+    "hex": "#F07F1E"
+   }
+  ],
+  "faixas": [
+   {
+    "id": "branca",
+    "hex": "#F2F4EF"
+   },
+   {
+    "id": "preta",
+    "hex": "#1C1C1C"
+   },
+   {
+    "id": "amarela",
+    "hex": "#FFC21A"
+   },
+   {
+    "id": "vermelha",
+    "hex": "#D62839"
+   }
+  ],
+  "sorteio": {
+   "_nota": "Chance de o visual sorteado vir com barba e com faixa de cabelo.",
+   "barba": 0.35,
+   "faixa": 0.2
+  }
+ }
+}

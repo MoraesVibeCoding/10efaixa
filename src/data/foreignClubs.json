@@ -1,5 +1,5 @@
 {
- "_nota": "Clubes estrangeiros sul-americanos: participantes oficiais de 2026 da Libertadores/Sul-Americana. Formam o pool de cada país; a cada ano o país distribui suas vagas entre eles pela força. Reputação é estimativa de balanceamento; cores provisórias.",
+ "_nota": "Clubes estrangeiros sul-americanos: participantes oficiais de 2026 da Libertadores/Sul-Americana. Formam o pool de cada país; a cada ano o país distribui suas vagas entre eles pela força. Reputação é estimativa de balanceamento; cores estimadas pelo assistente (T50j, ver coresRevisao.json).",
  "fonte": [
   "https://gol.conmebol.com/libertadores/es/news/sorteo-de-la-fase-de-grupos-de-la-conmebol-libertadores-2026-fecha-horario-clasificados",
   "https://gol.conmebol.com/sudamericana/en/news/great-conquest-these-are-groups-2026-conmebol-sudamericana",
@@ -15,8 +15,8 @@
    "sigla": "BOC",
    "pais": "ARG",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#003DA5",
+    "#FFD100"
    ],
    "reputacao": 92
   },
@@ -26,8 +26,8 @@
    "sigla": "RIE",
    "pais": "ARG",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 93
   },
@@ -37,7 +37,7 @@
    "sigla": "RAC",
    "pais": "ARG",
    "cores": [
-    "#14213D",
+    "#6CACE4",
     "#FFFFFF"
    ],
    "reputacao": 86
@@ -48,7 +48,7 @@
    "sigla": "EST",
    "pais": "ARG",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 84
@@ -59,7 +59,7 @@
    "sigla": "LAN",
    "pais": "ARG",
    "cores": [
-    "#14213D",
+    "#7A1E3A",
     "#FFFFFF"
    ],
    "reputacao": 80
@@ -70,8 +70,8 @@
    "sigla": "SAZ",
    "pais": "ARG",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0B2A6F",
+    "#C8102E"
    ],
    "reputacao": 80
   },
@@ -81,8 +81,8 @@
    "sigla": "ROS",
    "pais": "ARG",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#FFD100"
    ],
    "reputacao": 80
   },
@@ -92,7 +92,7 @@
    "sigla": "ARG",
    "pais": "ARG",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 78
@@ -103,7 +103,7 @@
    "sigla": "INP",
    "pais": "ARG",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 72
@@ -114,8 +114,8 @@
    "sigla": "PLA",
    "pais": "ARG",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#5C3317"
    ],
    "reputacao": 72
   },
@@ -125,8 +125,8 @@
    "sigla": "TIG",
    "pais": "ARG",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#C8102E"
    ],
    "reputacao": 72
   },
@@ -136,7 +136,7 @@
    "sigla": "BAA",
    "pais": "ARG",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 68
@@ -147,7 +147,7 @@
    "sigla": "DEP",
    "pais": "ARG",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 66
@@ -158,8 +158,8 @@
    "sigla": "PEN",
    "pais": "URU",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#000000"
    ],
    "reputacao": 84
   },
@@ -169,19 +169,19 @@
    "sigla": "NAO",
    "pais": "URU",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#0033A0"
    ],
    "reputacao": 84
   },
   {
    "id": "liverpool-uru",
-   "nome": "Liverpool",
+   "nome": "Liverpool-URU",
    "sigla": "LIV",
    "pais": "URU",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#000000",
+    "#0033A0"
    ],
    "reputacao": 70
   },
@@ -191,7 +191,7 @@
    "sigla": "DEF",
    "pais": "URU",
    "cores": [
-    "#14213D",
+    "#5B2C83",
     "#FFFFFF"
    ],
    "reputacao": 70
@@ -202,7 +202,7 @@
    "sigla": "JUT",
    "pais": "URU",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 64
@@ -213,7 +213,7 @@
    "sigla": "BOS",
    "pais": "URU",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 62
@@ -224,18 +224,18 @@
    "sigla": "MOV",
    "pais": "URU",
    "cores": [
-    "#14213D",
+    "#6CABDD",
     "#FFFFFF"
    ],
    "reputacao": 62
   },
   {
    "id": "racing-uru",
-   "nome": "Racing",
+   "nome": "Racing-URU",
    "sigla": "RAI",
    "pais": "URU",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 60
@@ -246,7 +246,7 @@
    "sigla": "ATT",
    "pais": "COL",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 82
@@ -257,7 +257,7 @@
    "sigla": "MIL",
    "pais": "COL",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 78
@@ -268,7 +268,7 @@
    "sigla": "AMD",
    "pais": "COL",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 78
@@ -279,7 +279,7 @@
    "sigla": "JUI",
    "pais": "COL",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 76
@@ -290,7 +290,7 @@
    "sigla": "SAF",
    "pais": "COL",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 74
@@ -301,8 +301,8 @@
    "sigla": "INN",
    "pais": "COL",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#0033A0"
    ],
    "reputacao": 74
   },
@@ -312,8 +312,8 @@
    "sigla": "DER",
    "pais": "COL",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#7A1E3A",
+    "#FFD100"
    ],
    "reputacao": 72
   },
@@ -323,8 +323,8 @@
    "sigla": "ATI",
    "pais": "COL",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#00843D"
    ],
    "reputacao": 68
   },
@@ -334,8 +334,8 @@
    "sigla": "UNV",
    "pais": "CHI",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0033A0",
+    "#C8102E"
    ],
    "reputacao": 78
   },
@@ -345,8 +345,8 @@
    "sigla": "UNE",
    "pais": "CHI",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#0033A0"
    ],
    "reputacao": 76
   },
@@ -356,8 +356,8 @@
    "sigla": "COQ",
    "pais": "CHI",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#000000"
    ],
    "reputacao": 68
   },
@@ -367,7 +367,7 @@
    "sigla": "OHI",
    "pais": "CHI",
    "cores": [
-    "#14213D",
+    "#6CABDD",
     "#FFFFFF"
    ],
    "reputacao": 68
@@ -378,8 +378,8 @@
    "sigla": "HUA",
    "pais": "CHI",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0033A0",
+    "#000000"
    ],
    "reputacao": 66
   },
@@ -389,8 +389,8 @@
    "sigla": "PAE",
    "pais": "CHI",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#00843D"
    ],
    "reputacao": 66
   },
@@ -400,7 +400,7 @@
    "sigla": "AUA",
    "pais": "CHI",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 64
@@ -411,7 +411,7 @@
    "sigla": "COB",
    "pais": "CHI",
    "cores": [
-    "#14213D",
+    "#F37021",
     "#FFFFFF"
    ],
    "reputacao": 62
@@ -422,8 +422,8 @@
    "sigla": "LIG",
    "pais": "ECU",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 82
   },
@@ -433,29 +433,29 @@
    "sigla": "INI",
    "pais": "ECU",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#000000",
+    "#0033A0"
    ],
    "reputacao": 82
   },
   {
    "id": "barcelona-sc",
-   "nome": "Barcelona",
+   "nome": "Barcelona-ECU",
    "sigla": "BAL",
    "pais": "ECU",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#000000"
    ],
    "reputacao": 78
   },
   {
    "id": "universidad-catolica-ecu",
-   "nome": "Universidad Católica",
+   "nome": "Universidad Católica-ECU",
    "sigla": "UNR",
    "pais": "ECU",
    "cores": [
-    "#14213D",
+    "#6CABDD",
     "#FFFFFF"
    ],
    "reputacao": 66
@@ -466,7 +466,7 @@
    "sigla": "DET",
    "pais": "ECU",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 64
@@ -477,7 +477,7 @@
    "sigla": "MCA",
    "pais": "ECU",
    "cores": [
-    "#14213D",
+    "#6CABDD",
     "#FFFFFF"
    ],
    "reputacao": 62
@@ -488,19 +488,19 @@
    "sigla": "ORE",
    "pais": "ECU",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 62
   },
   {
    "id": "libertad-ecu",
-   "nome": "Libertad",
+   "nome": "Libertad-ECU",
    "sigla": "LIB",
    "pais": "ECU",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#FFD100"
    ],
    "reputacao": 60
   },
@@ -510,8 +510,8 @@
    "sigla": "OLI",
    "pais": "PAR",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#000000"
    ],
    "reputacao": 80
   },
@@ -521,8 +521,8 @@
    "sigla": "CEO",
    "pais": "PAR",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0B2A6F",
+    "#C8102E"
    ],
    "reputacao": 80
   },
@@ -532,7 +532,7 @@
    "sigla": "LIE",
    "pais": "PAR",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 78
@@ -543,19 +543,19 @@
    "sigla": "GAR",
    "pais": "PAR",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#000000"
    ],
    "reputacao": 70
   },
   {
    "id": "nacional-par",
-   "nome": "Nacional",
+   "nome": "Nacional-PAR",
    "sigla": "NAN",
    "pais": "PAR",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#0033A0"
    ],
    "reputacao": 68
   },
@@ -565,7 +565,7 @@
    "sigla": "DEA",
    "pais": "PAR",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 60
@@ -576,8 +576,8 @@
    "sigla": "REC",
    "pais": "PAR",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#C8102E"
    ],
    "reputacao": 60
   },
@@ -587,7 +587,7 @@
    "sigla": "SPO",
    "pais": "PAR",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 60
@@ -598,8 +598,8 @@
    "sigla": "UNS",
    "pais": "PER",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#F2E8C9",
+    "#7A1E3A"
    ],
    "reputacao": 76
   },
@@ -609,7 +609,7 @@
    "sigla": "ALI",
    "pais": "PER",
    "cores": [
-    "#14213D",
+    "#0033A0",
     "#FFFFFF"
    ],
    "reputacao": 76
@@ -620,7 +620,7 @@
    "sigla": "SPR",
    "pais": "PER",
    "cores": [
-    "#14213D",
+    "#6CABDD",
     "#FFFFFF"
    ],
    "reputacao": 74
@@ -631,8 +631,8 @@
    "sigla": "MEL",
    "pais": "PER",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#000000"
    ],
    "reputacao": 66
   },
@@ -642,7 +642,7 @@
    "sigla": "CUS",
    "pais": "PER",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 64
@@ -653,7 +653,7 @@
    "sigla": "CIE",
    "pais": "PER",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 64
@@ -664,8 +664,8 @@
    "sigla": "ALA",
    "pais": "PER",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#0033A0"
    ],
    "reputacao": 60
   },
@@ -675,8 +675,8 @@
    "sigla": "DEI",
    "pais": "PER",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 60
   },
@@ -686,7 +686,7 @@
    "sigla": "BOL",
    "pais": "BOL",
    "cores": [
-    "#14213D",
+    "#6CABDD",
     "#FFFFFF"
    ],
    "reputacao": 74
@@ -697,8 +697,8 @@
    "sigla": "THE",
    "pais": "BOL",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#000000"
    ],
    "reputacao": 72
   },
@@ -708,7 +708,7 @@
    "sigla": "ALW",
    "pais": "BOL",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 68
@@ -719,7 +719,7 @@
    "sigla": "BLO",
    "pais": "BOL",
    "cores": [
-    "#14213D",
+    "#6CABDD",
     "#FFFFFF"
    ],
    "reputacao": 64
@@ -730,8 +730,8 @@
    "sigla": "NAL",
    "pais": "BOL",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#00843D"
    ],
    "reputacao": 62
   },
@@ -741,8 +741,8 @@
    "sigla": "INO",
    "pais": "BOL",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#FFD100"
    ],
    "reputacao": 60
   },
@@ -752,7 +752,7 @@
    "sigla": "GUB",
    "pais": "BOL",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 58
@@ -763,8 +763,8 @@
    "sigla": "SAI",
    "pais": "BOL",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#FFD100"
    ],
    "reputacao": 56
   },
@@ -774,8 +774,8 @@
    "sigla": "DEV",
    "pais": "VEN",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#000000"
    ],
    "reputacao": 66
   },
@@ -785,7 +785,7 @@
    "sigla": "CAS",
    "pais": "VEN",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 66
@@ -796,7 +796,7 @@
    "sigla": "DEL",
    "pais": "VEN",
    "cores": [
-    "#14213D",
+    "#F37021",
     "#FFFFFF"
    ],
    "reputacao": 64
@@ -807,7 +807,7 @@
    "sigla": "CRO",
    "pais": "VEN",
    "cores": [
-    "#14213D",
+    "#7A1E3A",
     "#FFFFFF"
    ],
    "reputacao": 62
@@ -818,8 +818,8 @@
    "sigla": "UND",
    "pais": "VEN",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#C8102E"
    ],
    "reputacao": 60
   },
@@ -829,8 +829,8 @@
    "sigla": "ACA",
    "pais": "VEN",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#C8102E"
    ],
    "reputacao": 60
   },
@@ -840,8 +840,8 @@
    "sigla": "MOA",
    "pais": "VEN",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0033A0",
+    "#7A1E3A"
    ],
    "reputacao": 58
   },
@@ -851,8 +851,8 @@
    "sigla": "MER",
    "pais": "VEN",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#C8102E"
    ],
    "reputacao": 58
   }

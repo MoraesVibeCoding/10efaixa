@@ -1,0 +1,40 @@
+{
+ "_nota": "Uniformes para a arte (SPEC 6.17). Só padrão genérico e cores: nenhum escudo, patrocinador, marca de fornecedor ou desenho exclusivo. Clube sem cadastro usa camisa lisa nas cores de clubs.json.",
+ "fonte": "Imagem de referência fornecida pelo usuário com as camisas dos 20 clubes da Série A (docs/referencias/camisas-serie-a-2026-10-01.jpg); cores conferidas com clubs.json",
+ "conferidoEm": "2026-10-01",
+ "padroes": ["lisa", "listras-verticais", "listras-finas", "faixas-horizontais", "listras-diagonais", "faixa-diagonal", "faixa-no-peito"],
+ "clubes": {
+  "athletico-pr": { "padrao": "listras-diagonais", "camisa": ["#C8102E", "#000000"], "detalhe": "#000000", "calcao": "#000000", "meiao": "#000000" },
+  "atletico-mg": { "padrao": "listras-verticais", "camisa": ["#000000", "#FFFFFF"], "detalhe": "#000000", "calcao": "#000000", "meiao": "#FFFFFF" },
+  "bahia": { "padrao": "faixas-horizontais", "camisa": ["#E30613", "#FFFFFF", "#0057B8"], "detalhe": "#0057B8", "calcao": "#0057B8", "meiao": "#E30613" },
+  "botafogo": { "padrao": "listras-verticais", "camisa": ["#000000", "#FFFFFF"], "detalhe": "#000000", "calcao": "#000000", "meiao": "#000000" },
+  "chapecoense": { "padrao": "lisa", "camisa": ["#00843D"], "detalhe": "#FFFFFF", "calcao": "#FFFFFF", "meiao": "#00843D" },
+  "corinthians": { "padrao": "lisa", "camisa": ["#FFFFFF"], "detalhe": "#000000", "calcao": "#000000", "meiao": "#FFFFFF" },
+  "coritiba": { "padrao": "listras-verticais", "camisa": ["#00543C", "#FFFFFF"], "detalhe": "#00543C", "calcao": "#00543C", "meiao": "#FFFFFF" },
+  "cruzeiro": { "padrao": "lisa", "camisa": ["#0033A0"], "detalhe": "#FFFFFF", "calcao": "#FFFFFF", "meiao": "#0033A0" },
+  "flamengo": { "padrao": "faixas-horizontais", "camisa": ["#C8102E", "#000000"], "detalhe": "#C8102E", "calcao": "#FFFFFF", "meiao": "#C8102E" },
+  "fluminense": { "padrao": "listras-verticais", "camisa": ["#7A1F3D", "#006241", "#FFFFFF"], "detalhe": "#7A1F3D", "calcao": "#FFFFFF", "meiao": "#FFFFFF" },
+  "gremio": { "padrao": "listras-verticais", "camisa": ["#0D80BF", "#000000", "#FFFFFF"], "detalhe": "#000000", "calcao": "#000000", "meiao": "#FFFFFF" },
+  "internacional": { "padrao": "lisa", "camisa": ["#E30613"], "detalhe": "#FFFFFF", "calcao": "#FFFFFF", "meiao": "#E30613" },
+  "mirassol": { "padrao": "lisa", "camisa": ["#FFD700"], "detalhe": "#006B3F", "calcao": "#006B3F", "meiao": "#FFD700" },
+  "palmeiras": { "padrao": "lisa", "camisa": ["#006437"], "detalhe": "#FFFFFF", "calcao": "#FFFFFF", "meiao": "#006437" },
+  "bragantino": { "padrao": "lisa", "camisa": ["#FFFFFF"], "detalhe": "#D20A11", "calcao": "#D20A11", "meiao": "#FFFFFF" },
+  "remo": { "padrao": "lisa", "camisa": ["#0B1F5C"], "detalhe": "#FFFFFF", "calcao": "#0B1F5C", "meiao": "#0B1F5C" },
+  "santos": { "padrao": "listras-finas", "camisa": ["#FFFFFF", "#000000"], "detalhe": "#000000", "calcao": "#FFFFFF", "meiao": "#FFFFFF" },
+  "sao-paulo": { "padrao": "faixa-no-peito", "camisa": ["#FFFFFF", "#E30613", "#000000"], "detalhe": "#E30613", "calcao": "#FFFFFF", "meiao": "#FFFFFF" },
+  "vasco": { "padrao": "faixa-diagonal", "camisa": ["#000000", "#FFFFFF"], "detalhe": "#FFFFFF", "calcao": "#000000", "meiao": "#000000" },
+  "vitoria": { "padrao": "listras-verticais", "camisa": ["#E30613", "#000000"], "detalhe": "#000000", "calcao": "#000000", "meiao": "#000000" }
+ },
+ "selecoes": {
+  "_obs": "T50k (SPEC v2.37): camisas tradicionais do Brasil e dos países da dupla nacionalidade (dualNationality.json), só cor e padrão; nenhum escudo de federação, estrela, patrocinador ou marca de fornecedor. Cores: estimativa do assistente em 2026-10-06, a conferir.",
+  "brasil": { "padrao": "lisa", "camisa": ["#FFDF00"], "detalhe": "#009C3B", "calcao": "#002776", "meiao": "#FFFFFF" },
+  "italia": { "padrao": "lisa", "camisa": ["#0066B3"], "detalhe": "#FFFFFF", "calcao": "#FFFFFF", "meiao": "#0066B3" },
+  "portugal": { "padrao": "lisa", "camisa": ["#C8102E"], "detalhe": "#006600", "calcao": "#006600", "meiao": "#C8102E" },
+  "espanha": { "padrao": "lisa", "camisa": ["#C60B1E"], "detalhe": "#FFC400", "calcao": "#0B2A6F", "meiao": "#0B2A6F" },
+  "alemanha": { "padrao": "lisa", "camisa": ["#FFFFFF"], "detalhe": "#000000", "calcao": "#000000", "meiao": "#FFFFFF" }
+ },
+ "goleiro": {
+  "_obs": "um uniforme só para todos os clubes (decisão do usuário): rosa, manga longa, calção e meião da mesma cor, luvas laranja. Cor e corte genéricos, sem estampa de fabricante.",
+  "padrao": "lisa", "camisa": ["#F0569B"], "detalhe": "#C93F80", "calcao": "#F0569B", "meiao": "#F0569B", "mangaLonga": true, "luvas": "#F28C28"
+ }
+}

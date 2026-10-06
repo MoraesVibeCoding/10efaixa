@@ -1,0 +1,20 @@
+/* T50h: a cor do clube multiplicada pela camisa em cinza, só onde a máscara (alfa do WebP) deixa.
+   Sintaxe conferida na MDN (mdn/content e browser-compat-data): mask-image sem prefixo desde Chrome 120, Safari 15.4 e
+   Firefox 53, com -webkit- antes; máscara raster usa o canal alfa; mix-blend-mode mistura com o que está atrás no mesmo
+   contexto de empilhamento. O recorte repete o enquadramento do retrato (cover e a mesma posição). */
+.camisa {
+  position: absolute;
+  inset: 0;
+  background-color: var(--camisa-cor);
+  background-image: var(--camisa-desenho); /* v2.37: padrão do clube; sem ele, a cor principal */
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  -webkit-mask-image: var(--camisa-mascara);
+  mask-image: var(--camisa-mascara);
+  -webkit-mask-size: cover;
+  mask-size: cover;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: var(--camisa-posicao, 50% 50%);
+  mask-position: var(--camisa-posicao, 50% 50%);
+}

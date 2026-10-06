@@ -1,29 +1,143 @@
 {
-  "_nota": "Formato das peças de arte (docs/briefing-arte.md, seções 4–5). Fonte de regras do validador (T43).",
-  "palette": ["#F2F4EF", "#14213D", "#FFC21A", "#1E7B4F", "#D62839", "#C9CFC6"],
+  "_nota": "Formato das peças de arte (docs/briefing-arte.md, Apêndice A: SVG da arte provisória). Fonte de regras do validador (T43).",
+  "palette": [
+    "#F2F4EF",
+    "#14213D",
+    "#FFC21A",
+    "#1E7B4F",
+    "#D62839",
+    "#C9CFC6"
+  ],
   "keyColors": {
-    "pele": "#FF00FF", "peleSombra": "#B000B0",
-    "uniforme1": "#00FF00", "uniforme1Sombra": "#00B000",
-    "uniforme2": "#0000FF", "uniforme2Sombra": "#0000B0",
-    "cabelo": "#FF8000", "cabeloSombra": "#B05800",
-    "chuteira": "#00FFFF", "acessorio": "#FFFF00"
+    "pele": "#FF00FF",
+    "peleSombra": "#B000B0",
+    "uniforme1": "#00FF00",
+    "uniforme1Sombra": "#00B000",
+    "uniforme2": "#0000FF",
+    "uniforme2Sombra": "#0000B0",
+    "cabelo": "#FF8000",
+    "cabeloSombra": "#B05800",
+    "chuteira": "#00FFFF",
+    "acessorio": "#FFFF00"
   },
   "fixedColors": [],
-  "angles": ["frente", "perfil", "tres-quartos"],
-  "forbiddenElements": ["image", "script", "style", "text", "linearGradient", "radialGradient", "foreignObject"],
+  "angles": [
+    "frente",
+    "perfil",
+    "tres-quartos"
+  ],
+  "forbiddenElements": [
+    "image",
+    "script",
+    "style",
+    "text",
+    "linearGradient",
+    "radialGradient",
+    "foreignObject"
+  ],
   "categories": {
-    "pose":        { "angle": false, "budgetKB": 30, "ordered": true,
-                     "layers": ["braco-tras", "perna-tras", "tronco", "pescoco", "perna-frente", "braco-frente", "cabeca-ancora"],
-                     "pivots": ["braco-tras", "perna-tras", "perna-frente", "braco-frente"] },
-    "rosto":       { "angle": true, "budgetKB": 15, "layers": ["cabeca"] },
-    "expressao":   { "angle": true, "budgetKB": 15, "layers": ["expressao"] },
-    "cabelo":      { "angle": true, "budgetKB": 15, "anyOf": ["cabelo-tras", "cabelo-frente"] },
-    "barba":       { "angle": true, "budgetKB": 15, "layers": ["barba"] },
-    "rugas":       { "angle": true, "budgetKB": 15, "layers": ["rugas"] },
-    "acessorio":   { "angle": true, "budgetKB": 15, "layers": ["acessorio"] },
-    "uniforme":    { "angle": false, "budgetKB": 15, "layers": ["padrao"] },
-    "comemoracao": { "angle": false, "budgetKB": 30, "layers": ["braco-tras", "braco-frente"] },
-    "cenario":     { "angle": false, "budgetKB": 80, "ordered": true, "layers": ["fundo", "meio", "slot-jogador", "frente"] },
-    "detalhe":     { "angle": false, "budgetKB": 20, "layers": ["detalhe"] }
+    "pose": {
+      "angle": false,
+      "budgetKB": 30,
+      "ordered": true,
+      "layers": [
+        "braco-tras",
+        "perna-tras",
+        "tronco",
+        "pescoco",
+        "perna-frente",
+        "braco-frente",
+        "cabeca-ancora"
+      ],
+      "pivots": [
+        "braco-tras",
+        "perna-tras",
+        "perna-frente",
+        "braco-frente"
+      ]
+    },
+    "rosto": {
+      "angle": true,
+      "budgetKB": 15,
+      "layers": [
+        "cabeca"
+      ]
+    },
+    "expressao": {
+      "angle": true,
+      "budgetKB": 15,
+      "layers": [
+        "expressao"
+      ]
+    },
+    "cabelo": {
+      "angle": true,
+      "budgetKB": 15,
+      "anyOf": [
+        "cabelo-tras",
+        "cabelo-frente"
+      ]
+    },
+    "barba": {
+      "angle": true,
+      "budgetKB": 15,
+      "layers": [
+        "barba"
+      ]
+    },
+    "rugas": {
+      "angle": true,
+      "budgetKB": 15,
+      "layers": [
+        "rugas"
+      ]
+    },
+    "acessorio": {
+      "angle": true,
+      "budgetKB": 15,
+      "layers": [
+        "acessorio"
+      ]
+    },
+    "uniforme": {
+      "angle": false,
+      "budgetKB": 15,
+      "layers": [
+        "padrao"
+      ]
+    },
+    "comemoracao": {
+      "angle": false,
+      "budgetKB": 30,
+      "layers": [
+        "braco-tras",
+        "braco-frente"
+      ]
+    },
+    "cenario": {
+      "angle": false,
+      "budgetKB": 80,
+      "ordered": true,
+      "layers": [
+        "fundo",
+        "meio",
+        "slot-jogador",
+        "frente"
+      ]
+    },
+    "detalhe": {
+      "angle": false,
+      "budgetKB": 20,
+      "layers": [
+        "detalhe"
+      ]
+    },
+    "emblema": {
+      "angle": false,
+      "budgetKB": 8,
+      "layers": [
+        "emblema"
+      ]
+    }
   }
 }

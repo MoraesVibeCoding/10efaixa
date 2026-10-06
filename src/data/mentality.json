@@ -1,0 +1,7 @@
+{
+ "_nota": "Mentalidade (proposta SPEC 6.17): muda o caminho até o teto (velocidade de crescimento por atributo, ruído e declínio), nunca o teto. Números iniciais (v2: ±30%); calibrar no simulador.",
+ "fominha": { "crescimento": { "finalizacao": 1.25, "drible": 1.25, "velocidade": 1.15, "passe": 0.8, "mental": 0.8 }, "ruido": 1.5, "declinio": 1 },
+ "capitao": { "crescimento": { "mental": 1.3, "passe": 1.15, "marcacao": 1.1 }, "ruido": 1, "declinio": 1 },
+ "professor": { "crescimento": { "passe": 1.25, "habilidade": 1.2, "mental": 1.2, "velocidade": 0.85 }, "ruido": 0.7, "declinio": 0.6 },
+ "maquina": { "crescimento": { "fisico": 1.25, "forca": 1.12, "marcacao": 1.15 }, "ruido": 0.4, "declinio": 0.75 }
+}

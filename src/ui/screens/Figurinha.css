@@ -1,0 +1,137 @@
+/* Figurinha (T49c, SPEC v2.26): papel branco de figurinha, borda de tinta e a sombra dura verde do jogo. */
+.figurinha {
+  display: grid;
+  align-content: start;
+  inline-size: 7rem;
+  padding: 5px 5px 7px;
+  border: var(--forma-borda) solid var(--cor-linha);
+  border-radius: 6px;
+  background: var(--cor-sobre-destaque);
+  box-shadow: var(--forma-sombra) var(--forma-sombra) 0 var(--cor-destaque);
+  color: var(--cor-texto);
+  text-align: start;
+}
+/* creme em cima e as duas faixas do clube na altura dos ombros */
+.figurinha__foto {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 3px;
+  background: linear-gradient(var(--cor-superficie) 0 60%, var(--faixa1) 60% 80%, var(--faixa2) 80%);
+}
+/* recorte de álbum: contorno branco por dentro e linha de tinta por fora */
+.figurinha__retrato {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  filter:
+    drop-shadow(2px 0 0 var(--cor-sobre-destaque)) drop-shadow(-2px 0 0 var(--cor-sobre-destaque)) drop-shadow(0 2px 0 var(--cor-sobre-destaque)) drop-shadow(0 -2px 0 var(--cor-sobre-destaque))
+    drop-shadow(1px 0 0 var(--cor-linha)) drop-shadow(-1px 0 0 var(--cor-linha)) drop-shadow(0 1px 0 var(--cor-linha)) drop-shadow(0 -1px 0 var(--cor-linha));
+}
+.figurinha__numero {
+  position: absolute;
+  inset-block-start: 1px;
+  inset-inline-end: 5px;
+  font-family: var(--fonte-titulo);
+  font-size: 1.9rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--cor-sobre-destaque);
+  -webkit-text-stroke: 1.5px var(--cor-linha);
+  paint-order: stroke;
+}
+.over {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  border: var(--forma-borda) solid var(--medalha-aro);
+  border-radius: var(--forma-raio-cartao);
+  background: linear-gradient(160deg, var(--medalha-clara), var(--medalha-escura)) center / cover;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.45);
+  color: var(--medalha-texto);
+  font-family: var(--fonte-titulo);
+  line-height: 1;
+}
+/* sobre a arte pintada, um contorno suave na cor oposta segura a leitura do número */
+.over[data-medalha='bronze'], .over[data-medalha='esmeralda'], .over[data-medalha='diamante'] { text-shadow: var(--forma-contorno-numero); }
+.over__numero { font-weight: 900; font-variant-numeric: tabular-nums; }
+.figurinha__over {
+  position: absolute;
+  inset-inline-start: 4px;
+  inset-block-end: 6px;
+  inline-size: 2.125rem;
+  block-size: 2.375rem;
+}
+.figurinha__over .over__numero { font-size: 1.25rem; }
+.figurinha__nome {
+  margin-block-start: 5px;
+  font-family: var(--fonte-titulo);
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+.figurinha__clube { font-size: 0.75rem; line-height: 1.25; color: var(--cor-texto-suave); }
+/* emblema do clube no canto de baixo, à direita (simplificado: a figurinha é pequena) */
+.figurinha__emblema { position: absolute; inset-inline-end: 5px; inset-block-end: 6px; display: flex; }
+
+/* T49h (SPEC v2.34): moldura metálica pela faixa de overall. A textura do metal é a arte de cartoes-over; o aro vem da medalha. */
+.figurinha--moldura {
+  --w: 4.75rem;
+  position: relative;
+  display: block;
+  inline-size: var(--w);
+  /* altura explícita: foto e tarja usam porcentagem dela, e aspect-ratio sozinho não a torna definida */
+  block-size: calc(var(--w) * 1.22);
+  /* padding em % seria da largura do contêiner pai: tudo em função de --w */
+  padding: calc(var(--w) * 0.09) calc(var(--w) * 0.09) 0;
+  border: 0;
+  border-radius: 8%;
+  background: var(--medalha-clara) center / cover no-repeat;
+  box-shadow: inset 0 0 0 1px var(--medalha-aro), var(--forma-sombra-suave);
+  font-size: calc(var(--w) / 10);
+}
+.figurinha--grande { --w: 11rem; }
+.figurinha--moldura .figurinha__foto { display: block; aspect-ratio: auto; block-size: calc(var(--w) * 0.8); border-radius: 0.4em; }
+.figurinha__over-grande {
+  position: absolute;
+  inset-block-start: 0.3em;
+  inset-inline-start: 0.3em;
+  padding: 0.08em 0.28em;
+  border-radius: 0.2em;
+  /* pastilha marinho: o branco do número não some sobre o creme da foto (contraste de texto) */
+  background: var(--cor-sigla-contorno);
+  font-family: var(--fonte-titulo);
+  font-size: 1.7em;
+  font-weight: 900;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--cor-sigla-texto);
+}
+.figurinha__tarja {
+  position: absolute;
+  inset-inline: 9%;
+  inset-block-end: 7%;
+  block-size: 17%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+  padding-inline: 0.6em;
+  border-radius: 0.25em;
+  background: var(--cor-sigla-contorno);
+  color: var(--cor-sigla-texto);
+  font-family: var(--fonte-titulo);
+  font-weight: 900;
+  line-height: 1;
+}
+.figurinha--pequena .figurinha__tarja { justify-content: center; }
+.figurinha__tarja-nome { flex: 1; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.92em; text-transform: uppercase; }
+.figurinha__tarja-numero { font-size: 1.6em; font-variant-numeric: tabular-nums; }
+
+/* v2.36: retrato pintado do visual (transparente) dentro do recorte de álbum: enche o quadrado, do topo da cabeça ao peito */
+.figurinha__retrato--pintado { object-fit: cover; object-position: 50% 6%; }
+/* T50h: a camada da camisa repete o enquadramento do retrato pintado (object-position acima) */
+.figurinha__camisa { --camisa-posicao: 50% 6%; }

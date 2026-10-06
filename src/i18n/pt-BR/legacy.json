@@ -23,7 +23,43 @@
   "carrascoDeClassico": "Carrasco de clássico",
   "reiDoEstadual": "Rei do estadual",
   "aposentadoriaTranquila": "Aposentadoria tranquila",
-  "rodado": "Rodado"
+  "rodado": "Rodado",
+  "operarioDaBola": "Operário da bola",
+  "cascaGrossa": "Casca-grossa",
+  "boleiroRaiz": "Boleiro raiz"
  },
- "raridade": { "comum": "Comum", "incomum": "Incomum", "rara": "Rara", "epica": "Épica", "lendaria": "Lendária" }
+ "raridade": { "comum": "Comum", "incomum": "Incomum", "rara": "Rara", "epica": "Épica", "lendaria": "Lendária" },
+ "honraria": {
+  "rodouMala": "Rodou mais que mala de rodoviária",
+  "fielAteOFim": "Fiel até o último contrato",
+  "canelaDeVidro": "Mais tempo no DM que na concentração",
+  "juizBolso": "O juiz já sabia o caminho do bolso",
+  "garcom": "Garçom de mão cheia",
+  "pescador": "Balançou mais rede que pescador",
+  "chaveNoGol": "Fechou o gol e jogou a chave fora",
+  "gandula": "Jogou em tudo, menos de gandula",
+  "chuteiraAposentada": "Jogou até a chuteira pedir aposentadoria",
+  "tacaDoChurrasco": "Taça, só a do churrasco de fim de ano"
+ },
+ "historia": {
+  "inicio_varzea": "Começou no terrão da várzea, aos {idade}",
+  "inicio_peneira": "Passou na peneira aos {idade}, no meio de centenas de moleques",
+  "inicio_baseGrande": "Subiu da base {prep} {clube} aos {idade}",
+  "primeiroTitulo": "Ergueu a primeira taça aos {idade}: {competicao}",
+  "europa": "Atravessou o oceano aos {idade} para vestir a camisa {prep} {clube}",
+  "exterior": "Foi jogar fora do país aos {idade}: {clube}",
+  "auge": "Viveu o auge aos {idade}, com a camisa {prep} {clube}",
+  "melhorDoMundo": "Eleito o melhor do mundo aos {idade}",
+  "selecao": "Jogou {n} vezes pela seleção principal",
+  "selecao_um": "Jogou uma vez pela seleção principal",
+  "campeaoMundial": "Campeão do {competicao} aos {idade}",
+  "heroiMundial": "Virou herói do {competicao} aos {idade}",
+  "idolo": "Virou ídolo {prep} {clube}, onde jogou {n} temporadas",
+  "idolo_um": "Virou ídolo {prep} {clube} em uma temporada só",
+  "lesoes": "Voltou de {n} lesões graves",
+  "lesoes_um": "Voltou de uma lesão grave",
+  "despedida_coracao": "Pendurou as chuteiras aos {idade}, no clube do coração",
+  "despedida_formador": "Pendurou as chuteiras aos {idade}, no clube que o formou",
+  "aposentadoria": "Pendurou as chuteiras aos {idade}"
+ }
 }

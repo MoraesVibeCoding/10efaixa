@@ -1,0 +1,76 @@
+/* T50g (v2.35): avatar-herói. O palco é o cartão; a legenda é uma barra marinho (a mesma da tarja da figurinha). */
+.heroi { display: grid; gap: var(--espaco-2); min-inline-size: 0; }
+.heroi__palco {
+  position: relative;
+  overflow: hidden;
+  block-size: min(54dvh, 30rem);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
+  border-radius: var(--forma-raio-cartao);
+  background: var(--cor-destaque); /* o retrato é transparente (fundo removido): o palco é o gramado */
+  box-shadow: var(--forma-sombra-suave);
+}
+.heroi__numero {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: var(--espaco-3);
+  font-family: var(--fonte-titulo);
+  font-size: 7rem;
+  font-weight: 900;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in oklab, var(--cor-sigla-texto) 26%, transparent);
+  pointer-events: none;
+}
+.heroi__retrato { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: cover; object-position: center top; }
+.heroi__legenda {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espaco-2);
+  padding: 0.25rem var(--espaco-2) 0.25rem var(--espaco-3);
+  background: var(--cor-sigla-contorno);
+  color: var(--cor-sigla-texto);
+}
+.heroi__rotulo { display: block; font-size: 0.8125rem; opacity: 0.9; }
+.heroi__nome { display: block; font-family: var(--fonte-titulo); font-size: 1.5rem; font-weight: 900; line-height: 1; }
+.heroi__setas { display: flex; gap: var(--espaco-1); }
+.heroi__seta {
+  display: grid;
+  place-items: center;
+  inline-size: var(--toque-compacto);
+  block-size: var(--toque-compacto);
+  border: 1px solid color-mix(in oklab, var(--cor-sigla-texto) 55%, transparent);
+  border-radius: var(--forma-raio);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.heroi__seta:focus-visible { outline: 3px solid var(--cor-sigla-texto); outline-offset: 2px; }
+@media (hover: hover) { .heroi__seta:hover { background: color-mix(in oklab, var(--cor-sigla-texto) 16%, transparent); } }
+
+/* computador: duas colunas lado a lado, então o palco é mais baixo para a página caber em 1280×800 */
+@media (min-width: 64rem) { .heroi__palco { block-size: min(40dvh, 22rem); } .heroi__numero { font-size: 5rem; } }
+
+/* miniaturas: uma faixa que desliza, o rótulo do grupo fica só para o leitor de tela */
+.escolhas.escolhas--miniaturas { grid-template-columns: minmax(0, 1fr); } /* classe dobrada: a regra base .escolhas (7rem + 1fr) vem depois no CSS */
+.escolhas--miniaturas .escolhas__rotulo { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.escolhas--miniaturas .escolhas__lista { margin-inline-end: 0; padding: 3px; }
+.escolhas--miniaturas .escolha__marca--miniatura {
+  inline-size: 3.25rem;
+  block-size: 3.5rem;
+  min-inline-size: 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: var(--forma-raio);
+  background: var(--cor-destaque);
+}
+.escolha__miniatura { inline-size: 100%; block-size: 100%; object-fit: cover; object-position: center top; }
+.escolha__espera { display: block; inline-size: 100%; block-size: 100%; background: var(--cor-trilho); }
+.escolhas--miniaturas .escolha__input:checked + .escolha__marca--miniatura { background: var(--cor-destaque); box-shadow: none; outline: 3px solid var(--cor-destaque); outline-offset: -3px; }
+.escolhas--miniaturas .escolha__input:focus-visible + .escolha__marca--miniatura { outline: 3px solid var(--cor-foco); outline-offset: 1px; }
+/* T50h: a camada da camisa repete o enquadramento do retrato (object-position: center top) */
+.heroi__camisa { --camisa-posicao: 50% 0%; }

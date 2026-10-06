@@ -1,8 +1,9 @@
 import { simulateCareer } from './career';
 import type { Ctx } from './events';
-import { LABELS, VERDICTS, labelsOf, legacyFacts, legacyOf, legacyScore, validateLegacyConfig, verdictOf } from './legacy';
+import { LABELS, RESERVE_LABELS, VERDICTS, labelsOf, legacyFacts, legacyOf, legacyScore, validateLegacyConfig, verdictOf } from './legacy';
 import cfg from '../data/legacy.json';
 import ptBR from '../i18n/pt-BR/legacy.json';
+import headlines from '../i18n/pt-BR/headlines.json';
 
 const f = (over: Ctx = {}): Ctx => ({
   posicao: 'atacante', origem: 'peneira', convocacoes: 0, semestresTitular: 0, semestresCamisa10Selecao: 0, semestresCapitaoSelecao: 0,
@@ -93,10 +94,15 @@ describe('veredito e rótulos (T40, SPEC 6.15)', () => {
     expect(verdictOf(f({ ...star, grandeNoMundo: true }), min('lendaMundial') - 1)).toBe('lendaDoFutebolBrasileiro');
     expect(verdictOf(f({ ...star, grandeNoMundo: false }), 100)).toBe('lendaDoFutebolBrasileiro');
     expect(verdictOf(f({ convocacoes: 20, semestresTitular: 8 }), min('craqueDaSelecao'))).toBe('craqueDaSelecao');
-    expect(verdictOf(f({ idolatriaMax: 80, temporadasElite: 10 }), min('idoloDeClube'))).toBe('idoloDeClube');
-    expect(verdictOf(f({ temporadasElite: 9 }), 10)).toBe('titularDeSerieA');
+    const req = (id: string) => Object.fromEntries(cfg.veredito.find((v) => v.id === id)!.condicoes.map((c) => [c[0], c[2]])) as Ctx;
+    expect(verdictOf(f({ ...req('titularDeSerieA'), ...req('idoloDeClube') }), min('idoloDeClube'))).toBe('idoloDeClube');
+    expect(verdictOf(f(req('titularDeSerieA')), min('titularDeSerieA'))).toBe('titularDeSerieA');
+    expect(verdictOf(f({ temporadasElite: Number(req('titularDeSerieA').temporadasElite) - 1 }), min('titularDeSerieA'))).toBe('jogadorDeSerieB');
     expect(verdictOf(f({ convocacoesBase: 3 }), 5)).toBe('promessaQueNaoVingou');
     expect(verdictOf(f({ convocacoesBase: 3, convocacoes: 2 }), 5)).not.toBe('promessaQueNaoVingou');
+    // uma única convocação de base não faz uma "promessa" (mantém o veredito abaixo de 15% em toda origem)
+    expect(verdictOf(f({ convocacoesBase: 1 }), 5)).not.toBe('promessaQueNaoVingou');
+    expect(verdictOf(f({ convocacoesBase: 2 }), 5)).toBe('promessaQueNaoVingou');
     expect(verdictOf(f({ clubes: 7 }), 2)).toBe('rodadoDoInterior');
     expect(verdictOf(f(), 2)).toBe('jogadorDeSerieB');
   });
@@ -105,7 +111,31 @@ describe('veredito e rótulos (T40, SPEC 6.15)', () => {
     const ls = labelsOf(f({ semestresCamisa10Selecao: 4, semestresCapitaoSelecao: 2, clubes: 7, heroiDaCopa: true }));
     expect(ls.map((l) => l.id)).toEqual(['dezEFaixa', 'heroiDaCopa', 'rodado']);
     expect(ls[0]!.rarity).toBe('lendaria');
-    expect(labelsOf(f())).toEqual([]);
+  });
+
+  it('rótulo de reserva: quem não conquistou nenhum recebe um, e só um; quem conquistou não recebe', () => {
+    expect(RESERVE_LABELS.length).toBeGreaterThanOrEqual(3);
+    const none = labelsOf(f());
+    expect(none).toHaveLength(1);
+    expect(RESERVE_LABELS).toContain(none[0]!.id);
+    expect(none[0]!.rarity).toBe('comum');
+    for (const l of cfg.rotulosReserva) expect(labelsOf(f(Object.fromEntries(l.condicoes.map((c) => [c[0], c[2]]))))[0]!.id).toBe(l.id);
+    expect(labelsOf(f({ clubes: 8, jogos: 9999, anos: 99 })).map((l) => l.id)).toEqual(['rodado']);
+    for (const l of RESERVE_LABELS) {
+      expect((ptBR.rotulo as Record<string, string>)[l]).toBeTruthy();
+      expect((headlines.comentarioRotulo as Record<string, string[]>)[l]?.length).toBeGreaterThan(0);
+    }
+    expect(validateLegacyConfig({ ...cfg, rotulosReserva: cfg.rotulosReserva.slice(0, -1) })).not.toEqual([]);
+  });
+
+  it('rótulos raros: fronteiras calibradas na T40', () => {
+    const has = (id: string, facts: Ctx) => labelsOf(f(facts)).some((l) => l.id === id);
+    // clube formador + um profissional contam como "um clube só"
+    expect(has('idoloDeUmClubeSo', { clubes: 2, idolatriaMax: 75 })).toBe(true);
+    expect(has('idoloDeUmClubeSo', { clubes: 3, idolatriaMax: 90 })).toBe(false);
+    expect(has('idoloDeUmClubeSo', { clubes: 2, idolatriaMax: 74 })).toBe(false);
+    expect(has('ganhouMuitoEGastouTudo', { ganhoBRL: 2e7, fracaoGuardada: 0.75 })).toBe(true);
+    expect(has('ganhouMuitoEGastouTudo', { ganhoBRL: 2e7, fracaoGuardada: 0.76 })).toBe(false);
   });
 
   it('cada rótulo tem uma carreira que o ganha', () => {
@@ -132,6 +162,7 @@ describe('legado na carreira (T40, invariante 9.2)', () => {
       expect(r.legacy.score).toBeGreaterThanOrEqual(0);
       expect(r.legacy.score).toBeLessThanOrEqual(100);
       expect(VERDICTS).toContain(r.legacy.verdict);
+      expect(r.legacy.labels.length).toBeGreaterThan(0);
       expect(r.legacy).toEqual(legacyOf(r));
       const facts = legacyFacts(r);
       expect(facts.convocacoes).toBe(r.selection.caps);

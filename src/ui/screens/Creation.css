@@ -1,0 +1,200 @@
+/* T50 (SPEC 6.1, v2.30): criação em telas curtas. Cabeçalho com o passo, o conteúdo e as ações sempre embaixo; sem rolar em 390×844. */
+.criacao { min-block-size: 100dvh; display: grid; grid-template-columns: minmax(0, 1fr); }
+.criacao__form {
+  /* coluna: só o conteúdo do passo estica, e as ações ficam no pé da tela */
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-2);
+  inline-size: min(100%, 30rem);
+  margin-inline: auto;
+  padding: var(--espaco-3);
+}
+.criacao__topo { display: grid; gap: var(--espaco-2); }
+.criacao__progresso { font-size: var(--tipo-apoio); color: var(--cor-texto-suave); }
+.criacao__trilho { display: block; block-size: 6px; border-radius: 3px; background: var(--cor-trilho); overflow: hidden; }
+.criacao__trilho > span { display: block; block-size: 100%; background: var(--cor-destaque); }
+.criacao__titulo { font-size: var(--tipo-titulo); line-height: 1.1; }
+.criacao__titulo:focus { outline: none; }
+.criacao__titulo:focus-visible { outline: 3px solid var(--cor-foco); outline-offset: 2px; }
+
+.criacao__passo { flex: 1; align-content: start; display: grid; gap: var(--espaco-2); min-inline-size: 0; }
+.criacao__campo { display: grid; gap: 2px; min-inline-size: 0; }
+.criacao__campo label, .escolhas__rotulo { font-family: var(--fonte-texto); font-size: var(--tipo-apoio); font-weight: 700; }
+.criacao__campo input, .criacao__campo select {
+  inline-size: 100%;
+  min-block-size: var(--toque-compacto);
+  padding: 0 var(--espaco-3);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
+  border-radius: var(--forma-raio-cartao);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  font: inherit;
+  font-size: var(--tipo-opcao);
+}
+.criacao__campo [aria-invalid='true'] { border-color: var(--cor-negativo); }
+.criacao__dica { font-size: var(--tipo-apoio); color: var(--cor-texto-suave); }
+.criacao__erro { font-size: var(--tipo-apoio); font-weight: 700; color: var(--cor-negativo); }
+
+.criacao__acoes { display: grid; grid-template-columns: 1fr 2fr; gap: var(--espaco-2); }
+.criacao__botao {
+  min-block-size: var(--toque-minimo);
+  padding: 0 var(--espaco-3);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
+  border-radius: var(--forma-raio-cartao);
+  background: var(--cor-superficie);
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.criacao__botao--principal {
+  background: var(--cor-destaque);
+  color: var(--cor-sobre-destaque);
+  box-shadow: var(--forma-sombra-suave);
+}
+@media (hover: hover) {
+  .criacao__botao:hover { background: var(--cor-fundo); }
+  .criacao__botao--principal:hover { background: var(--cor-positivo); }
+}
+
+/* tela 1: figurinha ao vivo ao lado dos campos de identidade */
+.quem { display: grid; gap: 0.375rem; min-inline-size: 0; }
+.quem__topo { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--espaco-3); align-items: start; }
+.quem__campos { display: grid; gap: var(--espaco-1); min-inline-size: 0; }
+.quem__linha { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); gap: var(--espaco-2); }
+.criacao__previa { display: grid; justify-items: center; }
+
+/* visual: título com "Sortear" ao lado (v2.30) */
+.criacao__secao { display: grid; gap: 2px; min-inline-size: 0; }
+.criacao__secao h2 { font-size: 1.25rem; line-height: 1; }
+.criacao__secao-topo { display: flex; align-items: center; justify-content: space-between; gap: var(--espaco-2); }
+.criacao__sortear {
+  min-block-size: var(--toque-compacto);
+  padding: 0 var(--espaco-3);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
+  border-radius: var(--forma-raio-cartao);
+  background: var(--cor-superficie);
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+@media (hover: hover) { .criacao__sortear:hover { border-color: var(--cor-destaque); } }
+
+/* grupos de escolha: rótulo à esquerda, faixa à direita; rádio nativo escondido, a marca é o alvo de toque (48 px) */
+.escolhas { display: grid; grid-template-columns: 7rem minmax(0, 1fr); align-items: center; min-inline-size: 0; }
+.escolhas__erro { grid-column: 1 / -1; }
+/* uma faixa por grupo, que desliza para o lado: a tela inteira cabe em 390×844 sem rolar (o foco do teclado rola a faixa) */
+.escolhas__cabeca { display: grid; align-content: center; min-inline-size: 0; }
+.escolhas__escolhida { font-size: 0.8125rem; line-height: 1.15; color: var(--cor-texto-suave); }
+.escolhas__lista {
+  display: flex;
+  gap: var(--espaco-1);
+  position: relative; /* referência do offsetLeft das opções (revealChecked) */
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  margin-inline-end: calc(-1 * var(--espaco-3));
+  padding: 2px var(--espaco-3) 2px 2px;
+}
+.escolhas__lista::-webkit-scrollbar { display: none; }
+.escolha { scroll-snap-align: start; flex: none; position: relative; } /* prende o rádio escondido (absoluto) dentro da faixa */
+.escolha { display: inline-flex; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.escolha__marca {
+  display: inline-grid;
+  place-items: center;
+  min-block-size: var(--toque-compacto);
+  min-inline-size: var(--toque-compacto);
+  padding: 0 var(--espaco-2);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
+  border-radius: var(--forma-raio-cartao);
+  background: var(--cor-superficie);
+  font-size: var(--tipo-apoio);
+  font-weight: 700;
+  border-radius: 999px; /* opção curta (barba, faixa de texto): pílula */
+}
+.escolha--cor .escolha__marca { padding: 0; border-radius: 50%; }
+.escolha__amostra { inline-size: 1.5rem; block-size: 1.5rem; border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.25); }
+.escolha__input:checked + .escolha__marca { background: var(--cor-destaque); border-color: var(--cor-destaque); color: var(--cor-sobre-destaque); }
+/* anéis desenhados para dentro: a faixa rola (overflow) e cortaria um contorno para fora */
+.escolha--cor .escolha__input:checked + .escolha__marca { background: var(--cor-superficie); box-shadow: inset 0 0 0 4px var(--cor-destaque); }
+.escolha__input:focus-visible + .escolha__marca { outline: 3px solid var(--cor-foco); outline-offset: -5px; }
+@media (hover: hover) { .escolha:hover .escolha__marca { border-color: var(--cor-destaque); } }
+
+/* frase da escolha (efeito, traço): embaixo da faixa, na coluna das opções */
+.escolhas__dica { grid-column: 2; line-height: 1.25; }
+
+/* tela 2 (T50d): posição no campinho, depois as faixas */
+.campo { display: grid; gap: 0.375rem; min-inline-size: 0; }
+.escolhas--campo { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+.escolhas--campo .escolhas__dica, .escolhas--campo .escolhas__erro { grid-column: 1; }
+.escolhas--campo .escolhas__lista {
+  display: block;
+  block-size: 7rem;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  border-radius: var(--forma-raio-cartao);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
+  /* gramado em faixas, linha do meio e grande área: só fundo, sem informação */
+  background:
+    linear-gradient(90deg, transparent calc(50% - 1px), rgb(255 255 255 / 0.55) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
+    radial-gradient(circle at 50% 50%, transparent 1.4rem, rgb(255 255 255 / 0.55) 1.4rem calc(1.4rem + 2px), transparent calc(1.4rem + 2px)),
+    repeating-linear-gradient(90deg, var(--cor-destaque) 0 12.5%, var(--cor-positivo) 12.5% 25%);
+}
+.escolhas--campo .escolha { position: absolute; transform: translate(-50%, -50%); }
+.escolhas--campo [data-opcao='goleiro'] { left: 8%; top: 50%; }
+.escolhas--campo [data-opcao='zagueiro'] { left: 24%; top: 50%; }
+.escolhas--campo [data-opcao='lateral'] { left: 39%; top: 24%; }
+.escolhas--campo [data-opcao='volante'] { left: 52%; top: 66%; }
+.escolhas--campo [data-opcao='meia'] { left: 69%; top: 36%; }
+.escolhas--campo [data-opcao='atacante'] { left: 89%; top: 54%; }
+.escolhas--campo .escolha__marca { border-radius: 50%; padding: 0; font-family: var(--fonte-titulo); font-size: 0.95rem; }
+.escolhas--campo .escolha__input:checked + .escolha__marca { background: var(--cor-texto); color: var(--cor-superficie); box-shadow: 0 0 0 3px var(--cor-superficie); }
+
+/* altura: controle deslizante com o valor ao lado */
+.escolhas--altura { row-gap: 0; }
+.altura { display: flex; align-items: center; gap: var(--espaco-2); min-block-size: var(--toque-compacto); }
+.altura input { flex: 1; min-inline-size: 0; accent-color: var(--cor-destaque); }
+.altura__valor { min-inline-size: 3.5rem; font-weight: 700; font-variant-numeric: tabular-nums; text-align: end; }
+
+/* tela 3 (T50e): tipo de início em cartões empilhados, nome em cima e a frase embaixo */
+.origem { display: grid; gap: var(--espaco-2); }
+.escolhas--cartoes { grid-template-columns: minmax(0, 1fr); gap: var(--espaco-1); }
+.escolhas--cartoes .escolhas__lista { display: grid; gap: var(--espaco-2); overflow: visible; margin: 0; padding: 0; }
+.escolhas--cartoes .escolhas__erro { grid-column: 1; }
+.escolhas--cartoes .escolha {
+  display: grid;
+  gap: 2px;
+  padding: var(--espaco-3);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
+  border-radius: var(--forma-raio-cartao);
+  background: var(--cor-superficie);
+}
+.escolhas--cartoes .escolha__marca { all: unset; font-family: var(--fonte-titulo); font-size: 1.25rem; font-weight: 900; }
+.escolhas--cartoes .escolha__detalhe { font-size: var(--tipo-apoio); line-height: 1.35; color: var(--cor-texto-suave); }
+/* no cartão, a marcação é a borda: o nome não ganha o fundo de opção marcada das faixas */
+.escolhas--cartoes .escolha__input:checked + .escolha__marca { background: none; color: inherit; box-shadow: none; }
+.escolhas--cartoes .escolha:has(.escolha__input:checked) { border-color: var(--cor-destaque); box-shadow: inset 0 0 0 2px var(--cor-destaque), var(--forma-sombra-suave); }
+.escolhas--cartoes .escolha:has(.escolha__input:focus-visible) { outline: 3px solid var(--cor-foco); outline-offset: 2px; }
+
+/* computador (T50e, v2.30): "quem é ele" e "em campo" lado a lado numa página só */
+.criacao__coluna { display: grid; gap: var(--espaco-2); align-content: start; min-inline-size: 0; }
+.criacao__subtitulo { font-size: var(--tipo-titulo); line-height: 1.1; }
+/* os botões ficam sob a coluna da direita (mais curta): a página inteira cabe em 1280×800 */
+@media (min-width: 64rem) {
+  .criacao__form--larga {
+    display: grid;
+    inline-size: min(100%, 64rem);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas: "topo topo" "c1 c2" "c1 acoes";
+    column-gap: var(--espaco-6);
+    row-gap: var(--espaco-2);
+  }
+  .criacao__form--larga .criacao__topo { grid-area: topo; }
+  .criacao__form--larga .criacao__passo { display: contents; }
+  .criacao__form--larga .criacao__coluna:first-child { grid-area: c1; }
+  .criacao__form--larga .criacao__coluna + .criacao__coluna { grid-area: c2; }
+  .criacao__form--larga .criacao__acoes { grid-area: acoes; align-self: end; }
+}

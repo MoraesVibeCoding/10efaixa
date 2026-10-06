@@ -5,9 +5,11 @@ description: Arte do 10eFaixa — gera arte provisória em SVG no formato final 
 
 # Arte do 10eFaixa
 
-O jogo mostra uma cena ilustrada em toda decisão, montada pelo código a partir de peças SVG em camadas. Um ilustrador humano faz a arte final; até ela chegar, o jogo roda com **arte provisória gerada por esta skill no mesmo formato**, para que trocar provisória por final seja só substituir arquivos.
+O jogo mostra uma cena ilustrada em toda decisão, montada pelo código a partir de peças em camadas. A **arte final é pintada e gerada por IA** (SPEC v2.12): o usuário gera as imagens, esta skill escreve os prompts e confere os lotes. Até ela chegar, o jogo roda com **arte provisória em SVG gerada por esta skill**.
 
-**Fonte da verdade do formato:** `docs/briefing-arte.md` (seções 4 e 5: cores-chave, boneco-base, nomes, camadas, orçamento de peso; seção 6: lista de peças). Leia antes de qualquer uma das três funções. Se esta skill e o briefing divergirem, vale o briefing — e corrija a divergência.
+**Em transição:** o formato raster da arte final (briefing, seções 4–5) só vale depois do lote piloto (T42b) e do retrabalho do código (T43b–T45b). Até lá, validador, avatar e compositor usam o formato SVG do Apêndice A do briefing, e as Funções 1 e 3 abaixo se referem a ele.
+
+**Fonte da verdade do formato:** `docs/briefing-arte.md` (Apêndice A: formato SVG da provisória — cores-chave, boneco-base, nomes, camadas, peso; seções 4 e 5: formato da arte pintada; seção 6: lista de peças). Leia antes de qualquer uma das três funções. Se esta skill e o briefing divergirem, vale o briefing — e corrija a divergência.
 
 Regras do projeto que valem para toda peça (CLAUDE.md e SPEC seção 11): arte original, nada que lembre pessoa real, escudo, clube ou marca; aparência (pele, cabelo, barba, acessório) é só visual.
 
@@ -16,7 +18,7 @@ Regras do projeto que valem para toda peça (CLAUDE.md e SPEC seção 11): arte 
 ```
 src/assets/art/
   provisoria/   gerada por esta skill
-  final/        entregue pelo ilustrador (mesmos nomes e estrutura)
+  final/        arte pintada processada (mesmos nomes e estrutura)
 ```
 
 Mesma estrutura nas duas pastas, organizada por categoria do nome do arquivo (`pose/`, `cabelo/`, `cenario/`…). O código prefere `final/` e cai para `provisoria/` quando a peça final ainda não existe.
@@ -25,24 +27,24 @@ Mesma estrutura nas duas pastas, organizada por categoria do nome do arquivo (`p
 
 Objetivo: peças **funcionalmente idênticas** às finais (mesmos nomes, grupos, `id`, `data-pivo`, slots, cores-chave), visualmente simples. Não tente fazer arte bonita: formas geométricas legíveis bastam, porque o que importa é o código de avatar e cenas poder ser escrito e testado contra o formato real.
 
-1. Pegue a peça na lista do briefing (seção 6) e o formato na seção 5.
+1. Pegue a peça na lista do briefing (seção 6) e o formato no Apêndice A.
 2. Desenhe com primitivas (`rect`, `circle`, `ellipse`, `path` simples) no `viewBox` do boneco-base (400 × 800, pés em `y = 780`, centro `x = 200`) ou do cenário.
-3. Pinte áreas personalizáveis **só** com as cores-chave exatas da seção 4.1 (o recolor troca hex exato — uma cor parecida quebra a troca). O resto, só com a paleta do jogo.
-4. Grupos na ordem e com os `id` da seção 5.2; membros com `data-pivo`; cenários com os `slot-*`.
-5. Para lotes grandes, gere por script determinístico (mesma entrada, mesmo SVG) em vez de escrever arquivo por arquivo: fica reprodutível e revisável.
+3. Pinte áreas personalizáveis **só** com as cores-chave exatas do Apêndice A.1.1 (o recolor troca hex exato — uma cor parecida quebra a troca). O resto, só com a paleta do jogo.
+4. Grupos na ordem e com os `id` do Apêndice A.2.2; membros com `data-pivo`; cenários com os `slot-*`.
+5. Para lotes grandes, gere por script determinístico (mesma entrada, mesmo SVG) em vez de escrever arquivo por arquivo: fica reprodutível e revisável. O gerador do catálogo inteiro é `src/art/provisional.ts`; `npm run art:generate` recria `src/assets/art/provisoria/` (não edite à mão).
 6. Rode o validador (Função 3) na pasta `provisoria/`. Peça provisória que não passa no validador não serve para nada — o objetivo dela é exercitar o formato.
 
 ## Função 2 — Manter o briefing atualizado
 
-O briefing é o contrato com o ilustrador; ele precisa refletir o jogo real.
+O briefing é o guia de produção da arte (regras, formato, prompts-base e lista de peças); ele precisa refletir o jogo real. Os prompts completos por peça ficam em `docs/arte-prompts.md` e nunca citam pessoa, clube, marca ou artista.
 
 - Quando um evento novo pedir cena, pose ou detalhe que não está na seção 6, acrescente na lista e diga em qual lote entra.
 - Quando o formato mudar (ex.: orçamento de peso fechado na T43, cor nova na lista fixa), atualize as seções 4–5 e suba a versão no topo do documento com data e motivo.
-- Mudança de formato depois que o ilustrador começou afeta trabalho já pago: **pare e peça aprovação humana** antes, e registre a decisão na seção 17 do SPEC.
+- Mudança de formato depois que a geração começou joga fora imagens já feitas: **pare e peça aprovação humana** antes, e registre a decisão na seção 17 do SPEC.
 
 ## Função 3 — Conferir entregas
 
-Toda entrega (lote do ilustrador ou provisória) passa pelo validador automático antes da revisão visual. Regras em `src/art/format.json` (mude lá, nunca no código, e reflita no briefing):
+Toda entrega (lote gerado ou provisória) passa pelo validador automático antes da revisão visual. Regras em `src/art/format.json` (mude lá, nunca no código, e reflita no briefing):
 
 ```bash
 npm run art:check -- src/assets/art/final
@@ -50,7 +52,7 @@ npm run art:check -- src/assets/art/final
 
 O relatório aponta camada faltando, nome fora do padrão, cor não recolorível (fora da paleta/cores-chave) e peso acima do orçamento. Ao conferir um lote:
 
-1. Rode o validador e devolva ao ilustrador o relatório em linguagem clara (arquivo, problema, como corrigir), sem jargão de código.
+1. Rode o validador e devolva ao usuário o relatório em linguagem clara (arquivo, problema, como corrigir ou o que mudar no prompt), sem jargão de código.
 2. Só depois dos erros zerados, faça a revisão visual no jogo (cena montada no celular, ~360 px de largura): legibilidade, recolor de pele e uniforme em vários tons, proporção em alturas e compleições extremas.
 3. Confira as regras de originalidade da seção 2 do briefing — essa parte o script não pega.
 

@@ -1,0 +1,31 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="layout.css"><style>
+.app{display:grid;gap:14px;padding:18px var(--g) 22px}
+.topo{display:flex;justify-content:space-between;align-items:end;gap:10px}
+.sub{color:var(--suave);font-size:.95rem}
+.ofs{display:grid;gap:12px}
+/* cartão de proposta comparável (Copero, T51): mesmas linhas em todos */
+.of{display:grid;grid-template-columns:56px 1fr;gap:4px 12px;padding:12px;text-align:left;font:inherit;color:inherit;width:100%}
+.of .em{grid-row:1/3;width:56px;height:56px}
+.of .nome{font-family:'Big Shoulders';font-weight:900;font-size:1.35rem;line-height:1;text-transform:uppercase}
+.of .liga{color:var(--suave);font-size:.88rem}
+.of dl{grid-column:1/3;display:grid;grid-template-columns:1fr 1fr;gap:0;margin:8px 0 0;border-top:2px solid var(--tinta)}
+.of dl div:nth-child(odd){border-left:0!important}.of dl div:nth-child(n+3){border-top:1px solid var(--trilho)}
+.of dl div{padding:6px 8px 6px 0}.of dl div:nth-child(even){padding-left:10px}.of dl div+div{border-left:1px solid var(--trilho)}
+.of dt{font-size:.75rem;color:var(--suave)}.of dd{margin:0;font-weight:700;font-size:.95rem;line-height:1.2}
+.of .tag{grid-column:1/3;justify-self:start;margin-top:6px;padding:1px 8px;border-radius:999px;font-size:.8rem;font-weight:700;background:var(--papel);border:1.5px solid var(--tinta)}
+.of.atual{background:var(--papel);box-shadow:none;border-style:dashed}
+.nivel{display:inline-grid;grid-template-columns:repeat(5,8px);gap:2px;vertical-align:middle}.nivel s{height:8px;border:1.2px solid var(--tinta)}.nivel s.c{background:var(--verde);border-color:var(--verde)}
+</style></head><body><div class="app">
+<div><h1>Propostas</h1><p class="sub">Fim da temporada: três clubes querem você.</p></div>
+<div class="ofs">
+ <button class="of caixa"><svg class="em"><use href="#pal"/></svg><span class="nome">Palmeiras</span><span class="liga">Série A, São Paulo</span>
+  <dl><div><dt>Papel</dt><dd>Titular</dd></div><div><dt>Salário/mês</dt><dd>R$ 260 mil</dd></div><div><dt>Contrato</dt><dd>4 anos</dd></div><div><dt>Nível</dt><dd><span class="nivel"><s class=c></s><s class=c></s><s class=c></s><s class=c></s><s class=c></s></span></dd></div></dl></button>
+ <button class="of caixa"><svg class="em"><use href="#san"/></svg><span class="nome">Santos</span><span class="liga">Série A, litoral de São Paulo</span>
+  <dl><div><dt>Papel</dt><dd>Titular</dd></div><div><dt>Salário/mês</dt><dd>R$ 150 mil</dd></div><div><dt>Contrato</dt><dd>3 anos</dd></div><div><dt>Nível</dt><dd><span class="nivel"><s class=c></s><s class=c></s><s class=c></s><s class=c></s><s></s></span></dd></div></dl><span class="tag">Clube do coração</span></button>
+ <button class="of caixa"><svg class="em"><use href="#cfc"/></svg><span class="nome">Coritiba</span><span class="liga">Série A, Paraná</span>
+  <dl><div><dt>Papel</dt><dd>Craque do time</dd></div><div><dt>Salário/mês</dt><dd>R$ 120 mil</dd></div><div><dt>Contrato</dt><dd>2 anos</dd></div><div><dt>Nível</dt><dd><span class="nivel"><s class=c></s><s class=c></s><s class=c></s><s></s><s></s></span></dd></div></dl></button>
+ <button class="of caixa atual"><svg class="em"><use href="#fla"/></svg><span class="nome">Ficar no Flamengo</span><span class="liga">Mais 1 ano de contrato</span>
+  <dl><div><dt>Papel</dt><dd>Titular</dd></div><div><dt>Salário/mês</dt><dd>R$ 180 mil</dd></div><div><dt>Contrato</dt><dd>1 ano</dd></div><div><dt>Nível</dt><dd><span class="nivel"><s class=c></s><s class=c></s><s class=c></s><s class=c></s><s class=c></s></span></dd></div></dl></button>
+</div>
+</div><script src="pecas.js"></script></body></html>

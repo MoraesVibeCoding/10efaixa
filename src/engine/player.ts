@@ -3,6 +3,7 @@ import { ARCHETYPES, type Archetype } from './archetypes';
 import { CLUBS } from './clubs';
 import { BUILDS, applyBiotype, isHeightAllowed, rollGrowth, type Biotype, type Growth } from './biotype';
 import { checkName } from './nameFilter';
+import { MENTALITIES, mentalityEffects } from './mentality';
 import { overall, type Position } from './overall';
 import { pickWeighted, type Prng } from './prng';
 import data from '../data/creation.json';
@@ -21,6 +22,8 @@ export interface CreationInput {
   foot: string;
   /** Clube de coração (6.18): id de clube brasileiro ou null = "Nenhum". */
   heartClub: string | null;
+  /** Mentalidade (fominha, capitão, professor, máquina); ausente = neutra. */
+  mentality?: string;
 }
 
 export interface Player extends CreationInput {
@@ -55,6 +58,7 @@ function validate(i: CreationInput): string[] {
   if (!data.celebrations.includes(i.celebration)) errors.push('celebration.invalid');
   if (!data.feet.includes(i.foot)) errors.push('foot.invalid');
   if (!ORIGINS[i.origin]) errors.push('origin.invalid');
+  if (i.mentality !== undefined && !(MENTALITIES as readonly string[]).includes(i.mentality)) errors.push('mentality.invalid');
   if (i.heartClub !== null && !CLUBS.some((c) => c.id === i.heartClub)) errors.push('heartClub.invalid');
   return errors;
 }
@@ -97,6 +101,8 @@ export function createPlayer(input: CreationInput, rng: Prng): CreationResult {
   const { chance, countries } = data.dualNationality;
   const dualNationality = rng.next() < chance ? pickWeighted(rng, countries) : null;
   const growth = rollGrowth(rng);
+  const growthBonus = { ...(origin.growthBonus ?? {}) };
+  for (const [a, f] of Object.entries(mentalityEffects(input.mentality).growth)) growthBonus[a as keyof Attributes] = (growthBonus[a as keyof Attributes] ?? 1) * f;
 
   const ov = (x: Attributes) => overall(x, input.position, arch.overallWeightBonus);
   const baseCaps = fitOverall(shape(potential, arch, origin.profile), potential, (x) => ov(applyBiotype(x, input.biotype)));
@@ -107,6 +113,6 @@ export function createPlayer(input: CreationInput, rng: Prng): CreationResult {
 
   return {
     ok: true,
-    player: { ...input, startingOverall, potential, isDiamond, dualNationality, growth, growthBonus: origin.growthBonus ?? {}, attributes, baseCaps, caps },
+    player: { ...input, startingOverall, potential, isDiamond, dualNationality, growth, growthBonus, attributes, baseCaps, caps },
   };
 }

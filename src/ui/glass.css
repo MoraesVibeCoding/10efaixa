@@ -1,0 +1,30 @@
+/* T49g (SPEC 7, v2.34): vidro fosco, só em sobreposições e no máximo 2 camadas por tela.
+   Fallback primeiro: sem suporte a backdrop-filter, ou com pedido de menos transparência, a superfície é sólida.
+   Só tokens (theme.ts); sintaxe conferida na MDN (backdrop-filter, @supports, prefers-reduced-transparency). */
+.vidro {
+  background: var(--cor-superficie);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
+  box-shadow: var(--forma-sombra-suave);
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .vidro {
+    background: var(--vidro-fundo);
+    border-color: var(--vidro-borda);
+    -webkit-backdrop-filter: blur(var(--vidro-desfoque)) saturate(var(--vidro-saturacao));
+    backdrop-filter: blur(var(--vidro-desfoque)) saturate(var(--vidro-saturacao));
+  }
+}
+
+/* Melhoria progressiva: só Chrome e Edge 118+ entendem hoje; nos demais vale o @supports acima. */
+@media (prefers-reduced-transparency: reduce) {
+  .vidro {
+    background: var(--cor-superficie);
+    border-color: var(--cor-linha);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* Fundo escurecido atrás do modal de revelação. */
+.vidro-scrim { background: var(--vidro-scrim); }

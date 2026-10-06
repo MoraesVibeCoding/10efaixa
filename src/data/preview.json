@@ -1,0 +1,35 @@
+{
+ "_nota": "Prévia de consequências por opção (T41b, SPEC v2.14). intensidade: limites da fração do efeito sobre a faixa do campo (abaixo do 1º = 1, abaixo do 2º = 2, senão 3). papel: estrelas de minutos previstos. salario: razão entre o salário da proposta e o atual.",
+ "intensidade": [
+  0.03,
+  0.08
+ ],
+ "papel": {
+  "titular": 3,
+  "rodizio": 2,
+  "aposta": 1
+ },
+ "salario": {
+  "menor": 0.9,
+  "maior": 1.1,
+  "muitoMaior": 2
+ },
+ "unidade": {
+  "_nota": "como o ganho ou a perda real de cada campo aparece no resultado da escolha: pontos100 = campo de 0 a 1 mostrado em pontos de 0 a 100",
+  "moral": "pontos100",
+  "relacaoTecnico": "pontos100",
+  "disciplina": "pontos100",
+  "prestigio": "pontos100",
+  "idolatria": "pontos",
+  "idolatriaCoracao": "pontos",
+  "patrimonio": "dinheiro",
+  "salarioFator": "porcento"
+ },
+ "resultadoMs": 2600,
+ "risco": {
+  "_nota": "Faixa de risco em palavras (SPEC v2.23: nunca percentual). Limite superior exclusivo de cada faixa; acima do último, muitoAlto.",
+  "baixo": 0.1,
+  "medio": 0.25,
+  "alto": 0.4
+ }
+}

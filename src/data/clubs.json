@@ -1,5 +1,5 @@
 {
- "_nota": "Clubes 2026 (SPEC 6.9, 11: nomes reais, escudo estilizado com sigla e cores). 'reputacao' (1–100) é estimativa de balanceamento, não dado oficial; 'cores' são aproximações para o uniforme (Série D: marinho/branco provisório até conferência). Rivais manuais só nas Séries A e B; rivais por cidade das Séries C e D são calculados pelo motor (cidade null = incerta, sem rival automático). Série D é divisão aberta, remontada pelos estaduais (T18). Clubes com divisao null disputam só o estadual (elite ou divisão de acesso); cores provisórias.",
+ "_nota": "Clubes 2026 (SPEC 6.9, 11: nomes reais, escudo estilizado com sigla e cores). 'reputacao' (1–100) é estimativa de balanceamento, não dado oficial; 'cores' são aproximações para o uniforme (T50j, 2026-10-06: estimativa do assistente; as prováveis e as desconhecidas estão em coresRevisao.json, e as desconhecidas seguem no marinho/branco provisório). Rivais manuais só nas Séries A e B; rivais por cidade das Séries C e D são calculados pelo motor (cidade null = incerta, sem rival automático). Série D é divisão aberta, remontada pelos estaduais (T18). Clubes com divisao null disputam só o estadual (elite ou divisão de acesso). artigo: \"a\" nos clubes de nome feminino (\"meia da Portuguesa\"); sem o campo, masculino (T49c).",
  "fonte": {
   "serieA": "https://www.cbf.com.br/futebol-brasileiro/tabelas/campeonato-brasileiro/serie-a/2026",
   "serieB": "https://www.cbf.com.br/futebol-brasileiro/tabelas/campeonato-brasileiro/serie-b/2026",
@@ -338,7 +338,8 @@
    ],
    "reputacao": 65,
    "divisao": "A",
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "vila-nova",
@@ -638,7 +639,8 @@
    ],
    "reputacao": 60,
    "divisao": "B",
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "botafogo-pb",
@@ -680,7 +682,8 @@
    ],
    "reputacao": 48,
    "divisao": "C",
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "maringa",
@@ -722,7 +725,8 @@
    ],
    "reputacao": 44,
    "divisao": "C",
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "paysandu",
@@ -922,12 +926,12 @@
   },
   {
    "id": "nacional-am",
-   "nome": "Nacional",
+   "nome": "Nacional-AM",
    "sigla": "NAC",
    "uf": "AM",
    "cidade": "Manaus",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 40,
@@ -941,8 +945,8 @@
    "uf": "AM",
    "cidade": "Manaus",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#0047AB"
    ],
    "reputacao": 34,
    "divisao": "D",
@@ -955,8 +959,8 @@
    "uf": "AM",
    "cidade": "Manaus",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#C8102E"
    ],
    "reputacao": 28,
    "divisao": "D",
@@ -969,7 +973,7 @@
    "uf": "RR",
    "cidade": "Boa Vista",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -983,8 +987,8 @@
    "uf": "RR",
    "cidade": "Boa Vista",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#0047AB"
    ],
    "reputacao": 22,
    "divisao": "D",
@@ -997,8 +1001,8 @@
    "uf": "RR",
    "cidade": "Boa Vista",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#00843D"
    ],
    "reputacao": 26,
    "divisao": "D",
@@ -1011,8 +1015,8 @@
    "uf": "AC",
    "cidade": "Rio Branco",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#FFD100"
    ],
    "reputacao": 24,
    "divisao": "D",
@@ -1025,8 +1029,8 @@
    "uf": "AC",
    "cidade": "Rio Branco",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#00843D"
    ],
    "reputacao": 22,
    "divisao": "D",
@@ -1039,8 +1043,8 @@
    "uf": "AC",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#FFD100"
    ],
    "reputacao": 20,
    "divisao": "D",
@@ -1053,8 +1057,8 @@
    "uf": "RO",
    "cidade": "Porto Velho",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#00843D"
    ],
    "reputacao": 24,
    "divisao": "D",
@@ -1067,8 +1071,8 @@
    "uf": "RO",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#0047AB"
    ],
    "reputacao": 22,
    "divisao": "D",
@@ -1081,8 +1085,8 @@
    "uf": "TO",
    "cidade": "Araguaína",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#0047AB"
    ],
    "reputacao": 24,
    "divisao": "D",
@@ -1095,7 +1099,7 @@
    "uf": "DF",
    "cidade": "Brasília",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 38,
@@ -1109,8 +1113,8 @@
    "uf": "DF",
    "cidade": "Brasília",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#00843D"
    ],
    "reputacao": 38,
    "divisao": "D",
@@ -1123,7 +1127,7 @@
    "uf": "MT",
    "cidade": "Lucas do Rio Verde",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 34,
@@ -1132,13 +1136,13 @@
   },
   {
    "id": "primavera-mt",
-   "nome": "Primavera",
+   "nome": "Primavera-MT",
    "sigla": "PRI",
    "uf": "MT",
    "cidade": "Primavera do Leste",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#0047AB"
    ],
    "reputacao": 24,
    "divisao": "D",
@@ -1151,8 +1155,8 @@
    "uf": "GO",
    "cidade": "Inhumas",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#FFD100"
    ],
    "reputacao": 22,
    "divisao": "D",
@@ -1165,12 +1169,13 @@
    "uf": "GO",
    "cidade": "Aparecida de Goiânia",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#FFD100"
    ],
    "reputacao": 34,
    "divisao": "D",
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "capital-df",
@@ -1179,8 +1184,8 @@
    "uf": "DF",
    "cidade": "Brasília",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#00843D"
    ],
    "reputacao": 28,
    "divisao": "D",
@@ -1193,8 +1198,8 @@
    "uf": "DF",
    "cidade": "Brasília",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#FFD100"
    ],
    "reputacao": 28,
    "divisao": "D",
@@ -1207,7 +1212,7 @@
    "uf": "MT",
    "cidade": "Cuiabá",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 32,
@@ -1221,7 +1226,7 @@
    "uf": "MT",
    "cidade": "Várzea Grande",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 28,
@@ -1235,8 +1240,8 @@
    "uf": "MT",
    "cidade": "Rondonópolis",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#0047AB"
    ],
    "reputacao": 26,
    "divisao": "D",
@@ -1249,8 +1254,8 @@
    "uf": "GO",
    "cidade": "Goiatuba",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#FFD100"
    ],
    "reputacao": 24,
    "divisao": "D",
@@ -1263,8 +1268,8 @@
    "uf": "AP",
    "cidade": "Macapá",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#FFD100"
    ],
    "reputacao": 24,
    "divisao": "D",
@@ -1277,8 +1282,8 @@
    "uf": "AP",
    "cidade": "Macapá",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#0047AB"
    ],
    "reputacao": 22,
    "divisao": "D",
@@ -1291,12 +1296,13 @@
    "uf": "PA",
    "cidade": "Belém",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#0047AB"
    ],
    "reputacao": 34,
    "divisao": "D",
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "aguia-de-maraba",
@@ -1305,7 +1311,7 @@
    "uf": "PA",
    "cidade": "Marabá",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 30,
@@ -1319,7 +1325,7 @@
    "uf": "TO",
    "cidade": "Tocantinópolis",
    "cores": [
-    "#14213D",
+    "#FFD100",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -1333,7 +1339,7 @@
    "uf": "MA",
    "cidade": "Imperatriz",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 30,
@@ -1347,8 +1353,8 @@
    "uf": "MA",
    "cidade": "São Luís",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#00843D"
    ],
    "reputacao": 48,
    "divisao": "D",
@@ -1361,8 +1367,8 @@
    "uf": "MA",
    "cidade": "São Luís",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#000000"
    ],
    "reputacao": 34,
    "divisao": "D",
@@ -1375,7 +1381,7 @@
    "uf": "MA",
    "cidade": "São Luís",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -1389,8 +1395,8 @@
    "uf": "CE",
    "cidade": "Maracanaú",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#FFD100"
    ],
    "reputacao": 24,
    "divisao": "D",
@@ -1403,8 +1409,8 @@
    "uf": "CE",
    "cidade": "Iguatu",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#FFD100"
    ],
    "reputacao": 28,
    "divisao": "D",
@@ -1417,8 +1423,8 @@
    "uf": "PI",
    "cidade": "Parnaíba",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#0047AB"
    ],
    "reputacao": 24,
    "divisao": "D",
@@ -1431,8 +1437,8 @@
    "uf": "CE",
    "cidade": "Fortaleza",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#000000"
    ],
    "reputacao": 38,
    "divisao": "D",
@@ -1445,8 +1451,8 @@
    "uf": "CE",
    "cidade": "Fortaleza",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#FFD100"
    ],
    "reputacao": 22,
    "divisao": "D",
@@ -1459,8 +1465,8 @@
    "uf": "CE",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#FFD100"
    ],
    "reputacao": 26,
    "divisao": "D",
@@ -1473,8 +1479,8 @@
    "uf": "PI",
    "cidade": "Altos",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#00843D"
    ],
    "reputacao": 30,
    "divisao": "D",
@@ -1487,8 +1493,8 @@
    "uf": "PI",
    "cidade": "Teresina",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#0047AB"
    ],
    "reputacao": 26,
    "divisao": "D",
@@ -1501,8 +1507,8 @@
    "uf": "PI",
    "cidade": "Teresina",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#FFD100"
    ],
    "reputacao": 28,
    "divisao": "D",
@@ -1515,8 +1521,8 @@
    "uf": "RN",
    "cidade": "Natal",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#000000"
    ],
    "reputacao": 52,
    "divisao": "D",
@@ -1529,7 +1535,7 @@
    "uf": "RN",
    "cidade": "Natal",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 44,
@@ -1543,8 +1549,8 @@
    "uf": "RN",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#00843D"
    ],
    "reputacao": 22,
    "divisao": "D",
@@ -1557,8 +1563,8 @@
    "uf": "PB",
    "cidade": "Sousa",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#000000",
+    "#C8102E"
    ],
    "reputacao": 30,
    "divisao": "D",
@@ -1571,7 +1577,7 @@
    "uf": "PE",
    "cidade": null,
    "cores": [
-    "#14213D",
+    "#FFD100",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -1585,7 +1591,7 @@
    "uf": "PE",
    "cidade": "Caruaru",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 34,
@@ -1599,7 +1605,7 @@
    "uf": "PE",
    "cidade": null,
    "cores": [
-    "#14213D",
+    "#FFD100",
     "#FFFFFF"
    ],
    "reputacao": 32,
@@ -1613,8 +1619,8 @@
    "uf": "PE",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#0047AB"
    ],
    "reputacao": 22,
    "divisao": "D",
@@ -1627,8 +1633,8 @@
    "uf": "PB",
    "cidade": "Serra Branca",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#000000",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": "D",
@@ -1641,7 +1647,7 @@
    "uf": "PB",
    "cidade": "Campina Grande",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 42,
@@ -1655,8 +1661,8 @@
    "uf": "SE",
    "cidade": "Lagarto",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#0047AB"
    ],
    "reputacao": 26,
    "divisao": "D",
@@ -1669,7 +1675,7 @@
    "uf": "SE",
    "cidade": "Aracaju",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 34,
@@ -1683,7 +1689,7 @@
    "uf": "AL",
    "cidade": "Arapiraca",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 38,
@@ -1697,7 +1703,7 @@
    "uf": "AL",
    "cidade": "Maceió",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 52,
@@ -1711,8 +1717,8 @@
    "uf": "AL",
    "cidade": "Palmeira dos Índios",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#C8102E"
    ],
    "reputacao": 26,
    "divisao": "D",
@@ -1725,8 +1731,8 @@
    "uf": "BA",
    "cidade": "Riachão do Jacuípe",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 30,
    "divisao": "D",
@@ -1739,7 +1745,7 @@
    "uf": "BA",
    "cidade": "Alagoinhas",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 30,
@@ -1753,7 +1759,7 @@
    "uf": "BA",
    "cidade": "Juazeiro",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 32,
@@ -1767,7 +1773,7 @@
    "uf": "MG",
    "cidade": "Uberlândia",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 34,
@@ -1781,8 +1787,8 @@
    "uf": "MG",
    "cidade": "Betim",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 26,
    "divisao": "D",
@@ -1795,8 +1801,8 @@
    "uf": "GO",
    "cidade": "Catalão",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#00843D"
    ],
    "reputacao": 30,
    "divisao": "D",
@@ -1809,8 +1815,8 @@
    "uf": "GO",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#FFD100"
    ],
    "reputacao": 22,
    "divisao": "D",
@@ -1823,7 +1829,7 @@
    "uf": "MS",
    "cidade": "Campo Grande",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 32,
@@ -1837,8 +1843,8 @@
    "uf": "MS",
    "cidade": "Ivinhema",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#00843D"
    ],
    "reputacao": 22,
    "divisao": "D",
@@ -1846,13 +1852,13 @@
   },
   {
    "id": "porto-ba",
-   "nome": "Porto",
+   "nome": "Porto-BA",
    "sigla": "POT",
    "uf": "BA",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#0047AB"
    ],
    "reputacao": 24,
    "divisao": "D",
@@ -1865,7 +1871,7 @@
    "uf": "ES",
    "cidade": null,
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 32,
@@ -1879,7 +1885,7 @@
    "uf": "ES",
    "cidade": "Vitória",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 30,
@@ -1893,8 +1899,8 @@
    "uf": "ES",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#0047AB"
    ],
    "reputacao": 26,
    "divisao": "D",
@@ -1907,8 +1913,8 @@
    "uf": "MG",
    "cidade": "Tombos",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 40,
    "divisao": "D",
@@ -1921,7 +1927,7 @@
    "uf": "MG",
    "cidade": "Governador Valadares",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 30,
@@ -1935,8 +1941,8 @@
    "uf": "RJ",
    "cidade": "Rio de Janeiro",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#0047AB"
    ],
    "reputacao": 38,
    "divisao": "D",
@@ -1949,12 +1955,13 @@
    "uf": "RJ",
    "cidade": "Rio de Janeiro",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#00843D"
    ],
    "reputacao": 32,
    "divisao": "D",
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "america-rj",
@@ -1963,7 +1970,7 @@
    "uf": "RJ",
    "cidade": "Rio de Janeiro",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 36,
@@ -1977,12 +1984,13 @@
    "uf": "SP",
    "cidade": "São Paulo",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#00843D"
    ],
    "reputacao": 46,
    "divisao": "D",
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "agua-santa",
@@ -1991,7 +1999,7 @@
    "uf": "SP",
    "cidade": "Diadema",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 34,
@@ -2005,8 +2013,8 @@
    "uf": "MG",
    "cidade": "Pouso Alegre",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 28,
    "divisao": "D",
@@ -2019,8 +2027,8 @@
    "uf": "RJ",
    "cidade": "Nova Iguaçu",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#F37021",
+    "#0047AB"
    ],
    "reputacao": 34,
    "divisao": "D",
@@ -2033,8 +2041,8 @@
    "uf": "RJ",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#0047AB"
    ],
    "reputacao": 28,
    "divisao": "D",
@@ -2047,7 +2055,7 @@
    "uf": "RJ",
    "cidade": "Maricá",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 28,
@@ -2061,7 +2069,7 @@
    "uf": "SP",
    "cidade": "Piracicaba",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 38,
@@ -2075,7 +2083,7 @@
    "uf": "SP",
    "cidade": "Bauru",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 36,
@@ -2089,8 +2097,8 @@
    "uf": "SP",
    "cidade": "Rio Claro",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#000000",
+    "#C8102E"
    ],
    "reputacao": 32,
    "divisao": "D",
@@ -2103,7 +2111,7 @@
    "uf": "PR",
    "cidade": "Cianorte",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 30,
@@ -2117,8 +2125,8 @@
    "uf": "PR",
    "cidade": "Cascavel",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#00843D"
    ],
    "reputacao": 32,
    "divisao": "D",
@@ -2131,7 +2139,7 @@
    "uf": "SC",
    "cidade": null,
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 26,
@@ -2145,8 +2153,8 @@
    "uf": "SC",
    "cidade": "Joinville",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#000000"
    ],
    "reputacao": 44,
    "divisao": "D",
@@ -2159,7 +2167,7 @@
    "uf": "RS",
    "cidade": "Bagé",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 28,
@@ -2173,8 +2181,8 @@
    "uf": "RS",
    "cidade": "Ijuí",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#FFD100"
    ],
    "reputacao": 30,
    "divisao": "D",
@@ -2187,7 +2195,7 @@
    "uf": "SC",
    "cidade": "Blumenau",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 28,
@@ -2201,8 +2209,8 @@
    "uf": "SC",
    "cidade": "Itajaí",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#00843D"
    ],
    "reputacao": 34,
    "divisao": "D",
@@ -2215,8 +2223,8 @@
    "uf": "PR",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#00843D"
    ],
    "reputacao": 24,
    "divisao": "D",
@@ -2229,7 +2237,7 @@
    "uf": "PR",
    "cidade": null,
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 26,
@@ -2243,8 +2251,8 @@
    "uf": "RS",
    "cidade": "Porto Alegre",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#C8102E"
    ],
    "reputacao": 34,
    "divisao": "D",
@@ -2257,8 +2265,8 @@
    "uf": "RS",
    "cidade": "Pelotas",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#000000"
    ],
    "reputacao": 44,
    "divisao": "D",
@@ -2271,8 +2279,8 @@
    "uf": "SP",
    "cidade": "Capivari",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#000000"
    ],
    "reputacao": 30,
    "divisao": null,
@@ -2280,13 +2288,13 @@
   },
   {
    "id": "primavera-sp",
-   "nome": "Primavera",
+   "nome": "Primavera-SP",
    "sigla": "PRM",
    "uf": "SP",
    "cidade": "Indaiatuba",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#000000"
    ],
    "reputacao": 30,
    "divisao": null,
@@ -2299,7 +2307,7 @@
    "uf": "RJ",
    "cidade": "Rio de Janeiro",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 30,
@@ -2313,8 +2321,8 @@
    "uf": "RJ",
    "cidade": "Saquarema",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#0047AB"
    ],
    "reputacao": 30,
    "divisao": null,
@@ -2327,8 +2335,8 @@
    "uf": "MG",
    "cidade": "Patos de Minas",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 30,
    "divisao": null,
@@ -2341,8 +2349,8 @@
    "uf": "MG",
    "cidade": "Itabirito",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 30,
    "divisao": null,
@@ -2355,8 +2363,8 @@
    "uf": "MG",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 30,
    "divisao": null,
@@ -2369,8 +2377,8 @@
    "uf": "RS",
    "cidade": "Santa Cruz do Sul",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#FFD100"
    ],
    "reputacao": 30,
    "divisao": null,
@@ -2383,8 +2391,8 @@
    "uf": "RS",
    "cidade": "Novo Hamburgo",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#C8102E"
    ],
    "reputacao": 30,
    "divisao": null,
@@ -2397,8 +2405,8 @@
    "uf": "RS",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#00843D"
    ],
    "reputacao": 30,
    "divisao": null,
@@ -2411,7 +2419,7 @@
    "uf": "RS",
    "cidade": "Santa Maria",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 30,
@@ -2425,8 +2433,8 @@
    "uf": "PR",
    "cidade": "Foz do Iguaçu",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#00843D"
    ],
    "reputacao": 30,
    "divisao": null,
@@ -2439,8 +2447,8 @@
    "uf": "PR",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#00843D"
    ],
    "reputacao": 30,
    "divisao": null,
@@ -2453,7 +2461,7 @@
    "uf": "PR",
    "cidade": "Maringá",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 30,
@@ -2467,8 +2475,8 @@
    "uf": "SC",
    "cidade": "Camboriú",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#00843D"
    ],
    "reputacao": 30,
    "divisao": null,
@@ -2481,7 +2489,7 @@
    "uf": "SC",
    "cidade": "Concórdia",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 30,
@@ -2495,8 +2503,8 @@
    "uf": "SC",
    "cidade": "Brusque",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#00843D"
    ],
    "reputacao": 30,
    "divisao": null,
@@ -2504,12 +2512,12 @@
   },
   {
    "id": "barcelona-ba",
-   "nome": "Barcelona",
+   "nome": "Barcelona-BA",
    "sigla": "BAC",
    "uf": "BA",
    "cidade": null,
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 30,
@@ -2523,7 +2531,7 @@
    "uf": "BA",
    "cidade": "Feira de Santana",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 30,
@@ -2537,7 +2545,7 @@
    "uf": "BA",
    "cidade": "Salvador",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 30,
@@ -2551,8 +2559,8 @@
    "uf": "BA",
    "cidade": "Jequié",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#C8102E"
    ],
    "reputacao": 30,
    "divisao": null,
@@ -2565,7 +2573,7 @@
    "uf": "PE",
    "cidade": null,
    "cores": [
-    "#14213D",
+    "#FFD100",
     "#FFFFFF"
    ],
    "reputacao": 30,
@@ -2579,8 +2587,8 @@
    "uf": "PE",
    "cidade": "Vitória de Santo Antão",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 30,
    "divisao": null,
@@ -2593,8 +2601,8 @@
    "uf": "GO",
    "cidade": "Jataí",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#FFD100"
    ],
    "reputacao": 30,
    "divisao": null,
@@ -2607,8 +2615,8 @@
    "uf": "GO",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#0047AB"
    ],
    "reputacao": 30,
    "divisao": null,
@@ -2621,12 +2629,13 @@
    "uf": "GO",
    "cidade": "Anápolis",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#FFD100"
    ],
    "reputacao": 30,
    "divisao": null,
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "taubate",
@@ -2635,7 +2644,7 @@
    "uf": "SP",
    "cidade": "Taubaté",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -2649,8 +2658,8 @@
    "uf": "SP",
    "cidade": "São José dos Campos",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#000000"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -2663,7 +2672,7 @@
    "uf": "SP",
    "cidade": "Santo André",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -2677,7 +2686,7 @@
    "uf": "SP",
    "cidade": "Presidente Prudente",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -2691,7 +2700,7 @@
    "uf": "SP",
    "cidade": null,
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -2700,12 +2709,12 @@
   },
   {
    "id": "juventus-sp",
-   "nome": "Juventus",
+   "nome": "Juventus-SP",
    "sigla": "JUE",
    "uf": "SP",
    "cidade": "São Paulo",
    "cores": [
-    "#14213D",
+    "#7A1E3A",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -2719,7 +2728,7 @@
    "uf": "SP",
    "cidade": "Lins",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -2733,8 +2742,8 @@
    "uf": "SP",
    "cidade": "Votuporanga",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#000000"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -2747,8 +2756,8 @@
    "uf": "SP",
    "cidade": "Sorocaba",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#000000",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -2761,8 +2770,8 @@
    "uf": "SP",
    "cidade": "Sertãozinho",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#000000",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -2775,7 +2784,7 @@
    "uf": "SP",
    "cidade": "Monte Azul Paulista",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -2789,7 +2798,7 @@
    "uf": "RJ",
    "cidade": "Campos dos Goytacazes",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -2803,8 +2812,8 @@
    "uf": "RJ",
    "cidade": "Araruama",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#0047AB"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -2817,8 +2826,8 @@
    "uf": "RJ",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#0047AB"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -2831,8 +2840,8 @@
    "uf": "RJ",
    "cidade": "Rio de Janeiro",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#0047AB"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -2845,12 +2854,13 @@
    "uf": "RJ",
    "cidade": "Cabo Frio",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 22,
    "divisao": null,
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "olaria",
@@ -2859,7 +2869,7 @@
    "uf": "RJ",
    "cidade": "Rio de Janeiro",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -2873,7 +2883,7 @@
    "uf": "RJ",
    "cidade": null,
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -2887,8 +2897,8 @@
    "uf": "RJ",
    "cidade": "Resende",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#0047AB"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -2901,7 +2911,7 @@
    "uf": "RJ",
    "cidade": "São Gonçalo",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -2915,8 +2925,8 @@
    "uf": "RJ",
    "cidade": "Petrópolis",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#0047AB"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -2929,7 +2939,7 @@
    "uf": "MG",
    "cidade": null,
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -2943,7 +2953,7 @@
    "uf": "MG",
    "cidade": "Nova Lima",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -2957,7 +2967,7 @@
    "uf": "MG",
    "cidade": "Sete Lagoas",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -2971,8 +2981,8 @@
    "uf": "MG",
    "cidade": "Ipatinga",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -2985,8 +2995,8 @@
    "uf": "MG",
    "cidade": "Patrocínio",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -2999,8 +3009,8 @@
    "uf": "MG",
    "cidade": "Patos de Minas",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3013,8 +3023,8 @@
    "uf": "MG",
    "cidade": "Itabira",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3027,7 +3037,7 @@
    "uf": "MG",
    "cidade": "Uberaba",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -3041,7 +3051,7 @@
    "uf": "MG",
    "cidade": "Divinópolis",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -3055,12 +3065,13 @@
    "uf": "MG",
    "cidade": "Poços de Caldas",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 22,
    "divisao": null,
-   "rivais": []
+   "rivais": [],
+   "artigo": "a"
   },
   {
    "id": "coimbra",
@@ -3069,8 +3080,8 @@
    "uf": "MG",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3083,8 +3094,8 @@
    "uf": "MG",
    "cidade": "Varginha",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3097,8 +3108,8 @@
    "uf": "RS",
    "cidade": "São Leopoldo",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3111,8 +3122,8 @@
    "uf": "RS",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3125,8 +3136,8 @@
    "uf": "RS",
    "cidade": "Bagé",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#000000"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3139,8 +3150,8 @@
    "uf": "RS",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#00843D"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3153,8 +3164,8 @@
    "uf": "RS",
    "cidade": "Bento Gonçalves",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#00843D"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3167,8 +3178,8 @@
    "uf": "RS",
    "cidade": "Passo Fundo",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#00843D"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3181,8 +3192,8 @@
    "uf": "RS",
    "cidade": "Vacaria",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#FFD100"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3195,8 +3206,8 @@
    "uf": "RS",
    "cidade": "Gramado",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3209,8 +3220,8 @@
    "uf": "RS",
    "cidade": "Venâncio Aires",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3223,8 +3234,8 @@
    "uf": "RS",
    "cidade": "Lajeado",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3237,8 +3248,8 @@
    "uf": "RS",
    "cidade": "Passo Fundo",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#00843D"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3251,8 +3262,8 @@
    "uf": "RS",
    "cidade": "Pelotas",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#FFD100"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3265,8 +3276,8 @@
    "uf": "RS",
    "cidade": "Santa Cruz do Sul",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3279,8 +3290,8 @@
    "uf": "RS",
    "cidade": "Frederico Westphalen",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#00843D"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3293,8 +3304,8 @@
    "uf": "RS",
    "cidade": "Veranópolis",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3307,7 +3318,7 @@
    "uf": "PR",
    "cidade": "Araucária",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -3321,8 +3332,8 @@
    "uf": "PR",
    "cidade": "Guarapuava",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#00843D"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3335,8 +3346,8 @@
    "uf": "PR",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#F37021",
+    "#000000"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3349,8 +3360,8 @@
    "uf": "PR",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#00843D"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3363,8 +3374,8 @@
    "uf": "PR",
    "cidade": "Curitiba",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3377,7 +3388,7 @@
    "uf": "PR",
    "cidade": "Paranavaí",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -3391,7 +3402,7 @@
    "uf": "PR",
    "cidade": null,
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -3405,8 +3416,8 @@
    "uf": "PR",
    "cidade": "Prudentópolis",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#00843D"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3419,7 +3430,7 @@
    "uf": "PR",
    "cidade": "Paranaguá",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -3433,7 +3444,7 @@
    "uf": "PR",
    "cidade": "Toledo",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -3447,8 +3458,8 @@
    "uf": "SC",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#00843D"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3461,8 +3472,8 @@
    "uf": "SC",
    "cidade": "Joinville",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3475,8 +3486,8 @@
    "uf": "SC",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#00843D"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3489,8 +3500,8 @@
    "uf": "SC",
    "cidade": "Tubarão",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3503,8 +3514,8 @@
    "uf": "SC",
    "cidade": "Jaraguá do Sul",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3517,7 +3528,7 @@
    "uf": "SC",
    "cidade": "Jaraguá do Sul",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -3531,8 +3542,8 @@
    "uf": "SC",
    "cidade": "Blumenau",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3545,8 +3556,8 @@
    "uf": "SC",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#00843D"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3559,7 +3570,7 @@
    "uf": "SC",
    "cidade": "Tubarão",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -3573,8 +3584,8 @@
    "uf": "BA",
    "cidade": "Salvador",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3587,8 +3598,8 @@
    "uf": "BA",
    "cidade": "Barreiras",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3601,8 +3612,8 @@
    "uf": "BA",
    "cidade": "Camaçari",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3615,8 +3626,8 @@
    "uf": "BA",
    "cidade": "Vitória da Conquista",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#0047AB"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3629,8 +3640,8 @@
    "uf": "BA",
    "cidade": "Feira de Santana",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3643,8 +3654,8 @@
    "uf": "BA",
    "cidade": "Feira de Santana",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#0047AB"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3657,8 +3668,8 @@
    "uf": "BA",
    "cidade": "Itabuna",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3671,8 +3682,8 @@
    "uf": "BA",
    "cidade": "Jacobina",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3685,7 +3696,7 @@
    "uf": "BA",
    "cidade": null,
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -3699,8 +3710,8 @@
    "uf": "BA",
    "cidade": "Salvador",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3713,8 +3724,8 @@
    "uf": "PE",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#FFD100"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3727,8 +3738,8 @@
    "uf": "PE",
    "cidade": "Recife",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#FFD100"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3741,8 +3752,8 @@
    "uf": "PE",
    "cidade": "Belo Jardim",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#FFD100"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3755,8 +3766,8 @@
    "uf": "PE",
    "cidade": "Caruaru",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#0047AB"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3769,8 +3780,8 @@
    "uf": "PE",
    "cidade": "Limoeiro",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#0047AB"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3783,8 +3794,8 @@
    "uf": "PE",
    "cidade": "Ipojuca",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3797,8 +3808,8 @@
    "uf": "PE",
    "cidade": "Caruaru",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#0047AB"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3811,8 +3822,8 @@
    "uf": "PE",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#FFD100"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3825,8 +3836,8 @@
    "uf": "PE",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3839,8 +3850,8 @@
    "uf": "GO",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#FFD100"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3853,8 +3864,8 @@
    "uf": "GO",
    "cidade": "Crixás",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#0047AB"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3867,8 +3878,8 @@
    "uf": "GO",
    "cidade": "Goiânia",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#0047AB"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3881,8 +3892,8 @@
    "uf": "GO",
    "cidade": "Goianésia",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#0047AB"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3895,8 +3906,8 @@
    "uf": "GO",
    "cidade": "Anápolis",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#FFD100"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3909,8 +3920,8 @@
    "uf": "GO",
    "cidade": "Mineiros",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#FFD100"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3923,8 +3934,8 @@
    "uf": "GO",
    "cidade": "Morrinhos",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#FFD100"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3937,8 +3948,8 @@
    "uf": "GO",
    "cidade": "Rio Verde",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#00843D"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3951,8 +3962,8 @@
    "uf": "GO",
    "cidade": "Trindade",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#FFD100"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3965,8 +3976,8 @@
    "uf": "GO",
    "cidade": "Jussara",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#0047AB"
    ],
    "reputacao": 22,
    "divisao": null,

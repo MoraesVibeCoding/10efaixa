@@ -1,0 +1,29 @@
+/* Paleta aprovada (v2.19): papel creme, tinta marinho, verde de destaque e sombra dura. Verde como texto só em #18683F. */
+:root{--papel:#EEE9DF;--sup:#F8F5EE;--tinta:#14213D;--suave:#4E5968;--trilho:#D5CEC0;--verde:#1E7B4F;--pos:#18683F;--neg:#B81E2E;--g:16px}
+body{background:var(--papel);color:var(--tinta)}
+.caixa{background:var(--sup);border:2px solid var(--tinta);border-radius:4px;box-shadow:3px 3px 0 var(--verde)}
+svg.em{display:block;flex:none}
+h1,.h1{font-family:'Big Shoulders';font-weight:900;font-size:2.1rem;line-height:.95;text-transform:uppercase}
+h2{font-family:'Big Shoulders';font-weight:900;font-size:1.35rem;line-height:1}
+.selos{display:flex;flex-wrap:wrap;gap:6px}
+.selo{padding:1px 9px;border:2px solid var(--tinta);border-radius:999px;background:var(--sup);font-weight:700;font-size:.85rem;white-space:nowrap}
+.prog{height:8px;background:var(--trilho);border-bottom:2px solid var(--tinta)}.prog i{display:block;height:100%;width:42%;background:var(--verde)}
+/* ---------- figurinha: fundo C (faixas do clube) e recorte de álbum */
+.fig{width:112px;padding:5px 5px 7px;background:#fff;border:2px solid var(--tinta);border-radius:6px;box-shadow:3px 3px 0 var(--verde)}
+.foto{position:relative;aspect-ratio:1/1;border-radius:3px;overflow:hidden;background:linear-gradient(var(--sup) 0 60%,var(--c1) 60% 80%,var(--c2) 80%)}
+.foto img.ret{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 16%;
+ filter:drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(1px 0 0 var(--tinta)) drop-shadow(-1px 0 0 var(--tinta)) drop-shadow(0 1px 0 var(--tinta)) drop-shadow(0 -1px 0 var(--tinta))}
+.foto .num{position:absolute;right:5px;top:1px;font-family:'Big Shoulders';font-weight:900;font-size:1.9rem;line-height:1;color:#fff;-webkit-text-stroke:1.5px var(--tinta)}
+.foto .ovr{position:absolute;left:4px;bottom:6px;display:grid;place-items:center;width:34px;height:38px;border-radius:7px;border:2px solid #2d5b6b;background:url(file:///home/user/10efaixa/src/assets/cartoes-over/platina.webp) center/cover;font-family:'Big Shoulders';font-weight:900;font-size:1.25rem;line-height:1}
+.foto .em{position:absolute;right:5px;bottom:6px;width:30px;height:30px}
+.fig b{display:block;margin-top:5px;font-family:'Big Shoulders';font-weight:900;font-size:1rem;text-transform:uppercase;line-height:1}
+.fig small{display:block;font-size:.72rem;color:var(--suave);line-height:1.25}
+/* ---------- opções com tarja de risco */
+.ops{display:grid;gap:12px}
+.op{display:grid;gap:3px;width:100%;padding:0 0 10px;text-align:left;font:inherit;color:inherit;overflow:hidden}
+.op .risco{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 12px;border-bottom:2px solid var(--tinta);background:var(--papel);font-family:'Big Shoulders';font-weight:800;font-size:.95rem}
+.medidor{display:inline-grid;grid-template-columns:repeat(4,14px);gap:3px}.medidor s{height:8px;border:1.5px solid var(--tinta);border-radius:1px}.medidor s.c{background:var(--neg);border-color:var(--neg)}
+.op b{padding:6px 12px 0;font-size:1.1rem;line-height:1.2}
+.op .lin{display:flex;flex-wrap:wrap;gap:2px 14px;padding:0 12px;font-size:.92rem;color:var(--suave)}
+.lin .g{color:var(--pos);font-weight:700}.lin .p{color:var(--neg);font-weight:700}
+.hist{color:var(--suave);font-size:1.05rem;line-height:1.45}

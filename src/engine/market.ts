@@ -65,6 +65,8 @@ const WINDOW_POOLS = {
   europa: [...EUROPE.map((c) => c.id), ...europe.outros.clubs.map((c) => c.id)],
 };
 const OFF_IDS = europe.foraDoEixo.clubs.map((c) => c.id);
+/** Todo clube que o mercado pode oferecer (a tela precisa do nome de cada um). */
+export const MARKET_CLUB_IDS = [...WINDOW_POOLS.brasil, ...WINDOW_POOLS.europa, ...OFF_IDS];
 
 function makeOffer(p: MarketPlayer, id: string, agent: Agent, rng: Prng, div: DivOf | undefined, offAxis: boolean): Offer {
   const league = leagueOf(id, div);
@@ -113,7 +115,7 @@ export function negotiate(o: Offer, agent: Agent, rng: Prng): Offer | null {
 }
 
 const ROLE_SCORE: Record<string, number> = { titular: 1, rodizio: 0.6, aposta: 0.2, reserva: 0.2, promessa: 0.2 };
-const toBRL = (o: Offer) => (o.currency === 'EUR' ? o.annualSalary * money.cambio.EUR : o.annualSalary);
+export const toBRL = (o: Offer) => (o.currency === 'EUR' ? o.annualSalary * money.cambio.EUR : o.annualSalary);
 
 /** Escolha automática por temperamento (simulação e ritmo Rápido); null = fica no clube atual. Usa os dilemas da T25. */
 export function chooseOffer(p: MarketPlayer, offers: Offer[], current: { annualSalaryBRL: number; role: string } | null): Offer | null {

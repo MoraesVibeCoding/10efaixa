@@ -51,6 +51,7 @@ describe('lesões (T31)', () => {
     expect(eligibleEvents({ lesaoGrave: true })).toContain('lesao-grave');
     expect(sceneOf('lesao-grave')).toBe('hospital');
     expect(autoChoice('lesao-grave', 'frio')).toBe('operar');
-    expect(autoChoice('lesao-grave', 'esquentado')).toBe('voltar-antes');
+    expect(autoChoice('lesao-grave', 'lider')).toBe('voltar-antes');
+    expect(autoChoice('lesao-grave', 'resenha')).toBe('conservador');
   });
 });

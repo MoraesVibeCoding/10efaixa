@@ -1,5 +1,5 @@
 {
- "_nota": "Europa e ligas fora do eixo (SPEC 6.10, 6.12; T29). Temporada 2026/27. Reputação (1–100) ordena dentro da liga; 'bonusNivel' ajusta o nível do elenco entre ligas. Reputação e cores são estimativas do jogo.",
+ "_nota": "Europa e ligas fora do eixo (SPEC 6.10, 6.12; T29). Temporada 2026/27. Reputação (1–100) ordena dentro da liga; 'bonusNivel' ajusta o nível do elenco entre ligas. Reputação e cores são estimativas do jogo (cores: T50j, ver coresRevisao.json).",
  "conferidoEm": "2026-10-01",
  "ligas": {
   "ENG": {
@@ -46,7 +46,7 @@
    "sigla": "MAH",
    "liga": "ENG",
    "cores": [
-    "#14213D",
+    "#6CABDD",
     "#FFFFFF"
    ],
    "reputacao": 97,
@@ -60,7 +60,7 @@
    "sigla": "ARS",
    "liga": "ENG",
    "cores": [
-    "#14213D",
+    "#EF0107",
     "#FFFFFF"
    ],
    "reputacao": 96,
@@ -75,7 +75,7 @@
    "sigla": "LIR",
    "liga": "ENG",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 97,
@@ -90,7 +90,7 @@
    "sigla": "CHE",
    "liga": "ENG",
    "cores": [
-    "#14213D",
+    "#034694",
     "#FFFFFF"
    ],
    "reputacao": 92,
@@ -105,8 +105,8 @@
    "sigla": "MAE",
    "liga": "ENG",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#DA291C",
+    "#000000"
    ],
    "reputacao": 92,
    "rivais": [
@@ -120,8 +120,8 @@
    "sigla": "TOT",
    "liga": "ENG",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#132257"
    ],
    "reputacao": 88,
    "rivais": [
@@ -135,7 +135,7 @@
    "sigla": "NEW",
    "liga": "ENG",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 87,
@@ -149,8 +149,8 @@
    "sigla": "AST",
    "liga": "ENG",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#670E36",
+    "#95BFE5"
    ],
    "reputacao": 86,
    "rivais": []
@@ -161,7 +161,7 @@
    "sigla": "BRG",
    "liga": "ENG",
    "cores": [
-    "#14213D",
+    "#0057B8",
     "#FFFFFF"
    ],
    "reputacao": 80,
@@ -173,8 +173,8 @@
    "sigla": "CRY",
    "liga": "ENG",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#1B458F",
+    "#C8102E"
    ],
    "reputacao": 78,
    "rivais": []
@@ -185,7 +185,7 @@
    "sigla": "NOI",
    "liga": "ENG",
    "cores": [
-    "#14213D",
+    "#DD0000",
     "#FFFFFF"
    ],
    "reputacao": 78,
@@ -197,7 +197,7 @@
    "sigla": "EVE",
    "liga": "ENG",
    "cores": [
-    "#14213D",
+    "#003399",
     "#FFFFFF"
    ],
    "reputacao": 78,
@@ -211,8 +211,8 @@
    "sigla": "BOU",
    "liga": "ENG",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#000000"
    ],
    "reputacao": 77,
    "rivais": []
@@ -223,7 +223,7 @@
    "sigla": "BRE",
    "liga": "ENG",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 76,
@@ -235,8 +235,8 @@
    "sigla": "FUL",
    "liga": "ENG",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#000000"
    ],
    "reputacao": 76,
    "rivais": []
@@ -247,8 +247,8 @@
    "sigla": "LEE",
    "liga": "ENG",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#1D428A"
    ],
    "reputacao": 74,
    "rivais": []
@@ -259,7 +259,7 @@
    "sigla": "SUN",
    "liga": "ENG",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 72,
@@ -273,7 +273,7 @@
    "sigla": "IPS",
    "liga": "ENG",
    "cores": [
-    "#14213D",
+    "#0044A9",
     "#FFFFFF"
    ],
    "reputacao": 68,
@@ -285,7 +285,7 @@
    "sigla": "COV",
    "liga": "ENG",
    "cores": [
-    "#14213D",
+    "#6CABDD",
     "#FFFFFF"
    ],
    "reputacao": 66,
@@ -297,8 +297,8 @@
    "sigla": "HUL",
    "liga": "ENG",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#F5A12D",
+    "#000000"
    ],
    "reputacao": 64,
    "rivais": []
@@ -309,8 +309,8 @@
    "sigla": "REL",
    "liga": "ESP",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#00529F"
    ],
    "reputacao": 99,
    "rivais": [
@@ -324,8 +324,8 @@
    "sigla": "BAO",
    "liga": "ESP",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#A50044",
+    "#004D98"
    ],
    "reputacao": 98,
    "rivais": [
@@ -339,7 +339,7 @@
    "sigla": "ATC",
    "liga": "ESP",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 93,
@@ -353,7 +353,7 @@
    "sigla": "ATU",
    "liga": "ESP",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 85,
@@ -367,7 +367,7 @@
    "sigla": "REO",
    "liga": "ESP",
    "cores": [
-    "#14213D",
+    "#0067B1",
     "#FFFFFF"
    ],
    "reputacao": 84,
@@ -381,8 +381,8 @@
    "sigla": "VIA",
    "liga": "ESP",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFE667",
+    "#005187"
    ],
    "reputacao": 84,
    "rivais": []
@@ -393,7 +393,7 @@
    "sigla": "REB",
    "liga": "ESP",
    "cores": [
-    "#14213D",
+    "#00954C",
     "#FFFFFF"
    ],
    "reputacao": 83,
@@ -407,8 +407,8 @@
    "sigla": "SEV",
    "liga": "ESP",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 82,
    "rivais": [
@@ -421,8 +421,8 @@
    "sigla": "VAE",
    "liga": "ESP",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#000000"
    ],
    "reputacao": 80,
    "rivais": [
@@ -435,7 +435,7 @@
    "sigla": "CEL",
    "liga": "ESP",
    "cores": [
-    "#14213D",
+    "#8AC3EE",
     "#FFFFFF"
    ],
    "reputacao": 77,
@@ -449,8 +449,8 @@
    "sigla": "OSA",
    "liga": "ESP",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#0A346F"
    ],
    "reputacao": 75,
    "rivais": []
@@ -461,8 +461,8 @@
    "sigla": "RAY",
    "liga": "ESP",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 74,
    "rivais": []
@@ -473,7 +473,7 @@
    "sigla": "GET",
    "liga": "ESP",
    "cores": [
-    "#14213D",
+    "#005999",
     "#FFFFFF"
    ],
    "reputacao": 73,
@@ -485,7 +485,7 @@
    "sigla": "ESA",
    "liga": "ESP",
    "cores": [
-    "#14213D",
+    "#007FC8",
     "#FFFFFF"
    ],
    "reputacao": 73,
@@ -499,7 +499,7 @@
    "sigla": "DEU",
    "liga": "ESP",
    "cores": [
-    "#14213D",
+    "#0067B1",
     "#FFFFFF"
    ],
    "reputacao": 72,
@@ -513,7 +513,7 @@
    "sigla": "ALV",
    "liga": "ESP",
    "cores": [
-    "#14213D",
+    "#0761AF",
     "#FFFFFF"
    ],
    "reputacao": 71,
@@ -525,7 +525,7 @@
    "sigla": "MLA",
    "liga": "ESP",
    "cores": [
-    "#14213D",
+    "#0B5DAA",
     "#FFFFFF"
    ],
    "reputacao": 70,
@@ -537,8 +537,8 @@
    "sigla": "ELC",
    "liga": "ESP",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#00843D"
    ],
    "reputacao": 68,
    "rivais": []
@@ -549,8 +549,8 @@
    "sigla": "LEV",
    "liga": "ESP",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#B4053F",
+    "#004F98"
    ],
    "reputacao": 68,
    "rivais": [
@@ -563,8 +563,8 @@
    "sigla": "RAN",
    "liga": "ESP",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#00843D"
    ],
    "reputacao": 68,
    "rivais": []
@@ -575,8 +575,8 @@
    "sigla": "ITE",
    "liga": "ITA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0068A8",
+    "#000000"
    ],
    "reputacao": 95,
    "rivais": [
@@ -590,8 +590,8 @@
    "sigla": "JUU",
    "liga": "ITA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#000000"
    ],
    "reputacao": 93,
    "rivais": [
@@ -605,8 +605,8 @@
    "sigla": "MIA",
    "liga": "ITA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FB090B",
+    "#000000"
    ],
    "reputacao": 93,
    "rivais": [
@@ -619,7 +619,7 @@
    "sigla": "NAP",
    "liga": "ITA",
    "cores": [
-    "#14213D",
+    "#12A0D7",
     "#FFFFFF"
    ],
    "reputacao": 92,
@@ -633,8 +633,8 @@
    "sigla": "ROM",
    "liga": "ITA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#8E1F2F",
+    "#F0BC42"
    ],
    "reputacao": 88,
    "rivais": [
@@ -648,8 +648,8 @@
    "sigla": "ATA",
    "liga": "ITA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#1E71B8",
+    "#000000"
    ],
    "reputacao": 87,
    "rivais": []
@@ -660,7 +660,7 @@
    "sigla": "LAZ",
    "liga": "ITA",
    "cores": [
-    "#14213D",
+    "#87D8F7",
     "#FFFFFF"
    ],
    "reputacao": 85,
@@ -674,7 +674,7 @@
    "sigla": "FIO",
    "liga": "ITA",
    "cores": [
-    "#14213D",
+    "#482E92",
     "#FFFFFF"
    ],
    "reputacao": 82,
@@ -686,8 +686,8 @@
    "sigla": "BOO",
    "liga": "ITA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#1A2F48",
+    "#C8102E"
    ],
    "reputacao": 81,
    "rivais": []
@@ -698,7 +698,7 @@
    "sigla": "TOR",
    "liga": "ITA",
    "cores": [
-    "#14213D",
+    "#881F19",
     "#FFFFFF"
    ],
    "reputacao": 77,
@@ -712,7 +712,7 @@
    "sigla": "COM",
    "liga": "ITA",
    "cores": [
-    "#14213D",
+    "#003DA5",
     "#FFFFFF"
    ],
    "reputacao": 76,
@@ -724,8 +724,8 @@
    "sigla": "UDI",
    "liga": "ITA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#000000"
    ],
    "reputacao": 74,
    "rivais": []
@@ -736,8 +736,8 @@
    "sigla": "GEN",
    "liga": "ITA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#002F6C"
    ],
    "reputacao": 74,
    "rivais": []
@@ -748,8 +748,8 @@
    "sigla": "SAU",
    "liga": "ITA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#000000"
    ],
    "reputacao": 72,
    "rivais": []
@@ -760,8 +760,8 @@
    "sigla": "PAM",
    "liga": "ITA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#000000"
    ],
    "reputacao": 72,
    "rivais": []
@@ -772,8 +772,8 @@
    "sigla": "CAG",
    "liga": "ITA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#0E1E5B"
    ],
    "reputacao": 71,
    "rivais": []
@@ -784,8 +784,8 @@
    "sigla": "LEC",
    "liga": "ITA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#C8102E"
    ],
    "reputacao": 69,
    "rivais": []
@@ -796,7 +796,7 @@
    "sigla": "MOZ",
    "liga": "ITA",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 68,
@@ -808,8 +808,8 @@
    "sigla": "VEN",
    "liga": "ITA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#000000",
+    "#F37021"
    ],
    "reputacao": 67,
    "rivais": []
@@ -820,8 +820,8 @@
    "sigla": "FRO",
    "liga": "ITA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#0047AB"
    ],
    "reputacao": 66,
    "rivais": []
@@ -832,7 +832,7 @@
    "sigla": "BAY",
    "liga": "GER",
    "cores": [
-    "#14213D",
+    "#DC052D",
     "#FFFFFF"
    ],
    "reputacao": 98,
@@ -846,8 +846,8 @@
    "sigla": "BOR",
    "liga": "GER",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FDE100",
+    "#000000"
    ],
    "reputacao": 92,
    "rivais": [
@@ -861,8 +861,8 @@
    "sigla": "BAV",
    "liga": "GER",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#E32221",
+    "#000000"
    ],
    "reputacao": 90,
    "rivais": []
@@ -873,8 +873,8 @@
    "sigla": "RBL",
    "liga": "GER",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#DD0741"
    ],
    "reputacao": 89,
    "rivais": []
@@ -885,8 +885,8 @@
    "sigla": "STU",
    "liga": "GER",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 84,
    "rivais": []
@@ -897,8 +897,8 @@
    "sigla": "EIN",
    "liga": "GER",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#000000",
+    "#C8102E"
    ],
    "reputacao": 84,
    "rivais": []
@@ -909,8 +909,8 @@
    "sigla": "FRE",
    "liga": "GER",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#000000"
    ],
    "reputacao": 80,
    "rivais": []
@@ -921,8 +921,8 @@
    "sigla": "BOI",
    "liga": "GER",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#00843D"
    ],
    "reputacao": 78,
    "rivais": [
@@ -935,7 +935,7 @@
    "sigla": "SCH",
    "liga": "GER",
    "cores": [
-    "#14213D",
+    "#004D9D",
     "#FFFFFF"
    ],
    "reputacao": 78,
@@ -949,7 +949,7 @@
    "sigla": "HOF",
    "liga": "GER",
    "cores": [
-    "#14213D",
+    "#1961B5",
     "#FFFFFF"
    ],
    "reputacao": 77,
@@ -961,7 +961,7 @@
    "sigla": "WER",
    "liga": "GER",
    "cores": [
-    "#14213D",
+    "#1D9053",
     "#FFFFFF"
    ],
    "reputacao": 77,
@@ -975,7 +975,7 @@
    "sigla": "MAZ",
    "liga": "GER",
    "cores": [
-    "#14213D",
+    "#C3141E",
     "#FFFFFF"
    ],
    "reputacao": 76,
@@ -987,8 +987,8 @@
    "sigla": "HAM",
    "liga": "GER",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#0A3F86"
    ],
    "reputacao": 76,
    "rivais": [
@@ -1001,7 +1001,7 @@
    "sigla": "UNO",
    "liga": "GER",
    "cores": [
-    "#14213D",
+    "#EB1923",
     "#FFFFFF"
    ],
    "reputacao": 75,
@@ -1013,8 +1013,8 @@
    "sigla": "AUG",
    "liga": "GER",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 74,
    "rivais": []
@@ -1025,8 +1025,8 @@
    "sigla": "COL",
    "liga": "GER",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#C8102E"
    ],
    "reputacao": 74,
    "rivais": [
@@ -1039,8 +1039,8 @@
    "sigla": "PAD",
    "liga": "GER",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00508C",
+    "#000000"
    ],
    "reputacao": 66,
    "rivais": []
@@ -1051,7 +1051,7 @@
    "sigla": "ELV",
    "liga": "GER",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 62,
@@ -1063,8 +1063,8 @@
    "sigla": "PAG",
    "liga": "FRA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#004170",
+    "#DA291C"
    ],
    "reputacao": 98,
    "rivais": [
@@ -1078,8 +1078,8 @@
    "sigla": "OLY",
    "liga": "FRA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#2FAEE0"
    ],
    "reputacao": 89,
    "rivais": [
@@ -1093,8 +1093,8 @@
    "sigla": "LYO",
    "liga": "FRA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#DA0812"
    ],
    "reputacao": 87,
    "rivais": [
@@ -1107,7 +1107,7 @@
    "sigla": "MOC",
    "liga": "FRA",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 87,
@@ -1121,8 +1121,8 @@
    "sigla": "LIL",
    "liga": "FRA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#20325F"
    ],
    "reputacao": 85,
    "rivais": [
@@ -1135,8 +1135,8 @@
    "sigla": "LEN",
    "liga": "FRA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#E30613"
    ],
    "reputacao": 82,
    "rivais": [
@@ -1149,8 +1149,8 @@
    "sigla": "NIC",
    "liga": "FRA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#000000"
    ],
    "reputacao": 81,
    "rivais": [
@@ -1163,8 +1163,8 @@
    "sigla": "REN",
    "liga": "FRA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#000000"
    ],
    "reputacao": 81,
    "rivais": []
@@ -1175,7 +1175,7 @@
    "sigla": "STR",
    "liga": "FRA",
    "cores": [
-    "#14213D",
+    "#009FE3",
     "#FFFFFF"
    ],
    "reputacao": 79,
@@ -1187,7 +1187,7 @@
    "sigla": "BRT",
    "liga": "FRA",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 76,
@@ -1199,7 +1199,7 @@
    "sigla": "TOU",
    "liga": "FRA",
    "cores": [
-    "#14213D",
+    "#5B2C83",
     "#FFFFFF"
    ],
    "reputacao": 75,
@@ -1211,7 +1211,7 @@
    "sigla": "PAF",
    "liga": "FRA",
    "cores": [
-    "#14213D",
+    "#1A2B55",
     "#FFFFFF"
    ],
    "reputacao": 72,
@@ -1225,8 +1225,8 @@
    "sigla": "AUX",
    "liga": "FRA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#0067B1"
    ],
    "reputacao": 70,
    "rivais": []
@@ -1237,8 +1237,8 @@
    "sigla": "LOR",
    "liga": "FRA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#F37021",
+    "#000000"
    ],
    "reputacao": 69,
    "rivais": []
@@ -1249,7 +1249,7 @@
    "sigla": "ANG",
    "liga": "FRA",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 68,
@@ -1261,8 +1261,8 @@
    "sigla": "LEH",
    "liga": "FRA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#6CABDD",
+    "#0B1F4B"
    ],
    "reputacao": 68,
    "rivais": []
@@ -1273,7 +1273,7 @@
    "sigla": "TRO",
    "liga": "FRA",
    "cores": [
-    "#14213D",
+    "#0067B1",
     "#FFFFFF"
    ],
    "reputacao": 64,
@@ -1285,8 +1285,8 @@
    "sigla": "LEM",
    "liga": "FRA",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#FFD100"
    ],
    "reputacao": 62,
    "rivais": []
@@ -1297,7 +1297,7 @@
    "sigla": "BEN",
    "liga": "POR",
    "cores": [
-    "#14213D",
+    "#E20E0E",
     "#FFFFFF"
    ],
    "reputacao": 92,
@@ -1312,7 +1312,7 @@
    "sigla": "PRT",
    "liga": "POR",
    "cores": [
-    "#14213D",
+    "#0033A0",
     "#FFFFFF"
    ],
    "reputacao": 91,
@@ -1327,7 +1327,7 @@
    "sigla": "SPI",
    "liga": "POR",
    "cores": [
-    "#14213D",
+    "#008057",
     "#FFFFFF"
    ],
    "reputacao": 91,
@@ -1342,7 +1342,7 @@
    "sigla": "BGA",
    "liga": "POR",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 82,
@@ -1356,8 +1356,8 @@
    "sigla": "VID",
    "liga": "POR",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#000000"
    ],
    "reputacao": 77,
    "rivais": [
@@ -1370,7 +1370,7 @@
    "sigla": "FAM",
    "liga": "POR",
    "cores": [
-    "#14213D",
+    "#003DA5",
     "#FFFFFF"
    ],
    "reputacao": 70,
@@ -1382,7 +1382,7 @@
    "sigla": "RIA",
    "liga": "POR",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 68,
@@ -1394,8 +1394,8 @@
    "sigla": "GIL",
    "liga": "POR",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#0033A0"
    ],
    "reputacao": 68,
    "rivais": []
@@ -1406,7 +1406,7 @@
    "sigla": "MOI",
    "liga": "POR",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 67,
@@ -1418,7 +1418,7 @@
    "sigla": "SNT",
    "liga": "POR",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 67,
@@ -1430,8 +1430,8 @@
    "sigla": "MAT",
    "liga": "POR",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#00843D",
+    "#C8102E"
    ],
    "reputacao": 67,
    "rivais": []
@@ -1442,8 +1442,8 @@
    "sigla": "ARO",
    "liga": "POR",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#0033A0"
    ],
    "reputacao": 66,
    "rivais": []
@@ -1454,8 +1454,8 @@
    "sigla": "ESO",
    "liga": "POR",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#0033A0"
    ],
    "reputacao": 66,
    "rivais": []
@@ -1466,7 +1466,7 @@
    "sigla": "CSP",
    "liga": "POR",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 65,
@@ -1478,7 +1478,7 @@
    "sigla": "NAD",
    "liga": "POR",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 65,
@@ -1490,8 +1490,8 @@
    "sigla": "ESR",
    "liga": "POR",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#00843D"
    ],
    "reputacao": 64,
    "rivais": []
@@ -1502,7 +1502,7 @@
    "sigla": "ALE",
    "liga": "POR",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 62,
@@ -1514,7 +1514,7 @@
    "sigla": "ACD",
    "liga": "POR",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 60,
@@ -1535,8 +1535,8 @@
     "sigla": "CLU",
     "pais": "BEL",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#0067CE",
+     "#000000"
     ],
     "reputacao": 84
    },
@@ -1546,7 +1546,7 @@
     "sigla": "PSV",
     "pais": "NED",
     "cores": [
-     "#14213D",
+     "#ED1C24",
      "#FFFFFF"
     ],
     "reputacao": 86
@@ -1557,7 +1557,7 @@
     "sigla": "FEY",
     "pais": "NED",
     "cores": [
-     "#14213D",
+     "#E4001B",
      "#FFFFFF"
     ],
     "reputacao": 85
@@ -1568,8 +1568,8 @@
     "sigla": "BOD",
     "pais": "NOR",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#FFD100",
+     "#000000"
     ],
     "reputacao": 76
    },
@@ -1579,8 +1579,8 @@
     "sigla": "FEN",
     "pais": "TUR",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#FFED00",
+     "#00205B"
     ],
     "reputacao": 84
    },
@@ -1590,8 +1590,8 @@
     "sigla": "SHA",
     "pais": "UKR",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#F37021",
+     "#000000"
     ],
     "reputacao": 83
    },
@@ -1601,8 +1601,8 @@
     "sigla": "GAA",
     "pais": "TUR",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#A90432",
+     "#FDB912"
     ],
     "reputacao": 85
    },
@@ -1612,7 +1612,7 @@
     "sigla": "SLA",
     "pais": "CZE",
     "cores": [
-     "#14213D",
+     "#C8102E",
      "#FFFFFF"
     ],
     "reputacao": 79
@@ -1623,7 +1623,7 @@
     "sigla": "SLO",
     "pais": "SVK",
     "cores": [
-     "#14213D",
+     "#6CABDD",
      "#FFFFFF"
     ],
     "reputacao": 70
@@ -1634,8 +1634,8 @@
     "sigla": "AEK",
     "pais": "GRE",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#FFD100",
+     "#000000"
     ],
     "reputacao": 76
    },
@@ -1645,7 +1645,7 @@
     "sigla": "LAS",
     "pais": "AUT",
     "cores": [
-     "#14213D",
+     "#000000",
      "#FFFFFF"
     ],
     "reputacao": 70
@@ -1656,7 +1656,7 @@
     "sigla": "VIK",
     "pais": "NOR",
     "cores": [
-     "#14213D",
+     "#0033A0",
      "#FFFFFF"
     ],
     "reputacao": 66
@@ -1667,8 +1667,8 @@
     "sigla": "SAH",
     "pais": "AZE",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#00843D",
+     "#0047AB"
     ],
     "reputacao": 60
    },
@@ -1678,7 +1678,7 @@
     "sigla": "AZA",
     "pais": "NED",
     "cores": [
-     "#14213D",
+     "#C8102E",
      "#FFFFFF"
     ],
     "reputacao": 80
@@ -1689,7 +1689,7 @@
     "sigla": "OLM",
     "pais": "GRE",
     "cores": [
-     "#14213D",
+     "#C8102E",
      "#FFFFFF"
     ],
     "reputacao": 81
@@ -1700,7 +1700,7 @@
     "sigla": "FEE",
     "pais": "HUN",
     "cores": [
-     "#14213D",
+     "#00843D",
      "#FFFFFF"
     ],
     "reputacao": 74
@@ -1711,8 +1711,8 @@
     "sigla": "VIP",
     "pais": "CZE",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#C8102E",
+     "#0033A0"
     ],
     "reputacao": 74
    },
@@ -1722,8 +1722,8 @@
     "sigla": "UNN",
     "pais": "BEL",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#FFD100",
+     "#0033A0"
     ],
     "reputacao": 77
    },
@@ -1733,7 +1733,7 @@
     "sigla": "DIN",
     "pais": "CRO",
     "cores": [
-     "#14213D",
+     "#0033A0",
      "#FFFFFF"
     ],
     "reputacao": 78
@@ -1744,8 +1744,8 @@
     "sigla": "SLZ",
     "pais": "AUT",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#FFFFFF",
+     "#C8102E"
     ],
     "reputacao": 80
    },
@@ -1755,7 +1755,7 @@
     "sigla": "CEC",
     "pais": "SCO",
     "cores": [
-     "#14213D",
+     "#018749",
      "#FFFFFF"
     ],
     "reputacao": 82
@@ -1766,7 +1766,7 @@
     "sigla": "SPA",
     "pais": "CZE",
     "cores": [
-     "#14213D",
+     "#7A1E3A",
      "#FFFFFF"
     ],
     "reputacao": 78
@@ -1777,7 +1777,7 @@
     "sigla": "ANE",
     "pais": "BEL",
     "cores": [
-     "#14213D",
+     "#5B2C83",
      "#FFFFFF"
     ],
     "reputacao": 79
@@ -1788,7 +1788,7 @@
     "sigla": "STM",
     "pais": "AUT",
     "cores": [
-     "#14213D",
+     "#000000",
      "#FFFFFF"
     ],
     "reputacao": 73
@@ -1799,7 +1799,7 @@
     "sigla": "LEP",
     "pais": "POL",
     "cores": [
-     "#14213D",
+     "#0033A0",
      "#FFFFFF"
     ],
     "reputacao": 70
@@ -1810,8 +1810,8 @@
     "sigla": "CEJ",
     "pais": "SVN",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#FFD100",
+     "#0033A0"
     ],
     "reputacao": 62
    },
@@ -1821,8 +1821,8 @@
     "sigla": "JAI",
     "pais": "POL",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#FFD100",
+     "#C8102E"
     ],
     "reputacao": 66
    },
@@ -1832,7 +1832,7 @@
     "sigla": "OMO",
     "pais": "CYP",
     "cores": [
-     "#14213D",
+     "#00843D",
      "#FFFFFF"
     ],
     "reputacao": 64
@@ -1843,7 +1843,7 @@
     "sigla": "BES",
     "pais": "TUR",
     "cores": [
-     "#14213D",
+     "#000000",
      "#FFFFFF"
     ],
     "reputacao": 80
@@ -1854,7 +1854,7 @@
     "sigla": "HAP",
     "pais": "ISR",
     "cores": [
-     "#14213D",
+     "#C8102E",
      "#FFFFFF"
     ],
     "reputacao": 66
@@ -1865,8 +1865,8 @@
     "sigla": "NEC",
     "pais": "NED",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#C8102E",
+     "#00843D"
     ],
     "reputacao": 68
    },
@@ -1876,7 +1876,7 @@
     "sigla": "OFI",
     "pais": "GRE",
     "cores": [
-     "#14213D",
+     "#000000",
      "#FFFFFF"
     ],
     "reputacao": 62
@@ -1887,8 +1887,8 @@
     "sigla": "LIS",
     "pais": "NOR",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#FFD100",
+     "#000000"
     ],
     "reputacao": 62
    },
@@ -1898,7 +1898,7 @@
     "sigla": "LES",
     "pais": "BUL",
     "cores": [
-     "#14213D",
+     "#0033A0",
      "#FFFFFF"
     ],
     "reputacao": 66
@@ -1909,8 +1909,8 @@
     "sigla": "ART",
     "pais": "ARM",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#C8102E",
+     "#0047AB"
     ],
     "reputacao": 56
    },
@@ -1920,8 +1920,8 @@
     "sigla": "TOE",
     "pais": "POR",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#00843D",
+     "#C8102E"
     ],
     "reputacao": 58
    }
@@ -1978,7 +1978,7 @@
     "sigla": "ALH",
     "liga": "SAU",
     "cores": [
-     "#14213D",
+     "#005CB9",
      "#FFFFFF"
     ],
     "reputacao": 86
@@ -1989,8 +1989,8 @@
     "sigla": "ALN",
     "liga": "SAU",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#FFD100",
+     "#0033A0"
     ],
     "reputacao": 84
    },
@@ -2000,8 +2000,8 @@
     "sigla": "ALD",
     "liga": "SAU",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#FFD100",
+     "#000000"
     ],
     "reputacao": 83
    },
@@ -2011,7 +2011,7 @@
     "sigla": "ALL",
     "liga": "SAU",
     "cores": [
-     "#14213D",
+     "#00843D",
      "#FFFFFF"
     ],
     "reputacao": 83
@@ -2022,8 +2022,8 @@
     "sigla": "ALQ",
     "liga": "SAU",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#C8102E",
+     "#FFD100"
     ],
     "reputacao": 76
    },
@@ -2033,8 +2033,8 @@
     "sigla": "INM",
     "liga": "USA",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#F7B5CD",
+     "#000000"
     ],
     "reputacao": 76
    },
@@ -2044,8 +2044,8 @@
     "sigla": "LAF",
     "liga": "USA",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#000000",
+     "#C39E6D"
     ],
     "reputacao": 76
    },
@@ -2055,8 +2055,8 @@
     "sigla": "LAL",
     "liga": "USA",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#FFFFFF",
+     "#00245D"
     ],
     "reputacao": 74
    },
@@ -2066,8 +2066,8 @@
     "sigla": "VIS",
     "liga": "JPN",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#A50034",
+     "#000000"
     ],
     "reputacao": 70
    },
@@ -2077,8 +2077,8 @@
     "sigla": "KAS",
     "liga": "JPN",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#B71C1C",
+     "#0B1F4B"
     ],
     "reputacao": 70
    },
@@ -2088,8 +2088,8 @@
     "sigla": "URA",
     "liga": "JPN",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#C8102E",
+     "#000000"
     ],
     "reputacao": 70
    },
@@ -2099,8 +2099,8 @@
     "sigla": "KAW",
     "liga": "JPN",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#56B2E4",
+     "#000000"
     ],
     "reputacao": 70
    },
@@ -2110,8 +2110,8 @@
     "sigla": "ALS",
     "liga": "QAT",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#FFFFFF",
+     "#000000"
     ],
     "reputacao": 72
    },
@@ -2121,7 +2121,7 @@
     "sigla": "ALU",
     "liga": "QAT",
     "cores": [
-     "#14213D",
+     "#C8102E",
      "#FFFFFF"
     ],
     "reputacao": 70
@@ -2132,8 +2132,8 @@
     "sigla": "ALR",
     "liga": "QAT",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#C8102E",
+     "#000000"
     ],
     "reputacao": 68
    },
@@ -2143,7 +2143,7 @@
     "sigla": "SHN",
     "liga": "CHN",
     "cores": [
-     "#14213D",
+     "#C8102E",
      "#FFFFFF"
     ],
     "reputacao": 68
@@ -2154,7 +2154,7 @@
     "sigla": "SHG",
     "liga": "CHN",
     "cores": [
-     "#14213D",
+     "#0033A0",
      "#FFFFFF"
     ],
     "reputacao": 66
@@ -2165,8 +2165,8 @@
     "sigla": "BEI",
     "liga": "CHN",
     "cores": [
-     "#14213D",
-     "#FFFFFF"
+     "#00843D",
+     "#FFD100"
     ],
     "reputacao": 66
    },
@@ -2176,7 +2176,7 @@
     "sigla": "SHD",
     "liga": "CHN",
     "cores": [
-     "#14213D",
+     "#F37021",
      "#FFFFFF"
     ],
     "reputacao": 66

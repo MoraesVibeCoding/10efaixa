@@ -1,0 +1,2 @@
+/* T51 (b): a carreira não cria caixa própria; quem desenha a tela é a decisão ou o resumo. */
+.carreira { display: contents; }

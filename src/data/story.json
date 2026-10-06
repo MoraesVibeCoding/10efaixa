@@ -1,0 +1,11 @@
+{
+ "_nota": "T55b (SPEC 6.15, v2.31/v2.42): frases de \"Sua história\" montadas do resultado da carreira enquanto a memória (T25d) não existe. `pesos` escolhe as frases do cartão narrativo (as `maxNoCartao` de maior peso, em ordem de idade). Textos em src/i18n/pt-BR/legacy.json → historia.",
+ "maxNoCartao": 4,
+ "pesos": {
+  "inicio_varzea": 3, "inicio_peneira": 3, "inicio_baseGrande": 2,
+  "primeiroTitulo": 4, "europa": 5, "exterior": 4, "auge": 3,
+  "melhorDoMundo": 10, "selecao": 5, "campeaoMundial": 10, "heroiMundial": 8,
+  "idolo": 7, "lesoes": 2,
+  "despedida_coracao": 6, "despedida_formador": 6, "aposentadoria": 1
+ }
+}

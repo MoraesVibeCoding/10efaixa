@@ -1,0 +1,37 @@
+/* T52: a reunião usa a casca da criação; o único botão ocupa a largura toda */
+.reuniao__acoes { grid-template-columns: 1fr; }
+
+/* os 12 focos todos à vista: rótulo em cima e as pílulas quebrando em linhas, sem a faixa que desliza */
+.reuniao .criacao__passo { display: grid; gap: var(--espaco-4); align-content: start; }
+.reuniao .escolhas.escolhas--faixa { grid-template-columns: minmax(0, 1fr); gap: var(--espaco-2); }
+.reuniao .escolhas__lista { flex-wrap: wrap; overflow: visible; margin-inline-end: 0; padding: 2px; }
+
+/* resposta da comissão: cartão de papel sobre o scrim, como o resultado da decisão */
+.reuniao__resposta {
+  inline-size: min(100% - 2rem, 22rem);
+  padding: var(--espaco-4);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
+  border-radius: var(--forma-raio-cartao);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  box-shadow: var(--forma-sombra-suave);
+}
+.reuniao__resposta[open] { display: grid; gap: var(--espaco-3); }
+.reuniao__resposta::backdrop { background: var(--vidro-scrim); }
+.reuniao__resposta h2 { font-size: var(--tipo-nome); font-weight: 900; line-height: 1.05; }
+.reuniao__resposta p { line-height: 1.4; }
+.reuniao__resposta button {
+  justify-self: end;
+  min-block-size: var(--toque-compacto);
+  padding: 0 var(--espaco-5);
+  border: 0;
+  border-radius: 999px;
+  background: var(--cor-texto);
+  color: var(--cor-superficie);
+  font-family: var(--fonte-titulo);
+  font-size: var(--tipo-opcao);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}

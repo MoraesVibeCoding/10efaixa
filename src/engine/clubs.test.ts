@@ -105,4 +105,14 @@ describe('clubes (T15)', () => {
     expect(rep('flamengo')).toBeGreaterThan(rep('mirassol'));
     expect(Math.min(...clubsIn('A').map((c) => c.reputacao))).toBeGreaterThanOrEqual(55);
   });
+
+  it('artigo (T49c): só "a" é aceito, para os clubes de nome feminino; sem ele vale o masculino', () => {
+    const base = { id: 'x', nome: 'X', sigla: 'XXX', uf: 'SP', cidade: 'X', cores: ['#000000', '#FFFFFF'], reputacao: 10, divisao: 'C', rivais: [] };
+    expect(validateClubs([{ ...base, artigo: 'o' }], ['SP'])).toEqual([expect.stringContaining('artigo')]);
+    expect(validateClubs([{ ...base, artigo: 'a' }], ['SP'])).toEqual([]);
+    expect(CLUBS.filter((c) => c.artigo === 'a').map((c) => c.id).sort()).toEqual(
+      ['anapolina', 'aparecidense', 'cabofriense', 'caldense', 'chapecoense', 'ferroviaria', 'inter-de-limeira', 'ponte-preta', 'portuguesa', 'portuguesa-rj', 'tuna-luso'],
+    );
+  });
 });
+

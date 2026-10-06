@@ -1,0 +1,14 @@
+/* Emblema do clube (T49d). A sigla do escudo genérico fica por cima, em HTML: a peça SVG não pode ter texto. */
+.emblema { position: relative; display: inline-grid; flex: none; place-items: center; }
+.emblema img { display: block; inline-size: 100%; block-size: 100%; }
+.emblema__sigla {
+  position: absolute;
+  inset-block-start: 38%;
+  font-family: var(--fonte-titulo);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--cor-texto);
+  background: var(--cor-superficie);
+  padding: 0 2px;
+  border-radius: 2px;
+}
