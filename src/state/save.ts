@@ -5,7 +5,7 @@ import { runUntilDecision } from './careerRun';
 // criação + semente + ritmo + escolhas; continuar = refazer a carreira até a próxima decisão (careerRun).
 // Fica só no aparelho (localStorage): nada vai para servidor, analytics ou URL. Uma carreira ativa por vez.
 export const SAVE_KEY = '10efaixa:carreira';
-export const SAVE_VERSION = 1;
+export const SAVE_VERSION = 2;
 const RITMOS = ['rapido', 'normal', 'completo'] as const;
 
 export interface SaveData {
@@ -18,8 +18,12 @@ export type SaveResult = { ok: true; save: SaveData } | { ok: false; reason: 'ne
 /** O pedaço do localStorage que o save usa (dá para testar com um armazenamento de mentira). */
 export interface SaveStorage { getItem(k: string): string | null; setItem(k: string, v: string): void; removeItem(k: string): void }
 
-/** Migrações por versão: cada uma leva um save da versão `n` para `n + 1`. Vazio enquanto só existe a versão 1. */
-const MIGRATIONS: Record<number, (old: Record<string, unknown>) => Record<string, unknown>> = {};
+/** Migrações por versão: cada uma leva um save da versão `n` para `n + 1`. */
+const MIGRATIONS: Record<number, (old: Record<string, unknown>) => Record<string, unknown>> = {
+  // v1 → v2 (T53): no v1 toda decisão ia para a tela em qualquer ritmo; as escolhas salvas só fazem sentido com essa
+  // regra, que hoje é a do Completo.
+  1: (old) => ({ ...old, versao: 2, ritmo: 'completo' }),
+};
 
 const isObject = (x: unknown): x is Record<string, unknown> => typeof x === 'object' && x !== null && !Array.isArray(x);
 

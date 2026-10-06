@@ -26,7 +26,7 @@ export interface CareerProps {
 
 export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal', initialChoices = [], onProgress }: CareerProps) {
   const [choices, setChoices] = useState(initialChoices);
-  const step = useMemo(() => runUntilDecision(input, seed, choices), [input, seed, choices]);
+  const step = useMemo(() => runUntilDecision(input, seed, choices, ritmo), [input, seed, choices, ritmo]);
   const done = step.kind === 'done';
   useEffect(() => { onProgress?.(choices, done); }, [choices, done, onProgress]);
   const box = useRef(null as HTMLDivElement | null);

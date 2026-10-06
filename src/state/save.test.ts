@@ -66,4 +66,10 @@ describe('save da carreira (T54)', () => {
     expect(validateSave(SAVE)).toEqual({ ok: true, save: SAVE });
     expect(validateSave({ ...SAVE, choices: ['opcao-que-nao-existe'] })).toEqual({ ok: false, reason: 'danificado' });
   });
+
+  it('migração v1 → v2 (T53): no v1 toda decisão ia para a tela; o save vira Completo, que mantém essa regra', () => {
+    expect(SAVE_VERSION).toBe(2);
+    const v1 = JSON.stringify({ versao: 1, ...SAVE, ritmo: 'rapido', choices: ['x'] });
+    expect(parseSave(v1)).toEqual({ ok: true, save: { ...SAVE, ritmo: 'completo', choices: ['x'] } });
+  });
 });

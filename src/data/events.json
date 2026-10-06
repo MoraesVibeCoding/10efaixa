@@ -1,5 +1,5 @@
 {
- "_nota": "Eventos e dilemas (SPEC 6.13, 6.18; T25). contexto \"selecao\" (v2.37, T50k): a figurinha veste a camisa da seleção do jogador nesse evento. Condições: campo op valor. Efeitos: add ou mul (com limites de 'campos') ou set. v2.17/v2.23: toda decisão (inclusive os antigos avisos) tem 3 opções, cada uma com o 'jeito' (temperamento) a que remete; a escolha automática é a opção do jeito do jogador, e o temperamento sem opção própria segue 'politica.padrao'.",
+ "_nota": "Eventos e dilemas (SPEC 6.13, 6.18; T25). importancia (1–10, T53/v2.39): no Rápido chega à tela só o evento mais importante da temporada; no Normal, os 3 mais importantes. contexto \"selecao\" (v2.37, T50k): a figurinha veste a camisa da seleção do jogador nesse evento. Condições: campo op valor. Efeitos: add ou mul (com limites de 'campos') ou set. v2.17/v2.23: toda decisão (inclusive os antigos avisos) tem 3 opções, cada uma com o 'jeito' (temperamento) a que remete; a escolha automática é a opção do jeito do jogador, e o temperamento sem opção própria segue 'politica.padrao'.",
  "campos": {
   "moral": [
    0,
@@ -49,6 +49,7 @@
  "eventos": [
   {
    "id": "estirao-grande",
+   "importancia": 3,
    "cena": "casa-familia",
    "peso": 10,
    "condicoes": [
@@ -124,6 +125,7 @@
   },
   {
    "id": "traco-desbloqueado",
+   "importancia": 3,
    "cena": "treino",
    "peso": 10,
    "condicoes": [
@@ -199,6 +201,7 @@
   },
   {
    "id": "troca-tecnico",
+   "importancia": 5,
    "cena": "reuniao-comissao",
    "peso": 5,
    "condicoes": [
@@ -269,6 +272,7 @@
   },
   {
    "id": "proposta-rival",
+   "importancia": 8,
    "cena": "sala-empresario",
    "peso": 8,
    "condicoes": [
@@ -339,6 +343,7 @@
   },
   {
    "id": "salario-atrasado",
+   "importancia": 5,
    "cena": "vestiario",
    "peso": 6,
    "condicoes": [
@@ -409,6 +414,7 @@
   },
   {
    "id": "proposta-coracao",
+   "importancia": 8,
    "cena": "assinatura-contrato",
    "peso": 9,
    "condicoes": [
@@ -489,6 +495,7 @@
   },
   {
    "id": "traicao-coracao",
+   "importancia": 8,
    "cena": "sala-empresario",
    "peso": 8,
    "condicoes": [
@@ -554,6 +561,7 @@
   },
   {
    "id": "jogo-contra-coracao",
+   "importancia": 6,
    "cena": "gol",
    "peso": 7,
    "condicoes": [
@@ -619,6 +627,7 @@
   },
   {
    "id": "empresario-forca-venda",
+   "importancia": 7,
    "cena": "sala-empresario",
    "peso": 7,
    "condicoes": [
@@ -684,6 +693,7 @@
   },
   {
    "id": "empresario-some-dinheiro",
+   "importancia": 6,
    "cena": "sala-empresario",
    "peso": 7,
    "condicoes": [
@@ -749,6 +759,7 @@
   },
   {
    "id": "empresario-briga-clube",
+   "importancia": 5,
    "cena": "reuniao-comissao",
    "peso": 6,
    "condicoes": [
@@ -814,6 +825,7 @@
   },
   {
    "id": "renovacao",
+   "importancia": 7,
    "cena": "assinatura-contrato",
    "peso": 8,
    "condicoes": [
@@ -889,6 +901,7 @@
   },
   {
    "id": "lesao-grave",
+   "importancia": 9,
    "cena": "hospital",
    "peso": 10,
    "condicoes": [
@@ -954,6 +967,7 @@
   },
   {
    "id": "mudanca-posicao",
+   "importancia": 7,
    "cena": "reuniao-comissao",
    "peso": 6,
    "condicoes": [
@@ -1029,6 +1043,7 @@
   },
   {
    "id": "festa",
+   "importancia": 3,
    "cena": "festa",
    "peso": 5,
    "condicoes": [
@@ -1094,6 +1109,7 @@
   },
   {
    "id": "polemica-redes",
+   "importancia": 4,
    "cena": "entrevista",
    "peso": 5,
    "condicoes": [
@@ -1164,6 +1180,7 @@
   },
   {
    "id": "casa-da-familia",
+   "importancia": 5,
    "cena": "casa-familia",
    "peso": 9,
    "condicoes": [
@@ -1244,6 +1261,7 @@
   },
   {
    "id": "investir",
+   "importancia": 4,
    "cena": "sala-empresario",
    "peso": 4,
    "condicoes": [
@@ -1299,6 +1317,7 @@
   },
   {
    "id": "amadurecimento",
+   "importancia": 4,
    "cena": "vestiario",
    "peso": 10,
    "condicoes": [
@@ -1369,6 +1388,7 @@
   },
   {
    "id": "retorno-formador",
+   "importancia": 7,
    "cena": "despedida",
    "peso": 9,
    "condicoes": [
@@ -1434,6 +1454,7 @@
   },
   {
    "id": "realizar-sonho",
+   "importancia": 10,
    "cena": "despedida",
    "peso": 9,
    "condicoes": [
@@ -1509,6 +1530,7 @@
   },
   {
    "id": "copa-sacrificio",
+   "importancia": 9,
    "contexto": "selecao",
    "cena": "copa",
    "peso": 10,
@@ -1560,6 +1582,7 @@
   },
   {
    "id": "copa-fora-posicao",
+   "importancia": 8,
    "contexto": "selecao",
    "cena": "copa",
    "peso": 10,
@@ -1611,6 +1634,7 @@
   },
   {
    "id": "copa-penalti",
+   "importancia": 10,
    "contexto": "selecao",
    "cena": "penalti",
    "peso": 10,
@@ -1672,6 +1696,7 @@
   },
   {
    "id": "dupla-nacionalidade",
+   "importancia": 10,
    "cena": "convocacao",
    "peso": 10,
    "condicoes": [
