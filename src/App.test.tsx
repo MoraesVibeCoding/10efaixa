@@ -1,6 +1,15 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { App } from './App';
 import { t } from './i18n';
+import type { CreationInput } from './engine/player';
+import type { Reveal } from './ui/screens/revealView';
+
+// a revelação de verdade, registrando com que jogador e semente foi chamada (para comparar com a tela)
+const revealCalls = vi.hoisted(() => [] as { input: CreationInput; seed: number; out: Reveal }[]);
+vi.mock('./ui/screens/revealView', async (original) => {
+  const real = await original<typeof import('./ui/screens/revealView')>();
+  return { ...real, revealOf: (input: CreationInput, seed: number) => { const out = real.revealOf(input, seed); revealCalls.push({ input, seed, out }); return out; } };
+});
 
 // T51 (b): o app de ponta a ponta. Até a T49 ele abria numa decisão de amostra; agora começa na criação de verdade
 // (a abertura, o sorteio e o ritmo da T48 ainda não têm tela).
@@ -27,9 +36,21 @@ describe('App (T51b): criação → carreira', () => {
     expect(screen.getByRole('heading', { level: 1, name: t('ui.criacao.passos.quemE') })).toBeInTheDocument();
   });
 
-  it('ao concluir a criação, a carreira começa na primeira decisão do jogador criado', () => {
+  it('ao concluir a criação, vem a revelação do jogador (T49i) com o mesmo sorteio da carreira', () => {
     const { container } = render(<App seed={11} />);
     createPlayer();
+    const dialog = screen.getByRole('dialog', { name: t('ui.revelacao.titulo') });
+    expect(container.querySelector('main[data-evento]')).toBeNull();
+    const last = revealCalls.at(-1)!;
+    expect(last.seed).toBe(11);
+    expect(last.input.name).toBe('Dudu Maestro');
+    expect(dialog.querySelector('.figurinha__over-grande')).toHaveTextContent(String(last.out.overall));
+  });
+
+  it('ao concluir a criação e começar a carreira, ela abre na primeira decisão do jogador criado', () => {
+    const { container } = render(<App seed={11} />);
+    createPlayer();
+    fireEvent.click(screen.getByRole('button', { name: t('ui.revelacao.comecar') }));
     expect(container.querySelector('main[data-evento]')).not.toBeNull();
     expect(screen.getByText('Dudu Maestro', { selector: '.figurinha__tarja-nome' })).toBeInTheDocument();
     // a figurinha da decisão usa o retrato pintado do visual escolhido na criação

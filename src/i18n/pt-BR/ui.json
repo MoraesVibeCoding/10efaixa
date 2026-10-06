@@ -191,5 +191,13 @@
   "nenhumTitulo": "Nenhum título na carreira.",
   "novaCarreira": "Nova carreira"
  },
- "varzea": "time da várzea"
+ "varzea": "time da várzea",
+ "revelacao": {
+  "titulo": "Nasce um jogador",
+  "subtitulo": "{nome}, este é o seu ponto de partida. O resto, a carreira decide.",
+  "atributos": "Como ele começa",
+  "diamante": "Diamante bruto",
+  "diamanteFrase": "A várzea escondia um craque: o teto dele é maior que o normal.",
+  "comecar": "Começar carreira"
+ }
 }
