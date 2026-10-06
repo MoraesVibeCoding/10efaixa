@@ -5,7 +5,6 @@ import album from '../../data/album.json';
 import type { AvatarSpec } from '../../art/avatar';
 import trophyArt from '../../data/trophyArt.json';
 import { ATTRIBUTES, toBand, type Attributes } from '../../engine/attributes';
-import bands from '../../data/bands.json';
 import { applyOption, type Ctx } from '../../engine/events';
 import { outcomeOf, outcomeVerdict, previewOf, riskOf, RISK_BANDS, timeOutOf, type Outcome, type Preview, type Risk } from '../../engine/preview';
 import previewCfg from '../../data/preview.json';
@@ -13,6 +12,7 @@ import { t } from '../../i18n';
 import { clubLine, clubName } from './clubText';
 import { Emblema } from './Emblema';
 import { Figurinha } from './Figurinha';
+import { Niveis } from './Niveis';
 import './Decision.css';
 
 // T49 (amostra aprovada) e T51: uma decisão por tela, com a cena ao fundo. Só faixas e setas, nunca números de atributo.
@@ -112,27 +112,9 @@ function Trophies({ titles }: { titles: string[] }) {
   );
 }
 
-const BAND_KEYS = bands.map((b) => { return b.key; });
-
-/** Os dez atributos em faixa: a palavra e uma barra de seis degraus, um por faixa. Nenhum número (SPEC 6.3). */
+/** Os dez atributos de agora em faixa, nunca em número (SPEC 6.3). */
 function Levels({ attributes }: { attributes: Attributes }) {
-  return (
-    <ul className="niveis" aria-labelledby="gaveta-atributos">
-      {ATTRIBUTES.map((id) => {
-        const band = toBand(attributes[id]).key;
-        const filled = BAND_KEYS.indexOf(band) + 1;
-        return (
-          <li key={id}>
-            <span className="niveis__nome">{t(`attributes.attribute.${id}`)}</span>
-            <span className="niveis__faixa">{t(`attributes.band.${band}`)}</span>
-            <span className="nivel" aria-hidden="true">
-              {bands.map((b, i) => <i key={b.key} data-cheio={i < filled ? '' : undefined} />)}
-            </span>
-          </li>
-        );
-      })}
-    </ul>
-  );
+  return <Niveis items={ATTRIBUTES.map((id) => ({ id, band: toBand(attributes[id]).key }))} labelledBy="gaveta-atributos" />;
 }
 
 const GOALS = album.metas as { id: string; titulo?: string; marco?: string }[];

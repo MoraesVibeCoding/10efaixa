@@ -83,7 +83,6 @@
 .jogador__mais,
 .previa__rotulo,
 .gaveta__bloco h3,
-.niveis__faixa,
 .trajetoria th {
   font-family: var(--fonte-titulo);
   font-size: var(--tipo-apoio);
@@ -307,14 +306,6 @@
 .gaveta__bloco h3 { color: var(--cor-texto-suave); }
 .gaveta__vazio { color: var(--cor-texto-suave); line-height: 1.4; }
 
-/* um atributo por linha: nome, barra de seis degraus e a faixa por extenso */
-.niveis { display: grid; gap: var(--espaco-2); margin: 0; padding: 0; list-style: none; }
-.niveis li { display: grid; grid-template-columns: 6.25rem minmax(0, 1fr) 5.5rem; align-items: center; column-gap: var(--espaco-3); }
-.niveis__nome { font-weight: 700; line-height: 1.25; }
-.niveis__faixa { order: 1; color: var(--cor-positivo); text-align: end; white-space: nowrap; }
-.nivel { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; block-size: 10px; }
-.nivel i { border: 1px solid var(--cor-linha); background: var(--cor-superficie); }
-.nivel i[data-cheio] { background: var(--cor-destaque); }
 
 .trofeus { display: flex; flex-wrap: wrap; gap: var(--espaco-2); margin: 0; padding: 0; list-style: none; }
 .trofeu {
