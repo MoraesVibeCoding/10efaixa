@@ -17,6 +17,7 @@
   block-size: 100%;
   aspect-ratio: 4 / 5;
   translate: -50% 0;
+  container-type: size; /* o "10" é medido na própria arte (cqh/cqw: Chrome 105, Safari 16, Firefox 110; MDN browser-compat-data) */
 }
 .abertura__arte img {
   display: block;
@@ -29,14 +30,15 @@
   mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
 }
 
-/* o número da camisa, como estampado: claro, condensado, um pouco abaixo dos ombros */
+/* o número da camisa, como estampado: medido na arte, a gola fica a 34% da altura, a barra a 58% e o centro das
+   costas a 50,6% da largura; o "10" fica centrado nas costas, entre 40% e 50% da altura */
 .abertura__numero {
   position: absolute;
-  inset-block-start: 36%;
-  inset-inline-start: 50%;
-  translate: -50% 0;
+  inset-block-start: 44%;
+  inset-inline-start: 50.6%;
+  translate: -50% -50%;
   font-family: var(--fonte-titulo);
-  font-size: calc(min(100dvh, 125vw) * 0.13);
+  font-size: 8.5cqh; /* largura do "10" ≈ dois terços das costas, longe da braçadeira */
   font-weight: 900;
   line-height: 1;
   font-variant-numeric: tabular-nums;
