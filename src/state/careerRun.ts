@@ -1,7 +1,8 @@
 import events from '../data/events.json';
 import flow from '../data/flow.json';
-import { simulateCareer, type CareerResult, type Decider, type DecisionView } from '../engine/career';
+import { autoDecide, simulateCareer, type CareerResult, type Decider, type DecisionView } from '../engine/career';
 import { autoChoice } from '../engine/events';
+import { MEETING_EVENT, parseProposal } from '../engine/meeting';
 import type { CreationInput } from '../engine/player';
 
 // T51 (a): carreira jogada pela tela. O motor é determinístico, então continuar = refazer do começo com as escolhas
@@ -11,6 +12,7 @@ import type { CreationInput } from '../engine/player';
 // a temporada é simulada à frente com as escolhas automáticas; os eventos mais importantes dela (events.json,
 // "importancia") vão para a tela e o resto o temperamento decide. A seleção depende só do que veio antes da
 // temporada, então refazer do começo dá sempre a mesma; ela fica em cache para cada decisão custar uma simulação.
+// T52 (v2.40): a reunião com a comissão também é decisão ("reuniao"); chega à tela nos semestres de reunioesNaTela.
 export type CareerStep =
   | { kind: 'decision'; eventId: string; view: DecisionView; index: number }
   | { kind: 'done'; result: CareerResult };
@@ -19,6 +21,8 @@ export type Ritmo = 'rapido' | 'normal' | 'completo';
 const OPTIONS = new Map(events.eventos.map((e) => [e.id, new Set(e.opcoes.map((o) => o.id))]));
 const IMPORTANCE = new Map(events.eventos.map((e) => [e.id, e.importancia]));
 const LIMITS = flow.decisoesPorTemporada as Record<Ritmo, number | null>;
+/** T52 (v2.40): em quais semestres a reunião com a comissão chega à tela, por ritmo; as outras são automáticas. */
+const MEETINGS = flow.reunioesNaTela as Record<Ritmo, number[]>;
 
 /** Interrupção da simulação: chegou numa decisão que o jogador ainda não tomou. */
 class Pending {
@@ -58,6 +62,11 @@ function decider(run: Run, probe?: { year: number; found: string[] }): Decider {
   return (eventId, temperament, view) => {
     const v = view();
     if (probe && v.year > probe.year) throw new SeasonOver();
+    if (eventId === MEETING_EVENT) {
+      const onScreen = !(probe && v.year === probe.year) && MEETINGS[run.ritmo].includes(Number(v.state.semestre));
+      if (!onScreen) return autoDecide(eventId, temperament, () => v);
+      return take(eventId, v);
+    }
     if (probe && v.year === probe.year) { probe.found.push(eventId); return autoChoice(eventId, temperament); }
     if (limit !== null) {
       let sel = inUse.get(v.year);
@@ -75,11 +84,17 @@ function decider(run: Run, probe?: { year: number; found: string[] }): Decider {
       if (n <= 0) return autoChoice(eventId, temperament);
       sel.set(eventId, n - 1);
     }
+    return take(eventId, v);
+  };
+
+  /** A escolha do jogador para esta decisão; sem escolha ainda, a carreira para aqui (vira a próxima tela). */
+  function take(eventId: string, v: DecisionView): string {
     if (i >= run.choices.length) throw new Pending(eventId, v, i);
     const choice = run.choices[i++]!;
-    if (!OPTIONS.get(eventId)?.has(choice)) throw new RangeError(`escolha inválida "${choice}" para ${eventId} (decisão ${i})`);
+    const valid = eventId === MEETING_EVENT ? parseProposal(choice) !== null : OPTIONS.get(eventId)?.has(choice);
+    if (!valid) throw new RangeError(`escolha inválida "${choice}" para ${eventId} (decisão ${i})`);
     return choice;
-  };
+  }
 }
 
 /** Os eventos da temporada `year`, com as escolhas feitas antes dela e as automáticas dentro dela. */

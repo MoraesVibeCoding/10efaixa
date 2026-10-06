@@ -10,12 +10,12 @@ import { EUROPE, areEuroRivals, effectiveRep } from './europe';
 import { initialEuroTables, simulateEuropeSeason, type EuroTables } from './europeSeason';
 import { applyOption, autoChoice, heartSalaryFactor } from './events';
 import { callUp, coachFor, isPrincipal, selectionEffect, updatePrestige, visibility, type CallUp, type Rung } from './nationalTeam';
-import { evolveSemester, type EvoState } from './evolution';
+import { evolveSemester, type EvoState, type Focus } from './evolution';
 import { mentalityEffects } from './mentality';
 import { afterClassico, afterSemester, afterTransfer, type Idolatry } from './idolatry';
 import { decayRelapse, graveDecision, semesterInjury } from './injuries';
 import { chooseOffer, generateOffers, leagueOf, marketValue, salaryFor, type Offer } from './market';
-import { autoProposal, staffMeeting } from './meeting';
+import { MEETING_EVENT, autoProposal, encodeProposal, parseProposal, staffMeeting, type MeetingResult } from './meeting';
 import { minutesShare, squadLevel, updateForm, updateMorale, type Role } from './minutes';
 import { overall, type Position } from './overall';
 import { coachProposal } from './positionChange';
@@ -82,12 +82,16 @@ export interface DecisionView {
   /** Estado que o evento lê e muda (moral, idolatria, patrimônio...), já com o que aconteceu neste semestre. */
   state: Record<string, number | string | boolean>;
   seasons: CareerResult['seasons']; titles: Title[];
+  /** T52: as reuniões com a comissão até agora (ano, semestre e resposta); a tela mostra a resposta da que o jogador fez. */
+  meetings: ({ year: number; semestre: 1 | 2 } & MeetingResult)[];
   /** Seleção que o jogador defende agora ("brasil" ou o país da dupla nacionalidade aceita): a camisa nos eventos da Seleção (v2.37). */
   nationality: string;
 }
 /** Quem decide: o temperamento (simulação, ritmo Rápido) ou o jogador (tela). `view` só é montada se pedida. */
 export type Decider = (eventId: string, temperament: string, view: () => DecisionView) => string;
-const AUTO: Decider = (eventId, temperament) => autoChoice(eventId, temperament);
+/** Decisão automática (simulação e eventos fora da tela): na reunião, a sugestão do preparador; nos eventos, o temperamento. */
+export const autoDecide: Decider = (eventId, temperament, view) => (eventId === MEETING_EVENT ? String(view().state.sugestao) : autoChoice(eventId, temperament));
+const AUTO = autoDecide;
 
 const UF = new Map(CLUBS.map((c) => [c.id, c.uf]));
 const BRAZIL = new Set(CLUBS.map((c) => c.id));
@@ -173,6 +177,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let decisiveDerbies = 0;
   let curYear = startYear;
   let curRole: Role = 'promessa';
+  const meetings: DecisionView['meetings'] = [];
   /** Toda decisão passa por aqui (T51): o padrão é a escolha do temperamento, como antes. */
   const ask = (eventId: string, state: Record<string, number | string | boolean> = {}, who = temp) => decide(eventId, who, () => ({
     year: curYear, age: evo.age, clubId, position, overall: ov(evo), role: curRole, temperament: who,
@@ -183,7 +188,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       moral: morale, disciplina: discipline, relacaoTecnico: coachRelation, patrimonio: wealth, salarioFator: 1,
       idolatria: clubId ? idol[clubId] ?? 0 : 0, idolatriaCoracao: input.heartClub ? idol[input.heartClub] ?? 0 : 0, ...state,
     },
-    seasons: [...seasons], titles: [...titles], nationality: selection.nationality,
+    seasons: [...seasons], titles: [...titles], nationality: selection.nationality, meetings: [...meetings],
   }));
   const earn = (amount: number, currency: Contract['currency']) => { const before = wealth; wealth = addToWealth(wealth, amount, currency, agent); earned += Math.max(0, wealth - before); };
   const awards: CareerResult['awards'] = [];
@@ -291,7 +296,18 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       if (varzeaLeft === 0 && !inYouth) minutes = clamp(minutes + fx.clubMinutes, 0, 1);
       morale = updateMorale(morale, minutes, role, teamResult);
       const clubNeed = ATTRIBUTES[yr.int(0, ATTRIBUTES.length - 1)]!;
-      const { focus, injuryRiskMultiplier } = staffMeeting({ proposal: autoProposal(evo.attributes, evo.caps, position, evo.age), morale, coachRelation, nationalTeamStatus: fx.meetingStatus, clubNeed });
+      // T52: com clube, a reunião passa por quem decide (tela ou automática); a sugestão é a proposta automática
+      const suggestion = autoProposal(evo.attributes, evo.caps, position, evo.age);
+      let proposal: { main: Focus; secondary: Focus } = suggestion;
+      if (clubId) {
+        const said = ask(MEETING_EVENT, { sugestao: encodeProposal(suggestion), semestre: sem + 1 });
+        const parsed = parseProposal(said);
+        if (!parsed) throw new RangeError(`proposta de reunião inválida: "${said}"`);
+        proposal = parsed;
+      }
+      const meeting = staffMeeting({ proposal, morale, coachRelation, nationalTeamStatus: fx.meetingStatus, clubNeed });
+      if (clubId) meetings.push({ year: curYear, semestre: (sem + 1) as 1 | 2, ...meeting });
+      const { focus, injuryRiskMultiplier } = meeting;
       // Lesões: tempo fora de uma grave anterior, depois o sorteio do semestre (só no profissional).
       if (outLeft > 0) { minutes *= 1 - Math.min(1, outLeft); outLeft = Math.max(0, outLeft - 1); }
       else if (!inYouth && varzeaLeft === 0) {

@@ -19,6 +19,16 @@ const advance = () => fireEvent.click(screen.getByRole('button', { name: t('ui.c
 
 const startNew = () => fireEvent.click(screen.getByRole('button', { name: t('ui.abertura.novaCarreira') }));
 
+/** T52: atravessa a reunião com a comissão (propõe a sugestão e fecha a resposta), se ela for a tela da vez. */
+function passMeetings() {
+  for (let guard = 0; guard < 6; guard++) {
+    const resposta = document.querySelector('dialog.reuniao__resposta');
+    if (resposta) { fireEvent.click(resposta.querySelector('button')!); continue; }
+    if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') })); continue; }
+    return;
+  }
+}
+
 function createPlayer() {
   startNew();
   fireEvent.change(screen.getByLabelText(t('ui.criacao.quemE.nome')), { target: { value: 'Dudu Maestro' } });
@@ -61,6 +71,7 @@ describe('App (T51b, T48): abertura → criação → revelação → ritmo → 
     fireEvent.click(screen.getByRole('button', { name: t('ui.revelacao.seguir') }));
     expect(screen.getByRole('heading', { level: 1, name: t('ui.ritmo.titulo') })).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: t('ui.ritmo.comecar') }));
+    passMeetings();
     expect(container.querySelector('main[data-evento]')).not.toBeNull();
     expect(screen.getByText('Dudu Maestro', { selector: '.figurinha__tarja-nome' })).toBeInTheDocument();
     // a figurinha da decisão usa o retrato pintado do visual escolhido na criação
@@ -103,6 +114,7 @@ describe('save no aparelho (T54, v2.39)', () => {
 
   const toRitmo = () => { fireEvent.click(screen.getByRole('button', { name: t('ui.revelacao.seguir') })); fireEvent.click(screen.getByRole('button', { name: t('ui.ritmo.comecar') })); };
   const decideFirst = () => {
+    passMeetings();
     fireEvent.click(document.querySelector('.opcao')!);
     fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
     fireEvent.click(screen.getByRole('button', { name: t('ui.resultado.seguir') }));
@@ -113,12 +125,12 @@ describe('save no aparelho (T54, v2.39)', () => {
     createPlayer(); toRitmo();
     expect(JSON.parse(localStorage.getItem(SAVE_KEY)!)).toMatchObject({ seed: 11, ritmo: 'normal', choices: [] });
     decideFirst();
-    expect(JSON.parse(localStorage.getItem(SAVE_KEY)!).choices).toHaveLength(1);
+    expect(JSON.parse(localStorage.getItem(SAVE_KEY)!).choices.length).toBeGreaterThanOrEqual(1);
   });
 
   it('fechar e abrir de novo: "Continuar" volta exatamente na decisão em que parou', () => {
     const first = render(<App seed={11} />);
-    createPlayer(); toRitmo(); decideFirst();
+    createPlayer(); toRitmo(); decideFirst(); passMeetings();
     const eventId = document.querySelector('main[data-evento]')!.getAttribute('data-evento');
     first.unmount();
     render(<App seed={99} />);

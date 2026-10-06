@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { CareerResult } from '../../engine/career';
+import type { CareerResult, DecisionView } from '../../engine/career';
+import { MEETING_EVENT } from '../../engine/meeting';
 import type { CreationInput } from '../../engine/player';
 import { t } from '../../i18n';
 import { runUntilDecision } from '../../state/careerRun';
@@ -7,6 +8,7 @@ import { clubName } from './clubText';
 import { careerProgress, toDecisionPlayer } from './careerView';
 import { Decision } from './Decision';
 import { Emblema } from './Emblema';
+import { Reuniao, ReuniaoResposta } from './Reuniao';
 import type { Look } from './look';
 import type { RitmoId } from './Ritmo';
 import scene from '../../assets/amostra/assinatura-contrato.webp';
@@ -26,6 +28,8 @@ export interface CareerProps {
 
 export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal', initialChoices = [], onProgress }: CareerProps) {
   const [choices, setChoices] = useState(initialChoices);
+  // T52: a reunião que o jogador acabou de fazer; a resposta dela aparece por cima da próxima tela
+  const [asked, setAsked] = useState(null as { year: number; semestre: number } | null);
   const step = useMemo(() => runUntilDecision(input, seed, choices, ritmo), [input, seed, choices, ritmo]);
   const done = step.kind === 'done';
   useEffect(() => { onProgress?.(choices, done); }, [choices, done, onProgress]);
@@ -41,6 +45,19 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
 
   if (step.kind === 'done') return <div ref={box} className="carreira"><CareerEnd result={step.result} onRestart={onRestart} /></div>;
   const { view, eventId, index } = step;
+  const resposta = answerOf(view.meetings, asked);
+  const respostaEl = resposta ? <ReuniaoResposta key={`${asked!.year}-${asked!.semestre}`} resposta={resposta} onDone={() => { setAsked(null); }} /> : null;
+  if (eventId === MEETING_EVENT) {
+    return (
+      <div ref={box} className="carreira" data-temperamento={view.temperament}>
+        <Reuniao key={index} sugestao={String(view.state.sugestao)} onChoose={(choice) => {
+          setAsked({ year: view.year, semestre: Number(view.state.semestre) });
+          setChoices([...choices, choice]);
+        }} />
+        {respostaEl}
+      </div>
+    );
+  }
   const player = toDecisionPlayer(view, input, look, visual, eventId);
   const clube = view.clubId ? clubName(view.clubId).nome : t('ui.varzea');
   return (
@@ -56,8 +73,16 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
         ritmo={ritmo}
         onContinue={(choice) => setChoices([...choices, choice])}
       />
+      {respostaEl}
     </div>
   );
+}
+
+/** A resposta da reunião que o jogador acabou de fazer, no histórico de reuniões da carreira (T52). Função declarada:
+ * o guarda do i18n lê "=>" seguido de JSX como texto solto. */
+function answerOf(meetings: DecisionView['meetings'], asked: { year: number; semestre: number } | null) {
+  if (!asked) return undefined;
+  return meetings.find(function same(m) { return m.year === asked.year && m.semestre === asked.semestre; });
 }
 
 /** Clubes na ordem em que passou, sem repetir a passagem seguida (renovação, volta de empréstimo). */

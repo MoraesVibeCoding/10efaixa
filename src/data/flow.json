@@ -2,6 +2,7 @@
  "_nota": "Fluxo de telas (SPEC 6.1, 6.14–6.16; T48). Cada tela lista os eventos que aceita e a tela de destino. A criação é uma tela só, com passos (v2.30: quem é ele, em campo e cabeça, tipo de início; v2.35: o visual ganhou passo próprio, depois de quem é ele).",
  "inicial": "abertura",
  "decisoesPorTemporada": { "rapido": 1, "normal": 3, "completo": null },
+ "reunioesNaTela": { "rapido": [], "normal": [2], "completo": [1, 2] },
  "passosCriacao": ["quemE", "visual", "emCampo", "origem"],
  "telas": {
   "abertura": { "NOVA_CARREIRA": "criacao", "CONTINUAR": "temporada", "SAVE_INVALIDO": "saveInvalido" },

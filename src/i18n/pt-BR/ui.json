@@ -222,6 +222,25 @@
   "dica": "Você pode começar uma carreira nova. A salva será apagada.",
   "recomecar": "Começar uma nova"
  },
+ "reuniao": {
+  "titulo": "Reunião com a comissão",
+  "texto": "É meio de temporada. O que você quer treinar mais no próximo semestre?",
+  "sugestao": "Sugestão do preparador: {principal} e {secundario}.",
+  "principal": "Foco principal",
+  "secundario": "Foco secundário",
+  "propor": "Propor ao técnico",
+  "foco": { "bolaParada": "Bola parada", "pernaRuim": "Perna ruim" },
+  "resposta": {
+   "aceita": { "titulo": "A comissão topou", "texto": "Foco principal em {principal}, com {secundario} de apoio." },
+   "contrapropoe": { "titulo": "O técnico tem outra ideia", "texto": "O clube precisa de {principal}. Seu pedido, {secundario}, fica como apoio." },
+   "recusa": {
+    "titulo": "A comissão não aceitou",
+    "moral": "Com o moral lá embaixo, ninguém quis mudar o treino agora.",
+    "relacao": "A relação com o técnico não está boa. Ele segue o plano dele.",
+    "score": "Não é o momento. O treino segue como está."
+   }
+  }
+ },
  "ritmo": {
   "titulo": "Como você quer jogar?",
   "rapido": { "nome": "Rápido", "detalhe": "Uns 5 minutos. Só os momentos-chave, e um toque já decide." },

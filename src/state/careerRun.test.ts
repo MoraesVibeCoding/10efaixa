@@ -1,9 +1,12 @@
 import events from '../data/events.json';
-import { simulateCareer, type Decider } from '../engine/career';
-import { autoChoice } from '../engine/events';
+import { autoDecide, simulateCareer, type Decider } from '../engine/career';
+import { MEETING_EVENT } from '../engine/meeting';
 import { marketValue } from '../engine/market';
 import type { CreationInput } from '../engine/player';
-import { runUntilDecision } from './careerRun';
+import { runUntilDecision, type CareerStep, type Ritmo } from './careerRun';
+
+/** A resposta automática da tela: na reunião, a sugestão do preparador; nos eventos, o temperamento (T52). */
+const auto = (step: Extract<CareerStep, { kind: 'decision' }>) => autoDecide(step.eventId, step.view.temperament, () => step.view);
 
 // T51 (a): a carreira para em cada decisão e continua refazendo do começo com as escolhas já feitas (motor determinístico).
 const input = (over: Partial<CreationInput> = {}): CreationInput => ({
@@ -19,7 +22,7 @@ function playAuto(i: CreationInput, seed: number) {
   for (let guard = 0; guard < 500; guard++) {
     const step = runUntilDecision(i, seed, choices);
     if (step.kind === 'done') return { result: step.result, choices };
-    choices.push(autoChoice(step.eventId, step.view.temperament));
+    choices.push(auto(step));
   }
   throw new Error('carreira não terminou');
 }
@@ -27,17 +30,17 @@ function playAuto(i: CreationInput, seed: number) {
 describe('motor interativo (T51a)', () => {
   it('simulateCareer com um decide igual ao automático dá exatamente o mesmo resultado', () => {
     const seen: string[] = [];
-    const auto: Decider = (e, temp) => { seen.push(e); return autoChoice(e, temp); };
-    expect(simulateCareer(input(), 11, 2026, auto)).toEqual(simulateCareer(input(), 11));
+    const decide: Decider = (e, temp, view) => { seen.push(e); return autoDecide(e, temp, view); };
+    expect(simulateCareer(input(), 11, 2026, decide)).toEqual(simulateCareer(input(), 11));
     expect(seen.length).toBeGreaterThan(0);
-    expect(seen.every((e) => EVENT_IDS.has(e))).toBe(true);
+    expect(seen.every((e) => EVENT_IDS.has(e) || e === MEETING_EVENT)).toBe(true);
   });
 
   it('sem escolhas, para na primeira decisão com a foto do jogador naquele momento', () => {
     const step = runUntilDecision(input(), 11, []);
     expect(step.kind).toBe('decision');
     if (step.kind !== 'decision') return;
-    expect(EVENT_IDS.has(step.eventId)).toBe(true);
+    expect(EVENT_IDS.has(step.eventId) || step.eventId === MEETING_EVENT).toBe(true);
     const v = step.view;
     expect(v.age).toBeGreaterThanOrEqual(16);
     expect(v.year).toBeGreaterThanOrEqual(2026);
@@ -62,16 +65,19 @@ describe('motor interativo (T51a)', () => {
   it('a mesma lista de escolhas sempre leva ao mesmo ponto (dá para salvar só criação, semente e escolhas)', () => {
     const first = runUntilDecision(input(), 11, []);
     if (first.kind !== 'decision') throw new Error('sem decisão');
-    const one = [autoChoice(first.eventId, first.view.temperament)];
+    const one = [auto(first)];
     expect(runUntilDecision(input(), 11, one)).toEqual(runUntilDecision(input(), 11, one));
     expect(runUntilDecision(input(), 11, one)).not.toEqual(first);
   });
 
   it('uma escolha diferente muda a carreira dali para frente', () => {
-    const first = runUntilDecision(input(), 11, []);
+    // o primeiro evento da carreira; as reuniões antes dele recebem a sugestão do preparador
+    const before: string[] = [];
+    let first = runUntilDecision(input(), 11, before);
+    while (first.kind === 'decision' && first.eventId === MEETING_EVENT) { before.push(auto(first)); first = runUntilDecision(input(), 11, before); }
     if (first.kind !== 'decision') throw new Error('sem decisão');
     const opts = events.eventos.find((e) => e.id === first.eventId)!.opcoes.map((o) => o.id);
-    const runs = opts.map((o) => { const { result } = playFrom(input(), 11, [o]); return JSON.stringify(result); });
+    const runs = opts.map((o) => { const { result } = playFrom(input(), 11, [...before, o]); return JSON.stringify(result); });
     expect(new Set(runs).size).toBeGreaterThan(1);
   });
 
@@ -81,12 +87,12 @@ describe('motor interativo (T51a)', () => {
 });
 
 /** Joga a partir de escolhas iniciais, depois sempre o automático. */
-function playFrom(i: CreationInput, seed: number, start: string[]) {
+function playFrom(i: CreationInput, seed: number, start: string[], ritmo: Ritmo = 'completo') {
   const choices = [...start];
   for (let guard = 0; guard < 500; guard++) {
-    const step = runUntilDecision(i, seed, choices);
+    const step = runUntilDecision(i, seed, choices, ritmo);
     if (step.kind === 'done') return { result: step.result, choices };
-    choices.push(autoChoice(step.eventId, step.view.temperament));
+    choices.push(auto(step));
   }
   throw new Error('carreira não terminou');
 }
