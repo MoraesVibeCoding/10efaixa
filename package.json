@@ -13,7 +13,8 @@
     "art:check": "node --experimental-strip-types --no-warnings src/art/check.ts",
     "art:generate": "node --experimental-strip-types --no-warnings src/art/generate.ts",
     "sim:carreira": "SIM_CARREIRA=1 vitest run src/engine/career.report",
-    "sim:legado": "SIM_LEGADO=${SIM_LEGADO:-300} vitest run src/engine/legacy.report"
+    "sim:legado": "SIM_LEGADO=${SIM_LEGADO:-300} vitest run src/engine/legacy.report",
+    "sim:estilos": "SIM_ESTILOS=${SIM_ESTILOS:-400} vitest run src/engine/archetypes.report"
   },
   "keywords": [],
   "author": "",
