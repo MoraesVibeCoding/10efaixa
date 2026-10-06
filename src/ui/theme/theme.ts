@@ -32,7 +32,7 @@ const glassVars = (g: Glass) => `--vidro-fundo: ${rgb(g.cor, g.alfa)}; --vidro-b
 /** Claro por padrão; escuro pela preferência do aparelho; `data-tema` força um dos dois (telas com cena usam "escuro"). */
 export function themeCss(): string {
   const { claro, escuro } = tokens.temas;
-  const fixed = [vars('fonte', tokens.fontes), vars('tipo', tokens.tipo), vars('espaco', tokens.espaco), vars('toque', tokens.toque), vars('forma', tokens.forma), `--vidro-desfoque: ${tokens.vidro.desfoque}; --vidro-saturacao: ${tokens.vidro.saturacao};`].join(' ');
+  const fixed = [vars('fonte', tokens.fontes), vars('tipo', tokens.tipo), vars('espaco', tokens.espaco), vars('toque', tokens.toque), vars('forma', tokens.forma), vars('paleta', tokens.paleta), `--vidro-desfoque: ${tokens.vidro.desfoque}; --vidro-saturacao: ${tokens.vidro.saturacao};`].join(' ');
   const medals = Object.entries(tokens.medalha).filter(([k]) => !k.startsWith('_')).map(([, m]) => m as { nome: string; clara: string; escura: string; aro: string; texto: string });
   return [
     `:root { ${fixed} ${colors(claro)} ${glassVars(tokens.vidro.claro)} color-scheme: light; }`,

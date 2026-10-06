@@ -114,3 +114,14 @@ describe('vidro (T49f, SPEC 7 v2.34)', () => {
     for (const v of ['--vidro-desfoque:', '--vidro-saturacao:', '--forma-borda-fina:', '--forma-sombra-suave:']) expect(css).toContain(v);
   });
 });
+
+describe('paleta como variável (T48 abertura)', () => {
+  it('cada cor da paleta vira --paleta-*: a abertura usa o amarelo da braçadeira (marca) sobre o marinho', () => {
+    const css = themeCss();
+    for (const [k, v] of Object.entries(tokens.paleta)) expect(css).toContain(`--paleta-${k}: ${v};`);
+  });
+
+  it('amarelo da marca sobre o marinho passa em AA para texto grande e normal', () => {
+    expect(contrast(tokens.paleta.amarelo, tokens.paleta.marinho)).toBeGreaterThanOrEqual(4.5);
+  });
+});
