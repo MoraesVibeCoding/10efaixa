@@ -1,5 +1,5 @@
 {
- "_nota": "Clubes 2026 (SPEC 6.9, 11: nomes reais, escudo estilizado com sigla e cores). 'reputacao' (1–100) é estimativa de balanceamento, não dado oficial; 'cores' são aproximações para o uniforme (Série D: marinho/branco provisório até conferência). Rivais manuais só nas Séries A e B; rivais por cidade das Séries C e D são calculados pelo motor (cidade null = incerta, sem rival automático). Série D é divisão aberta, remontada pelos estaduais (T18). Clubes com divisao null disputam só o estadual (elite ou divisão de acesso); cores provisórias. artigo: \"a\" nos clubes de nome feminino (\"meia da Portuguesa\"); sem o campo, masculino (T49c).",
+ "_nota": "Clubes 2026 (SPEC 6.9, 11: nomes reais, escudo estilizado com sigla e cores). 'reputacao' (1–100) é estimativa de balanceamento, não dado oficial; 'cores' são aproximações para o uniforme (T50j, 2026-10-06: estimativa do assistente; as prováveis e as desconhecidas estão em coresRevisao.json, e as desconhecidas seguem no marinho/branco provisório). Rivais manuais só nas Séries A e B; rivais por cidade das Séries C e D são calculados pelo motor (cidade null = incerta, sem rival automático). Série D é divisão aberta, remontada pelos estaduais (T18). Clubes com divisao null disputam só o estadual (elite ou divisão de acesso). artigo: \"a\" nos clubes de nome feminino (\"meia da Portuguesa\"); sem o campo, masculino (T49c).",
  "fonte": {
   "serieA": "https://www.cbf.com.br/futebol-brasileiro/tabelas/campeonato-brasileiro/serie-a/2026",
   "serieB": "https://www.cbf.com.br/futebol-brasileiro/tabelas/campeonato-brasileiro/serie-b/2026",
@@ -931,7 +931,7 @@
    "uf": "AM",
    "cidade": "Manaus",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 40,
@@ -1099,7 +1099,7 @@
    "uf": "DF",
    "cidade": "Brasília",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 38,
@@ -1113,8 +1113,8 @@
    "uf": "DF",
    "cidade": "Brasília",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#00843D"
    ],
    "reputacao": 38,
    "divisao": "D",
@@ -1127,7 +1127,7 @@
    "uf": "MT",
    "cidade": "Lucas do Rio Verde",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 34,
@@ -1212,7 +1212,7 @@
    "uf": "MT",
    "cidade": "Cuiabá",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 32,
@@ -1353,8 +1353,8 @@
    "uf": "MA",
    "cidade": "São Luís",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#00843D"
    ],
    "reputacao": 48,
    "divisao": "D",
@@ -1367,8 +1367,8 @@
    "uf": "MA",
    "cidade": "São Luís",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#000000"
    ],
    "reputacao": 34,
    "divisao": "D",
@@ -1437,8 +1437,8 @@
    "uf": "CE",
    "cidade": "Fortaleza",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#000000"
    ],
    "reputacao": 38,
    "divisao": "D",
@@ -1521,8 +1521,8 @@
    "uf": "RN",
    "cidade": "Natal",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFFFFF",
+    "#000000"
    ],
    "reputacao": 52,
    "divisao": "D",
@@ -1535,7 +1535,7 @@
    "uf": "RN",
    "cidade": "Natal",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 44,
@@ -1591,7 +1591,7 @@
    "uf": "PE",
    "cidade": "Caruaru",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 34,
@@ -1647,7 +1647,7 @@
    "uf": "PB",
    "cidade": "Campina Grande",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 42,
@@ -1675,7 +1675,7 @@
    "uf": "SE",
    "cidade": "Aracaju",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 34,
@@ -1689,7 +1689,7 @@
    "uf": "AL",
    "cidade": "Arapiraca",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 38,
@@ -1703,7 +1703,7 @@
    "uf": "AL",
    "cidade": "Maceió",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 52,
@@ -1773,7 +1773,7 @@
    "uf": "MG",
    "cidade": "Uberlândia",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 34,
@@ -1829,7 +1829,7 @@
    "uf": "MS",
    "cidade": "Campo Grande",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 32,
@@ -1871,7 +1871,7 @@
    "uf": "ES",
    "cidade": null,
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 32,
@@ -1885,7 +1885,7 @@
    "uf": "ES",
    "cidade": "Vitória",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 30,
@@ -1941,8 +1941,8 @@
    "uf": "RJ",
    "cidade": "Rio de Janeiro",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#0047AB"
    ],
    "reputacao": 38,
    "divisao": "D",
@@ -1955,8 +1955,8 @@
    "uf": "RJ",
    "cidade": "Rio de Janeiro",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#00843D"
    ],
    "reputacao": 32,
    "divisao": "D",
@@ -1970,7 +1970,7 @@
    "uf": "RJ",
    "cidade": "Rio de Janeiro",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 36,
@@ -1984,8 +1984,8 @@
    "uf": "SP",
    "cidade": "São Paulo",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#00843D"
    ],
    "reputacao": 46,
    "divisao": "D",
@@ -2027,8 +2027,8 @@
    "uf": "RJ",
    "cidade": "Nova Iguaçu",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#F37021",
+    "#0047AB"
    ],
    "reputacao": 34,
    "divisao": "D",
@@ -2069,7 +2069,7 @@
    "uf": "SP",
    "cidade": "Piracicaba",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 38,
@@ -2083,7 +2083,7 @@
    "uf": "SP",
    "cidade": "Bauru",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 36,
@@ -2153,8 +2153,8 @@
    "uf": "SC",
    "cidade": "Joinville",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#000000"
    ],
    "reputacao": 44,
    "divisao": "D",
@@ -2167,7 +2167,7 @@
    "uf": "RS",
    "cidade": "Bagé",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 28,
@@ -2265,8 +2265,8 @@
    "uf": "RS",
    "cidade": "Pelotas",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#C8102E",
+    "#000000"
    ],
    "reputacao": 44,
    "divisao": "D",
@@ -2307,7 +2307,7 @@
    "uf": "RJ",
    "cidade": "Rio de Janeiro",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 30,
@@ -2419,7 +2419,7 @@
    "uf": "RS",
    "cidade": "Santa Maria",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 30,
@@ -2545,7 +2545,7 @@
    "uf": "BA",
    "cidade": "Salvador",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 30,
@@ -2644,7 +2644,7 @@
    "uf": "SP",
    "cidade": "Taubaté",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -2672,7 +2672,7 @@
    "uf": "SP",
    "cidade": "Santo André",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -2714,7 +2714,7 @@
    "uf": "SP",
    "cidade": "São Paulo",
    "cores": [
-    "#14213D",
+    "#7A1E3A",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -2798,7 +2798,7 @@
    "uf": "RJ",
    "cidade": "Campos dos Goytacazes",
    "cores": [
-    "#14213D",
+    "#000000",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -2869,7 +2869,7 @@
    "uf": "RJ",
    "cidade": "Rio de Janeiro",
    "cores": [
-    "#14213D",
+    "#0047AB",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -2953,7 +2953,7 @@
    "uf": "MG",
    "cidade": "Nova Lima",
    "cores": [
-    "#14213D",
+    "#C8102E",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -3065,7 +3065,7 @@
    "uf": "MG",
    "cidade": "Poços de Caldas",
    "cores": [
-    "#14213D",
+    "#00843D",
     "#FFFFFF"
    ],
    "reputacao": 22,
@@ -3136,8 +3136,8 @@
    "uf": "RS",
    "cidade": "Bagé",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#FFD100",
+    "#000000"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3262,8 +3262,8 @@
    "uf": "RS",
    "cidade": "Pelotas",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#FFD100"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3346,8 +3346,8 @@
    "uf": "PR",
    "cidade": null,
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#F37021",
+    "#000000"
    ],
    "reputacao": 22,
    "divisao": null,
@@ -3374,8 +3374,8 @@
    "uf": "PR",
    "cidade": "Curitiba",
    "cores": [
-    "#14213D",
-    "#FFFFFF"
+    "#0047AB",
+    "#C8102E"
    ],
    "reputacao": 22,
    "divisao": null,
