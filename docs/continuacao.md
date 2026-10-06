@@ -1,5 +1,7 @@
 # Continuação: estado do projeto e próximos passos
 
+> **Histórico.** O estado atual (2026-10-06) está em `docs/current-task.md`.
+
 Atualizado em 2026-10-03. Leia antes de continuar numa sessão nova. A fonte da verdade continua sendo o `SPEC.md`, hoje na **v2.33**, e as regras de trabalho estão no `CLAUDE.md`.
 
 ## Onde estamos
