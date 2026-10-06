@@ -87,7 +87,8 @@ export function peekSave(storage: SaveStorage): SavePeek {
 /** Refaz a carreira com as escolhas salvas: escolha que o motor não aceita (save adulterado ou de outro jogo) é "danificado". */
 export function validateSave(save: SaveData): SaveResult {
   try {
-    runUntilDecision(save.created.input, save.seed, save.choices);
+    // no ritmo salvo: cada ritmo escolhe decisões diferentes, e o padrão (Completo) recusaria saves do Rápido e do Normal
+    runUntilDecision(save.created.input, save.seed, save.choices, save.ritmo);
     return { ok: true, save };
   } catch {
     return { ok: false, reason: 'danificado' };

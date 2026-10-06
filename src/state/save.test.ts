@@ -1,4 +1,5 @@
 import type { CreationInput } from '../engine/player';
+import { autoDecide } from '../engine/career';
 import { runUntilDecision } from './careerRun';
 import { SAVE_KEY, SAVE_VERSION, clearSave, parseSave, peekSave, readSave, validateSave, writeSave, type SaveData } from './save';
 
@@ -71,5 +72,24 @@ describe('save da carreira (T54)', () => {
     expect(SAVE_VERSION).toBe(2);
     const v1 = JSON.stringify({ versao: 1, ...SAVE, ritmo: 'rapido', choices: ['x'] });
     expect(parseSave(v1)).toEqual({ ok: true, save: { ...SAVE, ritmo: 'completo', choices: ['x'] } });
+  });
+});
+
+describe('validação refaz a carreira no ritmo salvo (bug achado no teste de deploy, 2026-10-06)', () => {
+  // escolhas reais de uma carreira jogada no ritmo, como o automático decide (reunião: a sugestão do preparador)
+  function played(ritmo: SaveData['ritmo'], n: number): string[] {
+    const choices: string[] = [];
+    for (let i = 0; i < n; i++) {
+      const step = runUntilDecision(INPUT, SAVE.seed, choices, ritmo);
+      if (step.kind !== 'decision') break;
+      choices.push(autoDecide(step.eventId, step.view.temperament, () => step.view));
+    }
+    return choices;
+  }
+
+  it.each(['rapido', 'normal', 'completo'] as const)('save do ritmo %s com escolhas continua válido', (ritmo) => {
+    const choices = played(ritmo, 8);
+    expect(choices.length).toBe(8);
+    expect(validateSave({ ...SAVE, ritmo, choices })).toEqual({ ok: true, save: { ...SAVE, ritmo, choices } });
   });
 });
