@@ -30,7 +30,7 @@ export function Career({ input, look, visual, seed, onRestart }: CareerProps) {
 
   if (step.kind === 'done') return <div ref={box} className="carreira"><CareerEnd result={step.result} onRestart={onRestart} /></div>;
   const { view, eventId, index } = step;
-  const player = toDecisionPlayer(view, input, look, visual);
+  const player = toDecisionPlayer(view, input, look, visual, eventId);
   const clube = view.clubId ? clubName(view.clubId).nome : t('ui.varzea');
   return (
     <div ref={box} className="carreira" data-temperamento={view.temperament}>

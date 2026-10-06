@@ -24,6 +24,13 @@ describe('camisa pela cor do clube (T50h)', () => {
     expect(camisa.style.getPropertyValue('--camisa-desenho')).toBe(shirtPaint(kitOf('flamengo')));
   });
 
+  it('com `uniforme`, a camisa veste a seleção e o emblema continua o do clube (T50k)', () => {
+    const { container } = render(<Figurinha name="Zé" number={8} overall={60} position="meia" clubId="flamengo" uniforme="selecao:brasil" visual="visual-03" />);
+    const camisa = container.querySelector('.camisa') as HTMLElement;
+    expect(camisa.style.getPropertyValue('--camisa-cor')).toBe(kitOf('selecao:brasil').camisa[0]);
+    expect(container.querySelector('.emblema')).toHaveAttribute('data-emblema', 'flamengo');
+  });
+
   it('a figurinha com moldura também pinta a camisa', () => {
     const { container } = render(<Figurinha name="Zé" number={8} overall={80} clubId="flamengo" moldura tamanho="grande" visual="visual-05" />);
     const camisa = container.querySelector('.figurinha--moldura .camisa') as HTMLElement;

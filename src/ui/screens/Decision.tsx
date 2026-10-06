@@ -39,6 +39,8 @@ export interface DecisionProps {
     avatar?: AvatarSpec;
     /** Id do visual escolhido na criação (v2.36): a figurinha usa o retrato pintado dele. */
     visual?: string;
+    /** Camisa da figurinha (v2.37): o clube ou "selecao:<país>" nos eventos da Seleção. Sem ela, a do clube. */
+    uniforme?: string;
     /** Marcos já alcançados ("selecao", "camisa10"): saem dos espaços vazios do álbum. */
     milestones?: string[];
   };
@@ -362,7 +364,7 @@ function PlayerBox({ player, age, open, opener, onOpen, inert }: {
   return (
     <header className="decisao__topo vidro" inert={inert}>
       <button ref={opener} type="button" className="jogador__abrir" aria-haspopup="dialog" aria-expanded={open} onClick={onOpen}>
-        <Figurinha moldura tamanho="pequena" name={player.name} number={player.number} overall={player.overall} position={player.position} clubId={player.clubId} avatar={player.avatar} visual={player.visual} />
+        <Figurinha moldura tamanho="pequena" name={player.name} number={player.number} overall={player.overall} position={player.position} clubId={player.clubId} uniforme={player.uniforme} avatar={player.avatar} visual={player.visual} />
         <span className="jogador__quem">
           <span className="jogador__nome" aria-hidden="true">{player.name}</span>
           <span className="jogador__clube"><Emblema clubId={player.clubId} size={18} />{clubLine(player.position, player.clubId)}</span>

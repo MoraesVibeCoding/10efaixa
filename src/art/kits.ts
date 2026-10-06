@@ -28,8 +28,13 @@ const KITS = data.clubes as Record<string, Kit>;
 // todos os clubes em que o jogador pode jogar (v2.37): brasileiros, sul-americanos, Europa e fora do eixo
 const COLORS = new Map([CLUBS, foreign.clubs, europe.clubs, europe.outros.clubs, europe.foraDoEixo.clubs].flat().map((c) => [c.id, c.cores]));
 
-/** Uniforme do clube; sem cadastro, camisa lisa nas cores do clube. */
+/** Uniforme do clube (ou da seleção, com o prefixo "selecao:"); sem cadastro, camisa lisa nas cores do clube. */
+const NATIONAL = data.selecoes as unknown as Record<string, Kit>;
+/** Prefixo do uniforme de seleção (v2.37): "selecao:brasil". */
+export const NATIONAL_PREFIX = 'selecao:';
+
 export function kitOf(clubId: string): Kit {
+  if (clubId.startsWith(NATIONAL_PREFIX)) return NATIONAL[clubId.slice(NATIONAL_PREFIX.length)] ?? kitOf('');
   const kit = KITS[clubId];
   if (kit) return kit;
   const cores = COLORS.get(clubId) ?? [];

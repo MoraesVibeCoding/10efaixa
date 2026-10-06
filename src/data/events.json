@@ -1,5 +1,5 @@
 {
- "_nota": "Eventos e dilemas (SPEC 6.13, 6.18; T25). Condições: campo op valor. Efeitos: add ou mul (com limites de 'campos') ou set. v2.17/v2.23: toda decisão (inclusive os antigos avisos) tem 3 opções, cada uma com o 'jeito' (temperamento) a que remete; a escolha automática é a opção do jeito do jogador, e o temperamento sem opção própria segue 'politica.padrao'.",
+ "_nota": "Eventos e dilemas (SPEC 6.13, 6.18; T25). contexto \"selecao\" (v2.37, T50k): a figurinha veste a camisa da seleção do jogador nesse evento. Condições: campo op valor. Efeitos: add ou mul (com limites de 'campos') ou set. v2.17/v2.23: toda decisão (inclusive os antigos avisos) tem 3 opções, cada uma com o 'jeito' (temperamento) a que remete; a escolha automática é a opção do jeito do jogador, e o temperamento sem opção própria segue 'politica.padrao'.",
  "campos": {
   "moral": [
    0,
@@ -1509,6 +1509,7 @@
   },
   {
    "id": "copa-sacrificio",
+   "contexto": "selecao",
    "cena": "copa",
    "peso": 10,
    "condicoes": [
@@ -1559,6 +1560,7 @@
   },
   {
    "id": "copa-fora-posicao",
+   "contexto": "selecao",
    "cena": "copa",
    "peso": 10,
    "condicoes": [
@@ -1609,6 +1611,7 @@
   },
   {
    "id": "copa-penalti",
+   "contexto": "selecao",
    "cena": "penalti",
    "peso": 10,
    "condicoes": [

@@ -6,6 +6,7 @@ import events from '../../data/events.json';
 import { previewOf } from '../../engine/preview';
 import { t } from '../../i18n';
 import { Decision } from './Decision';
+import { kitOf } from '../../art/kits';
 import libertaArt from '../../assets/art/provisoria/detalhe/detalhe__trofeu-continental-principal.svg';
 
 const EVENT = 'salario-atrasado';
@@ -455,5 +456,14 @@ describe('variação B (T51c, SPEC v2.34)', () => {
     const css = readFileSync(resolve(__dirname, 'Decision.css'), 'utf8');
     expect(css).not.toContain('var(--forma-sombra) var(--forma-sombra) 0');
     expect(css).not.toMatch(/border[\w-]*:\s*var\(--forma-borda\)/);
+  });
+});
+
+describe('uniforme na caixa do jogador (T50k, SPEC v2.37)', () => {
+  it('em evento da Seleção a figurinha do topo veste a seleção; o emblema segue o clube', () => {
+    render(<Decision eventId="copa-penalti" age={24} progress={0.4} player={{ ...PLAYER, visual: 'visual-03', uniforme: 'selecao:brasil' }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    const topo = screen.getByRole('main').querySelector('.decisao__topo') as HTMLElement;
+    expect((topo.querySelector('.camisa') as HTMLElement).style.getPropertyValue('--camisa-cor')).toBe(kitOf('selecao:brasil').camisa[0]);
+    expect(topo.querySelector('.jogador__clube .emblema')).toHaveAttribute('data-emblema', 'flamengo');
   });
 });

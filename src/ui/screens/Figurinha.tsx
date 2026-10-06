@@ -22,6 +22,8 @@ export interface FigurinhaProps {
   /** v2.34: moldura metálica pela faixa de overall (precisa de `overall`; sem ele vale a figurinha comum). */
   moldura?: boolean;
   tamanho?: 'pequena' | 'grande';
+  /** v2.37: camisa a vestir, quando não é a do clube ("selecao:brasil" nos eventos da Seleção). Emblema e linha seguem o clube. */
+  uniforme?: string;
 }
 
 const MEDALS = tokens.medalha as unknown as Record<string, { nome: string }>;
@@ -29,21 +31,22 @@ const PAINTED = import.meta.glob('../../assets/visuais/*.webp', { eager: true, q
 const paintedOf = (id: string | undefined) => (id ? PAINTED[`../../assets/visuais/${id}.webp`] : undefined);
 const CARD_ART = import.meta.glob('../../assets/cartoes-over/*.webp', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
 
-export function Figurinha({ name, number, overall, position, clubId = '', avatar, visual, moldura = false, tamanho = 'pequena' }: FigurinhaProps) {
-  const kit = kitOf(clubId);
+export function Figurinha({ name, number, overall, position, clubId = '', avatar, visual, moldura = false, tamanho = 'pequena', uniforme }: FigurinhaProps) {
+  const shirt = uniforme ?? clubId;
+  const kit = kitOf(shirt);
   const painted = paintedOf(visual);
-  const drawn = useBust(painted ? undefined : avatar, clubId);
+  const drawn = useBust(painted ? undefined : avatar, shirt);
   const bust = painted ?? drawn;
   const portraitClass = painted ? 'figurinha__retrato figurinha__retrato--pintado' : 'figurinha__retrato';
   const stripes = { '--faixa1': kit.camisa[0], '--faixa2': kit.camisa[1] ?? kit.detalhe } as React.CSSProperties;
   if (moldura && overall !== undefined) {
-    return <Moldurada {...{ name, number, overall, bust, stripes, tamanho, portraitClass }} camisa={painted && visual ? <Camisa visual={visual} clubId={clubId} className="figurinha__camisa" /> : null} />;
+    return <Moldurada {...{ name, number, overall, bust, stripes, tamanho, portraitClass }} camisa={painted && visual ? <Camisa visual={visual} clubId={shirt} className="figurinha__camisa" /> : null} />;
   }
   const comum = (
     <span className="figurinha">
       <span className="figurinha__foto" style={stripes}>
         {bust && <img className={portraitClass} src={bust} alt="" width="220" height="220" />}
-        {painted && visual ? <Camisa visual={visual} clubId={clubId} className="figurinha__camisa" /> : null}
+        {painted && visual ? <Camisa visual={visual} clubId={shirt} className="figurinha__camisa" /> : null}
         {number !== undefined && <span className="figurinha__numero" aria-hidden="true">{number}</span>}
         {clubId ? <span className="figurinha__emblema"><Emblema clubId={clubId} size={30} /></span> : null}
         {overall === undefined ? null : <OverCard overall={overall} />}

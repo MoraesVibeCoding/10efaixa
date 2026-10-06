@@ -2,6 +2,7 @@ import { CLUBS, clubsIn } from '../engine/clubs';
 import { GOALKEEPER_KIT, PATTERNS, kitOf, shirtPaint, validateKits } from './kits';
 import europe from '../data/europe.json';
 import foreign from '../data/foreignClubs.json';
+import dual from '../data/dualNationality.json';
 import data from '../data/kits.json';
 
 describe('uniformes dos clubes (arte, SPEC 6.17)', () => {
@@ -71,5 +72,25 @@ describe('camisa da figurinha (T50i, SPEC v2.37)', () => {
 
   it('os 20 clubes da Série A têm desenho (padrão do kits.json)', () => {
     for (const id of Object.keys(data.clubes)) expect(shirtPaint(kitOf(id)), id).toMatch(/gradient\(/);
+  });
+});
+
+describe('camisas das seleções (T50k, SPEC v2.37)', () => {
+  const countries = ['brasil', ...Object.keys(dual.selecao).filter((k) => !k.startsWith('_'))].sort();
+
+  it('Brasil e os países da dupla nacionalidade têm uniforme, com padrão válido e cores em hex', () => {
+    expect(Object.keys(data.selecoes).filter((k) => !k.startsWith('_')).sort()).toEqual(countries);
+    expect(validateKits({ padroes: data.padroes, clubes: Object.fromEntries(Object.entries(data.selecoes).filter(([k]) => !k.startsWith('_'))) as never }, countries)).toEqual([]);
+  });
+
+  it('kitOf("selecao:<país>") devolve a camisa do país; o Brasil é amarelo com detalhe verde', () => {
+    const br = kitOf('selecao:brasil');
+    expect(br.camisa[0]).toBe(data.selecoes.brasil.camisa[0]);
+    expect(br.camisa[0]).toMatch(/^#FF[CDE]/i);
+    expect(kitOf('selecao:italia')).toEqual(data.selecoes.italia);
+  });
+
+  it('seleção sem cadastro cai na camisa neutra, como clube sem cadastro', () => {
+    expect(kitOf('selecao:atlantida').camisa[0]).toBe(kitOf('').camisa[0]);
   });
 });

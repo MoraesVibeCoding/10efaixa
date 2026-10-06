@@ -82,6 +82,8 @@ export interface DecisionView {
   /** Estado que o evento lê e muda (moral, idolatria, patrimônio...), já com o que aconteceu neste semestre. */
   state: Record<string, number | string | boolean>;
   seasons: CareerResult['seasons']; titles: Title[];
+  /** Seleção que o jogador defende agora ("brasil" ou o país da dupla nacionalidade aceita): a camisa nos eventos da Seleção (v2.37). */
+  nationality: string;
 }
 /** Quem decide: o temperamento (simulação, ritmo Rápido) ou o jogador (tela). `view` só é montada se pedida. */
 export type Decider = (eventId: string, temperament: string, view: () => DecisionView) => string;
@@ -181,7 +183,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       moral: morale, disciplina: discipline, relacaoTecnico: coachRelation, patrimonio: wealth, salarioFator: 1,
       idolatria: clubId ? idol[clubId] ?? 0 : 0, idolatriaCoracao: input.heartClub ? idol[input.heartClub] ?? 0 : 0, ...state,
     },
-    seasons: [...seasons], titles: [...titles],
+    seasons: [...seasons], titles: [...titles], nationality: selection.nationality,
   }));
   const earn = (amount: number, currency: Contract['currency']) => { const before = wealth; wealth = addToWealth(wealth, amount, currency, agent); earned += Math.max(0, wealth - before); };
   const awards: CareerResult['awards'] = [];

@@ -3,7 +3,7 @@ import { simulateCareer } from '../../engine/career';
 import { runUntilDecision } from '../../state/careerRun';
 import events from '../../data/events.json';
 import { t } from '../../i18n';
-import { careerProgress, toDecisionPlayer } from './careerView';
+import { careerProgress, toDecisionPlayer, uniformeFor } from './careerView';
 
 const pickFirst = (id: string) => events.eventos.find((e) => e.id === id)!.opcoes[0]!.id;
 
@@ -67,5 +67,25 @@ describe('careerView (T51b): do motor para a tela de decisão', () => {
   it('leva o id do visual até a ficha da decisão (arte pintada); sem ele, só o busto em desenho', () => {
     expect(toDecisionPlayer(viewAt(0), INPUT, LOOK, 'visual-07').visual).toBe('visual-07');
     expect(toDecisionPlayer(viewAt(0), INPUT, LOOK).visual).toBeUndefined();
+  });
+});
+
+describe('uniforme da figurinha (T50k, SPEC v2.37)', () => {
+  it('o motor informa a seleção atual do jogador: Brasil no começo', () => {
+    expect(viewAt(0).nationality).toBe('brasil');
+  });
+
+  it('os eventos da Copa são do contexto Seleção (nos dados); os demais não', () => {
+    const selecao = events.eventos.filter((e) => (e as { contexto?: string }).contexto === 'selecao').map((e) => e.id).sort();
+    expect(selecao).toEqual(['copa-fora-posicao', 'copa-penalti', 'copa-sacrificio']);
+  });
+
+  it('em evento da Seleção a figurinha veste o país; nos outros, o clube', () => {
+    const v = { ...viewAt(0), clubId: 'flamengo' };
+    expect(uniformeFor('copa-penalti', v)).toBe('selecao:brasil');
+    expect(uniformeFor('copa-penalti', { ...v, nationality: 'italia' })).toBe('selecao:italia');
+    expect(uniformeFor('salario-atrasado', v)).toBe('flamengo');
+    expect(toDecisionPlayer(v, INPUT, LOOK, undefined, 'copa-sacrificio').uniforme).toBe('selecao:brasil');
+    expect(toDecisionPlayer(v, INPUT, LOOK, undefined, 'festa').uniforme).toBe('flamengo');
   });
 });
