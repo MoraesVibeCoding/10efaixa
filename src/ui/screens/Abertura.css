@@ -92,3 +92,34 @@
 @media (prefers-reduced-motion: reduce) {
   .abertura__numero { animation: none; }
 }
+
+/* T54: com carreira salva, "Nova carreira" fica secundária (contorno) abaixo de "Continuar" */
+.abertura__acoes { gap: var(--espaco-3); }
+.abertura__botao--secundario { background: transparent; color: var(--paleta-papel); box-shadow: inset 0 0 0 2px var(--paleta-papel); }
+
+/* "Começar outra carreira?": papel sólido sobre o scrim; o padrão é Cancelar (foco), apagar fica em vermelho */
+.abertura__confirmar {
+  inline-size: min(100% - 2rem, 22rem);
+  padding: var(--espaco-4);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
+  border-radius: var(--forma-raio-cartao);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  box-shadow: var(--forma-sombra-suave);
+}
+.abertura__confirmar[open] { display: grid; gap: var(--espaco-3); }
+.abertura__confirmar::backdrop { background: var(--vidro-scrim); }
+.abertura__confirmar h2 { font-size: var(--tipo-nome); font-weight: 900; line-height: 1.05; }
+.abertura__confirmar p { line-height: 1.4; }
+.abertura__confirmar-acoes { display: grid; grid-template-columns: 1fr 1fr; gap: var(--espaco-2); }
+.abertura__confirmar-acoes button {
+  min-block-size: var(--toque-compacto);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
+  border-radius: 999px;
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.abertura__confirmar-acoes .abertura__apagar { border-color: var(--cor-negativo); background: var(--cor-negativo); color: var(--cor-sobre-destaque); }

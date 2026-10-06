@@ -23,7 +23,8 @@ describe('carreira na tela (T51b)', () => {
 
   it('jogando com as escolhas do temperamento, termina no mesmo resumo que a simulação', { timeout: 60_000 }, () => {
     const onRestart = vi.fn();
-    render(<Career input={INPUT} look={LOOK} seed={11} onRestart={onRestart} />);
+    const onProgress = vi.fn();
+    render(<Career input={INPUT} look={LOOK} seed={11} onRestart={onRestart} onProgress={onProgress} />);
     for (let guard = 0; guard < 300 && !screen.queryByRole('heading', { level: 1, name: t('ui.fim.titulo') }); guard++) {
       const eventId = document.querySelector('[data-evento]')!.getAttribute('data-evento')!;
       const choice = autoChoice(eventId, document.querySelector('[data-temperamento]')!.getAttribute('data-temperamento')!);
@@ -37,5 +38,9 @@ describe('carreira na tela (T51b)', () => {
     expect(screen.getByText(result.headline)).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: t('ui.fim.novaCarreira') }));
     expect(onRestart).toHaveBeenCalledOnce();
+    // T54: salvou ao começar e a cada decisão; no fim avisa que terminou (o App apaga o save)
+    expect(onProgress.mock.calls[0]).toEqual([[], false]);
+    expect(onProgress.mock.calls.at(-1)![1]).toBe(true);
+    expect(onProgress.mock.calls.filter((c) => !c[1]).length).toBe(onProgress.mock.calls.at(-1)![0].length);
   });
 });

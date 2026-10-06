@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { App } from './App';
+import { SAVE_KEY } from './state/save';
 import { t } from './i18n';
 import type { CreationInput } from './engine/player';
 import type { Reveal } from './ui/screens/revealView';
@@ -32,6 +33,8 @@ function createPlayer() {
   fireEvent.click(within(group('origem.titulo')).getByRole('radio', { name: t('creation.origin.varzea') }));
   advance();
 }
+
+beforeEach(() => { localStorage.clear(); });
 
 describe('App (T51b, T48): abertura → criação → revelação → ritmo → carreira', () => {
   it('abre na abertura; "Nova carreira" leva à criação, no passo "quem é ele"', () => {
@@ -92,5 +95,67 @@ describe('App (T51b, T48): abertura → criação → revelação → ritmo → 
     expect(screen.getByRole('heading', { level: 1, name: t('ui.abertura.titulo') })).toBeInTheDocument();
     startNew();
     expect(screen.getByLabelText(t('ui.criacao.quemE.nome'))).toHaveValue('');
+  });
+});
+
+describe('save no aparelho (T54, v2.39)', () => {
+  beforeEach(() => { localStorage.clear(); });
+
+  const toRitmo = () => { fireEvent.click(screen.getByRole('button', { name: t('ui.revelacao.seguir') })); fireEvent.click(screen.getByRole('button', { name: t('ui.ritmo.comecar') })); };
+  const decideFirst = () => {
+    fireEvent.click(document.querySelector('.opcao')!);
+    fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
+    fireEvent.click(screen.getByRole('button', { name: t('ui.resultado.seguir') }));
+  };
+
+  it('a carreira é salva ao começar e a cada decisão (criação, semente, ritmo e escolhas)', () => {
+    render(<App seed={11} />);
+    createPlayer(); toRitmo();
+    expect(JSON.parse(localStorage.getItem(SAVE_KEY)!)).toMatchObject({ seed: 11, ritmo: 'normal', choices: [] });
+    decideFirst();
+    expect(JSON.parse(localStorage.getItem(SAVE_KEY)!).choices).toHaveLength(1);
+  });
+
+  it('fechar e abrir de novo: "Continuar" volta exatamente na decisão em que parou', () => {
+    const first = render(<App seed={11} />);
+    createPlayer(); toRitmo(); decideFirst();
+    const eventId = document.querySelector('main[data-evento]')!.getAttribute('data-evento');
+    first.unmount();
+    render(<App seed={99} />);
+    fireEvent.click(screen.getByRole('button', { name: t('ui.abertura.continuar', { nome: 'Dudu Maestro' }) }));
+    expect(document.querySelector('main[data-evento]')!.getAttribute('data-evento')).toBe(eventId);
+  });
+
+  it('"Nova carreira" com save pergunta; "Apagar e começar" apaga o save e abre a criação', () => {
+    const first = render(<App seed={11} />);
+    createPlayer(); toRitmo();
+    first.unmount();
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: t('ui.abertura.novaCarreira') }));
+    fireEvent.click(screen.getByRole('button', { name: t('ui.abertura.confirmar.apagar') }));
+    expect(localStorage.getItem(SAVE_KEY)).toBeNull();
+    expect(screen.getByRole('heading', { level: 1, name: t('ui.criacao.passos.quemE') })).toBeInTheDocument();
+  });
+
+  it('save danificado: "Continuar" mostra o aviso; "Começar uma nova" apaga e abre a criação; nada trava', () => {
+    localStorage.setItem(SAVE_KEY, '{quebrado');
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: t('ui.abertura.continuarSemNome') }));
+    expect(screen.getByRole('heading', { level: 1, name: t('ui.saveInvalido.titulo') })).toBeInTheDocument();
+    expect(screen.getByText(t('ui.saveInvalido.danificado'))).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: t('ui.saveInvalido.recomecar') }));
+    expect(localStorage.getItem(SAVE_KEY)).toBeNull();
+    expect(screen.getByRole('heading', { level: 1, name: t('ui.criacao.passos.quemE') })).toBeInTheDocument();
+  });
+
+  it('escolha salva que o motor não aceita (save adulterado) também vira o aviso, sem quebrar a tela', () => {
+    const first = render(<App seed={11} />);
+    createPlayer(); toRitmo();
+    first.unmount();
+    const save = JSON.parse(localStorage.getItem(SAVE_KEY)!);
+    localStorage.setItem(SAVE_KEY, JSON.stringify({ ...save, choices: ['nao-existe'] }));
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: t('ui.abertura.continuar', { nome: 'Dudu Maestro' }) }));
+    expect(screen.getByRole('heading', { level: 1, name: t('ui.saveInvalido.titulo') })).toBeInTheDocument();
   });
 });

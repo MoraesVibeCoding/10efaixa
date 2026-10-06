@@ -18,11 +18,17 @@ export interface CareerProps {
   input: CreationInput; look: Look; /** Id do visual escolhido (v2.36). */ visual?: string; seed: number; onRestart: () => void;
   /** Ritmo escolhido depois da revelação (T53a): no Rápido um toque decide e o resultado fecha sozinho. */
   ritmo?: RitmoId;
+  /** Escolhas já feitas (T54): ao continuar uma carreira salva, ela é refeita até a próxima decisão. */
+  initialChoices?: string[];
+  /** Chamado ao começar e a cada decisão (T54, salvar a cada decisão); `done` quando a carreira terminou. */
+  onProgress?: (choices: string[], done: boolean) => void;
 }
 
-export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal' }: CareerProps) {
-  const [choices, setChoices] = useState([] as string[]);
+export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal', initialChoices = [], onProgress }: CareerProps) {
+  const [choices, setChoices] = useState(initialChoices);
   const step = useMemo(() => runUntilDecision(input, seed, choices), [input, seed, choices]);
+  const done = step.kind === 'done';
+  useEffect(() => { onProgress?.(choices, done); }, [choices, done, onProgress]);
   const box = useRef(null as HTMLDivElement | null);
   // tela nova a cada decisão: o foco vai para o título, senão o leitor de tela fica perdido no corpo da página
   useEffect(() => {

@@ -204,7 +204,23 @@
   "titulo": "10eFaixa",
   "lema": "Da várzea à aposentadoria. Uma carreira, as suas escolhas.",
   "novaCarreira": "Nova carreira",
+  "continuar": "Continuar a carreira de {nome}",
+  "continuarSemNome": "Continuar a carreira salva",
+  "confirmar": {
+   "titulo": "Começar outra carreira?",
+   "texto": "Começar outra apaga a carreira de {nome}. Só existe uma carreira salva por vez.",
+   "textoSemNome": "Começar outra apaga a carreira salva. Só existe uma carreira salva por vez.",
+   "apagar": "Apagar e começar",
+   "cancelar": "Cancelar"
+  },
   "arteAlt": "Um jogador de costas caminha pelo túnel em direção ao gramado iluminado, com a braçadeira de capitão no braço."
+ },
+ "saveInvalido": {
+  "titulo": "Não deu para abrir a carreira salva",
+  "danificado": "O arquivo salvo neste aparelho está danificado.",
+  "versao": "A carreira foi salva por uma versão do jogo que esta não consegue abrir.",
+  "dica": "Você pode começar uma carreira nova. A salva será apagada.",
+  "recomecar": "Começar uma nova"
  },
  "ritmo": {
   "titulo": "Como você quer jogar?",

@@ -9,7 +9,7 @@ export const SAVE_VERSION = 1;
 const RITMOS = ['rapido', 'normal', 'completo'] as const;
 
 export interface SaveData {
-  created: { input: CreationInput; look: Record<string, unknown>; visual: string };
+  created: { input: CreationInput; look: object; visual: string };
   seed: number;
   ritmo: (typeof RITMOS)[number];
   choices: string[];
