@@ -10,13 +10,14 @@ describe('tokens visuais (T49, SPEC 7)', () => {
     expect(contrast('#14213D', '#14213D')).toBe(1);
   });
 
-  it('a paleta é a do SPEC (v2.19): papel, marinho e verde como base', () => {
+  it('a paleta é a do SPEC (v2.46, visual mesclado): menta, tinta e gramado como base; ouro para o destaque', () => {
     expect(tokens.paleta).toEqual({
       papel: '#EEE9DF', marinho: '#14213D', verde: '#1E7B4F', amarelo: '#FFC21A', vermelho: '#D62839', linha: '#C9CFC6',
+      ouro: '#DA942C', menta: '#E8F6EC', tinta: '#091A11', gramado: '#006731',
     });
-    expect(tokens.temas.claro.fundo).toBe(tokens.paleta.papel);
-    expect(tokens.temas.claro.texto).toBe(tokens.paleta.marinho);
-    expect(tokens.temas.claro.destaque).toBe(tokens.paleta.verde);
+    expect(tokens.temas.claro.fundo).toBe(tokens.paleta.menta);
+    expect(tokens.temas.claro.texto).toBe(tokens.paleta.tinta);
+    expect(tokens.temas.claro.destaque).toBe(tokens.paleta.gramado);
   });
 
   it('todo par de texto passa em AA (4,5:1) e todo par gráfico em 3:1, nos dois temas', () => {
@@ -45,9 +46,9 @@ describe('tokens visuais (T49, SPEC 7)', () => {
     expect(themeCss()).toContain('[data-medalha="diamante"]');
   });
 
-  it('fontes do SPEC, sempre com reserva do sistema', () => {
-    expect(tokens.fontes.titulo).toMatch(/^'Big Shoulders Display/);
-    expect(tokens.fontes.texto).toMatch(/^'Atkinson Hyperlegible/);
+  it('fontes do SPEC (v2.46: Oswald e Inter), sempre com reserva do sistema', () => {
+    expect(tokens.fontes.titulo).toMatch(/^'Oswald Variable'/);
+    expect(tokens.fontes.texto).toMatch(/^'Inter Variable'/);
     for (const stack of Object.values(tokens.fontes)) expect(stack.split(',').length).toBeGreaterThanOrEqual(3);
     expect(tokens.fontes.titulo).toMatch(/sans-serif$/);
     expect(tokens.fontes.texto).toMatch(/sans-serif$/);

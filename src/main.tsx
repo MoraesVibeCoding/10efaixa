@@ -1,8 +1,8 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import '@fontsource-variable/big-shoulders-display';
-import '@fontsource/atkinson-hyperlegible/latin-400.css';
-import '@fontsource/atkinson-hyperlegible/latin-700.css';
+// v2.46: Oswald (títulos) e Inter (texto), auto-hospedadas (Fontsource, OFL-1.1)
+import '@fontsource-variable/oswald';
+import '@fontsource-variable/inter';
 import { App } from './App';
 import { themeCss } from './ui/theme/theme';
 import './ui/base.css';

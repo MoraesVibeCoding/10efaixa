@@ -17,7 +17,12 @@ body {
 }
 
 h1, h2, h3, p { margin: 0; }
-h1, h2, h3 { font-family: var(--fonte-titulo); text-wrap: balance; }
+h1, h2, h3 { font-family: var(--fonte-titulo); font-weight: 600; text-wrap: balance; }
+/* v2.46 (visual mesclado): títulos em caixa alta na Oswald, fundo menta em degradê suave no tema claro */
+h1 { text-transform: uppercase; letter-spacing: 0.01em; }
+:root:not([data-tema='escuro']) body:not(:has([data-tema='escuro'])) {
+  background: linear-gradient(180deg, var(--paleta-menta), var(--cor-fundo) 50%, var(--cor-trilho)) fixed;
+}
 img { display: block; max-width: 100%; }
 button { font: inherit; color: inherit; }
 a { color: inherit; text-underline-offset: 0.2em; text-decoration-thickness: 0.08em; }

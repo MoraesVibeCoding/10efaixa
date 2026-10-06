@@ -19,7 +19,7 @@
 
 .criacao__passo { flex: 1; align-content: start; display: grid; gap: var(--espaco-2); min-inline-size: 0; }
 .criacao__campo { display: grid; gap: 2px; min-inline-size: 0; }
-.criacao__campo label, .escolhas__rotulo { font-family: var(--fonte-texto); font-size: var(--tipo-apoio); font-weight: 700; }
+.criacao__campo label, .escolhas__rotulo { font-family: var(--fonte-texto); font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cor-positivo); }
 .criacao__campo input, .criacao__campo select {
   inline-size: 100%;
   min-block-size: var(--toque-compacto);
@@ -50,11 +50,12 @@
 .criacao__botao--principal {
   background: var(--cor-destaque);
   color: var(--cor-sobre-destaque);
-  box-shadow: var(--forma-sombra-suave);
+  /* v2.46: sombra verde sob o botão principal, como na referência */
+  box-shadow: 0 12px 28px -10px color-mix(in srgb, var(--cor-destaque) 60%, transparent);
 }
 @media (hover: hover) {
   .criacao__botao:hover { background: var(--cor-fundo); }
-  .criacao__botao--principal:hover { background: var(--cor-positivo); }
+  .criacao__botao--principal:hover { background: color-mix(in srgb, var(--cor-destaque) 80%, black); }
 }
 
 /* tela 1: figurinha ao vivo ao lado dos campos de identidade */
@@ -144,7 +145,7 @@
     radial-gradient(circle at 50% 50%, transparent 2.6rem, rgb(255 255 255 / 0.55) 2.6rem calc(2.6rem + 2px), transparent calc(2.6rem + 2px)),
     linear-gradient(rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.55)) 50% 0 / 56% 2px no-repeat,
     linear-gradient(rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.55)) 50% 100% / 56% 2px no-repeat,
-    repeating-linear-gradient(180deg, #0E7A3F 0 10%, #11864A 10% 20%);
+    repeating-linear-gradient(180deg, var(--paleta-gramado) 0 10%, color-mix(in srgb, var(--paleta-gramado) 88%, white) 10% 20%);
 }
 .escolhas--campo .escolha { position: absolute; transform: translate(-50%, -50%); }
 .escolhas--campo [data-opcao='goleiro'] { left: 50%; top: 90%; }
@@ -166,8 +167,8 @@
   padding: 0.5rem 0 0;
   border: 0;
   border-radius: 0;
-  background: #FFFFFF;
-  color: #004D2B;
+  background: var(--cor-superficie);
+  color: var(--paleta-gramado);
   font-family: var(--fonte-titulo);
   font-size: 0.85rem;
   font-weight: 700;
@@ -178,12 +179,12 @@
 .escolhas--campo .escolha__input:checked + .escolha__marca {
   inline-size: 3.9rem;
   block-size: 3.9rem;
-  background: #DA942C;
-  color: #091A11;
+  background: var(--paleta-ouro);
+  color: var(--paleta-tinta);
   font-size: 1.15rem;
 }
 /* o foco do teclado fica num anel em volta da camisa (a máscara cortaria o contorno) */
-.escolhas--campo .escolha:has(.escolha__input:focus-visible) { outline: 3px solid #FFFFFF; outline-offset: 2px; border-radius: 0.75rem; }
+.escolhas--campo .escolha:has(.escolha__input:focus-visible) { outline: 3px solid var(--cor-superficie); outline-offset: 2px; border-radius: 0.75rem; }
 
 /* altura: controle deslizante com o valor ao lado */
 .escolhas--altura { row-gap: 0; }
