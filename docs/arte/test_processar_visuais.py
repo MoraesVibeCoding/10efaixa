@@ -71,6 +71,43 @@ def test_ja_enquadrada_nao_muda_de_forma():
     assert 9.0 <= 100 * rows[0] / h <= 11.0
 
 
+def _sombra(im):
+    """Uma dobra mais escura na camisa (metade do brilho), para conferir que luz e sombra ficam."""
+    a = np.asarray(im).copy(); h, w, _ = a.shape
+    a[int(h * 0.6):int(h * 0.7), w // 2 - 20:w // 2 + 20] = (102, 0, 85)
+    return Image.fromarray(a)
+
+
+def test_mascara_da_camisa_pega_so_o_magenta():
+    img = np.asarray(fake()).astype(float)
+    t = pv.shirt_mask(img, pv.matte(img))
+    assert t[300, 200] == 1.0, 'camisa inteira na máscara'
+    assert t[60, 200] == 0.0, 'rosto fora da máscara'
+    assert t[2, 2] == 0.0, 'fundo fora da máscara'
+
+
+def test_camisa_vira_cinza_com_luz_e_sombra():
+    img = np.asarray(_sombra(fake())).astype(float)
+    t = pv.shirt_mask(img, pv.matte(img))
+    out = pv.neutralize(img, t)
+    claro, escuro = out[300, 100], out[325, 200]
+    assert claro[0] == claro[1] == claro[2] and claro[0] >= 240, f'tecido claro vira quase branco: {claro}'
+    assert escuro[0] == escuro[1] == escuro[2] and escuro[0] < claro[0] * 0.7, f'a dobra continua mais escura: {escuro}'
+    assert (out[60, 200] == img[60, 200]).all(), 'o rosto não muda'
+
+
+def test_processar_camisa_devolve_retrato_sem_magenta_e_mascara_no_mesmo_quadro():
+    retrato, mascara = pv.processar_com_camisa(_sombra(fake(head_top=0.04)))
+    assert retrato.size == mascara.size and mascara.mode == 'RGBA'
+    r = np.asarray(retrato).astype(float)
+    op = r[..., 3] > 128
+    mag = np.minimum(r[..., 0], r[..., 2]) - r[..., 1]
+    assert (mag[op] <= 15).all(), 'nenhum magenta sobra no retrato'
+    m = np.asarray(mascara)[..., 3]
+    w, h = retrato.size
+    assert m[int(h * 0.8), w // 2] == 255 and m[int(h * 0.15), w // 2] == 0, 'máscara na camisa, fora da cabeça'
+
+
 def test_fundo_com_tom_diferente_tambem_sai():
     a = pv.matte(np.asarray(fake(bg=(20, 150, 60))).astype(float))
     assert a[2, 2] == 0

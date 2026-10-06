@@ -41,7 +41,7 @@ describe('visuais prontos (T50g, v2.36)', () => {
 
   it('cada visual tem a imagem provisória visual-NN.webp, em 4:5', () => {
     for (const v of LIST) expect(Object.keys(ART), v.id).toContain(`../assets/visuais/${v.id}.webp`);
-    expect(Object.keys(ART)).toHaveLength(10);
+    expect(Object.keys(ART).filter((k) => !k.endsWith('-camisa.webp'))).toHaveLength(10);
   });
 
   // pós-processamento (docs/arte/processar_visuais.py): fundo transparente e tela 4:5, lidos do cabeçalho do WebP
@@ -59,5 +59,17 @@ describe('visuais prontos (T50g, v2.36)', () => {
       expect(h.alpha, `${v.id} tem transparência`).toBe(true);
       expect(Math.abs(h.w / h.h - 0.8), `${v.id} ${h.w}x${h.h}`).toBeLessThan(0.01);
     }
+  });
+
+  // camisa pela cor do clube: o retrato traz a camisa em cinza e a máscara dela no mesmo quadro
+  it('cada visual tem a máscara da camisa visual-NN-camisa.webp, com alfa e do tamanho do retrato', () => {
+    for (const v of LIST) {
+      expect(Object.keys(ART), v.id).toContain(`../assets/visuais/${v.id}-camisa.webp`);
+      const m = header(`${v.id}-camisa`);
+      const r = header(v.id);
+      expect(m.alpha, `${v.id}-camisa tem alfa`).toBe(true);
+      expect([m.w, m.h], `${v.id}-camisa do tamanho do retrato`).toEqual([r.w, r.h]);
+    }
+    expect(Object.keys(ART)).toHaveLength(20);
   });
 });

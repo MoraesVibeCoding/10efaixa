@@ -3,7 +3,8 @@
 
 Para cada imagem: (1) acha o fundo verde chapado e o torna transparente, sem franja verde nas bordas;
 (2) reenquadra em 4:5 estendendo a tela (nunca corta o corpo): cabeça a 10% do topo e margem lateral de pelo menos 8%;
-(3) grava um WebP com transparência em src/assets/visuais/visual-NN.webp.
+(3) troca a camisa magenta por cinza com a mesma luz e sombra e grava a máscara dela (o jogo pinta com a cor do clube);
+(4) grava WebP com transparência em src/assets/visuais/visual-NN.webp e a máscara em visual-NN-camisa.webp.
 
 Uso:
   uv run --with pillow --with numpy python docs/arte/processar_visuais.py [--saida pasta] [--largura 928] [--qualidade 90]
@@ -25,6 +26,8 @@ RATIO = 0.8                 # 4:5
 HEAD_TOP = 0.10             # topo da cabeça a 10% da altura
 SIDE_MIN = 0.08             # margem lateral mínima (fração da largura), medida a 80% da altura
 KEY_LO, KEY_HI = 0.30, 0.80  # faixa do "quanto é fundo" em que a transparência é parcial
+SHIRT_LO, SHIRT_HI = 10.0, 40.0  # "quanto é magenta" (min(r, b) - g) em que a máscara da camisa é parcial; pele e cabelo ficam abaixo de 0
+SHIRT_REF = 95               # percentil do brilho da camisa que vira branco no cinza (o tecido mais claro)
 
 
 def _corner_color(img):
@@ -58,6 +61,23 @@ def despill(img, alpha):
     return out
 
 
+def shirt_mask(img, alpha):
+    """Quanto cada pixel é camisa (0..1): o magenta chapado do prompt (#CC00AA e suas sombras), só onde há pessoa."""
+    mag = np.minimum(img[..., 0], img[..., 2]) - img[..., 1]
+    return np.clip((mag - SHIRT_LO) / (SHIRT_HI - SHIRT_LO), 0.0, 1.0) * alpha
+
+
+def neutralize(img, t):
+    """Troca o magenta da camisa por cinza com a mesma luz e sombra: o tecido mais claro vira branco, para o jogo
+    multiplicar pela cor do clube. Fora da máscara nada muda."""
+    lum = img[..., 0] * 0.299 + img[..., 1] * 0.587 + img[..., 2] * 0.114
+    core = t > 0.9
+    ref = max(float(np.percentile(lum[core], SHIRT_REF)), 1.0) if core.any() else 255.0
+    gray = np.round(np.clip(lum / ref, 0.0, 1.0) * 255)
+    out = img * (1 - t[..., None]) + gray[..., None] * t[..., None]
+    return np.where(t[..., None] > 0, np.round(out), img)
+
+
 def _bbox_rows(alpha):
     rows = np.where((alpha > 0.5).sum(1) > max(2, alpha.shape[1] * 0.01))[0]
     return int(rows[0]), int(rows[-1])
@@ -69,15 +89,11 @@ def _side_margin_px(alpha):
     return int(min(cols[0], w - 1 - cols[-1])) if len(cols) else 0
 
 
-def processar(im):
-    """Imagem PIL (fundo verde) -> RGBA 4:5 com a cabeça a 10% do topo e margens laterais >= 8%."""
-    rgb = np.asarray(im.convert('RGB')).astype(float)
-    h, w, _ = rgb.shape
-    alpha = matte(rgb)
-    clean = despill(rgb, alpha)
+def _frame(alpha):
+    """Tamanho final (4:5) e posição do retrato nele: cabeça a 10% do topo e margens laterais >= 8%."""
+    h, w = alpha.shape
     y_top, _ = _bbox_rows(alpha)
     m = _side_margin_px(alpha)
-
     t_head = max(0.0, (HEAD_TOP * h - y_top) / (1 - HEAD_TOP))    # folga em cima para a cabeça ficar a 10%
     h2a = h + t_head
     w2a = RATIO * h2a
@@ -86,14 +102,35 @@ def processar(im):
     w2 = max(w2a, w + 2 * p_min)
     h2 = int(np.ceil(w2 / RATIO))                                  # sempre para cima: nunca corta nem encolhe a margem
     w2 = int(np.ceil(h2 * RATIO))
-    t = h2 - h                                                     # todo o acréscimo vai no topo: o corte da cintura fica
+    return (w2, h2), ((w2 - w) // 2, h2 - h)                       # todo o acréscimo vai no topo: o corte da cintura fica
 
+
+def _place(rgb, alpha, size, pos):
+    h, w = alpha.shape
     rgba = np.zeros((h, w, 4), dtype=np.uint8)
-    rgba[..., :3] = np.clip(clean, 0, 255).astype(np.uint8)
+    rgba[..., :3] = np.clip(rgb, 0, 255).astype(np.uint8)
     rgba[..., 3] = np.clip(alpha * 255 + 0.5, 0, 255).astype(np.uint8)
-    canvas = Image.new('RGBA', (w2, h2), (0, 0, 0, 0))
-    canvas.paste(Image.fromarray(rgba, 'RGBA'), ((w2 - w) // 2, t))
+    canvas = Image.new('RGBA', size, (0, 0, 0, 0))
+    canvas.paste(Image.fromarray(rgba, 'RGBA'), pos)
     return canvas
+
+
+def processar(im):
+    """Imagem PIL (fundo verde) -> RGBA 4:5 com a cabeça a 10% do topo e margens laterais >= 8%."""
+    rgb = np.asarray(im.convert('RGB')).astype(float)
+    alpha = matte(rgb)
+    return _place(despill(rgb, alpha), alpha, *_frame(alpha))
+
+
+def processar_com_camisa(im):
+    """Como `processar`, com a camisa magenta trocada por cinza; devolve também a máscara da camisa (alfa), no mesmo quadro."""
+    rgb = np.asarray(im.convert('RGB')).astype(float)
+    alpha = matte(rgb)
+    t = shirt_mask(rgb, alpha)
+    size, pos = _frame(alpha)
+    retrato = _place(neutralize(despill(rgb, alpha), t), alpha, size, pos)
+    mascara = _place(np.full_like(rgb, 255.0), t, size, pos)
+    return retrato, mascara
 
 
 def medir(rgba):
@@ -134,9 +171,10 @@ def main():
         if not src:
             print(f'{name:10} sem imagem'); bad += 1; continue
         im = Image.open(src)
-        out = processar(im)
+        out, mask = processar_com_camisa(im)
         if args.largura and out.size[0] != args.largura:
-            out = out.resize((args.largura, int(round(args.largura / RATIO))), Image.LANCZOS)
+            size = (args.largura, int(round(args.largura / RATIO)))
+            out, mask = out.resize(size, Image.LANCZOS), mask.resize(size, Image.LANCZOS)
         r = medir(out)
         notes = []
         if not (9.0 <= r['topo'] <= 15.0):
@@ -147,6 +185,7 @@ def main():
             notes.append('origem em baixa resolução (provisório)')
         bad += bool([n for n in notes if 'provisório' not in n])
         out.save(os.path.join(args.saida, f'{name}.webp'), 'WEBP', quality=args.qualidade, alpha_quality=100, method=6)
+        mask.save(os.path.join(args.saida, f'{name}-camisa.webp'), 'WEBP', quality=args.qualidade, alpha_quality=100, method=6)
         print(f'{name:10} {im.size[0]}x{im.size[1]:<5} {out.size[0]}x{out.size[1]:<5} {r["topo"]:>6.1f} {r["margem_l"]:>4.0f}/{r["margem_r"]:<4.0f}  {"; ".join(notes) or "OK"}')
     return 1 if bad else 0
 
