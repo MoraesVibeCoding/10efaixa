@@ -268,5 +268,10 @@
   "completo": { "nome": "Completo", "detalhe": "Sem pressa. Todas as decisões, reuniões e dilemas da carreira." },
   "comecar": "Começar carreira"
  },
-  "historia": { "titulo": "Sua história", "verCartao": "Ver meu cartão" }
+  "historia": { "titulo": "Sua história", "verCartao": "Ver meu cartão" },
+  "cartao": {
+    "numero": { "jogos": "Jogos", "gols": "Gols", "assistencias": "Assistências", "titulos": "Títulos", "patrimonio": "Patrimônio" },
+    "altNarrativa": "Cartão de carreira de {nome}, {apelido}. Veredito: {veredito}. Rótulo: {rotulo}. {manchete} {frases}.",
+    "altEstatistica": "Cartão de carreira de {nome} em números. Overall máximo {over}. {numeros}. Atributos no auge: {atributos}."
+  }
 }

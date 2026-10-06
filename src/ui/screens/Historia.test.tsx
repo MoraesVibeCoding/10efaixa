@@ -3,7 +3,8 @@ import { simulateCareer } from '../../engine/career';
 import { createPrng } from '../../engine/prng';
 import { randomInput } from '../../engine/simulation';
 import { storyOf } from '../../engine/story';
-import { Historia, storyText } from './Historia';
+import { Historia } from './Historia';
+import { storyText } from './storyText';
 
 // T55b: tela "Sua história", antes do cartão final.
 const result = simulateCareer(randomInput(createPrng(3)), 3);

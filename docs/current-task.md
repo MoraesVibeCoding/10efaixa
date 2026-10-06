@@ -21,17 +21,13 @@
 - **T55a** (`ef286c7`): `honorsOf`/`honorFacts`, `peakAttributes`, `peakClubId` e `honors` no resultado, `careerCode`.
 - **T55b** (`b288982`): `storyOf` e `storyHighlights` (`src/engine/story.ts`, pesos em `story.json`), tela `Historia` antes do resumo do fim.
 
-## Em andamento — T55c (modelo do cartão)
-
-- `storyText` saiu de `Historia.tsx` para `src/ui/screens/storyText.ts` (o cartão também usa).
-- Teste `src/share/cardModel.test.ts` escrito e falhando (Red); falta `src/share/cardModel.ts` e os textos `ui.cartao.*` (texto alternativo das duas versões).
-- Contrato: `cardModel(result, codigo)` → `nome, apelido, numero, posicao, clubeAuge, overall, veredito, rotulo, manchete, comentario, honrarias[≤3], frases[≤4], clubes[], numeros[jogos, gols, assistencias, titulos, patrimonio], radar[10 {id, nome, valor}], codigo, alt {narrativa, estatistica}`.
+- **T55c:** `cardModel(result, codigo)` em `src/share/cardModel.ts` (contrato: `nome, apelido, numero, posicao, clubeAuge, overall, veredito, rotulo, manchete, comentario, honrarias[≤3], frases[≤4], clubes[], numeros[5], radar[10 {id, nome, valor}], codigo, alt {narrativa, estatistica}`); textos `ui.cartao.*`; `storyText` em `src/ui/screens/storyText.ts`.
 
 ## Pendente
 
 - **T55d:** desenho em Canvas 2D 1080×1350 nas duas versões, com o "10"/número bem enquadrado nas costas; tela do cartão no lugar do resumo atual (`CareerEnd`).
 - ⛳ Capturas do cartão para aprovação.
 
-## Validação (último commit, T55b)
+## Validação (último commit, T55c)
 
-- `npm test`: 926 passando, 4 pulados · typecheck limpo · build OK.
+- `npm test`: 930 passando, 4 pulados · typecheck limpo · build OK.
