@@ -23,6 +23,6 @@
     "volanteRaiz": ["Pitbull", "Carrapato"], "motorzinho": ["Motorzinho", "Pulmão"], "xerifao": ["Xerife", "Muralha"],
     "zagueiroTecnico": ["Elegante", "Doutor"], "lateralApoiador": ["Expresso", "Ala"], "lateralFoguete": ["Foguete", "Canhão"],
     "lateralConstrutor": ["Arquiteto", "Engenheiro"], "paredao": ["Paredão", "Muralha"], "goleiroLibero": ["Líbero", "Goleirão"],
-    "pegadorPenalti": ["Santo", "Pegador"]
+    "goleiroSeguro": ["Seguro", "Gigante"], "ousado": ["Ousado", "Moleque"], "pontaArtilheiro": ["Patada", "Chutaço"], "pontaTrabalhador": ["Furacão", "Incansável"], "enganche": ["Condutor", "Elegância"], "zagueiroCobertura": ["Cobertura", "Xerife Veloz"]
   }
 }

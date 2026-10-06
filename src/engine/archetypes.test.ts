@@ -13,22 +13,25 @@ const byId = (id: string) => ARCHETYPES.find((a) => a.id === id)!;
 const HIGHLIGHTS: Record<string, Attribute[]> = {
   matador: ['finalizacao', 'mental'],
   arrancador: ['velocidade', 'drible', 'finalizacao'],
-  magico: ['habilidade', 'drible', 'passe'],
   centroavanteForca: ['forca', 'finalizacao', 'jogoAereo'],
+  ousado: ['drible', 'habilidade', 'velocidade'],
+  pontaArtilheiro: ['finalizacao', 'habilidade', 'drible'],
+  pontaTrabalhador: ['velocidade', 'fisico', 'finalizacao'],
   classico10: ['passe', 'habilidade', 'finalizacao'],
-  regente: ['passe', 'mental', 'marcacao'],
+  enganche: ['velocidade', 'passe', 'finalizacao'],
+  magico: ['habilidade', 'drible', 'passe'],
   volanteRaiz: ['marcacao', 'forca', 'fisico'],
+  regente: ['passe', 'mental', 'marcacao'],
   motorzinho: ['velocidade', 'passe', 'fisico'],
-  xerifao: ['forca', 'marcacao', 'jogoAereo'],
-  zagueiroTecnico: ['passe', 'mental', 'marcacao'],
   lateralApoiador: ['velocidade', 'fisico', 'passe'],
   lateralFoguete: ['velocidade', 'finalizacao'],
   lateralConstrutor: ['passe', 'mental', 'marcacao'],
+  xerifao: ['forca', 'marcacao', 'jogoAereo'],
+  zagueiroTecnico: ['passe', 'mental', 'marcacao'],
+  zagueiroCobertura: ['marcacao', 'velocidade', 'mental'],
   paredao: ['velocidade', 'habilidade'],
   goleiroLibero: ['passe', 'jogoAereo'],
-  pegadorPenalti: ['velocidade', 'mental'],
-  pontaDriblador: ['drible', 'velocidade'],
-  pontaInvertido: ['finalizacao', 'drible'],
+  goleiroSeguro: ['jogoAereo', 'mental', 'habilidade'],
 };
 
 describe('arquétipos', () => {
@@ -47,8 +50,8 @@ describe('arquétipos', () => {
     expect(validateArchetypes([null]).length).toBeGreaterThan(0);
   });
 
-  it('são 18, com ids únicos (v2.46: dois de ponta)', () => {
-    expect(new Set(ARCHETYPES.map((a) => a.id)).size).toBe(18);
+  it('são 21, com ids únicos (v2.48: 3 por posição)', () => {
+    expect(new Set(ARCHETYPES.map((a) => a.id)).size).toBe(21);
     expect(Object.keys(HIGHLIGHTS).sort()).toEqual(ARCHETYPES.map((a) => a.id).sort());
   });
 
@@ -73,9 +76,14 @@ describe('arquétipos', () => {
     expect(ARCHETYPES.filter((a) => a.latentTrait).length).toBe(1);
   });
 
-  it('toda posição tem ao menos 2 arquétipos; goleiros só no gol', () => {
-    for (const p of POSITIONS) expect(archetypesFor(p).length).toBeGreaterThanOrEqual(2);
-    expect(archetypesFor('goleiro').map((a) => a.id)).toEqual(['paredao', 'goleiroLibero', 'pegadorPenalti']);
+  it('v2.48: toda posição tem exatamente 3 estilos e cada estilo é de uma posição só', () => {
+    for (const p of POSITIONS) expect(archetypesFor(p)).toHaveLength(3);
+    for (const a of ARCHETYPES) expect(a.positions).toHaveLength(1);
+    expect(archetypesFor('goleiro').map((a) => a.id)).toEqual(['paredao', 'goleiroLibero', 'goleiroSeguro']);
+    expect(archetypesFor('ponta').map((a) => a.id)).toEqual(['ousado', 'pontaArtilheiro', 'pontaTrabalhador']);
+    expect(archetypesFor('meia').map((a) => a.id)).toEqual(['classico10', 'enganche', 'magico']);
+    expect(byId('magico').inspiracao).toBe('Ronaldinho');
+    expect(byId('lateralConstrutor').inspiracao).toBe('Júnior');
   });
 
   it('inspiracao obedece à flag inspiracaoLendas', () => {

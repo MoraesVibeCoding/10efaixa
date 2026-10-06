@@ -1,0 +1,13 @@
+{
+ "_nota": "v2.48: estilos que saíram de uma posição viram o mais parecido da mesma posição (save v2 → v3). Chave: posição:estilo antigo.",
+ "conversao": {
+  "goleiro:pegadorPenalti": "goleiroSeguro",
+  "ponta:pontaDriblador": "ousado",
+  "ponta:magico": "ousado",
+  "ponta:pontaInvertido": "pontaTrabalhador",
+  "ponta:arrancador": "pontaArtilheiro",
+  "atacante:magico": "arrancador",
+  "meia:regente": "classico10",
+  "meia:motorzinho": "classico10"
+ }
+}
