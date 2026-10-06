@@ -241,6 +241,26 @@
    }
   }
  },
+ "evolucao": {
+  "titulo": "Neste semestre",
+  "sobe": "{atributo} melhorou.",
+  "sobeForte": "{atributo} melhorou bastante.",
+  "desce": "{atributo} caiu.",
+  "desceForte": "{atributo} caiu bastante.",
+  "atributo": {
+   "finalizacao": "Sua finalização", "passe": "Seu passe", "habilidade": "Sua habilidade", "drible": "Seu drible",
+   "forca": "Sua força", "velocidade": "Sua velocidade", "fisico": "Seu físico", "marcacao": "Sua marcação",
+   "mental": "Sua cabeça", "jogoAereo": "Seu jogo aéreo"
+  }
+ },
+ "idolatria": {
+  "selo": "Torcida: {faixa}",
+  "coluna": "Torcida",
+  "faixa": {
+   "vilao": "Vilão", "contestado": "Contestado", "desconhecido": "Desconhecido", "promessa": "Promessa",
+   "conhecido": "Conhecido", "querido": "Querido", "idolo": "Ídolo", "lenda": "Lenda"
+  }
+ },
  "ritmo": {
   "titulo": "Como você quer jogar?",
   "rapido": { "nome": "Rápido", "detalhe": "Uns 5 minutos. Só os momentos-chave, e um toque já decide." },

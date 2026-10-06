@@ -3,7 +3,7 @@ import { simulateCareer } from '../../engine/career';
 import { runUntilDecision } from '../../state/careerRun';
 import events from '../../data/events.json';
 import { t } from '../../i18n';
-import { careerProgress, toDecisionPlayer, uniformeFor } from './careerView';
+import { careerProgress, semesterLines, toDecisionPlayer, uniformeFor } from './careerView';
 import { MEETING_EVENT } from '../../engine/meeting';
 
 const pickFirst = (id: string) => events.eventos.find((e) => e.id === id)!.opcoes[0]!.id;
@@ -48,7 +48,7 @@ describe('careerView (T51b): do motor para a tela de decisão', () => {
   it('temporadas viram idade (16 anos em 2026) e títulos viram a lista de competições', () => {
     const v = viewAt(12);
     const p = toDecisionPlayer(v, INPUT, LOOK);
-    expect(p.seasons).toEqual(v.seasons.map((s) => ({ age: s.year - 2026 + 16, clubId: s.clubId, overall: s.overall })));
+    expect(p.seasons).toEqual(v.seasons.map((s) => expect.objectContaining({ age: s.year - 2026 + 16, clubId: s.clubId, overall: s.overall })));
     expect(p.titles).toEqual(v.titles.map((x) => x.competition));
   });
 
@@ -88,5 +88,23 @@ describe('uniforme da figurinha (T50k, SPEC v2.37)', () => {
     expect(uniformeFor('salario-atrasado', v)).toBe('flamengo');
     expect(toDecisionPlayer(v, INPUT, LOOK, undefined, 'copa-sacrificio').uniforme).toBe('selecao:brasil');
     expect(toDecisionPlayer(v, INPUT, LOOK, undefined, 'festa').uniforme).toBe('flamengo');
+  });
+});
+
+describe('evolução e idolatria para a tela (T51b)', () => {
+  it('frases do semestre em palavras, com o possessivo certo e sem número', () => {
+    expect(semesterLines([{ atributo: 'passe', sentido: 'sobe', forte: true }, { atributo: 'velocidade', sentido: 'desce', forte: false }])).toEqual([
+      t('ui.evolucao.sobeForte', { atributo: t('ui.evolucao.atributo.passe') }),
+      t('ui.evolucao.desce', { atributo: t('ui.evolucao.atributo.velocidade') }),
+    ]);
+    expect(semesterLines([{ atributo: 'velocidade', sentido: 'desce', forte: false }])[0]).toMatch(/^Sua velocidade/);
+  });
+
+  it('o jogador leva a faixa da torcida do clube atual, e cada temporada a faixa daquele clube', () => {
+    const v = { ...viewAt(3), clubId: 'flamengo', idolatrias: { flamengo: 60, bahia: 80 }, seasons: [{ ...viewAt(3).seasons[0]!, clubId: 'bahia' }] };
+    const p = toDecisionPlayer(v, INPUT, LOOK);
+    expect(p.torcida).toBe('querido');
+    expect(p.seasons![0]!.torcida).toBe('idolo');
+    expect(toDecisionPlayer({ ...v, clubId: null }, INPUT, LOOK).torcida).toBeUndefined();
   });
 });

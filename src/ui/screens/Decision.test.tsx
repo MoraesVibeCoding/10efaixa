@@ -515,3 +515,38 @@ describe('prévia curta no ritmo Rápido (SPEC v2.38)', () => {
     expect(option('operar', 'lesao-grave').querySelector('.opcao__resumo')).toHaveTextContent(t('ui.fora.ano'));
   });
 });
+
+describe('evolução do semestre e idolatria (T51b, v2.41)', () => {
+  const show = (extra: Record<string, unknown> = {}, player: Record<string, unknown> = {}) =>
+    render(<Decision eventId={EVENT} age={24} progress={0.4} player={{ ...PLAYER, ...player }} scene={{ src: 'c.webp', alt: 'cena' }} {...extra} />);
+
+  it('com frases do semestre, a faixa de baixo abre com "Neste semestre: …" antes do título', () => {
+    show({ semestre: ['Seu passe melhorou bastante.', 'Seu físico caiu.'] });
+    const linha = screen.getByText(new RegExp(t('ui.evolucao.titulo'))).closest('p')!;
+    expect(linha).toHaveTextContent(`${t('ui.evolucao.titulo')}: Seu passe melhorou bastante. Seu físico caiu.`);
+    const painel = screen.getByRole('main').querySelector('.decisao__painel')!;
+    expect(painel.firstElementChild).toBe(linha);
+    expect(linha.textContent).not.toMatch(/\d/);
+  });
+
+  it('sem frases, sem linha', () => {
+    show();
+    expect(screen.queryByText(new RegExp(t('ui.evolucao.titulo')))).not.toBeInTheDocument();
+  });
+
+  it('o selo da torcida aparece na ficha do topo, em palavras', () => {
+    show({}, { torcida: 'querido' });
+    const selos = screen.getByRole('list', { name: t('ui.decisao.ficha') });
+    expect(within(selos).getByText(t('ui.idolatria.selo', { faixa: t('ui.idolatria.faixa.querido') }))).toBeInTheDocument();
+  });
+
+  it('na trajetória de "Minha carreira", a torcida de cada clube em palavras', () => {
+    show({}, { seasons: [{ age: 22, clubId: 'bahia', overall: 70, torcida: 'idolo' }, { age: 23, clubId: 'flamengo', overall: 75, torcida: 'conhecido' }] });
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(t('ui.carreira.titulo')) }));
+    const table = screen.getByRole('table', { name: t('ui.carreira.trajetoria') });
+    expect(within(table).getByRole('columnheader', { name: t('ui.idolatria.coluna') })).toBeInTheDocument();
+    const rows = within(table).getAllByRole('row');
+    expect(rows[1]).toHaveTextContent(t('ui.idolatria.faixa.conhecido'));
+    expect(rows[2]).toHaveTextContent(t('ui.idolatria.faixa.idolo'));
+  });
+});

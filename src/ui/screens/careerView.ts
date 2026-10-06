@@ -1,6 +1,8 @@
 import events from '../../data/events.json';
 import { NATIONAL_PREFIX } from '../../art/kits';
 import type { DecisionView } from '../../engine/career';
+import { idolBand, type Feedback } from '../../engine/feedback';
+import { t } from '../../i18n';
 import type { CreationInput } from '../../engine/player';
 import type { DecisionProps } from './Decision';
 import { previewAvatar, type Look } from './look';
@@ -28,8 +30,20 @@ export function toDecisionPlayer(view: DecisionView, input: CreationInput, look:
     name: input.name, position: view.position, clubId: view.clubId ?? '', overall: view.overall,
     titles: view.titles.map((x) => x.competition), role: view.role,
     monthlySalary: view.monthlySalary, marketValueEUR: view.marketValueEUR, number: view.number, attributes: view.attributes,
-    seasons: view.seasons.map((s) => ({ age: s.year - START_YEAR + START_AGE, clubId: s.clubId, overall: s.overall })),
+    seasons: view.seasons.map((s) => ({ age: s.year - START_YEAR + START_AGE, clubId: s.clubId, overall: s.overall, ...torcidaOf(view.idolatrias, s.clubId) })),
+    ...(view.clubId ? torcidaOf(view.idolatrias, view.clubId) : {}),
     // Aparência é só visual; altura e compleição vêm da criação (as únicas que pesam no jogo).
     avatar: { ...previewAvatar(look), heightCm: input.biotype.heightCm, build: input.biotype.build, age: Math.floor(view.age) },
   };
+}
+
+/** A faixa da torcida (T51b) de um clube, se o jogador já tem idolatria nele. */
+function torcidaOf(idolatrias: Record<string, number>, clubId: string) {
+  const v = idolatrias[clubId];
+  return v === undefined ? {} : { torcida: idolBand(v) };
+}
+
+/** As frases do semestre (T51b) em palavras: "Seu passe melhorou bastante." Nunca número. */
+export function semesterLines(frases: Feedback[]): string[] {
+  return frases.map((f) => t(`ui.evolucao.${f.sentido}${f.forte ? 'Forte' : ''}`, { atributo: t(`ui.evolucao.atributo.${f.atributo}`) }));
 }

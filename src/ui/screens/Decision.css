@@ -127,6 +127,9 @@
   text-transform: uppercase;
   text-wrap: balance;
 }
+/* T51b: o que mudou no semestre, numa linha no alto da faixa (só na primeira decisão depois dele) */
+.decisao__semestre { font-size: var(--tipo-apoio); line-height: 1.35; color: var(--cor-texto-suave); }
+.decisao__semestre strong { color: var(--cor-positivo); font-weight: 700; }
 .decisao__historia { font-size: var(--tipo-historia); line-height: 1.4; color: var(--cor-texto-suave); }
 
 /* opções de uma linha: o texto e, à direita, o medidor de risco */

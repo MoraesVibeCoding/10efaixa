@@ -11,6 +11,7 @@ import { initialEuroTables, simulateEuropeSeason, type EuroTables } from './euro
 import { applyOption, autoChoice, heartSalaryFactor } from './events';
 import { callUp, coachFor, isPrincipal, selectionEffect, updatePrestige, visibility, type CallUp, type Rung } from './nationalTeam';
 import { evolveSemester, type EvoState, type Focus } from './evolution';
+import { semesterFeedback, type Feedback } from './feedback';
 import { mentalityEffects } from './mentality';
 import { afterClassico, afterSemester, afterTransfer, type Idolatry } from './idolatry';
 import { decayRelapse, graveDecision, semesterInjury } from './injuries';
@@ -84,6 +85,10 @@ export interface DecisionView {
   seasons: CareerResult['seasons']; titles: Title[];
   /** T52: as reuniões com a comissão até agora (ano, semestre e resposta); a tela mostra a resposta da que o jogador fez. */
   meetings: ({ year: number; semestre: 1 | 2 } & MeetingResult)[];
+  /** T51b: o último semestre fechado e o que mais mudou nele (até 2 frases, sem número). */
+  ultimoSemestre?: { year: number; semestre: 1 | 2; frases: Feedback[] };
+  /** T51b: idolatria (−100 a 100) em cada clube por onde passou; a tela mostra só a faixa. */
+  idolatrias: Record<string, number>;
   /** Seleção que o jogador defende agora ("brasil" ou o país da dupla nacionalidade aceita): a camisa nos eventos da Seleção (v2.37). */
   nationality: string;
 }
@@ -178,6 +183,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let curYear = startYear;
   let curRole: Role = 'promessa';
   const meetings: DecisionView['meetings'] = [];
+  let ultimoSemestre: DecisionView['ultimoSemestre'];
   /** Toda decisão passa por aqui (T51): o padrão é a escolha do temperamento, como antes. */
   const ask = (eventId: string, state: Record<string, number | string | boolean> = {}, who = temp) => decide(eventId, who, () => ({
     year: curYear, age: evo.age, clubId, position, overall: ov(evo), role: curRole, temperament: who,
@@ -188,7 +194,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       moral: morale, disciplina: discipline, relacaoTecnico: coachRelation, patrimonio: wealth, salarioFator: 1,
       idolatria: clubId ? idol[clubId] ?? 0 : 0, idolatriaCoracao: input.heartClub ? idol[input.heartClub] ?? 0 : 0, ...state,
     },
-    seasons: [...seasons], titles: [...titles], nationality: selection.nationality, meetings: [...meetings],
+    seasons: [...seasons], titles: [...titles], nationality: selection.nationality, meetings: [...meetings], idolatrias: { ...idol }, ...(ultimoSemestre && { ultimoSemestre }),
   }));
   const earn = (amount: number, currency: Contract['currency']) => { const before = wealth; wealth = addToWealth(wealth, amount, currency, agent); earned += Math.max(0, wealth - before); };
   const awards: CareerResult['awards'] = [];
@@ -330,7 +336,9 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       const leader = leaderEffects(temp, teamResult);
       evo = { ...evo, growthBonus: { ...player.growthBonus, mental: (player.growthBonus.mental ?? 1) * leader.mentalBonus * fx.mentalBonus } };
       coachRelation = clamp(coachRelation + leader.relationDelta, 0, 1);
+      const antes = evo.attributes;
       evo = evolveSemester(evo, { focus, staffQuality, minutes, morale }, yr);
+      ultimoSemestre = { year: curYear, semestre: (sem + 1) as 1 | 2, frases: semesterFeedback(antes, evo.attributes) };
       const tr = progressTraits(traits, focus);
       traits = { position: tr.position, traits: tr.traits, latentTrait: tr.latentTrait, progress: tr.progress };
 

@@ -43,9 +43,13 @@ export interface DecisionProps {
     uniforme?: string;
     /** Marcos já alcançados ("selecao", "camisa10"): saem dos espaços vazios do álbum. */
     milestones?: string[];
+    /** T51b: a faixa da torcida no clube atual (idolatria em palavras, idolatry.json). */
+    torcida?: string;
   };
   /** Situação atual do jogador (moral, torcida, patrimônio…): o resultado da escolha mostra o ganho e a perda reais sobre ela. */
   state?: Ctx;
+  /** T51b: as frases do último semestre ("Seu passe melhorou."), só na primeira decisão depois dele. */
+  semestre?: string[];
   /** Ritmo da carreira (T49b): no normal o resultado espera o jogador; no rápido segue sozinho depois de `resultadoMs`. */
   ritmo?: 'normal' | 'rapido' | 'completo';
   onChoose?: (optionId: string) => void;
@@ -53,7 +57,7 @@ export interface DecisionProps {
   onContinue?: (optionId: string, state: Ctx) => void;
 }
 
-interface Season { age: number; clubId: string; overall: number }
+interface Season { age: number; clubId: string; overall: number; /** T51b: faixa da torcida naquele clube. */ torcida?: string }
 
 const ARROW = { sobe: 'M6 1 11 8H7.6v7H4.4V8H1z', desce: 'M6 15 1 8h3.4V1h3.2v7H11z', muda: 'M1 5.5 5 2v2.4h10v2.2H5V9zM15 10.5 11 14v-2.4H1V9.4h10V7z' };
 
@@ -190,6 +194,7 @@ function Career({ player, onClose }: { player: DecisionProps['player']; onClose:
                 <tr>
                   <th scope="col">{t('ui.carreira.colIdade')}</th>
                   <th scope="col">{t('ui.carreira.colClube')}</th>
+                  <th scope="col">{t('ui.idolatria.coluna')}</th>
                   <th scope="col">{t('ui.carreira.colOver')}</th>
                 </tr>
               </thead>
@@ -198,6 +203,7 @@ function Career({ player, onClose }: { player: DecisionProps['player']; onClose:
                   <tr key={s.age}>
                     <td>{s.age}</td>
                     <td><span className="trajetoria__clube"><Emblema clubId={s.clubId} size={20} />{clubName(s.clubId).nome}</span></td>
+                    <td>{s.torcida ? t(`ui.idolatria.faixa.${s.torcida}`) : null}</td>
                     <td>{s.overall}</td>
                   </tr>
                 ))}
@@ -387,12 +393,13 @@ function PlayerBox({ player, age, open, opener, onOpen, inert }: {
         <li>{t('ui.decisao.porMes', { valor: money(player.monthlySalary.amount, player.monthlySalary.currency) })}</li>
         {player.marketValueEUR === undefined ? null : <li>{t('ui.decisao.valor', { valor: money(player.marketValueEUR, 'EUR') })}</li>}
         <li>{titlesCount(player.titles.length)}</li>
+        {player.torcida ? <li>{t('ui.idolatria.selo', { faixa: t(`ui.idolatria.faixa.${player.torcida}`) })}</li> : null}
       </ul>
     </header>
   );
 }
 
-export function Decision({ eventId, age, progress, scene, player, state = {}, ritmo = 'normal', onChoose, onContinue }: DecisionProps) {
+export function Decision({ eventId, age, progress, scene, player, state = {}, ritmo = 'normal', semestre, onChoose, onContinue }: DecisionProps) {
   const [career, setCareer] = useState(false);
   // sem genérico aqui: a guarda de texto fora do i18n confunde o genérico com JSX
   const opener = useRef(null as HTMLButtonElement | null);
@@ -448,6 +455,7 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, ri
       </div>
       <PlayerBox player={player} age={age} open={career} opener={opener} onOpen={() => { setCareer(true); }} inert={overlay} />
       <div className="decisao__painel vidro" inert={overlay}>
+        {semestre && semestre.length > 0 ? <p className="decisao__semestre"><strong>{t('ui.evolucao.titulo')}:</strong> {semestre.join(' ')}</p> : null}
         <h1 className="decisao__titulo">{t(`events.${eventId}.titulo`)}</h1>
         {text && <p className="decisao__historia">{text}</p>}
         <div className="decisao__opcoes" role="group" aria-label={t('ui.decisao.opcoes')}>

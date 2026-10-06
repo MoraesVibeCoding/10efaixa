@@ -96,3 +96,39 @@ function playFrom(i: CreationInput, seed: number, start: string[], ritmo: Ritmo 
   }
   throw new Error('carreira não terminou');
 }
+
+describe('retorno do semestre e idolatria na visão (T51b)', () => {
+  /** Todas as visões da carreira, respondendo o automático. */
+  function views() {
+    const out: Extract<CareerStep, { kind: 'decision' }>['view'][] = [];
+    const choices: string[] = [];
+    for (let guard = 0; guard < 600; guard++) {
+      const step = runUntilDecision(input(), 11, choices);
+      if (step.kind === 'done') return out;
+      out.push(step.view);
+      choices.push(auto(step));
+    }
+    throw new Error('carreira não terminou');
+  }
+
+  it('cada decisão traz o último semestre fechado (ano, semestre e até 2 frases) e ele avança com a carreira', () => {
+    const vs = views();
+    const withSem = vs.filter((v) => v.ultimoSemestre);
+    expect(withSem.length).toBeGreaterThan(10);
+    for (const v of withSem) {
+      expect(v.ultimoSemestre!.frases.length).toBeLessThanOrEqual(2);
+      expect([1, 2]).toContain(v.ultimoSemestre!.semestre);
+    }
+    expect(withSem.some((v) => v.ultimoSemestre!.frases.length > 0)).toBe(true);
+    const keys = withSem.map((v) => v.ultimoSemestre!.year * 10 + v.ultimoSemestre!.semestre);
+    expect(keys).toEqual([...keys].sort((a, b) => a - b));
+  });
+
+  it('cada decisão traz a idolatria de cada clube por onde passou (−100 a 100)', () => {
+    const vs = views();
+    const last = vs.at(-1)!;
+    expect(Object.keys(last.idolatrias).length).toBeGreaterThan(0);
+    for (const v of Object.values(last.idolatrias)) expect(v).toBeGreaterThanOrEqual(-100);
+    if (last.clubId) expect(last.idolatrias).toHaveProperty(last.clubId);
+  });
+});

@@ -66,4 +66,25 @@ describe('carreira na tela (T51b)', () => {
     fireEvent.click(dialog.querySelector('button')!);
     expect(document.querySelector('dialog.reuniao__resposta')).toBeNull();
   });
+
+  it('a linha "Neste semestre" aparece só na primeira decisão depois de cada semestre (T51b)', { timeout: 60_000 }, () => {
+    render(<Career input={INPUT} look={LOOK} seed={11} ritmo="completo" onRestart={() => {}} />);
+    const seen = new Set<string>();
+    let shownCount = 0;
+    for (let guard = 0; guard < 120 && !screen.queryByRole('heading', { level: 1, name: t('ui.fim.titulo') }); guard++) {
+      const resposta = document.querySelector('dialog.reuniao__resposta');
+      if (resposta) { fireEvent.click(resposta.querySelector('button')!); continue; }
+      if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') })); continue; }
+      const key = document.querySelector('.carreira')!.getAttribute('data-semestre') ?? '';
+      const line = document.querySelector('.decisao__semestre');
+      if (seen.has(key)) expect(line, `repetiu ${key}`).toBeNull();
+      if (line) shownCount++;
+      seen.add(key);
+      const eventId = document.querySelector('[data-evento]')!.getAttribute('data-evento')!;
+      fireEvent.click(document.querySelector(`[data-opcao-id="${autoChoice(eventId, document.querySelector('[data-temperamento]')!.getAttribute('data-temperamento')!)}"]`)!);
+      fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
+      fireEvent.click(screen.getByRole('button', { name: t('ui.resultado.seguir') }));
+    }
+    expect(shownCount).toBeGreaterThan(3);
+  });
 });

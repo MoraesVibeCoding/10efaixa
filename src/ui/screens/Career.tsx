@@ -5,7 +5,7 @@ import type { CreationInput } from '../../engine/player';
 import { t } from '../../i18n';
 import { runUntilDecision } from '../../state/careerRun';
 import { clubName } from './clubText';
-import { careerProgress, toDecisionPlayer } from './careerView';
+import { careerProgress, semesterLines, toDecisionPlayer } from './careerView';
 import { Decision } from './Decision';
 import { Emblema } from './Emblema';
 import { Reuniao, ReuniaoResposta } from './Reuniao';
@@ -30,6 +30,8 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
   const [choices, setChoices] = useState(initialChoices);
   // T52: a reunião que o jogador acabou de fazer; a resposta dela aparece por cima da próxima tela
   const [asked, setAsked] = useState(null as { year: number; semestre: number } | null);
+  // T51b: o semestre cujas frases o jogador já viu; a linha "Neste semestre" só aparece na primeira decisão depois dele
+  const [seenSemester, setSeenSemester] = useState('');
   const step = useMemo(() => runUntilDecision(input, seed, choices, ritmo), [input, seed, choices, ritmo]);
   const done = step.kind === 'done';
   useEffect(() => { onProgress?.(choices, done); }, [choices, done, onProgress]);
@@ -45,6 +47,12 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
 
   if (step.kind === 'done') return <div ref={box} className="carreira"><CareerEnd result={step.result} onRestart={onRestart} /></div>;
   const { view, eventId, index } = step;
+  const semKey = view.ultimoSemestre ? `${view.ultimoSemestre.year}-${view.ultimoSemestre.semestre}` : '';
+  const semestre = semKey !== seenSemester && view.ultimoSemestre ? semesterLines(view.ultimoSemestre.frases) : undefined;
+  function decide(choice: string) {
+    setSeenSemester(semKey);
+    setChoices([...choices, choice]);
+  }
   const resposta = answerOf(view.meetings, asked);
   const respostaEl = resposta ? <ReuniaoResposta key={`${asked!.year}-${asked!.semestre}`} resposta={resposta} onDone={() => { setAsked(null); }} /> : null;
   if (eventId === MEETING_EVENT) {
@@ -52,7 +60,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
       <div ref={box} className="carreira" data-temperamento={view.temperament}>
         <Reuniao key={index} sugestao={String(view.state.sugestao)} onChoose={(choice) => {
           setAsked({ year: view.year, semestre: Number(view.state.semestre) });
-          setChoices([...choices, choice]);
+          decide(choice);
         }} />
         {respostaEl}
       </div>
@@ -61,7 +69,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
   const player = toDecisionPlayer(view, input, look, visual, eventId);
   const clube = view.clubId ? clubName(view.clubId).nome : t('ui.varzea');
   return (
-    <div ref={box} className="carreira" data-temperamento={view.temperament}>
+    <div ref={box} className="carreira" data-temperamento={view.temperament} data-semestre={semKey}>
       <Decision
         key={index}
         eventId={eventId}
@@ -71,7 +79,8 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
         player={player}
         state={view.state}
         ritmo={ritmo}
-        onContinue={(choice) => setChoices([...choices, choice])}
+        semestre={semestre}
+        onContinue={decide}
       />
       {respostaEl}
     </div>
