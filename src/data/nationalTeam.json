@@ -43,6 +43,7 @@
    "lateral": 1.2,
    "volante": 1.0,
    "meia": 0,
+   "ponta": -0.2,
    "atacante": -0.3
   }
  },
@@ -81,6 +82,7 @@
    "corte": 121,
    "posicoes": [
     "meia",
+    "ponta",
     "atacante"
    ]
   },

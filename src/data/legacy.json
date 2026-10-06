@@ -62,6 +62,10 @@
   "_obs": "ajustados por posição: média de min(1, número / referência) dos números que contam para a posição",
   "jogos": 1000,
   "porPosicao": {
+   "ponta": {
+    "gols": 260,
+    "assistencias": 220
+   },
    "atacante": {
     "gols": 400,
     "assistencias": 150

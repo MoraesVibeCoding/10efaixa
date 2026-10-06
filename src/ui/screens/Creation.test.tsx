@@ -200,14 +200,23 @@ describe('tela 2: em campo e cabeça (T50d, v2.30)', () => {
     toField();
     expect(title('emCampo')).toBeInTheDocument();
     const order = within(group('emCampo.posicao')).getAllByRole('radio').map((r) => (r as HTMLInputElement).value);
-    // ordem do teclado = ordem visual do campinho, e todas as posições com faixa de altura aparecem
-    expect(order).toEqual(['goleiro', 'zagueiro', 'lateral', 'volante', 'meia', 'atacante']);
-    expect([...order].sort()).toEqual(Object.keys(biotypeData.heightRangesCm).sort());
+    // v2.46: 9 camisas, da defesa ao ataque (ordem do teclado), cobrindo todas as posições com faixa de altura
+    expect(order).toEqual(['goleiro', 'zagueiro', 'lateral-esquerdo', 'lateral-direito', 'volante', 'meia', 'ponta-esquerda', 'ponta-direita', 'atacante']);
+    expect([...new Set(order.map((v) => v.split('-')[0]))].sort()).toEqual(Object.keys(biotypeData.heightRangesCm).sort());
     expect(within(group('emCampo.perna')).getAllByRole('radio')).toHaveLength(2);
     expect(within(group('emCampo.compleicao')).getAllByRole('radio')).toHaveLength(3);
     expect(within(group('emCampo.temperamento')).getAllByRole('radio')).toHaveLength(4);
     expect(within(group('emCampo.mentalidade')).getAllByRole('radio')).toHaveLength(4);
     expect(height()).toBeInTheDocument();
+  });
+
+  it('v2.46: a camisa marcada leva o número do jogador; o leitor de tela ouve a vaga por extenso', () => {
+    toField();
+    const pe = radio('emCampo.posicao', 'Ponta esquerda');
+    fireEvent.click(pe);
+    expect(pe).toBeChecked();
+    expect(pe.closest('label')).toHaveTextContent('10');
+    expect(radio('emCampo.posicao', 'Atacante').closest('label')).toHaveTextContent('ATA');
   });
 
   it('sem posição, o estilo pede a posição primeiro; com posição, mostra só os arquétipos dela', () => {

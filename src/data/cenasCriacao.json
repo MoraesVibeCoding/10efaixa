@@ -1,0 +1,5 @@
+{
+ "_nota": "T60b: cena pintada ao fundo de cada passo da criação (referência de layout da v2.12: cena ao fundo, painel por cima). No tipo de início, a cena segue a origem marcada; sem origem, vale a do passo.",
+ "passos": { "quemE": "vestiario", "visual": "vestiario", "emCampo": "treino", "origem": "peneira" },
+ "origem": { "baseGrande": "treino", "peneira": "peneira", "varzea": "varzea" }
+}

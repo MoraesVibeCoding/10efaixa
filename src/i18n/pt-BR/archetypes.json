@@ -16,7 +16,9 @@
     "lateralConstrutor": "Lateral construtor",
     "paredao": "Paredão",
     "goleiroLibero": "Goleiro-líbero",
-    "pegadorPenalti": "Pegador de pênalti"
+    "pegadorPenalti": "Pegador de pênalti",
+    "pontaDriblador": "Ponta driblador",
+    "pontaInvertido": "Ponta invertido"
   },
   "trait": {
     "faroDeGol": "Faro de gol",

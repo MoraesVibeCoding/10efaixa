@@ -2,7 +2,7 @@ import { ATTRIBUTES, type Attributes } from './attributes';
 import weights from '../data/positionWeights.json';
 
 // Seção 6.1. Goleiro lê os mesmos atributos com outro sentido (6.3); a tradução mora nos pesos.
-export const POSITIONS = ['goleiro', 'zagueiro', 'lateral', 'volante', 'meia', 'atacante'] as const;
+export const POSITIONS = ['goleiro', 'zagueiro', 'lateral', 'volante', 'meia', 'ponta', 'atacante'] as const;
 export type Position = (typeof POSITIONS)[number];
 
 /** Média ponderada pelos pesos da posição (em dados) + bônus do arquétipo, arredondada para inteiro 1–99. */

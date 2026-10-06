@@ -17,6 +17,7 @@ export function toCreationInput(identity: Identity, field: OnField, origin: stri
     celebration: identity.celebration!,
     origin,
     foot: field.foot,
+    ...(field.side ? { side: field.side } : {}),
     ...(field.mentality ? { mentality: field.mentality } : {}),
   };
 }

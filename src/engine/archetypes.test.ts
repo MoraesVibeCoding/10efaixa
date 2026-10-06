@@ -27,6 +27,8 @@ const HIGHLIGHTS: Record<string, Attribute[]> = {
   paredao: ['velocidade', 'habilidade'],
   goleiroLibero: ['passe', 'jogoAereo'],
   pegadorPenalti: ['velocidade', 'mental'],
+  pontaDriblador: ['drible', 'velocidade'],
+  pontaInvertido: ['finalizacao', 'drible'],
 };
 
 describe('arquétipos', () => {
@@ -45,8 +47,8 @@ describe('arquétipos', () => {
     expect(validateArchetypes([null]).length).toBeGreaterThan(0);
   });
 
-  it('são 16, com ids únicos', () => {
-    expect(new Set(ARCHETYPES.map((a) => a.id)).size).toBe(16);
+  it('são 18, com ids únicos (v2.46: dois de ponta)', () => {
+    expect(new Set(ARCHETYPES.map((a) => a.id)).size).toBe(18);
     expect(Object.keys(HIGHLIGHTS).sort()).toEqual(ARCHETYPES.map((a) => a.id).sort());
   });
 
