@@ -1,0 +1,16 @@
+{
+ "_nota": "T55a (SPEC 6.15, v2.28): honrarias bem-humoradas. Critérios sobre os fatos da carreira (legacyFacts + extras de honorFacts). A ordem é da mais rara para a mais comum (calibrada com `npm run sim:legado`); o cartão mostra as primeiras `maxNoCartao`. Textos em src/i18n/pt-BR/legacy.json → honraria. Frequência em 400 carreiras simuladas (decisão automática, 2026-10-06): fiel 0% (só com escolhas reais), gandula 2%, chave no gol 4%, churrasco 5,3%, DM 5,5%, pescador 6,5%, garçom 7,2%, juiz 10%, mala 11,3%, chuteira 12,8%; 52,5% sem nenhuma.",
+ "maxNoCartao": 3,
+ "honrarias": [
+  {"id": "fielAteOFim", "condicoes": [["clubes", "==", 1]]},
+  {"id": "gandula", "condicoes": [["mudancasPosicao", ">=", 2]]},
+  {"id": "chaveNoGol", "condicoes": [["posicao", "==", "goleiro"], ["semSofrerGol", ">=", 300]]},
+  {"id": "tacaDoChurrasco", "condicoes": [["titulos", "==", 0], ["jogos", ">=", 300]]},
+  {"id": "canelaDeVidro", "condicoes": [["lesoesGraves", ">=", 3]]},
+  {"id": "pescador", "condicoes": [["gols", ">=", 380]]},
+  {"id": "garcom", "condicoes": [["assistencias", ">=", 230]]},
+  {"id": "juizBolso", "condicoes": [["vermelhos", ">=", 7]]},
+  {"id": "rodouMala", "condicoes": [["clubes", ">=", 9]]},
+  {"id": "chuteiraAposentada", "condicoes": [["idadeFinal", ">=", 40]]}
+ ]
+}

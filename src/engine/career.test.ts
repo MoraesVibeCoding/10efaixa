@@ -218,3 +218,12 @@ describe('integração da carreira (T24b)', () => {
     [5, 10, 60, 25].forEach((target, k) => expect(Math.abs(got[k]! - target)).toBeLessThanOrEqual(6));
   });
 });
+
+describe('dados do cartão final (T55a)', () => {
+  it('guarda os 10 atributos, o clube e as honrarias do auge', () => {
+    const r = simulateCareer(input(), 7);
+    expect(Object.keys(r.peakAttributes)).toHaveLength(10);
+    expect(r.spells.some((s) => s.clubId === r.peakClubId && s.fromAge <= r.peakAge && r.peakAge <= s.toAge)).toBe(true);
+    expect(Array.isArray(r.honors)).toBe(true);
+  });
+});

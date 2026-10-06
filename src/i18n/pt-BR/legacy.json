@@ -28,5 +28,17 @@
   "cascaGrossa": "Casca-grossa",
   "boleiroRaiz": "Boleiro raiz"
  },
- "raridade": { "comum": "Comum", "incomum": "Incomum", "rara": "Rara", "epica": "Épica", "lendaria": "Lendária" }
+ "raridade": { "comum": "Comum", "incomum": "Incomum", "rara": "Rara", "epica": "Épica", "lendaria": "Lendária" },
+ "honraria": {
+  "rodouMala": "Rodou mais que mala de rodoviária",
+  "fielAteOFim": "Fiel até o último contrato",
+  "canelaDeVidro": "Mais tempo no DM que na concentração",
+  "juizBolso": "O juiz já sabia o caminho do bolso",
+  "garcom": "Garçom de mão cheia",
+  "pescador": "Balançou mais rede que pescador",
+  "chaveNoGol": "Fechou o gol e jogou a chave fora",
+  "gandula": "Jogou em tudo, menos de gandula",
+  "chuteiraAposentada": "Jogou até a chuteira pedir aposentadoria",
+  "tacaDoChurrasco": "Taça, só a do churrasco de fim de ano"
+ }
 }

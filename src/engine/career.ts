@@ -1,4 +1,4 @@
-import { ATTRIBUTES } from './attributes';
+import { ATTRIBUTES, type Attributes } from './attributes';
 import { agentSemester, changeAgent, createAgent, type Agent } from './agent';
 import { ARCHETYPES } from './archetypes';
 import { CLUBS, clubsIn, rivalsOf } from './clubs';
@@ -31,6 +31,7 @@ import { seasonAwards, type Award } from './awards';
 import { ZERO_STATS, addStats, seasonStats, type SeasonStats } from './stats';
 import { headlineOf } from './headline';
 import { legacyOf, type Legacy } from './legacy';
+import { honorFacts, honorsOf } from './honors';
 import { generateNickname } from './nickname';
 import { farewellOffer, retirementCheck, type RetireReason } from './retirement';
 import { simulateSeason, type ClubInfo, type Div, type Divisions, type Row } from './season';
@@ -47,6 +48,8 @@ export interface ClubSpell { clubId: string; fromAge: number; toAge: number; num
 export interface Title { year: number; competition: string; clubId: string }
 export interface CareerResult {
   player: Player; spells: ClubSpell[]; titles: Title[]; peakOverall: number; peakAge: number; endAge: number;
+  /** T55a: o auge revelado no cartão final (atributos e clube) e as honrarias. */
+  peakAttributes: Attributes; peakClubId: string; honors: string[];
   wearsTen: boolean; captain: boolean; idolatry: Record<string, number>;
   wealthBRL: number; agentProfile: string; contracts: number;
   injuries: { leve: number; media: number; grave: number };
@@ -157,6 +160,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   const seasons: CareerResult['seasons'] = [];
   let peakOverall = ov(evo);
   let peakAge = 16;
+  let peakAttributes = { ...evo.attributes };
+  let peakClubId: string | null = null;
   let wearsTen = false;
   let captain = false;
   let seasonsAtClub = 0;
@@ -441,7 +446,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         }
       }
       const o = ov(evo);
-      if (o > peakOverall) { peakOverall = o; peakAge = evo.age; }
+      if (o > peakOverall) { peakOverall = o; peakAge = evo.age; peakAttributes = { ...evo.attributes }; peakClubId = clubId; }
       peakPhysical = Math.max(peakPhysical, physical(evo));
       if (spells.length) spells.at(-1)!.toAge = evo.age;
     }
@@ -577,11 +582,11 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   selection.oriundoCampeao = selection.dual === 'aceitou' && selection.tournaments.some((t) => t.stage === 'campeao' && t.team !== 'brasil');
   selection.esperouOBrasil = selection.dual === 'recusou' && selection.caps > 0;
   const result = {
-    player, spells, titles, peakOverall, peakAge, endAge: evo.age, wearsTen, captain, idolatry: idol,
+    player, spells, titles, peakOverall, peakAge, peakAttributes, peakClubId: peakClubId ?? spells[0]?.clubId ?? '', endAge: evo.age, wearsTen, captain, idolatry: idol,
     wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, selection, stats, awards, retirement, farewell, cards, finalTemperament: temp, houseBought, discipline, seasons, earnedBRL: earned, decisiveDerbies,
   };
   // Sorteios novos ficam por último para não alterar nenhum resultado anterior da mesma semente.
   const nickname = generateNickname(player, rng);
   const legacy = legacyOf(result);
-  return { ...result, nickname, legacy, ...headlineOf({ player, nickname, legacy }, rng) };
+  return { ...result, honors: honorsOf(honorFacts(result)), nickname, legacy, ...headlineOf({ player, nickname, legacy }, rng) };
 }
