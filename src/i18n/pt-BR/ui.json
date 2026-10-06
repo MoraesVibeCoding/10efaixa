@@ -280,5 +280,17 @@
     "narrativa": "História",
     "estatistica": "Números",
     "altEstatistica": "Cartão de carreira de {nome} em números. Overall máximo {over}. {numeros}. Atributos no auge: {atributos}."
+  },
+  "compartilhar": {
+    "texto": "Minha carreira no 10eFaixa: {nome}, o {apelido}. {veredito}. Código {codigo}",
+    "compartilhar": "Compartilhar",
+    "baixar": "Baixar imagem",
+    "copiar": "Copiar texto",
+    "preparando": "Preparando a imagem…",
+    "compartilhado": "Cartão compartilhado.",
+    "cancelado": "Compartilhamento cancelado.",
+    "baixado": "Imagem baixada.",
+    "copiado": "Texto copiado. É só colar no WhatsApp.",
+    "naoCopiou": "Não deu para copiar o texto neste navegador."
   }
 }

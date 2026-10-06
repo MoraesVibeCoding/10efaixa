@@ -1,5 +1,7 @@
 # Tarefa atual
 
+> **T55 concluída e aprovada; T56 concluída.** Próxima na ordem da seção 14: T57 (desafio diário, com o link da carreira).
+
 > Estado para retomar depois de compactar a conversa (skill `task-compression`). A fonte da verdade continua sendo o `SPEC.md`; aqui fica só o andamento.
 
 ## Objetivo
@@ -27,8 +29,8 @@
 ## Pendente
 
 - ⛳ T55 **aprovada** pelo usuário (2026-10-06).
-- Depois: T56 (compartilhar: imagem, download, texto para WhatsApp e link com os dados para refazer a carreira).
+- **T56 feita:** `src/share/share.ts` (nativo com imagem + texto, download como alternativa, "Copiar texto"); link da carreira adiado para a T57 (v2.43). Conferir o compartilhamento nativo no celular.
 
-## Validação (último commit, T55d)
+## Validação (último commit, T56)
 
-- `npm test`: 933 passando, 4 pulados · typecheck limpo · build OK.
+- `npm test`: 940 passando, 4 pulados · typecheck limpo · build OK.

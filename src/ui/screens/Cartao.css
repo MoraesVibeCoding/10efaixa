@@ -40,3 +40,20 @@
   cursor: pointer;
 }
 .cartao button:focus-visible { outline: 3px solid var(--cor-destaque); outline-offset: 3px; }
+/* T56: ações de compartilhar; o botão nativo (quando existe) vem primeiro e cheio */
+.cartao__acoes { display: flex; flex-wrap: wrap; gap: var(--espaco-2); }
+.cartao__acoes button {
+  flex: 1 1 8rem;
+  min-block-size: var(--toque-compacto);
+  border: var(--forma-borda-fina) solid var(--cor-texto);
+  border-radius: 999px;
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  font-family: var(--fonte-titulo);
+  font-size: var(--tipo-opcao);
+  font-weight: 700;
+  cursor: pointer;
+}
+.cartao__acoes .cartao__compartilhar { flex-basis: 100%; background: var(--cor-texto); color: var(--cor-fundo); }
+.cartao__acoes button:disabled { opacity: 0.6; cursor: progress; }
+.cartao__status { min-block-size: 1.4em; margin: 0; font-size: var(--tipo-apoio); }
