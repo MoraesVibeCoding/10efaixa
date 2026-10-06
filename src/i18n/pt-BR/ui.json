@@ -25,6 +25,11 @@
  "amostra": {
   "clube": "clube do coração"
  },
+ "momento": {
+  "titulo": "Campeão",
+  "acesso": "Acesso!",
+  "rebaixamento": "Rebaixamento"
+ },
  "titulo": {
   "copaDoMundo": "Mundial de Seleções",
   "champions": "Copa Europeia",

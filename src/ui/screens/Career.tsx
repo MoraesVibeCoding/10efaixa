@@ -9,6 +9,7 @@ import { clubName } from './clubText';
 import { careerProgress, semesterLines, toDecisionPlayer } from './careerView';
 import { cutForVisual } from './cenaArte';
 import { Decision, type Anterior } from './Decision';
+import { momentsBetween } from './moments';
 import events from '../../data/events.json';
 import { Cartao } from './Cartao';
 import { Historia } from './Historia';
@@ -38,9 +39,11 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
   // T55b: no fim, "Sua história" vem antes do cartão
   const [showCard, setShowCard] = useState(false);
   // v2.47: os números da última decisão; na próxima, o overall, a idade e o valor rolam deles
-  const [anterior, setAnterior] = useState(undefined as Anterior | undefined);
+  const [anterior, setAnterior] = useState(undefined as (Anterior & Pick<DecisionView, 'titles' | 'seasons'>) | undefined);
   const step = useMemo(() => runUntilDecision(input, seed, choices, ritmo), [input, seed, choices, ritmo]);
   const done = step.kind === 'done';
+  // v2.47: título, acesso e rebaixamento desde a última decisão viram carimbo
+  const momentos = useMemo(() => (step.kind === 'done' ? [] : momentsBetween(anterior, step.view)), [anterior, step]);
   useEffect(() => { onProgress?.(choices, done); }, [choices, done, onProgress]);
   const box = useRef(null as HTMLDivElement | null);
   // tela nova a cada decisão: o foco vai para o título, senão o leitor de tela fica perdido no corpo da página
@@ -94,8 +97,9 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
         ritmo={ritmo}
         semestre={semestre}
         anterior={anterior}
+        momentos={momentos}
         onContinue={(choice) => {
-          setAnterior({ overall: player.overall, age: Math.floor(view.age), marketValueEUR: player.marketValueEUR });
+          setAnterior({ overall: player.overall, age: Math.floor(view.age), marketValueEUR: player.marketValueEUR, titles: view.titles, seasons: view.seasons });
           decide(choice);
         }}
       />

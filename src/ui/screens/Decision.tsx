@@ -16,6 +16,8 @@ import { Niveis } from './Niveis';
 import { CenaPintada } from './CenaPintada';
 import { useRolling } from '../useRolling';
 import { MOTION } from '../motion';
+import { Carimbo } from './Carimbo';
+import type { Moment } from './moments';
 import './Decision.css';
 
 // T49 (amostra aprovada) e T51: uma decisão por tela, com a cena ao fundo. Só faixas e setas, nunca números de atributo.
@@ -52,6 +54,8 @@ export interface DecisionProps {
   };
   /** v2.47: os números da decisão anterior; o overall, a idade e o valor rolam deles até os de agora. */
   anterior?: Anterior;
+  /** v2.47: o que aconteceu desde a decisão anterior (título, acesso, rebaixamento): vira carimbo por cima da tela. */
+  momentos?: Moment[];
   /** Situação atual do jogador (moral, torcida, patrimônio…): o resultado da escolha mostra o ganho e a perda reais sobre ela. */
   state?: Ctx;
   /** T51b: as frases do último semestre ("Seu passe melhorou."), só na primeira decisão depois dele. */
@@ -418,7 +422,7 @@ function PlayerBox({ player, age, anterior, open, opener, onOpen, inert }: {
   );
 }
 
-export function Decision({ eventId, age, progress, scene, player, anterior, state = {}, ritmo = 'normal', semestre, onChoose, onContinue }: DecisionProps) {
+export function Decision({ eventId, age, progress, scene, player, anterior, momentos, state = {}, ritmo = 'normal', semestre, onChoose, onContinue }: DecisionProps) {
   const [career, setCareer] = useState(false);
   // sem genérico aqui: a guarda de texto fora do i18n confunde o genérico com JSX
   const opener = useRef(null as HTMLButtonElement | null);
@@ -507,12 +511,14 @@ export function Decision({ eventId, age, progress, scene, player, anterior, stat
       </div>
       <Album titles={player.titles} milestones={player.milestones ?? []} />
       {career && <Career player={player} onClose={() => { setCareer(false); }} />}
+      <Carimbo momentos={momentos ?? NONE} />
       {chosen !== null && <Result eventId={eventId} optionId={chosen} state={state} auto={rapido} onDone={onDone} />}
     </main>
   );
 }
 
 /** v2.47: a duração das transições vem dos dados (motion.json). */
+const NONE: Moment[] = [];
 const TRANSITION = { '--transicao': `${MOTION.transicaoMs}ms` } as React.CSSProperties;
 
 function hasText(eventId: string): boolean {
