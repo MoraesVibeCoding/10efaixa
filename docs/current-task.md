@@ -26,7 +26,7 @@
 
 ## Pendente
 
-- ⛳ **Aprovação do usuário** das capturas do cartão (narrativa e estatística).
+- ⛳ T55 **aprovada** pelo usuário (2026-10-06).
 - Depois: T56 (compartilhar: imagem, download, texto para WhatsApp e link com os dados para refazer a carreira).
 
 ## Validação (último commit, T55d)
