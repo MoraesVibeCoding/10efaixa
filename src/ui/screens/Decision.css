@@ -150,6 +150,12 @@
   touch-action: manipulation;
 }
 .opcao__rotulo { font-size: var(--tipo-opcao); font-weight: 700; line-height: 1.2; }
+.opcao__texto { display: grid; gap: 2px; min-inline-size: 0; }
+/* prévia curta do ritmo Rápido (v2.38): campo e setas numa linha, que quebra se precisar */
+.opcao__resumo { display: flex; flex-wrap: wrap; gap: 0 var(--espaco-3); font-size: var(--tipo-apoio); font-weight: 400; line-height: 1.3; color: var(--cor-texto-suave); }
+.opcao__resumo .previa--sobe .previa__setas { color: var(--cor-positivo); }
+.opcao__resumo .previa--desce .previa__setas { color: var(--cor-negativo); }
+.opcao[aria-pressed='true'] .opcao__resumo, .opcao[aria-pressed='true'] .opcao__resumo .previa__setas { color: var(--cor-sobre-destaque); }
 @media (hover: hover) {
   .opcao:hover { background: var(--cor-fundo); }
 }

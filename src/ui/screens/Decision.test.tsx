@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import tokens from '../theme/tokens.json';
 import { resolve } from 'node:path';
-import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import events from '../../data/events.json';
 import { previewOf } from '../../engine/preview';
 import { t } from '../../i18n';
@@ -483,5 +483,35 @@ describe('tela pequena (T49j): nada fica cortado', () => {
     expect(rule('.decisao__cena')).toMatch(/position:\s*fixed/);
     expect(rule('.gaveta')).toMatch(/position:\s*fixed/);
     expect(rule('.resultado')).toMatch(/position:\s*fixed/);
+  });
+});
+
+describe('prévia curta no ritmo Rápido (SPEC v2.38)', () => {
+  const show = (ritmo: 'normal' | 'rapido', eventId = EVENT) => render(<Decision eventId={eventId} age={24} progress={0.4} ritmo={ritmo} player={PLAYER} scene={{ src: 'c.webp', alt: 'cena' }} />);
+  const option = (id: string, eventId = EVENT) => screen.getByRole('button', { name: new RegExp(t(`events.${eventId}.opcoes.${id}`)) });
+
+  it('no Rápido, cada opção mostra numa linha o campo e as setas: ganho em verde, custo em vermelho', () => {
+    show('rapido');
+    const resumo = option('ficar').querySelector('.opcao__resumo') as HTMLElement;
+    expect(resumo).not.toBeNull();
+    expect(resumo).toHaveAttribute('aria-hidden', 'true');
+    expect(resumo.querySelector('.previa--sobe')).toHaveTextContent(t('preview.campo.idolatria'));
+    expect(resumo.querySelector('.previa--desce')).toHaveTextContent(t('preview.campo.moral'));
+    expect(resumo.querySelectorAll('.previa__setas svg').length).toBeGreaterThan(0);
+  });
+
+  it('no Rápido, toda opção dos 25 eventos tem a linha preenchida; no Normal não há linha (o detalhe da marcada faz esse papel)', () => {
+    for (const e of events.eventos) {
+      show('rapido', e.id);
+      for (const o of e.opcoes) expect(option(o.id, e.id).querySelector('.opcao__resumo')?.textContent, `${e.id}/${o.id}`).toMatch(/\p{L}{3,}/u);
+      cleanup();
+    }
+    show('normal');
+    expect(document.querySelector('.opcao__resumo')).toBeNull();
+  });
+
+  it('no Rápido, o tempo fora aparece na linha da opção (o risco já está no medidor)', () => {
+    show('rapido', 'lesao-grave');
+    expect(option('operar', 'lesao-grave').querySelector('.opcao__resumo')).toHaveTextContent(t('ui.fora.ano'));
   });
 });

@@ -339,6 +339,25 @@ function Detail({ eventId, optionId }: { eventId: string; optionId: string }) {
   );
 }
 
+/** Prévia curta (v2.38): no ritmo Rápido tocar já decide, então cada opção mostra numa linha o campo com as setas e o
+ * tempo fora. Oculta ao leitor de tela, que já ouve tudo isso no nome do botão. */
+function ShortPreview({ eventId, optionId }: { eventId: string; optionId: string }) {
+  const out = timeOutOf(eventId, optionId);
+  const preview = previewOf(eventId, optionId);
+  return (
+    <span className="opcao__resumo" aria-hidden="true">
+      {preview.length === 0 && out === null && <span>{t('ui.decisao.semPrevia')}</span>}
+      {preview.map((p) => (
+        <span key={p.campo} className={`previa previa--${p.sentido}`}>
+          {t(`preview.campo.${p.campo}`)}
+          <Arrows sentido={p.sentido} intensidade={p.intensidade} />
+        </span>
+      ))}
+      {out !== null && <span className="opcao__fora">{timeOutText(out)}</span>}
+    </span>
+  );
+}
+
 /** Caixa do jogador no topo (v2.34, variação B): figurinha pequena com moldura (abre "Minha carreira"), o Over grande e a ficha. */
 function PlayerBox({ player, age, open, opener, onOpen, inert }: {
   player: DecisionProps['player']; age: number; open: boolean; opener: React.RefObject<HTMLButtonElement | null>; onOpen: () => void; inert: boolean;
@@ -439,7 +458,10 @@ export function Decision({ eventId, age, progress, scene, player, state = {}, ri
                 key={o.id} type="button" className="opcao" data-opcao-id={o.id} aria-pressed={pressed === o.id} disabled={chosen !== null && chosen !== o.id}
                 onClick={() => { if (rapido) { decide(o.id); } else if (chosen === null) { setMarked(o.id); } }}
               >
-                <span className="opcao__rotulo">{t(`events.${eventId}.opcoes.${o.id}`)}</span>
+                <span className="opcao__texto">
+                  <span className="opcao__rotulo">{t(`events.${eventId}.opcoes.${o.id}`)}</span>
+                  {rapido ? <ShortPreview eventId={eventId} optionId={o.id} /> : null}
+                </span>
                 <span className="sr-only">{optionSpeech(eventId, o.id)}</span>
                 {risk && <RiskMeter risk={risk} />}
               </button>
