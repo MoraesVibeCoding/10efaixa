@@ -35,6 +35,7 @@ export function Abertura({ saved, onNew, onContinue }: AberturaProps) {
           onClick={() => { if (hasSave) { setAsking(true); } else { onNew(); } }}>
           {t('ui.abertura.novaCarreira')}
         </button>
+        <p className="abertura__aviso">{t('ui.abertura.avisoLegal')}</p>
       </footer>
       {asking && <Confirm name={name} onConfirm={onNew} onCancel={() => { setAsking(false); }} />}
     </main>

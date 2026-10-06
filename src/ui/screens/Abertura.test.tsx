@@ -79,3 +79,14 @@ describe('abertura (T48)', () => {
     });
   });
 });
+
+// v2.47: aviso legal discreto; os nomes de clubes servem só para identificação
+describe('aviso legal (v2.47)', () => {
+  it('a abertura traz o aviso sobre nomes de clubes, sem escudos oficiais', () => {
+    render(<Abertura saved={{ status: 'nenhum' }} onNew={() => {}} onContinue={() => {}} />);
+    const aviso = screen.getByText(t('ui.abertura.avisoLegal'));
+    expect(aviso).toHaveClass('abertura__aviso');
+    expect(aviso.textContent).toMatch(/identificação/);
+    expect(aviso.textContent).toMatch(/escudos/);
+  });
+});
