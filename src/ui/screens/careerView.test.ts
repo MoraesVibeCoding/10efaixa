@@ -31,6 +31,16 @@ function viewAt(n: number) {
 }
 
 describe('careerView (T51b): do motor para a tela de decisão', () => {
+  it('leva os marcos já vividos (T25c), do mais antigo ao mais novo', () => {
+    const early = toDecisionPlayer(viewAt(0), INPUT, LOOK);
+    expect(early.marcos).toEqual([]);
+    const late = toDecisionPlayer(viewAt(40), INPUT, LOOK);
+    expect(late.marcos!.length).toBeGreaterThan(0);
+    for (const m of late.marcos!) expect(m).toEqual({ id: expect.any(String), ano: expect.any(Number), clubId: expect.any(String) });
+    const years = late.marcos!.map((m) => m.ano);
+    expect(years).toEqual([...years].sort((a, b) => a - b));
+  });
+
   it('leva nome, posição, overall, papel, salário, valor, número e atributos do momento', () => {
     const v = viewAt(0);
     const p = toDecisionPlayer(v, INPUT, LOOK);
@@ -79,7 +89,8 @@ describe('uniforme da figurinha (T50k, SPEC v2.37)', () => {
 
   it('os eventos da Copa são do contexto Seleção (nos dados); os demais não', () => {
     const selecao = events.eventos.filter((e) => (e as { contexto?: string }).contexto === 'selecao').map((e) => e.id).sort();
-    expect(selecao).toEqual(['copa-fora-posicao', 'copa-penalti', 'copa-sacrificio']);
+    // a Copa e os marcos da Seleção (T25c): a figurinha veste o país
+    expect(selecao).toEqual(['copa-fora-posicao', 'copa-penalti', 'copa-sacrificio', 'estreia-selecao', 'primeira-convocacao', 'primeira-copa', 'primeiro-gol-selecao']);
   });
 
   it('em evento da Seleção a figurinha veste o país; nos outros, o clube', () => {

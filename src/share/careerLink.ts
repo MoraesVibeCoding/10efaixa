@@ -2,6 +2,7 @@ import type { CreationInput } from '../engine/player';
 import { createPlayer } from '../engine/player';
 import { dailySeed } from '../engine/daily';
 import { createPrng } from '../engine/prng';
+import events from '../data/events.json';
 import { VISUAIS } from '../ui/screens/look';
 
 // T57b (SPEC 6.15, v2.49): link da carreira. Vai no fragmento da URL (#c=...), que o navegador não envia ao servidor.
@@ -33,6 +34,13 @@ const CODE = /^10F-[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}$/;
 // Só para a conferência semântica do createPlayer (que exige um nome válido); o nome nunca sai nem volta no link.
 const CHECK_NAME = 'Jogador';
 
+// As opções de evento (milhares de caracteres numa carreira Completa) viajam como "~" + índice em base 36 na lista ordenada de opções do
+// catálogo (events.json). Texto livre (reunião "a|b", proposta "aceitar:clube", "ficar") segue como está; link só com texto continua abrindo.
+const OPTION_IDS = [...new Set(events.eventos.flatMap((e) => e.opcoes.map((o) => o.id)))].sort();
+const OPTION_INDEX = new Map(OPTION_IDS.map((id, i) => [id, i]));
+const pack = (choice: string): string => { const i = OPTION_INDEX.get(choice); return i === undefined ? choice : `~${i.toString(36)}`; };
+const unpack = (choice: string): string | null => (choice.startsWith('~') ? OPTION_IDS[/^~[0-9a-z]{1,3}$/.test(choice) ? parseInt(choice.slice(1), 36) : -1] ?? null : choice);
+
 const isObject = (x: unknown): x is Record<string, unknown> => typeof x === 'object' && x !== null && !Array.isArray(x);
 
 function toBase64Url(text: string): string {
@@ -53,7 +61,7 @@ function fromBase64Url(b64: string): string | null {
 export function careerLinkFragment(data: CareerLinkData): string {
   const input: Record<string, unknown> = {};
   for (const k of INPUT_KEYS) if (data.input[k] !== undefined) input[k] = data.input[k];
-  return PREFIX + toBase64Url(JSON.stringify({ v: LINK_VERSION, s: data.seed, r: data.ritmo, i: input, x: data.visual, c: data.choices, k: data.codigo, ...(data.desafio === undefined ? {} : { d: data.desafio }) }));
+  return PREFIX + toBase64Url(JSON.stringify({ v: LINK_VERSION, s: data.seed, r: data.ritmo, i: input, x: data.visual, c: data.choices.map(pack), k: data.codigo, ...(data.desafio === undefined ? {} : { d: data.desafio }) }));
 }
 
 function isDay(d: unknown): boolean {
@@ -87,5 +95,7 @@ export function parseCareerLink(hash: string): LinkResult {
     && typeof k === 'string' && CODE.test(k)
     && (d === undefined || isDay(d))
     && validInput(i);
-  return ok ? { ok: true, data: { seed: s, ritmo: r as Ritmo, input: i as CareerLinkData['input'], visual: x, choices: c as string[], codigo: k as string, ...(d === undefined ? {} : { desafio: d as string }) } } : { ok: false, reason: 'invalido' };
+  const choices = ok ? (c as string[]).map(unpack) : [];
+  if (ok && choices.includes(null)) return { ok: false, reason: 'invalido' };
+  return ok ? { ok: true, data: { seed: s, ritmo: r as Ritmo, input: i as CareerLinkData['input'], visual: x, choices: choices as string[], codigo: k as string, ...(d === undefined ? {} : { desafio: d as string }) } } : { ok: false, reason: 'invalido' };
 }

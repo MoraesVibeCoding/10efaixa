@@ -41,6 +41,14 @@ describe('motor de eventos e dilemas (T25)', () => {
     expect(eligibleEvents(ctx({ estiraoGrande: true, idade: 19 }))).not.toContain('estirao-grande');
   });
 
+  it('marcos da carreira nunca entram no sorteio comum (só o motor de marcos os dispara)', () => {
+    const marcos = (raw.eventos as { id: string; marco?: boolean }[]).filter((e) => e.marco).map((e) => e.id);
+    expect(marcos.length).toBe(20);
+    for (const s of [ctx(), ctx({ moral: 1 }), ctx({ contratoAnosRestantes: 1 })]) {
+      for (const id of marcos) expect(eligibleEvents(s)).not.toContain(id);
+    }
+  });
+
   it('sorteio: determinístico pela semente e só entre elegíveis; nada elegível = null', () => {
     const c = ctx({ salarioAtrasos: 1, propostaDoRival: true, tecnicoTrocado: true });
     expect(pickEvent(c, createPrng(5))).toBe(pickEvent(c, createPrng(5)));

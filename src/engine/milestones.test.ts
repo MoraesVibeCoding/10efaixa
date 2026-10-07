@@ -1,5 +1,6 @@
 import { fireMilestones, milestoneKey, type MilestoneFacts } from './milestones';
 import data from '../data/milestones.json';
+import { t } from '../i18n';
 
 // T25c (SPEC 6.13b, v2.29): marcos da carreira = primeiras vezes. Uma vez por carreira, uma vez por clube; o motor só decide QUAIS
 // disparam (dados em milestones.json); o texto e as opções são eventos comuns de events.json.
@@ -69,5 +70,15 @@ describe('marcos da carreira (T25c)', () => {
   it('em outro clube o primeiro gol no clube dispara, mesmo com o de carreira já vivido', () => {
     const done = new Set([milestoneKey('primeiro-gol')]);
     expect(fireMilestones({ ...base, golsCarreira: 9, golsNoClube: 1, clubId: 'sport' }, done).fired.map((m) => m.id)).toEqual(['primeiro-gol-no-clube']);
+  });
+});
+
+describe('álbum dos marcos (T25c)', () => {
+  it('todo marco tem um rótulo curto de figurinha em pt-BR, até 30 caracteres', () => {
+    for (const m of data.marcos) {
+      const label = t(`ui.album.marco.${m.id}`);
+      expect(label.length, m.id).toBeGreaterThan(3);
+      expect(label.length, m.id).toBeLessThanOrEqual(30);
+    }
   });
 });

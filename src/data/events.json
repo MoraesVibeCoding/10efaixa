@@ -44,7 +44,12 @@
    0,
    1
   ],
-  "trocarSelecao": "bool"
+  "trocarSelecao": "bool",
+  "bonusMental": [
+   0,
+   0.06
+  ],
+  "cobrador": "bool"
  },
  "eventos": [
   {
@@ -1759,6 +1764,1340 @@
    "politica": {
     "padrao": "recusar"
    }
+  },
+  {
+   "id": "estreia-profissional",
+   "importancia": 10,
+   "cena": "estadio",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "respirar-e-jogar-simples",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "bonusMental",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "dar-o-sangue-em-cada-bola",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       6
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.03
+      ],
+      [
+       "moral",
+       "add",
+       0.03
+      ]
+     ]
+    },
+    {
+     "id": "curtir-cada-segundo",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.07
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.03
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "respirar-e-jogar-simples"
+   },
+   "marco": true
+  },
+  {
+   "id": "estreia-no-clube",
+   "importancia": 8,
+   "cena": "vestiario",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "chegar-calado-e-trabalhar",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.05
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "puxar-a-resenha",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.07
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "pedir-a-bola-no-treino",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       6
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.02
+      ],
+      [
+       "moral",
+       "add",
+       0.03
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "chegar-calado-e-trabalhar"
+   },
+   "marco": true
+  },
+  {
+   "id": "primeira-titularidade",
+   "importancia": 10,
+   "cena": "vestiario",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "agradecer-e-pedir-mais",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.05
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "guardar-a-euforia",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "bonusMental",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "comemorar-na-concentracao",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.07
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "guardar-a-euforia"
+   },
+   "marco": true
+  },
+  {
+   "id": "primeiro-gol",
+   "importancia": 10,
+   "cena": "gol",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "correr-para-a-torcida",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       6
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.03
+      ],
+      [
+       "moral",
+       "add",
+       0.03
+      ]
+     ]
+    },
+    {
+     "id": "fazer-a-danca-ensaiada",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.07
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "abracar-quem-deu-o-passe",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "bonusMental",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "abracar-quem-deu-o-passe"
+   },
+   "marco": true
+  },
+  {
+   "id": "primeiro-gol-no-clube",
+   "importancia": 8,
+   "cena": "gol",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "beijar-o-escudo",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.03
+      ],
+      [
+       "idolatria",
+       "add",
+       3
+      ],
+      [
+       "moral",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "gritar-que-chegou-para-ficar",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       6
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.03
+      ],
+      [
+       "moral",
+       "add",
+       0.03
+      ]
+     ]
+    },
+    {
+     "id": "apontar-para-o-parceiro",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.05
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "beijar-o-escudo"
+   },
+   "marco": true
+  },
+  {
+   "id": "primeira-assistencia",
+   "importancia": 8,
+   "cena": "gol",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "cobrar-a-mesma-entrega",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.03
+      ],
+      [
+       "idolatria",
+       "add",
+       3
+      ],
+      [
+       "moral",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "entrar-na-comemoracao",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.07
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "anotar-o-lance",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "bonusMental",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "anotar-o-lance"
+   },
+   "marco": true
+  },
+  {
+   "id": "primeiro-classico",
+   "importancia": 10,
+   "cena": "estadio",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "entrar-com-sangue-nos-olhos",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       6
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.04
+      ],
+      [
+       "moral",
+       "add",
+       0.03
+      ]
+     ]
+    },
+    {
+     "id": "ignorar-o-barulho",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "bonusMental",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "ouvir-o-capitao",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.03
+      ],
+      [
+       "idolatria",
+       "add",
+       3
+      ],
+      [
+       "moral",
+       "add",
+       -0.03
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "ignorar-o-barulho"
+   },
+   "marco": true
+  },
+  {
+   "id": "primeiro-classico-no-clube",
+   "importancia": 8,
+   "cena": "estadio",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "segurar-o-vestiario",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.03
+      ],
+      [
+       "idolatria",
+       "add",
+       3
+      ],
+      [
+       "moral",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "responder-a-torcida",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       6
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.04
+      ],
+      [
+       "moral",
+       "add",
+       0.03
+      ]
+     ]
+    },
+    {
+     "id": "rir-do-nervosismo",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.07
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.03
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "segurar-o-vestiario"
+   },
+   "marco": true
+  },
+  {
+   "id": "primeira-final",
+   "importancia": 10,
+   "cena": "estadio",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "desligar-o-celular",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "bonusMental",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "rir-com-o-elenco",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.07
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "falar-com-os-novatos",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.05
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "desligar-o-celular"
+   },
+   "marco": true
+  },
+  {
+   "id": "primeiro-titulo",
+   "importancia": 10,
+   "cena": "titulo",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "pular-na-festa-ate-o-sol-nascer",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.07
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "dedicar-a-taca",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "bonusMental",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "erguer-a-taca-com-o-elenco",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.03
+      ],
+      [
+       "idolatria",
+       "add",
+       3
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "dedicar-a-taca"
+   },
+   "marco": true
+  },
+  {
+   "id": "assumir-faltas",
+   "importancia": 9,
+   "cena": "treino",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "assumir-as-cobrancas",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "cobrador",
+       "set",
+       true
+      ],
+      [
+       "moral",
+       "add",
+       0.03
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "dividir-com-o-cobrador",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.05
+      ],
+      [
+       "moral",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "deixar-quem-sabe-bater",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "bonusMental",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "dividir-com-o-cobrador"
+   },
+   "marco": true
+  },
+  {
+   "id": "assumir-penaltis",
+   "importancia": 9,
+   "cena": "penalti",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "pegar-a-bola-e-bater",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       6
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.04
+      ],
+      [
+       "moral",
+       "add",
+       0.03
+      ]
+     ]
+    },
+    {
+     "id": "pedir-ajuda-ao-capitao",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.03
+      ],
+      [
+       "idolatria",
+       "add",
+       3
+      ],
+      [
+       "moral",
+       "add",
+       -0.04
+      ]
+     ]
+    },
+    {
+     "id": "respirar-e-escolher-o-canto",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "bonusMental",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.03
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "pegar-a-bola-e-bater"
+   },
+   "marco": true
+  },
+  {
+   "id": "bola-parada-no-clube",
+   "importancia": 8,
+   "cena": "treino",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "assumir-a-bola-parada",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "cobrador",
+       "set",
+       true
+      ],
+      [
+       "moral",
+       "add",
+       0.03
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "treinar-escondido",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "bonusMental",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "compartilhar-com-o-time",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.07
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "treinar-escondido"
+   },
+   "marco": true
+  },
+  {
+   "id": "primeira-bracadeira",
+   "importancia": 10,
+   "cena": "vestiario",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "aceitar-com-humildade",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.03
+      ],
+      [
+       "idolatria",
+       "add",
+       3
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "falar-com-o-vestiario",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       6
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.03
+      ],
+      [
+       "moral",
+       "add",
+       0.03
+      ]
+     ]
+    },
+    {
+     "id": "devolver-o-protagonismo",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "bonusMental",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "aceitar-com-humildade"
+   },
+   "marco": true
+  },
+  {
+   "id": "bracadeira-no-clube",
+   "importancia": 8,
+   "cena": "vestiario",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "ouvir-antes-de-falar",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.05
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "puxar-o-grito-da-torcida",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       6
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.03
+      ],
+      [
+       "moral",
+       "add",
+       0.03
+      ]
+     ]
+    },
+    {
+     "id": "levar-a-resenha-ao-grupo",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.07
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.03
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "ouvir-antes-de-falar"
+   },
+   "marco": true
+  },
+  {
+   "id": "primeira-convocacao",
+   "importancia": 10,
+   "cena": "convocacao",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "agradecer-calado",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "bonusMental",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "ligar-para-o-bairro-inteiro",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.07
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "prometer-a-camisa-ao-pai",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.03
+      ],
+      [
+       "idolatria",
+       "add",
+       3
+      ],
+      [
+       "moral",
+       "add",
+       -0.03
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "agradecer-calado"
+   },
+   "contexto": "selecao",
+   "marco": true
+  },
+  {
+   "id": "estreia-selecao",
+   "importancia": 10,
+   "cena": "estadio",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "cantar-o-hino-alto",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       6
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.03
+      ],
+      [
+       "moral",
+       "add",
+       0.03
+      ]
+     ]
+    },
+    {
+     "id": "segurar-a-emocao",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "bonusMental",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "abracar-os-mais-velhos",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.05
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "cantar-o-hino-alto"
+   },
+   "contexto": "selecao",
+   "marco": true
+  },
+  {
+   "id": "primeiro-gol-selecao",
+   "importancia": 10,
+   "cena": "gol",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "comemorar-com-a-nacao",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       6
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.03
+      ],
+      [
+       "moral",
+       "add",
+       0.03
+      ]
+     ]
+    },
+    {
+     "id": "dedicar-o-gol",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "bonusMental",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "puxar-o-abraco-coletivo",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.07
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.03
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "dedicar-o-gol"
+   },
+   "contexto": "selecao",
+   "marco": true
+  },
+  {
+   "id": "primeira-copa",
+   "importancia": 10,
+   "cena": "copa",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "dormir-cedo-e-focar",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "bonusMental",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "ser-o-alegre-do-grupo",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.07
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "puxar-o-grupo-nos-treinos",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.05
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "dormir-cedo-e-focar"
+   },
+   "contexto": "selecao",
+   "marco": true
+  },
+  {
+   "id": "estreia-exterior",
+   "importancia": 10,
+   "cena": "aeroporto",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "aprender-o-idioma",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "bonusMental",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "abracar-a-nova-torcida",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       6
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.03
+      ],
+      [
+       "moral",
+       "add",
+       0.03
+      ]
+     ]
+    },
+    {
+     "id": "chamar-os-brasileiros-do-elenco",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.07
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.03
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "aprender-o-idioma"
+   },
+   "marco": true
   }
  ]
 }

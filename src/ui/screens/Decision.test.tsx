@@ -49,6 +49,17 @@ describe('resultado da escolha (SPEC v2.20)', () => {
     expect(screen.getByRole('main')).toHaveAttribute('data-resultado', 'aberto');
   });
 
+  it('o bônus de Mental de um marco aparece em palavras, nunca em número (regra: nenhum número dos atributos)', () => {
+    render(<Decision eventId="estreia-profissional" age={17} progress={0.2} player={{ name: 'Zé', position: 'meia', clubId: 'flamengo', overall: 60, titles: [], role: 'composicao', monthlySalary: { amount: 4_000, currency: 'BRL' } }} state={{ ...STATE, bonusMental: 0 }} scene={{ src: 'c.webp', alt: 'cena' }} onContinue={() => {}} />);
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(t('events.estreia-profissional.opcoes.respirar-e-jogar-simples')) }));
+    fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
+    const dialog = screen.getByRole('dialog');
+    expect(within(dialog).getByText(t('preview.campo.bonusMental'))).toBeInTheDocument();
+    expect(within(dialog).getByText(t('ui.resultado.palavra', { sinal: '+' }))).toBeInTheDocument();
+    expect(within(dialog).queryByText(/pontos/)).toBeInTheDocument(); // o ganho de moral continua em número
+    expect(within(dialog).queryByText(t('ui.resultado.pontos', { sinal: '+', n: 4 }))).toBeNull();
+  });
+
   // T49b: no ritmo normal o resultado só fecha pelo botão ou Esc (WCAG 2.2.1); sozinho, só no ritmo Rápido
   it('no ritmo normal o resultado espera o jogador: não fecha sozinho', () => {
     const onContinue = open();
@@ -151,6 +162,18 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
       fireEvent.click(opener());
       return screen.getByRole('dialog', { name: t('ui.carreira.titulo') });
     };
+
+    it('lista os marcos vividos como figurinhas: "Primeiro gol · Flamengo · 2027" (T25c)', () => {
+      const dialog = openDrawer({ marcos: [{ id: 'primeiro-gol', ano: 2027, clubId: 'flamengo' }, { id: 'estreia-profissional', ano: 2026, clubId: 'flamengo' }] });
+      const bloco = within(dialog).getByRole('heading', { name: t('ui.carreira.marcos') }).closest('section')!;
+      expect(within(bloco).getByText(t('ui.album.cromoMarco', { marco: t('ui.album.marco.primeiro-gol'), clube: 'Flamengo', ano: 2027 }))).toBeInTheDocument();
+      expect(within(bloco).getAllByRole('listitem')).toHaveLength(2);
+    });
+
+    it('sem marcos, a gaveta diz que ainda não há nenhum (T25c)', () => {
+      const dialog = openDrawer();
+      expect(within(dialog).getByText(t('ui.carreira.semMarcos'))).toBeInTheDocument();
+    });
 
     it('fechada no começo; tocar na caixa do jogador abre', () => {
       setup();

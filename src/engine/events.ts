@@ -13,6 +13,8 @@ interface EventDef {
   /** `jeito`: temperamento a que a opção remete (SPEC v2.17). Decisões têm 3 opções, cada uma com um jeito diferente. */
   opcoes: { id: string; efeitos: Effect[]; jeito?: string }[];
   politica: { padrao: string };
+  /** T25c: marco da carreira (primeira vez); quem sorteia é `fireMilestones`, nunca o sorteio comum de eventos. */
+  marco?: boolean;
 }
 
 const TEMPERAMENTS: string[] = creation.temperaments;
@@ -62,11 +64,12 @@ const RANGES = data.campos as unknown as Record<string, [number | null, number |
 /** Condição `[campo, operador, valor]` sobre um contexto; campo ausente nunca vale. */
 export const holds = (c: Ctx, [field, op, v]: Cond) => field in c && OPS[op]!(c[field]!, v);
 
-export const eligibleEvents = (c: Ctx): string[] => EVENTS.filter((e) => e.condicoes.every((k) => holds(c, k))).map((e) => e.id);
+const pool = (c: Ctx) => EVENTS.filter((e) => !e.marco && e.condicoes.every((k) => holds(c, k)));
+export const eligibleEvents = (c: Ctx): string[] => pool(c).map((e) => e.id);
 
 /** Sorteio ponderado entre os elegíveis (ordem fixa do catálogo); nenhum elegível = null. */
 export function pickEvent(c: Ctx, rng: Prng): string | null {
-  const ok = EVENTS.filter((e) => e.condicoes.every((k) => holds(c, k)));
+  const ok = pool(c);
   if (!ok.length) return null;
   let roll = rng.next() * ok.reduce((s, e) => s + e.peso, 0);
   for (const e of ok) if ((roll -= e.peso) < 0) return e.id;

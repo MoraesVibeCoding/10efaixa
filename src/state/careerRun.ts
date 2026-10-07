@@ -3,6 +3,7 @@ import flow from '../data/flow.json';
 import { autoDecide, simulateCareer, type CareerResult, type Decider, type DecisionView } from '../engine/career';
 import { autoChoice } from '../engine/events';
 import { MEETING_EVENT, parseProposal } from '../engine/meeting';
+import { MILESTONES } from '../engine/milestones';
 import { ideaOf } from '../engine/meetingOptions';
 import { PROPOSAL_EVENT, parseProposalChoice } from '../engine/proposals';
 import type { CreationInput } from '../engine/player';
@@ -25,6 +26,8 @@ const IMPORTANCE = new Map(events.eventos.map((e) => [e.id, e.importancia]));
 const LIMITS = flow.decisoesPorTemporada as Record<Ritmo, number | null>;
 /** T52 (v2.40): em quais semestres a reunião com a comissão chega à tela, por ritmo; as outras são automáticas. */
 const MEETINGS = flow.reunioesNaTela as Record<Ritmo, number[]>;
+/** T25c (6.13b): marcos de clube só vão à tela no Normal e no Completo; no Rápido o temperamento decide e eles não ocupam vaga. */
+const CLUB_MILESTONES = new Set(MILESTONES.filter((m) => m.escopo === 'clube').map((m) => m.id));
 /** T28b (v2.50): em quais ritmos a proposta de clube chega à tela (desligado até a tela da T28d). */
 const PROPOSALS = flow.propostasNaTela as Record<Ritmo, boolean>;
 
@@ -76,6 +79,7 @@ function decider(run: Run, probe?: { year: number; found: string[] }): Decider {
       if (!PROPOSALS[run.ritmo] || (probe && v.year === probe.year)) return autoDecide(eventId, temperament, () => v);
       return take(eventId, v);
     }
+    if (run.ritmo === 'rapido' && CLUB_MILESTONES.has(eventId)) return autoChoice(eventId, temperament);
     if (probe && v.year === probe.year) { probe.found.push(eventId); return autoChoice(eventId, temperament); }
     if (limit !== null) {
       let sel = inUse.get(v.year);
