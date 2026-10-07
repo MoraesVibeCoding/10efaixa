@@ -3,7 +3,7 @@ import { CLUBS, areRivals } from './clubs';
 import { FOREIGN } from './cups';
 import { autoChoice } from './events';
 import { EUROPE, areEuroRivals, effectiveRep } from './europe';
-import { squadLevel } from './minutes';
+import { roleFor, squadLevel, type Role } from './minutes';
 import type { Prng } from './prng';
 import europe from '../data/europe.json';
 import cfg from '../data/market.json';
@@ -12,7 +12,7 @@ import money from '../data/money.json';
 // T28 (SPEC 6.12): valor de mercado, salário como % do valor por liga, propostas por janela e escolha automática.
 export interface Offer {
   clubId: string; league: string; currency: 'BRL' | 'EUR'; annualSalary: number; years: number;
-  role: 'titular' | 'rodizio' | 'aposta'; staffQuality: number;
+  role: Role; staffQuality: number;
   heartClub: boolean; rivalOfCurrent: boolean; rivalOfHeart: boolean; offAxis: boolean;
 }
 export interface MarketPlayer {
@@ -70,13 +70,12 @@ export const MARKET_CLUB_IDS = [...WINDOW_POOLS.brasil, ...WINDOW_POOLS.europa, 
 
 function makeOffer(p: MarketPlayer, id: string, agent: Agent, rng: Prng, div: DivOf | undefined, offAxis: boolean): Offer {
   const league = leagueOf(id, div);
-  const rel = p.overall - squadLevel(effectiveRep(id));
   const pr = cfg.propostas;
   return {
     clubId: id, league, currency: LEAGUES[league]!.moeda as 'BRL' | 'EUR',
     annualSalary: Math.round(salaryFor(marketValue(p.overall, p.age) * (p.valueMultiplier ?? 1), league) * salaryBoost(agent)),
     years: rng.int(pr.anos[0]!, pr.anos[1]!),
-    role: rel >= pr.papel.titular ? 'titular' : rel >= pr.papel.rodizio ? 'rodizio' : 'aposta',
+    role: roleFor(p.overall, effectiveRep(id), p.age),
     staffQuality: clamp(0.8 + (effectiveRep(id) / 100) * 0.4, 0.8, 1.2),
     heartClub: id === p.heartClub,
     rivalOfCurrent: !!p.clubId && (areRivals(p.clubId, id) || areEuroRivals(p.clubId, id)),
@@ -114,7 +113,7 @@ export function negotiate(o: Offer, agent: Agent, rng: Prng): Offer | null {
   return rng.next() < agent.influence ? { ...o, annualSalary: Math.round(o.annualSalary * (1 + n.melhora)) } : o;
 }
 
-const ROLE_SCORE: Record<string, number> = { titular: 1, rodizio: 0.6, aposta: 0.2, reserva: 0.2, promessa: 0.2 };
+const ROLE_SCORE = cfg.pontosPapel as Record<Role, number>;
 export const toBRL = (o: Offer) => (o.currency === 'EUR' ? o.annualSalary * money.cambio.EUR : o.annualSalary);
 
 /** Custos de forçar a saída antes do fim do contrato (T28e, v2.50); os números moram em market.json. */
@@ -129,11 +128,11 @@ export const MAX_SHOWN_OFFERS = 3;
  * `pick`: a escolha automática, que só considera as que o temperamento aceita e vence "ficar" pela margem (null = fica no clube
  * atual); sempre está entre as mostradas. Sem clube atual, não há "ficar": a melhor vence.
  */
-export function rankOffers(p: MarketPlayer, offers: Offer[], current: { annualSalaryBRL: number; role: string } | null): { shown: Offer[]; pick: Offer | null } {
+export function rankOffers(p: MarketPlayer, offers: Offer[], current: { annualSalaryBRL: number; role: Role } | null): { shown: Offer[]; pick: Offer | null } {
   const all = cfg.politica as unknown as Record<string, { nivel: number; salario: number; papel: number; ficar: number }>;
   const w = all[p.temperament] ?? all.padrao!;
-  const score = (rep: number, salaryBRL: number, role: string) =>
-    w.nivel * (rep / 10) + w.salario * Math.log10(Math.max(1, salaryBRL)) + w.papel * (ROLE_SCORE[role] ?? 0.2);
+  const score = (rep: number, salaryBRL: number, role: Role) =>
+    w.nivel * (rep / 10) + w.salario * Math.log10(Math.max(1, salaryBRL)) + w.papel * ROLE_SCORE[role];
   const accepts = (o: Offer) =>
     (!o.rivalOfCurrent || autoChoice('proposta-rival', p.temperament) === 'aceitar')
     && (!o.rivalOfHeart || autoChoice('traicao-coracao', p.temperament) === 'aceitar')
@@ -151,6 +150,6 @@ export function rankOffers(p: MarketPlayer, offers: Offer[], current: { annualSa
 }
 
 /** Escolha automática por temperamento (simulação e ritmo Rápido); null = fica no clube atual. Usa os dilemas da T25. */
-export function chooseOffer(p: MarketPlayer, offers: Offer[], current: { annualSalaryBRL: number; role: string } | null): Offer | null {
+export function chooseOffer(p: MarketPlayer, offers: Offer[], current: { annualSalaryBRL: number; role: Role } | null): Offer | null {
   return rankOffers(p, offers, current).pick;
 }

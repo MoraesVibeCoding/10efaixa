@@ -7,7 +7,7 @@ import { Reuniao, ReuniaoResposta } from './Reuniao';
 // fala do treinador e três cartões selecionáveis; depois, a resposta da comissão.
 const focusName = (f: string) => (f === 'bolaParada' || f === 'pernaRuim' ? t(`ui.reuniao.foco.${f}`) : t(`attributes.attribute.${f}`));
 const PLAYER = {
-  name: 'Pedro', position: 'volante', clubId: 'flamengo', overall: 80, titles: [] as string[], role: 'rodizio',
+  name: 'Pedro', position: 'volante', clubId: 'flamengo', overall: 80, titles: [] as string[], role: 'disputa',
   monthlySalary: { amount: 29_900, currency: 'EUR' as const }, marketValueEUR: 8_200_000,
 };
 const IDEIAS: MeetingOptions = {

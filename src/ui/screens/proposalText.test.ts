@@ -4,7 +4,7 @@ import { proposalText } from './proposalText';
 
 // T28c (SPEC 6.12, v2.28/v2.50): o texto de cada proposta na tela: clube, liga, salário, contrato, papel, minutos e nível do clube.
 const view = (over: Partial<ProposalView> = {}): ProposalView => ({
-  clubId: 'flamengo', league: 'BRA-A', currency: 'BRL', annualSalary: 2_400_000, years: 3, role: 'titular', staffQuality: 1.1, offAxis: false,
+  clubId: 'flamengo', league: 'BRA-A', currency: 'BRL', annualSalary: 2_400_000, years: 3, role: 'titularRegular', staffQuality: 1.1, offAxis: false,
   minutosFaixa: 'muitos', nivelClube: 'grande', marca: null, ...over,
 });
 
@@ -15,7 +15,7 @@ describe('texto da proposta (T28c)', () => {
     expect(x.liga).toBe('Série A');
     expect(x.salario).toMatch(/^R\$\s?2,4\smi\spor ano$/);
     expect(x.contrato).toBe('3 anos de contrato');
-    expect(x.papel).toBe(t('ui.proposta.papel.titular'));
+    expect(x.papel).toBe(t('ui.proposta.papel.titularRegular'));
     expect(x.minutos).toBe(t('ui.proposta.minutos.muitos'));
     expect(x.nivel).toBe(t('ui.proposta.nivel.grande'));
   });

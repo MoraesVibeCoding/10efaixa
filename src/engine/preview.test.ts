@@ -5,7 +5,7 @@ import type { Offer } from './market';
 import { offerPreview, outcomeOf, outcomeVerdict, previewOf, riskOf, timeOutOf } from './preview';
 
 const offer = (o: Partial<Offer> = {}): Offer => ({
-  clubId: 'x', league: 'BRA-A', currency: 'BRL', annualSalary: 1_000_000, years: 3, role: 'titular', staffQuality: 1,
+  clubId: 'x', league: 'BRA-A', currency: 'BRL', annualSalary: 1_000_000, years: 3, role: 'titularRegular', staffQuality: 1,
   heartClub: false, rivalOfCurrent: false, rivalOfHeart: false, offAxis: false, ...o,
 });
 const effects = events.eventos.flatMap((e) => e.opcoes.map((o) => ({ e: e.id, o: o.id, efeitos: o.efeitos as [string, string, number | string | boolean][] })));
@@ -52,8 +52,8 @@ describe('prévia de consequências por opção (T41b, estilo Copero)', () => {
   });
 
   it('proposta: minutos e espaço no elenco pelo papel, salário em faixa contra o atual, duração do contrato', () => {
-    expect(offerPreview(offer({ role: 'titular' }), 1_000_000).minutos).toBeGreaterThan(offerPreview(offer({ role: 'rodizio' }), 1_000_000).minutos);
-    expect(offerPreview(offer({ role: 'rodizio' }), 1_000_000).minutos).toBeGreaterThan(offerPreview(offer({ role: 'aposta' }), 1_000_000).minutos);
+    expect(offerPreview(offer({ role: 'titularRegular' }), 1_000_000).minutos).toBeGreaterThan(offerPreview(offer({ role: 'disputa' }), 1_000_000).minutos);
+    expect(offerPreview(offer({ role: 'disputa' }), 1_000_000).minutos).toBeGreaterThan(offerPreview(offer({ role: 'jovemPromessa' }), 1_000_000).minutos);
     const s = cfg.salario;
     expect(offerPreview(offer(), 1_000_000).salario).toBe('parecido');
     expect(offerPreview(offer({ annualSalary: 1_000_000 * s.menor * 0.9 }), 1_000_000).salario).toBe('menor');

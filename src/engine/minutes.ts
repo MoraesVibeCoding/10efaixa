@@ -2,7 +2,17 @@ import type { Prng } from './prng';
 import cfg from '../data/minutes.json';
 
 // T21: minutos pelo overall relativo ao elenco e pelo papel prometido; forma e moral por semestre.
-export type Role = 'titular' | 'rodizio' | 'reserva' | 'promessa';
+export const ROLES = ['joiaTitular', 'jovemRotacao', 'jovemPromessa', 'titularAbsoluto', 'titularRegular', 'disputa', 'reservaImediato', 'composicao'] as const;
+export type Role = (typeof ROLES)[number];
+interface RoleRule { id: Role; relMin: number | null; minutos: number }
+const MINUTES_OF = Object.fromEntries([...cfg.papel.jovem, ...cfg.papel.adulto].map((r) => [r.id, r.minutos])) as Record<Role, number>;
+
+/** Papel no elenco (T28g, SPEC v2.54): diferença entre o overall e o nível do elenco, em faixas de idade (cortes em dados). */
+export function roleFor(overall: number, clubRep: number, age: number): Role {
+  const rel = overall - squadLevel(clubRep);
+  const rules: RoleRule[] = (age <= cfg.papel.idadeJovemMax ? cfg.papel.jovem : cfg.papel.adulto) as RoleRule[];
+  return (rules.find((r) => r.relMin === null || rel >= r.relMin) as RoleRule).id;
+}
 export interface MinutesInput { overall: number; clubRep: number; role: Role; form: number }
 
 const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
@@ -14,7 +24,7 @@ export const squadLevel = (rep: number) => cfg.nivelElenco.base + rep * cfg.nive
 export function minutesShare(i: MinutesInput, rng: Prng): number {
   const rel = i.overall - squadLevel(i.clubRep);
   const noise = (rng.next() * 2 - 1) * cfg.ruido;
-  return clamp01(cfg.papel[i.role] + rel * cfg.porPontoRelativo + (i.form - 0.5) * cfg.pesoForma + noise);
+  return clamp01(MINUTES_OF[i.role] + rel * cfg.porPontoRelativo + (i.form - 0.5) * cfg.pesoForma + noise);
 }
 
 /** Forma (0–1): média móvel do desempenho, que melhora com overall acima do elenco. */
@@ -26,16 +36,16 @@ export function updateForm(form: number, overall: number, clubRep: number, rng: 
 
 /** Moral (0–1): minutos acima/abaixo do prometido e resultado do time (−1 a 1). */
 export function updateMorale(morale: number, minutes: number, role: Role, teamResult: number): number {
-  return clamp01(morale + (minutes - cfg.papel[role]) * cfg.moral.pesoMinutos + teamResult * cfg.moral.pesoResultado);
+  return clamp01(morale + (minutes - MINUTES_OF[role]) * cfg.moral.pesoMinutos + teamResult * cfg.moral.pesoResultado);
 }
 
 // T28c (SPEC 6.12, v2.28/v2.50): a proposta mostra os minutos previstos e o nível do clube em faixa de texto, sem número.
 export type MinutesBand = 'muitos' | 'rodizio' | 'poucos';
 export type ClubLevelBand = 'modesto' | 'medio' | 'grande' | 'elite';
 
-/** Minutos previstos pelo papel prometido e pelo nível do jogador no elenco (forma neutra, sem ruído); "aposta" conta como promessa. */
-export function minutesBand({ overall, clubRep, role }: { overall: number; clubRep: number; role: Role | 'aposta' }): MinutesBand {
-  const share = clamp01(cfg.papel[role === 'aposta' ? 'promessa' : role] + (overall - squadLevel(clubRep)) * cfg.porPontoRelativo);
+/** Minutos previstos pelo papel prometido e pelo nível do jogador no elenco (forma neutra, sem ruído). */
+export function minutesBand({ overall, clubRep, role }: { overall: number; clubRep: number; role: Role }): MinutesBand {
+  const share = clamp01(MINUTES_OF[role] + (overall - squadLevel(clubRep)) * cfg.porPontoRelativo);
   return share >= cfg.faixas.minutos.muitos ? 'muitos' : share >= cfg.faixas.minutos.rodizio ? 'rodizio' : 'poucos';
 }
 

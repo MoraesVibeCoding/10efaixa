@@ -85,7 +85,7 @@ export function promotion(p: { age: number; overall: number; clubId: string; hig
   if (p.age < c.idadeMin) return { promoted: false, released: false };
   const need = c.overallBase + byId.get(p.clubId)!.reputacao * c.porReputacao - (p.highlight ? c.bonusDestaque : 0);
   if (p.overall >= need) {
-    return { promoted: true, released: false, contract: { clubId: p.clubId, years: p.highlight ? c.anosContrato.destaque : c.anosContrato.normal, role: 'promessa' } };
+    return { promoted: true, released: false, contract: { clubId: p.clubId, years: p.highlight ? c.anosContrato.destaque : c.anosContrato.normal, role: 'jovemPromessa' } };
   }
   return { promoted: false, released: p.age >= c.idadeMax };
 }

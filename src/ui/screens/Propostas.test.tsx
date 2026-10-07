@@ -5,10 +5,10 @@ import { Propostas } from './Propostas';
 
 // T28d (SPEC 6.12, v2.50): a tela de propostas de clube: até 3 propostas e "Ficar no clube".
 const proposta = (over: Partial<ProposalView> = {}): ProposalView => ({
-  clubId: 'flamengo', league: 'BRA-A', currency: 'BRL', annualSalary: 2_400_000, years: 3, role: 'titular', staffQuality: 1.1, offAxis: false,
+  clubId: 'flamengo', league: 'BRA-A', currency: 'BRL', annualSalary: 2_400_000, years: 3, role: 'titularRegular', staffQuality: 1.1, offAxis: false,
   minutosFaixa: 'muitos', nivelClube: 'grande', marca: null, ...over,
 });
-const duas = [proposta(), proposta({ clubId: 'benfica', league: 'POR', currency: 'EUR', annualSalary: 1_200_000, role: 'rodizio', minutosFaixa: 'rodizio', nivelClube: 'grande', offAxis: true })];
+const duas = [proposta(), proposta({ clubId: 'benfica', league: 'POR', currency: 'EUR', annualSalary: 1_200_000, role: 'disputa', minutosFaixa: 'rodizio', nivelClube: 'grande', offAxis: true })];
 
 describe('tela de propostas (T28d)', () => {
   it('título em h1 com o foco nele, uma proposta por item de lista e a legenda dos dois pesos', () => {
@@ -26,7 +26,7 @@ describe('tela de propostas (T28d)', () => {
     expect(first.getByText('Série A')).toBeInTheDocument();
     expect(first.getByText(/2,4\smi\spor ano/)).toBeInTheDocument();
     expect(first.getByText('3 anos de contrato')).toBeInTheDocument();
-    expect(first.getByText(t('ui.proposta.papel.titular'))).toBeInTheDocument();
+    expect(first.getByText(t('ui.proposta.papel.titularRegular'))).toBeInTheDocument();
     expect(first.getByText(t('ui.proposta.minutos.muitos'))).toBeInTheDocument();
     expect(first.getByText(t('ui.proposta.nivel.grande'))).toBeInTheDocument();
     expect(within(screen.getAllByRole('listitem')[1]!).getByText(t('ui.proposta.foraDoEixo'))).toBeInTheDocument();

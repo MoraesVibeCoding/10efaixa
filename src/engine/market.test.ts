@@ -2,7 +2,7 @@ import { createAgent } from './agent';
 import { clubsIn } from './clubs';
 import { effectiveRep, europeClubsIn } from './europe';
 import { chooseOffer, generateOffers, rankOffers, leagueOf, marketValue, negotiate, salaryFor, type MarketPlayer, type Offer } from './market';
-import { squadLevel } from './minutes';
+import { ROLES, squadLevel, type Role } from './minutes';
 import { createPrng } from './prng';
 import cfg from '../data/market.json';
 
@@ -70,7 +70,7 @@ describe('mercado (T28)', () => {
       expect(os.length).toBeLessThanOrEqual(cfg.propostas.max);
       for (const o of os) {
         expect(o.clubId).not.toBe('bahia');
-        expect(['titular', 'rodizio', 'aposta']).toContain(o.role);
+        expect(ROLES).toContain(o.role);
         expect(o.annualSalary).toBeGreaterThan(0);
         expect(o.staffQuality).toBeGreaterThanOrEqual(0.8);
         expect(o.years).toBeGreaterThanOrEqual(cfg.propostas.anos[0]!);
@@ -120,25 +120,25 @@ describe('mercado (T28)', () => {
   });
 
   it('escolha automática: Frio prioriza o nível do clube; Resenha, o dinheiro; sem proposta melhor, fica', () => {
-    const base = { years: 3, role: 'rodizio' as const, staffQuality: 1, heartClub: false, rivalOfCurrent: false, rivalOfHeart: false, offAxis: false };
+    const base = { years: 3, role: 'disputa' as const, staffQuality: 1, heartClub: false, rivalOfCurrent: false, rivalOfHeart: false, offAxis: false };
     const top: Offer = { ...base, clubId: 'real-madrid', league: 'ESP', currency: 'EUR', annualSalary: 2_000_000 };
     const rich: Offer = { ...base, clubId: 'al-hilal', league: 'SAU', currency: 'EUR', annualSalary: 12_000_000, offAxis: true };
-    const cur = { annualSalaryBRL: 3_000_000, role: 'titular' };
+    const cur = { annualSalaryBRL: 3_000_000, role: 'titularRegular' as Role };
     expect(chooseOffer(player({ temperament: 'frio', overall: 90 }), [top, rich], cur)?.clubId).toBe('real-madrid');
     expect(chooseOffer(player({ temperament: 'resenha', overall: 90 }), [top, rich], cur)?.clubId).toBe('al-hilal');
-    const weak: Offer = { ...base, clubId: 'athletic-mg', league: 'BRA-B', currency: 'BRL', annualSalary: 200_000, role: 'aposta' };
+    const weak: Offer = { ...base, clubId: 'athletic-mg', league: 'BRA-B', currency: 'BRL', annualSalary: 200_000, role: 'jovemPromessa' };
     expect(chooseOffer(player({ temperament: 'lider' }), [weak], cur)).toBeNull();
   });
 
   it('margem para sair: proposta só um pouco melhor não tira o jogador do clube', () => {
-    const cur = { annualSalaryBRL: 3_000_000, role: 'titular' };
-    const similar: Offer = { clubId: 'vitoria', league: 'BRA-A', currency: 'BRL', annualSalary: 3_300_000, years: 3, role: 'titular', staffQuality: 1, heartClub: false, rivalOfCurrent: false, rivalOfHeart: false, offAxis: false };
+    const cur = { annualSalaryBRL: 3_000_000, role: 'titularRegular' as Role };
+    const similar: Offer = { clubId: 'vitoria', league: 'BRA-A', currency: 'BRL', annualSalary: 3_300_000, years: 3, role: 'titularRegular', staffQuality: 1, heartClub: false, rivalOfCurrent: false, rivalOfHeart: false, offAxis: false };
     expect(chooseOffer(player({ temperament: 'esquentado', clubId: 'sport' }), [similar], cur)).toBeNull();
   });
 
   it('dilemas da T25 na escolha: Frio recusa o rival; Esquentado aceita', () => {
-    const o: Offer = { clubId: 'vitoria', league: 'BRA-A', currency: 'BRL', annualSalary: 9_000_000, years: 3, role: 'titular', staffQuality: 1, heartClub: false, rivalOfCurrent: true, rivalOfHeart: false, offAxis: false };
-    const cur = { annualSalaryBRL: 1_000_000, role: 'aposta' };
+    const o: Offer = { clubId: 'vitoria', league: 'BRA-A', currency: 'BRL', annualSalary: 9_000_000, years: 3, role: 'titularRegular', staffQuality: 1, heartClub: false, rivalOfCurrent: true, rivalOfHeart: false, offAxis: false };
+    const cur = { annualSalaryBRL: 1_000_000, role: 'jovemPromessa' as Role };
     expect(chooseOffer(player({ temperament: 'esquentado' }), [o], cur)?.clubId).toBe('vitoria');
     expect(chooseOffer(player({ temperament: 'frio' }), [o], cur)).toBeNull();
   });
@@ -152,16 +152,16 @@ describe('mercado (T28)', () => {
 
 // T28b (SPEC 6.12, v2.50): as propostas que a tela mostra são as mesmas que a escolha automática considera.
 describe('propostas na tela (T28b)', () => {
-  const base = { years: 3, role: 'titular' as const, staffQuality: 1, heartClub: false, rivalOfCurrent: false, rivalOfHeart: false, offAxis: false };
+  const base = { years: 3, role: 'titularRegular' as const, staffQuality: 1, heartClub: false, rivalOfCurrent: false, rivalOfHeart: false, offAxis: false };
   const mk = (clubId: string, annualSalary: number, over: Partial<Offer> = {}): Offer => ({ ...base, clubId, league: 'BRA-A', currency: 'BRL', annualSalary, ...over });
-  const cur = { annualSalaryBRL: 1_000_000, role: 'rodizio' };
+  const cur = { annualSalaryBRL: 1_000_000, role: 'disputa' as Role };
 
   it('a escolha automática está sempre entre as mostradas (ou ninguém)', () => {
     for (const temperament of ['frio', 'resenha', 'lider', 'esquentado']) {
       for (let s = 0; s < 60; s++) {
         const p = player({ temperament, overall: 70 + (s % 20) });
         const offs = [...generateOffers(p, 'brasil', agent, createPrng(s)), ...generateOffers(p, 'europa', agent, createPrng(s + 1000))];
-        const current = { annualSalaryBRL: 2_000_000, role: 'rodizio' };
+        const current = { annualSalaryBRL: 2_000_000, role: 'disputa' as Role };
         const { shown, pick } = rankOffers(p, offs, current);
         expect(pick).toEqual(chooseOffer(p, offs, current));
         if (pick) expect(shown).toContainEqual(pick);
@@ -188,7 +188,7 @@ describe('propostas na tela (T28b)', () => {
   it('a escolha automática entra na lista mesmo quando propostas barradas pontuam mais', () => {
     const barrada = mk('vitoria', 20_000_000, { rivalOfCurrent: true });
     const normal = [mk('sport', 900_000), mk('fortaleza', 1_000_000), mk('ceara', 1_100_000)];
-    const { shown, pick } = rankOffers(player({ temperament: 'frio' }), [barrada, ...normal], { annualSalaryBRL: 100_000, role: 'reserva' });
+    const { shown, pick } = rankOffers(player({ temperament: 'frio' }), [barrada, ...normal], { annualSalaryBRL: 100_000, role: 'composicao' });
     expect(pick).not.toBeNull();
     expect(shown).toContainEqual(pick);
     expect(shown.length).toBeLessThanOrEqual(3);

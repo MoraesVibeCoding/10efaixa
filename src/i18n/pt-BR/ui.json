@@ -49,11 +49,14 @@
   "estadual": "Estadual"
  },
  "papel": {
-  "titular": "Titular",
-  "rodizio": "Rodízio",
-  "reserva": "Reserva",
-  "promessa": "Promessa",
-  "aposta": "Aposta"
+  "joiaTitular": "Joia Titular",
+  "jovemRotacao": "Jovem em Rotação",
+  "jovemPromessa": "Jovem Promessa",
+  "titularAbsoluto": "Titular Absoluto",
+  "titularRegular": "Titular Regular",
+  "disputa": "Disputa de Titularidade",
+  "reservaImediato": "Reserva Imediato",
+  "composicao": "Composição de Elenco"
  },
  "resultado": {
   "positivo": "Deu certo",
@@ -356,9 +359,14 @@
   "contrato": "{n} anos de contrato",
   "contrato_um": "1 ano de contrato",
   "papel": {
-   "titular": "Titular prometido",
-   "rodizio": "Rodízio prometido",
-   "aposta": "Entra como aposta"
+   "joiaTitular": "Joia Titular prometida",
+   "jovemRotacao": "Entra na rotação dos jovens",
+   "jovemPromessa": "Entra como Jovem Promessa",
+   "titularAbsoluto": "Titular Absoluto prometido",
+   "titularRegular": "Titular Regular prometido",
+   "disputa": "Disputa a titularidade",
+   "reservaImediato": "Reserva Imediato",
+   "composicao": "Entra para compor o elenco"
   },
   "minutos": {
    "muitos": "Muitos minutos",

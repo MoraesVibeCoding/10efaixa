@@ -18,7 +18,7 @@ import { decayRelapse, graveDecision, semesterInjury } from './injuries';
 import { FORCE_EXIT, generateOffers, negotiate, rankOffers, leagueOf, marketValue, salaryFor, type Offer } from './market';
 import { MEETING_EVENT, autoProposal, encodeProposal, meetingScore, parseProposal, staffMeeting, type MeetingResult } from './meeting';
 import { MEETING_IDEAS, TRUST, drawClubNeed, ideaOf, meetingOptions, type Idea, type MeetingOptions } from './meetingOptions';
-import { minutesShare, squadLevel, updateForm, updateMorale, type Role } from './minutes';
+import { minutesShare, roleFor, squadLevel, updateForm, updateMorale, type Role } from './minutes';
 import { overall, type Position } from './overall';
 import { coachProposal } from './positionChange';
 import { createPlayer, type CreationInput, type Player } from './player';
@@ -120,13 +120,6 @@ const DIVS: Div[] = ['A', 'B', 'C', 'D'];
 const clamp = (x: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, x));
 const divisionOf = (d: Divisions, id: string) => DIVS.find((k) => d[k].includes(id)) ?? null;
 
-function roleFor(ov: number, squad: number, age: number): Role {
-  const rel = ov - squad;
-  if (rel >= cfg.papel.titular) return 'titular';
-  if (rel >= cfg.papel.rodizio) return 'rodizio';
-  return age <= cfg.papel.promessaIdadeMax ? 'promessa' : 'reserva';
-}
-
 export function simulateCareer(input: CreationInput, seed: number, startYear = 2026, decide: Decider = AUTO): CareerResult {
   const rng = createPrng(seed);
   const created = createPlayer(input, rng);
@@ -197,7 +190,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let earned = 0;
   let decisiveDerbies = 0;
   let curYear = startYear;
-  let curRole: Role = 'promessa';
+  let curRole: Role = 'jovemPromessa';
   const meetings: DecisionView['meetings'] = [];
   let ultimoSemestre: DecisionView['ultimoSemestre'];
   /** Toda decisão passa por aqui (T51): o padrão é a escolha do temperamento, como antes. */
@@ -304,14 +297,14 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
 
     for (let sem = 0; sem < 2; sem++) {
       let minutes: number;
-      let role: Role = 'promessa';
+      let role: Role = 'jovemPromessa';
       let staffQuality = 0.8;
       if (varzeaLeft > 0) {
         minutes = cfg.minutosBase;
       } else {
         const rep = effectiveRep(clubId!);
         staffQuality = clamp(0.8 + (rep / 100) * 0.4, 0.8, 1.2);
-        role = roleFor(ov(evo), squadLevel(rep), evo.age);
+        role = roleFor(ov(evo), rep, evo.age);
         curRole = role;
         minutes = inYouth ? cfg.minutosBase : minutesShare({ overall: ov(evo), clubRep: rep, role, form }, yr);
         form = updateForm(form, ov(evo), rep, yr);
@@ -551,7 +544,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       const me = { overall: ov(evo), age: evo.age, clubId, heartClub: input.heartClub, temperament: temp, valueMultiplier: market.marketMultiplier, extraOffers: market.extraOffers };
       const offers = [...generateOffers(me, 'brasil', agent, yr, divOf), ...generateOffers(me, 'europa', agent, yr, divOf)];
       const c = contract as Contract | null;
-      const current = wantsOut || !c ? null : { annualSalaryBRL: toBRL(c.annualSalary, c.currency), role: roleFor(me.overall, squadLevel(effectiveRep(clubId)), evo.age) };
+      const current = wantsOut || !c ? null : { annualSalaryBRL: toBRL(c.annualSalary, c.currency), role: roleFor(me.overall, effectiveRep(clubId), evo.age) };
       // Despedida (6.14/6.18): proposta única de encerrar a carreira no clube de coração ou no formador.
       const fw = farewellOffer({ age: evo.age, clubId, formativeClub: spells[0]?.clubId ?? null, heartClub: input.heartClub, done: farewellAsked }, yr);
       let goingHome = false;

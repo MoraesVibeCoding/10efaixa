@@ -13,7 +13,7 @@ const EVENT = 'salario-atrasado';
 const def = events.eventos.find((e) => e.id === EVENT)!;
 const PLAYER = {
   name: 'Dudu Maestro', position: 'meia', clubId: 'flamengo', overall: 78, titles: ['estadual', 'estadual', 'copaDoBrasil'],
-  role: 'titular', monthlySalary: { amount: 180_000, currency: 'BRL' as const }, marketValueEUR: 12_500_000,
+  role: 'titularRegular', monthlySalary: { amount: 180_000, currency: 'BRL' as const }, marketValueEUR: 12_500_000,
 };
 const setup = (onChoose = vi.fn()) => {
   render(<Decision eventId={EVENT} age={17} progress={0.05} player={PLAYER} scene={{ src: 'cena.webp', alt: 'O jogador na sala do empresário' }} onChoose={onChoose} />);
@@ -27,14 +27,14 @@ describe('resultado da escolha (SPEC v2.20)', () => {
   afterEach(() => { vi.useRealTimers(); });
 
   const open = (onContinue = vi.fn()) => {
-    render(<Decision eventId="salario-atrasado" age={24} progress={0.4} player={{ name: 'Zé', position: 'meia', clubId: 'flamengo', overall: 60, titles: [], role: 'reserva', monthlySalary: { amount: 4_000, currency: 'BRL' } }} state={STATE} scene={{ src: 'c.webp', alt: 'cena' }} onContinue={onContinue} />);
+    render(<Decision eventId="salario-atrasado" age={24} progress={0.4} player={{ name: 'Zé', position: 'meia', clubId: 'flamengo', overall: 60, titles: [], role: 'composicao', monthlySalary: { amount: 4_000, currency: 'BRL' } }} state={STATE} scene={{ src: 'c.webp', alt: 'cena' }} onContinue={onContinue} />);
     fireEvent.click(screen.getByRole('button', { name: new RegExp(t('events.salario-atrasado.opcoes.ficar')) }));
     fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
     return onContinue;
   };
 
   it('as opções não mostram mais o jeito: só o texto e o resumo das consequências', () => {
-    render(<Decision eventId="proposta-coracao" age={24} progress={0.4} player={{ name: 'Zé', position: 'meia', clubId: 'flamengo', overall: 60, titles: [], role: 'reserva', monthlySalary: { amount: 4_000, currency: 'BRL' } }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    render(<Decision eventId="proposta-coracao" age={24} progress={0.4} player={{ name: 'Zé', position: 'meia', clubId: 'flamengo', overall: 60, titles: [], role: 'composicao', monthlySalary: { amount: 4_000, currency: 'BRL' } }} scene={{ src: 'c.webp', alt: 'cena' }} />);
     expect(within(screen.getByRole('group', { name: t('ui.decisao.opcoes') })).getAllByRole('button')).toHaveLength(3);
     for (const tmp of ['frio', 'esquentado', 'lider', 'resenha']) expect(screen.queryByText(new RegExp(t(`creation.temperament.${tmp}`)))).not.toBeInTheDocument();
   });
@@ -58,7 +58,7 @@ describe('resultado da escolha (SPEC v2.20)', () => {
 
   it('no ritmo Rápido segue sozinho depois de um instante, uma única vez', () => {
     const onContinue = vi.fn();
-    render(<Decision eventId="salario-atrasado" age={24} progress={0.4} ritmo="rapido" player={{ name: 'Zé', position: 'meia', clubId: 'flamengo', overall: 60, titles: [], role: 'reserva', monthlySalary: { amount: 4_000, currency: 'BRL' } }} state={STATE} scene={{ src: 'c.webp', alt: 'cena' }} onContinue={onContinue} />);
+    render(<Decision eventId="salario-atrasado" age={24} progress={0.4} ritmo="rapido" player={{ name: 'Zé', position: 'meia', clubId: 'flamengo', overall: 60, titles: [], role: 'composicao', monthlySalary: { amount: 4_000, currency: 'BRL' } }} state={STATE} scene={{ src: 'c.webp', alt: 'cena' }} onContinue={onContinue} />);
     fireEvent.click(screen.getByRole('button', { name: new RegExp(t('events.salario-atrasado.opcoes.ficar')) }));
     expect(onContinue).not.toHaveBeenCalled();
     act(() => { vi.advanceTimersByTime(10_000); });
@@ -124,7 +124,7 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
     expect(screen.getByRole('heading', { level: 1, name: t(`events.${EVENT}.titulo`) })).toBeInTheDocument();
     const selos = screen.getByRole('list', { name: t('ui.decisao.ficha') });
     expect(within(selos).getByText(t('ui.decisao.idade', { idade: 17 }))).toBeInTheDocument();
-    expect(within(selos).getByText(t('ui.papel.titular'))).toBeInTheDocument();
+    expect(within(selos).getByText(t('ui.papel.titularRegular'))).toBeInTheDocument();
     expect(within(selos).getByText(/R\$\s180\smil/)).toBeInTheDocument();
     // v2.33: valor de mercado em euros junto do salário e do tempo de jogo
     expect(within(selos).getByText(/^Valor\s€\s12,5\smi$/)).toBeInTheDocument();
