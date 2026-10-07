@@ -6,6 +6,12 @@
       "sourceType": "github",
       "skillPath": "skills/baoyu-image-gen/SKILL.md",
       "computedHash": "90b3b4cd8ae115c3a8eedd69439485cb449b04879ac2c60ceaa7071ecddd44b2"
+    },
+    "web-games-v2": {
+      "source": "diegosouzapw/awesome-omni-skills",
+      "sourceType": "github",
+      "skillPath": "skills/web-games-v2/SKILL.md",
+      "computedHash": "6129e8e09e083581ac7ac18363edad1fc3b75017369b7b8f4dd23dc5b2a0f551"
     }
   }
 }
