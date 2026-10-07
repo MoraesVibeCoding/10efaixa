@@ -55,16 +55,23 @@ describe('marcos dentro da carreira (T25c)', () => {
     expect(run(5).marcos).toEqual(run(5).marcos);
   });
 
-  it('a opção com bônus de Mental rende mais Mental que a sem bônus (mesma carreira, só a escolha muda)', () => {
-    const pick = (opt: string): Decider => (id, temp, view) => (id === 'estreia-profissional' ? opt : autoDecide(id, temp, view));
-    let better = 0;
-    for (const seed of SEEDS) {
-      const com = run(seed, pick('respirar-e-jogar-simples')).peakAttributes.mental;
-      const sem = run(seed, pick('curtir-cada-segundo')).peakAttributes.mental;
-      expect(com).toBeGreaterThanOrEqual(sem - 1);
-      if (com > sem) better++;
+  it('a opção com bônus de Mental rende mais Mental que a sem bônus (mesma carreira, só a escolha muda), medido aos ~22 anos, antes de o Mental bater no teto', () => {
+    // O bônus é +4% no crescimento de Mental; no auge da carreira quase todo mundo já está no teto e a diferença some (medido: 3 melhores e 2 piores em 30).
+    // Aos ~22 anos o efeito aparece (medido: melhor em 13 de 40, pior em 3).
+    const at22 = (opt: string, seed: number) => {
+      let mental = NaN;
+      run(seed, (id, t, view) => { const v = view(); if (Number.isNaN(mental) && v.age >= 21.5) mental = v.attributes.mental; return id === 'estreia-profissional' ? opt : autoDecide(id, t, view); });
+      return mental;
+    };
+    let com = 0; let sem = 0; let better = 0; let worse = 0;
+    for (let seed = 1; seed <= 40; seed++) {
+      const [a, b] = [at22('respirar-e-jogar-simples', seed), at22('curtir-cada-segundo', seed)];
+      com += a; sem += b;
+      if (a > b) better++;
+      if (a < b) worse++;
     }
-    expect(better).toBeGreaterThan(0);
+    expect(com).toBeGreaterThan(sem);
+    expect(better).toBeGreaterThan(worse);
   });
 
   it('assumir as faltas torna o jogador cobrador do clube atual: mais gols de bola parada que quem deixa o cobrador', () => {

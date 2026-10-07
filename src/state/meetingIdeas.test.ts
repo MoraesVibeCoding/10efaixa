@@ -42,6 +42,22 @@ describe('sorteio da necessidade do clube pela posição (T52c)', () => {
 });
 
 describe('reunião em 3 ideias no motor (T52c)', () => {
+  it('a óbvia é o que o clube quer: escolhê-la nunca é recusada nem contraproposta, em qualquer semestre de qualquer carreira (v2.58)', { timeout: 300_000 }, () => {
+    for (const seed of [1, 2, 3]) {
+      const input = inputOf(seed);
+      const choices: string[] = [];
+      let last: { meetings: { year: number; semestre: number; response: string }[] } | null = null;
+      for (let guard = 0; guard < 800; guard++) {
+        const step = runUntilDecision(input, seed, choices, 'completo');
+        if (step.kind === 'done') break;
+        last = step.view;
+        choices.push(autoDecide(step.eventId, step.view.temperament, () => step.view));
+      }
+      expect(last!.meetings.length, `seed ${seed}`).toBeGreaterThan(10);
+      for (const x of last!.meetings) expect(x.response, `seed ${seed} ${x.year}/${x.semestre}`).toBe('aceita');
+    }
+  });
+
   it('a tela da reunião traz as 3 ideias e a sugestão é a óbvia', { timeout: 120_000 }, () => {
     const f = toFirstMeeting(1)!;
     const o = f.view.reuniao!;

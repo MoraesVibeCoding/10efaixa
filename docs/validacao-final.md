@@ -61,3 +61,8 @@ Simulação pareada (`npm run sim:estilos`, 400 carreiras por estilo), antes (HE
 - **Etiquetas medidas** (25 carreiras, 2480 decisões): jovem 20%, convocado 27%, capitão 16%, empresário que pressiona 15%, salário atrasado 13%, ídolo 10%, veterano 14%, moral baixa 10%, no banco 5%, posição disputada 7%, campeão no ano 11%, vilão 1%, subindo/caindo de divisão 2%/1%. Nenhuma passa de metade das decisões. `perdeuFinal`, `trocouPeloRival`, `noClubeDeCoracao` e `foraDoEixo` são raras (0 em 25 carreiras): a conferir.
 - **Equilíbrio:** `ajustes` de `festa` mexem de leve em moral e disciplina; sem simulação pareada própria (entra na medição final junto com a T25b).
 - **Troféus:** o selo de título e a gaveta usam a imagem de troféu que criamos; Liga Europa e copa nacional europeia usam provisoriamente as peças da segunda copa continental e da copa nacional até o lote 5 de arte.
+
+## Reunião com a comissão: 1ª opção é a proposta do técnico (SPEC v2.58)
+- A 1ª opção é sempre o que o clube quer (principal = necessidade do clube, secundário = melhor complemento); escolhê-la é sempre aceita.
+- Simulação pareada (400 carreiras por estilo): chance média de "Lenda" 6,15% antes e depois (faixa 3,8–7,5% → 3,5–7,5%). Equilíbrio mantido.
+- Validar na tela: a 1ª opção diz "O que o técnico quer de você neste semestre." e nunca gera recusa.

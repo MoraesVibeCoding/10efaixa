@@ -6,11 +6,13 @@ import weights from '../data/positionWeights.json';
 import cfg from '../data/meeting.json';
 
 // T52b (SPEC 6.5, v2.53): as três ideias da reunião. Tudo calculado pelo motor com os atributos do jogador; a tela só mostra.
+// v2.58: a primeira ideia é a proposta do técnico (o que o clube quer); escolhê-la é sempre aceito.
 export interface Proposal { main: Attribute; secondary: Attribute }
 export type Agrado = 'muito' | 'possivel' | 'pouco';
 export interface MeetingCard { proposal: Proposal; agrado: Agrado }
 export interface MeetingOptions { obvia: MeetingCard; mescla: MeetingCard; ousada: MeetingCard }
-export interface MeetingOptionsInput { position: Position; attrs: Attributes; caps: Attributes; age: number; score: number }
+/** `need`: o que o clube quer neste semestre (sorteado pelos pesos da posição, `drawClubNeed`); é o principal da proposta do técnico. */
+export interface MeetingOptionsInput { position: Position; attrs: Attributes; caps: Attributes; age: number; score: number; need: Attribute }
 
 const weightsOf = (position: Position) => weights[position] as Record<Attribute, number>;
 
@@ -24,15 +26,18 @@ export function needProbability(position: Position, focus: string): number {
 const unorderedKey = (p: Proposal) => [p.main, p.secondary].sort().join('|');
 
 /** Faixa em palavras da chance de a comissão concordar (nunca percentual); abaixo da recusa, "pouco" sempre. */
-function agradoOf(position: Position, main: Attribute, score: number): Agrado {
+function agradoOf(position: Position, main: Attribute, score: number, need: Attribute): Agrado {
+  if (main === need) return 'muito'; // o que o clube quer é sempre aceito (v2.58)
   if (score < cfg.refuseBelow) return 'pouco';
   const chance = score >= cfg.acceptFrom ? 1 : needProbability(position, main);
   return chance >= cfg.agrado.muito ? 'muito' : chance >= cfg.agrado.possivel ? 'possivel' : 'pouco';
 }
 
-export function meetingOptions({ position, attrs, caps, age, score }: MeetingOptionsInput): MeetingOptions {
+export function meetingOptions({ position, attrs, caps, age, score, need }: MeetingOptionsInput): MeetingOptions {
   const w = weightsOf(position);
-  const obvia = autoProposal(attrs, caps, position, age);
+  // v2.58: a proposta do técnico = o que o clube quer (principal) + o melhor complemento do preparador (secundário); escolhê-la é sempre aceito
+  const auto = autoProposal(attrs, caps, position, age);
+  const obvia: Proposal = { main: need, secondary: auto.main !== need ? auto.main : auto.secondary };
   const taken = new Set([unorderedKey(obvia)]);
   // mais forte primeiro; empate, o de teto maior; depois a ordem fixa dos atributos
   const strongest = [...ATTRIBUTES].sort((a, b) => attrs[b] - attrs[a] || caps[b] - caps[a] || ATTRIBUTES.indexOf(a) - ATTRIBUTES.indexOf(b));
@@ -51,7 +56,7 @@ export function meetingOptions({ position, attrs, caps, age, score }: MeetingOpt
   for (let i = 2; taken.has(unorderedKey(ousada)) && i < strongest.length; i++) ousada = { main: top, secondary: strongest[i]! };
   if (taken.has(unorderedKey(ousada))) ousada = { main: strongest[1]!, secondary: strongest[2]! };
 
-  const card = (proposal: Proposal): MeetingCard => ({ proposal, agrado: agradoOf(position, proposal.main, score) });
+  const card = (proposal: Proposal): MeetingCard => ({ proposal, agrado: agradoOf(position, proposal.main, score, need) });
   return { obvia: card(obvia), mescla: card(mescla), ousada: card(ousada) };
 }
 

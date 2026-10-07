@@ -367,11 +367,12 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       // T52c: com as 3 ideias, o clube precisa do que a posição pede (mesma quantidade de sorteios); antes, de qualquer um dos 10
       const clubNeed = MEETING_IDEAS ? drawClubNeed(position, yr) : ATTRIBUTES[yr.int(0, ATTRIBUTES.length - 1)]!;
       // T52: com clube, a reunião passa por quem decide (tela ou automática); a sugestão é a proposta automática
-      const suggestion = autoProposal(evo.attributes, evo.caps, position, evo.age);
-      let proposal: { main: Focus; secondary: Focus } = suggestion;
       const ideas = MEETING_IDEAS && clubId
-        ? meetingOptions({ position, attrs: evo.attributes, caps: evo.caps, age: evo.age, score: meetingScore({ morale, coachRelation, nationalTeamStatus: fx.meetingStatus }) })
+        ? meetingOptions({ position, attrs: evo.attributes, caps: evo.caps, age: evo.age, score: meetingScore({ morale, coachRelation, nationalTeamStatus: fx.meetingStatus }), need: clubNeed })
         : undefined;
+      // v2.58: com as 3 ideias, a sugestão (e a reunião automática) é a proposta do técnico, o que o clube quer
+      const suggestion = ideas ? ideas.obvia.proposal : autoProposal(evo.attributes, evo.caps, position, evo.age);
+      let proposal: { main: Focus; secondary: Focus } = suggestion;
       if (clubId) {
         const said = ask(MEETING_EVENT, { sugestao: encodeProposal(suggestion), semestre: sem + 1 }, temp, ideas ? { reuniao: ideas } : {});
         const parsed = parseProposal(said);

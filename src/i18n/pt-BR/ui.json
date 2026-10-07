@@ -317,12 +317,12 @@
    "obvia": {
     "nome": "Treino",
     "titulo": "{principal} e {secundario}",
-    "texto": "Os dois pontos que mais rendem para a sua posição neste momento."
+    "texto": "O que o técnico quer de você neste semestre."
    },
    "mescla": {
     "nome": "Equilíbrio",
     "titulo": "{principal} e {secundario}",
-    "texto": "O que a posição pede, mais um diferencial seu."
+    "texto": "O que o técnico quer, mais um diferencial seu."
    },
    "ousada": {
     "nome": "Ousadia",
