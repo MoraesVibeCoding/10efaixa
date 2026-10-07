@@ -4,6 +4,7 @@
   "hardFloor": 0.2,
   "refuseBelow": 0.35,
   "acceptFrom": 0.6,
+  "agrado": { "_nota": "T52b (v2.53): faixas da dica de agrado, pela chance de a comissão concordar com o foco principal (limite inferior de cada faixa).", "muito": 0.66, "possivel": 0.33 },
   "physical": ["forca", "fisico", "velocidade"],
   "injuryRisk": { "main": 0.3, "secondary": 0.15 }
 }
