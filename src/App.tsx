@@ -6,6 +6,7 @@ import { reviewLink } from './share/reviewLink';
 import { t } from './i18n';
 import type { CareerResult } from './engine/career';
 import { Abertura, Confirm } from './ui/screens/Abertura';
+import { Reiniciar } from './ui/screens/Reiniciar';
 import { Cartao } from './ui/screens/Cartao';
 import { LinkInvalido } from './ui/screens/LinkInvalido';
 import { Career } from './ui/screens/Career';
@@ -61,6 +62,8 @@ function firstPhase(hash: string): Phase {
 export function App({ seed, storage = browserStorage(), now = () => new Date(), hash = currentHash() }: { seed?: number; storage?: SaveStorage; now?: () => Date; hash?: string }) {
   const [phase, setPhase] = useState(() => firstPhase(hash));
   const [asking, setAsking] = useState(false);
+  // v2.56: reiniciar a carreira em qualquer tela depois da abertura, com aviso
+  const [restarting, setRestarting] = useState(false);
   const next = phase.round + 1;
   // salva a cada decisão; carreira terminada não é mais "ativa" (uma por vez), então o save sai.
   // Durante a carreira o objeto da fase não muda (as escolhas vivem no Career), então a função fica estável.
@@ -76,6 +79,21 @@ export function App({ seed, storage = browserStorage(), now = () => new Date(), 
     clearSave(storage);
     setPhase({ kind: 'criacao', round: next, seed: fixedSeed ?? (desafio === undefined ? (seed ?? Date.now()) : dailySeed(desafio)), ...(desafio === undefined ? {} : { desafio }) });
   }
+
+  /** v2.56: apaga o save e a carreira em andamento e volta à abertura (o aviso já foi confirmado). */
+  function restart() {
+    clearHash();
+    clearSave(storage);
+    setRestarting(false);
+    setPhase({ kind: 'abertura', round: next });
+  }
+  /** v2.56: a tela com o botão de reiniciar por cima; com o aviso aberto, a tela fica inerte. */
+  const withRestart = (screen: React.ReactNode) => (
+    <>
+      <div inert={restarting}>{screen}</div>
+      <Reiniciar open={restarting} onOpen={() => { setRestarting(true); }} onCancel={() => { setRestarting(false); }} onConfirm={restart} />
+    </>
+  );
 
   function continueSaved() {
     const read = readSave(storage);
@@ -114,23 +132,23 @@ export function App({ seed, storage = browserStorage(), now = () => new Date(), 
   if (phase.kind === 'revelacao') {
     const { input, visual } = phase.created;
     // mesma semente da carreira: o Over revelado é o do jogador que vai jogar
-    return <Revelacao key={phase.round} name={input.name} number={input.shirtNumber} visual={visual} reveal={revealOf(input, phase.seed)} onContinue={() => setPhase({ ...phase, kind: 'ritmo' })} />;
+    return withRestart(<Revelacao key={phase.round} name={input.name} number={input.shirtNumber} visual={visual} reveal={revealOf(input, phase.seed)} onContinue={() => setPhase({ ...phase, kind: 'ritmo' })} />);
   }
   if (phase.kind === 'ritmo') {
-    return <Ritmo onChoose={(ritmo) => setPhase({ ...phase, kind: 'carreira', ritmo, choices: [] })} onBack={() => setPhase({ ...phase, kind: 'revelacao' })} />;
+    return withRestart(<Ritmo onChoose={(ritmo) => setPhase({ ...phase, kind: 'carreira', ritmo, choices: [] })} onBack={() => setPhase({ ...phase, kind: 'revelacao' })} />);
   }
   if (phase.kind === 'carreira') {
-    return (
+    return withRestart(
       <Career key={phase.round} input={phase.created.input} look={phase.created.look} visual={phase.created.visual} seed={phase.seed}
-        ritmo={phase.ritmo} initialChoices={phase.choices} onProgress={onProgress} desafio={phase.desafio} onRestart={() => { startNew(); }} />
+        ritmo={phase.ritmo} initialChoices={phase.choices} onProgress={onProgress} desafio={phase.desafio} onRestart={() => { startNew(); }} />,
     );
   }
-  return (
+  return withRestart(
     <Creation
       key={phase.round}
       seed={phase.seed}
       onExit={() => setPhase({ kind: 'abertura', round: next })}
       onFinish={(c) => setPhase({ kind: 'revelacao', round: phase.round, created: c, seed: phase.seed, ...(phase.desafio === undefined ? {} : { desafio: phase.desafio }) })}
-    />
+    />,
   );
 }
