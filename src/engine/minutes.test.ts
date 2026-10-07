@@ -1,5 +1,8 @@
-import { ROLES, clubLevelBand, minutesBand, minutesShare, roleFor, squadLevel, updateForm, updateMorale, type MinutesInput } from './minutes';
+import { LEVELS, ROLES, clubLevelBand, minutesBand, minutesShare, roleFor, squadLevel, updateForm, updateMorale, type MinutesInput } from './minutes';
+import { CLUBS } from './clubs';
+import { EUROPE, effectiveRep } from './europe';
 import { createPrng } from './prng';
+import europe from '../data/europe.json';
 
 const avg = (i: MinutesInput, n = 500) => Array.from({ length: n }, (_, s) => minutesShare(i, createPrng(s))).reduce((a, b) => a + b, 0) / n;
 const base: MinutesInput = { overall: 70, clubRep: 80, role: 'disputa', form: 0.5 };
@@ -74,8 +77,23 @@ describe('faixas da proposta (T28c)', () => {
     }
   });
 
-  it('nível do clube pela reputação: modesto, médio, grande e de elite, em ordem', () => {
-    expect([20, 30, 31, 50, 51, 80, 81, 109].map(clubLevelBand)).toEqual(['modesto', 'modesto', 'medio', 'medio', 'grande', 'grande', 'elite', 'elite']);
+  it('nível do clube pela reputação: 6 níveis em ordem (T28h)', () => {
+    expect(LEVELS).toEqual(['semExpressao', 'baixa', 'media', 'boa', 'alta', 'gigante']);
+    const reps = Array.from({ length: 110 }, (_, i) => i + 1);
+    const idx = reps.map((r) => LEVELS.indexOf(clubLevelBand(r)));
+    expect(idx.every((x) => x >= 0)).toBe(true);
+    for (let i = 1; i < idx.length; i++) expect(idx[i]!).toBeGreaterThanOrEqual(idx[i - 1]!);
+    expect(new Set(idx).size).toBe(6);
+  });
+
+  it('cada nível tem clubes reais e os extremos fazem sentido (T28h)', () => {
+    const ids = [...CLUBS.map((c) => c.id), ...EUROPE.map((c) => c.id), ...europe.outros.clubs.map((c) => c.id), ...europe.foraDoEixo.clubs.map((c) => c.id)];
+    const count = new Map<string, number>();
+    for (const id of ids) count.set(clubLevelBand(effectiveRep(id)), (count.get(clubLevelBand(effectiveRep(id))) ?? 0) + 1);
+    for (const l of LEVELS) expect(count.get(l) ?? 0, l).toBeGreaterThanOrEqual(10);
+    const reps = ids.map((id) => effectiveRep(id));
+    expect(clubLevelBand(Math.min(...reps))).toBe('semExpressao');
+    expect(clubLevelBand(Math.max(...reps))).toBe('gigante');
   });
 });
 

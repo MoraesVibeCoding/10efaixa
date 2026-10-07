@@ -41,7 +41,8 @@ export function updateMorale(morale: number, minutes: number, role: Role, teamRe
 
 // T28c (SPEC 6.12, v2.28/v2.50): a proposta mostra os minutos previstos e o nível do clube em faixa de texto, sem número.
 export type MinutesBand = 'muitos' | 'rodizio' | 'poucos';
-export type ClubLevelBand = 'modesto' | 'medio' | 'grande' | 'elite';
+export const LEVELS = ['semExpressao', 'baixa', 'media', 'boa', 'alta', 'gigante'] as const;
+export type ClubLevelBand = (typeof LEVELS)[number];
 
 /** Minutos previstos pelo papel prometido e pelo nível do jogador no elenco (forma neutra, sem ruído). */
 export function minutesBand({ overall, clubRep, role }: { overall: number; clubRep: number; role: Role }): MinutesBand {
@@ -52,5 +53,5 @@ export function minutesBand({ overall, clubRep, role }: { overall: number; clubR
 /** Nível do clube pela reputação. */
 export function clubLevelBand(rep: number): ClubLevelBand {
   const f = cfg.faixas.nivelClube;
-  return rep <= f.modesto ? 'modesto' : rep <= f.medio ? 'medio' : rep <= f.grande ? 'grande' : 'elite';
+  return LEVELS.find((l) => l !== 'gigante' && rep <= f[l]) ?? 'gigante';
 }

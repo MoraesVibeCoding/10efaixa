@@ -1,3 +1,4 @@
+import { LEVELS } from '../../engine/minutes';
 import type { ProposalView } from '../../engine/proposals';
 import { t } from '../../i18n';
 import { proposalText } from './proposalText';
@@ -5,7 +6,7 @@ import { proposalText } from './proposalText';
 // T28c (SPEC 6.12, v2.28/v2.50): o texto de cada proposta na tela: clube, liga, salário, contrato, papel, minutos e nível do clube.
 const view = (over: Partial<ProposalView> = {}): ProposalView => ({
   clubId: 'flamengo', league: 'BRA-A', currency: 'BRL', annualSalary: 2_400_000, years: 3, role: 'titularRegular', staffQuality: 1.1, offAxis: false,
-  minutosFaixa: 'muitos', nivelClube: 'grande', marca: null, ...over,
+  minutosFaixa: 'muitos', nivelClube: 'boa', marca: null, ...over,
 });
 
 describe('texto da proposta (T28c)', () => {
@@ -17,7 +18,7 @@ describe('texto da proposta (T28c)', () => {
     expect(x.contrato).toBe('3 anos de contrato');
     expect(x.papel).toBe(t('ui.proposta.papel.titularRegular'));
     expect(x.minutos).toBe(t('ui.proposta.minutos.muitos'));
-    expect(x.nivel).toBe(t('ui.proposta.nivel.grande'));
+    expect(x.nivel).toBe(t('ui.proposta.nivel.boa'));
   });
 
   it('salário em euro para clube europeu, e contrato de um ano no singular', () => {
@@ -27,7 +28,7 @@ describe('texto da proposta (T28c)', () => {
   });
 
   it('minutos e nível saem só em palavras: nenhuma faixa vira número', () => {
-    for (const m of ['muitos', 'rodizio', 'poucos'] as const) for (const n of ['modesto', 'medio', 'grande', 'elite'] as const) {
+    for (const m of ['muitos', 'rodizio', 'poucos'] as const) for (const n of LEVELS) {
       const x = proposalText(view({ minutosFaixa: m, nivelClube: n }));
       expect(`${x.minutos} ${x.nivel} ${x.papel}`).not.toMatch(/\d/);
     }

@@ -374,10 +374,12 @@
    "poucos": "Poucos minutos"
   },
   "nivel": {
-   "modesto": "Clube modesto",
-   "medio": "Clube médio",
-   "grande": "Clube grande",
-   "elite": "Clube de elite"
+   "semExpressao": "Sem expressão",
+   "baixa": "Reputação baixa",
+   "media": "Reputação média",
+   "boa": "Reputação boa",
+   "alta": "Reputação alta",
+   "gigante": "Clube gigante"
   },
   "foraDoEixo": "Muito salário, pouca visibilidade",
   "legenda": "Os minutos e o nível do clube pesam na sua evolução. Os minutos são uma previsão, não uma promessa.",

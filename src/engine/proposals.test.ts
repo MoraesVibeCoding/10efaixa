@@ -32,7 +32,7 @@ describe('escolha da proposta (T28b)', () => {
 
   it('a visão da proposta para a tela leva só o que a tela mostra, sem os campos internos do mercado', () => {
     const v = proposalViewOf(offer('vitoria', { heartClub: true, rivalOfCurrent: true, offAxis: true, annualSalary: 2_500_000, currency: 'EUR', league: 'POR', role: 'jovemPromessa' }), 70);
-    expect(v).toEqual({ clubId: 'vitoria', league: 'POR', currency: 'EUR', annualSalary: 2_500_000, years: 3, role: 'jovemPromessa', staffQuality: 1, offAxis: true, marca: 'coracao', minutosFaixa: expect.stringMatching(/^(muitos|rodizio|poucos)$/), nivelClube: expect.stringMatching(/^(modesto|medio|grande|elite)$/) });
+    expect(v).toEqual({ clubId: 'vitoria', league: 'POR', currency: 'EUR', annualSalary: 2_500_000, years: 3, role: 'jovemPromessa', staffQuality: 1, offAxis: true, marca: 'coracao', minutosFaixa: expect.stringMatching(/^(muitos|rodizio|poucos)$/), nivelClube: expect.stringMatching(/^(semExpressao|baixa|media|boa|alta|gigante)$/) });
   });
 
   it('a visão traz as faixas de minutos e de nível do clube, e o mesmo jogador vê faixas diferentes em clubes diferentes', () => {
