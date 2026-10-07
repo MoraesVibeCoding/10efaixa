@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { t } from '../../i18n';
 import { MOTION } from '../motion';
 import type { Moment } from './moments';
+import { TrophyIcon } from './TrophyIcon';
 import './Carimbo.css';
 
 // v2.47: o carimbo do momento (título, acesso, rebaixamento) por cima da decisão, um por vez, e some sozinho.
@@ -20,6 +21,7 @@ export function Carimbo({ momentos }: { momentos: Moment[] }) {
     <div className="carimbo" role="status">
       {atual ? (
         <p key={i} className="carimbo__selo" data-momento={atual.kind}>
+          {atual.kind === 'titulo' ? <span className="carimbo__trofeu"><TrophyIcon id={atual.competition} size={96} /></span> : null}
           {t(`ui.momento.${atual.kind}`)}{' '}
           {atual.kind === 'titulo' ? <span className="carimbo__sub">{t(`ui.titulo.${atual.competition}`)}</span> : null}
         </p>

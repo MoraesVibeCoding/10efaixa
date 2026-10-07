@@ -21,6 +21,8 @@
   animation: carimbo-particulas 900ms ease-out 150ms both;
 }
 .carimbo__selo[data-momento='titulo']::after { inset: -55%; background-size: 30px 30px; animation-delay: 300ms; }
+.carimbo__trofeu { display: grid; place-items: center; margin-block-end: 0.15em; color: var(--paleta-ouro); }
+.carimbo__trofeu .trofeu__arte { inline-size: clamp(64px, 22vw, 96px); block-size: clamp(64px, 22vw, 96px); }
 .carimbo__sub { display: block; margin-block-start: 0.25em; font-size: 0.45em; letter-spacing: 0.06em; }
 @keyframes carimbo-bate { from { opacity: 0; transform: rotate(-6deg) scale(2.2); } to { opacity: 1; transform: rotate(-6deg) scale(1); } }
 @keyframes carimbo-brilho { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--paleta-ouro) 90%, transparent); } 100% { box-shadow: 0 0 0 28px transparent, 0 10px 30px rgb(0 0 0 / 0.25); } }
