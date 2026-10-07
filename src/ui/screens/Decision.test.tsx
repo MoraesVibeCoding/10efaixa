@@ -7,7 +7,7 @@ import { previewOf } from '../../engine/preview';
 import { t } from '../../i18n';
 import { Decision } from './Decision';
 import { kitOf } from '../../art/kits';
-import libertaArt from '../../assets/art/provisoria/detalhe/detalhe__trofeu-continental-principal.svg';
+import libertaArt from '../../assets/trofeus/continental-principal.webp';
 
 const EVENT = 'salario-atrasado';
 const def = events.eventos.find((e) => e.id === EVENT)!;

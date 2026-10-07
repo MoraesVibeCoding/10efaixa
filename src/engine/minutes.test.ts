@@ -78,8 +78,8 @@ describe('faixas da proposta (T28c)', () => {
     }
   });
 
-  it('nível do clube pela reputação: 6 níveis em ordem (T28h)', () => {
-    expect(LEVELS).toEqual(['semExpressao', 'baixa', 'media', 'boa', 'alta', 'gigante']);
+  it('nível do clube pela reputação: 6 níveis em ordem, e "elite" (v2.59) fica acima, por lista e não por reputação (T28h)', () => {
+    expect(LEVELS).toEqual(['semExpressao', 'baixa', 'media', 'boa', 'alta', 'gigante', 'elite']);
     const reps = Array.from({ length: 110 }, (_, i) => i + 1);
     const idx = reps.map((r) => LEVELS.indexOf(clubLevelBand(r)));
     expect(idx.every((x) => x >= 0)).toBe(true);
@@ -91,7 +91,7 @@ describe('faixas da proposta (T28c)', () => {
     const ids = [...CLUBS.map((c) => c.id), ...EUROPE.map((c) => c.id), ...europe.outros.clubs.map((c) => c.id), ...europe.foraDoEixo.clubs.map((c) => c.id)];
     const count = new Map<string, number>();
     for (const id of ids) count.set(clubLevelBand(effectiveRep(id)), (count.get(clubLevelBand(effectiveRep(id))) ?? 0) + 1);
-    for (const l of LEVELS) expect(count.get(l) ?? 0, l).toBeGreaterThanOrEqual(10);
+    for (const l of LEVELS.filter((x) => x !== 'elite')) expect(count.get(l) ?? 0, l).toBeGreaterThanOrEqual(10);
     const reps = ids.map((id) => effectiveRep(id));
     expect(clubLevelBand(Math.min(...reps))).toBe('semExpressao');
     expect(clubLevelBand(Math.max(...reps))).toBe('gigante');

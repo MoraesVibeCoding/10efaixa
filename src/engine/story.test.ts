@@ -3,7 +3,7 @@ import cfg from '../data/story.json';
 import ptBR from '../i18n/pt-BR/legacy.json';
 
 // T55b (SPEC 6.15, v2.31/v2.42): "Sua história" montada do resultado da carreira, em ordem de idade.
-const season = (year: number, clubId: string) => ({ year, age: 16 + (year - 2026), clubId, division: 'BRA-A', minutes: 0.8, overall: 70 });
+const season = (year: number, clubId: string) => ({ year, age: 16 + (year - 2026), clubId, division: 'BRA-A', minutes: 0.8, overall: 70, goals: 0, assists: 0 });
 const r = (over: Partial<StoryInput> = {}): StoryInput => ({
   origin: 'peneira',
   spells: [{ clubId: 'santos', fromAge: 16, toAge: 30, number: 10, loan: false }],

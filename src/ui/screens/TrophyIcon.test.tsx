@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import trophyArt from '../../data/trophyArt.json';
 import ui from '../../i18n/pt-BR/ui.json';
 import { TrophyIcon, trophySrc } from './TrophyIcon';
 
@@ -15,5 +16,9 @@ describe('troféus em imagem (v2.56)', () => {
     expect(img).toHaveAttribute('width', '96');
     unmount();
     expect(render(<TrophyIcon id="inexistente" />).container.querySelector('svg')).not.toBeNull();
+  });
+
+  it('as peças são os troféus criados pelo usuário (src/assets/trofeus), não as provisórias (v2.60)', () => {
+    for (const [id, piece] of Object.entries(trophyArt.pecas)) expect(trophySrc(id), id).toContain(`/trofeus/${piece}.webp`);
   });
 });

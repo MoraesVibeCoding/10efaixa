@@ -1,21 +1,21 @@
 {
-  "_nota": "Peça de troféu de cada título (ids de legacy.json → src/assets/art/provisoria/detalhe/detalhe__trofeu-<peça>.svg). Provisório até a arte do lote 5 (docs/arte/trofeus). Todo título tem uma peça de imagem (o ícone genérico só vale para id desconhecido): a Liga Europa usa a peça da segunda copa continental e a copa nacional europeia usa a peça de copa nacional, até a arte do lote 5 trazer peças próprias.",
-  "pecas": {
-    "copaDoMundo": "copa-do-mundo",
-    "champions": "copa-europeia",
-    "libertadores": "continental-principal",
-    "sulAmericana": "continental-secundaria",
-    "copaAmerica": "copa-america",
-    "olimpiadas": "olimpiadas-medalha",
-    "serieA": "serie-a",
-    "serieB": "serie-b",
-    "serieC": "serie-c",
-    "serieD": "serie-d",
-    "ligaNacional": "liga-europeia",
-    "copaDoBrasil": "copa-do-brasil",
-    "copaDoNordeste": "copa-do-nordeste",
-    "europaLeague": "continental-secundaria",
-    "copaNacional": "copa-do-brasil",
-    "estadual": "estadual"
-  }
+ "_nota": "v2.60: peça de troféu de cada título (ids de legacy.json → src/assets/trofeus/<peça>.webp), os troféus criados pelo usuário (docs/arte/trofeus), com fundo transparente por docs/arte/processar_trofeus.py. Todo título tem uma peça (o ícone genérico só vale para id desconhecido): a Liga Europa usa a peça da segunda copa continental e a copa nacional europeia usa a peça de copa nacional, até haver peças próprias.",
+ "pecas": {
+  "copaDoMundo": "copa-do-mundo",
+  "champions": "copa-europeia",
+  "libertadores": "continental-principal",
+  "sulAmericana": "continental-secundaria",
+  "copaAmerica": "copa-america",
+  "olimpiadas": "olimpiadas",
+  "serieA": "serie-a",
+  "serieB": "serie-b",
+  "serieC": "serie-c",
+  "serieD": "serie-d",
+  "ligaNacional": "liga-europeia",
+  "copaDoBrasil": "copa-do-brasil",
+  "copaDoNordeste": "copa-do-nordeste",
+  "europaLeague": "continental-secundaria",
+  "copaNacional": "copa-do-brasil",
+  "estadual": "estadual"
+ }
 }

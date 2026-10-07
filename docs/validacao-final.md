@@ -66,3 +66,12 @@ Simulação pareada (`npm run sim:estilos`, 400 carreiras por estilo), antes (HE
 - A 1ª opção é sempre o que o clube quer (principal = necessidade do clube, secundário = melhor complemento); escolhê-la é sempre aceita.
 - Simulação pareada (400 carreiras por estilo): chance média de "Lenda" 6,15% antes e depois (faixa 3,8–7,5% → 3,5–7,5%). Equilíbrio mantido.
 - Validar na tela: a 1ª opção diz "O que o técnico quer de você neste semestre." e nunca gera recusa.
+
+## Clubes de elite mundial (SPEC v2.59)
+- 7 clubes (Real Madrid, Barcelona, PSG, Bayern, Liverpool, Arsenal, Man. City): nível "Elite mundial" (7ª estrela), salário ×1,35, valor projetado ×1,25, bônus 3 na escolha automática e na ordem da tela. Valores em `market.json` (`elite`).
+- Simulação pareada (400 carreiras por estilo): chance média de "Lenda" **6,15% → 7,17%** (faixa 3,5–7,5% → 5,3–8,5%), efeito esperado de jogar mais em clubes de elite (mais estrutura). Se achar alto, reduzir `salarioMultiplicador`/`bonusEscolha`.
+- Validar na tela: o cartão da proposta diz "Elite mundial" com 7 estrelas; a proposta de elite só aparece para jogador de nível altíssimo.
+
+## "Sua carreira" com gols, assistências e troféus (SPEC v2.60)
+- Cada temporada de profissional mostra "Gols: n" e "Assistências: n"; títulos do ano vêm com a miniatura do troféu criado por você (WebP transparente em `src/assets/trofeus/`, gerado por `docs/arte/processar_trofeus.py`). O selo de campeão e a gaveta usam as mesmas peças.
+- Validar: os troféus ficaram nítidos e sem borda azul? Algum troféu precisa de novo corte ou nova geração?

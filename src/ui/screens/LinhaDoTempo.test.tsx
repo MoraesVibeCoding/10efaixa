@@ -35,6 +35,36 @@ describe('"Sua carreira" (T55h)', () => {
     expect(screen.getAllByText(t('ui.linhaDoTempo.auge'))).toHaveLength(1);
   });
 
+  it('cada temporada de profissional mostra gols e assistências do ano; nas categorias de base, não (v2.60)', () => {
+    render(<LinhaDoTempo result={result} onContinue={() => {}} />);
+    const rows = timelineOf(result);
+    const items = screen.getAllByRole('listitem');
+    expect(rows.some((r) => r.division !== null)).toBe(true);
+    rows.forEach((r, i) => {
+      const text = items[i]!.textContent ?? '';
+      if (r.division === null) {
+        expect(text).not.toContain('Gols');
+        expect(text).not.toContain('Assistências');
+      } else {
+        expect(text).toContain(t('ui.linhaDoTempo.gols', { n: r.goals }));
+        expect(text).toContain(t('ui.linhaDoTempo.assistencias', { n: r.assists }));
+      }
+    });
+  });
+
+  it('cada título do ano ganha a miniatura do troféu (decorativa) junto do nome', () => {
+    const { container } = render(<LinhaDoTempo result={result} onContinue={() => {}} />);
+    const rows = timelineOf(result);
+    const items = screen.getAllByRole('listitem');
+    expect(rows.some((r) => r.titles.length > 0)).toBe(true);
+    rows.forEach((r, i) => {
+      const imgs = items[i]!.querySelectorAll('img.trofeu__arte');
+      expect(imgs, `ano ${r.year}`).toHaveLength(r.titles.length);
+      imgs.forEach((img) => expect(img).toHaveAttribute('alt', ''));
+    });
+    expect(container.querySelectorAll('[role="img"]')).toHaveLength(0);
+  });
+
   it('o emblema é decorativo (o nome do clube já está no texto da linha)', () => {
     const { container } = render(<LinhaDoTempo result={result} onContinue={() => {}} />);
     expect(container.querySelectorAll('[role="img"]')).toHaveLength(0);

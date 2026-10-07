@@ -4,6 +4,7 @@ import { timelineOf } from '../../engine/timeline';
 import { t } from '../../i18n';
 import { clubName } from './clubText';
 import { Emblema } from './Emblema';
+import { TrophyIcon } from './TrophyIcon';
 import './LinhaDoTempo.css';
 
 // T55h (SPEC 6.15, v2.51): "Sua carreira", antes do cartão final: uma linha por temporada com idade, clube e divisão,
@@ -38,7 +39,19 @@ export function LinhaDoTempo({ result, onContinue }: { result: CareerResult; onC
             )}
             <span className="linha__over">{t('ui.linhaDoTempo.over', { n: r.overall })}</span>
             {r.peak && <strong className="linha__auge">{t('ui.linhaDoTempo.auge')}</strong>}
-            {r.titles.length > 0 && <span className="linha__titulos">{t('ui.linhaDoTempo.titulos', { lista: r.titles.map((c) => t(`ui.titulo.${c}`)).join(', ') })}</span>}
+            {r.division !== null && (
+              <span className="linha__numeros">
+                <span>{t('ui.linhaDoTempo.gols', { n: r.goals })}</span>
+                <span>{t('ui.linhaDoTempo.assistencias', { n: r.assists })}</span>
+              </span>
+            )}
+            {r.titles.length > 0 && (
+              <span className="linha__titulos">
+                {r.titles.map((c, k) => (
+                  <span key={`${c}-${k}`} className="linha__taca"><TrophyIcon id={c} size={28} />{t(`ui.titulo.${c}`)}</span>
+                ))}
+              </span>
+            )}
           </li>
         ))}
       </ol>
