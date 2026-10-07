@@ -1,0 +1,6 @@
+{
+ "_nota": "Texto em camadas e sorteio por contexto (SPEC 6.13c; T25e). texto: maxContexto = quantas frases de contexto entram; aberturaMax e contextoMax = tamanho máximo (caracteres) de cada frase; textoMax = tamanho máximo do texto composto (a base já segue a regra de até 280). sorteio: porSemestre = média de eventos de catálogo por semestre profissional (a parte inteira sempre sai; a fração é sorteada), max = teto por semestre, reforcoPorEtiqueta = multiplicador do peso por etiqueta do contexto que o evento lista em reforco; empresarioInfluenciaMin: influência do empresário a partir da qual ele “pressiona” (etiqueta empresarioPressiona). Números de balanceamento.",
+ "empresarioInfluenciaMin": 0.7,
+ "sorteio": { "porSemestre": 1.2, "max": 2, "reforcoPorEtiqueta": 1.6 },
+ "texto": { "maxContexto": 2, "aberturaMax": 90, "contextoMax": 110, "textoMax": 620 }
+}

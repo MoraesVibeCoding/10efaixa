@@ -7,7 +7,8 @@ import { ATTRIBUTES, toBand, type Attributes } from '../../engine/attributes';
 import { applyOption, type Ctx } from '../../engine/events';
 import { outcomeOf, outcomeVerdict, previewOf, riskOf, RISK_BANDS, timeOutOf, type Outcome, type Preview, type Risk } from '../../engine/preview';
 import previewCfg from '../../data/preview.json';
-import { t } from '../../i18n';
+import { eventLayers, format, t, type Params } from '../../i18n';
+import { composeText } from '../../engine/contextText';
 import { clubLine, clubName } from './clubText';
 import { TrophyIcon } from './TrophyIcon';
 import { Emblema } from './Emblema';
@@ -51,6 +52,10 @@ export interface DecisionProps {
     milestones?: string[];
     /** T25c: marcos vividos (primeiras vezes), do mais antigo ao mais novo: figurinhas do álbum e da gaveta. */
     marcos?: { id: string; ano: number; clubId: string }[];
+    /** T25d: parâmetros de texto da memória da carreira ({mem_<id>_ano|anos|clube}) para citar o passado no texto do evento. */
+    textoParams?: Params;
+    /** T25e: etiquetas de contexto de agora (da mais forte para a mais fraca): escolhem a abertura e as frases de contexto do texto. */
+    etiquetas?: string[];
     /** T51b: a faixa da torcida no clube atual (idolatria em palavras, idolatry.json). */
     torcida?: string;
   };
@@ -283,8 +288,8 @@ function outcomeText(o: Outcome): string {
 }
 
 /** O que a escolha rendeu de verdade, por cima da tela desfocada; fecha pelo botão ou Esc e, no ritmo Rápido, sozinho depois de um instante. */
-function Result({ eventId, optionId, state, auto, onDone }: { eventId: string; optionId: string; state: Ctx; auto: boolean; onDone: () => void }) {
-  const outcome = outcomeOf(state, eventId, optionId);
+function Result({ eventId, optionId, state, tags, auto, onDone }: { eventId: string; optionId: string; state: Ctx; tags: readonly string[]; auto: boolean; onDone: () => void }) {
+  const outcome = outcomeOf(state, eventId, optionId, tags);
   const verdict = outcomeVerdict(outcome);
   const button = useRef<HTMLButtonElement>(null);
   useEffect(() => {
@@ -451,7 +456,7 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
   }
   const options = events.eventos.find((e) => e.id === eventId)?.opcoes ?? [];
   const percent = Math.round(Math.min(1, Math.max(0, progress)) * 100);
-  const text = hasText(eventId) ? t(`events.${eventId}.texto`) : null;
+  const text = eventText(eventId, player.etiquetas ?? [], player.textoParams);
   const pressed = chosen ?? marked;
   // gaveta ou resultado abertos: o resto da tela fica inerte e o Esc vale de qualquer ponto (T49b)
   const overlay = career || chosen !== null;
@@ -517,7 +522,7 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
       <Album titles={player.titles} milestones={player.milestones ?? []} marcos={player.marcos ?? []} />
       {career && <Career player={player} onClose={() => { setCareer(false); }} />}
       <Carimbo momentos={momentos ?? NONE} />
-      {chosen !== null && <Result eventId={eventId} optionId={chosen} state={state} auto={rapido} onDone={onDone} />}
+      {chosen !== null && <Result eventId={eventId} optionId={chosen} state={state} tags={player.etiquetas ?? []} auto={rapido} onDone={onDone} />}
     </main>
   );
 }
@@ -526,6 +531,9 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
 const NONE: Moment[] = [];
 export const TRANSITION = { '--transicao': `${MOTION.transicaoMs}ms` } as React.CSSProperties;
 
-function hasText(eventId: string): boolean {
-  try { t(`events.${eventId}.texto`); return true; } catch { return false; }
+/** O texto da situação em camadas (T25e): abertura, base e frases de contexto pelas etiquetas; sem texto (ou com parâmetro faltando), nada. */
+function eventText(eventId: string, tags: readonly string[], params?: Params): string | null {
+  const layers = eventLayers(eventId);
+  if (!layers) return null;
+  try { return format(composeText(layers, tags), params); } catch { return null; }
 }

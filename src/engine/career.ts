@@ -17,6 +17,10 @@ import { mentalityEffects } from './mentality';
 import { afterClassico, afterSemester, afterTransfer, type Idolatry } from './idolatry';
 import { decayRelapse, graveDecision, semesterInjury } from './injuries';
 import { FORCE_EXIT, generateOffers, negotiate, rankOffers, leagueOf, marketValue, salaryFor, type Offer } from './market';
+import { drawCatalog, drawCount } from './contextDraw';
+import { contextCtx, tagsOf } from './contextTags';
+import contextCfg from '../data/context.json';
+import { ONCE, memoryCtx, type Memory } from './memory';
 import { EFFECTS, FACTS, fireMilestones, milestoneKey, type MilestoneFacts } from './milestones';
 import { MEETING_EVENT, autoProposal, encodeProposal, meetingScore, parseProposal, staffMeeting, type MeetingResult } from './meeting';
 import { MEETING_IDEAS, TRUST, drawClubNeed, ideaOf, meetingOptions, type Idea, type MeetingOptions } from './meetingOptions';
@@ -70,6 +74,8 @@ export interface CareerResult {
   earnedBRL: number; decisiveDerbies: number;
   /** T25c: os marcos vividos (primeiras vezes), com a opção escolhida; alimentam o álbum e a manchete. */
   marcos: { id: string; year: number; age: number; clubId: string; option: string }[];
+  /** T25d: a memória da carreira (marcos e fatos: final perdida, lesão grave, troca pelo rival, recusa da Europa). */
+  memorias: Memory[];
   legacy: Legacy;
   /** T41: apelido dado pelo jogo, manchete séria e comentário com zoeira. */
   nickname: string; headline: string; comment: string;
@@ -107,6 +113,10 @@ export interface DecisionView {
   idolatrias: Record<string, number>;
   /** T25c: os marcos já vividos, do mais antigo ao mais novo (álbum da carreira). */
   marcos: { id: string; year: number; clubId: string }[];
+  /** T25d: a memória da carreira até aqui (marcos e fatos de história); no contexto do evento vira `mem.<id>` e `anos.<id>` em `state`. */
+  memorias: Memory[];
+  /** T25e: as etiquetas de contexto de agora, da mais forte para a mais fraca; escolhem a abertura e as frases de contexto do texto. */
+  etiquetas: string[];
   /** T28b (v2.50): na decisão `proposta-clube`, as até 3 propostas mostradas (a escolha é "aceitar:<clube>" ou "ficar"). */
   propostas?: ProposalView[];
   /** T28j (v2.54): o clube atual como primeiro cartão da tela de propostas, com a renovação quando o contrato acaba. */
@@ -197,6 +207,29 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let stats: SeasonStats = ZERO_STATS;
   let earned = 0;
   let decisiveDerbies = 0;
+  let lastMinutes = 0.6; // fração de minutos do semestre mais recente (etiqueta noBanco)
+  const OFF_AXIS = new Set(europe.foraDoEixo.clubs.map((x) => x.id));
+  // T25e: etiquetas de contexto a partir dos fatos de agora
+  const contextNow = () => {
+    const last2 = seasons.slice(-2);
+    const div = (s?: { division: string | null }) => /^BRA-([A-D])$/.exec(s?.division ?? '')?.[1];
+    const [pa, pb] = [div(last2[0]), div(last2[1])];
+    const sameClub = last2.length === 2 && last2[0]!.clubId === last2[1]!.clubId && !!pa && !!pb;
+    const facts = {
+      idade: evo.age, moral: morale, idolatria: clubId ? idol[clubId] ?? 0 : 0, idolatriaCoracao: input.heartClub ? idol[input.heartClub] ?? 0 : 0,
+      minutosFracao: lastMinutes, salarioAtrasos: salaryDelays, convocado: sel.rung !== 'nenhum',
+      subiuDivisao: sameClub && pb! < pa!, caiuDivisao: sameClub && pb! > pa!, foraDoEixo: !!clubId && OFF_AXIS.has(clubId),
+      empresarioPressiona: agent.influence >= contextCfg.empresarioInfluenciaMin, posicaoDisputada: curRole === 'disputa',
+      noClubeDeCoracao: !!clubId && clubId === input.heartClub, capitao: !!clubId && captainAt.has(clubId),
+      campeaoNoAno: !!clubId && titles.some((t) => t.year === curYear && t.clubId === clubId),
+    };
+    return contextCtx(facts, memorias, curYear);
+  };
+  const contextTags = (): string[] => tagsOf(contextNow());
+  const usedCatalog = new Set<string>();
+  // T25d: memória da carreira (id, ano, idade e clube); os marcos da T25c também entram
+  const memorias: Memory[] = [];
+  const remember = (id: string, club: string) => { if (ONCE.has(id) && memorias.some((x) => x.id === id)) return; memorias.push({ id, year: curYear, age: Math.floor(evo.age - 1), clubId: club }); };
   // T25c: marcos da carreira (primeiras vezes)
   const marcos: CareerResult['marcos'] = [];
   const doneMarcos = new Set<string>();
@@ -218,9 +251,9 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     number: spells.at(-1)?.number ?? input.shirtNumber, attributes: { ...evo.attributes },
     state: {
       moral: morale, disciplina: discipline, relacaoTecnico: coachRelation, patrimonio: wealth, salarioFator: 1,
-      idolatria: clubId ? idol[clubId] ?? 0 : 0, idolatriaCoracao: input.heartClub ? idol[input.heartClub] ?? 0 : 0, ...state,
+      idolatria: clubId ? idol[clubId] ?? 0 : 0, idolatriaCoracao: input.heartClub ? idol[input.heartClub] ?? 0 : 0, ...memoryCtx(memorias, curYear), ...state,
     },
-    seasons: [...seasons], titles: [...titles], marcos: marcos.map(({ id, year, clubId: club }) => ({ id, year, clubId: club })), nationality: selection.nationality, meetings: [...meetings], idolatrias: { ...idol }, ...(ultimoSemestre && { ultimoSemestre }),
+    seasons: [...seasons], titles: [...titles], marcos: marcos.map(({ id, year, clubId: club }) => ({ id, year, clubId: club })), memorias: memorias.map((x) => ({ ...x })), etiquetas: contextTags(), nationality: selection.nationality, meetings: [...meetings], idolatrias: { ...idol }, ...(ultimoSemestre && { ultimoSemestre }),
   }));
   const earn = (amount: number, currency: Contract['currency']) => { const before = wealth; wealth = addToWealth(wealth, amount, currency, agent); earned += Math.max(0, wealth - before); };
   const awards: CareerResult['awards'] = [];
@@ -334,11 +367,12 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       // T52c: com as 3 ideias, o clube precisa do que a posição pede (mesma quantidade de sorteios); antes, de qualquer um dos 10
       const clubNeed = MEETING_IDEAS ? drawClubNeed(position, yr) : ATTRIBUTES[yr.int(0, ATTRIBUTES.length - 1)]!;
       // T52: com clube, a reunião passa por quem decide (tela ou automática); a sugestão é a proposta automática
-      const suggestion = autoProposal(evo.attributes, evo.caps, position, evo.age);
-      let proposal: { main: Focus; secondary: Focus } = suggestion;
       const ideas = MEETING_IDEAS && clubId
-        ? meetingOptions({ position, attrs: evo.attributes, caps: evo.caps, age: evo.age, score: meetingScore({ morale, coachRelation, nationalTeamStatus: fx.meetingStatus }) })
+        ? meetingOptions({ position, attrs: evo.attributes, caps: evo.caps, age: evo.age, score: meetingScore({ morale, coachRelation, nationalTeamStatus: fx.meetingStatus }), need: clubNeed })
         : undefined;
+      // v2.58: com as 3 ideias, a sugestão (e a reunião automática) é a proposta do técnico, o que o clube quer
+      const suggestion = ideas ? ideas.obvia.proposal : autoProposal(evo.attributes, evo.caps, position, evo.age);
+      let proposal: { main: Focus; secondary: Focus } = suggestion;
       if (clubId) {
         const said = ask(MEETING_EVENT, { sugestao: encodeProposal(suggestion), semestre: sem + 1 }, temp, ideas ? { reuniao: ideas } : {});
         const parsed = parseProposal(said);
@@ -362,6 +396,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
           injuries[inj.severity]++;
           minutes *= 1 - inj.minutesLost;
           if (inj.severity === 'grave') {
+            remember('lesaoGrave', clubId!);
             const d = graveDecision(ask('lesao-grave'));
             outLeft = Math.max(0, d.semestersOut - 1);
             relapseRisk = d.relapseRisk;
@@ -403,6 +438,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         if (life.loanOffer && !parent && !loanTarget) loanTarget = life.loanOffer;
 
         // Disciplina: cartões pelo temperamento; suspensão tira minutos do próximo semestre.
+        lastMinutes = minutes;
         const cd = semesterCards({ temperament: temp, minutes }, yr);
         cards.yellows += cd.yellows;
         cards.reds += cd.reds;
@@ -410,13 +446,22 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         // Vida fora de campo: dilemas resolvidos pela política do temperamento, com efeitos do catálogo.
         const flags = offFieldFlags({ temperament: temp, wealthBRL: wealth, houseBought }, yr);
         let st8 = { moral: morale, disciplina: discipline, idolatria: idol[clubId] ?? 0, relacaoTecnico: coachRelation, patrimonio: wealth, casaComprada: houseBought, investir: false } as Record<string, number | string | boolean>;
-        if (flags.conviteFesta) st8 = applyOption(st8, 'festa', ask('festa', st8));
-        if (flags.polemica) st8 = applyOption(st8, 'polemica-redes', ask('polemica-redes', st8));
-        if (flags.podeComprarCasa) st8 = applyOption(st8, 'casa-da-familia', ask('casa-da-familia', st8));
-        if (flags.conviteInvestir) st8 = applyOption(st8, 'investir', ask('investir', st8));
+        const tagsNow = contextTags(); // T25e: o contexto ajusta as consequências (events.json, ajustes)
+        if (flags.conviteFesta) st8 = applyOption(st8, 'festa', ask('festa', st8), tagsNow);
+        if (flags.polemica) st8 = applyOption(st8, 'polemica-redes', ask('polemica-redes', st8), tagsNow);
+        if (flags.podeComprarCasa) st8 = applyOption(st8, 'casa-da-familia', ask('casa-da-familia', st8), tagsNow);
+        if (flags.conviteInvestir) st8 = applyOption(st8, 'investir', ask('investir', st8), tagsNow);
         // Amadurecimento do temperamento por idade ou suspensão longa (evento narrado).
         const matured = matureTemperament(temp, evo.age, cd.longSuspension);
-        if (matured !== temp) { temp = matured; st8 = applyOption(st8, 'amadurecimento', ask('amadurecimento', st8, matured)); }
+        if (matured !== temp) { temp = matured; st8 = applyOption(st8, 'amadurecimento', ask('amadurecimento', st8, matured), tagsNow); }
+        // T25e: eventos de catálogo por contexto (events.json com sorteio: true), com gerador próprio para não deslocar os outros sorteios
+        if (!inYouth && varzeaLeft === 0) {
+          const storyRng = createPrng(((seed >>> 0) ^ Math.imul(year, 2654435761) ^ Math.imul(sem + 1, 40503)) >>> 0);
+          for (const id of drawCatalog({ ctx: contextNow(), tags: tagsNow, temperament: temp, used: usedCatalog, count: drawCount(storyRng) }, storyRng)) {
+            usedCatalog.add(id);
+            st8 = applyOption(st8, id, ask(id, st8), tagsNow);
+          }
+        }
         morale = st8.moral as number;
         discipline = st8.disciplina as number;
         coachRelation = clamp((st8.relacaoTecnico as number) - (discipline < 0.3 ? 0.03 : 0), 0, 1);
@@ -545,6 +590,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     if (clubId && !inYouth) {
       proSeasons++;
       const wonThisYear = titles.some((t) => t.year === year && t.clubId === clubId);
+      if (!wonThisYear && cdb.runnerUp === clubId && avgMinutes >= cfg.minutosParaTitulo) remember('perdeuFinal', clubId);
       const facts: MilestoneFacts = {
         clubId, proDebut: proSeasons === 1, clubDebut: seasonsAtClub === 1, titular: avgMinutes >= FACTS.titularMinutos,
         golsAno: seasonGoals, golsCarreira: stats.goals, assistenciasCarreira: stats.assists, golsNoClube: goalsAtClub[clubId] ?? 0,
@@ -567,6 +613,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         marcoMental = Math.min(EFFECTS.bonusMentalMax, marcoMental + (out.bonusMental as number));
         if (out.cobrador) cobradorClub = clubId;
         marcos.push({ id: m.id, year, age: Math.floor(evo.age - 1), clubId, option });
+        remember(m.id, clubId);
       }
     }
 
@@ -671,6 +718,9 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
             pick = out;
             negotiations.push({ year, clubId: chosen.offer.clubId, result: !out ? 'sumiu' : out.annualSalary > chosen.offer.annualSalary ? 'melhorou' : 'igual' });
           }
+          // T25d: a janela trouxe proposta de clube europeu e o jogador não foi para a Europa
+          const isEurope = (id: string) => EURO_LEAGUE.has(id) || UEFA_POOL.has(id);
+          if (shown.some((o) => isEurope(o.clubId)) && !(pick && isEurope(pick.clubId))) remember('recusouEuropa', clubId!);
         }
       }
       if (goingHome) { /* contrato novo já assinado */ } else if (pick) {
@@ -685,6 +735,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         const from = clubId;
         join(pick.clubId, false, yr, factor === 1 ? pick : { ...pick, annualSalary: Math.round(pick.annualSalary * factor) });
         salaryDelays = 0;
+        if (pick.rivalOfCurrent) remember('trocouPeloRival', pick.clubId);
         if (forced && from && c) {
           // T28e: forçar a saída: multa em meses de salário, idolatria perdida no clube que deixa, moral e relação com o técnico; risco de virar vilão (market.json)
           const f = FORCE_EXIT;
@@ -728,7 +779,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   selection.esperouOBrasil = selection.dual === 'recusou' && selection.caps > 0;
   const result = {
     player, spells, titles, peakOverall, peakAge, peakAttributes, peakClubId: peakClubId ?? spells[0]?.clubId ?? '', endAge: evo.age, wearsTen, captain, idolatry: idol, negotiations, forcedExits,
-    wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, selection, stats, awards, retirement, farewell, cards, finalTemperament: temp, houseBought, discipline, seasons, earnedBRL: earned, decisiveDerbies, marcos,
+    wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, selection, stats, awards, retirement, farewell, cards, finalTemperament: temp, houseBought, discipline, seasons, earnedBRL: earned, decisiveDerbies, marcos, memorias,
   };
   // Sorteios novos ficam por último para não alterar nenhum resultado anterior da mesma semente.
   const nickname = generateNickname(player, rng);

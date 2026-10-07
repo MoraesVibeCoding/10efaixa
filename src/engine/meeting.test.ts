@@ -19,6 +19,19 @@ describe('reunião com a comissão', () => {
     expect(r.focus).not.toBe(i.proposal);
   });
 
+  it('proposta que é o que o clube quer (principal = necessidade) é sempre aceita, até com moral, relação e pontuação no chão (v2.58)', () => {
+    for (const over of [{ morale: 0.05 }, { coachRelation: 0.05 }, { morale: 0.3, coachRelation: 0.3, nationalTeamStatus: 0 }, { morale: 0.5, coachRelation: 0.5 }]) {
+      const i = input({ ...over, proposal: { main: 'passe', secondary: 'drible' }, clubNeed: 'passe' });
+      const r = staffMeeting(i);
+      expect(r, JSON.stringify(over)).toMatchObject({ response: 'aceita', focus: i.proposal });
+      expect(r.reason).toBeUndefined();
+    }
+  });
+
+  it('o que o clube quer só como secundário não garante nada: moral no chão ainda recusa', () => {
+    expect(staffMeeting(input({ morale: 0.05, proposal: { main: 'drible', secondary: 'passe' }, clubNeed: 'passe' }))).toMatchObject({ response: 'recusa', reason: 'moral' });
+  });
+
   it('moral abaixo do piso → recusa por moral, mesmo com o resto ótimo', () => {
     const r = staffMeeting(input({ morale: 0.19, coachRelation: 1, nationalTeamStatus: 1 }));
     expect(r).toMatchObject({ response: 'recusa', reason: 'moral', focus: {} });

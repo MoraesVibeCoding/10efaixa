@@ -27,6 +27,20 @@ function lookup(node: string | Tree | undefined, parts: string[]): string | Tree
   return undefined;
 }
 
+/** Camadas de texto de um evento (T25e): o texto base e, se existirem, as aberturas e as frases de contexto por etiqueta. */
+export function eventLayers(eventId: string): { texto: string; abertura?: Record<string, string>; contexto?: Record<string, string> } | null {
+  const e = (events as unknown as Record<string, { texto?: string; abertura?: Record<string, string>; contexto?: Record<string, string> }>)[eventId];
+  return e?.texto === undefined ? null : { texto: e.texto, ...(e.abertura && { abertura: e.abertura }), ...(e.contexto && { contexto: e.contexto }) };
+}
+
+/** Troca os {parâmetros} de um texto já montado (as camadas do evento). Parâmetro faltando lança erro, como em `t`. */
+export function format(text: string, params: Params = {}): string {
+  return text.replace(/\{(\w+)\}/g, (_, p: string) => {
+    if (!(p in params)) throw new Error(`i18n: parâmetro {${p}} faltando em "${text.slice(0, 40)}"`);
+    return String(params[p]);
+  });
+}
+
 /** Texto pt-BR pela chave "arquivo.caminho", com {parâmetros}. Chave ou parâmetro faltando lança erro. */
 export function t(key: string, params: Params = {}): string {
   const text = lookup(ptBR, key.split('.'));

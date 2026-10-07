@@ -78,8 +78,8 @@ export function offerPreview(o: Offer, currentAnnualSalaryBRL: number | null): O
 export interface Outcome { campo: string; delta: number; unidade: string }
 
 /** Resultado real da escolha (SPEC v2.20): quanto cada campo numérico mudou de verdade, já com os limites aplicados. */
-export function outcomeOf(state: Ctx, eventId: string, optionId: string): Outcome[] {
-  const after = applyOption(state, eventId, optionId);
+export function outcomeOf(state: Ctx, eventId: string, optionId: string, tags: readonly string[] = []): Outcome[] {
+  const after = applyOption(state, eventId, optionId, tags);
   const units = cfg.unidade as Record<string, string>;
   return Object.keys(after).flatMap((campo): Outcome[] => {
     const [a, b] = [state[campo] ?? 0, after[campo]];

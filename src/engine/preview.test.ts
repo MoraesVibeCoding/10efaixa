@@ -66,6 +66,13 @@ describe('prévia de consequências por opção (T41b, estilo Copero)', () => {
     for (const k of Object.keys(cfg.papel)) expect((txt.papel as Record<string, string>)[k]).toBeTruthy();
   });
 
+  it('o resultado real já traz o ajuste da etiqueta (T25e): festa com moral baixa rende mais ânimo', () => {
+    const state = { moral: 0.5, disciplina: 0.6 };
+    const base = outcomeOf(state, 'festa', 'ir').find((o) => o.campo === 'moral')!.delta;
+    const baixa = outcomeOf(state, 'festa', 'ir', ['moralBaixa']).find((o) => o.campo === 'moral')!.delta;
+    expect(baixa).toBeGreaterThan(base);
+  });
+
   it('resultado real da escolha: quanto cada campo ganhou ou perdeu de verdade, respeitando os limites', () => {
     const state = { moral: 0.6, relacaoTecnico: 0.6, idolatria: 40, idolatriaCoracao: 55, disciplina: 0.7, patrimonio: 2_000_000, salarioFator: 1 };
     expect(outcomeOf(state, 'salario-atrasado', 'ficar')).toEqual([

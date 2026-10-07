@@ -75,6 +75,8 @@ export const meetingScore = (i: Pick<MeetingInput, 'morale' | 'coachRelation' | 
 
 export function staffMeeting(i: MeetingInput): MeetingResult {
   validate(i);
+  // v2.58: a proposta que é o que o clube quer (principal = necessidade) é sempre aceita, qualquer que seja o humor da comissão
+  if (i.proposal.main === i.clubNeed) return result('aceita', { main: i.proposal.main, secondary: i.proposal.secondary });
   if (i.morale < cfg.hardFloor) return result('recusa', {}, 'moral');
   if (i.coachRelation < cfg.hardFloor) return result('recusa', {}, 'relacao');
   const score = meetingScore(i);

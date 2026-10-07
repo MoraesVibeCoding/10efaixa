@@ -125,3 +125,42 @@ describe('clube do coração (v2.23): o desconto no salário vem dos dados da op
     expect(heartSalaryFactor('esquentado')).toBe(0.7);
   });
 });
+
+// T25e: consequências ajustadas ao contexto. Cada opção pode ter `ajustes: [{ etiqueta, efeitos }]`; quando a etiqueta vale, os efeitos extras se somam.
+describe('ajuste das consequências por etiqueta (T25e)', () => {
+  const state = () => ctx({ moral: 0.5, disciplina: 0.6 });
+
+  it('sem etiqueta (ou com etiqueta que a opção não ajusta), o efeito é o de sempre', () => {
+    const base = applyOption(state(), 'festa', 'ir');
+    expect(applyOption(state(), 'festa', 'ir', [])).toEqual(base);
+    expect(applyOption(state(), 'festa', 'ir', ['capitao', 'convocado'])).toEqual(base);
+  });
+
+  it('com a etiqueta, os efeitos extras entram: festa com moral baixa levanta mais o ânimo; veterano paga mais caro no dia seguinte', () => {
+    const base = applyOption(state(), 'festa', 'ir');
+    const baixa = applyOption(state(), 'festa', 'ir', ['moralBaixa']);
+    expect(baixa.moral as number).toBeGreaterThan(base.moral as number);
+    const vet = applyOption(state(), 'festa', 'ir', ['veterano']);
+    expect(vet.disciplina as number).toBeLessThan(base.disciplina as number);
+  });
+
+  it('os limites de cada campo continuam valendo com o ajuste', () => {
+    const out = applyOption(ctx({ moral: 0.99, disciplina: 0.01 }), 'festa', 'ir', ['moralBaixa', 'veterano']);
+    expect(out.moral as number).toBeLessThanOrEqual(1);
+    expect(out.disciplina as number).toBeGreaterThanOrEqual(0);
+  });
+
+  it('ajustes do catálogo só usam etiquetas que existem e campos do motor', async () => {
+    const { CONTEXT_TAGS } = await import('./contextTags');
+    const tags = new Set(CONTEXT_TAGS.map((x) => x.id));
+    let total = 0;
+    for (const e of raw.eventos as { id: string; opcoes: { id: string; ajustes?: { etiqueta: string; efeitos: [string, string, unknown][] }[] }[] }[]) {
+      for (const o of e.opcoes) for (const a of o.ajustes ?? []) {
+        total++;
+        expect(tags.has(a.etiqueta), `${e.id}/${o.id}: ${a.etiqueta}`).toBe(true);
+        for (const [field, op] of a.efeitos) { expect(field in raw.campos, `${e.id}/${o.id}: ${field}`).toBe(true); expect(['add', 'set', 'mul']).toContain(op); }
+      }
+    }
+    expect(total).toBeGreaterThanOrEqual(2);
+  });
+});

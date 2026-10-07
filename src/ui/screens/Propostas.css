@@ -41,3 +41,5 @@
 /* T28m: a marca de minutos contra o clube atual (palavras, não só cor) */
 .propostas__tag--mais { border-color: var(--cor-positivo); color: var(--cor-positivo); font-weight: 800; }
 .propostas__tag--menos { border-color: var(--cor-negativo); color: var(--cor-negativo); font-weight: 800; }
+/* T25e: a frase de contexto da situação (etiqueta mais forte), logo abaixo do apoio */
+.propostas__contexto { margin: 0; font-size: 0.82rem; font-weight: 700; line-height: 1.3; }

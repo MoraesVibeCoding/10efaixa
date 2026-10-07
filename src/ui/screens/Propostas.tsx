@@ -132,6 +132,7 @@ export function Propostas({ propostas, atual, podeFicar, podeForcar = false, pod
         <p className="propostas__sala">{t('ui.proposta.sala')}</p>
         <h1 className="decisao__titulo" ref={title} tabIndex={-1}>{t('ui.proposta.titulo')}</h1>
         <p className="propostas__apoio">{t('ui.proposta.apoio')}</p>
+        {player.etiquetas?.[0] && <p className="propostas__contexto">{t(`ui.proposta.contexto.${player.etiquetas[0]}`)}</p>}
         <div className="propostas__lista" role="group" aria-label={t('ui.proposta.cartoes')}>
           {showAtual && (() => {
             const x = currentText(atual);

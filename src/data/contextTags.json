@@ -1,0 +1,25 @@
+{
+ "_nota": "Etiquetas de contexto (SPEC 6.13c; T25e). Cada etiqueta é uma condição sobre o contexto da carreira (fatos de contextCtx + memórias mem.*/anos.*, mesma sintaxe de events.json). A ORDEM do arquivo é a prioridade: a primeira etiqueta que vale é a mais forte (abertura do texto). Limiares são balanceamento.",
+ "etiquetas": [
+  { "id": "vilao", "condicoes": [["idolatria", "<=", -30]] },
+  { "id": "salarioAtrasado", "condicoes": [["salarioAtrasos", ">=", 1]] },
+  { "id": "idolo", "condicoes": [["idolatria", ">=", 60]] },
+  { "id": "moralBaixa", "condicoes": [["moral", "<", 0.35]] },
+  { "id": "noBanco", "condicoes": [["minutosFracao", "<", 0.25]] },
+  { "id": "posicaoDisputada", "condicoes": [["posicaoDisputada", "==", true]] },
+  { "id": "empresarioPressiona", "condicoes": [["empresarioPressiona", "==", true]] },
+  { "id": "campeaoNoAno", "condicoes": [["campeaoNoAno", "==", true]] },
+  { "id": "subindoDeDivisao", "condicoes": [["subiuDivisao", "==", true]] },
+  { "id": "caindoDeDivisao", "condicoes": [["caiuDivisao", "==", true]] },
+  { "id": "perdeuFinal", "condicoes": [["mem.perdeuFinal", "==", true], ["anos.perdeuFinal", "<=", 3]] },
+  { "id": "lesaoGrave", "condicoes": [["mem.lesaoGrave", "==", true], ["anos.lesaoGrave", "<=", 3]] },
+  { "id": "trocouPeloRival", "condicoes": [["mem.trocouPeloRival", "==", true], ["anos.trocouPeloRival", "<=", 5]] },
+  { "id": "recusouEuropa", "condicoes": [["mem.recusouEuropa", "==", true], ["anos.recusouEuropa", "<=", 6]] },
+  { "id": "capitao", "condicoes": [["capitao", "==", true]] },
+  { "id": "convocado", "condicoes": [["convocado", "==", true]] },
+  { "id": "noClubeDeCoracao", "condicoes": [["noClubeDeCoracao", "==", true]] },
+  { "id": "foraDoEixo", "condicoes": [["foraDoEixo", "==", true]] },
+  { "id": "jovem", "condicoes": [["idade", "<=", 20]] },
+  { "id": "veterano", "condicoes": [["idade", ">=", 32]] }
+ ]
+}
