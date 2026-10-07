@@ -7,12 +7,31 @@
   "patrimonio": "Patrimônio",
   "salarioFator": "Salário",
   "disciplina": "Disciplina",
-  "prestigio": "Prestígio na Seleção"
+  "prestigio": "Prestígio na Seleção",
+  "bonusMental": "Cabeça no jogo",
+  "cobrador": "Cobrança de bola parada"
  },
- "sentido": { "sobe": "sobe", "desce": "desce", "muda": "muda" },
- "intensidade": { "1": "um pouco", "2": "bastante", "3": "muito" },
- "papel": { "titular": "Chega para ser titular", "rodizio": "Entra no rodízio", "aposta": "Chega como aposta" },
- "salario": { "menor": "Salário menor", "parecido": "Salário parecido", "maior": "Salário maior", "muitoMaior": "Salário muito maior" },
+ "sentido": {
+  "sobe": "sobe",
+  "desce": "desce",
+  "muda": "muda"
+ },
+ "intensidade": {
+  "1": "um pouco",
+  "2": "bastante",
+  "3": "muito"
+ },
+ "papel": {
+  "titular": "Chega para ser titular",
+  "rodizio": "Entra no rodízio",
+  "aposta": "Chega como aposta"
+ },
+ "salario": {
+  "menor": "Salário menor",
+  "parecido": "Salário parecido",
+  "maior": "Salário maior",
+  "muitoMaior": "Salário muito maior"
+ },
  "anos": "{anos} anos de contrato",
  "minutos": "Minutos previstos"
 }

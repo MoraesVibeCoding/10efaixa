@@ -23,7 +23,8 @@
   "idolatria": "pontos",
   "idolatriaCoracao": "pontos",
   "patrimonio": "dinheiro",
-  "salarioFator": "porcento"
+  "salarioFator": "porcento",
+  "bonusMental": "pontos100"
  },
  "resultadoMs": 2600,
  "risco": {
