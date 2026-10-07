@@ -58,9 +58,12 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
   }, [choices.length, showCard]);
 
   if (step.kind === 'done') {
+    const code = careerCode({ seed, ritmo, input, choices });
+    // T57e: o link refaz esta carreira; o codec descarta nome e apelido
+    const link = { seed, ritmo, input, visual: visual ?? '', choices, codigo: code, ...(desafio === undefined ? {} : { desafio }) };
     return (
       <div ref={box} className="carreira">
-        {showCard ? <Cartao result={step.result} code={careerCode({ seed, ritmo, input, choices })} visual={visual} desafio={desafio} onRestart={onRestart} /> : <Historia result={step.result} onContinue={() => { setShowCard(true); }} />}
+        {showCard ? <Cartao result={step.result} code={code} visual={visual} desafio={desafio} link={visual === undefined ? undefined : link} onRestart={onRestart} /> : <Historia result={step.result} onContinue={() => { setShowCard(true); }} />}
       </div>
     );
   }
