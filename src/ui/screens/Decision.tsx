@@ -49,6 +49,8 @@ export interface DecisionProps {
     uniforme?: string;
     /** Marcos já alcançados ("selecao", "camisa10"): saem dos espaços vazios do álbum. */
     milestones?: string[];
+    /** T25c: marcos vividos (primeiras vezes), do mais antigo ao mais novo: figurinhas do álbum e da gaveta. */
+    marcos?: { id: string; ano: number; clubId: string }[];
     /** T51b: a faixa da torcida no clube atual (idolatria em palavras, idolatry.json). */
     torcida?: string;
   };
@@ -145,7 +147,7 @@ function missingGoals(titles: string[], milestones: string[]) {
 }
 
 /** Álbum da carreira (v2.26): as conquistas em cromo e, tracejadas, as metas que ainda faltam. */
-function Album({ titles, milestones }: { titles: string[]; milestones: string[] }) {
+function Album({ titles, milestones, marcos }: { titles: string[]; milestones: string[]; marcos: { id: string; ano: number; clubId: string }[] }) {
   const missing = missingGoals(titles, milestones);
   return (
     <section className="album" aria-labelledby="album-titulo">
@@ -159,11 +161,21 @@ function Album({ titles, milestones }: { titles: string[]; milestones: string[] 
           </li>
         ))}
       </ul>
+      {marcos.length > 0 && (
+        <ul className="album__cromos" aria-label={t('ui.carreira.marcos')}>
+          {marcos.map((m) => <li key={`${m.id}@${m.clubId}`} className="album__cromo"><span>{marcoLabel(m)}</span></li>)}
+        </ul>
+      )}
       <ul className="album__cromos" aria-label={t('ui.album.faltam')}>
         {missing.map((g) => <li key={g.id} className="album__vazio">{t(`ui.album.meta.${g.id}`)}</li>)}
       </ul>
     </section>
   );
+}
+
+/** "Primeiro gol · Flamengo · 2027": a figurinha de um marco. */
+function marcoLabel(m: { id: string; ano: number; clubId: string }): string {
+  return t('ui.album.cromoMarco', { marco: t(`ui.album.marco.${m.id}`), clube: clubName(m.clubId).nome, ano: m.ano });
 }
 
 function recentFirst(seasons: Season[]) {
@@ -196,6 +208,15 @@ export function Career({ player, onClose }: { player: DecisionProps['player']; o
         <section className="gaveta__bloco">
           <h3>{t('ui.carreira.titulos')}</h3>
           {player.titles.length ? <Trophies titles={player.titles} /> : <p className="gaveta__vazio">{t('ui.decisao.nenhumTitulo')}</p>}
+        </section>
+        <section className="gaveta__bloco">
+          <h3>{t('ui.carreira.marcos')}</h3>
+          {(player.marcos ?? []).length === 0 && <p className="gaveta__vazio">{t('ui.carreira.semMarcos')}</p>}
+          {(player.marcos ?? []).length > 0 && (
+            <ul className="album__cromos">
+              {(player.marcos ?? []).map((m) => <li key={`${m.id}@${m.clubId}`} className="album__cromo"><span>{marcoLabel(m)}</span></li>)}
+            </ul>
+          )}
         </section>
         <section className="gaveta__bloco">
           <h3 id="gaveta-trajetoria">{t('ui.carreira.trajetoria')}</h3>
@@ -510,7 +531,7 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
           </button>
         )}
       </div>
-      <Album titles={player.titles} milestones={player.milestones ?? []} />
+      <Album titles={player.titles} milestones={player.milestones ?? []} marcos={player.marcos ?? []} />
       {career && <Career player={player} onClose={() => { setCareer(false); }} />}
       <Carimbo momentos={momentos ?? NONE} />
       {chosen !== null && <Result eventId={eventId} optionId={chosen} state={state} auto={rapido} onDone={onDone} />}

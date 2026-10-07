@@ -163,6 +163,18 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
       return screen.getByRole('dialog', { name: t('ui.carreira.titulo') });
     };
 
+    it('lista os marcos vividos como figurinhas: "Primeiro gol · Flamengo · 2027" (T25c)', () => {
+      const dialog = openDrawer({ marcos: [{ id: 'primeiro-gol', ano: 2027, clubId: 'flamengo' }, { id: 'estreia-profissional', ano: 2026, clubId: 'flamengo' }] });
+      const bloco = within(dialog).getByRole('heading', { name: t('ui.carreira.marcos') }).closest('section')!;
+      expect(within(bloco).getByText(t('ui.album.cromoMarco', { marco: t('ui.album.marco.primeiro-gol'), clube: 'Flamengo', ano: 2027 }))).toBeInTheDocument();
+      expect(within(bloco).getAllByRole('listitem')).toHaveLength(2);
+    });
+
+    it('sem marcos, a gaveta diz que ainda não há nenhum (T25c)', () => {
+      const dialog = openDrawer();
+      expect(within(dialog).getByText(t('ui.carreira.semMarcos'))).toBeInTheDocument();
+    });
+
     it('fechada no começo; tocar na caixa do jogador abre', () => {
       setup();
       expect(opener()).toHaveAttribute('aria-expanded', 'false');

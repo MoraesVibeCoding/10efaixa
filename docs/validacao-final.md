@@ -39,3 +39,10 @@ Simulação pareada (`npm run sim:estilos`, 400 carreiras por estilo), antes (HE
 - Valor projetado é estimativa de 2 semestres sem sorteio; pode ser otimista para jovens de alto Over: conferir contra a evolução real nas carreiras de teste.
 - Reputação em 6 níveis: distribuição dos 447 clubes (quartis 22, 22, 30, 58, 75, 87).
 - Simulação pareada do T28g: ver seção acima (4,0%–7,5%); repetir com 1000+ carreiras por estilo.
+
+## Marcos da carreira (T25c)
+- Medido em 40 carreiras (Completo, automático): **~21 marcos por carreira**, sobretudo "no clube" (estreia no clube 4,3 por carreira, primeiro gol no clube 3,1). Conferir se pesa demais no Normal e no Completo (marcos têm importância 10 e ocupam vaga).
+- 20 marcos escritos para você ler (`src/i18n/pt-BR/events.json`, ids em `src/data/milestones.json`); os textos não passaram por revisão sua.
+- Números: bônus de Mental por marco 0,04 (teto 1,25 no multiplicador), cobrador +10% de gols (`milestones.json` → `efeitos`), gols pela Seleção = 15% dos gols do ano (`fatos`).
+- Pendente do SPEC: progresso do traço "Bola parada" pelo marco; manchete do cartão final com marco.
+- A equivalência "automático = simulação" continua (testes de ritmo), mas a carreira automática **mudou** (marcos entram): relatórios de simulação antigos não valem mais.
