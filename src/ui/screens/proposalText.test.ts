@@ -1,7 +1,7 @@
 import { LEVELS } from '../../engine/minutes';
 import type { ProposalView } from '../../engine/proposals';
 import { t } from '../../i18n';
-import { proposalText } from './proposalText';
+import { changeText, currentText, proposalText, starsOf } from './proposalText';
 
 // T28c (SPEC 6.12, v2.28/v2.50): o texto de cada proposta na tela: clube, liga, salário, contrato, papel, minutos e nível do clube.
 const view = (over: Partial<ProposalView> = {}): ProposalView => ({
@@ -50,5 +50,31 @@ describe('texto da proposta (T28c)', () => {
     expect(proposalText(view({ marca: 'coracao' })).marca).toBe(t('ui.proposta.marca.coracao'));
     expect(proposalText(view({ marca: 'rival' })).marca).toBe(t('ui.proposta.marca.rival'));
     expect(proposalText(view({ marca: 'rivalCoracao' })).marca).toBe(t('ui.proposta.marca.rivalCoracao'));
+  });
+});
+
+describe('texto do cartão de contrato (T28k)', () => {
+  it('variação em palavras e seta, com o sinal dito por extenso', () => {
+    expect(changeText({ pct: 27, sentido: 'sobe' })?.texto).toBe(t('ui.proposta.pct.sobe', { pct: 27 }));
+    expect(changeText({ pct: -10, sentido: 'cai' })?.texto).toBe(t('ui.proposta.pct.cai', { pct: 10 }));
+    expect(changeText({ pct: 0, sentido: 'igual' })?.texto).toBe(t('ui.proposta.pct.igual'));
+    expect(changeText({ pct: 2048, sentido: 'sobe' })?.texto).toBe(t('ui.proposta.pct.muito'));
+    expect(changeText({ pct: 999, sentido: 'sobe' })?.texto).toBe(t('ui.proposta.pct.sobe', { pct: 999 }));
+    expect(changeText(null)).toBeNull();
+  });
+
+  it('reputação em estrelas, de 1 a 6, na ordem dos níveis', () => {
+    expect(LEVELS.map(starsOf)).toEqual([1, 2, 3, 4, 5, 6]);
+  });
+
+  it('a proposta traz salário por mês, valor projetado e estrelas; o clube atual traz os anos que restam', () => {
+    const x = proposalText(view());
+    expect(x.salarioMes).toMatch(/200\smil\spor mês/);
+    expect(x.valorProj).toMatch(/Valor projetado: .*9,5\smi/);
+    expect(x.estrelas).toBe(4);
+    const a = currentText({ clubId: 'sport', league: 'BRA-A', currency: 'BRL', salarioMensal: 150_000, anosRestantes: 1, role: 'disputa', nivelClube: 'media', valorProjetadoEUR: 8_000_000, valorPct: null, renovacao: null, aumento: null });
+    expect(a.restam).toBe(t('ui.proposta.restam_um'));
+    expect(a.clube).toBe('Sport');
+    expect(currentText({ clubId: 'sport', league: 'BRA-A', currency: 'BRL', salarioMensal: 1, anosRestantes: 3, role: 'disputa', nivelClube: 'media', valorProjetadoEUR: 1, valorPct: null, renovacao: null, aumento: null }).restam).toBe(t('ui.proposta.restam', { n: 3 }));
   });
 });

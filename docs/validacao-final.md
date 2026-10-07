@@ -32,3 +32,10 @@ Simulação pareada (`npm run sim:estilos`, 400 carreiras por estilo), antes (HE
 - **"Lenda" média dos 21 estilos:** 5,67% → 5,97% (+0,30 pt; ruído da média ≈ ±0,25 pt).
 - **Por estilo:** antes 4,3% a 7,0%; depois **4,0% a 7,5%** (Lateral construtor 4,0%, Enganche 7,5%), **0,3 e 0,5 pt fora da faixa combinada** (4,3%–7,0%), mas dentro do ruído de amostra (±1,1 pt por estilo com 400 carreiras).
 - **Decisão pendente do usuário:** aceitar (medir com 1000+ carreiras na validação final) ou recalibrar os minutos de `Disputa` e `Reserva Imediato` agora.
+
+## Tela de contratos (T28g–k): o que conferir no celular real
+- Selecionar cartão, ver o detalhe abaixo dele e **Confirmar escolha** (botão fixo no rodapé); modos: aceitar, negociar, forçar a saída, por amor, renovar, pedir aumento, não renovar.
+- Variação de salário muito alta (jovem da base indo para a Europa) aparece como "mais de 10 vezes o atual" (limite `pctMaximo` em `src/data/contractCard.json`).
+- Valor projetado é estimativa de 2 semestres sem sorteio; pode ser otimista para jovens de alto Over: conferir contra a evolução real nas carreiras de teste.
+- Reputação em 6 níveis: distribuição dos 447 clubes (quartis 22, 22, 30, 58, 75, 87).
+- Simulação pareada do T28g: ver seção acima (4,0%–7,5%); repetir com 1000+ carreiras por estilo.

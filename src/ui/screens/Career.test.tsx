@@ -21,8 +21,9 @@ const LOOK = { skin: 't6', hairStyle: 'curto', hairColor: 'preto', beard: null, 
 /** T28d: a tela de propostas, se for a da vez: fica no clube (ou, sem clube, aceita a primeira proposta). */
 function passProposals(): boolean {
   if (!screen.queryByRole('heading', { level: 1, name: t('ui.proposta.titulo') })) return false;
-  const stay = screen.queryByRole('button', { name: t('ui.proposta.ficar') });
-  fireEvent.click(stay ?? screen.getAllByRole('button', { name: /Aceitar proposta/ })[0]!);
+  // o primeiro cartão é o clube atual (ficar ou renovar); sem clube, é a primeira proposta (aceitar)
+  fireEvent.click(screen.getAllByRole('radio', { name: /./ })[0]!);
+  fireEvent.click(screen.getByRole('button', { name: t('ui.proposta.confirmar') }));
   return true;
 }
 

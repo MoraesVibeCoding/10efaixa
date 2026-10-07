@@ -97,10 +97,16 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
     );
   }
   if (eventId === PROPOSAL_EVENT) {
-    // T28d: propostas de clube; sem clube atual (contrato rescindido) não há "Ficar"
+    // T28k: tela de contratos (cartões + confirmar), no desenho da decisão; sem clube atual (contrato rescindido) não há o cartão do clube
+    const contractPlayer = toDecisionPlayer(view, input, look, visual, eventId);
+    const contractClub = view.clubId ? clubName(view.clubId).nome : t('ui.varzea');
     return (
       <div ref={box} className="carreira" data-temperamento={view.temperament}>
-        <Propostas key={index} propostas={view.propostas ?? []} podeFicar={view.state.podeFicar === true} podeForcar={view.state.podeForcar === true} onChoose={decide} />
+        <Propostas
+          key={index} propostas={view.propostas ?? []} atual={view.atual} podeFicar={view.state.podeFicar === true} podeForcar={view.state.podeForcar === true}
+          podeRenovar={view.state.podeRenovar === true} player={contractPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} anterior={anterior}
+          scene={sceneOfCena('assinatura-contrato', contractPlayer, visual, input.name, contractClub)} onChoose={decide}
+        />
       </div>
     );
   }
