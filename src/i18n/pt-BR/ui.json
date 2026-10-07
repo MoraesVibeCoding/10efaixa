@@ -66,6 +66,7 @@
   "semEfeito": "Nada mudou por enquanto.",
   "seguir": "Seguir",
   "pontos": "{sinal}{n} pontos",
+  "palavra": "{sinal} um pouco",
   "porcento": "{sinal}{n}%",
   "dinheiro": "{sinal}{valor}"
  },

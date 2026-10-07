@@ -273,6 +273,7 @@ function outcomeText(o: Outcome): string {
   const sinal = o.delta > 0 ? SIGN.up : SIGN.down;
   const abs = Math.abs(o.delta);
   if (o.unidade === 'dinheiro') return t('ui.resultado.dinheiro', { sinal, valor: money(abs, 'BRL') });
+  if (o.unidade === 'palavra') return t('ui.resultado.palavra', { sinal });
   if (o.unidade === 'porcento') return t('ui.resultado.porcento', { sinal, n: Math.round(abs * 100) });
   return t('ui.resultado.pontos', { sinal, n: Math.round(o.unidade === 'pontos100' ? abs * 100 : abs) });
 }

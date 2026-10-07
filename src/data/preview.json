@@ -15,7 +15,7 @@
   "muitoMaior": 2
  },
  "unidade": {
-  "_nota": "como o ganho ou a perda real de cada campo aparece no resultado da escolha: pontos100 = campo de 0 a 1 mostrado em pontos de 0 a 100",
+  "_nota": "como o ganho ou a perda real de cada campo aparece no resultado da escolha: pontos100 = campo de 0 a 1 mostrado em pontos de 0 a 100; palavra = só o sinal e “um pouco”, sem número (bônus de Mental dos marcos: nenhum número dos atributos)",
   "moral": "pontos100",
   "relacaoTecnico": "pontos100",
   "disciplina": "pontos100",
@@ -23,7 +23,8 @@
   "idolatria": "pontos",
   "idolatriaCoracao": "pontos",
   "patrimonio": "dinheiro",
-  "salarioFator": "porcento"
+  "salarioFator": "porcento",
+  "bonusMental": "palavra"
  },
  "resultadoMs": 2600,
  "risco": {

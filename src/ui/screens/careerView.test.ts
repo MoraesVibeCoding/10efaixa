@@ -79,7 +79,8 @@ describe('uniforme da figurinha (T50k, SPEC v2.37)', () => {
 
   it('os eventos da Copa são do contexto Seleção (nos dados); os demais não', () => {
     const selecao = events.eventos.filter((e) => (e as { contexto?: string }).contexto === 'selecao').map((e) => e.id).sort();
-    expect(selecao).toEqual(['copa-fora-posicao', 'copa-penalti', 'copa-sacrificio']);
+    // a Copa e os marcos da Seleção (T25c): a figurinha veste o país
+    expect(selecao).toEqual(['copa-fora-posicao', 'copa-penalti', 'copa-sacrificio', 'estreia-selecao', 'primeira-convocacao', 'primeira-copa', 'primeiro-gol-selecao']);
   });
 
   it('em evento da Seleção a figurinha veste o país; nos outros, o clube', () => {

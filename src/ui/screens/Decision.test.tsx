@@ -49,6 +49,17 @@ describe('resultado da escolha (SPEC v2.20)', () => {
     expect(screen.getByRole('main')).toHaveAttribute('data-resultado', 'aberto');
   });
 
+  it('o bônus de Mental de um marco aparece em palavras, nunca em número (regra: nenhum número dos atributos)', () => {
+    render(<Decision eventId="estreia-profissional" age={17} progress={0.2} player={{ name: 'Zé', position: 'meia', clubId: 'flamengo', overall: 60, titles: [], role: 'composicao', monthlySalary: { amount: 4_000, currency: 'BRL' } }} state={{ ...STATE, bonusMental: 0 }} scene={{ src: 'c.webp', alt: 'cena' }} onContinue={() => {}} />);
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(t('events.estreia-profissional.opcoes.respirar-e-jogar-simples')) }));
+    fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
+    const dialog = screen.getByRole('dialog');
+    expect(within(dialog).getByText(t('preview.campo.bonusMental'))).toBeInTheDocument();
+    expect(within(dialog).getByText(t('ui.resultado.palavra', { sinal: '+' }))).toBeInTheDocument();
+    expect(within(dialog).queryByText(/pontos/)).toBeInTheDocument(); // o ganho de moral continua em número
+    expect(within(dialog).queryByText(t('ui.resultado.pontos', { sinal: '+', n: 4 }))).toBeNull();
+  });
+
   // T49b: no ritmo normal o resultado só fecha pelo botão ou Esc (WCAG 2.2.1); sozinho, só no ritmo Rápido
   it('no ritmo normal o resultado espera o jogador: não fecha sozinho', () => {
     const onContinue = open();
