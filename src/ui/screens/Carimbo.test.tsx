@@ -20,6 +20,19 @@ describe('Carimbo (v2.47)', () => {
     expect(screen.getByRole('status')).toBeEmptyDOMElement();
   });
 
+  it('o selo de título traz a imagem do troféu da competição dentro dele, decorativa; acesso e rebaixamento não', () => {
+    const { unmount } = render(<Carimbo momentos={[{ kind: 'titulo', competition: 'serieA' }]} />);
+    const selo = screen.getByRole('status').querySelector('[data-momento="titulo"]')!;
+    const trofeu = selo.querySelector('.carimbo__trofeu')!;
+    expect(trofeu).not.toBeNull();
+    expect(trofeu.querySelector('img, svg')).not.toBeNull();
+    expect(trofeu.querySelector('img')?.getAttribute('alt') ?? '').toBe('');
+    expect(selo).toHaveTextContent(t('ui.titulo.serieA'));
+    unmount();
+    render(<Carimbo momentos={[{ kind: 'acesso' }]} />);
+    expect(screen.getByRole('status').querySelector('.carimbo__trofeu')).toBeNull();
+  });
+
   it('sem momentos, só a região viva vazia', () => {
     render(<Carimbo momentos={[]} />);
     expect(screen.getByRole('status')).toBeEmptyDOMElement();

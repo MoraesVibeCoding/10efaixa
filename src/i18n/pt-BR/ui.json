@@ -245,6 +245,13 @@
   "diamanteFrase": "A várzea escondia um craque: o teto dele é maior que o normal.",
   "seguir": "Escolher o ritmo"
  },
+ "reiniciar": {
+  "botao": "Reiniciar carreira",
+  "titulo": "Reiniciar a carreira?",
+  "texto": "Você perde a carreira atual e volta ao começo. Isso não pode ser desfeito.",
+  "cancelar": "Continuar jogando",
+  "confirmar": "Reiniciar"
+ },
  "abertura": {
   "titulo": "10eFaixa",
   "lema": "Da várzea à aposentadoria. Uma carreira, as suas escolhas.",

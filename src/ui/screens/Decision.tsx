@@ -3,13 +3,13 @@ import events from '../../data/events.json';
 import legacy from '../../data/legacy.json';
 import album from '../../data/album.json';
 import type { AvatarSpec } from '../../art/avatar';
-import trophyArt from '../../data/trophyArt.json';
 import { ATTRIBUTES, toBand, type Attributes } from '../../engine/attributes';
 import { applyOption, type Ctx } from '../../engine/events';
 import { outcomeOf, outcomeVerdict, previewOf, riskOf, RISK_BANDS, timeOutOf, type Outcome, type Preview, type Risk } from '../../engine/preview';
 import previewCfg from '../../data/preview.json';
 import { t } from '../../i18n';
 import { clubLine, clubName } from './clubText';
+import { TrophyIcon } from './TrophyIcon';
 import { Emblema } from './Emblema';
 import { Figurinha } from './Figurinha';
 import { Niveis } from './Niveis';
@@ -96,23 +96,6 @@ function rankTitles(titles: string[]) {
   const counts: Record<string, number> = {};
   for (const id of titles) counts[id] = (counts[id] ?? 0) + 1;
   return Object.entries(counts).sort((a, b) => (TITLE_WEIGHT[b[0]] ?? 0) - (TITLE_WEIGHT[a[0]] ?? 0));
-}
-
-// troféu de cada competição (provisório até o lote 5); sem peça, o ícone genérico abaixo
-const TROPHY_FILES = import.meta.glob('../../assets/art/provisoria/detalhe/detalhe__trofeu-*.svg', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
-const trophySrc = (id: string) => {
-  const piece = (trophyArt.pecas as Record<string, string>)[id];
-  return piece ? TROPHY_FILES[`../../assets/art/provisoria/detalhe/detalhe__trofeu-${piece}.svg`] : undefined;
-};
-
-const TROPHY = 'M7 3h10v2h3.5v3.2A4.3 4.3 0 0 1 16.6 12 5.2 5.2 0 0 1 13 14.4V17h3v4H8v-4h3v-2.6A5.2 5.2 0 0 1 7.4 12 4.3 4.3 0 0 1 3.5 8.2V5H7zm0 4H5.5v1.2c0 .9.6 1.7 1.5 2zm10 0v3.2c.9-.3 1.5-1.1 1.5-2V7z';
-
-/** Imagem decorativa: o nome da competição vem escrito ao lado. */
-function TrophyIcon({ id }: { id: string }) {
-  const src = trophySrc(id);
-  return src
-    ? <img className="trofeu__arte" src={src} alt="" width="32" height="32" />
-    : <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d={TROPHY} fill="currentColor" /></svg>;
 }
 
 /** Uma etiqueta por competição vencida, com o nome; o ×N só aparece quando há mais de um título dela. */

@@ -1,0 +1,25 @@
+/* v2.56: botão fixo de reiniciar (canto superior direito) e aviso. Alvo de toque de 44 px; o ícone é menor. */
+.reiniciar__botao {
+  position: fixed; inset-block-start: 2px; inset-inline-end: 6px; z-index: 3;
+  display: grid; place-items: center; inline-size: 44px; block-size: 44px; padding: 0;
+  border: 0; background: transparent; color: var(--cor-texto); cursor: pointer; touch-action: manipulation;
+}
+.reiniciar__botao svg { box-sizing: content-box; padding: 6px; border-radius: 50%; background: color-mix(in srgb, var(--cor-superficie) 92%, transparent); border: var(--forma-borda-fina) solid var(--cor-linha); box-shadow: var(--forma-sombra-suave); }
+.reiniciar__botao:focus-visible { outline: 3px solid var(--cor-foco); outline-offset: -4px; border-radius: 50%; }
+/* com "Minha carreira", o resultado ou outro modal por cima, o botão some para não cobrir o X nem o título */
+:root:has(.gaveta, .resultado, dialog[open]) .reiniciar__botao { visibility: hidden; }
+.reiniciar__fundo { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: var(--espaco-5); background: var(--vidro-scrim); }
+.reiniciar__aviso {
+  display: grid; gap: var(--espaco-3); inline-size: min(100%, 22rem); padding: var(--espaco-4);
+  border: var(--forma-borda-fina) solid var(--cor-linha); border-radius: var(--forma-raio-cartao);
+  background: var(--cor-superficie); color: var(--cor-texto); box-shadow: var(--forma-sombra-suave);
+}
+.reiniciar__aviso h2 { margin: 0; font-size: var(--tipo-nome); font-weight: 900; line-height: 1.05; }
+.reiniciar__aviso p { margin: 0; line-height: 1.4; }
+.reiniciar__acoes { display: grid; gap: var(--espaco-2); }
+.reiniciar__acoes button {
+  min-block-size: var(--toque-compacto); padding: 0 var(--espaco-5); border: 2px solid var(--cor-texto); border-radius: 999px;
+  background: var(--cor-superficie); color: var(--cor-texto); font-family: var(--fonte-titulo); font-size: var(--tipo-opcao); font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer;
+}
+.reiniciar__acoes .reiniciar__apagar { background: var(--cor-negativo); border-color: var(--cor-negativo); color: var(--cor-superficie); }
+.reiniciar__acoes button:focus-visible { outline: 3px solid var(--cor-foco); outline-offset: 3px; }

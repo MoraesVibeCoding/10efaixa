@@ -280,3 +280,60 @@ describe('App: rever carreira por link (T57d)', () => {
     expect(screen.getByRole('heading', { level: 1, name: t('ui.abertura.titulo') })).toBeInTheDocument();
   });
 });
+
+describe('App: reiniciar a carreira em qualquer tela (v2.56)', () => {
+  beforeEach(() => { localStorage.clear(); });
+  const reiniciar = () => screen.getByRole('button', { name: t('ui.reiniciar.botao') });
+  const toRitmo = () => { fireEvent.click(screen.getByRole('button', { name: t('ui.revelacao.seguir') })); };
+
+  it('a abertura não tem o botão (ainda não há carreira); criação, revelação, ritmo e carreira têm', () => {
+    render(<App seed={11} />);
+    expect(screen.queryByRole('button', { name: t('ui.reiniciar.botao') })).toBeNull();
+    startNew();
+    expect(reiniciar()).toBeInTheDocument();
+    createPlayer(false);
+    expect(reiniciar()).toBeInTheDocument(); // revelação
+    toRitmo();
+    expect(reiniciar()).toBeInTheDocument(); // ritmo
+    fireEvent.click(screen.getByRole('button', { name: t('ui.ritmo.comecar') }));
+    passMeetings();
+    expect(reiniciar()).toBeInTheDocument(); // decisão
+  });
+
+  it('com o aviso aberto, o resto da tela fica inerte; "Continuar jogando" mantém a carreira', () => {
+    render(<App seed={11} />);
+    createPlayer();
+    toRitmo();
+    fireEvent.click(screen.getByRole('button', { name: t('ui.ritmo.comecar') }));
+    passMeetings();
+    const eventId = document.querySelector('main[data-evento]')!.getAttribute('data-evento');
+    fireEvent.click(reiniciar());
+    expect(document.querySelector('main[data-evento]')!.closest('[inert]')).not.toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: t('ui.reiniciar.cancelar') }));
+    expect(document.querySelector('main[data-evento]')!.closest('[inert]')).toBeNull();
+    expect(document.querySelector('main[data-evento]')!.getAttribute('data-evento')).toBe(eventId);
+    expect(localStorage.getItem(SAVE_KEY)).not.toBeNull();
+  });
+
+  it('"Reiniciar" apaga o save e volta à abertura, sem a carreira para continuar', () => {
+    render(<App seed={11} />);
+    createPlayer();
+    toRitmo();
+    fireEvent.click(screen.getByRole('button', { name: t('ui.ritmo.comecar') }));
+    passMeetings();
+    expect(localStorage.getItem(SAVE_KEY)).not.toBeNull();
+    fireEvent.click(reiniciar());
+    fireEvent.click(screen.getByRole('button', { name: t('ui.reiniciar.confirmar') }));
+    expect(localStorage.getItem(SAVE_KEY)).toBeNull();
+    expect(screen.getByRole('button', { name: t('ui.abertura.novaCarreira') })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: t('ui.reiniciar.botao') })).toBeNull();
+  });
+
+  it('na criação também reinicia (volta à abertura)', () => {
+    render(<App seed={11} />);
+    startNew();
+    fireEvent.click(reiniciar());
+    fireEvent.click(screen.getByRole('button', { name: t('ui.reiniciar.confirmar') }));
+    expect(screen.getByRole('button', { name: t('ui.abertura.novaCarreira') })).toBeInTheDocument();
+  });
+});
