@@ -13,8 +13,8 @@
 3. O resultado continua determinístico (mesma semente + mesmas escolhas = mesma carreira) e o save/link seguem funcionando.
 
 ## Proposta de escopo (a confirmar)
-- **Quando aparece:** na janela de transferência, se existir ao menos uma oferta que vence "ficar" pela margem do `chooseOffer` ou se o contrato está acabando. Sem oferta, nada muda e não há tela.
-- **Quantas:** até 3 propostas (as melhores pela mesma pontuação do `chooseOffer`) mais "Ficar no clube".
+- **Quando aparece (decisão do usuário, 2026-10-07):** **sempre que houver oferta, no período das janelas de transferência**, mesmo que ela não vença "ficar" pela margem do `chooseOffer`. Sem oferta, não há tela. A margem de 2 pontos continua valendo só para o modo automático (simulações).
+- **Quantas:** até 3 propostas (as melhores pela mesma pontuação do `chooseOffer`) mais "Ficar no clube". Com a regra acima, a tela pode aparecer quase toda temporada, então o limite de decisões do Rápido (1 por temporada) precisa de regra de prioridade; a confirmar na T28f.
 - **Ritmos:** a proposta tem peso alto (como as do coração e do rival, importância 8), então aparece no Rápido, no Normal e no Completo. Se o limite de decisões por temporada for estourado, ela tem prioridade.
 - **Opções v1:** aceitar uma proposta · ficar · mandar o empresário negociar (pode melhorar ou sumir; usa o perfil do empresário) · **forçar saída** só quando o jogador já "quer sair" (salário atrasado, moral).
 - **Fora da v1:** leilão entre clubes, mais de uma janela por temporada, contraproposta do jogador com valores livres.
@@ -41,6 +41,6 @@
 | T28f | Ritmos, save/link e simulação pareada | Equilíbrio dos estilos inalterado no automático |
 
 ## Perguntas de escopo (para você decidir)
-1. Aparece **sempre que houver oferta melhor** ou **só quando o contrato está acabando**? (recomendado: oferta melhor, como acima)
+1. ~~Quando aparece~~ **Decidido:** sempre que houver oferta, no período das janelas.
 2. Entram já na v1 "empresário negocia" e "forçar saída", ou só aceitar e ficar primeiro?
 3. Isso entra **antes da T58** ou depois, no Marco do jogo (ordem do SPEC)?
