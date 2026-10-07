@@ -1,5 +1,6 @@
 import { simulateCareer, type Decider } from '../engine/career';
 import { autoChoice } from '../engine/events';
+import { PROPOSAL_EVENT } from '../engine/proposals';
 import { MEETING_EVENT, parseProposal } from '../engine/meeting';
 import type { CreationInput } from '../engine/player';
 import { runUntilDecision, type Ritmo } from './careerRun';
@@ -33,7 +34,7 @@ const meetingsByYear = (shown: ReturnType<typeof play>['shown']) => {
 
 describe('reunião com a comissão como decisão (T52)', () => {
   it('a reunião automática segue igual: responder sempre a sugestão dá a mesma carreira de antes', () => {
-    const auto: Decider = (e, t, v) => (e === MEETING_EVENT ? String(v().state.sugestao) : autoChoice(e, t));
+    const auto: Decider = (e, t, v) => (e === MEETING_EVENT || e === PROPOSAL_EVENT ? String(v().state.sugestao) : autoChoice(e, t));
     expect(simulateCareer(input(), 11, 2026, auto)).toEqual(simulateCareer(input(), 11));
     const played = play('completo');
     expect(played.shown.some((s) => s.eventId === MEETING_EVENT)).toBe(true);

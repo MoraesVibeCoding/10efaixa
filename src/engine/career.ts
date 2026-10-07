@@ -15,7 +15,7 @@ import { semesterFeedback, type Feedback } from './feedback';
 import { mentalityEffects } from './mentality';
 import { afterClassico, afterSemester, afterTransfer, type Idolatry } from './idolatry';
 import { decayRelapse, graveDecision, semesterInjury } from './injuries';
-import { chooseOffer, generateOffers, leagueOf, marketValue, salaryFor, type Offer } from './market';
+import { generateOffers, rankOffers, leagueOf, marketValue, salaryFor, type Offer } from './market';
 import { MEETING_EVENT, autoProposal, encodeProposal, parseProposal, staffMeeting, type MeetingResult } from './meeting';
 import { minutesShare, squadLevel, updateForm, updateMorale, type Role } from './minutes';
 import { overall, type Position } from './overall';
@@ -33,6 +33,7 @@ import { headlineOf } from './headline';
 import { legacyOf, type Legacy } from './legacy';
 import { honorFacts, honorsOf } from './honors';
 import { generateNickname } from './nickname';
+import { PROPOSAL_EVENT, STAY, acceptChoice, parseProposalChoice, proposalViewOf, type ProposalView } from './proposals';
 import { farewellOffer, retirementCheck, type RetireReason } from './retirement';
 import { simulateSeason, type ClubInfo, type Div, type Divisions, type Row } from './season';
 import { assignNumber, canGetArmband, canGetTen, rosterNumbers } from './shirt';
@@ -93,13 +94,15 @@ export interface DecisionView {
   ultimoSemestre?: { year: number; semestre: 1 | 2; frases: Feedback[] };
   /** T51b: idolatria (−100 a 100) em cada clube por onde passou; a tela mostra só a faixa. */
   idolatrias: Record<string, number>;
+  /** T28b (v2.50): na decisão `proposta-clube`, as até 3 propostas mostradas (a escolha é "aceitar:<clube>" ou "ficar"). */
+  propostas?: ProposalView[];
   /** Seleção que o jogador defende agora ("brasil" ou o país da dupla nacionalidade aceita): a camisa nos eventos da Seleção (v2.37). */
   nationality: string;
 }
 /** Quem decide: o temperamento (simulação, ritmo Rápido) ou o jogador (tela). `view` só é montada se pedida. */
 export type Decider = (eventId: string, temperament: string, view: () => DecisionView) => string;
 /** Decisão automática (simulação e eventos fora da tela): na reunião, a sugestão do preparador; nos eventos, o temperamento. */
-export const autoDecide: Decider = (eventId, temperament, view) => (eventId === MEETING_EVENT ? String(view().state.sugestao) : autoChoice(eventId, temperament));
+export const autoDecide: Decider = (eventId, temperament, view) => (eventId === MEETING_EVENT || eventId === PROPOSAL_EVENT ? String(view().state.sugestao) : autoChoice(eventId, temperament));
 const AUTO = autoDecide;
 
 const UF = new Map(CLUBS.map((c) => [c.id, c.uf]));
@@ -191,7 +194,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   const meetings: DecisionView['meetings'] = [];
   let ultimoSemestre: DecisionView['ultimoSemestre'];
   /** Toda decisão passa por aqui (T51): o padrão é a escolha do temperamento, como antes. */
-  const ask = (eventId: string, state: Record<string, number | string | boolean> = {}, who = temp) => decide(eventId, who, () => ({
+  const ask = (eventId: string, state: Record<string, number | string | boolean> = {}, who = temp, extra: Pick<DecisionView, 'propostas'> = {}) => decide(eventId, who, () => ({
+    ...extra,
     year: curYear, age: evo.age, clubId, position, overall: ov(evo), role: curRole, temperament: who,
     marketValueEUR: Math.round(marketValue(ov(evo), evo.age) * selectionEffect(prestige, sel, sel.rung).marketMultiplier),
     monthlySalary: contract ? { amount: Math.round(contract.annualSalary / 12), currency: contract.currency } : { amount: 0, currency: 'BRL' },
@@ -546,7 +550,18 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         }
       }
       // Em despedida, o jogador não sai mais: só renova.
-      const pick = goingHome || farewell ? null : chooseOffer(me, offers, current);
+      // T28b (v2.50): com propostas na janela, o jogador escolhe (ou o automático, que sugere a que vence "ficar" pela margem).
+      let pick: Offer | null = null;
+      if (!goingHome && !farewell) {
+        const { shown, pick: auto } = rankOffers(me, offers, current);
+        pick = auto;
+        if (shown.length > 0) {
+          const said = ask(PROPOSAL_EVENT, { sugestao: auto ? acceptChoice(auto.clubId) : STAY, podeFicar: current !== null }, temp, { propostas: shown.map(proposalViewOf) });
+          const chosen = parseProposalChoice(said, shown, current !== null);
+          if (!chosen) throw new RangeError(`proposta inválida: "${said}"`);
+          pick = chosen.kind === 'aceitar' ? chosen.offer : null;
+        }
+      }
       if (goingHome) { /* contrato novo já assinado */ } else if (pick) {
         // clube do coração: o desconto aceito vem da opção do jeito do jogador (events.json)
         const factor = pick.heartClub ? heartSalaryFactor(temp) : 1;

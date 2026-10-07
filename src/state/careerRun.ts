@@ -3,6 +3,7 @@ import flow from '../data/flow.json';
 import { autoDecide, simulateCareer, type CareerResult, type Decider, type DecisionView } from '../engine/career';
 import { autoChoice } from '../engine/events';
 import { MEETING_EVENT, parseProposal } from '../engine/meeting';
+import { PROPOSAL_EVENT, parseProposalChoice } from '../engine/proposals';
 import type { CreationInput } from '../engine/player';
 
 // T51 (a): carreira jogada pela tela. O motor é determinístico, então continuar = refazer do começo com as escolhas
@@ -23,6 +24,8 @@ const IMPORTANCE = new Map(events.eventos.map((e) => [e.id, e.importancia]));
 const LIMITS = flow.decisoesPorTemporada as Record<Ritmo, number | null>;
 /** T52 (v2.40): em quais semestres a reunião com a comissão chega à tela, por ritmo; as outras são automáticas. */
 const MEETINGS = flow.reunioesNaTela as Record<Ritmo, number[]>;
+/** T28b (v2.50): em quais ritmos a proposta de clube chega à tela (desligado até a tela da T28d). */
+const PROPOSALS = flow.propostasNaTela as Record<Ritmo, boolean>;
 
 /** Interrupção da simulação: chegou numa decisão que o jogador ainda não tomou. */
 class Pending {
@@ -67,6 +70,11 @@ function decider(run: Run, probe?: { year: number; found: string[] }): Decider {
       if (!onScreen) return autoDecide(eventId, temperament, () => v);
       return take(eventId, v);
     }
+    if (eventId === PROPOSAL_EVENT) {
+      // T28b: a proposta de clube sempre vai à tela quando existe (sem entrar na conta de decisões por temporada); na simulação de olhar à frente é automática
+      if (!PROPOSALS[run.ritmo] || (probe && v.year === probe.year)) return autoDecide(eventId, temperament, () => v);
+      return take(eventId, v);
+    }
     if (probe && v.year === probe.year) { probe.found.push(eventId); return autoChoice(eventId, temperament); }
     if (limit !== null) {
       let sel = inUse.get(v.year);
@@ -91,7 +99,9 @@ function decider(run: Run, probe?: { year: number; found: string[] }): Decider {
   function take(eventId: string, v: DecisionView): string {
     if (i >= run.choices.length) throw new Pending(eventId, v, i);
     const choice = run.choices[i++]!;
-    const valid = eventId === MEETING_EVENT ? parseProposal(choice) !== null : OPTIONS.get(eventId)?.has(choice);
+    const valid = eventId === MEETING_EVENT ? parseProposal(choice) !== null
+      : eventId === PROPOSAL_EVENT ? parseProposalChoice(choice, v.propostas ?? [], v.state.podeFicar === true) !== null
+      : OPTIONS.get(eventId)?.has(choice);
     if (!valid) throw new RangeError(`escolha inválida "${choice}" para ${eventId} (decisão ${i})`);
     return choice;
   }

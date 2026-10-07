@@ -1,7 +1,7 @@
 import { createAgent } from './agent';
 import { clubsIn } from './clubs';
 import { effectiveRep, europeClubsIn } from './europe';
-import { chooseOffer, generateOffers, leagueOf, marketValue, negotiate, salaryFor, type MarketPlayer, type Offer } from './market';
+import { chooseOffer, generateOffers, rankOffers, leagueOf, marketValue, negotiate, salaryFor, type MarketPlayer, type Offer } from './market';
 import { squadLevel } from './minutes';
 import { createPrng } from './prng';
 import cfg from '../data/market.json';
@@ -147,5 +147,43 @@ describe('mercado (T28)', () => {
     const sal = (p: MarketPlayer) => generateOffers(p, 'brasil', agent, createPrng(3))[0]!.annualSalary;
     expect(sal(player({ valueMultiplier: 1.3 }))).toBeGreaterThan(sal(player()) * 1.2);
     expect(offers(player({ extraOffers: 1.5 }), 'brasil', 300).length).toBeGreaterThan(offers(player(), 'brasil', 300).length);
+  });
+});
+
+// T28b (SPEC 6.12, v2.50): as propostas que a tela mostra são as mesmas que a escolha automática considera.
+describe('propostas na tela (T28b)', () => {
+  const base = { years: 3, role: 'titular' as const, staffQuality: 1, heartClub: false, rivalOfCurrent: false, rivalOfHeart: false, offAxis: false };
+  const mk = (clubId: string, annualSalary: number, over: Partial<Offer> = {}): Offer => ({ ...base, clubId, league: 'BRA-A', currency: 'BRL', annualSalary, ...over });
+  const cur = { annualSalaryBRL: 1_000_000, role: 'rodizio' };
+
+  it('a escolha automática é sempre a primeira da lista mostrada (ou ninguém)', () => {
+    for (const temperament of ['frio', 'resenha', 'lider', 'esquentado']) {
+      for (let s = 0; s < 60; s++) {
+        const p = player({ temperament, overall: 70 + (s % 20) });
+        const offs = [...generateOffers(p, 'brasil', agent, createPrng(s)), ...generateOffers(p, 'europa', agent, createPrng(s + 1000))];
+        const current = { annualSalaryBRL: 2_000_000, role: 'rodizio' };
+        const { shown, pick } = rankOffers(p, offs, current);
+        expect(pick).toEqual(chooseOffer(p, offs, current));
+        if (pick) expect(shown[0]).toEqual(pick);
+      }
+    }
+  });
+
+  it('mostra no máximo 3, da melhor para a pior, mesmo quando nenhuma vence "ficar"', () => {
+    const offs = [mk('vitoria', 900_000), mk('sport', 1_100_000), mk('fortaleza', 1_300_000), mk('ceara', 1_200_000), mk('bahia-b', 800_000)];
+    const { shown, pick } = rankOffers(player({ temperament: 'lider', clubId: 'bahia' }), offs, cur);
+    expect(shown.length).toBeLessThanOrEqual(3);
+    expect(shown.length).toBeGreaterThan(0);
+    expect(pick === null || shown[0] === pick).toBe(true);
+  });
+
+  it('proposta que o jogador recusaria por regra (rival do clube atual, para quem não aceita) não é mostrada', () => {
+    const rival = mk('vitoria', 9_000_000, { rivalOfCurrent: true });
+    expect(rankOffers(player({ temperament: 'frio' }), [rival], cur).shown).toEqual([]);
+    expect(rankOffers(player({ temperament: 'esquentado' }), [rival], cur).shown.map((o) => o.clubId)).toEqual(['vitoria']);
+  });
+
+  it('sem propostas, nada é mostrado', () => {
+    expect(rankOffers(player(), [], cur)).toEqual({ shown: [], pick: null });
   });
 });
