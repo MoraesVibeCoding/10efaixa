@@ -28,7 +28,7 @@ function Variacao({ c }: { c: ChangeText | null }) {
 function Estrelas({ n, nivel }: { n: number; nivel: string }) {
   return (
     <span className="propostas__tag">
-      <span aria-hidden="true" className="propostas__estrelas">{'★'.repeat(n)}{'☆'.repeat(6 - n)}</span>
+      <span aria-hidden="true" className="propostas__estrelas">{'★'.repeat(n)}{'☆'.repeat(7 - n)}</span>
       <span>{nivel}</span>
     </span>
   );

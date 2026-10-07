@@ -63,8 +63,8 @@ describe('texto do cartão de contrato (T28k)', () => {
     expect(changeText(null)).toBeNull();
   });
 
-  it('reputação em estrelas, de 1 a 6, na ordem dos níveis', () => {
-    expect(LEVELS.map(starsOf)).toEqual([1, 2, 3, 4, 5, 6]);
+  it('reputação em estrelas, de 1 a 7, na ordem dos níveis', () => {
+    expect(LEVELS.map(starsOf)).toEqual([1, 2, 3, 4, 5, 6, 7]);
   });
 
   it('a proposta traz salário por mês, valor projetado e estrelas; o clube atual traz os anos que restam', () => {

@@ -459,7 +459,8 @@
    "media": "Reputação média",
    "boa": "Reputação boa",
    "alta": "Reputação alta",
-   "gigante": "Clube gigante"
+   "gigante": "Clube gigante",
+   "elite": "Elite mundial"
   },
   "foraDoEixo": "Muito salário, pouca visibilidade",
   "legenda": "Os minutos e o nível do clube pesam na sua evolução. Os minutos são uma previsão, não uma promessa.",
@@ -479,7 +480,8 @@
   "over": "Over {n}",
   "auge": "Auge",
   "novoClube": "Novo clube",
-  "titulos": "Títulos: {lista}",
+  "gols": "Gols: {n}",
+  "assistencias": "Assistências: {n}",
   "outraLiga": "Outra liga",
   "divisao": {
    "BRA-A": "Série A",

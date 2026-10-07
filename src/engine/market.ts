@@ -3,7 +3,7 @@ import { CLUBS, areRivals } from './clubs';
 import { FOREIGN } from './cups';
 import { autoChoice } from './events';
 import { EUROPE, areEuroRivals, effectiveRep } from './europe';
-import { roleFor, squadLevel, type Role } from './minutes';
+import { clubLevelBand, roleFor, squadLevel, type ClubLevelBand, type Role } from './minutes';
 import type { Prng } from './prng';
 import europe from '../data/europe.json';
 import cfg from '../data/market.json';
@@ -60,6 +60,14 @@ export function salaryFor(valueEUR: number, league: string): number {
   return Math.max(l.pisoSalarioAnual, Math.round(l.moeda === 'BRL' ? eur * money.cambio.EUR : eur));
 }
 
+/** v2.59: os clubes de elite (lista em market.json) e seus multiplicadores. */
+export const ELITE_CLUBS: readonly string[] = cfg.elite.clubes;
+export const isEliteClub = (id: string): boolean => ELITE_CLUBS.includes(id);
+/** Fator do valor projetado: só clube de elite multiplica. */
+export const eliteValueFactor = (id: string): number => (isEliteClub(id) ? cfg.elite.valorMultiplicador : 1);
+/** Nível do clube para a tela: "elite" por lista; os demais pela reputação. */
+export const clubLevelOf = (id: string, rep: number): ClubLevelBand => (isEliteClub(id) ? 'elite' : clubLevelBand(rep));
+
 const WINDOW_POOLS = {
   brasil: [...CLUBS.map((c) => c.id), ...FOREIGN.map((c) => c.id)],
   europa: [...EUROPE.map((c) => c.id), ...europe.outros.clubs.map((c) => c.id)],
@@ -73,7 +81,7 @@ function makeOffer(p: MarketPlayer, id: string, agent: Agent, rng: Prng, div: Di
   const pr = cfg.propostas;
   return {
     clubId: id, league, currency: LEAGUES[league]!.moeda as 'BRL' | 'EUR',
-    annualSalary: Math.round(salaryFor(marketValue(p.overall, p.age) * (p.valueMultiplier ?? 1), league) * salaryBoost(agent)),
+    annualSalary: Math.round(salaryFor(marketValue(p.overall, p.age) * (p.valueMultiplier ?? 1), league) * salaryBoost(agent) * (isEliteClub(id) ? cfg.elite.salarioMultiplicador : 1)),
     years: rng.int(pr.anos[0]!, pr.anos[1]!),
     role: roleFor(p.overall, effectiveRep(id), p.age),
     staffQuality: clamp(0.8 + (effectiveRep(id) / 100) * 0.4, 0.8, 1.2),
@@ -131,17 +139,17 @@ export const MAX_SHOWN_OFFERS = 3;
 export function rankOffers(p: MarketPlayer, offers: Offer[], current: { annualSalaryBRL: number; role: Role } | null): { shown: Offer[]; pick: Offer | null } {
   const all = cfg.politica as unknown as Record<string, { nivel: number; salario: number; papel: number; ficar: number }>;
   const w = all[p.temperament] ?? all.padrao!;
-  const score = (rep: number, salaryBRL: number, role: Role) =>
-    w.nivel * (rep / 10) + w.salario * Math.log10(Math.max(1, salaryBRL)) + w.papel * ROLE_SCORE[role];
+  const score = (rep: number, salaryBRL: number, role: Role, club?: string) =>
+    (club && isEliteClub(club) ? cfg.elite.bonusEscolha : 0) + w.nivel * (rep / 10) + w.salario * Math.log10(Math.max(1, salaryBRL)) + w.papel * ROLE_SCORE[role];
   const accepts = (o: Offer) =>
     (!o.rivalOfCurrent || autoChoice('proposta-rival', p.temperament) === 'aceitar')
     && (!o.rivalOfHeart || autoChoice('traicao-coracao', p.temperament) === 'aceitar')
     && (!o.heartClub || autoChoice('proposta-coracao', p.temperament) !== 'recusar');
   // sort estável: em empate fica na frente a que o motor gerou primeiro, como no laço original
-  const ranked = offers.map((o) => ({ o, s: score(effectiveRep(o.clubId), toBRL(o), o.role) })).sort((a, b) => b.s - a.s);
+  const ranked = offers.map((o) => ({ o, s: score(effectiveRep(o.clubId), toBRL(o), o.role, o.clubId) })).sort((a, b) => b.s - a.s);
   // Ficar leva vantagem: o apego do temperamento e uma margem mínima para valer a mudança.
   const stay = current && p.clubId
-    ? score(effectiveRep(p.clubId), current.annualSalaryBRL, current.role) + w.ficar * 0.3 + cfg.propostas.margemParaSair : -Infinity;
+    ? score(effectiveRep(p.clubId), current.annualSalaryBRL, current.role, p.clubId) + w.ficar * 0.3 + cfg.propostas.margemParaSair : -Infinity;
   const best = ranked.find((x) => accepts(x.o));
   const pick = best && best.s > stay ? best.o : null;
   const shown = ranked.slice(0, MAX_SHOWN_OFFERS).map((x) => x.o);

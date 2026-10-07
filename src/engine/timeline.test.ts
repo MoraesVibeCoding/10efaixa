@@ -4,7 +4,7 @@ import { randomInput } from './simulation';
 import { timelineOf, type TimelineInput } from './timeline';
 
 // T55g (SPEC 6.15, v2.51): o modelo da tela "Sua carreira": uma linha por temporada, em ordem de idade.
-const row = (age: number, clubId: string, overall: number, division: string | null = 'BRA-A') => ({ year: 2026 + age - 16, age, clubId, division, minutes: 0.8, overall });
+const row = (age: number, clubId: string, overall: number, division: string | null = 'BRA-A') => ({ year: 2026 + age - 16, age, clubId, division, minutes: 0.8, overall, goals: age - 10, assists: age - 14 });
 const input = (over: Partial<TimelineInput> = {}): TimelineInput => ({
   seasons: [row(16, 'santos', 60), row(17, 'santos', 66), row(18, 'santos', 72), row(19, 'benfica', 72, 'POR'), row(20, 'benfica', 70, 'POR')],
   titles: [], ...over,
@@ -30,6 +30,21 @@ describe('linha do tempo por idade (T55g)', () => {
   it('marca a troca de clube (e a estreia não conta como troca)', () => {
     const rows = timelineOf(input());
     expect(rows.map((r) => r.newClub)).toEqual([false, false, false, true, false]);
+  });
+
+  it('cada linha leva os gols e as assistências da temporada (v2.60)', () => {
+    const rows = timelineOf(input());
+    expect(rows.map((r) => r.goals)).toEqual([6, 7, 8, 9, 10]);
+    expect(rows.map((r) => r.assists)).toEqual([2, 3, 4, 5, 6]);
+  });
+
+  it('numa carreira simulada, a soma dos gols e das assistências por temporada é a da carreira', () => {
+    for (const seed of [1, 2, 3, 4]) {
+      const r = simulateCareer(randomInput(createPrng(seed)), seed);
+      const rows = timelineOf(r);
+      expect(rows.reduce((n, x) => n + x.goals, 0), `gols ${seed}`).toBe(r.stats.goals);
+      expect(rows.reduce((n, x) => n + x.assists, 0), `assistências ${seed}`).toBe(r.stats.assists);
+    }
   });
 
   it('sem temporadas, sem linhas', () => {

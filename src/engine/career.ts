@@ -16,7 +16,7 @@ import { semesterFeedback, type Feedback } from './feedback';
 import { mentalityEffects } from './mentality';
 import { afterClassico, afterSemester, afterTransfer, type Idolatry } from './idolatry';
 import { decayRelapse, graveDecision, semesterInjury } from './injuries';
-import { FORCE_EXIT, generateOffers, negotiate, rankOffers, leagueOf, marketValue, salaryFor, type Offer } from './market';
+import { FORCE_EXIT, clubLevelOf, eliteValueFactor, generateOffers, negotiate, rankOffers, leagueOf, marketValue, salaryFor, type Offer } from './market';
 import { drawCatalog, drawCount } from './contextDraw';
 import { contextCtx, tagsOf } from './contextTags';
 import contextCfg from '../data/context.json';
@@ -24,7 +24,7 @@ import { ONCE, memoryCtx, type Memory } from './memory';
 import { EFFECTS, FACTS, fireMilestones, milestoneKey, type MilestoneFacts } from './milestones';
 import { MEETING_EVENT, autoProposal, encodeProposal, meetingScore, parseProposal, staffMeeting, type MeetingResult } from './meeting';
 import { MEETING_IDEAS, TRUST, drawClubNeed, ideaOf, meetingOptions, type Idea, type MeetingOptions } from './meetingOptions';
-import { clubLevelBand, expectedMinutes, minutesShare, roleFor, squadLevel, updateForm, updateMorale, type Role } from './minutes';
+import { expectedMinutes, minutesShare, roleFor, squadLevel, updateForm, updateMorale, type Role } from './minutes';
 import { overall, type Position } from './overall';
 import { coachProposal } from './positionChange';
 import { createPlayer, type CreationInput, type Player } from './player';
@@ -86,7 +86,7 @@ export interface CareerResult {
   negotiations: { year: number; clubId: string; result: 'melhorou' | 'igual' | 'sumiu' }[];
   /** T28e: saídas forçadas (antes do fim do contrato) e se o jogador virou vilão da torcida do clube que deixou. */
   forcedExits: { year: number; fromClubId: string; toClubId: string; villain: boolean }[];
-  seasons: { year: number; age: number; clubId: string; division: string | null; minutes: number; overall: number }[];
+  seasons: { year: number; age: number; clubId: string; division: string | null; minutes: number; overall: number; goals: number; assists: number }[];
 }
 
 /** T51: o momento de uma decisão, para a tela mostrar o jogador como ele está ali. */
@@ -562,11 +562,13 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     }
     // Números e prêmios da temporada (só no profissional).
     let seasonGoals = 0;
+    let seasonAssists = 0;
     if (clubId && !inYouth) {
       const raw = seasonStats({ position, overall: ov(evo), minutes: avgMinutes, league, teamResult, setPieceTaker: traits.traits.includes('cobrador') }, yr);
       // T25c: cobrador do time (marco "assumir a bola parada") faz alguns gols a mais; o goleiro cobrador segue stats.json
       const st = cobradorClub === clubId && position !== 'goleiro' ? { ...raw, goals: Math.round(raw.goals * (1 + EFFECTS.cobradorGolsExtra)) } : raw;
       seasonGoals = st.goals;
+      seasonAssists = st.assists;
       goalsAtClub[clubId] = (goalsAtClub[clubId] ?? 0) + st.goals;
       stats = addStats(stats, st);
       const won = seasonAwards({
@@ -575,7 +577,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       }, yr);
       for (const award of won) if (award !== 'revelacao' || !awards.some((a) => a.award === 'revelacao')) awards.push({ year, award });
     }
-    seasons.push({ year, age: evo.age - 1, clubId: seasonClub, division: league, minutes: avgMinutes, overall: ov(evo) });
+    seasons.push({ year, age: evo.age - 1, clubId: seasonClub, division: league, minutes: avgMinutes, overall: ov(evo), goals: seasonGoals, assists: seasonAssists });
 
     // Camisa 10 e faixa do clube por evento.
     if (clubId && !inYouth) {
@@ -674,7 +676,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         projectedValueEUR: projectValue({
           evo, position, bonus: position === input.position ? arch.overallWeightBonus : undefined, clubRep: effectiveRep(o.clubId),
           role: o.role, staffQuality: o.staffQuality, morale,
-        }).valueEUR,
+        }).valueEUR * eliteValueFactor(o.clubId),
       });
       const canForce = !!c && c.years > 1;
       // T28j (v2.54): o clube atual é o primeiro cartão; com o contrato no fim, a renovação (e o pedido de aumento) saem dele.
@@ -683,14 +685,14 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         const k = c!;
         const rep = effectiveRep(clubId!);
         const role = roleFor(me.overall, rep, evo.age);
-        const projected = projectValue({ evo, position, bonus: position === input.position ? arch.overallWeightBonus : undefined, clubRep: rep, role, staffQuality: clamp(0.8 + (rep / 100) * 0.4, 0.8, 1.2), morale }).valueEUR;
+        const projected = projectValue({ evo, position, bonus: position === input.position ? arch.overallWeightBonus : undefined, clubRep: rep, role, staffQuality: clamp(0.8 + (rep / 100) * 0.4, 0.8, 1.2), morale }).valueEUR * eliteValueFactor(clubId!);
         const renewalOf = (raise: boolean) => {
           const r = renew(k, ov(evo) - contractOverall, raise);
           return { salarioMensal: Math.round(r.annualSalary / 12), salarioPct: salaryChange(r.annualSalary, k.annualSalary), anos: r.years };
         };
         return {
           clubId: clubId!, league: leagueOf(clubId!, divOf), currency: k.currency, salarioMensal: Math.round(k.annualSalary / 12), anosRestantes: Math.max(0, k.years - 1),
-          role, nivelClube: clubLevelBand(rep), valorProjetadoEUR: projected, valorPct: valueChange(projected, todayValue),
+          role, nivelClube: clubLevelOf(clubId!, rep), valorProjetadoEUR: projected, valorPct: valueChange(projected, todayValue),
           renovacao: due ? renewalOf(false) : null, aumento: due ? renewalOf(true) : null,
         };
       };

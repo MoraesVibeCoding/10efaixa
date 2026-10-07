@@ -33,7 +33,10 @@
 .linha__divisao { grid-column: 2; font-size: 0.875rem; opacity: 0.8; }
 .linha__over { grid-row: 1; grid-column: 3; font-family: var(--fonte-titulo); font-weight: 800; }
 .linha__auge { grid-column: 3; font-size: 0.75rem; text-transform: uppercase; text-align: end; }
-.linha__titulos { grid-column: 2 / -1; font-size: 0.9rem; font-weight: 600; }
+.linha__numeros { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: 0 var(--espaco-3); font-size: 0.875rem; font-variant-numeric: tabular-nums; }
+.linha__titulos { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: var(--espaco-1) var(--espaco-3); font-size: 0.9rem; font-weight: 600; }
+.linha__taca { display: inline-flex; align-items: center; gap: var(--espaco-1); }
+.linha__taca .trofeu__arte { inline-size: 1.75rem; block-size: 1.75rem; object-fit: contain; }
 .linha__cartao {
   position: sticky;
   inset-block-end: var(--espaco-3);

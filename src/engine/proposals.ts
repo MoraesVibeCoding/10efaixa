@@ -1,7 +1,7 @@
 import { minutesChange, salaryChange, valueChange, type Change } from './contractCard';
 import { effectiveRep } from './europe';
-import { toBRL, type Offer } from './market';
-import { clubLevelBand, expectedMinutes, minutesBand, type ClubLevelBand, type MinutesBand } from './minutes';
+import { clubLevelOf, toBRL, type Offer } from './market';
+import { expectedMinutes, minutesBand, type ClubLevelBand, type MinutesBand } from './minutes';
 
 // T28b (SPEC 6.12, v2.50): a decisão "proposta-clube", no mesmo molde da reunião (as opções mudam a cada temporada,
 // então a escolha é um texto conferido contra as propostas mostradas, e não uma opção fixa de events.json).
@@ -52,7 +52,7 @@ export interface CardContext { currentAnnualSalaryBRL: number | null; todayValue
 export const proposalViewOf = (o: Offer, overall: number, card?: CardContext): ProposalView => ({
   clubId: o.clubId, league: o.league, currency: o.currency, annualSalary: o.annualSalary, years: o.years,
   role: o.role, staffQuality: o.staffQuality, offAxis: o.offAxis,
-  minutosFaixa: minutesBand({ overall, clubRep: effectiveRep(o.clubId), role: o.role }), nivelClube: clubLevelBand(effectiveRep(o.clubId)),
+  minutosFaixa: minutesBand({ overall, clubRep: effectiveRep(o.clubId), role: o.role }), nivelClube: clubLevelOf(o.clubId, effectiveRep(o.clubId)),
   marca: o.heartClub ? 'coracao' : o.rivalOfHeart ? 'rivalCoracao' : o.rivalOfCurrent ? 'rival' : null,
   salarioMensal: Math.round(o.annualSalary / 12),
   salarioPct: card ? salaryChange(toBRL(o), card.currentAnnualSalaryBRL) : null,

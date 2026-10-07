@@ -9,7 +9,7 @@ import { divisionLabel } from './LinhaDoTempo';
 // T28c (SPEC 6.12, v2.28/v2.50): o texto de uma proposta na tela. Minutos e nível do clube só em palavras (faixas).
 export interface ProposalText {
   clube: string; liga: string; salario: string; contrato: string; papel: string; minutos: string; nivel: string; aviso: string | null; marca: string | null;
-  /** T28k: salário por mês com a variação, valor projetado (estimativa) com a variação e a reputação em estrelas (1 a 6). */
+  /** T28k: salário por mês com a variação, valor projetado (estimativa) com a variação e a reputação em estrelas (1 a 7). */
   salarioMes: string; salarioVar: ChangeText | null; valorProj: string; valorVar: ChangeText | null; estrelas: number;
   /** T28m: minutos neste clube contra o atual, em palavras (null = sem clube atual para comparar). */
   minutosVs: string | null;
@@ -22,7 +22,7 @@ export function changeText(c: Change | null): ChangeText | null {
   const key = c.sentido === 'sobe' && c.pct >= cfg.pctMaximo ? 'muito' : c.sentido;
   return { texto: t(`ui.proposta.pct.${key}`, { pct: Math.abs(c.pct) }), sentido: c.sentido };
 }
-/** Reputação do clube em estrelas, de 1 (sem expressão) a 6 (gigante). */
+/** Reputação do clube em estrelas, de 1 (sem expressão) a 7 (elite mundial). */
 export const starsOf = (nivel: ProposalView['nivelClube']): number => LEVELS.indexOf(nivel) + 1;
 
 export const money = (amount: number, currency: string) =>
