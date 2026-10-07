@@ -1,4 +1,4 @@
-import { autoDecide, simulateCareer, type Decider } from '../engine/career';
+import { autoDecide, simulateCareer, type Decider, type DecisionView } from '../engine/career';
 import { autoChoice } from '../engine/events';
 import { PROPOSAL_EVENT } from '../engine/proposals';
 import { MEETING_EVENT, parseProposal } from '../engine/meeting';
@@ -14,7 +14,7 @@ const input = (over: Partial<CreationInput> = {}): CreationInput => ({
 });
 
 /** Joga a carreira; nas reuniões responde `meeting(view)`, nos eventos a escolha automática. Devolve o que veio à tela. */
-function play(ritmo: Ritmo, meeting: (sugestao: string) => string = (s) => s, seed = 11) {
+function play(ritmo: Ritmo, meeting: (sugestao: string, view: DecisionView) => string = (s) => s, seed = 11) {
   const choices: string[] = [];
   const shown: { eventId: string; year: number; semestre?: number; clubId: string | null; meetings: { year: number; semestre: number; response: string }[] }[] = [];
   for (let g = 0; g < 600; g++) {
@@ -22,7 +22,7 @@ function play(ritmo: Ritmo, meeting: (sugestao: string) => string = (s) => s, se
     if (step.kind === 'done') return { result: step.result, shown };
     const v = step.view;
     shown.push({ eventId: step.eventId, year: v.year, semestre: v.state.semestre as number | undefined, clubId: v.clubId, meetings: v.meetings });
-    choices.push(step.eventId === MEETING_EVENT ? meeting(String(v.state.sugestao)) : autoDecide(step.eventId, v.temperament, () => v));
+    choices.push(step.eventId === MEETING_EVENT ? meeting(String(v.state.sugestao), v) : autoDecide(step.eventId, v.temperament, () => v));
   }
   throw new Error('carreira não terminou');
 }
@@ -60,7 +60,8 @@ describe('reunião com a comissão como decisão (T52)', () => {
     const { shown } = play('normal');
     const sug = shown.find((s) => s.eventId === MEETING_EVENT);
     expect(sug).toBeDefined();
-    const other = play('normal', (s) => (s.startsWith('jogoAereo') ? 'marcacao|forca' : 'jogoAereo|marcacao'));
+    // T52d: a proposta livre não existe mais; "outra" é a ideia ousada em vez da sugestão (óbvia)
+    const other = play('normal', (_s, v) => `${v.reuniao!.ousada.proposal.main}|${v.reuniao!.ousada.proposal.secondary}`);
     expect(other.result).not.toEqual(play('normal').result);
   });
 

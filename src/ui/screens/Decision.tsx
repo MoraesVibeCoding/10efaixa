@@ -171,7 +171,7 @@ function recentFirst(seasons: Season[]) {
 }
 
 /** Gaveta "Minha carreira" (SPEC v2.21): o que saiu da tela de decisão para ela caber no celular. Fecha pelo botão, por Esc ou tocando fora. */
-function Career({ player, onClose }: { player: DecisionProps['player']; onClose: () => void }) {
+export function Career({ player, onClose }: { player: DecisionProps['player']; onClose: () => void }) {
   const close = useRef<HTMLButtonElement>(null);
   useEffect(() => { close.current?.focus(); }, []);
   const seasons = recentFirst(player.seasons ?? []);
@@ -385,7 +385,7 @@ function Rolled({ final, shown }: { final: string; shown: string }) {
   return shown === final ? final : <><span aria-hidden="true">{shown}</span><span className="sr-only">{final}</span></>;
 }
 
-function PlayerBox({ player, age, anterior, open, opener, onOpen, inert }: {
+export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert }: {
   player: DecisionProps['player']; age: number; anterior?: Anterior; open: boolean; opener: React.RefObject<HTMLButtonElement | null>; onOpen: () => void; inert: boolean;
 }) {
   const over = useRolling(player.overall, anterior?.overall);
@@ -519,7 +519,7 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
 
 /** v2.47: a duração das transições vem dos dados (motion.json). */
 const NONE: Moment[] = [];
-const TRANSITION = { '--transicao': `${MOTION.transicaoMs}ms` } as React.CSSProperties;
+export const TRANSITION = { '--transicao': `${MOTION.transicaoMs}ms` } as React.CSSProperties;
 
 function hasText(eventId: string): boolean {
   try { t(`events.${eventId}.texto`); return true; } catch { return false; }

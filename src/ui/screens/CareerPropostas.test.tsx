@@ -24,7 +24,7 @@ function playUntilProposals() {
   for (let guard = 0; guard < 400 && !onProposalScreen(); guard++) {
     const resposta = document.querySelector('dialog.reuniao__resposta');
     if (resposta) { fireEvent.click(resposta.querySelector('button')!); continue; }
-    if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') })); continue; }
+    if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') })); continue; }
     const el = document.querySelector('[data-evento]');
     if (!el) break;
     const choice = autoChoice(el.getAttribute('data-evento')!, document.querySelector('[data-temperamento]')!.getAttribute('data-temperamento')!);

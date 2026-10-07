@@ -3,8 +3,7 @@ import { App } from './App';
 import { SAVE_KEY } from './state/save';
 import { dailySeed } from './engine/daily';
 import { autoDecide } from './engine/career';
-import { FOCI, type Focus } from './engine/evolution';
-import { MEETING_EVENT, encodeProposal } from './engine/meeting';
+import { MEETING_EVENT } from './engine/meeting';
 import { runUntilDecision } from './state/careerRun';
 import { careerLinkFragment } from './share/careerLink';
 import { VISUAIS } from './ui/screens/look';
@@ -31,7 +30,7 @@ function passMeetings() {
   for (let guard = 0; guard < 6; guard++) {
     const resposta = document.querySelector('dialog.reuniao__resposta');
     if (resposta) { fireEvent.click(resposta.querySelector('button')!); continue; }
-    if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') })); continue; }
+    if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') })); continue; }
     // T28d: tela de propostas de clube (fica no clube; sem clube, aceita a primeira)
     if (screen.queryByRole('heading', { level: 1, name: t('ui.proposta.titulo') })) { fireEvent.click(screen.queryByRole('button', { name: t('ui.proposta.ficar') }) ?? screen.getAllByRole('button', { name: /Aceitar proposta/ })[0]!); continue; }
     return;
@@ -227,7 +226,7 @@ describe('App: rever carreira por link (T57d)', () => {
     for (let guard = 0; guard < 500; guard++) {
       const step = runUntilDecision({ ...linkInput, name: 'Original Secreto' }, seed, choices, 'completo');
       if (step.kind === 'done') break;
-      choices.push(step.eventId === MEETING_EVENT ? encodeProposal({ main: FOCI[0] as Focus, secondary: FOCI[1] as Focus }) : autoDecide(step.eventId, step.view.temperament, () => step.view));
+      choices.push(step.eventId === MEETING_EVENT ? String(step.view.state.sugestao) : autoDecide(step.eventId, step.view.temperament, () => step.view));
     }
     return { hash: careerLinkFragment({ seed, ritmo: 'completo', input: linkInput, visual: VISUAIS[0]!.id, choices, codigo: '10F-7K3Q-9M2X', ...extra }), seed };
   }

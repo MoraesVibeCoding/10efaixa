@@ -4,6 +4,10 @@
   "hardFloor": 0.2,
   "refuseBelow": 0.35,
   "acceptFrom": 0.6,
+  "tresIdeias": true,
+  "_tresIdeias": "T52c (v2.53): reunião em 3 ideias no motor (necessidade do clube pela posição, confiança do técnico por ideia, proposta fora dos 3 recusada). Ligado com a tela da T52d; desligado, vale a regra de antes.",
+  "confianca": { "_nota": "T52c: variação da confiança do técnico (relação, 0–1) conforme a ideia aceita; contraproposta custa um pouco; recusa não muda.", "obvia": 0.01, "mescla": 0.005, "ousada": -0.015, "contraproposta": -0.01 },
+  "agrado": { "_nota": "T52b (v2.53): faixas da dica de agrado, pela chance de a comissão concordar com o foco principal (limite inferior de cada faixa).", "muito": 0.66, "possivel": 0.33 },
   "physical": ["forca", "fisico", "velocidade"],
   "injuryRisk": { "main": 0.3, "secondary": 0.15 }
 }

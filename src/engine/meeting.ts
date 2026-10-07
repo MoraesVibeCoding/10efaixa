@@ -69,12 +69,15 @@ const risk = ({ main, secondary }: MeetingResult['focus']) =>
 const result = (response: MeetingResult['response'], focus: MeetingResult['focus'], reason?: MeetingResult['reason']): MeetingResult =>
   ({ response, ...(reason && { reason }), focus, injuryRiskMultiplier: risk(focus) });
 
+/** Pontuação da comissão (moral, relação e Seleção) que decide aceitar, contrapropor ou recusar; a dica de agrado da tela usa a mesma. */
+export const meetingScore = (i: Pick<MeetingInput, 'morale' | 'coachRelation' | 'nationalTeamStatus'>): number =>
+  cfg.weights.morale * i.morale + cfg.weights.coachRelation * i.coachRelation + cfg.weights.nationalTeamStatus * i.nationalTeamStatus;
+
 export function staffMeeting(i: MeetingInput): MeetingResult {
   validate(i);
   if (i.morale < cfg.hardFloor) return result('recusa', {}, 'moral');
   if (i.coachRelation < cfg.hardFloor) return result('recusa', {}, 'relacao');
-  const w = cfg.weights;
-  const score = w.morale * i.morale + w.coachRelation * i.coachRelation + w.nationalTeamStatus * i.nationalTeamStatus;
+  const score = meetingScore(i);
   if (score < cfg.refuseBelow - EPS) return result('recusa', {}, 'score');
   const { main, secondary } = i.proposal;
   if (score < cfg.acceptFrom - EPS && main !== i.clubNeed) {

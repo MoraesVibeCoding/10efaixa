@@ -1,44 +1,75 @@
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { fireEvent, render, screen, within } from '@testing-library/react';
+import type { MeetingOptions } from '../../engine/meetingOptions';
 import { t } from '../../i18n';
 import { Reuniao, ReuniaoResposta } from './Reuniao';
 
-// T52 (SPEC 6.5, v2.40): a reunião com a comissão. Foco principal e secundário (10 atributos, bola parada, perna
-// ruim), abrindo com a sugestão do preparador; depois, a resposta da comissão.
-const group = (k: 'principal' | 'secundario') => screen.getByRole('radiogroup', { name: t(`ui.reuniao.${k}`) });
+// T52d (SPEC 6.5, v2.53): a reunião com a comissão em 3 ideias (óbvia, mescla, ousada), no desenho aprovado: card do jogador no topo,
+// fala do treinador e três cartões selecionáveis; depois, a resposta da comissão.
 const focusName = (f: string) => (f === 'bolaParada' || f === 'pernaRuim' ? t(`ui.reuniao.foco.${f}`) : t(`attributes.attribute.${f}`));
+const PLAYER = {
+  name: 'Pedro', position: 'volante', clubId: 'flamengo', overall: 80, titles: [] as string[], role: 'rodizio',
+  monthlySalary: { amount: 29_900, currency: 'EUR' as const }, marketValueEUR: 8_200_000,
+};
+const IDEIAS: MeetingOptions = {
+  obvia: { proposal: { main: 'fisico', secondary: 'passe' }, agrado: 'muito' },
+  mescla: { proposal: { main: 'fisico', secondary: 'drible' }, agrado: 'possivel' },
+  ousada: { proposal: { main: 'drible', secondary: 'finalizacao' }, agrado: 'pouco' },
+};
+const setup = (onChoose = vi.fn()) => {
+  render(<Reuniao ideias={IDEIAS} player={PLAYER} age={19} progress={0.1} scene={{ src: 'c.webp', alt: 'Sala de reuniões' }} onChoose={onChoose} />);
+  return onChoose;
+};
+const cards = () => within(screen.getByRole('radiogroup', { name: t('ui.reuniao.ideias') })).getAllByRole('radio');
 
-describe('tela da reunião (T52)', () => {
-  it('título, a sugestão do preparador por escrito e os dois grupos com os 12 focos, já marcados com a sugestão', () => {
-    render(<Reuniao sugestao="passe|drible" onChoose={() => {}} />);
+describe('tela da reunião em 3 ideias (T52d)', () => {
+  it('título, a fala do treinador com o nome do jogador e o card do jogador no topo', () => {
+    setup();
     expect(screen.getByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })).toBeInTheDocument();
-    expect(screen.getByText(t('ui.reuniao.sugestao', { principal: focusName('passe'), secundario: focusName('drible') }))).toBeInTheDocument();
-    for (const k of ['principal', 'secundario'] as const) expect(within(group(k)).getAllByRole('radio')).toHaveLength(12);
-    expect(within(group('principal')).getByRole('radio', { name: focusName('passe') })).toBeChecked();
-    expect(within(group('secundario')).getByRole('radio', { name: focusName('drible') })).toBeChecked();
+    expect(screen.getByText(t('ui.reuniao.sala'))).toBeInTheDocument();
+    expect(screen.getByText(t('ui.reuniao.fala', { nome: 'Pedro' }))).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: new RegExp(t('ui.carreira.titulo')) })).toBeInTheDocument();
   });
 
-  it('"Propor ao técnico" manda "principal|secundário"', () => {
-    const onChoose = vi.fn();
-    render(<Reuniao sugestao="passe|drible" onChoose={onChoose} />);
-    fireEvent.click(within(group('principal')).getByRole('radio', { name: focusName('bolaParada') }));
-    fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') }));
-    expect(onChoose).toHaveBeenCalledWith('bolaParada|drible');
+  it('três cartões em grupo de rádio, cada um com os dois focos', () => {
+    setup();
+    expect(cards()).toHaveLength(3);
+    expect(cards()[0]).toHaveAccessibleName(new RegExp(`${focusName('fisico')}.*${focusName('passe')}`));
+    expect(cards()[1]).toHaveAccessibleName(new RegExp(`${focusName('fisico')}.*${focusName('drible')}`));
+    expect(cards()[2]).toHaveAccessibleName(new RegExp(`${focusName('drible')}.*${focusName('finalizacao')}`));
   });
 
-  it('principal e secundário nunca ficam iguais: marcar no principal o que era o secundário troca os dois', () => {
-    const onChoose = vi.fn();
-    render(<Reuniao sugestao="passe|drible" onChoose={onChoose} />);
-    fireEvent.click(within(group('principal')).getByRole('radio', { name: focusName('drible') }));
-    expect(within(group('secundario')).getByRole('radio', { name: focusName('passe') })).toBeChecked();
-    fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') }));
-    expect(onChoose).toHaveBeenCalledWith('drible|passe');
+  it('o cartão 1 não tem rótulo nem dica de confiança; a mescla e a ousada dizem o agrado em palavras', () => {
+    setup();
+    expect(screen.queryByText(t('ui.reuniao.agrado.muito'))).toBeNull();
+    expect(screen.getByText(t('ui.reuniao.agrado.possivel'))).toBeInTheDocument();
+    expect(screen.getByText(t('ui.reuniao.agrado.pouco'))).toBeInTheDocument();
+    expect(screen.queryByText(/sugerido|óbvio|obvio/i)).toBeNull();
   });
 
-  it('nenhum número de atributo na tela', () => {
-    render(<Reuniao sugestao="passe|drible" onChoose={() => {}} />);
-    expect(screen.getByRole('main').textContent).not.toMatch(/\d/);
+  it('"Propor ao técnico" só vale depois de escolher uma ideia e manda "principal|secundário" dela', () => {
+    const onChoose = setup();
+    const propor = screen.getByRole('button', { name: t('ui.reuniao.propor') });
+    expect(propor).toBeDisabled();
+    fireEvent.click(propor);
+    expect(onChoose).not.toHaveBeenCalled();
+    fireEvent.click(cards()[1]!);
+    expect(cards()[1]).toBeChecked();
+    expect(propor).toBeEnabled();
+    fireEvent.click(propor);
+    expect(onChoose).toHaveBeenCalledWith('fisico|drible');
+  });
+
+  it('escolher outro cartão troca a marca (um só marcado)', () => {
+    setup();
+    fireEvent.click(cards()[0]!);
+    fireEvent.click(cards()[2]!);
+    expect(cards().filter((c) => (c as HTMLInputElement).checked)).toHaveLength(1);
+    expect(cards()[2]).toBeChecked();
+  });
+
+  it('nenhum número de atributo nos cartões', () => {
+    setup();
+    expect(screen.getByRole('radiogroup', { name: t('ui.reuniao.ideias') }).textContent).not.toMatch(/\d/);
   });
 });
 
@@ -64,13 +95,5 @@ describe('resposta da comissão (T52)', () => {
     fireEvent.click(seguir);
     fireEvent.click(seguir);
     expect(onDone).toHaveBeenCalledOnce();
-  });
-});
-
-describe('layout da reunião (T52)', () => {
-  it('CSS: os 12 focos aparecem todos, quebrando em linhas (sem a faixa que desliza da criação)', () => {
-    const css = readFileSync(resolve(__dirname, 'Reuniao.css'), 'utf8');
-    expect(css).toMatch(/\.reuniao \.escolhas__lista\s*\{[^}]*flex-wrap:\s*wrap/);
-    expect(css).toMatch(/\.reuniao \.escolhas__lista\s*\{[^}]*overflow:\s*visible/);
   });
 });
