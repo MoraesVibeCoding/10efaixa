@@ -19,3 +19,9 @@
 
 ## Revisão de equilíbrio pedida pelo usuário
 - Muitas reuniões, muitas decisões de contrato/renovação, vida pessoal na média e pouco jogo em campo: ver `docs/revisao-equilibrio-decisoes.md` (números medidos e ideias). Itens a decidir junto com a reunião em 3 ideias e a tela de contratos.
+
+## Medição de equilíbrio: reunião em 3 ideias (T52c, 2026-10-07)
+Simulação pareada (`npm run sim:estilos`, 300 carreiras por estilo, mesmas sementes), regra antiga × nova (necessidade do clube pela posição, confiança por ideia, automático = ideia óbvia):
+- **"Lenda" geral:** 5,63% → 5,78% (+0,15 pt). **Pico de Over médio:** 86,64 → 86,77.
+- **Por estilo:** antes 4,0% a 6,7%; depois **4,3% a 7,0%**, dentro da faixa combinada (4,3% a 7,0%). Maiores variações: Ponta trabalhador +1,7 pt, Lateral apoiador +1,3 pt, Goleiro seguro −1,3 pt (ruído de amostra de ±1,3 pt com 300 carreiras).
+- Conclusão: o equilíbrio não saiu da faixa; uma medição com 1000+ carreiras por estilo fica para o fim.
