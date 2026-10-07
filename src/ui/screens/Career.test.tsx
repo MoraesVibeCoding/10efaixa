@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import type { CreationInput } from '../../engine/player';
-import { simulateCareer } from '../../engine/career';
+import { runUntilDecision } from '../../state/careerRun';
 import { autoChoice } from '../../engine/events';
 import { t } from '../../i18n';
 import { careerCode } from '../../engine/careerCode';
@@ -16,6 +16,15 @@ const INPUT: CreationInput = {
   origin: 'baseGrande', foot: 'direita', heartClub: 'bahia',
 };
 const LOOK = { skin: 't6', hairStyle: 'curto', hairColor: 'preto', beard: null, headband: null, boots: 'preta' };
+
+
+/** T28d: a tela de propostas, se for a da vez: fica no clube (ou, sem clube, aceita a primeira proposta). */
+function passProposals(): boolean {
+  if (!screen.queryByRole('heading', { level: 1, name: t('ui.proposta.titulo') })) return false;
+  const stay = screen.queryByRole('button', { name: t('ui.proposta.ficar') });
+  fireEvent.click(stay ?? screen.getAllByRole('button', { name: /Aceitar proposta/ })[0]!);
+  return true;
+}
 
 describe('carreira na tela (T51b)', () => {
   it('mostra a primeira decisão com o jogador de verdade', () => {
@@ -35,6 +44,7 @@ describe('carreira na tela (T51b)', () => {
       const resposta = document.querySelector('dialog.reuniao__resposta');
       if (resposta) { fireEvent.click(resposta.querySelector('button')!); continue; }
       if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') })); continue; }
+      if (passProposals()) continue;
       const eventId = document.querySelector('[data-evento]')!.getAttribute('data-evento')!;
       const choice = autoChoice(eventId, document.querySelector('[data-temperamento]')!.getAttribute('data-temperamento')!);
       fireEvent.click(document.querySelector(`[data-opcao-id="${choice}"]`)!);
@@ -43,7 +53,10 @@ describe('carreira na tela (T51b)', () => {
     }
     // T55b: "Sua história" antes do resumo
     fireEvent.click(screen.getByRole('button', { name: t('ui.linhaDoTempo.verCartao') }));
-    const result = simulateCareer(INPUT, 11);
+    // com propostas na tela o jogador pode escolher diferente do automático: a conta é a carreira refeita com as escolhas dele
+    const played = runUntilDecision(INPUT, 11, onProgress.mock.calls.at(-1)![0] as string[], 'normal');
+    if (played.kind !== 'done') throw new Error('a carreira devia ter terminado');
+    const result = played.result;
     // T55d: o cartão (canvas) com o texto alternativo da versão narrativa, que abre primeiro
     expect(screen.getByRole('heading', { level: 1, name: t('ui.cartao.titulo') })).toBeInTheDocument();
     const card = screen.getByRole('img', { name: /Cartão de carreira/ });
@@ -76,6 +89,7 @@ describe('carreira na tela (T51b)', () => {
   it('no Normal, a reunião do meio do ano abre com a sugestão; depois de propor, vem a resposta da comissão por cima da tela', () => {
     render(<Career input={INPUT} look={LOOK} seed={11} ritmo="normal" onRestart={() => {}} />);
     for (let guard = 0; guard < 60 && !screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') }); guard++) {
+      if (passProposals()) continue;
       const eventId = document.querySelector('[data-evento]')!.getAttribute('data-evento')!;
       fireEvent.click(document.querySelector(`[data-opcao-id="${autoChoice(eventId, document.querySelector('[data-temperamento]')!.getAttribute('data-temperamento')!)}"]`)!);
       fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
@@ -98,6 +112,7 @@ describe('carreira na tela (T51b)', () => {
       const resposta = document.querySelector('dialog.reuniao__resposta');
       if (resposta) { fireEvent.click(resposta.querySelector('button')!); continue; }
       if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') })); continue; }
+      if (passProposals()) continue;
       const key = document.querySelector('.carreira')!.getAttribute('data-semestre') ?? '';
       const line = document.querySelector('.decisao__semestre');
       if (seen.has(key)) expect(line, `repetiu ${key}`).toBeNull();

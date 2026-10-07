@@ -3,6 +3,8 @@
  "inicial": "abertura",
  "decisoesPorTemporada": { "rapido": 1, "normal": 3, "completo": null },
  "reunioesNaTela": { "rapido": [], "normal": [2], "completo": [1, 2] },
+ "_propostasNaTela": "T28b/T28d (v2.50): se a proposta de clube vai à tela em cada ritmo. Ligado nos três com a tela de propostas (T28d); desligado, o automático decide como antes.",
+ "propostasNaTela": { "rapido": true, "normal": true, "completo": true },
  "passosCriacao": ["quemE", "visual", "emCampo", "origem"],
  "telas": {
   "abertura": { "NOVA_CARREIRA": "criacao", "CONTINUAR": "temporada", "SAVE_INVALIDO": "saveInvalido" },

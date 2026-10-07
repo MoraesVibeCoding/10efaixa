@@ -1,0 +1,57 @@
+import { fireEvent, render, screen, within } from '@testing-library/react';
+import type { ProposalView } from '../../engine/proposals';
+import { t } from '../../i18n';
+import { Propostas } from './Propostas';
+
+// T28d (SPEC 6.12, v2.50): a tela de propostas de clube: até 3 propostas e "Ficar no clube".
+const proposta = (over: Partial<ProposalView> = {}): ProposalView => ({
+  clubId: 'flamengo', league: 'BRA-A', currency: 'BRL', annualSalary: 2_400_000, years: 3, role: 'titular', staffQuality: 1.1, offAxis: false,
+  minutosFaixa: 'muitos', nivelClube: 'grande', ...over,
+});
+const duas = [proposta(), proposta({ clubId: 'benfica', league: 'POR', currency: 'EUR', annualSalary: 1_200_000, role: 'rodizio', minutosFaixa: 'rodizio', nivelClube: 'grande', offAxis: true })];
+
+describe('tela de propostas (T28d)', () => {
+  it('título em h1 com o foco nele, uma proposta por item de lista e a legenda dos dois pesos', () => {
+    render(<Propostas propostas={duas} podeFicar onChoose={() => {}} />);
+    const h1 = screen.getByRole('heading', { level: 1, name: t('ui.proposta.titulo') });
+    expect(h1).toHaveFocus();
+    expect(screen.getAllByRole('listitem')).toHaveLength(2);
+    expect(screen.getByText(t('ui.proposta.legenda'))).toBeInTheDocument();
+  });
+
+  it('cada proposta lê clube, liga, salário, contrato, papel, minutos e nível do clube', () => {
+    render(<Propostas propostas={duas} podeFicar onChoose={() => {}} />);
+    const first = within(screen.getAllByRole('listitem')[0]!);
+    expect(first.getByText('Flamengo')).toBeInTheDocument();
+    expect(first.getByText('Série A')).toBeInTheDocument();
+    expect(first.getByText(/2,4\smi\spor ano/)).toBeInTheDocument();
+    expect(first.getByText('3 anos de contrato')).toBeInTheDocument();
+    expect(first.getByText(t('ui.proposta.papel.titular'))).toBeInTheDocument();
+    expect(first.getByText(t('ui.proposta.minutos.muitos'))).toBeInTheDocument();
+    expect(first.getByText(t('ui.proposta.nivel.grande'))).toBeInTheDocument();
+    expect(within(screen.getAllByRole('listitem')[1]!).getByText(t('ui.proposta.foraDoEixo'))).toBeInTheDocument();
+  });
+
+  it('"Aceitar proposta" escolhe aquele clube; o nome do botão diz qual clube (leitor de tela)', () => {
+    const onChoose = vi.fn();
+    render(<Propostas propostas={duas} podeFicar onChoose={onChoose} />);
+    fireEvent.click(screen.getByRole('button', { name: /Aceitar proposta do Flamengo/ }));
+    expect(onChoose).toHaveBeenLastCalledWith('aceitar:flamengo');
+    fireEvent.click(screen.getByRole('button', { name: /Aceitar proposta do Benfica/ }));
+    expect(onChoose).toHaveBeenLastCalledWith('aceitar:benfica');
+  });
+
+  it('"Ficar no clube" escolhe ficar e só existe quando há clube para ficar', () => {
+    const onChoose = vi.fn();
+    const { rerender } = render(<Propostas propostas={duas} podeFicar onChoose={onChoose} />);
+    fireEvent.click(screen.getByRole('button', { name: t('ui.proposta.ficar') }));
+    expect(onChoose).toHaveBeenCalledWith('ficar');
+    rerender(<Propostas propostas={duas} podeFicar={false} onChoose={onChoose} />);
+    expect(screen.queryByRole('button', { name: t('ui.proposta.ficar') })).toBeNull();
+  });
+
+  it('os emblemas são decorativos (o nome do clube já está no texto)', () => {
+    const { container } = render(<Propostas propostas={duas} podeFicar onChoose={() => {}} />);
+    expect(container.querySelectorAll('[role="img"]')).toHaveLength(0);
+  });
+});

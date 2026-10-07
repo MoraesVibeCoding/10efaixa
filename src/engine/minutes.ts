@@ -28,3 +28,19 @@ export function updateForm(form: number, overall: number, clubRep: number, rng: 
 export function updateMorale(morale: number, minutes: number, role: Role, teamResult: number): number {
   return clamp01(morale + (minutes - cfg.papel[role]) * cfg.moral.pesoMinutos + teamResult * cfg.moral.pesoResultado);
 }
+
+// T28c (SPEC 6.12, v2.28/v2.50): a proposta mostra os minutos previstos e o nível do clube em faixa de texto, sem número.
+export type MinutesBand = 'muitos' | 'rodizio' | 'poucos';
+export type ClubLevelBand = 'modesto' | 'medio' | 'grande' | 'elite';
+
+/** Minutos previstos pelo papel prometido e pelo nível do jogador no elenco (forma neutra, sem ruído); "aposta" conta como promessa. */
+export function minutesBand({ overall, clubRep, role }: { overall: number; clubRep: number; role: Role | 'aposta' }): MinutesBand {
+  const share = clamp01(cfg.papel[role === 'aposta' ? 'promessa' : role] + (overall - squadLevel(clubRep)) * cfg.porPontoRelativo);
+  return share >= cfg.faixas.minutos.muitos ? 'muitos' : share >= cfg.faixas.minutos.rodizio ? 'rodizio' : 'poucos';
+}
+
+/** Nível do clube pela reputação. */
+export function clubLevelBand(rep: number): ClubLevelBand {
+  const f = cfg.faixas.nivelClube;
+  return rep <= f.modesto ? 'modesto' : rep <= f.medio ? 'medio' : rep <= f.grande ? 'grande' : 'elite';
+}

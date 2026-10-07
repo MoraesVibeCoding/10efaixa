@@ -296,7 +296,21 @@
   "completo": { "nome": "Completo", "detalhe": "Sem pressa. Todas as decisões, reuniões e dilemas da carreira." },
   "comecar": "Começar carreira"
  },
-  "linhaDoTempo": {
+  "proposta": {
+  "titulo": "Propostas",
+  "salario": "{valor} por ano",
+  "contrato": "{n} anos de contrato",
+  "contrato_um": "1 ano de contrato",
+  "papel": { "titular": "Titular prometido", "rodizio": "Rodízio prometido", "aposta": "Entra como aposta" },
+  "minutos": { "muitos": "Muitos minutos", "rodizio": "Rodízio de minutos", "poucos": "Poucos minutos" },
+  "nivel": { "modesto": "Clube modesto", "medio": "Clube médio", "grande": "Clube grande", "elite": "Clube de elite" },
+  "foraDoEixo": "Muito salário, pouca visibilidade",
+  "legenda": "Os minutos e o nível do clube pesam na sua evolução. Os minutos são uma previsão, não uma promessa.",
+  "aceitar": "Aceitar proposta",
+  "aceitarDe": "Aceitar proposta {prep} {clube}",
+  "ficar": "Ficar no clube"
+ },
+ "linhaDoTempo": {
   "titulo": "Sua carreira",
   "verCartao": "Ver meu cartão",
   "idade": "{n} anos",

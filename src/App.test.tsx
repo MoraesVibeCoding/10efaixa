@@ -32,6 +32,8 @@ function passMeetings() {
     const resposta = document.querySelector('dialog.reuniao__resposta');
     if (resposta) { fireEvent.click(resposta.querySelector('button')!); continue; }
     if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') })); continue; }
+    // T28d: tela de propostas de clube (fica no clube; sem clube, aceita a primeira)
+    if (screen.queryByRole('heading', { level: 1, name: t('ui.proposta.titulo') })) { fireEvent.click(screen.queryByRole('button', { name: t('ui.proposta.ficar') }) ?? screen.getAllByRole('button', { name: /Aceitar proposta/ })[0]!); continue; }
     return;
   }
 }

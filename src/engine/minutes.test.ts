@@ -1,4 +1,4 @@
-import { minutesShare, squadLevel, updateForm, updateMorale, type MinutesInput } from './minutes';
+import { clubLevelBand, minutesBand, minutesShare, squadLevel, updateForm, updateMorale, type MinutesInput } from './minutes';
 import { createPrng } from './prng';
 
 const avg = (i: MinutesInput, n = 500) => Array.from({ length: n }, (_, s) => minutesShare(i, createPrng(s))).reduce((a, b) => a + b, 0) / n;
@@ -56,5 +56,27 @@ describe('minutos, forma e moral (T21)', () => {
     expect(updateMorale(0.6, 0.85, 'titular', 1)).toBeGreaterThan(updateMorale(0.6, 0.85, 'titular', -1));
     expect(updateMorale(0.99, 1, 'reserva', 1)).toBeLessThanOrEqual(1);
     expect(updateMorale(0.01, 0, 'titular', -1)).toBeGreaterThanOrEqual(0);
+  });
+});
+
+// T28c (SPEC 6.12, v2.28/v2.50): minutos previstos e nível do clube numa proposta, em faixa de texto e sem número.
+describe('faixas da proposta (T28c)', () => {
+  it('minutos previstos: titular acima do elenco = muitos; rodízio no mesmo nível = rodízio; aposta bem abaixo = poucos', () => {
+    expect(minutesBand({ overall: 80, clubRep: 40, role: 'titular' })).toBe('muitos');
+    expect(minutesBand({ overall: squadLevel(60), clubRep: 60, role: 'rodizio' })).toBe('rodizio');
+    expect(minutesBand({ overall: 55, clubRep: 100, role: 'aposta' })).toBe('poucos');
+  });
+
+  it('a faixa acompanha a conta de minutos sem ruído e com forma neutra (mesmo overall: papel melhor, faixa igual ou melhor)', () => {
+    const order = ['poucos', 'rodizio', 'muitos'];
+    for (let ov = 40; ov <= 95; ov += 5) for (const rep of [20, 50, 80, 105]) {
+      const idx = (role: 'titular' | 'rodizio' | 'aposta') => order.indexOf(minutesBand({ overall: ov, clubRep: rep, role }));
+      expect(idx('titular')).toBeGreaterThanOrEqual(idx('rodizio'));
+      expect(idx('rodizio')).toBeGreaterThanOrEqual(idx('aposta'));
+    }
+  });
+
+  it('nível do clube pela reputação: modesto, médio, grande e de elite, em ordem', () => {
+    expect([20, 30, 31, 50, 51, 80, 81, 109].map(clubLevelBand)).toEqual(['modesto', 'modesto', 'medio', 'medio', 'grande', 'grande', 'elite', 'elite']);
   });
 });

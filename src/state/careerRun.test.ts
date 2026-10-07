@@ -1,5 +1,6 @@
 import events from '../data/events.json';
 import { autoDecide, simulateCareer, type Decider } from '../engine/career';
+import { PROPOSAL_EVENT } from '../engine/proposals';
 import { MEETING_EVENT } from '../engine/meeting';
 import { marketValue } from '../engine/market';
 import type { CreationInput } from '../engine/player';
@@ -33,7 +34,7 @@ describe('motor interativo (T51a)', () => {
     const decide: Decider = (e, temp, view) => { seen.push(e); return autoDecide(e, temp, view); };
     expect(simulateCareer(input(), 11, 2026, decide)).toEqual(simulateCareer(input(), 11));
     expect(seen.length).toBeGreaterThan(0);
-    expect(seen.every((e) => EVENT_IDS.has(e) || e === MEETING_EVENT)).toBe(true);
+    expect(seen.every((e) => EVENT_IDS.has(e) || e === MEETING_EVENT || e === PROPOSAL_EVENT)).toBe(true);
   });
 
   it('sem escolhas, para na primeira decisão com a foto do jogador naquele momento', () => {

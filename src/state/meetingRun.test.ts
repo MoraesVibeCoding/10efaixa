@@ -1,5 +1,6 @@
-import { simulateCareer, type Decider } from '../engine/career';
+import { autoDecide, simulateCareer, type Decider } from '../engine/career';
 import { autoChoice } from '../engine/events';
+import { PROPOSAL_EVENT } from '../engine/proposals';
 import { MEETING_EVENT, parseProposal } from '../engine/meeting';
 import type { CreationInput } from '../engine/player';
 import { runUntilDecision, type Ritmo } from './careerRun';
@@ -21,7 +22,7 @@ function play(ritmo: Ritmo, meeting: (sugestao: string) => string = (s) => s, se
     if (step.kind === 'done') return { result: step.result, shown };
     const v = step.view;
     shown.push({ eventId: step.eventId, year: v.year, semestre: v.state.semestre as number | undefined, clubId: v.clubId, meetings: v.meetings });
-    choices.push(step.eventId === MEETING_EVENT ? meeting(String(v.state.sugestao)) : autoChoice(step.eventId, v.temperament));
+    choices.push(step.eventId === MEETING_EVENT ? meeting(String(v.state.sugestao)) : autoDecide(step.eventId, v.temperament, () => v));
   }
   throw new Error('carreira não terminou');
 }
@@ -33,7 +34,7 @@ const meetingsByYear = (shown: ReturnType<typeof play>['shown']) => {
 
 describe('reunião com a comissão como decisão (T52)', () => {
   it('a reunião automática segue igual: responder sempre a sugestão dá a mesma carreira de antes', () => {
-    const auto: Decider = (e, t, v) => (e === MEETING_EVENT ? String(v().state.sugestao) : autoChoice(e, t));
+    const auto: Decider = (e, t, v) => (e === MEETING_EVENT || e === PROPOSAL_EVENT ? String(v().state.sugestao) : autoChoice(e, t));
     expect(simulateCareer(input(), 11, 2026, auto)).toEqual(simulateCareer(input(), 11));
     const played = play('completo');
     expect(played.shown.some((s) => s.eventId === MEETING_EVENT)).toBe(true);
@@ -81,7 +82,7 @@ describe('reunião com a comissão como decisão (T52)', () => {
     const first = runUntilDecision(input(), 11, [], 'completo');
     const toMeeting: string[] = [];
     let step = first;
-    while (step.kind === 'decision' && step.eventId !== MEETING_EVENT) { toMeeting.push(autoChoice(step.eventId, step.view.temperament)); step = runUntilDecision(input(), 11, toMeeting, 'completo'); }
+    while (step.kind === 'decision' && step.eventId !== MEETING_EVENT) { const v = step.view; toMeeting.push(autoDecide(step.eventId, v.temperament, () => v)); step = runUntilDecision(input(), 11, toMeeting, 'completo'); }
     expect(() => runUntilDecision(input(), 11, [...toMeeting, 'passe|passe'], 'completo')).toThrow(RangeError);
   });
 });
