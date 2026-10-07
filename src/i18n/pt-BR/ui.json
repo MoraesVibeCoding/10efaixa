@@ -307,6 +307,7 @@
   "foraDoEixo": "Muito salário, pouca visibilidade",
   "legenda": "Os minutos e o nível do clube pesam na sua evolução. Os minutos são uma previsão, não uma promessa.",
   "aceitar": "Aceitar proposta",
+  "aceitarDe": "Aceitar proposta {prep} {clube}",
   "ficar": "Ficar no clube"
  },
  "linhaDoTempo": {

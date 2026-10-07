@@ -13,6 +13,8 @@ import { momentsBetween } from './moments';
 import events from '../../data/events.json';
 import { Cartao } from './Cartao';
 import { LinhaDoTempo } from './LinhaDoTempo';
+import { PROPOSAL_EVENT } from '../../engine/proposals';
+import { Propostas } from './Propostas';
 import { Reuniao, ReuniaoResposta } from './Reuniao';
 import type { Look } from './look';
 import type { RitmoId } from './Ritmo';
@@ -84,6 +86,14 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
           decide(choice);
         }} />
         {respostaEl}
+      </div>
+    );
+  }
+  if (eventId === PROPOSAL_EVENT) {
+    // T28d: propostas de clube; sem clube atual (contrato rescindido) não há "Ficar"
+    return (
+      <div ref={box} className="carreira" data-temperamento={view.temperament}>
+        <Propostas key={index} propostas={view.propostas ?? []} podeFicar={view.state.podeFicar === true} onChoose={decide} />
       </div>
     );
   }

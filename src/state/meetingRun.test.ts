@@ -1,4 +1,4 @@
-import { simulateCareer, type Decider } from '../engine/career';
+import { autoDecide, simulateCareer, type Decider } from '../engine/career';
 import { autoChoice } from '../engine/events';
 import { PROPOSAL_EVENT } from '../engine/proposals';
 import { MEETING_EVENT, parseProposal } from '../engine/meeting';
@@ -22,7 +22,7 @@ function play(ritmo: Ritmo, meeting: (sugestao: string) => string = (s) => s, se
     if (step.kind === 'done') return { result: step.result, shown };
     const v = step.view;
     shown.push({ eventId: step.eventId, year: v.year, semestre: v.state.semestre as number | undefined, clubId: v.clubId, meetings: v.meetings });
-    choices.push(step.eventId === MEETING_EVENT ? meeting(String(v.state.sugestao)) : autoChoice(step.eventId, v.temperament));
+    choices.push(step.eventId === MEETING_EVENT ? meeting(String(v.state.sugestao)) : autoDecide(step.eventId, v.temperament, () => v));
   }
   throw new Error('carreira não terminou');
 }
@@ -82,7 +82,7 @@ describe('reunião com a comissão como decisão (T52)', () => {
     const first = runUntilDecision(input(), 11, [], 'completo');
     const toMeeting: string[] = [];
     let step = first;
-    while (step.kind === 'decision' && step.eventId !== MEETING_EVENT) { toMeeting.push(autoChoice(step.eventId, step.view.temperament)); step = runUntilDecision(input(), 11, toMeeting, 'completo'); }
+    while (step.kind === 'decision' && step.eventId !== MEETING_EVENT) { const v = step.view; toMeeting.push(autoDecide(step.eventId, v.temperament, () => v)); step = runUntilDecision(input(), 11, toMeeting, 'completo'); }
     expect(() => runUntilDecision(input(), 11, [...toMeeting, 'passe|passe'], 'completo')).toThrow(RangeError);
   });
 });

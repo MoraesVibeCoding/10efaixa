@@ -22,7 +22,7 @@ function play(i: CreationInput, seed: number, ritmo: Ritmo) {
   for (let guard = 0; guard < 500; guard++) {
     const step = runUntilDecision(i, seed, choices, ritmo);
     if (step.kind === 'done') return { result: step.result, shown };
-    if (step.eventId !== MEETING_EVENT) (shown[step.view.year] ??= []).push(step.eventId);
+    if (step.eventId !== MEETING_EVENT && step.eventId !== PROPOSAL_EVENT) (shown[step.view.year] ??= []).push(step.eventId);
     choices.push(autoDecide(step.eventId, step.view.temperament, () => step.view));
   }
   throw new Error('carreira não terminou');

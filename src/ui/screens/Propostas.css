@@ -1,0 +1,18 @@
+/* T28d: propostas de clube. Usa a casca da criação; uma carta por proposta, "Ficar no clube" sempre à vista no rodapé. */
+.propostas .criacao__passo { display: grid; gap: var(--espaco-4); align-content: start; }
+.propostas__lista { display: grid; gap: var(--espaco-3); margin: 0; padding: 0; list-style: none; }
+.propostas__item {
+  display: grid;
+  gap: var(--espaco-2);
+  padding: var(--espaco-3);
+  border: var(--forma-borda-fina) solid var(--cor-linha);
+  border-radius: var(--forma-raio);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+}
+.propostas__clube { display: flex; align-items: center; gap: var(--espaco-2); margin: 0; font-family: var(--fonte-titulo); font-size: var(--tipo-nome); font-weight: 900; }
+.propostas__liga { margin: 0; opacity: 0.8; }
+.propostas__detalhes { display: grid; gap: 2px; }
+.propostas__detalhes span:first-child { font-family: var(--fonte-titulo); font-weight: 800; }
+.propostas__aviso { margin: 0; font-weight: 700; }
+.propostas__acoes { grid-template-columns: 1fr; }

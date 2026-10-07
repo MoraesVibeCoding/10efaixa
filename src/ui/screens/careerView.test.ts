@@ -5,6 +5,7 @@ import events from '../../data/events.json';
 import { t } from '../../i18n';
 import { careerProgress, semesterLines, toDecisionPlayer, uniformeFor } from './careerView';
 import { MEETING_EVENT } from '../../engine/meeting';
+import { PROPOSAL_EVENT } from '../../engine/proposals';
 
 const pickFirst = (id: string) => events.eventos.find((e) => e.id === id)!.opcoes[0]!.id;
 
@@ -20,7 +21,7 @@ function viewAt(n: number) {
   const choices: string[] = [];
   let step = runUntilDecision(INPUT, 11, choices);
   while (step.kind === 'decision' && choices.length < n) {
-    choices.push(step.eventId === MEETING_EVENT ? String(step.view.state.sugestao) : pickFirst(step.eventId));
+    choices.push(step.eventId === MEETING_EVENT || step.eventId === PROPOSAL_EVENT ? String(step.view.state.sugestao) : pickFirst(step.eventId));
     const next = runUntilDecision(INPUT, 11, choices);
     if (next.kind !== 'decision') break;
     step = next;
