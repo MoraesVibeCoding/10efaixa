@@ -25,6 +25,19 @@ describe('link da carreira (T57b)', () => {
     expect(parseCareerLink(careerLinkFragment(data))).toEqual({ ok: true, data });
   });
 
+  it('as opções de evento viajam como índice curto; texto livre (reunião, proposta) segue como está; o link antigo em texto ainda abre', () => {
+    const frag = careerLinkFragment(data);
+    const json = JSON.parse(atob(frag.slice(3).replace(/-/g, '+').replace(/_/g, '/'))) as { c: string[] };
+    expect(json.c[0]).toMatch(/^~[0-9a-z]{1,3}$/);
+    expect(json.c[1]).toBe('principal|secundario');
+    expect(parseCareerLink(rawLink(good))).toEqual({ ok: true, data });
+  });
+
+  it('índice que não existe no catálogo é recusado', () => {
+    expect(parseCareerLink(rawLink({ ...good, c: ['~zzzz'] }))).toEqual({ ok: false, reason: 'invalido' });
+    expect(parseCareerLink(rawLink({ ...good, c: ['~'] }))).toEqual({ ok: false, reason: 'invalido' });
+  });
+
   it('o fragmento é "#c=" + base64url (sem + / = nem espaço)', () => {
     expect(careerLinkFragment(data)).toMatch(/^#c=[A-Za-z0-9_-]+$/);
   });
