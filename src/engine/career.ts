@@ -17,6 +17,7 @@ import { mentalityEffects } from './mentality';
 import { afterClassico, afterSemester, afterTransfer, type Idolatry } from './idolatry';
 import { decayRelapse, graveDecision, semesterInjury } from './injuries';
 import { FORCE_EXIT, generateOffers, negotiate, rankOffers, leagueOf, marketValue, salaryFor, type Offer } from './market';
+import { ONCE, memoryCtx, type Memory } from './memory';
 import { EFFECTS, FACTS, fireMilestones, milestoneKey, type MilestoneFacts } from './milestones';
 import { MEETING_EVENT, autoProposal, encodeProposal, meetingScore, parseProposal, staffMeeting, type MeetingResult } from './meeting';
 import { MEETING_IDEAS, TRUST, drawClubNeed, ideaOf, meetingOptions, type Idea, type MeetingOptions } from './meetingOptions';
@@ -70,6 +71,8 @@ export interface CareerResult {
   earnedBRL: number; decisiveDerbies: number;
   /** T25c: os marcos vividos (primeiras vezes), com a opção escolhida; alimentam o álbum e a manchete. */
   marcos: { id: string; year: number; age: number; clubId: string; option: string }[];
+  /** T25d: a memória da carreira (marcos e fatos: final perdida, lesão grave, troca pelo rival, recusa da Europa). */
+  memorias: Memory[];
   legacy: Legacy;
   /** T41: apelido dado pelo jogo, manchete séria e comentário com zoeira. */
   nickname: string; headline: string; comment: string;
@@ -107,6 +110,8 @@ export interface DecisionView {
   idolatrias: Record<string, number>;
   /** T25c: os marcos já vividos, do mais antigo ao mais novo (álbum da carreira). */
   marcos: { id: string; year: number; clubId: string }[];
+  /** T25d: a memória da carreira até aqui (marcos e fatos de história); no contexto do evento vira `mem.<id>` e `anos.<id>` em `state`. */
+  memorias: Memory[];
   /** T28b (v2.50): na decisão `proposta-clube`, as até 3 propostas mostradas (a escolha é "aceitar:<clube>" ou "ficar"). */
   propostas?: ProposalView[];
   /** T28j (v2.54): o clube atual como primeiro cartão da tela de propostas, com a renovação quando o contrato acaba. */
@@ -197,6 +202,9 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let stats: SeasonStats = ZERO_STATS;
   let earned = 0;
   let decisiveDerbies = 0;
+  // T25d: memória da carreira (id, ano, idade e clube); os marcos da T25c também entram
+  const memorias: Memory[] = [];
+  const remember = (id: string, club: string) => { if (ONCE.has(id) && memorias.some((x) => x.id === id)) return; memorias.push({ id, year: curYear, age: Math.floor(evo.age - 1), clubId: club }); };
   // T25c: marcos da carreira (primeiras vezes)
   const marcos: CareerResult['marcos'] = [];
   const doneMarcos = new Set<string>();
@@ -218,9 +226,9 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     number: spells.at(-1)?.number ?? input.shirtNumber, attributes: { ...evo.attributes },
     state: {
       moral: morale, disciplina: discipline, relacaoTecnico: coachRelation, patrimonio: wealth, salarioFator: 1,
-      idolatria: clubId ? idol[clubId] ?? 0 : 0, idolatriaCoracao: input.heartClub ? idol[input.heartClub] ?? 0 : 0, ...state,
+      idolatria: clubId ? idol[clubId] ?? 0 : 0, idolatriaCoracao: input.heartClub ? idol[input.heartClub] ?? 0 : 0, ...memoryCtx(memorias, curYear), ...state,
     },
-    seasons: [...seasons], titles: [...titles], marcos: marcos.map(({ id, year, clubId: club }) => ({ id, year, clubId: club })), nationality: selection.nationality, meetings: [...meetings], idolatrias: { ...idol }, ...(ultimoSemestre && { ultimoSemestre }),
+    seasons: [...seasons], titles: [...titles], marcos: marcos.map(({ id, year, clubId: club }) => ({ id, year, clubId: club })), memorias: memorias.map((x) => ({ ...x })), nationality: selection.nationality, meetings: [...meetings], idolatrias: { ...idol }, ...(ultimoSemestre && { ultimoSemestre }),
   }));
   const earn = (amount: number, currency: Contract['currency']) => { const before = wealth; wealth = addToWealth(wealth, amount, currency, agent); earned += Math.max(0, wealth - before); };
   const awards: CareerResult['awards'] = [];
@@ -362,6 +370,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
           injuries[inj.severity]++;
           minutes *= 1 - inj.minutesLost;
           if (inj.severity === 'grave') {
+            remember('lesaoGrave', clubId!);
             const d = graveDecision(ask('lesao-grave'));
             outLeft = Math.max(0, d.semestersOut - 1);
             relapseRisk = d.relapseRisk;
@@ -545,6 +554,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     if (clubId && !inYouth) {
       proSeasons++;
       const wonThisYear = titles.some((t) => t.year === year && t.clubId === clubId);
+      if (!wonThisYear && cdb.runnerUp === clubId && avgMinutes >= cfg.minutosParaTitulo) remember('perdeuFinal', clubId);
       const facts: MilestoneFacts = {
         clubId, proDebut: proSeasons === 1, clubDebut: seasonsAtClub === 1, titular: avgMinutes >= FACTS.titularMinutos,
         golsAno: seasonGoals, golsCarreira: stats.goals, assistenciasCarreira: stats.assists, golsNoClube: goalsAtClub[clubId] ?? 0,
@@ -567,6 +577,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         marcoMental = Math.min(EFFECTS.bonusMentalMax, marcoMental + (out.bonusMental as number));
         if (out.cobrador) cobradorClub = clubId;
         marcos.push({ id: m.id, year, age: Math.floor(evo.age - 1), clubId, option });
+        remember(m.id, clubId);
       }
     }
 
@@ -671,6 +682,9 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
             pick = out;
             negotiations.push({ year, clubId: chosen.offer.clubId, result: !out ? 'sumiu' : out.annualSalary > chosen.offer.annualSalary ? 'melhorou' : 'igual' });
           }
+          // T25d: a janela trouxe proposta de clube europeu e o jogador não foi para a Europa
+          const isEurope = (id: string) => EURO_LEAGUE.has(id) || UEFA_POOL.has(id);
+          if (shown.some((o) => isEurope(o.clubId)) && !(pick && isEurope(pick.clubId))) remember('recusouEuropa', clubId!);
         }
       }
       if (goingHome) { /* contrato novo já assinado */ } else if (pick) {
@@ -685,6 +699,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         const from = clubId;
         join(pick.clubId, false, yr, factor === 1 ? pick : { ...pick, annualSalary: Math.round(pick.annualSalary * factor) });
         salaryDelays = 0;
+        if (pick.rivalOfCurrent) remember('trocouPeloRival', pick.clubId);
         if (forced && from && c) {
           // T28e: forçar a saída: multa em meses de salário, idolatria perdida no clube que deixa, moral e relação com o técnico; risco de virar vilão (market.json)
           const f = FORCE_EXIT;
@@ -728,7 +743,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   selection.esperouOBrasil = selection.dual === 'recusou' && selection.caps > 0;
   const result = {
     player, spells, titles, peakOverall, peakAge, peakAttributes, peakClubId: peakClubId ?? spells[0]?.clubId ?? '', endAge: evo.age, wearsTen, captain, idolatry: idol, negotiations, forcedExits,
-    wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, selection, stats, awards, retirement, farewell, cards, finalTemperament: temp, houseBought, discipline, seasons, earnedBRL: earned, decisiveDerbies, marcos,
+    wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, selection, stats, awards, retirement, farewell, cards, finalTemperament: temp, houseBought, discipline, seasons, earnedBRL: earned, decisiveDerbies, marcos, memorias,
   };
   // Sorteios novos ficam por último para não alterar nenhum resultado anterior da mesma semente.
   const nickname = generateNickname(player, rng);

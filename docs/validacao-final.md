@@ -52,3 +52,6 @@ Simulação pareada (`npm run sim:estilos`, 400 carreiras por estilo), antes (HE
 - Cartão de proposta: marca "Jogará mais / parecido / menos que hoje" (tolerância 0,08 em `contractCard.json` → `minutosParecidoAte`).
 - **Equilíbrio** (simulação pareada, 400 carreiras por estilo, antes = `main` com os marcos, depois = curva nova): "Lenda" média 5,99% → 6,02%; por estilo 4,0%–7,5% → 3,8%–7,5%; nota média 30,2 → 29,9; pico de Over 86,8 → 86,9. Sem mudança além do ruído (±1,1 pt por estilo); extremos seguem 0,5 pt fora da faixa 4,3%–7,0% como já estavam desde a T28g (medir com 1000+ carreiras no fim).
 - Os pontos de meio da curva são a média das duas pontas do degrau antigo, por isso a continuidade com o equilíbrio de antes.
+
+## Memória da carreira (T25d)
+- Infraestrutura pronta e testada: memórias (marcos + perdeuFinal, lesaoGrave, trocouPeloRival, recusouEuropa), contexto `mem.*`/`anos.*`, parâmetros `{mem_<id>_ano|anos|clube}` e teste de citação. Nenhum evento do catálogo usa ainda (T25e e T25b). Medido em 60 carreiras: lesão grave 47, final perdida 3 (rara), recusa da Europa uma por carreira.

@@ -7,7 +7,7 @@ import { ATTRIBUTES, toBand, type Attributes } from '../../engine/attributes';
 import { applyOption, type Ctx } from '../../engine/events';
 import { outcomeOf, outcomeVerdict, previewOf, riskOf, RISK_BANDS, timeOutOf, type Outcome, type Preview, type Risk } from '../../engine/preview';
 import previewCfg from '../../data/preview.json';
-import { t } from '../../i18n';
+import { t, type Params } from '../../i18n';
 import { clubLine, clubName } from './clubText';
 import { TrophyIcon } from './TrophyIcon';
 import { Emblema } from './Emblema';
@@ -51,6 +51,8 @@ export interface DecisionProps {
     milestones?: string[];
     /** T25c: marcos vividos (primeiras vezes), do mais antigo ao mais novo: figurinhas do álbum e da gaveta. */
     marcos?: { id: string; ano: number; clubId: string }[];
+    /** T25d: parâmetros de texto da memória da carreira ({mem_<id>_ano|anos|clube}) para citar o passado no texto do evento. */
+    textoParams?: Params;
     /** T51b: a faixa da torcida no clube atual (idolatria em palavras, idolatry.json). */
     torcida?: string;
   };
@@ -451,7 +453,7 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
   }
   const options = events.eventos.find((e) => e.id === eventId)?.opcoes ?? [];
   const percent = Math.round(Math.min(1, Math.max(0, progress)) * 100);
-  const text = hasText(eventId) ? t(`events.${eventId}.texto`) : null;
+  const text = hasText(eventId, player.textoParams) ? t(`events.${eventId}.texto`, player.textoParams) : null;
   const pressed = chosen ?? marked;
   // gaveta ou resultado abertos: o resto da tela fica inerte e o Esc vale de qualquer ponto (T49b)
   const overlay = career || chosen !== null;
@@ -526,6 +528,6 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
 const NONE: Moment[] = [];
 export const TRANSITION = { '--transicao': `${MOTION.transicaoMs}ms` } as React.CSSProperties;
 
-function hasText(eventId: string): boolean {
-  try { t(`events.${eventId}.texto`); return true; } catch { return false; }
+function hasText(eventId: string, params?: Params): boolean {
+  try { t(`events.${eventId}.texto`, params); return true; } catch { return false; }
 }

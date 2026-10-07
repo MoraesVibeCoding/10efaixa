@@ -1,0 +1,9 @@
+{
+ "_nota": "Memória da carreira (SPEC 6.13c; T25d). 'fatos': memórias que não são marcos (os 20 marcos da T25c entram pelo próprio id). Cada memória guarda id, ano, idade e clube; unica: só a primeira vez entra (a janela europeia aparece quase todo ano, e “recusou a Europa” é uma lembrança só); o contexto dos eventos ganha mem.<id> e anos.<id>, e o texto, {mem_<id>_ano}, {mem_<id>_anos} e {mem_<id>_clube} (id com _ no lugar de -).",
+ "fatos": [
+  { "id": "perdeuFinal", "quando": "final da copa nacional perdida (o clube foi vice com minutos suficientes)" },
+  { "id": "lesaoGrave", "quando": "lesão grave" },
+  { "id": "trocouPeloRival", "quando": "aceitou proposta de rival do clube atual" },
+  { "id": "recusouEuropa", "unica": true, "quando": "a janela trouxe proposta de clube europeu e o jogador escolheu outra coisa" }
+ ]
+}

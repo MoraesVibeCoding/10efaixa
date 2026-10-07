@@ -31,6 +31,16 @@ function viewAt(n: number) {
 }
 
 describe('careerView (T51b): do motor para a tela de decisão', () => {
+  it('leva os parâmetros de texto da memória (T25d): só existem para o que aconteceu', () => {
+    expect(toDecisionPlayer(viewAt(0), INPUT, LOOK).textoParams).toEqual({});
+    const late = viewAt(40);
+    const p = toDecisionPlayer(late, INPUT, LOOK).textoParams!;
+    expect(Object.keys(p).length).toBeGreaterThan(0);
+    for (const k of Object.keys(p)) expect(k).toMatch(/^mem_\w+_(ano|anos|clube)$/);
+    const marco = late.marcos[0]!;
+    expect(p[`mem_${marco.id.replace(/-/g, '_')}_ano`]).toBe(marco.year);
+  });
+
   it('leva os marcos já vividos (T25c), do mais antigo ao mais novo', () => {
     const early = toDecisionPlayer(viewAt(0), INPUT, LOOK);
     expect(early.marcos).toEqual([]);
