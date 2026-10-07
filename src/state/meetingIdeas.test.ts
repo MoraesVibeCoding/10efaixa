@@ -7,11 +7,7 @@ import { ATTRIBUTES } from '../engine/attributes';
 import weights from '../data/positionWeights.json';
 import { runUntilDecision, type Ritmo } from './careerRun';
 
-// T52c (SPEC 6.5, v2.53): reunião em 3 ideias no motor. Aqui a chave `tresIdeias` está ligada (mock); em meeting.json ela só liga com a tela (T52d).
-vi.mock('../data/meeting.json', async (original) => {
-  const real = await original<{ default: Record<string, unknown> }>();
-  return { default: { ...real.default, tresIdeias: true } };
-});
+// T52c/T52d (SPEC 6.5, v2.53): reunião em 3 ideias no motor, com a chave `tresIdeias` ligada em meeting.json.
 
 const inputOf = (seed: number) => randomInput(createPrng(seed));
 

@@ -78,13 +78,20 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
   }
   const resposta = answerOf(view.meetings, asked);
   const respostaEl = resposta ? <ReuniaoResposta key={`${asked!.year}-${asked!.semestre}`} resposta={resposta} onDone={() => { setAsked(null); }} /> : null;
-  if (eventId === MEETING_EVENT) {
+  if (eventId === MEETING_EVENT && view.reuniao) {
+    // T52d: reunião em 3 ideias, no desenho da decisão (cena da sala de reuniões e o card do jogador de sempre)
+    const meetingPlayer = toDecisionPlayer(view, input, look, visual, eventId);
+    const meetingClub = view.clubId ? clubName(view.clubId).nome : t('ui.varzea');
     return (
       <div ref={box} className="carreira" data-temperamento={view.temperament}>
-        <Reuniao key={index} sugestao={String(view.state.sugestao)} onChoose={(choice) => {
-          setAsked({ year: view.year, semestre: Number(view.state.semestre) });
-          decide(choice);
-        }} />
+        <Reuniao
+          key={index} ideias={view.reuniao} player={meetingPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} anterior={anterior}
+          scene={sceneOfCena('reuniao-comissao', meetingPlayer, visual, input.name, meetingClub)}
+          onChoose={(choice) => {
+            setAsked({ year: view.year, semestre: Number(view.state.semestre) });
+            decide(choice);
+          }}
+        />
         {respostaEl}
       </div>
     );
@@ -133,6 +140,10 @@ function answerOf(meetings: DecisionView['meetings'], asked: { year: number; sem
 /** T60a: a cena pintada do evento, no corte de cabelo do visual, com o uniforme da vez (clube ou seleção) e o número. */
 function sceneFor(eventId: string, player: ReturnType<typeof toDecisionPlayer>, visual: string | undefined, nome: string, clube: string) {
   const cena = events.eventos.find(function byId(e) { return e.id === eventId; })?.cena ?? 'assinatura-contrato';
+  return sceneOfCena(cena, player, visual, nome, clube);
+}
+
+function sceneOfCena(cena: string, player: ReturnType<typeof toDecisionPlayer>, visual: string | undefined, nome: string, clube: string) {
   return {
     alt: t(`scenes.alt.${cena}`, { nome, clube }),
     pintada: { scene: cena, cut: cutForVisual(visual), clubId: player.uniforme ?? player.clubId, number: player.number },

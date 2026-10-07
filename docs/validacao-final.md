@@ -5,7 +5,8 @@
 ## Etapas entregues sem parada
 - T28b–d tela de propostas (PR #12, já no `main`).
 - T28e propostas completas (coração e rival na tela, aceitar por amor, empresário negocia, forçar saída): feito, em PR.
-- T25c marcos · T25d memória · T25e eventos modulares · T25b catálogo 80+: *a fazer*.
+- Reunião em 3 ideias (T52b–d): feita, em PR; carreiras salvas antigas com reunião na tela não abrem.
+- T25c marcos (motor pronto; 20 marcos escritos em `d5cdb21`, revertidos na branch) · T25d memória · T25e eventos modulares · T25b catálogo 80+: *a fazer*.
 
 ## O que o usuário precisa revisar no fim
 - Textos de todos os eventos novos (tom, zoeira só com o próprio jogador, nenhuma opção dominante).

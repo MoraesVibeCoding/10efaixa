@@ -1,6 +1,5 @@
 import { autoDecide } from '../engine/career';
-import { MEETING_EVENT, encodeProposal } from '../engine/meeting';
-import { FOCI, type Focus } from '../engine/evolution';
+import { MEETING_EVENT } from '../engine/meeting';
 import type { CreationInput } from '../engine/player';
 import { runUntilDecision } from '../state/careerRun';
 import { VISUAIS } from '../ui/screens/look';
@@ -55,7 +54,7 @@ describe('link da carreira (T57b)', () => {
     for (let guard = 0; guard < 500; guard++) {
       const step = runUntilDecision(full, data.seed, choices, 'completo');
       if (step.kind === 'done') break;
-      choices.push(step.eventId === MEETING_EVENT ? encodeProposal({ main: FOCI[0] as Focus, secondary: FOCI[1] as Focus }) : autoDecide(step.eventId, step.view.temperament, () => step.view));
+      choices.push(step.eventId === MEETING_EVENT ? String(step.view.state.sugestao) : autoDecide(step.eventId, step.view.temperament, () => step.view));
     }
     expect(choices.length).toBeGreaterThan(20);
     expect(careerLinkFragment({ ...data, ritmo: 'completo', choices }).length).toBeLessThanOrEqual(3000);

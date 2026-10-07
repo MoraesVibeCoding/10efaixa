@@ -252,22 +252,54 @@
  },
  "reuniao": {
   "titulo": "Reunião com a comissão",
-  "texto": "É meio de temporada. O que você quer treinar mais no próximo semestre?",
-  "sugestao": "Sugestão do preparador: {principal} e {secundario}.",
-  "principal": "Foco principal",
-  "secundario": "Foco secundário",
   "propor": "Propor ao técnico",
-  "foco": { "bolaParada": "Bola parada", "pernaRuim": "Perna ruim" },
+  "foco": {
+   "bolaParada": "Bola parada",
+   "pernaRuim": "Perna ruim"
+  },
   "resposta": {
-   "aceita": { "titulo": "A comissão topou", "texto": "Foco principal em {principal}, com {secundario} de apoio." },
-   "contrapropoe": { "titulo": "O técnico tem outra ideia", "texto": "O clube precisa de {principal}. Seu pedido, {secundario}, fica como apoio." },
+   "aceita": {
+    "titulo": "A comissão topou",
+    "texto": "Foco principal em {principal}, com {secundario} de apoio."
+   },
+   "contrapropoe": {
+    "titulo": "O técnico tem outra ideia",
+    "texto": "O clube precisa de {principal}. Seu pedido, {secundario}, fica como apoio."
+   },
    "recusa": {
     "titulo": "A comissão não aceitou",
     "moral": "Com o moral lá embaixo, ninguém quis mudar o treino agora.",
     "relacao": "A relação com o técnico não está boa. Ele segue o plano dele.",
     "score": "Não é o momento. O treino segue como está."
    }
-  }
+  },
+  "sala": "Sala de reuniões",
+  "fala": "{nome}, estamos na metade da temporada. Em que você quer evoluir neste semestre? Escolha uma das ideias.",
+  "ideias": "Ideias de treino para o semestre",
+  "toque": "Toque numa ideia para definir o foco de treino do semestre.",
+  "ideia": {
+   "obvia": {
+    "nome": "Treino",
+    "titulo": "{principal} e {secundario}",
+    "texto": "Os dois pontos que mais rendem para a sua posição neste momento."
+   },
+   "mescla": {
+    "nome": "Equilíbrio",
+    "titulo": "{principal} e {secundario}",
+    "texto": "O que a posição pede, mais um diferencial seu."
+   },
+   "ousada": {
+    "nome": "Ousadia",
+    "titulo": "{principal} e {secundario}",
+    "texto": "Os seus pontos mais fortes: você treina no que mais confia."
+   }
+  },
+  "agrado": {
+   "muito": "Muito provável que a comissão apoie",
+   "possivel": "Pode agradar à comissão",
+   "pouco": "Pouco provável que o técnico apoie"
+  },
+  "treinador": "Treinador:"
  },
  "evolucao": {
   "titulo": "Neste semestre",
@@ -276,34 +308,69 @@
   "desce": "{atributo} caiu.",
   "desceForte": "{atributo} caiu bastante.",
   "atributo": {
-   "finalizacao": "Sua finalização", "passe": "Seu passe", "habilidade": "Sua habilidade", "drible": "Seu drible",
-   "forca": "Sua força", "velocidade": "Sua velocidade", "fisico": "Seu físico", "marcacao": "Sua marcação",
-   "mental": "Sua cabeça", "jogoAereo": "Seu jogo aéreo"
+   "finalizacao": "Sua finalização",
+   "passe": "Seu passe",
+   "habilidade": "Sua habilidade",
+   "drible": "Seu drible",
+   "forca": "Sua força",
+   "velocidade": "Sua velocidade",
+   "fisico": "Seu físico",
+   "marcacao": "Sua marcação",
+   "mental": "Sua cabeça",
+   "jogoAereo": "Seu jogo aéreo"
   }
  },
  "idolatria": {
   "selo": "Torcida: {faixa}",
   "coluna": "Torcida",
   "faixa": {
-   "vilao": "Vilão", "contestado": "Contestado", "desconhecido": "Desconhecido", "promessa": "Promessa",
-   "conhecido": "Conhecido", "querido": "Querido", "idolo": "Ídolo", "lenda": "Lenda"
+   "vilao": "Vilão",
+   "contestado": "Contestado",
+   "desconhecido": "Desconhecido",
+   "promessa": "Promessa",
+   "conhecido": "Conhecido",
+   "querido": "Querido",
+   "idolo": "Ídolo",
+   "lenda": "Lenda"
   }
  },
  "ritmo": {
   "titulo": "Como você quer jogar?",
-  "rapido": { "nome": "Rápido", "detalhe": "Uns 5 minutos. Só os momentos-chave, e um toque já decide." },
-  "normal": { "nome": "Normal", "detalhe": "Uns 20 minutos. Duas ou três decisões por temporada, com tempo para pensar." },
-  "completo": { "nome": "Completo", "detalhe": "Sem pressa. Todas as decisões, reuniões e dilemas da carreira." },
+  "rapido": {
+   "nome": "Rápido",
+   "detalhe": "Uns 5 minutos. Só os momentos-chave, e um toque já decide."
+  },
+  "normal": {
+   "nome": "Normal",
+   "detalhe": "Uns 20 minutos. Duas ou três decisões por temporada, com tempo para pensar."
+  },
+  "completo": {
+   "nome": "Completo",
+   "detalhe": "Sem pressa. Todas as decisões, reuniões e dilemas da carreira."
+  },
   "comecar": "Começar carreira"
  },
-  "proposta": {
+ "proposta": {
   "titulo": "Propostas",
   "salario": "{valor} por ano",
   "contrato": "{n} anos de contrato",
   "contrato_um": "1 ano de contrato",
-  "papel": { "titular": "Titular prometido", "rodizio": "Rodízio prometido", "aposta": "Entra como aposta" },
-  "minutos": { "muitos": "Muitos minutos", "rodizio": "Rodízio de minutos", "poucos": "Poucos minutos" },
-  "nivel": { "modesto": "Clube modesto", "medio": "Clube médio", "grande": "Clube grande", "elite": "Clube de elite" },
+  "papel": {
+   "titular": "Titular prometido",
+   "rodizio": "Rodízio prometido",
+   "aposta": "Entra como aposta"
+  },
+  "minutos": {
+   "muitos": "Muitos minutos",
+   "rodizio": "Rodízio de minutos",
+   "poucos": "Poucos minutos"
+  },
+  "nivel": {
+   "modesto": "Clube modesto",
+   "medio": "Clube médio",
+   "grande": "Clube grande",
+   "elite": "Clube de elite"
+  },
   "foraDoEixo": "Muito salário, pouca visibilidade",
   "legenda": "Os minutos e o nível do clube pesam na sua evolução. Os minutos são uma previsão, não uma promessa.",
   "aceitar": "Aceitar proposta",
@@ -317,7 +384,11 @@
   "porAmor": "Aceitar por amor",
   "porAmorDe": "Aceitar por amor {prep} {clube}",
   "dicaAmor": "Por amor: salário menor, mais idolatria.",
-  "marca": { "coracao": "Proposta do seu clube de coração", "rival": "Rival do seu clube atual", "rivalCoracao": "Rival do seu clube de coração" },
+  "marca": {
+   "coracao": "Proposta do seu clube de coração",
+   "rival": "Rival do seu clube atual",
+   "rivalCoracao": "Rival do seu clube de coração"
+  },
   "ficar": "Ficar no clube"
  },
  "linhaDoTempo": {
@@ -330,37 +401,57 @@
   "titulos": "Títulos: {lista}",
   "outraLiga": "Outra liga",
   "divisao": {
-   "BRA-A": "Série A", "BRA-B": "Série B", "BRA-C": "Série C", "BRA-D": "Série D", "BRA-E": "Estadual",
-   "ENG": "Liga Inglesa", "ESP": "Liga Espanhola", "ITA": "Liga Italiana", "GER": "Liga Alemã", "FRA": "Liga Francesa", "POR": "Liga Portuguesa",
-   "OUTROS": "Outra liga europeia", "SAM": "Outra liga do continente",
-   "SAU": "Liga Saudita", "USA": "Liga Norte-Americana", "JPN": "Liga Japonesa", "QAT": "Liga do Catar", "CHN": "Liga Chinesa"
+   "BRA-A": "Série A",
+   "BRA-B": "Série B",
+   "BRA-C": "Série C",
+   "BRA-D": "Série D",
+   "BRA-E": "Estadual",
+   "ENG": "Liga Inglesa",
+   "ESP": "Liga Espanhola",
+   "ITA": "Liga Italiana",
+   "GER": "Liga Alemã",
+   "FRA": "Liga Francesa",
+   "POR": "Liga Portuguesa",
+   "OUTROS": "Outra liga europeia",
+   "SAM": "Outra liga do continente",
+   "SAU": "Liga Saudita",
+   "USA": "Liga Norte-Americana",
+   "JPN": "Liga Japonesa",
+   "QAT": "Liga do Catar",
+   "CHN": "Liga Chinesa"
   }
  },
-  "cartao": {
-    "numero": { "jogos": "Jogos", "gols": "Gols", "assistencias": "Assistências", "titulos": "Títulos", "patrimonio": "Patrimônio" },
-    "altNarrativa": "Cartão de carreira de {nome}, {apelido}. Veredito: {veredito}. Rótulo: {rotulo}. {manchete} {frases}.",
-    "overMax": "Over máximo",
-    "honrarias": "Honrarias",
-    "codigo": "Código",
-    "titulo": "Seu cartão",
-    "desafio": "Desafio de {data}",
-    "versoes": "Versão do cartão",
-    "narrativa": "História",
-    "estatistica": "Números",
-    "altEstatistica": "Cartão de carreira de {nome} em números. Overall máximo {over}. {numeros}. Atributos no auge: {atributos}."
+ "cartao": {
+  "numero": {
+   "jogos": "Jogos",
+   "gols": "Gols",
+   "assistencias": "Assistências",
+   "titulos": "Títulos",
+   "patrimonio": "Patrimônio"
   },
-  "compartilhar": {
-    "texto": "Minha carreira no 10eFaixa: {nome}, o {apelido}. {veredito}. Código {codigo}",
-    "compartilhar": "Compartilhar",
-    "baixar": "Baixar imagem",
-    "copiar": "Copiar texto",
-    "copiarLink": "Copiar link",
-    "linkCopiado": "Link copiado. Quem abrir vê a carreira, sem o nome do jogador.",
-    "preparando": "Preparando a imagem…",
-    "compartilhado": "Cartão compartilhado.",
-    "cancelado": "Compartilhamento cancelado.",
-    "baixado": "Imagem baixada.",
-    "copiado": "Texto copiado. É só colar no WhatsApp.",
-    "naoCopiou": "Não deu para copiar o texto neste navegador."
-  }
+  "altNarrativa": "Cartão de carreira de {nome}, {apelido}. Veredito: {veredito}. Rótulo: {rotulo}. {manchete} {frases}.",
+  "overMax": "Over máximo",
+  "honrarias": "Honrarias",
+  "codigo": "Código",
+  "titulo": "Seu cartão",
+  "desafio": "Desafio de {data}",
+  "versoes": "Versão do cartão",
+  "narrativa": "História",
+  "estatistica": "Números",
+  "altEstatistica": "Cartão de carreira de {nome} em números. Overall máximo {over}. {numeros}. Atributos no auge: {atributos}."
+ },
+ "compartilhar": {
+  "texto": "Minha carreira no 10eFaixa: {nome}, o {apelido}. {veredito}. Código {codigo}",
+  "compartilhar": "Compartilhar",
+  "baixar": "Baixar imagem",
+  "copiar": "Copiar texto",
+  "copiarLink": "Copiar link",
+  "linkCopiado": "Link copiado. Quem abrir vê a carreira, sem o nome do jogador.",
+  "preparando": "Preparando a imagem…",
+  "compartilhado": "Cartão compartilhado.",
+  "cancelado": "Compartilhamento cancelado.",
+  "baixado": "Imagem baixada.",
+  "copiado": "Texto copiado. É só colar no WhatsApp.",
+  "naoCopiou": "Não deu para copiar o texto neste navegador."
+ }
 }

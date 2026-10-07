@@ -1,6 +1,5 @@
 import { autoDecide } from '../engine/career';
-import { FOCI, type Focus } from '../engine/evolution';
-import { MEETING_EVENT, encodeProposal } from '../engine/meeting';
+import { MEETING_EVENT } from '../engine/meeting';
 import type { CreationInput } from '../engine/player';
 import { runUntilDecision } from '../state/careerRun';
 import { VISUAIS } from '../ui/screens/look';
@@ -21,7 +20,7 @@ function fullCareer(): CareerLinkData {
   for (let guard = 0; guard < 500; guard++) {
     const step = runUntilDecision(full, 7, choices, 'completo');
     if (step.kind === 'done') break;
-    choices.push(step.eventId === MEETING_EVENT ? encodeProposal({ main: FOCI[0] as Focus, secondary: FOCI[1] as Focus }) : autoDecide(step.eventId, step.view.temperament, () => step.view));
+    choices.push(step.eventId === MEETING_EVENT ? String(step.view.state.sugestao) : autoDecide(step.eventId, step.view.temperament, () => step.view));
   }
   return { seed: 7, ritmo: 'completo', input, visual: VISUAIS[0]!.id, choices, codigo: '10F-7K3Q-9M2X' };
 }
