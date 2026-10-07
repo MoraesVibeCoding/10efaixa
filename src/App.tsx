@@ -93,7 +93,8 @@ export function App({ seed, storage = browserStorage(), now = () => new Date(), 
   }
   if (phase.kind === 'rever') {
     const saved = peekSave(storage);
-    const play = () => startNew(phase.desafio, phase.seed);
+    const { desafio, seed: linkSeed } = phase;
+    function play() { startNew(desafio, linkSeed); }
     return (
       <>
         <Cartao result={phase.result} code={phase.codigo} visual={phase.visual} desafio={phase.desafio}
