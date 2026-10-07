@@ -4,11 +4,6 @@
   "porPonto": 0.15,
   "max": 5
  },
- "papel": {
-  "titular": 3,
-  "rodizio": -3,
-  "promessaIdadeMax": 19
- },
  "minutosBase": 0.6,
  "minutosParaTitulo": 0.3,
  "emprestimoTemporadas": 1,

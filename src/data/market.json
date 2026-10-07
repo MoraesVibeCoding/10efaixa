@@ -208,10 +208,6 @@
   ],
   "max": 4,
   "porInfluencia": 3,
-  "papel": {
-   "titular": 3,
-   "rodizio": -3
-  },
   "anos": [
    2,
    4
@@ -235,6 +231,12 @@
    "idolatriaVilao": -70
   },
   "margemParaSair": 2
+ },
+ "pontosPapel": {
+  "_nota": "T28g (v2.54): pontos de cada papel na escolha automática (continuidade: titular 1, rodízio 0,6, aposta/reserva 0,2).",
+  "titularAbsoluto": 1, "titularRegular": 1, "joiaTitular": 1,
+  "disputa": 0.7, "reservaImediato": 0.5, "jovemRotacao": 0.6,
+  "composicao": 0.2, "jovemPromessa": 0.2
  },
  "politica": {
   "_obs": "pesos da escolha automática por temperamento: nível do clube, salário (log), papel e apego ao clube atual",

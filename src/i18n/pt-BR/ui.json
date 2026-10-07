@@ -49,11 +49,14 @@
   "estadual": "Estadual"
  },
  "papel": {
-  "titular": "Titular",
-  "rodizio": "Rodízio",
-  "reserva": "Reserva",
-  "promessa": "Promessa",
-  "aposta": "Aposta"
+  "joiaTitular": "Joia Titular",
+  "jovemRotacao": "Jovem em Rotação",
+  "jovemPromessa": "Jovem Promessa",
+  "titularAbsoluto": "Titular Absoluto",
+  "titularRegular": "Titular Regular",
+  "disputa": "Disputa de Titularidade",
+  "reservaImediato": "Reserva Imediato",
+  "composicao": "Composição de Elenco"
  },
  "resultado": {
   "positivo": "Deu certo",
@@ -351,14 +354,43 @@
   "comecar": "Começar carreira"
  },
  "proposta": {
-  "titulo": "Propostas",
+  "sala": "Mercado de transferências aberto",
+  "titulo": "Propostas de contrato",
+  "apoio": "Toque num cartão para ver os detalhes. O valor projetado é uma estimativa, não uma promessa.",
+  "cartoes": "Clube atual e propostas",
+  "detalhe": "Detalhes do cartão escolhido",
+  "confirmar": "Confirmar escolha",
+  "selo": { "renovacao": "Renovação", "atual": "Seu time atual", "nova": "Nova proposta" },
+  "salarioMes": "{valor} por mês",
+  "valorProjetado": "Valor projetado: {valor}",
+  "pct": { "muito": "▲ mais de 10 vezes o atual", "sobe": "▲ {pct}% a mais", "cai": "▼ {pct}% a menos", "igual": "● igual ao atual" },
+  "modo": {
+    "aceitar": "Aceitar a proposta",
+    "negociar": "Negociar com o empresário",
+    "forcar": "Forçar a saída",
+    "amor": "Aceitar por amor",
+    "renovar": "Renovar o contrato",
+    "aumento": "Renovar pedindo aumento",
+    "naoRenovar": "Não renovar e cumprir o último ano"
+  },
+  "dicaAumento": "Pedir aumento rende mais salário, mas pesa na relação com o técnico.",
+  "dicaNaoRenovar": "Você cumpre o último ano e o mercado fica aberto na próxima janela.",
+  "bonus": "Luvas e bicho seguem a regra do contrato.",
+  "restam_um": "1 ano de contrato restante",
+  "restam": "{n} anos de contrato restantes",
+  "renovaPor": "{n} anos de contrato novo",
   "salario": "{valor} por ano",
   "contrato": "{n} anos de contrato",
   "contrato_um": "1 ano de contrato",
   "papel": {
-   "titular": "Titular prometido",
-   "rodizio": "Rodízio prometido",
-   "aposta": "Entra como aposta"
+   "joiaTitular": "Joia Titular prometida",
+   "jovemRotacao": "Entra na rotação dos jovens",
+   "jovemPromessa": "Entra como Jovem Promessa",
+   "titularAbsoluto": "Titular Absoluto prometido",
+   "titularRegular": "Titular Regular prometido",
+   "disputa": "Disputa a titularidade",
+   "reservaImediato": "Reserva Imediato",
+   "composicao": "Entra para compor o elenco"
   },
   "minutos": {
    "muitos": "Muitos minutos",
@@ -366,30 +398,23 @@
    "poucos": "Poucos minutos"
   },
   "nivel": {
-   "modesto": "Clube modesto",
-   "medio": "Clube médio",
-   "grande": "Clube grande",
-   "elite": "Clube de elite"
+   "semExpressao": "Sem expressão",
+   "baixa": "Reputação baixa",
+   "media": "Reputação média",
+   "boa": "Reputação boa",
+   "alta": "Reputação alta",
+   "gigante": "Clube gigante"
   },
   "foraDoEixo": "Muito salário, pouca visibilidade",
   "legenda": "Os minutos e o nível do clube pesam na sua evolução. Os minutos são uma previsão, não uma promessa.",
-  "aceitar": "Aceitar proposta",
-  "aceitarDe": "Aceitar proposta {prep} {clube}",
-  "negociar": "Mandar o empresário negociar",
-  "negociarDe": "Mandar o empresário negociar a proposta {prep} {clube}",
   "dicaNegociar": "O empresário pode melhorar o salário, deixar igual, ou a proposta pode sumir.",
-  "forcar": "Forçar a saída",
-  "forcarDe": "Forçar a saída e aceitar a proposta {prep} {clube}",
   "dicaForcar": "Forçar a saída antes do fim do contrato: você paga uma multa, perde idolatria no clube e pode virar vilão da torcida.",
-  "porAmor": "Aceitar por amor",
-  "porAmorDe": "Aceitar por amor {prep} {clube}",
   "dicaAmor": "Por amor: salário menor, mais idolatria.",
   "marca": {
    "coracao": "Proposta do seu clube de coração",
    "rival": "Rival do seu clube atual",
    "rivalCoracao": "Rival do seu clube de coração"
-  },
-  "ficar": "Ficar no clube"
+  }
  },
  "linhaDoTempo": {
   "titulo": "Sua carreira",

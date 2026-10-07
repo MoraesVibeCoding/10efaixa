@@ -74,12 +74,12 @@ describe('início por origem (T20)', () => {
   it('promoção: aos 17–20 com overall suficiente gera primeiro contrato; aos 20 sem nível é dispensado', () => {
     const ok = promotion({ age: 18, overall: 60, clubId: 'flamengo', highlight: true });
     expect(ok.promoted).toBe(true);
-    expect(ok.contract).toEqual({ clubId: 'flamengo', years: start.promocao.anosContrato.destaque, role: 'promessa' });
+    expect(ok.contract).toEqual({ clubId: 'flamengo', years: start.promocao.anosContrato.destaque, role: 'jovemPromessa' });
     expect(promotion({ age: 16, overall: 99, clubId: 'flamengo', highlight: false }).promoted).toBe(false);
     expect(promotion({ age: 20, overall: 30, clubId: 'flamengo', highlight: false })).toMatchObject({ promoted: false, released: true });
   });
 
   it('primeiro contrato direto (peneira/várzea)', () => {
-    expect(firstContract('ituano')).toEqual({ clubId: 'ituano', years: 2, role: 'promessa' });
+    expect(firstContract('ituano')).toEqual({ clubId: 'ituano', years: 2, role: 'jovemPromessa' });
   });
 });

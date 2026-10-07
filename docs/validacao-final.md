@@ -26,3 +26,16 @@ Simulação pareada (`npm run sim:estilos`, 300 carreiras por estilo, mesmas sem
 - **"Lenda" geral:** 5,63% → 5,78% (+0,15 pt). **Pico de Over médio:** 86,64 → 86,77.
 - **Por estilo:** antes 4,0% a 6,7%; depois **4,3% a 7,0%**, dentro da faixa combinada (4,3% a 7,0%). Maiores variações: Ponta trabalhador +1,7 pt, Lateral apoiador +1,3 pt, Goleiro seguro −1,3 pt (ruído de amostra de ±1,3 pt com 300 carreiras).
 - Conclusão: o equilíbrio não saiu da faixa; uma medição com 1000+ carreiras por estilo fica para o fim.
+
+## Medição de equilíbrio: 8 papéis por idade (T28g, 2026-10-07)
+Simulação pareada (`npm run sim:estilos`, 400 carreiras por estilo), antes (HEAD, reunião em 3 ideias) × depois (papéis divididos em dados; minutos de cada papel continuam os de antes: titular .85/.88, rodízio .62/.48, reserva .25, promessa .15; jovens até 20 anos):
+- **"Lenda" média dos 21 estilos:** 5,67% → 5,97% (+0,30 pt; ruído da média ≈ ±0,25 pt).
+- **Por estilo:** antes 4,3% a 7,0%; depois **4,0% a 7,5%** (Lateral construtor 4,0%, Enganche 7,5%), **0,3 e 0,5 pt fora da faixa combinada** (4,3%–7,0%), mas dentro do ruído de amostra (±1,1 pt por estilo com 400 carreiras).
+- **Decisão pendente do usuário:** aceitar (medir com 1000+ carreiras na validação final) ou recalibrar os minutos de `Disputa` e `Reserva Imediato` agora.
+
+## Tela de contratos (T28g–k): o que conferir no celular real
+- Selecionar cartão, ver o detalhe abaixo dele e **Confirmar escolha** (botão fixo no rodapé); modos: aceitar, negociar, forçar a saída, por amor, renovar, pedir aumento, não renovar.
+- Variação de salário muito alta (jovem da base indo para a Europa) aparece como "mais de 10 vezes o atual" (limite `pctMaximo` em `src/data/contractCard.json`).
+- Valor projetado é estimativa de 2 semestres sem sorteio; pode ser otimista para jovens de alto Over: conferir contra a evolução real nas carreiras de teste.
+- Reputação em 6 níveis: distribuição dos 447 clubes (quartis 22, 22, 30, 58, 75, 87).
+- Simulação pareada do T28g: ver seção acima (4,0%–7,5%); repetir com 1000+ carreiras por estilo.

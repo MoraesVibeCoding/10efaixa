@@ -5,9 +5,9 @@
   0.08
  ],
  "papel": {
-  "titular": 3,
-  "rodizio": 2,
-  "aposta": 1
+  "titularAbsoluto": 3, "titularRegular": 3, "joiaTitular": 3,
+  "disputa": 2, "reservaImediato": 2, "jovemRotacao": 2,
+  "composicao": 1, "jovemPromessa": 1
  },
  "salario": {
   "menor": 0.9,

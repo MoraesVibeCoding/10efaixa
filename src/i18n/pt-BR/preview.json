@@ -11,7 +11,7 @@
  },
  "sentido": { "sobe": "sobe", "desce": "desce", "muda": "muda" },
  "intensidade": { "1": "um pouco", "2": "bastante", "3": "muito" },
- "papel": { "titular": "Chega para ser titular", "rodizio": "Entra no rodízio", "aposta": "Chega como aposta" },
+ "papel": { "titularAbsoluto": "Chega para ser titular absoluto", "titularRegular": "Chega para ser titular", "joiaTitular": "Chega como joia titular", "disputa": "Chega para disputar a vaga", "reservaImediato": "Chega como primeiro reserva", "jovemRotacao": "Entra na rotação dos jovens", "composicao": "Chega para compor o elenco", "jovemPromessa": "Chega como jovem promessa" },
  "salario": { "menor": "Salário menor", "parecido": "Salário parecido", "maior": "Salário maior", "muitoMaior": "Salário muito maior" },
  "anos": "{anos} anos de contrato",
  "minutos": "Minutos previstos"

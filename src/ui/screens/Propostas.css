@@ -1,19 +1,40 @@
-/* T28d: propostas de clube. Usa a casca da criação; uma carta por proposta, "Ficar no clube" sempre à vista no rodapé. */
-.propostas .criacao__passo { display: grid; gap: var(--espaco-4); align-content: start; }
-.propostas__lista { display: grid; gap: var(--espaco-3); margin: 0; padding: 0; list-style: none; }
+/* T28k: tela de contratos. Usa a casca da decisão (cena, faixa, card do jogador, painel de vidro); aqui só os cartões e o detalhe. */
+.propostas__painel { display: flex; flex-direction: column; gap: var(--espaco-2); }
+.propostas__sala { margin: 0; text-align: center; font-size: 0.8rem; opacity: 0.85; }
+.propostas__apoio { margin: 0; font-size: 0.78rem; line-height: 1.3; opacity: 0.9; }
+.propostas__lista { display: grid; gap: var(--espaco-2); }
 .propostas__item {
+  position: relative;
   display: grid;
-  gap: var(--espaco-2);
-  padding: var(--espaco-3);
-  border: var(--forma-borda-fina) solid var(--cor-linha);
+  gap: 4px;
+  padding: var(--espaco-2) var(--espaco-3);
+  border: 2px solid var(--cor-linha);
   border-radius: var(--forma-raio);
   background: var(--cor-superficie);
   color: var(--cor-texto);
+  cursor: pointer;
 }
-.propostas__clube { display: flex; align-items: center; gap: var(--espaco-2); margin: 0; font-family: var(--fonte-titulo); font-size: var(--tipo-nome); font-weight: 900; }
-.propostas__liga { margin: 0; opacity: 0.8; }
-.propostas__detalhes { display: grid; gap: 2px; }
-.propostas__detalhes span:first-child { font-family: var(--fonte-titulo); font-weight: 800; }
-.propostas__aviso { margin: 0; font-weight: 700; }
-.propostas__acoes { grid-template-columns: 1fr; }
-.propostas__marca { margin: 0; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; }
+.propostas__item--marcado { border-color: var(--cor-destaque); box-shadow: inset 0 0 0 2px var(--cor-destaque); }
+.propostas__item:has(input:focus-visible), .propostas__modo:has(input:focus-visible) { outline: 3px solid var(--cor-foco); outline-offset: 2px; }
+.propostas__marca { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
+.propostas__topo { display: flex; align-items: center; gap: var(--espaco-2); }
+.propostas__nome { display: grid; flex: 1; min-inline-size: 0; }
+.propostas__clube { font-family: var(--fonte-titulo); font-size: 1.05rem; font-weight: 900; line-height: 1.1; }
+.propostas__liga { font-size: 0.72rem; opacity: 0.8; }
+.propostas__selo { padding: 2px 8px; border-radius: 999px; background: var(--cor-texto); color: var(--cor-superficie); font-size: 0.65rem; font-weight: 800; text-transform: uppercase; white-space: nowrap; }
+.propostas__financeiro { display: grid; gap: 1px; font-size: 0.85rem; font-weight: 700; }
+.propostas__var { font-size: 0.75rem; font-weight: 800; }
+.propostas__var--sobe { color: var(--cor-positivo); }
+.propostas__var--cai { color: var(--cor-negativo); }
+.propostas__var--igual { color: var(--cor-texto-suave, var(--cor-texto)); }
+.propostas__tags { display: flex; flex-wrap: wrap; gap: var(--espaco-2); font-size: 0.72rem; }
+.propostas__tag { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border: 1px solid var(--cor-linha); border-radius: 999px; }
+.propostas__estrelas { letter-spacing: 1px; color: #b07500; }
+.propostas__detalhe { display: grid; gap: 4px; padding: var(--espaco-2) var(--espaco-3); border: 1px dashed var(--cor-linha); border-radius: var(--forma-raio); background: var(--cor-superficie); color: var(--cor-texto); font-size: 0.82rem; }
+.propostas__detalhe p { margin: 0; }
+.propostas__aviso { font-weight: 700; }
+.propostas__modos { display: grid; gap: var(--espaco-1, 4px); }
+.propostas__modo { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--espaco-2); padding: 6px var(--espaco-2); border: 1px solid var(--cor-linha); border-radius: var(--forma-raio); cursor: pointer; font-weight: 700; }
+.propostas__modo--marcado { border-color: var(--cor-destaque); box-shadow: inset 0 0 0 1px var(--cor-destaque); }
+.propostas__dica { font-size: 0.75rem; opacity: 0.9; }
+.propostas__confirmar { position: sticky; inset-block-end: var(--espaco-2); }

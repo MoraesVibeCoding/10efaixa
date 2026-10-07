@@ -35,23 +35,26 @@ function playUntilProposals() {
 }
 
 describe('carreira com propostas na tela (T28d)', () => {
-  it('chega à tela de propostas, "Ficar" segue o jogo e a escolha entra no save', { timeout: 60_000 }, () => {
+  it('chega à tela de contratos, o clube atual segue o jogo e a escolha entra no save', { timeout: 60_000 }, () => {
     const onProgress = vi.fn();
     render(<Career input={INPUT} look={LOOK} seed={11} ritmo="normal" onRestart={() => {}} onProgress={onProgress} />);
     playUntilProposals();
     expect(onProposalScreen()).not.toBeNull();
-    expect(screen.getAllByRole('button', { name: /Aceitar proposta/ }).length).toBeGreaterThan(0);
-    fireEvent.click(screen.getByRole('button', { name: t('ui.proposta.ficar') }));
+    expect(screen.getAllByRole('radio').length).toBeGreaterThan(1);
+    fireEvent.click(screen.getAllByRole('radio')[0]!);
+    fireEvent.click(screen.getByRole('button', { name: t('ui.proposta.confirmar') }));
     expect(onProposalScreen()).toBeNull();
     expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
-    expect(onProgress.mock.calls.at(-1)![0]).toContain('ficar');
+    // o primeiro cartão é o clube atual: ficar, ou renovar quando o contrato acaba
+    expect(['ficar', 'renovar']).toContain((onProgress.mock.calls.at(-1)![0] as string[]).at(-1));
   });
 
   it('aceitar uma proposta leva ao clube dela e guarda "aceitar:<clube>"', { timeout: 60_000 }, () => {
     const onProgress = vi.fn();
     render(<Career input={INPUT} look={LOOK} seed={11} ritmo="normal" onRestart={() => {}} onProgress={onProgress} />);
     playUntilProposals();
-    fireEvent.click(screen.getAllByRole('button', { name: /Aceitar proposta/ })[0]!);
+    fireEvent.click(screen.getAllByRole('radio')[1]!);
+    fireEvent.click(screen.getByRole('button', { name: t('ui.proposta.confirmar') }));
     expect(onProposalScreen()).toBeNull();
     expect((onProgress.mock.calls.at(-1)![0] as string[]).some((c) => c.startsWith('aceitar:'))).toBe(true);
   });
