@@ -117,6 +117,9 @@ export function negotiate(o: Offer, agent: Agent, rng: Prng): Offer | null {
 const ROLE_SCORE: Record<string, number> = { titular: 1, rodizio: 0.6, aposta: 0.2, reserva: 0.2, promessa: 0.2 };
 export const toBRL = (o: Offer) => (o.currency === 'EUR' ? o.annualSalary * money.cambio.EUR : o.annualSalary);
 
+/** Custos de forçar a saída antes do fim do contrato (T28e, v2.50); os números moram em market.json. */
+export const FORCE_EXIT = cfg.propostas.forcarSaida;
+
 /** Quantas propostas a tela mostra (T28b, v2.50). */
 export const MAX_SHOWN_OFFERS = 3;
 

@@ -7,7 +7,7 @@
 - **Branch de trabalho:** `main` está em dia; os PRs #4 a #8 foram mergeados. Link de teste: https://10efaixa-9vpy.vercel.app (atualiza a partir do `main`).
 - **Verificação no `main`:** 985 testes passando (5 pulados de propósito: simulações longas), typecheck limpo e build OK.
 - **T57 concluída na branch `claude/eloquent-dirac-qnpqbi`** (SPEC v2.49; ainda sem PR nem merge): desafio do dia, link da carreira (`#c=`, sem nome) e rever carreira. Layout da abertura e do cartão conferido em 390×844 (Playwright instalado como dependência de desenvolvimento).
-- **Branch `claude/eloquent-dirac-qnpqbi` (a partir do `main` pós-T57), ainda sem PR:** SPEC v2.50 (propostas de clube): T28b–d **feitas** (tela de propostas ligada; falta T28e empresário/forçar saída e T28f simulação pareada) e v2.51 (linha do tempo "Sua carreira", T55f–h **feitas**; falta só conferir no celular real).
+- **Branch `claude/eloquent-dirac-qnpqbi` (a partir do `main` pós-T57), ainda sem PR:** SPEC v2.50 (propostas de clube): T28b–e **feitas** (propostas completas); falta a T28f (simulação pareada), na validação final. Decisão do usuário (v2.52): fazer toda a fila de decisões e histórias (T25c, T25d, T25e, T25b) e validar tudo no fim; lista em `docs/validacao-final.md` e v2.51 (linha do tempo "Sua carreira", T55f–h **feitas**; falta só conferir no celular real).
 - **Bug em aberto (iPhone/Safari):** na reunião, "A comissão topou" não sai ao tocar em Seguir; não reproduzido no Chromium (36 combinações, toque simulado). Suspeita: `<dialog>` modal no Safari. Falta a versão do iOS ou autorização para trocar por um aviso comum.
 - **Próxima tarefa pela ordem da seção 14:** **T58** (Apoia.se, aviso legal e privacidade).
 

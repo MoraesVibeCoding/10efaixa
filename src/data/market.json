@@ -226,8 +226,13 @@
    "sumirBase": 0.3
   },
   "forcarSaida": {
+   "_nota": "T28e (v2.50): forçar a saída antes do fim do contrato. Paga uma multa em meses de salário e perde idolatria no clube que deixa; custa moral e relação com o técnico, e há risco de virar vilão da torcida.",
    "custoMesesSalario": 6,
-   "idolatria": -30
+   "idolatria": -30,
+   "moral": -0.08,
+   "relacaoTecnico": -0.15,
+   "chanceVilao": 0.35,
+   "idolatriaVilao": -70
   },
   "margemParaSair": 2
  },

@@ -8,8 +8,14 @@ export const PROPOSAL_EVENT = 'proposta-clube';
 export const STAY = 'ficar';
 const ACCEPT = 'aceitar:';
 const LOVE = 'amor:';
+const NEGOTIATE = 'negociar:';
+const FORCE = 'forcar:';
 
 export const acceptChoice = (clubId: string): string => `${ACCEPT}${clubId}`;
+/** Forçar a saída para a proposta daquele clube antes do fim do contrato (custa multa, idolatria, moral e relação). */
+export const forceChoice = (clubId: string): string => `${FORCE}${clubId}`;
+/** Mandar o empresário negociar a proposta daquele clube (pode melhorar, ficar igual ou sumir). */
+export const negotiateChoice = (clubId: string): string => `${NEGOTIATE}${clubId}`;
 /** Só na proposta do clube de coração: aceitar por amor (salário menor, mais idolatria). */
 export const loveChoice = (clubId: string): string => `${LOVE}${clubId}`;
 
@@ -32,19 +38,27 @@ export const proposalViewOf = (o: Offer, overall: number): ProposalView => ({
 });
 
 export type ProposalChoice<T extends { clubId: string } = Offer> =
-  { kind: 'ficar' } | { kind: 'aceitar'; offer: T } | { kind: 'amor'; offer: T };
+  { kind: 'ficar' } | { kind: 'aceitar'; offer: T } | { kind: 'amor'; offer: T } | { kind: 'negociar'; offer: T } | { kind: 'forcar'; offer: T };
 
 /**
- * "ficar" (se há clube para ficar), "aceitar:<clube>" ou "amor:<clube>" (só quando `isHeart` diz que a proposta é a do clube de
+ * "ficar" (se há clube para ficar), "aceitar:<clube>", "negociar:<clube>", "forcar:<clube>" (só com `canForce`, contrato longo) ou "amor:<clube>" (só quando `isHeart` diz que a proposta é a do clube de
  * coração) de uma das propostas mostradas; qualquer outra coisa é null.
  */
 export function parseProposalChoice<T extends { clubId: string }>(
-  choice: string, shown: readonly T[], canStay: boolean, isHeart: (o: T) => boolean = () => false,
+  choice: string, shown: readonly T[], canStay: boolean, isHeart: (o: T) => boolean = () => false, canForce = false,
 ): ProposalChoice<T> | null {
   if (choice === STAY) return canStay ? { kind: 'ficar' } : null;
   if (choice.startsWith(ACCEPT)) {
     const offer = shown.find((o) => acceptChoice(o.clubId) === choice);
     return offer ? { kind: 'aceitar', offer } : null;
+  }
+  if (choice.startsWith(FORCE)) {
+    const offer = shown.find((o) => forceChoice(o.clubId) === choice);
+    return offer && canForce ? { kind: 'forcar', offer } : null;
+  }
+  if (choice.startsWith(NEGOTIATE)) {
+    const offer = shown.find((o) => negotiateChoice(o.clubId) === choice);
+    return offer ? { kind: 'negociar', offer } : null;
   }
   if (choice.startsWith(LOVE)) {
     const offer = shown.find((o) => loveChoice(o.clubId) === choice);

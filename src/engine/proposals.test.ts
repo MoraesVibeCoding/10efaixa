@@ -1,5 +1,5 @@
 import type { Offer } from './market';
-import { PROPOSAL_EVENT, STAY, acceptChoice, loveChoice, parseProposalChoice, proposalViewOf } from './proposals';
+import { PROPOSAL_EVENT, STAY, acceptChoice, loveChoice, forceChoice, negotiateChoice, parseProposalChoice, proposalViewOf } from './proposals';
 
 // T28b (SPEC 6.12, v2.50): a decisão "proposta-clube": a escolha é "aceitar:<clube>" ou "ficar", conferida com as propostas mostradas.
 const offer = (clubId: string, over: Partial<Offer> = {}): Offer => ({
@@ -60,5 +60,26 @@ describe('proposta com marca (T28e)', () => {
     expect(proposalViewOf(offer('a', { rivalOfCurrent: true }), 70).marca).toBe('rival');
     expect(proposalViewOf(offer('a', { rivalOfHeart: true }), 70).marca).toBe('rivalCoracao');
     expect(proposalViewOf(offer('a', { heartClub: true, rivalOfCurrent: true }), 70).marca).toBe('coracao');
+  });
+});
+
+// T28e (v2.50): "mandar o empresário negociar" uma das propostas mostradas.
+describe('empresário negocia (T28e)', () => {
+  it('"negociar:<clube>" vale para qualquer proposta mostrada, e só para elas', () => {
+    expect(negotiateChoice('sport')).toBe('negociar:sport');
+    expect(parseProposalChoice('negociar:sport', shown, true)).toEqual({ kind: 'negociar', offer: shown[1] });
+    expect(parseProposalChoice('negociar:flamengo', shown, true)).toBeNull();
+    expect(parseProposalChoice('negociar:', shown, true)).toBeNull();
+  });
+});
+
+// T28e (v2.50): forçar a saída antes do fim do contrato.
+describe('forçar saída (T28e)', () => {
+  it('"forcar:<clube>" só vale quando o contrato permite forçar, e para propostas mostradas', () => {
+    expect(forceChoice('sport')).toBe('forcar:sport');
+    expect(parseProposalChoice('forcar:sport', shown, true, () => false, true)).toEqual({ kind: 'forcar', offer: shown[1] });
+    expect(parseProposalChoice('forcar:sport', shown, true, () => false, false)).toBeNull();
+    expect(parseProposalChoice('forcar:sport', shown, true)).toBeNull();
+    expect(parseProposalChoice('forcar:flamengo', shown, true, () => false, true)).toBeNull();
   });
 });

@@ -100,7 +100,7 @@ function decider(run: Run, probe?: { year: number; found: string[] }): Decider {
     if (i >= run.choices.length) throw new Pending(eventId, v, i);
     const choice = run.choices[i++]!;
     const valid = eventId === MEETING_EVENT ? parseProposal(choice) !== null
-      : eventId === PROPOSAL_EVENT ? parseProposalChoice(choice, v.propostas ?? [], v.state.podeFicar === true, (o) => o.marca === 'coracao') !== null
+      : eventId === PROPOSAL_EVENT ? parseProposalChoice(choice, v.propostas ?? [], v.state.podeFicar === true, (o) => o.marca === 'coracao', v.state.podeForcar === true) !== null
       : OPTIONS.get(eventId)?.has(choice);
     if (!valid) throw new RangeError(`escolha inválida "${choice}" para ${eventId} (decisão ${i})`);
     return choice;

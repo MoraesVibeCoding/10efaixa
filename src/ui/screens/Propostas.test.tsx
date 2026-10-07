@@ -65,4 +65,24 @@ describe('tela de propostas (T28d)', () => {
     expect(screen.getAllByRole('button', { name: /Aceitar por amor/ })).toHaveLength(1);
     expect(screen.getByText(t('ui.proposta.dicaAmor'))).toBeInTheDocument();
   });
+
+  it('cada proposta tem "Mandar o empresário negociar", que escolhe aquele clube', () => {
+    const onChoose = vi.fn();
+    render(<Propostas propostas={duas} podeFicar onChoose={onChoose} />);
+    expect(screen.getAllByRole('button', { name: /Mandar o empresário negociar/ })).toHaveLength(2);
+    fireEvent.click(screen.getByRole('button', { name: /Mandar o empresário negociar a proposta do Benfica/ }));
+    expect(onChoose).toHaveBeenLastCalledWith('negociar:benfica');
+    expect(screen.getAllByText(t('ui.proposta.dicaNegociar')).length).toBeGreaterThan(0);
+  });
+
+  it('"Forçar a saída" só aparece com contrato longo (podeForcar) e escolhe forcar:<clube>', () => {
+    const onChoose = vi.fn();
+    const { rerender } = render(<Propostas propostas={duas} podeFicar podeForcar onChoose={onChoose} />);
+    fireEvent.click(screen.getByRole('button', { name: /Forçar a saída e aceitar a proposta do Flamengo/ }));
+    expect(onChoose).toHaveBeenLastCalledWith('forcar:flamengo');
+    expect(screen.getByText(t('ui.proposta.dicaForcar'))).toBeInTheDocument();
+    rerender(<Propostas propostas={duas} podeFicar onChoose={onChoose} />);
+    expect(screen.queryByRole('button', { name: /Forçar a saída/ })).toBeNull();
+    expect(screen.queryByText(t('ui.proposta.dicaForcar'))).toBeNull();
+  });
 });

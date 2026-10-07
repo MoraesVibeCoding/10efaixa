@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { STAY, acceptChoice, loveChoice, type ProposalView } from '../../engine/proposals';
+import { STAY, acceptChoice, forceChoice, loveChoice, negotiateChoice, type ProposalView } from '../../engine/proposals';
 import { t } from '../../i18n';
 import { clubName } from './clubText';
 import { Emblema } from './Emblema';
@@ -9,7 +9,7 @@ import './Propostas.css';
 
 // T28d (SPEC 6.12, v2.50): propostas de clube da janela de transferências. Até 3 propostas e "Ficar no clube" (só com clube
 // para ficar). Minutos e nível do clube só em palavras. Um toque decide, como as outras decisões do ritmo Rápido.
-export function Propostas({ propostas, podeFicar, onChoose }: { propostas: ProposalView[]; podeFicar: boolean; onChoose: (choice: string) => void }) {
+export function Propostas({ propostas, podeFicar, podeForcar = false, onChoose }: { propostas: ProposalView[]; podeFicar: boolean; podeForcar?: boolean; onChoose: (choice: string) => void }) {
   const title = useRef(null as HTMLHeadingElement | null);
   useEffect(() => { title.current?.focus(); }, []);
   return (
@@ -40,6 +40,16 @@ export function Propostas({ propostas, podeFicar, onChoose }: { propostas: Propo
                     onClick={function accept() { onChoose(acceptChoice(p.clubId)); }}>
                     {t('ui.proposta.aceitar')}
                   </button>
+                  <button type="button" className="criacao__botao" aria-label={t('ui.proposta.negociarDe', { prep, clube: nome })}
+                    onClick={function negotiate() { onChoose(negotiateChoice(p.clubId)); }}>
+                    {t('ui.proposta.negociar')}
+                  </button>
+                  {podeForcar && (
+                    <button type="button" className="criacao__botao" aria-label={t('ui.proposta.forcarDe', { prep, clube: nome })}
+                      onClick={function force() { onChoose(forceChoice(p.clubId)); }}>
+                      {t('ui.proposta.forcar')}
+                    </button>
+                  )}
                   {p.marca === 'coracao' && (
                     <>
                       <button type="button" className="criacao__botao" aria-label={t('ui.proposta.porAmorDe', { prep, clube: nome })}
@@ -54,6 +64,8 @@ export function Propostas({ propostas, podeFicar, onChoose }: { propostas: Propo
             })}
           </ul>
           <p className="criacao__dica">{t('ui.proposta.legenda')}</p>
+          <p className="criacao__dica">{t('ui.proposta.dicaNegociar')}</p>
+          {podeForcar && <p className="criacao__dica">{t('ui.proposta.dicaForcar')}</p>}
         </div>
         {podeFicar && (
           <footer className="criacao__acoes propostas__acoes">
