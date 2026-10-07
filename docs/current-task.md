@@ -6,7 +6,7 @@
 
 - **Branch de trabalho:** `main` está em dia; os PRs #4 a #8 foram mergeados. Link de teste: https://10efaixa-9vpy.vercel.app (atualiza a partir do `main`).
 - **Verificação no `main`:** 985 testes passando (5 pulados de propósito: simulações longas), typecheck limpo e build OK.
-- **T57 concluída na branch `claude/eloquent-dirac-qnpqbi`** (SPEC v2.49; ainda sem PR nem merge): desafio do dia, link da carreira (`#c=`, sem nome) e rever carreira. Falta conferir o layout da abertura e do cartão em 390×844 (o Playwright não está instalado no projeto).
+- **T57 concluída na branch `claude/eloquent-dirac-qnpqbi`** (SPEC v2.49; ainda sem PR nem merge): desafio do dia, link da carreira (`#c=`, sem nome) e rever carreira. Layout da abertura e do cartão conferido em 390×844 (Playwright instalado como dependência de desenvolvimento).
 - **Próxima tarefa pela ordem da seção 14:** **T58** (Apoia.se, aviso legal e privacidade).
 
 ## Feito recentemente

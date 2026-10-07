@@ -76,13 +76,13 @@ export function Cartao({ result, code, visual, desafio, link, onJogar, onRestart
       </div>
       <canvas ref={canvas} className="cartao__imagem" role="img" aria-label={model.alt[version]} width={CARD_SIZE.width} height={CARD_SIZE.height} />
       <div className="cartao__acoes">
+        {onJogar && <button type="button" className="cartao__compartilhar" onClick={onJogar}>{t('ui.rever.jogar')}</button>}
         {nativeShare && <button type="button" className="cartao__compartilhar" disabled={!file} onClick={() => { void share(); }}>{t('ui.compartilhar.compartilhar')}</button>}
         <button type="button" disabled={!file} onClick={download}>{t('ui.compartilhar.baixar')}</button>
         <button type="button" onClick={() => { void copy(); }}>{t('ui.compartilhar.copiar')}</button>
         {link && <button type="button" onClick={() => { void copyLink(); }}>{t('ui.compartilhar.copiarLink')}</button>}
       </div>
       <p className="cartao__status" role="status">{status}</p>
-      {onJogar && <button type="button" className="cartao__compartilhar" onClick={onJogar}>{t('ui.rever.jogar')}</button>}
       <button type="button" className="cartao__nova" onClick={onRestart}>{t('ui.fim.novaCarreira')}</button>
     </main>
   );
