@@ -16,3 +16,6 @@
 - `market.json` → `propostas.forcarSaida`: multa de 6 meses de salário, −30 de idolatria no clube que deixa, −0,08 de moral, −0,15 de relação com o técnico, 35% de risco de virar vilão (idolatria −70).
 - `market.json` → `propostas.negociar` (já existia): +15% de salário quando melhora; 30% de chance base de a proposta sumir, menor com empresário mais influente.
 - Aceitar a proposta do clube de coração agora **aplica** moral e idolatria da opção escolhida (antes só o salário valia); pode mexer um pouco no equilíbrio de carreiras com clube de coração.
+
+## Revisão de equilíbrio pedida pelo usuário
+- Muitas reuniões, muitas decisões de contrato/renovação, vida pessoal na média e pouco jogo em campo: ver `docs/revisao-equilibrio-decisoes.md` (números medidos e ideias). Itens a decidir junto com a reunião em 3 ideias e a tela de contratos.
