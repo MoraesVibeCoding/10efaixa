@@ -15,6 +15,8 @@ interface EventDef {
   politica: { padrao: string };
   /** T25c: marco da carreira (primeira vez); quem sorteia é `fireMilestones`, nunca o sorteio comum de eventos. */
   marco?: boolean;
+  /** T25e: evento de catálogo; entra só pelo sorteio por contexto (`contextDraw.ts`), nunca pelo sorteio comum. */
+  sorteio?: boolean;
 }
 
 const TEMPERAMENTS: string[] = creation.temperaments;
@@ -64,7 +66,7 @@ const RANGES = data.campos as unknown as Record<string, [number | null, number |
 /** Condição `[campo, operador, valor]` sobre um contexto; campo ausente nunca vale. */
 export const holds = (c: Ctx, [field, op, v]: Cond) => field in c && OPS[op]!(c[field]!, v);
 
-const pool = (c: Ctx) => EVENTS.filter((e) => !e.marco && e.condicoes.every((k) => holds(c, k)));
+const pool = (c: Ctx) => EVENTS.filter((e) => !e.marco && !e.sorteio && e.condicoes.every((k) => holds(c, k)));
 export const eligibleEvents = (c: Ctx): string[] => pool(c).map((e) => e.id);
 
 /** Sorteio ponderado entre os elegíveis (ordem fixa do catálogo); nenhum elegível = null. */
