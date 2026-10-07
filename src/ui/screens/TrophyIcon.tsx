@@ -2,7 +2,7 @@ import trophyArt from '../../data/trophyArt.json';
 
 // troféu de cada competição (provisório até o lote 5); sem peça, o ícone genérico abaixo
 const TROPHY_FILES = import.meta.glob('../../assets/art/provisoria/detalhe/detalhe__trofeu-*.svg', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
-const trophySrc = (id: string) => {
+export const trophySrc = (id: string) => {
   const piece = (trophyArt.pecas as Record<string, string>)[id];
   return piece ? TROPHY_FILES[`../../assets/art/provisoria/detalhe/detalhe__trofeu-${piece}.svg`] : undefined;
 };
