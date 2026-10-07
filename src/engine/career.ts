@@ -16,7 +16,8 @@ import { mentalityEffects } from './mentality';
 import { afterClassico, afterSemester, afterTransfer, type Idolatry } from './idolatry';
 import { decayRelapse, graveDecision, semesterInjury } from './injuries';
 import { FORCE_EXIT, generateOffers, negotiate, rankOffers, leagueOf, marketValue, salaryFor, type Offer } from './market';
-import { MEETING_EVENT, autoProposal, encodeProposal, parseProposal, staffMeeting, type MeetingResult } from './meeting';
+import { MEETING_EVENT, autoProposal, encodeProposal, meetingScore, parseProposal, staffMeeting, type MeetingResult } from './meeting';
+import { MEETING_IDEAS, TRUST, drawClubNeed, ideaOf, meetingOptions, type Idea, type MeetingOptions } from './meetingOptions';
 import { minutesShare, squadLevel, updateForm, updateMorale, type Role } from './minutes';
 import { overall, type Position } from './overall';
 import { coachProposal } from './positionChange';
@@ -93,7 +94,9 @@ export interface DecisionView {
   state: Record<string, number | string | boolean>;
   seasons: CareerResult['seasons']; titles: Title[];
   /** T52: as reuniões com a comissão até agora (ano, semestre e resposta); a tela mostra a resposta da que o jogador fez. */
-  meetings: ({ year: number; semestre: 1 | 2 } & MeetingResult)[];
+  meetings: ({ year: number; semestre: 1 | 2; ideia?: Idea } & MeetingResult)[];
+  /** T52c (v2.53): na decisão da reunião, as 3 ideias (óbvia, mescla, ousada); a escolha é uma delas. */
+  reuniao?: MeetingOptions;
   /** T51b: o último semestre fechado e o que mais mudou nele (até 2 frases, sem número). */
   ultimoSemestre?: { year: number; semestre: 1 | 2; frases: Feedback[] };
   /** T51b: idolatria (−100 a 100) em cada clube por onde passou; a tela mostra só a faixa. */
@@ -198,7 +201,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   const meetings: DecisionView['meetings'] = [];
   let ultimoSemestre: DecisionView['ultimoSemestre'];
   /** Toda decisão passa por aqui (T51): o padrão é a escolha do temperamento, como antes. */
-  const ask = (eventId: string, state: Record<string, number | string | boolean> = {}, who = temp, extra: Pick<DecisionView, 'propostas'> = {}) => decide(eventId, who, () => ({
+  const ask = (eventId: string, state: Record<string, number | string | boolean> = {}, who = temp, extra: Pick<DecisionView, 'propostas' | 'reuniao'> = {}) => decide(eventId, who, () => ({
     ...extra,
     year: curYear, age: evo.age, clubId, position, overall: ov(evo), role: curRole, temperament: who,
     marketValueEUR: Math.round(marketValue(ov(evo), evo.age) * selectionEffect(prestige, sel, sel.rung).marketMultiplier),
@@ -317,18 +320,28 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       const fx = selectionEffect(prestige, sel, sel.rung);
       if (varzeaLeft === 0 && !inYouth) minutes = clamp(minutes + fx.clubMinutes, 0, 1);
       morale = updateMorale(morale, minutes, role, teamResult);
-      const clubNeed = ATTRIBUTES[yr.int(0, ATTRIBUTES.length - 1)]!;
+      // T52c: com as 3 ideias, o clube precisa do que a posição pede (mesma quantidade de sorteios); antes, de qualquer um dos 10
+      const clubNeed = MEETING_IDEAS ? drawClubNeed(position, yr) : ATTRIBUTES[yr.int(0, ATTRIBUTES.length - 1)]!;
       // T52: com clube, a reunião passa por quem decide (tela ou automática); a sugestão é a proposta automática
       const suggestion = autoProposal(evo.attributes, evo.caps, position, evo.age);
       let proposal: { main: Focus; secondary: Focus } = suggestion;
+      const ideas = MEETING_IDEAS && clubId
+        ? meetingOptions({ position, attrs: evo.attributes, caps: evo.caps, age: evo.age, score: meetingScore({ morale, coachRelation, nationalTeamStatus: fx.meetingStatus }) })
+        : undefined;
       if (clubId) {
-        const said = ask(MEETING_EVENT, { sugestao: encodeProposal(suggestion), semestre: sem + 1 });
+        const said = ask(MEETING_EVENT, { sugestao: encodeProposal(suggestion), semestre: sem + 1 }, temp, ideas ? { reuniao: ideas } : {});
         const parsed = parseProposal(said);
         if (!parsed) throw new RangeError(`proposta de reunião inválida: "${said}"`);
         proposal = parsed;
       }
       const meeting = staffMeeting({ proposal, morale, coachRelation, nationalTeamStatus: fx.meetingStatus, clubNeed });
-      if (clubId) meetings.push({ year: curYear, semestre: (sem + 1) as 1 | 2, ...meeting });
+      // T52c: a confiança do técnico muda com a ideia aceita (óbvia sobe, ousada desce) e com a contraproposta; recusa não muda
+      const ideia = ideas ? ideaOf(ideas, proposal.main, proposal.secondary) : null;
+      if (ideas) {
+        if (meeting.response === 'aceita' && ideia) coachRelation = clamp(coachRelation + TRUST[ideia], 0, 1);
+        else if (meeting.response === 'contrapropoe') coachRelation = clamp(coachRelation + TRUST.contraproposta, 0, 1);
+      }
+      if (clubId) meetings.push({ year: curYear, semestre: (sem + 1) as 1 | 2, ...meeting, ...(ideia && { ideia }) });
       const { focus, injuryRiskMultiplier } = meeting;
       // Lesões: tempo fora de uma grave anterior, depois o sorteio do semestre (só no profissional).
       if (outLeft > 0) { minutes *= 1 - Math.min(1, outLeft); outLeft = Math.max(0, outLeft - 1); }

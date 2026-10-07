@@ -1,3 +1,4 @@
+import { pickWeighted, type Prng } from './prng';
 import { ATTRIBUTES, type Attribute, type Attributes } from './attributes';
 import { autoProposal } from './meeting';
 import type { Position } from './overall';
@@ -53,3 +54,21 @@ export function meetingOptions({ position, attrs, caps, age, score }: MeetingOpt
   const card = (proposal: Proposal): MeetingCard => ({ proposal, agrado: agradoOf(position, proposal.main, score) });
   return { obvia: card(obvia), mescla: card(mescla), ousada: card(ousada) };
 }
+
+/** T52c: a necessidade do clube neste semestre, sorteada pelos pesos da posição (uma só chamada ao sorteio, como antes). */
+export const drawClubNeed = (position: Position, rng: Prng): Attribute => pickWeighted(rng, weightsOf(position));
+
+export type Idea = 'obvia' | 'mescla' | 'ousada';
+/** Qual das 3 ideias é esta proposta ("principal|secundário" na ordem do cartão); null se não é nenhuma. */
+export function ideaOf(options: MeetingOptions, main: string, secondary: string): Idea | null {
+  for (const id of ['obvia', 'mescla', 'ousada'] as const) {
+    const p = options[id].proposal;
+    if (p.main === main && p.secondary === secondary) return id;
+  }
+  return null;
+}
+
+/** Chave que liga a reunião em 3 ideias no motor (meeting.json; só liga com a tela da T52d). */
+export const MEETING_IDEAS = cfg.tresIdeias;
+/** Variação da confiança do técnico por ideia aceita e na contraproposta (meeting.json). */
+export const TRUST = cfg.confianca;

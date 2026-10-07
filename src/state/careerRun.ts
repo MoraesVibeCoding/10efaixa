@@ -3,6 +3,7 @@ import flow from '../data/flow.json';
 import { autoDecide, simulateCareer, type CareerResult, type Decider, type DecisionView } from '../engine/career';
 import { autoChoice } from '../engine/events';
 import { MEETING_EVENT, parseProposal } from '../engine/meeting';
+import { ideaOf } from '../engine/meetingOptions';
 import { PROPOSAL_EVENT, parseProposalChoice } from '../engine/proposals';
 import type { CreationInput } from '../engine/player';
 
@@ -99,7 +100,8 @@ function decider(run: Run, probe?: { year: number; found: string[] }): Decider {
   function take(eventId: string, v: DecisionView): string {
     if (i >= run.choices.length) throw new Pending(eventId, v, i);
     const choice = run.choices[i++]!;
-    const valid = eventId === MEETING_EVENT ? parseProposal(choice) !== null
+    const meetingOk = () => { const p = parseProposal(choice); return p !== null && (!v.reuniao || ideaOf(v.reuniao, p.main, p.secondary) !== null); };
+    const valid = eventId === MEETING_EVENT ? meetingOk()
       : eventId === PROPOSAL_EVENT ? parseProposalChoice(choice, v.propostas ?? [], v.state.podeFicar === true, (o) => o.marca === 'coracao', v.state.podeForcar === true) !== null
       : OPTIONS.get(eventId)?.has(choice);
     if (!valid) throw new RangeError(`escolha inválida "${choice}" para ${eventId} (decisão ${i})`);
