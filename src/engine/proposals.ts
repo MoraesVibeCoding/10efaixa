@@ -1,4 +1,6 @@
+import { effectiveRep } from './europe';
 import type { Offer } from './market';
+import { clubLevelBand, minutesBand, type ClubLevelBand, type MinutesBand } from './minutes';
 
 // T28b (SPEC 6.12, v2.50): a decisão "proposta-clube", no mesmo molde da reunião (as opções mudam a cada temporada,
 // então a escolha é um texto conferido contra as propostas mostradas, e não uma opção fixa de events.json).
@@ -12,11 +14,15 @@ export const acceptChoice = (clubId: string): string => `${ACCEPT}${clubId}`;
 export interface ProposalView {
   clubId: string; league: string; currency: Offer['currency']; annualSalary: number; years: number;
   role: Offer['role']; staffQuality: number; offAxis: boolean;
+  /** v2.28: minutos previstos e nível do clube, só em faixa (os dois pesam na evolução). */
+  minutosFaixa: MinutesBand; nivelClube: ClubLevelBand;
 }
 
-export const proposalViewOf = (o: Offer): ProposalView => ({
+/** `overall`: o do jogador agora; com o nível do elenco do clube dá os minutos previstos. */
+export const proposalViewOf = (o: Offer, overall: number): ProposalView => ({
   clubId: o.clubId, league: o.league, currency: o.currency, annualSalary: o.annualSalary, years: o.years,
   role: o.role, staffQuality: o.staffQuality, offAxis: o.offAxis,
+  minutosFaixa: minutesBand({ overall, clubRep: effectiveRep(o.clubId), role: o.role }), nivelClube: clubLevelBand(effectiveRep(o.clubId)),
 });
 
 export type ProposalChoice<T extends { clubId: string } = Offer> = { kind: 'ficar' } | { kind: 'aceitar'; offer: T };

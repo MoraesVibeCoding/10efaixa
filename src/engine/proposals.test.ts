@@ -30,7 +30,14 @@ describe('escolha da proposta (T28b)', () => {
     });
 
   it('a visão da proposta para a tela leva só o que a tela mostra, sem os campos internos do mercado', () => {
-    const v = proposalViewOf(offer('vitoria', { heartClub: true, rivalOfCurrent: true, offAxis: true, annualSalary: 2_500_000, currency: 'EUR', league: 'POR', role: 'aposta' }));
-    expect(v).toEqual({ clubId: 'vitoria', league: 'POR', currency: 'EUR', annualSalary: 2_500_000, years: 3, role: 'aposta', staffQuality: 1, offAxis: true });
+    const v = proposalViewOf(offer('vitoria', { heartClub: true, rivalOfCurrent: true, offAxis: true, annualSalary: 2_500_000, currency: 'EUR', league: 'POR', role: 'aposta' }), 70);
+    expect(v).toEqual({ clubId: 'vitoria', league: 'POR', currency: 'EUR', annualSalary: 2_500_000, years: 3, role: 'aposta', staffQuality: 1, offAxis: true, minutosFaixa: expect.stringMatching(/^(muitos|rodizio|poucos)$/), nivelClube: expect.stringMatching(/^(modesto|medio|grande|elite)$/) });
+  });
+
+  it('a visão traz as faixas de minutos e de nível do clube, e o mesmo jogador vê faixas diferentes em clubes diferentes', () => {
+    const forte = proposalViewOf(offer('flamengo', { role: 'rodizio' }), 75);
+    const fraco = proposalViewOf(offer('santa-cruz', { role: 'titular' }), 75);
+    expect(forte.nivelClube).not.toBe(fraco.nivelClube);
+    expect(fraco.minutosFaixa).toBe('muitos');
   });
 });

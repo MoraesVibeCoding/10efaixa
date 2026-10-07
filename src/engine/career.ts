@@ -556,7 +556,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         const { shown, pick: auto } = rankOffers(me, offers, current);
         pick = auto;
         if (shown.length > 0) {
-          const said = ask(PROPOSAL_EVENT, { sugestao: auto ? acceptChoice(auto.clubId) : STAY, podeFicar: current !== null }, temp, { propostas: shown.map(proposalViewOf) });
+          const said = ask(PROPOSAL_EVENT, { sugestao: auto ? acceptChoice(auto.clubId) : STAY, podeFicar: current !== null }, temp, { propostas: shown.map((o) => proposalViewOf(o, me.overall)) });
           const chosen = parseProposalChoice(said, shown, current !== null);
           if (!chosen) throw new RangeError(`proposta inválida: "${said}"`);
           pick = chosen.kind === 'aceitar' ? chosen.offer : null;

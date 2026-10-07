@@ -3,6 +3,11 @@
  "nivelElenco": { "base": 40, "porReputacao": 0.45 },
  "papel": { "titular": 0.85, "rodizio": 0.55, "reserva": 0.25, "promessa": 0.15 },
  "porPontoRelativo": 0.03,
+ "faixas": {
+  "_nota": "T28c (v2.28/v2.50): faixas em texto da proposta, sem número na tela. Minutos: fração prevista (forma neutra, sem ruído) a partir da qual vale cada faixa; nível do clube: reputação máxima de cada faixa (acima do último, elite).",
+  "minutos": { "muitos": 0.7, "rodizio": 0.4 },
+  "nivelClube": { "modesto": 30, "medio": 50, "grande": 80 }
+ },
  "pesoForma": 0.2,
  "ruido": 0.08,
  "forma": { "memoria": 0.6, "escala": 40, "ruido": 0.15 },
