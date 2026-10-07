@@ -30,7 +30,7 @@ describe('carreira na tela (T51b)', () => {
     const onRestart = vi.fn();
     const onProgress = vi.fn();
     render(<Career input={INPUT} look={LOOK} visual={VISUAIS[0]!.id} seed={11} onRestart={onRestart} onProgress={onProgress} />);
-    for (let guard = 0; guard < 400 && !screen.queryByRole('heading', { level: 1, name: t('ui.historia.titulo') }); guard++) {
+    for (let guard = 0; guard < 400 && !screen.queryByRole('heading', { level: 1, name: t('ui.linhaDoTempo.titulo') }); guard++) {
       // T52: resposta da comissão por cima da tela; reunião aceita a sugestão do preparador (o mesmo do automático)
       const resposta = document.querySelector('dialog.reuniao__resposta');
       if (resposta) { fireEvent.click(resposta.querySelector('button')!); continue; }
@@ -42,7 +42,7 @@ describe('carreira na tela (T51b)', () => {
       fireEvent.click(screen.getByRole('button', { name: t('ui.resultado.seguir') }));
     }
     // T55b: "Sua história" antes do resumo
-    fireEvent.click(screen.getByRole('button', { name: t('ui.historia.verCartao') }));
+    fireEvent.click(screen.getByRole('button', { name: t('ui.linhaDoTempo.verCartao') }));
     const result = simulateCareer(INPUT, 11);
     // T55d: o cartão (canvas) com o texto alternativo da versão narrativa, que abre primeiro
     expect(screen.getByRole('heading', { level: 1, name: t('ui.cartao.titulo') })).toBeInTheDocument();

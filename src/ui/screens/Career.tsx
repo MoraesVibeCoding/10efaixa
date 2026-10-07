@@ -12,7 +12,7 @@ import { Decision, type Anterior } from './Decision';
 import { momentsBetween } from './moments';
 import events from '../../data/events.json';
 import { Cartao } from './Cartao';
-import { Historia } from './Historia';
+import { LinhaDoTempo } from './LinhaDoTempo';
 import { Reuniao, ReuniaoResposta } from './Reuniao';
 import type { Look } from './look';
 import type { RitmoId } from './Ritmo';
@@ -63,7 +63,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
     const link = { seed, ritmo, input, visual: visual ?? '', choices, codigo: code, ...(desafio === undefined ? {} : { desafio }) };
     return (
       <div ref={box} className="carreira">
-        {showCard ? <Cartao result={step.result} code={code} visual={visual} desafio={desafio} link={visual === undefined ? undefined : link} onRestart={onRestart} /> : <Historia result={step.result} onContinue={() => { setShowCard(true); }} />}
+        {showCard ? <Cartao result={step.result} code={code} visual={visual} desafio={desafio} link={visual === undefined ? undefined : link} onRestart={onRestart} /> : <LinhaDoTempo result={step.result} onContinue={() => { setShowCard(true); }} />}
       </div>
     );
   }
