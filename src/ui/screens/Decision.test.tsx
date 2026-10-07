@@ -49,6 +49,21 @@ describe('resultado da escolha (SPEC v2.20)', () => {
     expect(screen.getByRole('main')).toHaveAttribute('data-resultado', 'aberto');
   });
 
+  it('o texto do evento sai em camadas pelas etiquetas da carreira (T25e): abertura, texto base e frases de contexto', () => {
+    const render1 = (etiquetas: string[]) => render(<Decision eventId="festa" age={19} progress={0.2} player={{ ...PLAYER, etiquetas }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    const { unmount } = render1(['jovem', 'moralBaixa', 'noBanco', 'capitao']);
+    const texto = document.querySelector('.decisao__historia')?.textContent ?? '';
+    expect(texto).toContain(t('events.festa.abertura.jovem'));
+    expect(texto).toContain(t('events.festa.texto'));
+    expect(texto).toContain(t('events.festa.contexto.moralBaixa'));
+    expect(texto).toContain(t('events.festa.contexto.noBanco'));
+    expect(texto).not.toContain(t('events.festa.contexto.capitao')); // só 2 frases de contexto
+    unmount();
+    render1([]);
+    expect(document.body.textContent).toContain(t('events.festa.texto'));
+    expect(document.body.textContent).not.toContain(t('events.festa.abertura.jovem'));
+  });
+
   it('o bônus de Mental de um marco aparece em palavras, nunca em número (regra: nenhum número dos atributos)', () => {
     render(<Decision eventId="estreia-profissional" age={17} progress={0.2} player={{ name: 'Zé', position: 'meia', clubId: 'flamengo', overall: 60, titles: [], role: 'composicao', monthlySalary: { amount: 4_000, currency: 'BRL' } }} state={{ ...STATE, bonusMental: 0 }} scene={{ src: 'c.webp', alt: 'cena' }} onContinue={() => {}} />);
     fireEvent.click(screen.getByRole('button', { name: new RegExp(t('events.estreia-profissional.opcoes.respirar-e-jogar-simples')) }));
@@ -235,15 +250,15 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
       expect(items[0]!.textContent).not.toMatch(/\d/);
     });
 
-    it('títulos com a imagem do troféu provisório da competição; sem peça própria, fica o ícone genérico', () => {
+    it('todo título mostra a imagem do troféu que criamos (a Liga Europa usa a peça da segunda copa continental)', () => {
       const drawer = openDrawer({ titles: ['libertadores', 'europaLeague'] });
       const [liberta, europa] = within(within(drawer).getByRole('list', { name: t('ui.decisao.titulosLista') })).getAllByRole('listitem');
       // a imagem é decorativa (alt vazio): o nome da competição já está escrito ao lado
       const img = liberta!.querySelector('img')!;
       expect(img.getAttribute('src')).toBe(libertaArt);
       expect(img).toHaveAttribute('alt', '');
-      expect(europa!.querySelector('img')).toBeNull();
-      expect(europa!.querySelector('svg')).not.toBeNull();
+      expect(europa!.querySelector('img')).not.toBeNull();
+      expect(europa!.querySelector('svg')).toBeNull();
     });
 
     it('sem título ainda: a gaveta diz isso, sem lista', () => {

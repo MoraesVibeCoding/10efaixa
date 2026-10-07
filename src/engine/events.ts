@@ -11,7 +11,7 @@ type Effect = [string, 'add' | 'set' | 'mul', Val];
 interface EventDef {
   id: string; cena: string; peso: number; condicoes: Cond[];
   /** `jeito`: temperamento a que a opção remete (SPEC v2.17). Decisões têm 3 opções, cada uma com um jeito diferente. */
-  opcoes: { id: string; efeitos: Effect[]; jeito?: string }[];
+  opcoes: { id: string; efeitos: Effect[]; jeito?: string; ajustes?: { etiqueta: string; efeitos: Effect[] }[] }[];
   politica: { padrao: string };
   /** T25c: marco da carreira (primeira vez); quem sorteia é `fireMilestones`, nunca o sorteio comum de eventos. */
   marco?: boolean;
@@ -77,11 +77,13 @@ export function pickEvent(c: Ctx, rng: Prng): string | null {
 }
 
 /** Aplica os efeitos da opção (puro), respeitando os limites de cada campo. */
-export function applyOption(s: Ctx, eventId: string, optionId: string): Ctx {
+export function applyOption(s: Ctx, eventId: string, optionId: string, tags: readonly string[] = []): Ctx {
   const opt = BY_ID.get(eventId)?.opcoes.find((o) => o.id === optionId);
   if (!opt) throw new RangeError(`opção inexistente: ${eventId}/${optionId}`);
   const out = { ...s };
-  for (const [field, op, v] of opt.efeitos) {
+  // T25e: o contexto ajusta as consequências: os efeitos extras das etiquetas que valem somam-se aos da opção
+  const effects = [...opt.efeitos, ...(opt.ajustes ?? []).filter((a) => tags.includes(a.etiqueta)).flatMap((a) => a.efeitos)];
+  for (const [field, op, v] of effects) {
     const range = RANGES[field];
     const cur = (out[field] as number) ?? 0;
     let next: Val = op === 'set' ? v : op === 'mul' ? cur * (v as number) : cur + (v as number);

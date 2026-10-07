@@ -55,3 +55,9 @@ Simulação pareada (`npm run sim:estilos`, 400 carreiras por estilo), antes (HE
 
 ## Memória da carreira (T25d)
 - Infraestrutura pronta e testada: memórias (marcos + perdeuFinal, lesaoGrave, trocouPeloRival, recusouEuropa), contexto `mem.*`/`anos.*`, parâmetros `{mem_<id>_ano|anos|clube}` e teste de citação. Nenhum evento do catálogo usa ainda (T25e e T25b). Medido em 60 carreiras: lesão grave 47, final perdida 3 (rara), recusa da Europa uma por carreira.
+
+## Eventos modulares e sorteio por contexto (T25e)
+- **Textos a ler:** aberturas e frases de contexto de 9 eventos (`src/i18n/pt-BR/events.json`: festa, polemica-redes, salario-atrasado, lesao-grave, troca-tecnico, casa-da-familia, investir, proposta-rival, empresario-forca-venda) e 20 frases de contexto da tela de contratos (`ui.proposta.contexto`).
+- **Etiquetas medidas** (25 carreiras, 2480 decisões): jovem 20%, convocado 27%, capitão 16%, empresário que pressiona 15%, salário atrasado 13%, ídolo 10%, veterano 14%, moral baixa 10%, no banco 5%, posição disputada 7%, campeão no ano 11%, vilão 1%, subindo/caindo de divisão 2%/1%. Nenhuma passa de metade das decisões. `perdeuFinal`, `trocouPeloRival`, `noClubeDeCoracao` e `foraDoEixo` são raras (0 em 25 carreiras): a conferir.
+- **Equilíbrio:** `ajustes` de `festa` mexem de leve em moral e disciplina; sem simulação pareada própria (entra na medição final junto com a T25b).
+- **Troféus:** o selo de título e a gaveta usam a imagem de troféu que criamos; Liga Europa e copa nacional europeia usam provisoriamente as peças da segunda copa continental e da copa nacional até o lote 5 de arte.

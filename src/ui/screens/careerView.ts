@@ -31,7 +31,7 @@ export function toDecisionPlayer(view: DecisionView, input: CreationInput, look:
     name: input.name, position: view.position, clubId: view.clubId ?? '', overall: view.overall,
     titles: view.titles.map((x) => x.competition), role: view.role,
     marcos: view.marcos.map((m) => ({ id: m.id, ano: m.year, clubId: m.clubId })),
-    textoParams: memoryTextParams(view.memorias, view.year),
+    textoParams: memoryTextParams(view.memorias, view.year), etiquetas: view.etiquetas,
     monthlySalary: view.monthlySalary, marketValueEUR: view.marketValueEUR, number: view.number, attributes: view.attributes,
     seasons: view.seasons.map((s) => ({ age: s.year - START_YEAR + START_AGE, clubId: s.clubId, overall: s.overall, ...torcidaOf(view.idolatrias, s.clubId) })),
     ...(view.clubId ? torcidaOf(view.idolatrias, view.clubId) : {}),

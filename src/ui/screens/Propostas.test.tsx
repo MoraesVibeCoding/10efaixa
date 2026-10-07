@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import type { CurrentClubView, ProposalView } from '../../engine/proposals';
 import { t } from '../../i18n';
+import { CONTEXT_TAGS } from '../../engine/contextTags';
 import { Propostas } from './Propostas';
 
 // T28k (SPEC 6.12, v2.54): tela de contratos em cartões selecionáveis + "Confirmar escolha"; o clube atual é o primeiro cartão
@@ -40,6 +41,20 @@ describe('tela de contratos (T28k)', () => {
     expect(screen.getByRole('heading', { level: 1, name: t('ui.proposta.titulo') })).toHaveFocus();
     expect(screen.getByRole('button', { name: new RegExp(t('ui.carreira.titulo')) })).toBeInTheDocument();
     expect(screen.getByText(t('ui.proposta.apoio'))).toBeInTheDocument();
+  });
+
+  it('a frase de contexto vem da etiqueta mais forte da situação (T25e); sem etiqueta, não há frase', () => {
+    render(<Propostas propostas={duas} atual={longo} podeFicar player={{ ...PLAYER, etiquetas: ['noBanco', 'jovem'] }} age={24} progress={0.4} scene={{ src: 'c.webp', alt: 'x' }} onChoose={() => {}} />);
+    expect(screen.getByText(t('ui.proposta.contexto.noBanco'))).toBeInTheDocument();
+    expect(screen.queryByText(t('ui.proposta.contexto.jovem'))).toBeNull();
+  });
+
+  it('toda etiqueta de contexto tem a sua frase na tela de contratos, curta (até 110 caracteres)', () => {
+    for (const { id } of CONTEXT_TAGS) {
+      const text = t(`ui.proposta.contexto.${id}`);
+      expect(text.length, id).toBeLessThanOrEqual(110);
+      expect(text, id).toMatch(/^[A-ZÁÉÍÓÚÂÊÔÃÕÇ].*[.!?]$/);
+    }
   });
 
   it('o clube atual é o primeiro cartão, seguido das propostas, num grupo de cartões', () => {

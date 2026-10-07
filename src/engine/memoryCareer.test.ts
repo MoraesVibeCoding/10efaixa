@@ -75,3 +75,42 @@ describe('memória dentro da carreira (T25d)', () => {
     expect(run(5).memorias).toEqual(run(5).memorias);
   });
 });
+
+// T25e: as etiquetas de contexto de cada decisão, calculadas dos fatos reais da carreira
+import { CONTEXT_TAGS } from './contextTags';
+describe('etiquetas de contexto dentro da carreira (T25e)', () => {
+  const TAGS = new Set(CONTEXT_TAGS.map((x) => x.id));
+  const collect = (seed: number) => {
+    const out: { age: number; tags: string[] }[] = [];
+    run(seed, (id, t, view) => { const v = view(); out.push({ age: v.age, tags: v.etiquetas }); return autoDecide(id, t, view); });
+    return out;
+  };
+
+  it('toda decisão traz as etiquetas, só de ids conhecidos, sem repetir', () => {
+    for (const seed of SEEDS) for (const { tags } of collect(seed)) {
+      for (const tag of tags) expect(TAGS.has(tag), tag).toBe(true);
+      expect(new Set(tags).size).toBe(tags.length);
+    }
+  });
+
+  it('idade manda: jovem só até 20 anos, veterano só a partir de 32', () => {
+    let jovem = 0;
+    let veterano = 0;
+    for (const seed of SEEDS) for (const { age, tags } of collect(seed)) {
+      if (tags.includes('jovem')) { jovem++; expect(age).toBeLessThanOrEqual(21); }
+      if (tags.includes('veterano')) { veterano++; expect(age).toBeGreaterThanOrEqual(32); }
+      if (age <= 20) expect(tags).toContain('jovem');
+    }
+    expect(jovem).toBeGreaterThan(0);
+    expect(veterano).toBeGreaterThan(0);
+  });
+
+  it('as situações da carreira aparecem em algum momento (e nenhuma etiqueta fica ligada o tempo todo)', () => {
+    const seen = new Map<string, number>();
+    let total = 0;
+    for (let seed = 1; seed <= 25; seed++) for (const { tags } of collect(seed)) { total++; tags.forEach((x) => seen.set(x, (seen.get(x) ?? 0) + 1)); }
+    for (const tag of ['campeaoNoAno', 'convocado', 'idolo', 'noBanco', 'moralBaixa', 'capitao', 'salarioAtrasado', 'subindoDeDivisao', 'recusouEuropa']) expect(seen.has(tag), tag).toBe(true);
+    // nada fica ligado em mais da metade das decisões (senão deixa de ser contexto)
+    for (const [tag, n] of seen) expect(n / total, tag).toBeLessThan(0.5);
+  });
+});

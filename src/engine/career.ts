@@ -17,6 +17,9 @@ import { mentalityEffects } from './mentality';
 import { afterClassico, afterSemester, afterTransfer, type Idolatry } from './idolatry';
 import { decayRelapse, graveDecision, semesterInjury } from './injuries';
 import { FORCE_EXIT, generateOffers, negotiate, rankOffers, leagueOf, marketValue, salaryFor, type Offer } from './market';
+import { drawCatalog, drawCount } from './contextDraw';
+import { contextCtx, tagsOf } from './contextTags';
+import contextCfg from '../data/context.json';
 import { ONCE, memoryCtx, type Memory } from './memory';
 import { EFFECTS, FACTS, fireMilestones, milestoneKey, type MilestoneFacts } from './milestones';
 import { MEETING_EVENT, autoProposal, encodeProposal, meetingScore, parseProposal, staffMeeting, type MeetingResult } from './meeting';
@@ -112,6 +115,8 @@ export interface DecisionView {
   marcos: { id: string; year: number; clubId: string }[];
   /** T25d: a memória da carreira até aqui (marcos e fatos de história); no contexto do evento vira `mem.<id>` e `anos.<id>` em `state`. */
   memorias: Memory[];
+  /** T25e: as etiquetas de contexto de agora, da mais forte para a mais fraca; escolhem a abertura e as frases de contexto do texto. */
+  etiquetas: string[];
   /** T28b (v2.50): na decisão `proposta-clube`, as até 3 propostas mostradas (a escolha é "aceitar:<clube>" ou "ficar"). */
   propostas?: ProposalView[];
   /** T28j (v2.54): o clube atual como primeiro cartão da tela de propostas, com a renovação quando o contrato acaba. */
@@ -202,6 +207,26 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let stats: SeasonStats = ZERO_STATS;
   let earned = 0;
   let decisiveDerbies = 0;
+  let lastMinutes = 0.6; // fração de minutos do semestre mais recente (etiqueta noBanco)
+  const OFF_AXIS = new Set(europe.foraDoEixo.clubs.map((x) => x.id));
+  // T25e: etiquetas de contexto a partir dos fatos de agora
+  const contextNow = () => {
+    const last2 = seasons.slice(-2);
+    const div = (s?: { division: string | null }) => /^BRA-([A-D])$/.exec(s?.division ?? '')?.[1];
+    const [pa, pb] = [div(last2[0]), div(last2[1])];
+    const sameClub = last2.length === 2 && last2[0]!.clubId === last2[1]!.clubId && !!pa && !!pb;
+    const facts = {
+      idade: evo.age, moral: morale, idolatria: clubId ? idol[clubId] ?? 0 : 0, idolatriaCoracao: input.heartClub ? idol[input.heartClub] ?? 0 : 0,
+      minutosFracao: lastMinutes, salarioAtrasos: salaryDelays, convocado: sel.rung !== 'nenhum',
+      subiuDivisao: sameClub && pb! < pa!, caiuDivisao: sameClub && pb! > pa!, foraDoEixo: !!clubId && OFF_AXIS.has(clubId),
+      empresarioPressiona: agent.influence >= contextCfg.empresarioInfluenciaMin, posicaoDisputada: curRole === 'disputa',
+      noClubeDeCoracao: !!clubId && clubId === input.heartClub, capitao: !!clubId && captainAt.has(clubId),
+      campeaoNoAno: !!clubId && titles.some((t) => t.year === curYear && t.clubId === clubId),
+    };
+    return contextCtx(facts, memorias, curYear);
+  };
+  const contextTags = (): string[] => tagsOf(contextNow());
+  const usedCatalog = new Set<string>();
   // T25d: memória da carreira (id, ano, idade e clube); os marcos da T25c também entram
   const memorias: Memory[] = [];
   const remember = (id: string, club: string) => { if (ONCE.has(id) && memorias.some((x) => x.id === id)) return; memorias.push({ id, year: curYear, age: Math.floor(evo.age - 1), clubId: club }); };
@@ -228,7 +253,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       moral: morale, disciplina: discipline, relacaoTecnico: coachRelation, patrimonio: wealth, salarioFator: 1,
       idolatria: clubId ? idol[clubId] ?? 0 : 0, idolatriaCoracao: input.heartClub ? idol[input.heartClub] ?? 0 : 0, ...memoryCtx(memorias, curYear), ...state,
     },
-    seasons: [...seasons], titles: [...titles], marcos: marcos.map(({ id, year, clubId: club }) => ({ id, year, clubId: club })), memorias: memorias.map((x) => ({ ...x })), nationality: selection.nationality, meetings: [...meetings], idolatrias: { ...idol }, ...(ultimoSemestre && { ultimoSemestre }),
+    seasons: [...seasons], titles: [...titles], marcos: marcos.map(({ id, year, clubId: club }) => ({ id, year, clubId: club })), memorias: memorias.map((x) => ({ ...x })), etiquetas: contextTags(), nationality: selection.nationality, meetings: [...meetings], idolatrias: { ...idol }, ...(ultimoSemestre && { ultimoSemestre }),
   }));
   const earn = (amount: number, currency: Contract['currency']) => { const before = wealth; wealth = addToWealth(wealth, amount, currency, agent); earned += Math.max(0, wealth - before); };
   const awards: CareerResult['awards'] = [];
@@ -412,6 +437,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         if (life.loanOffer && !parent && !loanTarget) loanTarget = life.loanOffer;
 
         // Disciplina: cartões pelo temperamento; suspensão tira minutos do próximo semestre.
+        lastMinutes = minutes;
         const cd = semesterCards({ temperament: temp, minutes }, yr);
         cards.yellows += cd.yellows;
         cards.reds += cd.reds;
@@ -419,13 +445,22 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         // Vida fora de campo: dilemas resolvidos pela política do temperamento, com efeitos do catálogo.
         const flags = offFieldFlags({ temperament: temp, wealthBRL: wealth, houseBought }, yr);
         let st8 = { moral: morale, disciplina: discipline, idolatria: idol[clubId] ?? 0, relacaoTecnico: coachRelation, patrimonio: wealth, casaComprada: houseBought, investir: false } as Record<string, number | string | boolean>;
-        if (flags.conviteFesta) st8 = applyOption(st8, 'festa', ask('festa', st8));
-        if (flags.polemica) st8 = applyOption(st8, 'polemica-redes', ask('polemica-redes', st8));
-        if (flags.podeComprarCasa) st8 = applyOption(st8, 'casa-da-familia', ask('casa-da-familia', st8));
-        if (flags.conviteInvestir) st8 = applyOption(st8, 'investir', ask('investir', st8));
+        const tagsNow = contextTags(); // T25e: o contexto ajusta as consequências (events.json, ajustes)
+        if (flags.conviteFesta) st8 = applyOption(st8, 'festa', ask('festa', st8), tagsNow);
+        if (flags.polemica) st8 = applyOption(st8, 'polemica-redes', ask('polemica-redes', st8), tagsNow);
+        if (flags.podeComprarCasa) st8 = applyOption(st8, 'casa-da-familia', ask('casa-da-familia', st8), tagsNow);
+        if (flags.conviteInvestir) st8 = applyOption(st8, 'investir', ask('investir', st8), tagsNow);
         // Amadurecimento do temperamento por idade ou suspensão longa (evento narrado).
         const matured = matureTemperament(temp, evo.age, cd.longSuspension);
-        if (matured !== temp) { temp = matured; st8 = applyOption(st8, 'amadurecimento', ask('amadurecimento', st8, matured)); }
+        if (matured !== temp) { temp = matured; st8 = applyOption(st8, 'amadurecimento', ask('amadurecimento', st8, matured), tagsNow); }
+        // T25e: eventos de catálogo por contexto (events.json com sorteio: true), com gerador próprio para não deslocar os outros sorteios
+        if (!inYouth && varzeaLeft === 0) {
+          const storyRng = createPrng(((seed >>> 0) ^ Math.imul(year, 2654435761) ^ Math.imul(sem + 1, 40503)) >>> 0);
+          for (const id of drawCatalog({ ctx: contextNow(), tags: tagsNow, temperament: temp, used: usedCatalog, count: drawCount(storyRng) }, storyRng)) {
+            usedCatalog.add(id);
+            st8 = applyOption(st8, id, ask(id, st8), tagsNow);
+          }
+        }
         morale = st8.moral as number;
         discipline = st8.disciplina as number;
         coachRelation = clamp((st8.relacaoTecnico as number) - (discipline < 0.3 ? 0.03 : 0), 0, 1);

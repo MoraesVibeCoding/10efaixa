@@ -24,6 +24,16 @@
    "chegar-primeiro": "Chegar primeiro ao CT e se apresentar",
    "esperar-a-chance": "Esperar a chance e mostrar serviço no treino",
    "cobrar-explicacao": "Cobrar explicação se for para o banco"
+  },
+  "abertura": {
+   "noBanco": "Para quem vinha esquentando o banco, o recado do novo técnico soa como porta aberta.",
+   "idolo": "Quem é ídolo da torcida sabe que o novo técnico vai testar até isso.",
+   "jovem": "Para quem é novo no grupo, técnico novo é recomeço pela metade."
+  },
+  "contexto": {
+   "posicaoDisputada": "Na sua posição a briga está apertada, e o técnico novo vai olhar tudo de novo.",
+   "capitao": "A faixa no seu braço agora depende de a nova comissão gostar de você.",
+   "moralBaixa": "Para quem estava de cabeça baixa, a mudança chega como um fôlego."
   }
  },
  "proposta-rival": {
@@ -33,6 +43,16 @@
    "aceitar": "Aceitar e vestir a camisa do rival",
    "recusar": "Recusar e beijar o escudo no próximo jogo",
    "usar-como-trunfo": "Usar a proposta para pedir aumento aqui"
+  },
+  "abertura": {
+   "idolo": "Ídolo aqui, você sabe o tamanho da raiva que uma saída dessas provoca.",
+   "vilao": "A torcida já não gosta de você, e a proposta chega como saída ou como combustível.",
+   "jovem": "Em começo de carreira, dobrar o salário parece resolver a vida inteira."
+  },
+  "contexto": {
+   "salarioAtrasado": "Com o salário atrasado, o dinheiro do rival ficou barulhento demais para ignorar.",
+   "empresarioPressiona": "Seu empresário já respondeu que você topa pensar; faltou só avisar você.",
+   "noBanco": "No banco, a promessa de ser titular lá pesa quase tanto quanto o salário."
   }
  },
  "salario-atrasado": {
@@ -42,6 +62,16 @@
    "pedir-saida": "Pedir para sair na próxima janela",
    "ficar": "Ficar e segurar o elenco junto",
    "cobrar-a-diretoria": "Cobrar a diretoria na frente de todo mundo"
+  },
+  "abertura": {
+   "jovem": "Você ainda não tem reserva nenhuma, e a conta do mês chegou.",
+   "veterano": "Você já viu esse filme e sabe como ele costuma terminar.",
+   "capitao": "Como capitão, os colegas olham para você antes de olhar para a diretoria."
+  },
+  "contexto": {
+   "empresarioPressiona": "Seu empresário garante que tem outro clube na linha, é só dizer a palavra.",
+   "moralBaixa": "O ânimo já estava no chão antes de o dinheiro faltar.",
+   "idolo": "A torcida te adora, e por isso ninguém quer ver você sair."
   }
  },
  "proposta-coracao": {
@@ -78,6 +108,16 @@
    "aceitar-venda": "Aceitar a transferência e fazer as malas",
    "bater-o-pe": "Bater o pé e ficar no clube",
    "trocar-empresario": "Romper com o empresário"
+  },
+  "abertura": {
+   "jovem": "Você achava que o empresário só abria portas, e não decidia por você.",
+   "idolo": "Ídolo da torcida, você nem imaginou ser vendido sem ser ouvido.",
+   "veterano": "Em fim de carreira, ser vendido sem aviso dói mais que a conta do hotel."
+  },
+  "contexto": {
+   "moralBaixa": "A notícia caiu justo quando você precisava de alguém ao seu lado.",
+   "capitao": "Com a faixa de capitão, o vestiário vai querer saber o que você achou.",
+   "noClubeDeCoracao": "E logo no clube do coração, onde você queria ficar."
   }
  },
  "empresario-some-dinheiro": {
@@ -114,6 +154,16 @@
    "operar": "Operar e voltar com calma",
    "conservador": "Tratar sem cirurgia",
    "voltar-antes": "Voltar no sacrifício"
+  },
+  "abertura": {
+   "jovem": "Tão novo, a pior parte é o medo de nunca mais ser o mesmo.",
+   "veterano": "Depois dos trinta, o corpo não promete mais que volta igual.",
+   "idolo": "A torcida que te canta o nome agora reza para você voltar."
+  },
+  "contexto": {
+   "campeaoNoAno": "Logo no ano em que a taça chegou, justo agora.",
+   "convocado": "A convocação estava no horizonte, e agora ela fica no ar.",
+   "noClubeDeCoracao": "Logo no clube que você sempre sonhou defender, e agora você assiste de fora."
   }
  },
  "mudanca-posicao": {
@@ -132,6 +182,17 @@
    "ir": "Ir e ficar até o fim",
    "ficar-em-casa": "Ficar em casa e dormir cedo",
    "dar-uma-passada": "Dar uma passada e sair antes da meia-noite"
+  },
+  "abertura": {
+   "jovem": "Moleque ainda, você sabe que todo mundo repara em quem aparece e em quem some.",
+   "veterano": "Já são muitas festas nas costas, e o corpo cobra a conta no dia seguinte.",
+   "vilao": "Com a torcida de pé atrás, qualquer foto sua vira assunto na segunda."
+  },
+  "contexto": {
+   "moralBaixa": "A cabeça pede uma noite fora, e o bom senso pede cama cedo.",
+   "noBanco": "No banco, ninguém vai notar se você aparecer. Nem se faltar.",
+   "salarioAtrasado": "Com o salário atrasado, até o presente do aniversariante pesa no bolso.",
+   "capitao": "Com a faixa no braço, o elenco vai olhar para o que você fizer."
   }
  },
  "polemica-redes": {
@@ -141,6 +202,16 @@
    "postar": "Postar a sua versão, sem filtro",
    "deixar-pra-la": "Ficar quieto e esperar a poeira baixar",
    "responder-na-zoeira": "Rir de si mesmo num vídeo e virar a página"
+  },
+  "abertura": {
+   "vilao": "A torcida já desconfiava de você, e agora tem munição.",
+   "idolo": "Quem sempre te defendeu agora quer ouvir a sua versão.",
+   "jovem": "Com poucos anos de profissional, você ainda aprende o preço de uma frase solta."
+  },
+  "contexto": {
+   "empresarioPressiona": "Seu empresário já ligou duas vezes e quer falar antes de você.",
+   "moralBaixa": "Na cabeça que já andava pesada, cada comentário vira uma pedra a mais.",
+   "capitao": "Com a faixa no braço, o silêncio do vestiário pesa em dobro."
   }
  },
  "casa-da-familia": {
@@ -150,6 +221,16 @@
    "comprar": "Comprar a casa à vista",
    "comprar-financiado": "Comprar financiada e deixar o dinheiro rendendo",
    "ainda-nao": "Ainda não: primeiro curtir um pouco o dinheiro"
+  },
+  "abertura": {
+   "jovem": "Você ainda lembra do quarto dividido, e agora a chance de mudar isso chegou.",
+   "veterano": "Depois de tantos anos fora de casa, um lugar só da família pesa mais.",
+   "idolo": "A torcida já te trata como de casa, mas a sua família ainda paga aluguel."
+  },
+  "contexto": {
+   "noClubeDeCoracao": "E vem justo no clube que você sempre quis defender.",
+   "empresarioPressiona": "Seu empresário insiste que o dinheiro rende mais em outro lugar que não tijolo.",
+   "salarioAtrasado": "Com o salário atrasado, firmar a casa vira aposta no mês seguinte."
   }
  },
  "investir": {
@@ -159,6 +240,16 @@
    "investir": "Entrar com uma parte grande do que você tem",
    "guardar": "Guardar o dinheiro onde está",
    "pedir-conselho": "Pagar um consultor para analisar antes"
+  },
+  "abertura": {
+   "veterano": "Quem já viu colega quebrar depois de pendurar a chuteira escuta com atenção.",
+   "jovem": "Com pouco tempo de carreira, ouvir falar em sociedade é novidade.",
+   "idolo": "Ser ídolo abre portas, e também atrai gente com pressa."
+  },
+  "contexto": {
+   "empresarioPressiona": "Seu empresário diz que a porta fecha sexta e que já avisou o conhecido.",
+   "salarioAtrasado": "Com o salário atrasado, qualquer promessa de dinheiro novo soa tentadora e perigosa.",
+   "moralBaixa": "Quem anda por baixo costuma aceitar a primeira boa notícia que aparece."
   }
  },
  "amadurecimento": {
