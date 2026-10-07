@@ -7,7 +7,7 @@ import { changeText, currentText, proposalText, starsOf } from './proposalText';
 const view = (over: Partial<ProposalView> = {}): ProposalView => ({
   clubId: 'flamengo', league: 'BRA-A', currency: 'BRL', annualSalary: 2_400_000, years: 3, role: 'titularRegular', staffQuality: 1.1, offAxis: false,
   minutosFaixa: 'muitos', nivelClube: 'boa', marca: null,
-  salarioMensal: 200_000, salarioPct: { pct: 27, sentido: 'sobe' }, valorProjetadoEUR: 9_500_000, valorPct: { pct: 15, sentido: 'sobe' }, ...over,
+  salarioMensal: 200_000, salarioPct: { pct: 27, sentido: 'sobe' }, valorProjetadoEUR: 9_500_000, valorPct: { pct: 15, sentido: 'sobe' }, minutosVs: 'menos', ...over,
 });
 
 describe('texto da proposta (T28c)', () => {
@@ -72,6 +72,8 @@ describe('texto do cartão de contrato (T28k)', () => {
     expect(x.salarioMes).toMatch(/200\smil\spor mês/);
     expect(x.valorProj).toMatch(/Valor projetado: .*9,5\smi/);
     expect(x.estrelas).toBe(4);
+    expect(x.minutosVs).toBe(t('ui.proposta.minutosVs.menos'));
+    expect(proposalText(view({ minutosVs: null })).minutosVs).toBeNull();
     const a = currentText({ clubId: 'sport', league: 'BRA-A', currency: 'BRL', salarioMensal: 150_000, anosRestantes: 1, role: 'disputa', nivelClube: 'media', valorProjetadoEUR: 8_000_000, valorPct: null, renovacao: null, aumento: null });
     expect(a.restam).toBe(t('ui.proposta.restam_um'));
     expect(a.clube).toBe('Sport');

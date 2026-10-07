@@ -1,6 +1,7 @@
 {
- "_nota": "T28i (SPEC v2.54): cartão de contrato. igualAtePct: variação em % abaixo da qual o salário conta como igual; pctMaximo: a partir dele a tela diz “mais de 10 vezes” em vez do número; semestresProjecao: quantos semestres a projeção de valor avança (estimativa, sem sorteio).",
+ "_nota": "T28i (SPEC v2.54): cartão de contrato. igualAtePct: variação em % abaixo da qual o salário conta como igual; pctMaximo: a partir dele a tela diz “mais de 10 vezes” em vez do número; minutosParecidoAte: diferença de minutos esperados (fração) abaixo da qual o clube da proposta conta como “parecido” com o atual; semestresProjecao: quantos semestres a projeção de valor avança (estimativa, sem sorteio).",
  "igualAtePct": 0.5,
  "pctMaximo": 1000,
+ "minutosParecidoAte": 0.08,
  "semestresProjecao": 2
 }

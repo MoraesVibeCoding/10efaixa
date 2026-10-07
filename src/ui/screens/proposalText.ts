@@ -11,6 +11,8 @@ export interface ProposalText {
   clube: string; liga: string; salario: string; contrato: string; papel: string; minutos: string; nivel: string; aviso: string | null; marca: string | null;
   /** T28k: salário por mês com a variação, valor projetado (estimativa) com a variação e a reputação em estrelas (1 a 6). */
   salarioMes: string; salarioVar: ChangeText | null; valorProj: string; valorVar: ChangeText | null; estrelas: number;
+  /** T28m: minutos neste clube contra o atual, em palavras (null = sem clube atual para comparar). */
+  minutosVs: string | null;
 }
 export interface ChangeText { texto: string; sentido: Change['sentido'] }
 
@@ -42,6 +44,7 @@ export function proposalText(v: ProposalView): ProposalText {
     valorProj: v.valorProjetadoEUR === null ? '' : t('ui.proposta.valorProjetado', { valor: money(v.valorProjetadoEUR, 'EUR') }),
     valorVar: changeText(v.valorPct),
     estrelas: starsOf(v.nivelClube),
+    minutosVs: v.minutosVs === null ? null : t(`ui.proposta.minutosVs.${v.minutosVs}`),
   };
 }
 

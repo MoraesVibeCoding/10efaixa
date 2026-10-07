@@ -389,6 +389,7 @@
   "selo": { "renovacao": "Renovação", "atual": "Seu time atual", "nova": "Nova proposta" },
   "salarioMes": "{valor} por mês",
   "valorProjetado": "Valor projetado: {valor}",
+  "minutosVs": { "mais": "Jogará mais que hoje", "parecido": "Jogará parecido com hoje", "menos": "Jogará menos que hoje" },
   "pct": { "muito": "▲ mais de 10 vezes o atual", "sobe": "▲ {pct}% a mais", "cai": "▼ {pct}% a menos", "igual": "● igual ao atual" },
   "modo": {
     "aceitar": "Aceitar a proposta",

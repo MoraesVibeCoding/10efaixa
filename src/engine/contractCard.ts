@@ -28,6 +28,10 @@ export const salaryChange = (offer: number, current: number | null): Change | nu
 /** Valor projetado contra o valor de hoje. */
 export const valueChange = (projected: number, today: number): Change | null => change(projected, today);
 
+/** Minutos esperados no clube da proposta contra os do clube atual (T28m): mais, parecido ou menos; sem clube atual, sem comparação. */
+export const minutesChange = (offer: number, current: number | null): 'mais' | 'parecido' | 'menos' | null =>
+  current === null ? null : Math.abs(offer - current) < cfg.minutosParecidoAte - 1e-9 ? 'parecido' : offer > current ? 'mais' : 'menos';
+
 export interface ProjectionInput {
   evo: EvoState; position: Position; bonus?: Partial<Attributes>;
   clubRep: number; role: Role; staffQuality: number; morale: number;

@@ -171,7 +171,11 @@ export function Propostas({ propostas, atual, podeFicar, podeForcar = false, pod
                   <span>{x.salarioMes} <Variacao c={x.salarioVar} /></span>
                   <span>{x.valorProj} <Variacao c={x.valorVar} /></span>
                 </span>
-                <span className="propostas__tags"><Estrelas n={x.estrelas} nivel={x.nivel} /><span className="propostas__tag">{x.papel}</span></span>
+                <span className="propostas__tags">
+                  <Estrelas n={x.estrelas} nivel={x.nivel} />
+                  <span className="propostas__tag">{x.papel}</span>
+                  {x.minutosVs && <span className={`propostas__tag propostas__tag--${p.minutosVs}`}>{x.minutosVs}</span>}
+                </span>
               </label>
               {on && detail()}
               </Fragment>

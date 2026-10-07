@@ -1,4 +1,4 @@
-import { LEVELS, ROLES, clubLevelBand, minutesBand, minutesShare, roleFor, squadLevel, updateForm, updateMorale, type MinutesInput } from './minutes';
+import { LEVELS, ROLES, clubLevelBand, expectedMinutes, minutesBand, minutesShare, roleFor, squadLevel, updateForm, updateMorale, type MinutesInput } from './minutes';
 import { CLUBS } from './clubs';
 import { EUROPE, effectiveRep } from './europe';
 import { createPrng } from './prng';
@@ -28,9 +28,10 @@ describe('minutos, forma e moral (T21)', () => {
     expect(avg({ ...base, clubRep: 50 })).toBeGreaterThan(avg({ ...base, clubRep: 95 }));
   });
 
-  it('papel prometido: minutos crescem do papel de elenco ao titular absoluto no mesmo overall', () => {
-    const order = ['composicao', 'reservaImediato', 'disputa', 'titularRegular', 'titularAbsoluto'] as const;
-    const m = order.map((role) => avg({ ...base, role }));
+  it('os minutos esperados seguem o Over relativo ao elenco, e o papel serve de rótulo (mais Over, mais minutos)', () => {
+    const order = [{ ov: 55, role: 'composicao' }, { ov: 66, role: 'reservaImediato' }, { ov: 69, role: 'disputa' }, { ov: 74, role: 'titularRegular' }, { ov: 82, role: 'titularAbsoluto' }] as const;
+    const rep = 80; // elenco ~76
+    const m = order.map((o) => avg({ overall: o.ov, clubRep: rep, role: o.role, form: 0.5 }));
     for (let i = 1; i < m.length; i++) expect(m[i]!).toBeGreaterThan(m[i - 1]!);
   });
 
@@ -122,9 +123,14 @@ describe('papel no elenco por faixa de idade (T28g, SPEC v2.54)', () => {
   });
 
   it('todo papel tem minutos esperados entre 0 e 1 e a ordem é coerente', () => {
-    const m = (r: (typeof ROLES)[number]) => avg({ ...base, role: r });
-    expect(m('jovemPromessa')).toBeLessThan(m('jovemRotacao'));
-    expect(m('jovemRotacao')).toBeLessThan(m('joiaTitular'));
+    // o papel vem do Over relativo (roleFor); os minutos crescem com ele: Jovem Promessa < Jovem em Rotação < Joia Titular
+    const rep = 80;
+    const m = (rel: number) => avg({ overall: squadLevel(rep) + rel, clubRep: rep, role: roleFor(squadLevel(rep) + rel, rep, 18), form: 0.5 });
+    expect(roleFor(squadLevel(rep) - 8, rep, 18)).toBe('jovemPromessa');
+    expect(roleFor(squadLevel(rep), rep, 18)).toBe('jovemRotacao');
+    expect(roleFor(squadLevel(rep) + 4, rep, 18)).toBe('joiaTitular');
+    expect(m(-8)).toBeLessThan(m(0));
+    expect(m(0)).toBeLessThan(m(4));
   });
 });
 
@@ -138,5 +144,44 @@ describe('textos dos papéis (T28g)', () => {
       expect(t(`preview.papel.${r}`)).not.toContain('preview.papel');
       expect(preview[r]).toBeGreaterThanOrEqual(1);
     }
+  });
+});
+
+describe('curva de minutos contínua, com piso (T28l, SPEC v2.55)', () => {
+  const GROUPS = [{ nome: 'adulto', roles: ['composicao', 'reservaImediato', 'disputa', 'titularRegular', 'titularAbsoluto'] as const }, { nome: 'jovem', roles: ['jovemPromessa', 'jovemRotacao', 'joiaTitular'] as const }];
+  const at = (rel: number, role: (typeof GROUPS)[number]['roles'][number]) => expectedMinutes(squadLevel(80) + rel, 80, role);
+
+  it('sem degrau: um ponto de Over a mais nunca muda os minutos em mais de 0,12 (antes chegava a 0,44)', () => {
+    for (const g of GROUPS) {
+      const role = g.roles[0]!;
+      for (let rel = -20; rel < 20; rel += 0.5) expect(Math.abs(at(rel + 1, role) - at(rel, role)), `${g.nome} ${rel}`).toBeLessThanOrEqual(0.12);
+    }
+  });
+
+  it('o caso do Coritiba: Over 69 e 68 contra elenco 72 ficam próximos (antes 46% × 2%)', () => {
+    const rep = 72; // elenco ~72
+    const a = expectedMinutes(squadLevel(rep) - 3, rep, roleFor(squadLevel(rep) - 3, rep, 20));
+    const b = expectedMinutes(squadLevel(rep) - 4, rep, roleFor(squadLevel(rep) - 4, rep, 20));
+    expect(a - b).toBeLessThanOrEqual(0.12);
+  });
+
+  it('só cresce com o Over e tem piso: quem está no elenco joga pelo menos ~5%, no máximo 100%', () => {
+    for (const g of GROUPS) {
+      let prev = -1;
+      for (let rel = -30; rel <= 30; rel += 0.5) {
+        const m = at(rel, g.roles[0]!);
+        expect(m).toBeGreaterThanOrEqual(prev);
+        expect(m).toBeGreaterThanOrEqual(0.05);
+        expect(m).toBeLessThanOrEqual(1);
+        prev = m;
+      }
+    }
+  });
+
+  it('jovem e adulto: o mesmo Over relativo dá minutos parecidos nos extremos (titular joga quase tudo, reserva quase nada)', () => {
+    expect(at(15, 'titularAbsoluto')).toBeGreaterThan(0.95);
+    expect(at(15, 'joiaTitular')).toBeGreaterThan(0.95);
+    expect(at(-15, 'composicao')).toBeLessThan(0.15);
+    expect(at(-15, 'jovemPromessa')).toBeLessThan(0.15);
   });
 });

@@ -1,7 +1,7 @@
-import { salaryChange, valueChange, type Change } from './contractCard';
+import { minutesChange, salaryChange, valueChange, type Change } from './contractCard';
 import { effectiveRep } from './europe';
 import { toBRL, type Offer } from './market';
-import { clubLevelBand, minutesBand, type ClubLevelBand, type MinutesBand } from './minutes';
+import { clubLevelBand, expectedMinutes, minutesBand, type ClubLevelBand, type MinutesBand } from './minutes';
 
 // T28b (SPEC 6.12, v2.50): a decisão "proposta-clube", no mesmo molde da reunião (as opções mudam a cada temporada,
 // então a escolha é um texto conferido contra as propostas mostradas, e não uma opção fixa de events.json).
@@ -33,6 +33,8 @@ export interface ProposalView {
   marca: 'coracao' | 'rival' | 'rivalCoracao' | null;
   /** T28i (v2.54): salário por mês na moeda da proposta e a variação contra o atual; valor projetado (estimativa) e a variação contra o de hoje. */
   salarioMensal: number; salarioPct: Change | null; valorProjetadoEUR: number | null; valorPct: Change | null;
+  /** T28m (v2.55): minutos esperados neste clube contra os do clube atual (clube maior, elenco melhor, em geral menos minutos). */
+  minutosVs: 'mais' | 'parecido' | 'menos' | null;
 }
 
 /** T28j: o clube atual como primeiro cartão (renovação quando o contrato acaba, "seu time atual" quando não). */
@@ -44,7 +46,7 @@ export interface CurrentClubView {
 export interface RenewalView { salarioMensal: number; salarioPct: Change | null; anos: number }
 
 /** O que só o motor da carreira sabe: contrato atual, valor de hoje e valor projetado naquele clube. */
-export interface CardContext { currentAnnualSalaryBRL: number | null; todayValueEUR: number; projectedValueEUR: number }
+export interface CardContext { currentAnnualSalaryBRL: number | null; todayValueEUR: number; projectedValueEUR: number; currentExpectedMinutes: number | null }
 
 /** `overall`: o do jogador agora; com o nível do elenco do clube dá os minutos previstos. */
 export const proposalViewOf = (o: Offer, overall: number, card?: CardContext): ProposalView => ({
@@ -56,6 +58,7 @@ export const proposalViewOf = (o: Offer, overall: number, card?: CardContext): P
   salarioPct: card ? salaryChange(toBRL(o), card.currentAnnualSalaryBRL) : null,
   valorProjetadoEUR: card ? card.projectedValueEUR : null,
   valorPct: card ? valueChange(card.projectedValueEUR, card.todayValueEUR) : null,
+  minutosVs: card ? minutesChange(expectedMinutes(overall, effectiveRep(o.clubId), o.role), card.currentExpectedMinutes) : null,
 });
 
 export type ProposalChoice<T extends { clubId: string } = Offer> =

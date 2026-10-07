@@ -20,7 +20,7 @@ import { FORCE_EXIT, generateOffers, negotiate, rankOffers, leagueOf, marketValu
 import { EFFECTS, FACTS, fireMilestones, milestoneKey, type MilestoneFacts } from './milestones';
 import { MEETING_EVENT, autoProposal, encodeProposal, meetingScore, parseProposal, staffMeeting, type MeetingResult } from './meeting';
 import { MEETING_IDEAS, TRUST, drawClubNeed, ideaOf, meetingOptions, type Idea, type MeetingOptions } from './meetingOptions';
-import { clubLevelBand, minutesShare, roleFor, squadLevel, updateForm, updateMorale, type Role } from './minutes';
+import { clubLevelBand, expectedMinutes, minutesShare, roleFor, squadLevel, updateForm, updateMorale, type Role } from './minutes';
 import { overall, type Position } from './overall';
 import { coachProposal } from './positionChange';
 import { createPlayer, type CreationInput, type Player } from './player';
@@ -623,6 +623,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       const todayValue = marketValue(ov(evo), evo.age);
       const cardContext = (o: Offer) => ({
         currentAnnualSalaryBRL: current?.annualSalaryBRL ?? null, todayValueEUR: todayValue,
+        currentExpectedMinutes: clubId ? expectedMinutes(ov(evo), effectiveRep(clubId), roleFor(ov(evo), effectiveRep(clubId), evo.age)) : null,
         projectedValueEUR: projectValue({
           evo, position, bonus: position === input.position ? arch.overallWeightBonus : undefined, clubRep: effectiveRep(o.clubId),
           role: o.role, staffQuality: o.staffQuality, morale,

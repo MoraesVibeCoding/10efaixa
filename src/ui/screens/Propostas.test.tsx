@@ -12,7 +12,7 @@ const PLAYER = {
 const proposta = (over: Partial<ProposalView> = {}): ProposalView => ({
   clubId: 'flamengo', league: 'BRA-A', currency: 'BRL', annualSalary: 2_400_000, years: 3, role: 'titularRegular', staffQuality: 1.1, offAxis: false,
   minutosFaixa: 'muitos', nivelClube: 'boa', marca: null,
-  salarioMensal: 200_000, salarioPct: { pct: 27, sentido: 'sobe' }, valorProjetadoEUR: 9_500_000, valorPct: { pct: 15, sentido: 'sobe' }, ...over,
+  salarioMensal: 200_000, salarioPct: { pct: 27, sentido: 'sobe' }, valorProjetadoEUR: 9_500_000, valorPct: { pct: 15, sentido: 'sobe' }, minutosVs: 'menos', ...over,
 });
 const duas = [proposta(), proposta({ clubId: 'benfica', league: 'POR', currency: 'EUR', annualSalary: 1_200_000, role: 'disputa', minutosFaixa: 'rodizio', nivelClube: 'alta', offAxis: true, salarioPct: { pct: -10, sentido: 'cai' }, valorPct: { pct: 0, sentido: 'igual' } })];
 const atual = (over: Partial<CurrentClubView> = {}): CurrentClubView => ({
@@ -66,6 +66,14 @@ describe('tela de contratos (T28k)', () => {
     expect(card.getByText(t('ui.proposta.pct.sobe', { pct: 15 }))).toBeInTheDocument();
     expect(card.getByText(t('ui.proposta.nivel.boa'))).toBeInTheDocument();
     expect(card.getByText(t('ui.proposta.papel.titularRegular'))).toBeInTheDocument();
+  });
+
+  it('a marca de minutos contra o clube atual aparece em palavras no cartão (mais, parecido ou menos que hoje)', () => {
+    setup({ atual: longo, propostas: [proposta({ minutosVs: 'menos' }), proposta({ clubId: 'benfica', minutosVs: 'mais' }), proposta({ clubId: 'sport', minutosVs: 'parecido' }), proposta({ clubId: 'bahia', minutosVs: null })] });
+    expect(within(cards()[1]!.closest('label')!).getByText(t('ui.proposta.minutosVs.menos'))).toBeInTheDocument();
+    expect(within(cards()[2]!.closest('label')!).getByText(t('ui.proposta.minutosVs.mais'))).toBeInTheDocument();
+    expect(within(cards()[3]!.closest('label')!).getByText(t('ui.proposta.minutosVs.parecido'))).toBeInTheDocument();
+    expect(within(cards()[4]!.closest('label')!).queryByText(/que hoje|com hoje/)).toBeNull();
   });
 
   it('redução e igual aparecem em palavras, não só em cor', () => {

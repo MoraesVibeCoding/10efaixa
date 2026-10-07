@@ -17,7 +17,12 @@
    { "id": "composicao", "relMin": null, "minutos": 0.25 }
   ]
  },
- "porPontoRelativo": 0.03,
+ "curva": {
+  "_nota": "T28l (SPEC v2.55): minutos esperados pelo Over relativo ao elenco (overall − nível do elenco), interpolados entre os pontos [rel, minutos]; fora das pontas vale o valor da ponta. Sem degrau entre papéis (o papel é rótulo e promessa da moral); piso de quem está no elenco. Os pontos de meio são a média das duas pontas do degrau antigo (continuidade com o equilíbrio de antes).",
+  "piso": 0.05,
+  "adulto": [[-14, 0.05], [-3, 0.27], [0, 0.55], [3, 0.82], [9, 1.0]],
+  "jovem": [[-14, 0.05], [-3, 0.26], [3, 0.79], [6, 1.0]]
+ },
  "faixas": {
   "_nota": "T28c (v2.28/v2.50): faixas em texto da proposta, sem número na tela. Minutos: fração prevista (forma neutra, sem ruído) a partir da qual vale cada faixa; nível do clube (T28h, v2.54, 6 níveis): reputação efetiva máxima de cada nível; acima da última, gigante. Calibrado pela distribuição dos 447 clubes (quartis: 22, 22, 30, 58, 75, 87).",
   "minutos": { "muitos": 0.7, "rodizio": 0.4 },
