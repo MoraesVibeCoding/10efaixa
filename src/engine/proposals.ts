@@ -7,8 +7,11 @@ import { clubLevelBand, minutesBand, type ClubLevelBand, type MinutesBand } from
 export const PROPOSAL_EVENT = 'proposta-clube';
 export const STAY = 'ficar';
 const ACCEPT = 'aceitar:';
+const LOVE = 'amor:';
 
 export const acceptChoice = (clubId: string): string => `${ACCEPT}${clubId}`;
+/** Só na proposta do clube de coração: aceitar por amor (salário menor, mais idolatria). */
+export const loveChoice = (clubId: string): string => `${LOVE}${clubId}`;
 
 /** Uma proposta como a tela a vê: o que ela mostra, sem os marcadores internos (rival, coração). */
 export interface ProposalView {
@@ -16,6 +19,8 @@ export interface ProposalView {
   role: Offer['role']; staffQuality: number; offAxis: boolean;
   /** v2.28: minutos previstos e nível do clube, só em faixa (os dois pesam na evolução). */
   minutosFaixa: MinutesBand; nivelClube: ClubLevelBand;
+  /** T28e: a proposta é do clube de coração, de um rival (do clube atual ou do coração) ou comum. O coração vence o rival. */
+  marca: 'coracao' | 'rival' | 'rivalCoracao' | null;
 }
 
 /** `overall`: o do jogador agora; com o nível do elenco do clube dá os minutos previstos. */
@@ -23,14 +28,27 @@ export const proposalViewOf = (o: Offer, overall: number): ProposalView => ({
   clubId: o.clubId, league: o.league, currency: o.currency, annualSalary: o.annualSalary, years: o.years,
   role: o.role, staffQuality: o.staffQuality, offAxis: o.offAxis,
   minutosFaixa: minutesBand({ overall, clubRep: effectiveRep(o.clubId), role: o.role }), nivelClube: clubLevelBand(effectiveRep(o.clubId)),
+  marca: o.heartClub ? 'coracao' : o.rivalOfHeart ? 'rivalCoracao' : o.rivalOfCurrent ? 'rival' : null,
 });
 
-export type ProposalChoice<T extends { clubId: string } = Offer> = { kind: 'ficar' } | { kind: 'aceitar'; offer: T };
+export type ProposalChoice<T extends { clubId: string } = Offer> =
+  { kind: 'ficar' } | { kind: 'aceitar'; offer: T } | { kind: 'amor'; offer: T };
 
-/** "ficar" (se há clube para ficar) ou "aceitar:<clube>" de uma das propostas mostradas; qualquer outra coisa é null. */
-export function parseProposalChoice<T extends { clubId: string }>(choice: string, shown: readonly T[], canStay: boolean): ProposalChoice<T> | null {
+/**
+ * "ficar" (se há clube para ficar), "aceitar:<clube>" ou "amor:<clube>" (só quando `isHeart` diz que a proposta é a do clube de
+ * coração) de uma das propostas mostradas; qualquer outra coisa é null.
+ */
+export function parseProposalChoice<T extends { clubId: string }>(
+  choice: string, shown: readonly T[], canStay: boolean, isHeart: (o: T) => boolean = () => false,
+): ProposalChoice<T> | null {
   if (choice === STAY) return canStay ? { kind: 'ficar' } : null;
-  if (!choice.startsWith(ACCEPT)) return null;
-  const offer = shown.find((o) => acceptChoice(o.clubId) === choice);
-  return offer ? { kind: 'aceitar', offer } : null;
+  if (choice.startsWith(ACCEPT)) {
+    const offer = shown.find((o) => acceptChoice(o.clubId) === choice);
+    return offer ? { kind: 'aceitar', offer } : null;
+  }
+  if (choice.startsWith(LOVE)) {
+    const offer = shown.find((o) => loveChoice(o.clubId) === choice);
+    return offer && isHeart(offer) ? { kind: 'amor', offer } : null;
+  }
+  return null;
 }

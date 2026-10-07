@@ -156,7 +156,7 @@ describe('propostas na tela (T28b)', () => {
   const mk = (clubId: string, annualSalary: number, over: Partial<Offer> = {}): Offer => ({ ...base, clubId, league: 'BRA-A', currency: 'BRL', annualSalary, ...over });
   const cur = { annualSalaryBRL: 1_000_000, role: 'rodizio' };
 
-  it('a escolha automática é sempre a primeira da lista mostrada (ou ninguém)', () => {
+  it('a escolha automática está sempre entre as mostradas (ou ninguém)', () => {
     for (const temperament of ['frio', 'resenha', 'lider', 'esquentado']) {
       for (let s = 0; s < 60; s++) {
         const p = player({ temperament, overall: 70 + (s % 20) });
@@ -164,7 +164,7 @@ describe('propostas na tela (T28b)', () => {
         const current = { annualSalaryBRL: 2_000_000, role: 'rodizio' };
         const { shown, pick } = rankOffers(p, offs, current);
         expect(pick).toEqual(chooseOffer(p, offs, current));
-        if (pick) expect(shown[0]).toEqual(pick);
+        if (pick) expect(shown).toContainEqual(pick);
       }
     }
   });
@@ -174,13 +174,24 @@ describe('propostas na tela (T28b)', () => {
     const { shown, pick } = rankOffers(player({ temperament: 'lider', clubId: 'bahia' }), offs, cur);
     expect(shown.length).toBeLessThanOrEqual(3);
     expect(shown.length).toBeGreaterThan(0);
-    expect(pick === null || shown[0] === pick).toBe(true);
+    expect(pick === null || shown.includes(pick)).toBe(true);
   });
 
-  it('proposta que o jogador recusaria por regra (rival do clube atual, para quem não aceita) não é mostrada', () => {
+  it('proposta que o jogador recusaria por regra (rival do clube atual) aparece na tela, mas não é a escolha automática dele', () => {
     const rival = mk('vitoria', 9_000_000, { rivalOfCurrent: true });
-    expect(rankOffers(player({ temperament: 'frio' }), [rival], cur).shown).toEqual([]);
-    expect(rankOffers(player({ temperament: 'esquentado' }), [rival], cur).shown.map((o) => o.clubId)).toEqual(['vitoria']);
+    const frio = rankOffers(player({ temperament: 'frio' }), [rival], cur);
+    expect(frio.shown.map((o) => o.clubId)).toEqual(['vitoria']);
+    expect(frio.pick).toBeNull();
+    expect(rankOffers(player({ temperament: 'esquentado' }), [rival], cur).pick?.clubId).toBe('vitoria');
+  });
+
+  it('a escolha automática entra na lista mesmo quando propostas barradas pontuam mais', () => {
+    const barrada = mk('vitoria', 20_000_000, { rivalOfCurrent: true });
+    const normal = [mk('sport', 900_000), mk('fortaleza', 1_000_000), mk('ceara', 1_100_000)];
+    const { shown, pick } = rankOffers(player({ temperament: 'frio' }), [barrada, ...normal], { annualSalaryBRL: 100_000, role: 'reserva' });
+    expect(pick).not.toBeNull();
+    expect(shown).toContainEqual(pick);
+    expect(shown.length).toBeLessThanOrEqual(3);
   });
 
   it('sem propostas, nada é mostrado', () => {

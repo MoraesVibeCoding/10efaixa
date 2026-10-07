@@ -82,3 +82,47 @@ describe('proposta de clube como decisão (T28b)', () => {
     throw new Error('nenhuma carreira de teste teve duas propostas distintas');
   });
 });
+
+// T28e (v2.50): proposta do clube de coração na tela: "aceitar" (salário ×0,85) ou "aceitar por amor" (×0,70 e mais idolatria).
+describe('proposta do clube de coração (T28e)', () => {
+  /** Procura uma carreira em que uma tela de proposta traga a proposta do clube de coração. */
+  function findHeartScreen() {
+    for (let seed = 1; seed <= 80; seed++) {
+      const input = { ...inputOf(seed), heartClub: 'bahia' };
+      const choices: string[] = [];
+      for (let guard = 0; guard < 800; guard++) {
+        const step = runUntilDecision(input, seed, choices, 'completo');
+        if (step.kind === 'done') break;
+        if (step.eventId === PROPOSAL_EVENT && step.view.propostas?.some((p) => p.marca === 'coracao')) return { input, seed, choices: [...choices], view: step.view };
+        choices.push(autoDecide(step.eventId, step.view.temperament, () => step.view));
+      }
+    }
+    return null;
+  }
+
+  it('a proposta do clube de coração aparece na tela com a marca, mesmo para quem a recusaria', { timeout: 300_000 }, () => {
+    const found = findHeartScreen();
+    expect(found).not.toBeNull();
+    expect(found!.view.propostas!.find((p) => p.marca === 'coracao')!.clubId).toBe('bahia');
+  });
+
+  it('"amor:" é aceito só nela e rende mais idolatria no clube de coração, com menos dinheiro, que "aceitar:"', { timeout: 300_000 }, () => {
+    const f = findHeartScreen()!;
+    const finish = (choice: string) => {
+      const choices = [...f.choices, choice];
+      for (let guard = 0; guard < 800; guard++) {
+        const step = runUntilDecision(f.input, f.seed, choices, 'completo');
+        if (step.kind === 'done') return step.result;
+        choices.push(autoDecide(step.eventId, step.view.temperament, () => step.view));
+      }
+      throw new Error('carreira não terminou');
+    };
+    const normal = finish(acceptChoice('bahia'));
+    const amor = finish(`amor:bahia`);
+    expect(amor.idolatry.bahia ?? 0).toBeGreaterThan(normal.idolatry.bahia ?? 0);
+    expect(amor.earnedBRL).toBeLessThan(normal.earnedBRL);
+    // "amor:" para um clube que não é o do coração é recusado pelo motor
+    const other = f.view.propostas!.find((p) => p.marca !== 'coracao');
+    if (other) expect(() => runUntilDecision(f.input, f.seed, [...f.choices, `amor:${other.clubId}`], 'completo')).toThrow(/escolha inválida/);
+  });
+});

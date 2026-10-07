@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { STAY, acceptChoice, type ProposalView } from '../../engine/proposals';
+import { STAY, acceptChoice, loveChoice, type ProposalView } from '../../engine/proposals';
 import { t } from '../../i18n';
 import { clubName } from './clubText';
 import { Emblema } from './Emblema';
@@ -25,6 +25,7 @@ export function Propostas({ propostas, podeFicar, onChoose }: { propostas: Propo
               const { prep, nome } = clubName(p.clubId);
               return (
                 <li key={p.clubId} className="propostas__item">
+                  {x.marca && <p className="propostas__marca">{x.marca}</p>}
                   <h2 className="propostas__clube"><Emblema clubId={p.clubId} size={28} />{x.clube}</h2>
                   <p className="propostas__liga">{x.liga}</p>
                   <div className="propostas__detalhes">
@@ -39,6 +40,15 @@ export function Propostas({ propostas, podeFicar, onChoose }: { propostas: Propo
                     onClick={function accept() { onChoose(acceptChoice(p.clubId)); }}>
                     {t('ui.proposta.aceitar')}
                   </button>
+                  {p.marca === 'coracao' && (
+                    <>
+                      <button type="button" className="criacao__botao" aria-label={t('ui.proposta.porAmorDe', { prep, clube: nome })}
+                        onClick={function love() { onChoose(loveChoice(p.clubId)); }}>
+                        {t('ui.proposta.porAmor')}
+                      </button>
+                      <p className="criacao__dica">{t('ui.proposta.dicaAmor')}</p>
+                    </>
+                  )}
                 </li>
               );
             })}

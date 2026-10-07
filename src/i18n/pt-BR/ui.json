@@ -308,6 +308,10 @@
   "legenda": "Os minutos e o nível do clube pesam na sua evolução. Os minutos são uma previsão, não uma promessa.",
   "aceitar": "Aceitar proposta",
   "aceitarDe": "Aceitar proposta {prep} {clube}",
+  "porAmor": "Aceitar por amor",
+  "porAmorDe": "Aceitar por amor {prep} {clube}",
+  "dicaAmor": "Por amor: salário menor, mais idolatria.",
+  "marca": { "coracao": "Proposta do seu clube de coração", "rival": "Rival do seu clube atual", "rivalCoracao": "Rival do seu clube de coração" },
   "ficar": "Ficar no clube"
  },
  "linhaDoTempo": {
