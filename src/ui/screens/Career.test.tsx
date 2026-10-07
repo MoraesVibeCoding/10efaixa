@@ -1,9 +1,13 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import type { CreationInput } from '../../engine/player';
 import { simulateCareer } from '../../engine/career';
 import { autoChoice } from '../../engine/events';
 import { t } from '../../i18n';
+import { careerCode } from '../../engine/careerCode';
+import { parseCareerLink } from '../../share/careerLink';
+import { reviewLink } from '../../share/reviewLink';
 import { Career } from './Career';
+import { VISUAIS } from './look';
 
 // T51 (b): a carreira jogada na tela, do primeiro momento ao resumo final.
 const INPUT: CreationInput = {
@@ -22,10 +26,10 @@ describe('carreira na tela (T51b)', () => {
     expect(screen.getByRole('list', { name: t('ui.decisao.ficha') })).toBeInTheDocument();
   });
 
-  it('jogando com as escolhas do temperamento, termina no mesmo resumo que a simulação', { timeout: 60_000 }, () => {
+  it('jogando com as escolhas do temperamento, termina no mesmo resumo que a simulação', { timeout: 60_000 }, async () => {
     const onRestart = vi.fn();
     const onProgress = vi.fn();
-    render(<Career input={INPUT} look={LOOK} seed={11} onRestart={onRestart} onProgress={onProgress} />);
+    render(<Career input={INPUT} look={LOOK} visual={VISUAIS[0]!.id} seed={11} onRestart={onRestart} onProgress={onProgress} />);
     for (let guard = 0; guard < 400 && !screen.queryByRole('heading', { level: 1, name: t('ui.historia.titulo') }); guard++) {
       // T52: resposta da comissão por cima da tela; reunião aceita a sugestão do preparador (o mesmo do automático)
       const resposta = document.querySelector('dialog.reuniao__resposta');
@@ -48,6 +52,18 @@ describe('carreira na tela (T51b)', () => {
     fireEvent.click(screen.getByRole('button', { name: t('ui.cartao.estatistica') }));
     expect(screen.getByRole('button', { name: t('ui.cartao.estatistica') })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByRole('img', { name: /em números/ })).toBeInTheDocument();
+    // T57e: o link copiado refaz esta mesma carreira (sem o nome) e o código é o do cartão
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Copiar link' })); });
+    const copied = String(writeText.mock.calls[0]![0]);
+    const parsed = parseCareerLink(copied.slice(copied.indexOf('#')));
+    expect(parsed.ok && parsed.data.seed).toBe(11);
+    expect(copied).not.toContain(INPUT.name);
+    if (parsed.ok) {
+      expect(parsed.data.codigo).toBe(careerCode({ seed: 11, ritmo: 'normal', input: INPUT, choices: parsed.data.choices }));
+      expect(reviewLink(parsed.data, 'Jogador do link').ok).toBe(true);
+    }
     fireEvent.click(screen.getByRole('button', { name: t('ui.fim.novaCarreira') }));
     expect(onRestart).toHaveBeenCalledOnce();
     // T54: salvou ao começar e a cada decisão; no fim avisa que terminou (o App apaga o save)

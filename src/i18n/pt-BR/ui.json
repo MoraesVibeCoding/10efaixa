@@ -220,6 +220,7 @@
   "titulo": "10eFaixa",
   "lema": "Da várzea à aposentadoria. Uma carreira, as suas escolhas.",
   "novaCarreira": "Nova carreira",
+  "desafio": "Desafio do dia ({data})",
   "continuar": "Continuar a carreira de {nome}",
   "continuarSemNome": "Continuar a carreira salva",
   "avisoLegal": "Jogo de ficção. Nomes de clubes aparecem só para identificação, sem vínculo com os clubes; os emblemas são originais, não os escudos oficiais.",
@@ -238,6 +239,16 @@
   "versao": "A carreira foi salva por uma versão do jogo que esta não consegue abrir.",
   "dica": "Você pode começar uma carreira nova. A salva será apagada.",
   "recomecar": "Começar uma nova"
+ },
+ "rever": {
+  "nomeGenerico": "Jogador do link",
+  "aviso": "Você está vendo a carreira de um link, só para ler. O nome do jogador não vai no link.",
+  "jogar": "Jogar este desafio"
+ },
+ "linkInvalido": {
+  "titulo": "Não deu para abrir este link",
+  "texto": "O link está incompleto, foi alterado ou é de uma versão do jogo que esta não abre.",
+  "voltar": "Voltar ao início"
  },
  "reuniao": {
   "titulo": "Reunião com a comissão",
@@ -293,6 +304,7 @@
     "honrarias": "Honrarias",
     "codigo": "Código",
     "titulo": "Seu cartão",
+    "desafio": "Desafio de {data}",
     "versoes": "Versão do cartão",
     "narrativa": "História",
     "estatistica": "Números",
@@ -303,6 +315,8 @@
     "compartilhar": "Compartilhar",
     "baixar": "Baixar imagem",
     "copiar": "Copiar texto",
+    "copiarLink": "Copiar link",
+    "linkCopiado": "Link copiado. Quem abrir vê a carreira, sem o nome do jogador.",
     "preparando": "Preparando a imagem…",
     "compartilhado": "Cartão compartilhado.",
     "cancelado": "Compartilhamento cancelado.",

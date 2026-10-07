@@ -4,6 +4,7 @@ import { createPrng } from '../../engine/prng';
 import { randomInput } from '../../engine/simulation';
 import { cardModel } from '../../share/cardModel';
 import { shareText } from '../../share/share';
+import { careerLinkFragment, type CareerLinkData } from '../../share/careerLink';
 import { Cartao } from './Cartao';
 
 // T56: botões de compartilhar na tela do cartão; o leitor de tela ouve o resultado.
@@ -23,5 +24,47 @@ describe('compartilhar na tela do cartão (T56)', () => {
     render(<Cartao result={result} code="10F-7K3Q-9M2X" onRestart={() => {}} />);
     expect(screen.getByRole('button', { name: 'Baixar imagem' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Compartilhar' })).toBeNull();
+  });
+});
+
+// T57c (v2.49): selo do desafio do dia na tela do cartão (só quando a carreira é um desafio).
+describe('selo do desafio (T57c)', () => {
+  it('mostra "Desafio de DD/MM" quando é desafio', () => {
+    render(<Cartao result={result} code="10F-7K3Q-9M2X" desafio="2026-10-07" onRestart={() => {}} />);
+    expect(screen.getByText('Desafio de 07/10')).toBeInTheDocument();
+  });
+
+  it('não mostra selo na carreira livre', () => {
+    render(<Cartao result={result} code="10F-7K3Q-9M2X" onRestart={() => {}} />);
+    expect(screen.queryByText(/^Desafio de/)).toBeNull();
+  });
+});
+
+// T57e (v2.49): "Copiar link" copia o endereço do site + o fragmento do link da carreira.
+describe('copiar link (T57e)', () => {
+  const link: CareerLinkData = {
+    seed: 11, ritmo: 'normal', visual: 'visual-01', choices: ['a'], codigo: '10F-7K3Q-9M2X',
+    input: { shirtNumber: 10, state: 'BA', position: 'meia', archetypeId: 'classico10', biotype: { heightCm: 176, build: 'atletico' }, temperament: 'resenha', celebration: 'aviaozinho', origin: 'baseGrande', foot: 'direita', heartClub: 'bahia' },
+  };
+
+  it('copia o endereço da página com o fragmento do link e avisa', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+    render(<Cartao result={result} code="10F-7K3Q-9M2X" link={link} onRestart={() => {}} />);
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Copiar link' })); });
+    expect(writeText).toHaveBeenCalledWith(`${window.location.origin}${window.location.pathname}${careerLinkFragment(link)}`);
+    expect(screen.getByRole('status')).toHaveTextContent('Link copiado');
+  });
+
+  it('avisa quando o navegador não deixa copiar', async () => {
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText: vi.fn().mockRejectedValue(new Error('negado')) }, configurable: true });
+    render(<Cartao result={result} code="10F-7K3Q-9M2X" link={link} onRestart={() => {}} />);
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Copiar link' })); });
+    expect(screen.getByRole('status')).toHaveTextContent('Não deu para copiar');
+  });
+
+  it('sem dados de link (rever um link) não há "Copiar link"', () => {
+    render(<Cartao result={result} code="10F-7K3Q-9M2X" onRestart={() => {}} />);
+    expect(screen.queryByRole('button', { name: 'Copiar link' })).toBeNull();
   });
 });

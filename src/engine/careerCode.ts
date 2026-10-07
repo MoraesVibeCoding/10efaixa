@@ -14,7 +14,7 @@ function stable(v: unknown): string {
 }
 
 /** FNV-1a de 32 bits, com base de partida escolhível para tirar duas metades independentes. */
-function fnv1a(text: string, basis: number): number {
+export function fnv1a(text: string, basis: number): number {
   let h = basis >>> 0;
   for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 0x01000193) >>> 0;
   return h;

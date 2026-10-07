@@ -1,12 +1,13 @@
 # Tarefa atual
 
-> Atualizado em 2026-10-06, para a próxima sessão. A fonte da verdade continua sendo o `SPEC.md` (hoje na **v2.48**), e as regras de trabalho estão no `CLAUDE.md`.
+> Atualizado em 2026-10-07, para a próxima sessão. A fonte da verdade continua sendo o `SPEC.md` (hoje na **v2.48**), e as regras de trabalho estão no `CLAUDE.md`.
 
 ## Onde estamos
 
 - **Branch de trabalho:** `main` está em dia; os PRs #4 a #8 foram mergeados. Link de teste: https://10efaixa-9vpy.vercel.app (atualiza a partir do `main`).
 - **Verificação no `main`:** 985 testes passando (5 pulados de propósito: simulações longas), typecheck limpo e build OK.
-- **Próxima tarefa pela ordem da seção 14:** **T57**, o desafio diário com o link da carreira (adiado da T56 na v2.43).
+- **T57 concluída na branch `claude/eloquent-dirac-qnpqbi`** (SPEC v2.49; ainda sem PR nem merge): desafio do dia, link da carreira (`#c=`, sem nome) e rever carreira. Layout da abertura e do cartão conferido em 390×844 (Playwright instalado como dependência de desenvolvimento).
+- **Próxima tarefa pela ordem da seção 14:** **T58** (Apoia.se, aviso legal e privacidade).
 
 ## Feito recentemente
 
@@ -20,7 +21,7 @@
 
 ## Opções em aberto para o usuário decidir
 
-1. **T57:** desafio diário + link da carreira (próxima na ordem do SPEC).
+1. **T58** (próxima na ordem do SPEC), ou abrir o PR da T57.
 2. **Habilidades dos estilos com efeito real** no motor: hoje o traço especial é só descrição; os efeitos precisam ser aprovados antes de codar.
 
 ## Pendências conhecidas

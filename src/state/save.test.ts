@@ -119,3 +119,17 @@ describe('validação refaz a carreira no ritmo salvo (bug achado no teste de de
     expect(validateSave({ ...SAVE, ritmo, choices })).toEqual({ ok: true, save: { ...SAVE, ritmo, choices } });
   });
 });
+
+describe('save do desafio do dia (T57c)', () => {
+  it('guarda e devolve o dia do desafio; sem ele a carreira é livre (saves antigos seguem valendo)', () => {
+    const store = memory();
+    writeSave(store, { ...SAVE, desafio: '2026-10-07' });
+    expect(readSave(store)).toEqual({ ok: true, save: { ...SAVE, desafio: '2026-10-07' } });
+    const livre = parseSave(JSON.stringify({ versao: SAVE_VERSION, ...SAVE }));
+    expect(livre.ok && 'desafio' in livre.save).toBe(false);
+  });
+
+  it.each(['07/10/2026', '2026-02-30', 7, ''])('save com desafio inválido (%s) é danificado', (bad) => {
+    expect(parseSave(JSON.stringify({ versao: SAVE_VERSION, ...SAVE, desafio: bad }))).toEqual({ ok: false, reason: 'danificado' });
+  });
+});

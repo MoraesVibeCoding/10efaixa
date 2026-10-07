@@ -27,6 +27,8 @@
 }
 .cartao__versoes button[aria-pressed='true'] { background: var(--cor-texto); color: var(--cor-fundo); border-color: var(--cor-texto); }
 .cartao__imagem { inline-size: 100%; block-size: auto; aspect-ratio: 4 / 5; border-radius: var(--forma-raio); box-shadow: var(--forma-sombra-suave); }
+.cartao__aviso { margin: 0; font-size: var(--tipo-pequeno, 0.875rem); text-align: center; }
+.cartao__selo { align-self: flex-start; margin: 0; padding: 4px 12px; border-radius: 999px; font-weight: 600; box-shadow: inset 0 0 0 2px currentColor; }
 .cartao__nova {
   align-self: stretch;
   min-block-size: var(--toque-minimo);
