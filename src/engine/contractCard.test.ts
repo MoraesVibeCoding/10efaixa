@@ -1,6 +1,6 @@
 import { ATTRIBUTES, type Attributes } from './attributes';
 import { applyBiotype } from './biotype';
-import { projectValue, salaryChange, valueChange } from './contractCard';
+import { minutesChange, projectValue, salaryChange, valueChange } from './contractCard';
 import type { EvoState } from './evolution';
 import { expectedMinutes } from './minutes';
 
@@ -15,8 +15,8 @@ const evo = (age: number, v = 60): EvoState => {
 const base = { evo: evo(19), position: 'meia' as const, clubRep: 50, role: 'joiaTitular' as const, staffQuality: 1, morale: 0.6 };
 
 describe('minutos esperados (T28i)', () => {
-  it('crescem com o papel e com o overall acima do elenco, sempre entre 0 e 1', () => {
-    expect(expectedMinutes(70, 50, 'titularRegular')).toBeGreaterThan(expectedMinutes(70, 50, 'composicao'));
+  it('crescem com o overall acima do elenco (o papel só diz o grupo, jovem ou adulto), sempre entre 0 e 1', () => {
+    expect(expectedMinutes(80, 50, 'titularRegular')).toBeGreaterThan(expectedMinutes(60, 50, 'composicao'));
     expect(expectedMinutes(80, 50, 'disputa')).toBeGreaterThan(expectedMinutes(60, 50, 'disputa'));
     for (const ov of [1, 50, 99]) for (const rep of [20, 109]) {
       const m = expectedMinutes(ov, rep, 'titularAbsoluto');
@@ -67,5 +67,17 @@ describe('variação do salário e do valor (T28i)', () => {
     expect(valueChange(11_500_000, 10_000_000)).toEqual({ pct: 15, sentido: 'sobe' });
     expect(valueChange(8_000_000, 10_000_000)).toEqual({ pct: -20, sentido: 'cai' });
     expect(valueChange(1, 0)).toBeNull();
+  });
+});
+
+describe('minutos contra o clube atual (T28m, SPEC v2.55)', () => {
+  it('mais, parecido ou menos, com tolerância de 0,08; sem clube atual não há comparação', () => {
+    expect(minutesChange(0.8, 0.5)).toBe('mais');
+    expect(minutesChange(0.2, 0.5)).toBe('menos');
+    expect(minutesChange(0.55, 0.5)).toBe('parecido');
+    expect(minutesChange(0.5, 0.5)).toBe('parecido');
+    expect(minutesChange(0.58, 0.5)).toBe('mais');
+    expect(minutesChange(0.42, 0.5)).toBe('menos');
+    expect(minutesChange(0.5, null)).toBeNull();
   });
 });

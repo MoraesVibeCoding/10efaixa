@@ -1,4 +1,5 @@
 import events from '../data/events.json';
+import { MILESTONES } from '../engine/milestones';
 import { autoDecide, simulateCareer, type Decider } from '../engine/career';
 import { PROPOSAL_EVENT } from '../engine/proposals';
 import { MEETING_EVENT } from '../engine/meeting';
@@ -71,19 +72,17 @@ describe('motor interativo (T51a)', () => {
     expect(runUntilDecision(input(), 11, one)).not.toEqual(first);
   });
 
-  it('uma escolha diferente muda a carreira dali para frente', () => {
-    // a primeira decisão da carreira (depois das reuniões, que recebem a sugestão do preparador); em alguma semente o efeito dela chega ao fim
-    // (numa carreira em que moral e disciplina saturam, o efeito de um evento solto pode se diluir, então não se exige de todas)
-    const differs = [11, 12, 13, 14, 15].some((seed) => {
-      const before: string[] = [];
-      let first = runUntilDecision(input(), seed, before);
-      while (first.kind === 'decision' && first.eventId === MEETING_EVENT) { before.push(auto(first)); first = runUntilDecision(input(), seed, before); }
-      if (first.kind !== 'decision') throw new Error('sem decisão');
-      const opts = events.eventos.find((e) => e.id === first.eventId)!.opcoes.map((o) => o.id);
-      const runs = opts.map((o) => { const { result } = playFrom(input(), seed, [...before, o]); return JSON.stringify(result); });
-      return new Set(runs).size > 1;
-    });
-    expect(differs).toBe(true);
+  it('uma escolha diferente muda a carreira dali para frente (decisão de marco: o efeito fica registrado)', () => {
+    // O efeito de um evento solto (festa, salário atrasado) pode se diluir: moral e disciplina saturam nos limites e apagam a diferença
+    // (medido: 1 carreira distinta em quase todas as sementes). O marco registra a opção e seus efeitos, então a carreira sempre muda.
+    const marcos = new Set(MILESTONES.map((m) => m.id));
+    const before: string[] = [];
+    let step = runUntilDecision(input(), 11, before);
+    while (step.kind === 'decision' && !marcos.has(step.eventId)) { before.push(auto(step)); step = runUntilDecision(input(), 11, before); }
+    if (step.kind !== 'decision') throw new Error('sem marco');
+    const opts = events.eventos.find((e) => e.id === step.eventId)!.opcoes.map((o) => o.id);
+    const runs = opts.map((o) => { const { result } = playFrom(input(), 11, [...before, o]); return JSON.stringify(result); });
+    expect(new Set(runs).size).toBeGreaterThan(1);
   });
 
   it('escolha que não existe no evento é recusada (save corrompido não vira carreira errada)', () => {

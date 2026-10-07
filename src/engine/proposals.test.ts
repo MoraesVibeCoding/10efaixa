@@ -32,16 +32,24 @@ describe('escolha da proposta (T28b)', () => {
 
   it('a visão da proposta para a tela leva só o que a tela mostra, sem os campos internos do mercado', () => {
     const v = proposalViewOf(offer('vitoria', { heartClub: true, rivalOfCurrent: true, offAxis: true, annualSalary: 2_500_000, currency: 'EUR', league: 'POR', role: 'jovemPromessa' }), 70);
-    expect(v).toEqual({ clubId: 'vitoria', league: 'POR', currency: 'EUR', annualSalary: 2_500_000, years: 3, role: 'jovemPromessa', staffQuality: 1, offAxis: true, marca: 'coracao', minutosFaixa: expect.stringMatching(/^(muitos|rodizio|poucos)$/), nivelClube: expect.stringMatching(/^(semExpressao|baixa|media|boa|alta|gigante)$/), salarioMensal: 208_333, salarioPct: null, valorProjetadoEUR: null, valorPct: null });
+    expect(v).toEqual({ clubId: 'vitoria', league: 'POR', currency: 'EUR', annualSalary: 2_500_000, years: 3, role: 'jovemPromessa', staffQuality: 1, offAxis: true, marca: 'coracao', minutosFaixa: expect.stringMatching(/^(muitos|rodizio|poucos)$/), nivelClube: expect.stringMatching(/^(semExpressao|baixa|media|boa|alta|gigante)$/), salarioMensal: 208_333, salarioPct: null, valorProjetadoEUR: null, valorPct: null, minutosVs: null });
   });
 
   it('com contrato atual e projeção, a visão traz salário por mês, % contra o atual e valor projetado contra o de hoje', () => {
     const o = offer('vitoria', { annualSalary: 456_000, currency: 'BRL', league: 'BRA-A' });
-    const v = proposalViewOf(o, 70, { currentAnnualSalaryBRL: 360_000, todayValueEUR: 10_000_000, projectedValueEUR: 11_500_000 });
+    const v = proposalViewOf(o, 70, { currentAnnualSalaryBRL: 360_000, todayValueEUR: 10_000_000, projectedValueEUR: 11_500_000, currentExpectedMinutes: 0.2 });
     expect(v.salarioMensal).toBe(38_000);
     expect(v.salarioPct).toEqual({ pct: 27, sentido: 'sobe' });
     expect(v.valorProjetadoEUR).toBe(11_500_000);
     expect(v.valorPct).toEqual({ pct: 15, sentido: 'sobe' });
+  });
+
+  it('a visão compara os minutos esperados no clube da proposta com os do atual: clube maior, menos minutos (mesmo jogador)', () => {
+    const ctx = { currentAnnualSalaryBRL: 360_000, todayValueEUR: 10_000_000, projectedValueEUR: 11_000_000, currentExpectedMinutes: 0.9 };
+    const grande = proposalViewOf(offer('flamengo', { role: 'jovemPromessa' }), 70, ctx);
+    const pequeno = proposalViewOf(offer('santa-cruz', { role: 'joiaTitular' }), 70, { ...ctx, currentExpectedMinutes: 0.3 });
+    expect(grande.minutosVs).toBe('menos');
+    expect(pequeno.minutosVs).toBe('mais');
   });
 
   it('a visão traz as faixas de minutos e de nível do clube, e o mesmo jogador vê faixas diferentes em clubes diferentes', () => {

@@ -46,3 +46,9 @@ Simulação pareada (`npm run sim:estilos`, 400 carreiras por estilo), antes (HE
 - Números: bônus de Mental por marco 0,04 (teto 1,25 no multiplicador), cobrador +10% de gols (`milestones.json` → `efeitos`), gols pela Seleção = 15% dos gols do ano (`fatos`).
 - Pendente do SPEC: progresso do traço "Bola parada" pelo marco; manchete do cartão final com marco.
 - A equivalência "automático = simulação" continua (testes de ritmo), mas a carreira automática **mudou** (marcos entram): relatórios de simulação antigos não valem mais.
+
+## Curva de minutos contínua e marca de minutos (T28l, T28m; SPEC v2.55)
+- Pedido do usuário: clube maior = elenco melhor = menos minutos para quem ainda não tem nome; o jogador precisa "conquistar o espaço". O motor já seguia isso (papel e minutos pelo Over relativo ao elenco), mas a curva tinha **degrau** (Over 69 no Coritiba: ~46% dos minutos; Over 68: ~2%) e chegava a 0%. Agora: curva contínua por pontos em `minutes.json` (`curva`), piso de 5%, papel como rótulo e promessa da moral.
+- Cartão de proposta: marca "Jogará mais / parecido / menos que hoje" (tolerância 0,08 em `contractCard.json` → `minutosParecidoAte`).
+- **Equilíbrio** (simulação pareada, 400 carreiras por estilo, antes = `main` com os marcos, depois = curva nova): "Lenda" média 5,99% → 6,02%; por estilo 4,0%–7,5% → 3,8%–7,5%; nota média 30,2 → 29,9; pico de Over 86,8 → 86,9. Sem mudança além do ruído (±1,1 pt por estilo); extremos seguem 0,5 pt fora da faixa 4,3%–7,0% como já estavam desde a T28g (medir com 1000+ carreiras no fim).
+- Os pontos de meio da curva são a média das duas pontas do degrau antigo, por isso a continuidade com o equilíbrio de antes.

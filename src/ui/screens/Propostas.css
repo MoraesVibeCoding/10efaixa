@@ -38,3 +38,6 @@
 .propostas__modo--marcado { border-color: var(--cor-destaque); box-shadow: inset 0 0 0 1px var(--cor-destaque); }
 .propostas__dica { font-size: 0.75rem; opacity: 0.9; }
 .propostas__confirmar { position: sticky; inset-block-end: var(--espaco-2); }
+/* T28m: a marca de minutos contra o clube atual (palavras, não só cor) */
+.propostas__tag--mais { border-color: var(--cor-positivo); color: var(--cor-positivo); font-weight: 800; }
+.propostas__tag--menos { border-color: var(--cor-negativo); color: var(--cor-negativo); font-weight: 800; }
