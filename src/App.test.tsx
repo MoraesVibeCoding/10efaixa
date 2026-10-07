@@ -2,6 +2,12 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { App } from './App';
 import { SAVE_KEY } from './state/save';
 import { dailySeed } from './engine/daily';
+import { autoDecide } from './engine/career';
+import { FOCI, type Focus } from './engine/evolution';
+import { MEETING_EVENT, encodeProposal } from './engine/meeting';
+import { runUntilDecision } from './state/careerRun';
+import { careerLinkFragment } from './share/careerLink';
+import { VISUAIS } from './ui/screens/look';
 import { t } from './i18n';
 import type { CreationInput } from './engine/player';
 import type { Reveal } from './ui/screens/revealView';
@@ -204,5 +210,72 @@ describe('App: desafio do dia (T57c)', () => {
     passMeetings();
     // continuar não troca a semente nem o desafio pelo dia de hoje
     expect(JSON.parse(localStorage.getItem(SAVE_KEY)!)).toMatchObject({ seed: dailySeed('2026-10-07'), desafio: '2026-10-07' });
+  });
+});
+
+// T57d (SPEC 6.15, v2.49): abrir um link "#c=..." revê a carreira, só leitura, sem tocar no save.
+describe('App: rever carreira por link (T57d)', () => {
+  const linkInput = {
+    shirtNumber: 10, state: 'BA', position: 'meia' as const, archetypeId: 'classico10',
+    biotype: { heightCm: 176, build: 'atletico' as const }, temperament: 'resenha', celebration: 'aviaozinho',
+    origin: 'baseGrande', foot: 'direita', heartClub: 'bahia',
+  };
+  function linkHash(extra: { desafio?: string } = {}): { hash: string; seed: number } {
+    const seed = 7; const choices: string[] = [];
+    for (let guard = 0; guard < 500; guard++) {
+      const step = runUntilDecision({ ...linkInput, name: 'Original Secreto' }, seed, choices, 'completo');
+      if (step.kind === 'done') break;
+      choices.push(step.eventId === MEETING_EVENT ? encodeProposal({ main: FOCI[0] as Focus, secondary: FOCI[1] as Focus }) : autoDecide(step.eventId, step.view.temperament, () => step.view));
+    }
+    return { hash: careerLinkFragment({ seed, ritmo: 'completo', input: linkInput, visual: VISUAIS[0]!.id, choices, codigo: '10F-7K3Q-9M2X', ...extra }), seed };
+  }
+
+  it('link válido abre o cartão com o aviso de só leitura e o nome genérico; não grava save', () => {
+    const { hash } = linkHash();
+    render(<App hash={hash} />);
+    expect(screen.getByRole('heading', { level: 1, name: t('ui.cartao.titulo') })).toBeInTheDocument();
+    expect(screen.getByText(t('ui.rever.aviso'))).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: new RegExp(t('ui.rever.nomeGenerico')) })).toBeInTheDocument();
+    expect(localStorage.getItem(SAVE_KEY)).toBeNull();
+  });
+
+  it('link com o selo do desafio mostra o selo', () => {
+    render(<App hash={linkHash({ desafio: '2026-10-07' }).hash} />);
+    expect(screen.getByText('Desafio de 07/10')).toBeInTheDocument();
+  });
+
+  it('link inválido mostra o aviso e "Voltar ao início" leva à abertura', () => {
+    render(<App hash="#c=lixo" />);
+    expect(screen.getByRole('heading', { level: 1, name: t('ui.linkInvalido.titulo') })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: t('ui.linkInvalido.voltar') }));
+    expect(screen.getByRole('heading', { level: 1, name: t('ui.abertura.titulo') })).toBeInTheDocument();
+  });
+
+  it('link com escolhas que não fecham a carreira também é inválido', () => {
+    const bad = careerLinkFragment({ seed: 7, ritmo: 'completo', input: linkInput, visual: VISUAIS[0]!.id, choices: [], codigo: '10F-7K3Q-9M2X' });
+    render(<App hash={bad} />);
+    expect(screen.getByRole('heading', { level: 1, name: t('ui.linkInvalido.titulo') })).toBeInTheDocument();
+  });
+
+  it('"Jogar este desafio" começa a criação com a semente do link', () => {
+    const { hash, seed } = linkHash();
+    render(<App hash={hash} />);
+    fireEvent.click(screen.getByRole('button', { name: t('ui.rever.jogar') }));
+    createPlayer(false);
+    expect(revealCalls.at(-1)!.seed).toBe(seed);
+  });
+
+  it('com carreira salva, "Jogar este desafio" pergunta; cancelar mantém o save', () => {
+    localStorage.setItem(SAVE_KEY, '{"qualquer":"coisa"}');
+    render(<App hash={linkHash().hash} />);
+    fireEvent.click(screen.getByRole('button', { name: t('ui.rever.jogar') }));
+    fireEvent.click(screen.getByRole('button', { name: t('ui.abertura.confirmar.cancelar') }));
+    expect(localStorage.getItem(SAVE_KEY)).toBe('{"qualquer":"coisa"}');
+    expect(screen.getByRole('heading', { level: 1, name: t('ui.cartao.titulo') })).toBeInTheDocument();
+  });
+
+  it('sem link, o app abre na abertura como sempre', () => {
+    render(<App hash="" />);
+    expect(screen.getByRole('heading', { level: 1, name: t('ui.abertura.titulo') })).toBeInTheDocument();
   });
 });

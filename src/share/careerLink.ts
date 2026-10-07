@@ -1,5 +1,6 @@
 import type { CreationInput } from '../engine/player';
 import { createPlayer } from '../engine/player';
+import { dailySeed } from '../engine/daily';
 import { createPrng } from '../engine/prng';
 import { VISUAIS } from '../ui/screens/look';
 
@@ -19,11 +20,16 @@ export interface CareerLinkData {
   input: Omit<CreationInput, 'name'>;
   visual: string;
   choices: string[];
+  /** Código do cartão original (`careerCode`): o nome não vai no link, então ele não dá para refazer ao abrir. */
+  codigo: string;
+  /** Dia "AAAA-MM-DD" do desafio do dia, quando a carreira era um desafio. */
+  desafio?: string;
 }
 export type LinkResult = { ok: true; data: CareerLinkData } | { ok: false; reason: 'formato' | 'versao' | 'tamanho' | 'invalido' };
 
 const INPUT_KEYS = ['shirtNumber', 'state', 'position', 'archetypeId', 'biotype', 'temperament', 'celebration', 'origin', 'foot', 'heartClub', 'side', 'mentality'] as const;
-const ROOT_KEYS = ['v', 's', 'r', 'i', 'x', 'c'];
+const ROOT_KEYS = ['v', 's', 'r', 'i', 'x', 'c', 'k', 'd'];
+const CODE = /^10F-[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}$/;
 // Só para a conferência semântica do createPlayer (que exige um nome válido); o nome nunca sai nem volta no link.
 const CHECK_NAME = 'Jogador';
 
@@ -47,7 +53,11 @@ function fromBase64Url(b64: string): string | null {
 export function careerLinkFragment(data: CareerLinkData): string {
   const input: Record<string, unknown> = {};
   for (const k of INPUT_KEYS) if (data.input[k] !== undefined) input[k] = data.input[k];
-  return PREFIX + toBase64Url(JSON.stringify({ v: LINK_VERSION, s: data.seed, r: data.ritmo, i: input, x: data.visual, c: data.choices }));
+  return PREFIX + toBase64Url(JSON.stringify({ v: LINK_VERSION, s: data.seed, r: data.ritmo, i: input, x: data.visual, c: data.choices, k: data.codigo, ...(data.desafio === undefined ? {} : { d: data.desafio }) }));
+}
+
+function isDay(d: unknown): boolean {
+  try { dailySeed(d as string); return true; } catch { return false; }
 }
 
 function validInput(i: unknown): i is CareerLinkData['input'] {
@@ -68,12 +78,14 @@ export function parseCareerLink(hash: string): LinkResult {
   if (text === null) return { ok: false, reason: 'formato' };
   if (!isObject(raw)) return { ok: false, reason: 'invalido' };
   if (raw.v !== LINK_VERSION) return { ok: false, reason: 'versao' };
-  const { s, r, i, x, c } = raw;
+  const { s, r, i, x, c, k, d } = raw;
   const ok = Object.keys(raw).every((k) => ROOT_KEYS.includes(k))
     && typeof s === 'number' && Number.isSafeInteger(s) && s >= 0
     && RITMOS.includes(r as Ritmo)
     && typeof x === 'string' && VISUAIS.some((v) => v.id === x)
     && Array.isArray(c) && c.length <= MAX_CHOICES && c.every((e) => typeof e === 'string' && /^[\x21-\x7e]{1,64}$/.test(e))
+    && typeof k === 'string' && CODE.test(k)
+    && (d === undefined || isDay(d))
     && validInput(i);
-  return ok ? { ok: true, data: { seed: s, ritmo: r as Ritmo, input: i as CareerLinkData['input'], visual: x, choices: c as string[] } } : { ok: false, reason: 'invalido' };
+  return ok ? { ok: true, data: { seed: s, ritmo: r as Ritmo, input: i as CareerLinkData['input'], visual: x, choices: c as string[], codigo: k as string, ...(d === undefined ? {} : { desafio: d as string }) } } : { ok: false, reason: 'invalido' };
 }

@@ -1,7 +1,13 @@
 import { useCallback, useState } from 'react';
 import { dailySeed, dayKeyBR } from './engine/daily';
 import { clearSave, peekSave, readSave, validateSave, writeSave, type SaveStorage } from './state/save';
-import { Abertura } from './ui/screens/Abertura';
+import { parseCareerLink } from './share/careerLink';
+import { reviewLink } from './share/reviewLink';
+import { t } from './i18n';
+import type { CareerResult } from './engine/career';
+import { Abertura, Confirm } from './ui/screens/Abertura';
+import { Cartao } from './ui/screens/Cartao';
+import { LinkInvalido } from './ui/screens/LinkInvalido';
 import { Career } from './ui/screens/Career';
 import { Creation, type CreationResult } from './ui/screens/Creation';
 import { Revelacao } from './ui/screens/Revelacao';
@@ -15,6 +21,8 @@ import { SaveInvalido } from './ui/screens/SaveInvalido';
 type Created = { round: number; created: CreationResult; seed: number; desafio?: string };
 type Phase =
   | { kind: 'abertura'; round: number }
+  | { kind: 'rever'; round: number; result: CareerResult; visual: string; codigo: string; seed: number; desafio?: string }
+  | { kind: 'linkInvalido'; round: number }
   | { kind: 'saveInvalido'; round: number; reason: 'danificado' | 'versao' }
   | { kind: 'criacao'; round: number; seed: number; desafio?: string }
   | ({ kind: 'revelacao' } & Created)
@@ -30,8 +38,29 @@ function browserStorage(): SaveStorage {
   }
 }
 
-export function App({ seed, storage = browserStorage(), now = () => new Date() }: { seed?: number; storage?: SaveStorage; now?: () => Date }) {
-  const [phase, setPhase] = useState({ kind: 'abertura', round: 0 } as Phase);
+/** O fragmento da URL de agora ("#c=..." quando alguém abriu um link de carreira). */
+function currentHash(): string {
+  try { return window.location.hash; } catch { return ''; }
+}
+
+/** Tira o "#c=..." do endereço, para recarregar ou sair do link não reabrir a carreira do link (T57d). */
+function clearHash(): void {
+  try { window.history.replaceState(null, '', window.location.pathname + window.location.search); } catch { /* sem história do navegador: nada a limpar */ }
+}
+
+/** Fase inicial: abertura, ou a carreira do link (conferida com o motor) ou o aviso de link inválido (T57d). */
+function firstPhase(hash: string): Phase {
+  if (!hash.startsWith('#c=')) return { kind: 'abertura', round: 0 };
+  const parsed = parseCareerLink(hash);
+  const rev = parsed.ok ? reviewLink(parsed.data, t('ui.rever.nomeGenerico')) : null;
+  if (!parsed.ok || !rev?.ok) return { kind: 'linkInvalido', round: 0 };
+  const { seed, desafio, visual, codigo } = parsed.data;
+  return { kind: 'rever', round: 0, result: rev.result, visual, codigo, seed, ...(desafio === undefined ? {} : { desafio }) };
+}
+
+export function App({ seed, storage = browserStorage(), now = () => new Date(), hash = currentHash() }: { seed?: number; storage?: SaveStorage; now?: () => Date; hash?: string }) {
+  const [phase, setPhase] = useState(() => firstPhase(hash));
+  const [asking, setAsking] = useState(false);
   const next = phase.round + 1;
   // salva a cada decisão; carreira terminada não é mais "ativa" (uma por vez), então o save sai.
   // Durante a carreira o objeto da fase não muda (as escolhas vivem no Career), então a função fica estável.
@@ -42,9 +71,10 @@ export function App({ seed, storage = browserStorage(), now = () => new Date() }
   }, [phase, storage]);
 
   /** Nova carreira livre (semente injetada ou do relógio) ou desafio do dia (semente da data de Brasília). */
-  function startNew(desafio?: string) {
+  function startNew(desafio?: string, fixedSeed?: number) {
+    clearHash();
     clearSave(storage);
-    setPhase({ kind: 'criacao', round: next, seed: desafio === undefined ? (seed ?? Date.now()) : dailySeed(desafio), ...(desafio === undefined ? {} : { desafio }) });
+    setPhase({ kind: 'criacao', round: next, seed: fixedSeed ?? (desafio === undefined ? (seed ?? Date.now()) : dailySeed(desafio)), ...(desafio === undefined ? {} : { desafio }) });
   }
 
   function continueSaved() {
@@ -58,6 +88,21 @@ export function App({ seed, storage = browserStorage(), now = () => new Date() }
     setPhase({ kind: 'carreira', round: next, created: c as CreationResult, seed: s, ritmo, choices, ...(desafio === undefined ? {} : { desafio }) });
   }
 
+  if (phase.kind === 'linkInvalido') {
+    return <LinkInvalido onBack={() => { clearHash(); setPhase({ kind: 'abertura', round: next }); }} />;
+  }
+  if (phase.kind === 'rever') {
+    const saved = peekSave(storage);
+    const play = () => startNew(phase.desafio, phase.seed);
+    return (
+      <>
+        <Cartao result={phase.result} code={phase.codigo} visual={phase.visual} desafio={phase.desafio}
+          onJogar={() => { if (saved.status === 'nenhum') play(); else setAsking(true); }}
+          onRestart={() => { clearHash(); setPhase({ kind: 'abertura', round: next }); }} />
+        {asking && <Confirm name={saved.status === 'salvo' ? saved.name : null} onConfirm={play} onCancel={() => { setAsking(false); }} />}
+      </>
+    );
+  }
   if (phase.kind === 'abertura') {
     const dia = dayKeyBR(now());
     return <Abertura saved={peekSave(storage)} dia={dia} onNew={() => { startNew(); }} onDesafio={() => { startNew(dia); }} onContinue={continueSaved} />;

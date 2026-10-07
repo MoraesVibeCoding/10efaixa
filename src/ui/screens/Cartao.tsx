@@ -10,8 +10,9 @@ import './Cartao.css';
 // T55d (SPEC 6.15, v2.42): o cartão final em Canvas 2D, versão narrativa primeiro; o texto alternativo descreve a versão à vista.
 const VERSIONS: CardVersion[] = ['narrativa', 'estatistica'];
 
+/** `onJogar` (T57d): presente só ao rever um link; mostra o aviso de só leitura e "Jogar este desafio". */
 /** `desafio` = dia "AAAA-MM-DD" do desafio do dia (T57c); ausente = carreira livre, sem selo. */
-export function Cartao({ result, code, visual, desafio, onRestart }: { result: CareerResult; code: string; visual?: string; desafio?: string; onRestart: () => void }) {
+export function Cartao({ result, code, visual, desafio, onJogar, onRestart }: { result: CareerResult; code: string; visual?: string; desafio?: string; onJogar?: () => void; onRestart: () => void }) {
   const [version, setVersion] = useState('narrativa' as CardVersion);
   const canvas = useRef(null as HTMLCanvasElement | null);
   const model = useMemo(() => cardModel(result, code), [result, code]);
@@ -55,6 +56,7 @@ export function Cartao({ result, code, visual, desafio, onRestart }: { result: C
     <main className="cartao" data-tema="claro">
       <h1 className="cartao__titulo">{t('ui.cartao.titulo')}</h1>
       {desafio && <p className="cartao__selo">{t('ui.cartao.desafio', { data: `${desafio.slice(8, 10)}/${desafio.slice(5, 7)}` })}</p>}
+      {onJogar && <p className="cartao__aviso">{t('ui.rever.aviso')}</p>}
       <div className="cartao__versoes" role="group" aria-label={t('ui.cartao.versoes')}>
         {VERSIONS.map((v) => (
           <button key={v} type="button" aria-pressed={version === v} onClick={() => { setVersion(v); }}>{t(`ui.cartao.${v}`)}</button>
@@ -67,6 +69,7 @@ export function Cartao({ result, code, visual, desafio, onRestart }: { result: C
         <button type="button" onClick={() => { void copy(); }}>{t('ui.compartilhar.copiar')}</button>
       </div>
       <p className="cartao__status" role="status">{status}</p>
+      {onJogar && <button type="button" className="cartao__compartilhar" onClick={onJogar}>{t('ui.rever.jogar')}</button>}
       <button type="button" className="cartao__nova" onClick={onRestart}>{t('ui.fim.novaCarreira')}</button>
     </main>
   );

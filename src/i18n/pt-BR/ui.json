@@ -240,6 +240,16 @@
   "dica": "Você pode começar uma carreira nova. A salva será apagada.",
   "recomecar": "Começar uma nova"
  },
+ "rever": {
+  "nomeGenerico": "Jogador do link",
+  "aviso": "Você está vendo a carreira de um link, só para ler. O nome do jogador não vai no link.",
+  "jogar": "Jogar este desafio"
+ },
+ "linkInvalido": {
+  "titulo": "Não deu para abrir este link",
+  "texto": "O link está incompleto, foi alterado ou é de uma versão do jogo que esta não abre.",
+  "voltar": "Voltar ao início"
+ },
  "reuniao": {
   "titulo": "Reunião com a comissão",
   "texto": "É meio de temporada. O que você quer treinar mais no próximo semestre?",

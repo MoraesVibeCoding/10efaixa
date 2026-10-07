@@ -50,7 +50,7 @@ export function Abertura({ saved, onNew, onDesafio, dia, onContinue }: AberturaP
 }
 
 /** "Começar outra carreira?": uma carreira salva por vez, então começar outra apaga a atual (v2.39). */
-function Confirm({ name, onConfirm, onCancel }: { name: string | null; onConfirm: () => void; onCancel: () => void }) {
+export function Confirm({ name, onConfirm, onCancel }: { name: string | null; onConfirm: () => void; onCancel: () => void }) {
   const dialog = useRef(null as HTMLDialogElement | null);
   useEffect(() => {
     const el = dialog.current;

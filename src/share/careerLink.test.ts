@@ -12,14 +12,14 @@ const input: Omit<CreationInput, 'name'> = {
   biotype: { heightCm: 176, build: 'atletico' }, temperament: 'resenha', celebration: 'aviaozinho',
   origin: 'baseGrande', foot: 'direita', heartClub: 'bahia',
 };
-const data: CareerLinkData = { seed: 1_759_000_000_000, ritmo: 'normal', input, visual: VISUAIS[0]!.id, choices: ['aceitar', 'principal|secundario'] };
+const data: CareerLinkData = { seed: 1_759_000_000_000, ritmo: 'normal', input, visual: VISUAIS[0]!.id, choices: ['aceitar', 'principal|secundario'], codigo: '10F-7K3Q-9M2X' };
 
 /** Monta um link com o conteúdo bruto dado, igual ao que o codec grava (para testar a leitura estrita). */
 function rawLink(payload: unknown): string {
   const b64 = btoa(JSON.stringify(payload)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   return `#c=${b64}`;
 }
-const good = { v: 1, s: data.seed, r: data.ritmo, i: input, x: data.visual, c: data.choices };
+const good = { v: 1, s: data.seed, r: data.ritmo, i: input, x: data.visual, c: data.choices, k: data.codigo };
 
 describe('link da carreira (T57b)', () => {
   it('ida e volta devolve a mesma carreira', () => {
@@ -36,6 +36,12 @@ describe('link da carreira (T57b)', () => {
     const decoded = atob(frag.slice(3).replace(/-/g, '+').replace(/_/g, '/'));
     expect(decoded).not.toMatch(/Fulano|Segredo|Apelid|name|nickname/);
     expect(parseCareerLink(frag)).toEqual({ ok: true, data });
+  });
+
+  it('o dia do desafio (opcional) e o código do cartão original sobrevivem à ida e volta', () => {
+    const d = { ...data, desafio: '2026-10-07' };
+    expect(parseCareerLink(careerLinkFragment(d))).toEqual({ ok: true, data: d });
+    expect(parseCareerLink(careerLinkFragment(data))).toEqual({ ok: true, data }); // sem desafio, a chave nem existe
   });
 
   it('opcionais (lado e mentalidade) sobrevivem à ida e volta', () => {
@@ -86,6 +92,10 @@ describe('link da carreira (T57b)', () => {
     ['nome dentro do link', { i: { ...input, name: 'Jogador Teste' } }],
     ['lado inválido', { i: { ...input, side: 'meio' } }],
     ['campo a mais na raiz', { extra: 1 }],
+    ['código fora do formato', { k: '10F-xxxx' }],
+    ['sem código', { k: undefined }],
+    ['desafio com data inexistente', { d: '2026-02-30' }],
+    ['desafio fora do formato', { d: '07/10/2026' }],
     ['escolhas que não são lista', { c: 'aceitar' }],
     ['escolha que não é texto', { c: ['aceitar', 7] }],
     ['escolha longa demais', { c: ['a'.repeat(65)] }],
