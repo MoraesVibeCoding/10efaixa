@@ -688,7 +688,7 @@ Cada tarefa é atômica, com teste escrito antes do código e **um commit por ta
 | T55 | Geração do cartão 1080×1350 | Avatar no auge, radar de 10 atributos, elementos da 6.15 (com as honrarias da v2.28), **versões narrativa e estatística** e tela "Sua história" (v2.31), texto alternativo ⛳ |
 | T56 | Compartilhamento com fallback | Nativo quando suportado; download; texto para WhatsApp |
 | T57a | Semente do dia (v2.49) | `dailySeed(data)` determinística, fuso de Brasília |
-| T57b | Codec do link da carreira | Ida e volta idêntica; rejeita versão, tamanho, tipos e ids inválidos; sem nome nem apelido |
+| T57b | Codec do link da carreira | Ida e volta idêntica; rejeita versão, tamanho, tipos e ids inválidos; sem nome nem apelido; carreira Completa real ≈ 2,4 mil caracteres (limite 3 mil; a estimativa de 1,5 kB da proposta estava baixa) |
 | T57c | Desafio na Abertura, `desafio` no save e selo no cartão | Criação usa a semente do dia; carreira livre inalterada |
 | T57d | Tela "Rever carreira" por link | Só leitura, não grava save, link inválido tratado, "Jogar este desafio" |
 | T57e | "Copiar link" no cartão | Texto copiado = link da T57b; aria-live; sem ranking online |

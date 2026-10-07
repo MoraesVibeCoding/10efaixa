@@ -37,7 +37,7 @@ Ranking online, mesmo jogador inicial, contas, streaks, notificações, analytic
 | ID | Tarefa | Critério de aceitação |
 |---|---|---|
 | T57a | `dailySeed(data)` | Determinística; fuso de Brasília; testes vermelhos antes |
-| T57b | Codec do link (`careerLink`) | Ida e volta idêntica; todas as rejeições acima; sem nome/apelido; ≤ ~1,5 kB para carreira Completa |
+| T57b | Codec do link (`careerLink`) | Ida e volta idêntica; todas as rejeições acima; sem nome/apelido; ≤ ~3 mil caracteres (medido ≈ 2,4 mil; a estimativa de 1,5 kB estava baixa) |
 | T57c | Desafio na Abertura + `desafio` no save + selo no cartão | Criação usa a semente do dia; selo só quando é desafio; carreira livre inalterada |
 | T57d | Tela "Rever carreira" por link | Somente leitura, não grava save, link inválido tratado, "Jogar este desafio" |
 | T57e | "Copiar link" no cartão + SPEC v2.49 + `current-task.md` | Texto copiado = link da T57b; aria-live; log 100% testes, typecheck e build |
