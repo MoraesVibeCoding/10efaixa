@@ -6,7 +6,8 @@ import { Propostas } from './Propostas';
 // T28d (SPEC 6.12, v2.50): a tela de propostas de clube: até 3 propostas e "Ficar no clube".
 const proposta = (over: Partial<ProposalView> = {}): ProposalView => ({
   clubId: 'flamengo', league: 'BRA-A', currency: 'BRL', annualSalary: 2_400_000, years: 3, role: 'titularRegular', staffQuality: 1.1, offAxis: false,
-  minutosFaixa: 'muitos', nivelClube: 'boa', marca: null, ...over,
+  minutosFaixa: 'muitos', nivelClube: 'boa', marca: null,
+  salarioMensal: 200_000, salarioPct: { pct: 27, sentido: 'sobe' }, valorProjetadoEUR: 9_500_000, valorPct: { pct: 15, sentido: 'sobe' }, ...over,
 });
 const duas = [proposta(), proposta({ clubId: 'benfica', league: 'POR', currency: 'EUR', annualSalary: 1_200_000, role: 'disputa', minutosFaixa: 'rodizio', nivelClube: 'boa', offAxis: true })];
 

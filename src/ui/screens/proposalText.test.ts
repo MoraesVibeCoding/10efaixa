@@ -6,7 +6,8 @@ import { proposalText } from './proposalText';
 // T28c (SPEC 6.12, v2.28/v2.50): o texto de cada proposta na tela: clube, liga, salário, contrato, papel, minutos e nível do clube.
 const view = (over: Partial<ProposalView> = {}): ProposalView => ({
   clubId: 'flamengo', league: 'BRA-A', currency: 'BRL', annualSalary: 2_400_000, years: 3, role: 'titularRegular', staffQuality: 1.1, offAxis: false,
-  minutosFaixa: 'muitos', nivelClube: 'boa', marca: null, ...over,
+  minutosFaixa: 'muitos', nivelClube: 'boa', marca: null,
+  salarioMensal: 200_000, salarioPct: { pct: 27, sentido: 'sobe' }, valorProjetadoEUR: 9_500_000, valorPct: { pct: 15, sentido: 'sobe' }, ...over,
 });
 
 describe('texto da proposta (T28c)', () => {

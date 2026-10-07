@@ -1,5 +1,6 @@
+import { salaryChange, valueChange, type Change } from './contractCard';
 import { effectiveRep } from './europe';
-import type { Offer } from './market';
+import { toBRL, type Offer } from './market';
 import { clubLevelBand, minutesBand, type ClubLevelBand, type MinutesBand } from './minutes';
 
 // T28b (SPEC 6.12, v2.50): a decisão "proposta-clube", no mesmo molde da reunião (as opções mudam a cada temporada,
@@ -27,14 +28,23 @@ export interface ProposalView {
   minutosFaixa: MinutesBand; nivelClube: ClubLevelBand;
   /** T28e: a proposta é do clube de coração, de um rival (do clube atual ou do coração) ou comum. O coração vence o rival. */
   marca: 'coracao' | 'rival' | 'rivalCoracao' | null;
+  /** T28i (v2.54): salário por mês na moeda da proposta e a variação contra o atual; valor projetado (estimativa) e a variação contra o de hoje. */
+  salarioMensal: number; salarioPct: Change | null; valorProjetadoEUR: number | null; valorPct: Change | null;
 }
 
+/** O que só o motor da carreira sabe: contrato atual, valor de hoje e valor projetado naquele clube. */
+export interface CardContext { currentAnnualSalaryBRL: number | null; todayValueEUR: number; projectedValueEUR: number }
+
 /** `overall`: o do jogador agora; com o nível do elenco do clube dá os minutos previstos. */
-export const proposalViewOf = (o: Offer, overall: number): ProposalView => ({
+export const proposalViewOf = (o: Offer, overall: number, card?: CardContext): ProposalView => ({
   clubId: o.clubId, league: o.league, currency: o.currency, annualSalary: o.annualSalary, years: o.years,
   role: o.role, staffQuality: o.staffQuality, offAxis: o.offAxis,
   minutosFaixa: minutesBand({ overall, clubRep: effectiveRep(o.clubId), role: o.role }), nivelClube: clubLevelBand(effectiveRep(o.clubId)),
   marca: o.heartClub ? 'coracao' : o.rivalOfHeart ? 'rivalCoracao' : o.rivalOfCurrent ? 'rival' : null,
+  salarioMensal: Math.round(o.annualSalary / 12),
+  salarioPct: card ? salaryChange(toBRL(o), card.currentAnnualSalaryBRL) : null,
+  valorProjetadoEUR: card ? card.projectedValueEUR : null,
+  valorPct: card ? valueChange(card.projectedValueEUR, card.todayValueEUR) : null,
 });
 
 export type ProposalChoice<T extends { clubId: string } = Offer> =

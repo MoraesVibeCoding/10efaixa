@@ -45,8 +45,11 @@ export const LEVELS = ['semExpressao', 'baixa', 'media', 'boa', 'alta', 'gigante
 export type ClubLevelBand = (typeof LEVELS)[number];
 
 /** Minutos previstos pelo papel prometido e pelo nível do jogador no elenco (forma neutra, sem ruído). */
+export const expectedMinutes = (overall: number, clubRep: number, role: Role): number =>
+  clamp01(MINUTES_OF[role] + (overall - squadLevel(clubRep)) * cfg.porPontoRelativo);
+
 export function minutesBand({ overall, clubRep, role }: { overall: number; clubRep: number; role: Role }): MinutesBand {
-  const share = clamp01(MINUTES_OF[role] + (overall - squadLevel(clubRep)) * cfg.porPontoRelativo);
+  const share = expectedMinutes(overall, clubRep, role);
   return share >= cfg.faixas.minutos.muitos ? 'muitos' : share >= cfg.faixas.minutos.rodizio ? 'rodizio' : 'poucos';
 }
 

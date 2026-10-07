@@ -11,6 +11,7 @@ import { initialEuroTables, simulateEuropeSeason, type EuroTables } from './euro
 import { applyOption, autoChoice } from './events';
 import { callUp, coachFor, isPrincipal, selectionEffect, updatePrestige, visibility, type CallUp, type Rung } from './nationalTeam';
 import { evolveSemester, type EvoState, type Focus } from './evolution';
+import { projectValue } from './contractCard';
 import { semesterFeedback, type Feedback } from './feedback';
 import { mentalityEffects } from './mentality';
 import { afterClassico, afterSemester, afterTransfer, type Idolatry } from './idolatry';
@@ -567,6 +568,14 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       let pick: Offer | null = null;
       let byLove = false;
       let forced = false;
+      const todayValue = marketValue(ov(evo), evo.age);
+      const cardContext = (o: Offer) => ({
+        currentAnnualSalaryBRL: current?.annualSalaryBRL ?? null, todayValueEUR: todayValue,
+        projectedValueEUR: projectValue({
+          evo, position, bonus: position === input.position ? arch.overallWeightBonus : undefined, clubRep: effectiveRep(o.clubId),
+          role: o.role, staffQuality: o.staffQuality, morale,
+        }).valueEUR,
+      });
       const canForce = !!c && c.years > 1; // saída forçada só com contrato por mais de um ano
       if (!goingHome && !farewell) {
         const { shown, pick: auto } = rankOffers(me, offers, current);
@@ -574,7 +583,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         if (shown.length > 0) {
           // a sugestão é a escolha automática; no clube de coração, "por amor" quando o jeito do jogador escolheria assim (events.json)
           const sugestao = !auto ? STAY : auto.heartClub && autoChoice('proposta-coracao', temp) === 'aceitar-por-amor' ? loveChoice(auto.clubId) : acceptChoice(auto.clubId);
-          const said = ask(PROPOSAL_EVENT, { sugestao, podeFicar: true, podeForcar: canForce }, temp, { propostas: shown.map((o) => proposalViewOf(o, me.overall)) });
+          const said = ask(PROPOSAL_EVENT, { sugestao, podeFicar: true, podeForcar: canForce }, temp, { propostas: shown.map((o) => proposalViewOf(o, me.overall, cardContext(o))) });
           const chosen = parseProposalChoice(said, shown, true, (o) => o.heartClub, canForce);
           if (!chosen) throw new RangeError(`proposta inválida: "${said}"`);
           pick = chosen.kind === 'ficar' ? null : chosen.offer;
