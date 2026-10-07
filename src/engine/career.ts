@@ -69,7 +69,8 @@ export interface CareerResult {
   nickname: string; headline: string; comment: string;
   retirement: RetireReason; farewell: 'formador' | 'coracao' | null;
   cards: { yellows: number; reds: number }; finalTemperament: string; houseBought: boolean; discipline: number;
-  seasons: { year: number; clubId: string; division: string | null; minutes: number; overall: number }[];
+  /** `age` (v2.51): idade em que jogou a temporada (a de `evo.age` já avançou um ano ao registrar); para a linha do tempo. */
+  seasons: { year: number; age: number; clubId: string; division: string | null; minutes: number; overall: number }[];
 }
 
 /** T51: o momento de uma decisão, para a tela mostrar o jogador como ele está ali. */
@@ -489,7 +490,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       }, yr);
       for (const award of won) if (award !== 'revelacao' || !awards.some((a) => a.award === 'revelacao')) awards.push({ year, award });
     }
-    seasons.push({ year, clubId: seasonClub, division: league, minutes: avgMinutes, overall: ov(evo) });
+    seasons.push({ year, age: evo.age - 1, clubId: seasonClub, division: league, minutes: avgMinutes, overall: ov(evo) });
 
     // Camisa 10 e faixa do clube por evento.
     if (clubId && !inYouth) {
