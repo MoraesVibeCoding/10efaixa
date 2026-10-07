@@ -1,5 +1,5 @@
 import { autoDecide, simulateCareer } from '../engine/career';
-import { PROPOSAL_EVENT, acceptChoice, STAY } from '../engine/proposals';
+import { PROPOSAL_EVENT, RAISE, RENEW, acceptChoice, STAY } from '../engine/proposals';
 import { createPrng } from '../engine/prng';
 import { randomInput } from '../engine/simulation';
 import { runUntilDecision, type Ritmo } from './careerRun';
@@ -41,7 +41,7 @@ describe('proposta de clube como decisão (T28b)', () => {
       for (const p of shown) {
         expect(p.propostas.length).toBeGreaterThanOrEqual(1);
         expect(p.propostas.length).toBeLessThanOrEqual(3);
-        expect(p.sugestao === STAY || p.propostas.some((o) => acceptChoice(o.clubId) === p.sugestao)).toBe(true);
+        expect([STAY, RENEW, RAISE].includes(p.sugestao) || p.propostas.some((o) => acceptChoice(o.clubId) === p.sugestao)).toBe(true);
       }
     }
   });

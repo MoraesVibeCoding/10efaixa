@@ -11,7 +11,7 @@ import { initialEuroTables, simulateEuropeSeason, type EuroTables } from './euro
 import { applyOption, autoChoice } from './events';
 import { callUp, coachFor, isPrincipal, selectionEffect, updatePrestige, visibility, type CallUp, type Rung } from './nationalTeam';
 import { evolveSemester, type EvoState, type Focus } from './evolution';
-import { projectValue } from './contractCard';
+import { projectValue, salaryChange, valueChange } from './contractCard';
 import { semesterFeedback, type Feedback } from './feedback';
 import { mentalityEffects } from './mentality';
 import { afterClassico, afterSemester, afterTransfer, type Idolatry } from './idolatry';
@@ -19,7 +19,7 @@ import { decayRelapse, graveDecision, semesterInjury } from './injuries';
 import { FORCE_EXIT, generateOffers, negotiate, rankOffers, leagueOf, marketValue, salaryFor, type Offer } from './market';
 import { MEETING_EVENT, autoProposal, encodeProposal, meetingScore, parseProposal, staffMeeting, type MeetingResult } from './meeting';
 import { MEETING_IDEAS, TRUST, drawClubNeed, ideaOf, meetingOptions, type Idea, type MeetingOptions } from './meetingOptions';
-import { minutesShare, roleFor, squadLevel, updateForm, updateMorale, type Role } from './minutes';
+import { clubLevelBand, minutesShare, roleFor, squadLevel, updateForm, updateMorale, type Role } from './minutes';
 import { overall, type Position } from './overall';
 import { coachProposal } from './positionChange';
 import { createPlayer, type CreationInput, type Player } from './player';
@@ -35,7 +35,7 @@ import { headlineOf } from './headline';
 import { legacyOf, type Legacy } from './legacy';
 import { honorFacts, honorsOf } from './honors';
 import { generateNickname } from './nickname';
-import { PROPOSAL_EVENT, STAY, acceptChoice, loveChoice, parseProposalChoice, proposalViewOf, type ProposalView } from './proposals';
+import { PROPOSAL_EVENT, RAISE, RENEW, STAY, acceptChoice, loveChoice, parseProposalChoice, proposalViewOf, type CurrentClubView, type ProposalView } from './proposals';
 import { farewellOffer, retirementCheck, type RetireReason } from './retirement';
 import { simulateSeason, type ClubInfo, type Div, type Divisions, type Row } from './season';
 import { assignNumber, canGetArmband, canGetTen, rosterNumbers } from './shirt';
@@ -104,6 +104,8 @@ export interface DecisionView {
   idolatrias: Record<string, number>;
   /** T28b (v2.50): na decisão `proposta-clube`, as até 3 propostas mostradas (a escolha é "aceitar:<clube>" ou "ficar"). */
   propostas?: ProposalView[];
+  /** T28j (v2.54): o clube atual como primeiro cartão da tela de propostas, com a renovação quando o contrato acaba. */
+  atual?: CurrentClubView;
   /** Seleção que o jogador defende agora ("brasil" ou o país da dupla nacionalidade aceita): a camisa nos eventos da Seleção (v2.37). */
   nationality: string;
 }
@@ -195,7 +197,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   const meetings: DecisionView['meetings'] = [];
   let ultimoSemestre: DecisionView['ultimoSemestre'];
   /** Toda decisão passa por aqui (T51): o padrão é a escolha do temperamento, como antes. */
-  const ask = (eventId: string, state: Record<string, number | string | boolean> = {}, who = temp, extra: Pick<DecisionView, 'propostas' | 'reuniao'> = {}) => decide(eventId, who, () => ({
+  const ask = (eventId: string, state: Record<string, number | string | boolean> = {}, who = temp, extra: Pick<DecisionView, 'propostas' | 'reuniao' | 'atual'> = {}) => decide(eventId, who, () => ({
     ...extra,
     year: curYear, age: evo.age, clubId, position, overall: ov(evo), role: curRole, temperament: who,
     marketValueEUR: Math.round(marketValue(ov(evo), evo.age) * selectionEffect(prestige, sel, sel.rung).marketMultiplier),
@@ -576,17 +578,40 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
           role: o.role, staffQuality: o.staffQuality, morale,
         }).valueEUR,
       });
-      const canForce = !!c && c.years > 1; // saída forçada só com contrato por mais de um ano
+      const canForce = !!c && c.years > 1;
+      // T28j (v2.54): o clube atual é o primeiro cartão; com o contrato no fim, a renovação (e o pedido de aumento) saem dele.
+      const due = !!c && c.years - 1 <= 1;
+      const atualCard = (): CurrentClubView => {
+        const k = c!;
+        const rep = effectiveRep(clubId!);
+        const role = roleFor(me.overall, rep, evo.age);
+        const projected = projectValue({ evo, position, bonus: position === input.position ? arch.overallWeightBonus : undefined, clubRep: rep, role, staffQuality: clamp(0.8 + (rep / 100) * 0.4, 0.8, 1.2), morale }).valueEUR;
+        const renewalOf = (raise: boolean) => {
+          const r = renew(k, ov(evo) - contractOverall, raise);
+          return { salarioMensal: Math.round(r.annualSalary / 12), salarioPct: salaryChange(r.annualSalary, k.annualSalary), anos: r.years };
+        };
+        return {
+          clubId: clubId!, league: leagueOf(clubId!, divOf), currency: k.currency, salarioMensal: Math.round(k.annualSalary / 12), anosRestantes: Math.max(0, k.years - 1),
+          role, nivelClube: clubLevelBand(rep), valorProjetadoEUR: projected, valorPct: valueChange(projected, todayValue),
+          renovacao: due ? renewalOf(false) : null, aumento: due ? renewalOf(true) : null,
+        };
+      };
+      let renewChoice: string | null = null; // saída forçada só com contrato por mais de um ano
       if (!goingHome && !farewell) {
         const { shown, pick: auto } = rankOffers(me, offers, current);
         pick = auto;
         if (shown.length > 0) {
           // a sugestão é a escolha automática; no clube de coração, "por amor" quando o jeito do jogador escolheria assim (events.json)
-          const sugestao = !auto ? STAY : auto.heartClub && autoChoice('proposta-coracao', temp) === 'aceitar-por-amor' ? loveChoice(auto.clubId) : acceptChoice(auto.clubId);
-          const said = ask(PROPOSAL_EVENT, { sugestao, podeFicar: true, podeForcar: canForce }, temp, { propostas: shown.map((o) => proposalViewOf(o, me.overall, cardContext(o))) });
-          const chosen = parseProposalChoice(said, shown, true, (o) => o.heartClub, canForce);
+          const staying = due ? autoChoice('renovacao', temp) : null;
+          const stayChoice = staying === 'renovar' ? RENEW : staying === 'pedir-aumento' ? RAISE : STAY;
+          const sugestao = !auto ? stayChoice : auto.heartClub && autoChoice('proposta-coracao', temp) === 'aceitar-por-amor' ? loveChoice(auto.clubId) : acceptChoice(auto.clubId);
+          const said = ask(PROPOSAL_EVENT, { sugestao, podeFicar: true, podeForcar: canForce, podeRenovar: due }, temp, { propostas: shown.map((o) => proposalViewOf(o, me.overall, cardContext(o))), ...(c ? { atual: atualCard() } : {}) });
+          const chosen = parseProposalChoice(said, shown, true, (o) => o.heartClub, canForce, due);
           if (!chosen) throw new RangeError(`proposta inválida: "${said}"`);
-          pick = chosen.kind === 'ficar' ? null : chosen.offer;
+          if (chosen.kind === 'renovar') renewChoice = 'renovar';
+          else if (chosen.kind === 'aumento') renewChoice = 'pedir-aumento';
+          else if (chosen.kind === 'ficar' && due) renewChoice = 'nao-renovar';
+          pick = chosen.kind === 'ficar' || chosen.kind === 'renovar' || chosen.kind === 'aumento' ? null : chosen.offer;
           byLove = chosen.kind === 'amor';
           forced = chosen.kind === 'forcar';
           if (chosen.kind === 'negociar') {
@@ -623,7 +648,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       } else if (c) {
         c.years -= 1;
         if (c.years <= 1) {
-          const choice = ask('renovacao');
+          const choice = renewChoice ?? ask('renovacao');
           if (choice !== 'nao-renovar') { contract = renew(c, ov(evo) - contractOverall, choice === 'pedir-aumento'); contractOverall = ov(evo); contracts++; }
           else c.years = 1;
         }
