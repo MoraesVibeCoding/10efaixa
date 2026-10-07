@@ -16,3 +16,4 @@
 .propostas__detalhes span:first-child { font-family: var(--fonte-titulo); font-weight: 800; }
 .propostas__aviso { margin: 0; font-weight: 700; }
 .propostas__acoes { grid-template-columns: 1fr; }
+.propostas__marca { margin: 0; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; }

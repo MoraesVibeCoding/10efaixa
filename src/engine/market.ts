@@ -117,31 +117,37 @@ export function negotiate(o: Offer, agent: Agent, rng: Prng): Offer | null {
 const ROLE_SCORE: Record<string, number> = { titular: 1, rodizio: 0.6, aposta: 0.2, reserva: 0.2, promessa: 0.2 };
 export const toBRL = (o: Offer) => (o.currency === 'EUR' ? o.annualSalary * money.cambio.EUR : o.annualSalary);
 
+/** Custos de forçar a saída antes do fim do contrato (T28e, v2.50); os números moram em market.json. */
+export const FORCE_EXIT = cfg.propostas.forcarSaida;
+
 /** Quantas propostas a tela mostra (T28b, v2.50). */
 export const MAX_SHOWN_OFFERS = 3;
 
 /**
- * Propostas que a tela mostra e a escolha automática. `shown`: as até 3 melhores pela pontuação do temperamento, entre as que o
- * jogador não recusaria por regra (rival, traição, clube do coração); `pick`: a que vence "ficar" pela margem (null = fica no clube
- * atual), sempre a primeira de `shown`. Sem clube atual, não há "ficar": a melhor vence.
+ * Propostas que a tela mostra e a escolha automática. `shown`: as até 3 melhores pela pontuação do temperamento, **todas**, inclusive
+ * as que o temperamento do jogador recusaria por regra (rival, traição, clube do coração): na tela a decisão é dele (T28e, v2.50).
+ * `pick`: a escolha automática, que só considera as que o temperamento aceita e vence "ficar" pela margem (null = fica no clube
+ * atual); sempre está entre as mostradas. Sem clube atual, não há "ficar": a melhor vence.
  */
 export function rankOffers(p: MarketPlayer, offers: Offer[], current: { annualSalaryBRL: number; role: string } | null): { shown: Offer[]; pick: Offer | null } {
   const all = cfg.politica as unknown as Record<string, { nivel: number; salario: number; papel: number; ficar: number }>;
   const w = all[p.temperament] ?? all.padrao!;
   const score = (rep: number, salaryBRL: number, role: string) =>
     w.nivel * (rep / 10) + w.salario * Math.log10(Math.max(1, salaryBRL)) + w.papel * (ROLE_SCORE[role] ?? 0.2);
-  const allowed = offers.filter((o) =>
+  const accepts = (o: Offer) =>
     (!o.rivalOfCurrent || autoChoice('proposta-rival', p.temperament) === 'aceitar')
     && (!o.rivalOfHeart || autoChoice('traicao-coracao', p.temperament) === 'aceitar')
-    && (!o.heartClub || autoChoice('proposta-coracao', p.temperament) !== 'recusar'));
-  const scored = allowed.map((o) => ({ o, s: score(effectiveRep(o.clubId), toBRL(o), o.role) }));
+    && (!o.heartClub || autoChoice('proposta-coracao', p.temperament) !== 'recusar');
   // sort estável: em empate fica na frente a que o motor gerou primeiro, como no laço original
-  const ranked = [...scored].sort((a, b) => b.s - a.s);
+  const ranked = offers.map((o) => ({ o, s: score(effectiveRep(o.clubId), toBRL(o), o.role) })).sort((a, b) => b.s - a.s);
   // Ficar leva vantagem: o apego do temperamento e uma margem mínima para valer a mudança.
   const stay = current && p.clubId
     ? score(effectiveRep(p.clubId), current.annualSalaryBRL, current.role) + w.ficar * 0.3 + cfg.propostas.margemParaSair : -Infinity;
-  const best = ranked[0];
-  return { shown: ranked.slice(0, MAX_SHOWN_OFFERS).map((x) => x.o), pick: best && best.s > stay ? best.o : null };
+  const best = ranked.find((x) => accepts(x.o));
+  const pick = best && best.s > stay ? best.o : null;
+  const shown = ranked.slice(0, MAX_SHOWN_OFFERS).map((x) => x.o);
+  if (pick && !shown.includes(pick)) shown[shown.length - 1] = pick;
+  return { shown, pick };
 }
 
 /** Escolha automática por temperamento (simulação e ritmo Rápido); null = fica no clube atual. Usa os dilemas da T25. */

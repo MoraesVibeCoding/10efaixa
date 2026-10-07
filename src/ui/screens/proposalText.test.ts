@@ -5,7 +5,7 @@ import { proposalText } from './proposalText';
 // T28c (SPEC 6.12, v2.28/v2.50): o texto de cada proposta na tela: clube, liga, salário, contrato, papel, minutos e nível do clube.
 const view = (over: Partial<ProposalView> = {}): ProposalView => ({
   clubId: 'flamengo', league: 'BRA-A', currency: 'BRL', annualSalary: 2_400_000, years: 3, role: 'titular', staffQuality: 1.1, offAxis: false,
-  minutosFaixa: 'muitos', nivelClube: 'grande', ...over,
+  minutosFaixa: 'muitos', nivelClube: 'grande', marca: null, ...over,
 });
 
 describe('texto da proposta (T28c)', () => {
@@ -41,5 +41,12 @@ describe('texto da proposta (T28c)', () => {
   it('a legenda dos dois pesos e a previsão estão no texto da tela', () => {
     expect(t('ui.proposta.legenda')).toMatch(/pesam na sua evolução/);
     expect(t('ui.proposta.legenda')).toMatch(/previsão/);
+  });
+
+  it('a marca vira texto: coração, rival, rival do coração; sem marca, nada', () => {
+    expect(proposalText(view()).marca).toBeNull();
+    expect(proposalText(view({ marca: 'coracao' })).marca).toBe(t('ui.proposta.marca.coracao'));
+    expect(proposalText(view({ marca: 'rival' })).marca).toBe(t('ui.proposta.marca.rival'));
+    expect(proposalText(view({ marca: 'rivalCoracao' })).marca).toBe(t('ui.proposta.marca.rivalCoracao'));
   });
 });

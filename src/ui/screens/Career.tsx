@@ -93,7 +93,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
     // T28d: propostas de clube; sem clube atual (contrato rescindido) não há "Ficar"
     return (
       <div ref={box} className="carreira" data-temperamento={view.temperament}>
-        <Propostas key={index} propostas={view.propostas ?? []} podeFicar={view.state.podeFicar === true} onChoose={decide} />
+        <Propostas key={index} propostas={view.propostas ?? []} podeFicar={view.state.podeFicar === true} podeForcar={view.state.podeForcar === true} onChoose={decide} />
       </div>
     );
   }

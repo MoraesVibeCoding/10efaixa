@@ -8,14 +8,14 @@ import { addToWealth, makeContract, renew, seasonEarnings, toBRL, type Contract 
 import { brazilQualifiers, copaDoBrasil, copaDoBrasilEntrants, copaDoNordeste, foreignQualifiers, libertadores, nordesteGroups, sulAmericana } from './cups';
 import { EUROPE, areEuroRivals, effectiveRep } from './europe';
 import { initialEuroTables, simulateEuropeSeason, type EuroTables } from './europeSeason';
-import { applyOption, autoChoice, heartSalaryFactor } from './events';
+import { applyOption, autoChoice } from './events';
 import { callUp, coachFor, isPrincipal, selectionEffect, updatePrestige, visibility, type CallUp, type Rung } from './nationalTeam';
 import { evolveSemester, type EvoState, type Focus } from './evolution';
 import { semesterFeedback, type Feedback } from './feedback';
 import { mentalityEffects } from './mentality';
 import { afterClassico, afterSemester, afterTransfer, type Idolatry } from './idolatry';
 import { decayRelapse, graveDecision, semesterInjury } from './injuries';
-import { generateOffers, rankOffers, leagueOf, marketValue, salaryFor, type Offer } from './market';
+import { FORCE_EXIT, generateOffers, negotiate, rankOffers, leagueOf, marketValue, salaryFor, type Offer } from './market';
 import { MEETING_EVENT, autoProposal, encodeProposal, parseProposal, staffMeeting, type MeetingResult } from './meeting';
 import { minutesShare, squadLevel, updateForm, updateMorale, type Role } from './minutes';
 import { overall, type Position } from './overall';
@@ -33,7 +33,7 @@ import { headlineOf } from './headline';
 import { legacyOf, type Legacy } from './legacy';
 import { honorFacts, honorsOf } from './honors';
 import { generateNickname } from './nickname';
-import { PROPOSAL_EVENT, STAY, acceptChoice, parseProposalChoice, proposalViewOf, type ProposalView } from './proposals';
+import { PROPOSAL_EVENT, STAY, acceptChoice, loveChoice, parseProposalChoice, proposalViewOf, type ProposalView } from './proposals';
 import { farewellOffer, retirementCheck, type RetireReason } from './retirement';
 import { simulateSeason, type ClubInfo, type Div, type Divisions, type Row } from './season';
 import { assignNumber, canGetArmband, canGetTen, rosterNumbers } from './shirt';
@@ -71,6 +71,10 @@ export interface CareerResult {
   retirement: RetireReason; farewell: 'formador' | 'coracao' | null;
   cards: { yellows: number; reds: number }; finalTemperament: string; houseBought: boolean; discipline: number;
   /** `age` (v2.51): idade em que jogou a temporada (a de `evo.age` já avançou um ano ao registrar); para a linha do tempo. */
+  /** T28e (v2.50): as vezes em que o empresário negociou uma proposta, e como terminou. */
+  negotiations: { year: number; clubId: string; result: 'melhorou' | 'igual' | 'sumiu' }[];
+  /** T28e: saídas forçadas (antes do fim do contrato) e se o jogador virou vilão da torcida do clube que deixou. */
+  forcedExits: { year: number; fromClubId: string; toClubId: string; villain: boolean }[];
   seasons: { year: number; age: number; clubId: string; division: string | null; minutes: number; overall: number }[];
 }
 
@@ -208,6 +212,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   }));
   const earn = (amount: number, currency: Contract['currency']) => { const before = wealth; wealth = addToWealth(wealth, amount, currency, agent); earned += Math.max(0, wealth - before); };
   const awards: CareerResult['awards'] = [];
+  const negotiations: CareerResult['negotiations'] = [];
+  const forcedExits: CareerResult['forcedExits'] = [];
 
   let clubId: string | null = null;
   let inYouth = false;
@@ -550,23 +556,55 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         }
       }
       // Em despedida, o jogador não sai mais: só renova.
+      // "Ficar" sempre existe aqui (há clube): quem pediu para sair (current null) só sai se aceitar uma proposta; sem proposta aceita, fica.
       // T28b (v2.50): com propostas na janela, o jogador escolhe (ou o automático, que sugere a que vence "ficar" pela margem).
       let pick: Offer | null = null;
+      let byLove = false;
+      let forced = false;
+      const canForce = !!c && c.years > 1; // saída forçada só com contrato por mais de um ano
       if (!goingHome && !farewell) {
         const { shown, pick: auto } = rankOffers(me, offers, current);
         pick = auto;
         if (shown.length > 0) {
-          const said = ask(PROPOSAL_EVENT, { sugestao: auto ? acceptChoice(auto.clubId) : STAY, podeFicar: current !== null }, temp, { propostas: shown.map((o) => proposalViewOf(o, me.overall)) });
-          const chosen = parseProposalChoice(said, shown, current !== null);
+          // a sugestão é a escolha automática; no clube de coração, "por amor" quando o jeito do jogador escolheria assim (events.json)
+          const sugestao = !auto ? STAY : auto.heartClub && autoChoice('proposta-coracao', temp) === 'aceitar-por-amor' ? loveChoice(auto.clubId) : acceptChoice(auto.clubId);
+          const said = ask(PROPOSAL_EVENT, { sugestao, podeFicar: true, podeForcar: canForce }, temp, { propostas: shown.map((o) => proposalViewOf(o, me.overall)) });
+          const chosen = parseProposalChoice(said, shown, true, (o) => o.heartClub, canForce);
           if (!chosen) throw new RangeError(`proposta inválida: "${said}"`);
-          pick = chosen.kind === 'aceitar' ? chosen.offer : null;
+          pick = chosen.kind === 'ficar' ? null : chosen.offer;
+          byLove = chosen.kind === 'amor';
+          forced = chosen.kind === 'forcar';
+          if (chosen.kind === 'negociar') {
+            // o empresário negocia: a proposta pode sumir (o jogador fica), ficar igual ou melhorar o salário; o sorteio só roda se o jogador pediu
+            const out = negotiate(chosen.offer, agent, yr);
+            pick = out;
+            negotiations.push({ year, clubId: chosen.offer.clubId, result: !out ? 'sumiu' : out.annualSalary > chosen.offer.annualSalary ? 'melhorou' : 'igual' });
+          }
         }
       }
       if (goingHome) { /* contrato novo já assinado */ } else if (pick) {
-        // clube do coração: o desconto aceito vem da opção do jeito do jogador (events.json)
-        const factor = pick.heartClub ? heartSalaryFactor(temp) : 1;
+        // clube do coração: salário, moral e idolatria vêm da opção escolhida (aceitar ou por amor), números em events.json
+        let factor = 1;
+        if (pick.heartClub) {
+          const out = applyOption({ salarioFator: 1, moral: morale, idolatriaCoracao: idol[pick.clubId] ?? 0 }, 'proposta-coracao', byLove ? 'aceitar-por-amor' : 'aceitar');
+          factor = out.salarioFator as number;
+          morale = out.moral as number;
+          idol = { ...idol, [pick.clubId]: out.idolatriaCoracao as number };
+        }
+        const from = clubId;
         join(pick.clubId, false, yr, factor === 1 ? pick : { ...pick, annualSalary: Math.round(pick.annualSalary * factor) });
         salaryDelays = 0;
+        if (forced && from && c) {
+          // T28e: forçar a saída: multa em meses de salário, idolatria perdida no clube que deixa, moral e relação com o técnico; risco de virar vilão (market.json)
+          const f = FORCE_EXIT;
+          wealth -= (toBRL(c.annualSalary, c.currency) / 12) * f.custoMesesSalario;
+          morale = clamp(morale + f.moral, 0, 1);
+          coachRelation = clamp(coachRelation + f.relacaoTecnico, 0, 1);
+          const villain = yr.next() < f.chanceVilao;
+          const lost = clamp((idol[from] ?? 0) + f.idolatria, -100, 100);
+          idol = { ...idol, [from]: villain ? Math.min(lost, f.idolatriaVilao) : lost };
+          forcedExits.push({ year, fromClubId: from, toClubId: pick.clubId, villain });
+        }
       } else if (c) {
         c.years -= 1;
         if (c.years <= 1) {
@@ -598,7 +636,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   selection.oriundoCampeao = selection.dual === 'aceitou' && selection.tournaments.some((t) => t.stage === 'campeao' && t.team !== 'brasil');
   selection.esperouOBrasil = selection.dual === 'recusou' && selection.caps > 0;
   const result = {
-    player, spells, titles, peakOverall, peakAge, peakAttributes, peakClubId: peakClubId ?? spells[0]?.clubId ?? '', endAge: evo.age, wearsTen, captain, idolatry: idol,
+    player, spells, titles, peakOverall, peakAge, peakAttributes, peakClubId: peakClubId ?? spells[0]?.clubId ?? '', endAge: evo.age, wearsTen, captain, idolatry: idol, negotiations, forcedExits,
     wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, selection, stats, awards, retirement, farewell, cards, finalTemperament: temp, houseBought, discipline, seasons, earnedBRL: earned, decisiveDerbies,
   };
   // Sorteios novos ficam por último para não alterar nenhum resultado anterior da mesma semente.
