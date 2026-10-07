@@ -32,6 +32,9 @@ export interface MilestoneDef { id: string; escopo: 'carreira' | 'clube'; gatilh
 
 export const MILESTONES = data.marcos as unknown as MilestoneDef[];
 export const MAX_PER_SEASON = data.maxPorTemporada;
+/** Como a temporada vira fatos (titular, gols pela Seleção) e o teto dos efeitos dos marcos; números em milestones.json. */
+export const FACTS = data.fatos;
+export const EFFECTS = data.efeitos;
 
 /** Chave de registro: o de carreira é o id; o de clube é "id@clube" (uma vez por clube). */
 export const milestoneKey = (id: string, clubId?: string): string => (clubId ? `${id}@${clubId}` : id);

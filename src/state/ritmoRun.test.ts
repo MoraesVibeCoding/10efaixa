@@ -1,6 +1,7 @@
 import events from '../data/events.json';
 import flow from '../data/flow.json';
 import { autoDecide, simulateCareer } from '../engine/career';
+import { MILESTONES } from '../engine/milestones';
 import { PROPOSAL_EVENT } from '../engine/proposals';
 import { MEETING_EVENT } from '../engine/meeting';
 import type { CreationInput } from '../engine/player';
@@ -34,6 +35,8 @@ function allEvents(i: CreationInput, seed: number) {
   simulateCareer(i, seed, 2026, (e, t, v) => { if (e !== MEETING_EVENT && e !== PROPOSAL_EVENT) (byYear[v().year] ??= []).push(e); return autoDecide(e, t, v); });
   return byYear;
 }
+/** T25c: no Rápido os marcos de clube são sempre automáticos e não ocupam a vaga da temporada. */
+const CLUB_MARCOS = new Set(MILESTONES.filter((m) => m.escopo === 'clube').map((m) => m.id));
 const top = (list: string[], n: number) => [...list].map((id, k) => ({ id, k })).sort((a, b) => (IMPORTANCE.get(b.id)! - IMPORTANCE.get(a.id)!) || a.k - b.k).slice(0, n).map((x) => x.id);
 
 describe('decisões por ritmo (T53)', () => {
@@ -47,7 +50,7 @@ describe('decisões por ritmo (T53)', () => {
       const all = allEvents(input(), seed);
       const { shown } = play(input(), seed, 'rapido');
       for (const [year, list] of Object.entries(all)) {
-        expect(shown[Number(year)] ?? [], year).toEqual(top(list, 1));
+        expect(shown[Number(year)] ?? [], year).toEqual(top(list.filter((id) => !CLUB_MARCOS.has(id)), 1));
       }
     });
 
