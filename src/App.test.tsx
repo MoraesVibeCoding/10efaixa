@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { App } from './App';
 import { SAVE_KEY } from './state/save';
+import { dailySeed } from './engine/daily';
 import { t } from './i18n';
 import type { CreationInput } from './engine/player';
 import type { Reveal } from './ui/screens/revealView';
@@ -29,8 +30,8 @@ function passMeetings() {
   }
 }
 
-function createPlayer() {
-  startNew();
+function createPlayer(begin = true) {
+  if (begin) startNew();
   fireEvent.change(screen.getByLabelText(t('ui.criacao.quemE.nome')), { target: { value: 'Dudu Maestro' } });
   fireEvent.change(screen.getByLabelText(t('ui.criacao.quemE.estado')), { target: { value: 'BA' } });
   fireEvent.click(within(group('quemE.comemoracao')).getByRole('radio', { name: t('creation.celebration.aviaozinho') }));
@@ -169,5 +170,39 @@ describe('save no aparelho (T54, v2.39)', () => {
     render(<App />);
     fireEvent.click(screen.getByRole('button', { name: t('ui.abertura.continuar', { nome: 'Dudu Maestro' }) }));
     expect(screen.getByRole('heading', { level: 1, name: t('ui.saveInvalido.titulo') })).toBeInTheDocument();
+  });
+});
+
+// T57c (SPEC 6.15, v2.49): o desafio do dia usa a semente da data de Brasília; a carreira livre segue como antes.
+describe('App: desafio do dia (T57c)', () => {
+  const NOW = () => new Date('2026-10-07T12:00:00Z');
+  const startDesafio = () => fireEvent.click(screen.getByRole('button', { name: t('ui.abertura.desafio', { data: '07/10' }) }));
+
+  it('a carreira do desafio usa a semente do dia, igual para qualquer pessoa, mesmo com outra semente injetada', () => {
+    render(<App seed={11} now={NOW} storage={localStorage} />);
+    startDesafio();
+    createPlayer(false);
+    expect(revealCalls.at(-1)!.seed).toBe(dailySeed('2026-10-07'));
+  });
+
+  it('a carreira livre não usa a semente do dia', () => {
+    render(<App seed={11} now={NOW} />);
+    createPlayer();
+    expect(revealCalls.at(-1)!.seed).toBe(11);
+  });
+
+  it('salva o dia do desafio no save, e "Continuar" mantém o desafio', () => {
+    const first = render(<App now={NOW} />);
+    startDesafio();
+    createPlayer(false);
+    fireEvent.click(screen.getByRole('button', { name: t('ui.revelacao.seguir') }));
+    fireEvent.click(screen.getByRole('button', { name: t('ui.ritmo.comecar') }));
+    expect(JSON.parse(localStorage.getItem(SAVE_KEY)!)).toMatchObject({ seed: dailySeed('2026-10-07'), desafio: '2026-10-07' });
+    first.unmount();
+    render(<App now={() => new Date('2026-10-09T12:00:00Z')} />);
+    fireEvent.click(screen.getByRole('button', { name: t('ui.abertura.continuar', { nome: 'Dudu Maestro' }) }));
+    passMeetings();
+    // continuar não troca a semente nem o desafio pelo dia de hoje
+    expect(JSON.parse(localStorage.getItem(SAVE_KEY)!)).toMatchObject({ seed: dailySeed('2026-10-07'), desafio: '2026-10-07' });
   });
 });

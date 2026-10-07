@@ -7,14 +7,18 @@ import './Abertura.css';
 // T48 (SPEC 7, v2.34): a abertura. Arte do túnel (docs/arte/abertura) com o "10" gigante "carimbando" nas costas do
 // jogador (animação desligada com prefers-reduced-motion), a marca no amarelo da braçadeira e "Nova carreira".
 // T54 (v2.39): com carreira salva, "Continuar" vem primeiro e "Nova carreira" pergunta antes de apagar.
-export interface AberturaProps { saved: SavePeek; onNew: () => void; onContinue: () => void }
+// T57c (v2.49): "Desafio do dia" (`dia` = "AAAA-MM-DD" de Brasília) ao lado de "Nova carreira"; também pergunta antes de apagar.
+export interface AberturaProps { saved: SavePeek; onNew: () => void; onDesafio: () => void; dia: string; onContinue: () => void }
+type Starting = 'nova' | 'desafio';
 
-export function Abertura({ saved, onNew, onContinue }: AberturaProps) {
+export function Abertura({ saved, onNew, onDesafio, dia, onContinue }: AberturaProps) {
   const first = useRef(null as HTMLButtonElement | null);
-  const [asking, setAsking] = useState(false);
+  const [asking, setAsking] = useState(null as Starting | null);
   useEffect(() => { first.current?.focus(); }, []);
   const hasSave = saved.status !== 'nenhum';
   const name = saved.status === 'salvo' ? saved.name : null;
+  const run = (what: Starting) => { if (what === 'desafio') onDesafio(); else onNew(); };
+  function start(what: Starting) { if (hasSave) setAsking(what); else run(what); }
   return (
     <main className="abertura" data-tema="escuro">
       <div className="abertura__arte">
@@ -32,12 +36,15 @@ export function Abertura({ saved, onNew, onContinue }: AberturaProps) {
           </button>
         )}
         <button ref={hasSave ? undefined : first} type="button" className={hasSave ? 'abertura__botao abertura__botao--secundario' : 'abertura__botao'}
-          onClick={() => { if (hasSave) { setAsking(true); } else { onNew(); } }}>
+          onClick={() => { start('nova'); }}>
           {t('ui.abertura.novaCarreira')}
+        </button>
+        <button type="button" className="abertura__botao abertura__botao--secundario" onClick={() => { start('desafio'); }}>
+          {t('ui.abertura.desafio', { data: `${dia.slice(8, 10)}/${dia.slice(5, 7)}` })}
         </button>
         <p className="abertura__aviso">{t('ui.abertura.avisoLegal')}</p>
       </footer>
-      {asking && <Confirm name={name} onConfirm={onNew} onCancel={() => { setAsking(false); }} />}
+      {asking && <Confirm name={name} onConfirm={() => { run(asking); }} onCancel={() => { setAsking(null); }} />}
     </main>
   );
 }

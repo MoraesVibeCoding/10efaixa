@@ -25,3 +25,16 @@ describe('compartilhar na tela do cartão (T56)', () => {
     expect(screen.queryByRole('button', { name: 'Compartilhar' })).toBeNull();
   });
 });
+
+// T57c (v2.49): selo do desafio do dia na tela do cartão (só quando a carreira é um desafio).
+describe('selo do desafio (T57c)', () => {
+  it('mostra "Desafio de DD/MM" quando é desafio', () => {
+    render(<Cartao result={result} code="10F-7K3Q-9M2X" desafio="2026-10-07" onRestart={() => {}} />);
+    expect(screen.getByText('Desafio de 07/10')).toBeInTheDocument();
+  });
+
+  it('não mostra selo na carreira livre', () => {
+    render(<Cartao result={result} code="10F-7K3Q-9M2X" onRestart={() => {}} />);
+    expect(screen.queryByText(/^Desafio de/)).toBeNull();
+  });
+});

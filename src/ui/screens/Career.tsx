@@ -28,9 +28,11 @@ export interface CareerProps {
   initialChoices?: string[];
   /** Chamado ao começar e a cada decisão (T54, salvar a cada decisão); `done` quando a carreira terminou. */
   onProgress?: (choices: string[], done: boolean) => void;
+  /** Dia "AAAA-MM-DD" do desafio do dia (T57c); vai para o selo do cartão. */
+  desafio?: string;
 }
 
-export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal', initialChoices = [], onProgress }: CareerProps) {
+export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal', initialChoices = [], onProgress, desafio }: CareerProps) {
   const [choices, setChoices] = useState(initialChoices);
   // T52: a reunião que o jogador acabou de fazer; a resposta dela aparece por cima da próxima tela
   const [asked, setAsked] = useState(null as { year: number; semestre: number } | null);
@@ -58,7 +60,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
   if (step.kind === 'done') {
     return (
       <div ref={box} className="carreira">
-        {showCard ? <Cartao result={step.result} code={careerCode({ seed, ritmo, input, choices })} visual={visual} onRestart={onRestart} /> : <Historia result={step.result} onContinue={() => { setShowCard(true); }} />}
+        {showCard ? <Cartao result={step.result} code={careerCode({ seed, ritmo, input, choices })} visual={visual} desafio={desafio} onRestart={onRestart} /> : <Historia result={step.result} onContinue={() => { setShowCard(true); }} />}
       </div>
     );
   }

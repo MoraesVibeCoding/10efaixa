@@ -7,14 +7,14 @@ import { Abertura } from './Abertura';
 // T48/T53a (SPEC 7, v2.34): a abertura. Arte do túnel, o "10" carimbando nas costas, a marca e "Nova carreira".
 describe('abertura (T48)', () => {
   it('a marca é o título da tela; a arte tem texto alternativo', () => {
-    render(<Abertura saved={{ status: 'nenhum' }} onNew={() => {}} onContinue={() => {}} />);
+    render(<Abertura saved={{ status: 'nenhum' }} onNew={() => {}} onDesafio={() => {}} dia="2026-10-07" onContinue={() => {}} />);
     expect(screen.getByRole('heading', { level: 1, name: t('ui.abertura.titulo') })).toBeInTheDocument();
     expect(screen.getByRole('img', { name: t('ui.abertura.arteAlt') })).toBeInTheDocument();
     expect(screen.getByText(t('ui.abertura.lema'))).toBeInTheDocument();
   });
 
   it('o "10" gigante é decorativo (o leitor de tela não lê um número solto)', () => {
-    const { container } = render(<Abertura saved={{ status: 'nenhum' }} onNew={() => {}} onContinue={() => {}} />);
+    const { container } = render(<Abertura saved={{ status: 'nenhum' }} onNew={() => {}} onDesafio={() => {}} dia="2026-10-07" onContinue={() => {}} />);
     const numero = container.querySelector('.abertura__numero')!;
     expect(numero).toHaveTextContent('10');
     expect(numero).toHaveAttribute('aria-hidden', 'true');
@@ -22,10 +22,10 @@ describe('abertura (T48)', () => {
 
   it('"Nova carreira" começa; ainda sem save, não há "Continuar" (T54)', () => {
     const onNew = vi.fn();
-    render(<Abertura saved={{ status: 'nenhum' }} onNew={onNew} onContinue={() => {}} />);
+    render(<Abertura saved={{ status: 'nenhum' }} onNew={onNew} onDesafio={() => {}} dia="2026-10-07" onContinue={() => {}} />);
     fireEvent.click(screen.getByRole('button', { name: t('ui.abertura.novaCarreira') }));
     expect(onNew).toHaveBeenCalledOnce();
-    expect(screen.getAllByRole('button')).toHaveLength(1); // sem save, só "Nova carreira"
+    expect(screen.getAllByRole('button')).toHaveLength(2); // sem save: "Nova carreira" e "Desafio do dia" (T57c), nada de "Continuar"
   });
 
   it('CSS: o número "carimba" com animação, que some com prefers-reduced-motion', () => {
@@ -45,7 +45,7 @@ describe('abertura (T48)', () => {
   describe('com carreira salva (T54, v2.39)', () => {
     const show = (saved: { status: 'salvo'; name: string } | { status: 'invalido' } = { status: 'salvo', name: 'Dudu Maestro' }) => {
       const onNew = vi.fn(); const onContinue = vi.fn();
-      render(<Abertura saved={saved} onNew={onNew} onContinue={onContinue} />);
+      render(<Abertura saved={saved} onNew={onNew} onDesafio={() => {}} dia="2026-10-07" onContinue={onContinue} />);
       return { onNew, onContinue };
     };
 
@@ -83,10 +83,43 @@ describe('abertura (T48)', () => {
 // v2.47: aviso legal discreto; os nomes de clubes servem só para identificação
 describe('aviso legal (v2.47)', () => {
   it('a abertura traz o aviso sobre nomes de clubes, sem escudos oficiais', () => {
-    render(<Abertura saved={{ status: 'nenhum' }} onNew={() => {}} onContinue={() => {}} />);
+    render(<Abertura saved={{ status: 'nenhum' }} onNew={() => {}} onDesafio={() => {}} dia="2026-10-07" onContinue={() => {}} />);
     const aviso = screen.getByText(t('ui.abertura.avisoLegal'));
     expect(aviso).toHaveClass('abertura__aviso');
     expect(aviso.textContent).toMatch(/identificação/);
     expect(aviso.textContent).toMatch(/escudos/);
+  });
+});
+
+// T57c (SPEC 6.15, v2.49): "Desafio do dia" ao lado de "Nova carreira"; com carreira salva também pergunta antes de apagar.
+describe('abertura: desafio do dia (T57c)', () => {
+  const label = t('ui.abertura.desafio', { data: '07/10' });
+
+  it('mostra o botão com a data do dia e começa o desafio quando não há save', () => {
+    const onDesafio = vi.fn();
+    const onNew = vi.fn();
+    render(<Abertura saved={{ status: 'nenhum' }} onNew={onNew} onDesafio={onDesafio} dia="2026-10-07" onContinue={() => {}} />);
+    fireEvent.click(screen.getByRole('button', { name: label }));
+    expect(onDesafio).toHaveBeenCalledTimes(1);
+    expect(onNew).not.toHaveBeenCalled();
+  });
+
+  it('com carreira salva, pergunta antes de apagar e só então começa o desafio', () => {
+    const onDesafio = vi.fn();
+    const onNew = vi.fn();
+    render(<Abertura saved={{ status: 'salvo', name: 'Dudu' }} onNew={onNew} onDesafio={onDesafio} dia="2026-10-07" onContinue={() => {}} />);
+    fireEvent.click(screen.getByRole('button', { name: label }));
+    expect(onDesafio).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: t('ui.abertura.confirmar.apagar') }));
+    expect(onDesafio).toHaveBeenCalledTimes(1);
+    expect(onNew).not.toHaveBeenCalled();
+  });
+
+  it('cancelar a pergunta não começa nada', () => {
+    const onDesafio = vi.fn();
+    render(<Abertura saved={{ status: 'salvo', name: 'Dudu' }} onNew={() => {}} onDesafio={onDesafio} dia="2026-10-07" onContinue={() => {}} />);
+    fireEvent.click(screen.getByRole('button', { name: label }));
+    fireEvent.click(screen.getByRole('button', { name: t('ui.abertura.confirmar.cancelar') }));
+    expect(onDesafio).not.toHaveBeenCalled();
   });
 });

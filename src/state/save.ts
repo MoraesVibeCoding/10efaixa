@@ -1,4 +1,5 @@
 import type { CreationInput } from '../engine/player';
+import { dailySeed } from '../engine/daily';
 import { runUntilDecision } from './careerRun';
 import archetypeMigration from '../data/archetypeMigration.json';
 
@@ -14,6 +15,8 @@ export interface SaveData {
   seed: number;
   ritmo: (typeof RITMOS)[number];
   choices: string[];
+  /** v2.49 (T57c): dia "AAAA-MM-DD" do desafio; ausente = carreira livre. Sem mudar a versão do save. */
+  desafio?: string;
 }
 export type SaveResult = { ok: true; save: SaveData } | { ok: false; reason: 'nenhum' | 'danificado' | 'versao' };
 /** O pedaço do localStorage que o save usa (dá para testar com um armazenamento de mentira). */
@@ -44,7 +47,12 @@ function wellFormed(x: Record<string, unknown>): boolean {
   return isObject(created) && isObject(created.input) && typeof (created.input as { name?: unknown }).name === 'string'
     && isObject(created.look) && typeof created.visual === 'string'
     && Number.isInteger(x.seed) && RITMOS.includes(x.ritmo as SaveData['ritmo'])
-    && Array.isArray(x.choices) && x.choices.every((c) => typeof c === 'string');
+    && Array.isArray(x.choices) && x.choices.every((c) => typeof c === 'string')
+    && (x.desafio === undefined || isDay(x.desafio));
+}
+
+function isDay(d: unknown): boolean {
+  try { dailySeed(d as string); return true; } catch { return false; }
 }
 
 /** Lê o texto salvo: versão conhecida (migrando as antigas) e formato certo. Não refaz a carreira (validateSave faz). */
@@ -62,8 +70,8 @@ export function parseSave(raw: string): SaveResult {
     version += 1;
   }
   if (!wellFormed(cur)) return { ok: false, reason: 'danificado' };
-  const { created, seed, ritmo, choices } = cur as unknown as SaveData;
-  return { ok: true, save: { created, seed, ritmo, choices } };
+  const { created, seed, ritmo, choices, desafio } = cur as unknown as SaveData;
+  return { ok: true, save: { created, seed, ritmo, choices, ...(desafio === undefined ? {} : { desafio }) } };
 }
 
 export function readSave(storage: SaveStorage): SaveResult {

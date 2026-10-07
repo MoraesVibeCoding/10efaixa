@@ -10,7 +10,8 @@ import './Cartao.css';
 // T55d (SPEC 6.15, v2.42): o cartão final em Canvas 2D, versão narrativa primeiro; o texto alternativo descreve a versão à vista.
 const VERSIONS: CardVersion[] = ['narrativa', 'estatistica'];
 
-export function Cartao({ result, code, visual, onRestart }: { result: CareerResult; code: string; visual?: string; onRestart: () => void }) {
+/** `desafio` = dia "AAAA-MM-DD" do desafio do dia (T57c); ausente = carreira livre, sem selo. */
+export function Cartao({ result, code, visual, desafio, onRestart }: { result: CareerResult; code: string; visual?: string; desafio?: string; onRestart: () => void }) {
   const [version, setVersion] = useState('narrativa' as CardVersion);
   const canvas = useRef(null as HTMLCanvasElement | null);
   const model = useMemo(() => cardModel(result, code), [result, code]);
@@ -53,6 +54,7 @@ export function Cartao({ result, code, visual, onRestart }: { result: CareerResu
   return (
     <main className="cartao" data-tema="claro">
       <h1 className="cartao__titulo">{t('ui.cartao.titulo')}</h1>
+      {desafio && <p className="cartao__selo">{t('ui.cartao.desafio', { data: `${desafio.slice(8, 10)}/${desafio.slice(5, 7)}` })}</p>}
       <div className="cartao__versoes" role="group" aria-label={t('ui.cartao.versoes')}>
         {VERSIONS.map((v) => (
           <button key={v} type="button" aria-pressed={version === v} onClick={() => { setVersion(v); }}>{t(`ui.cartao.${v}`)}</button>
