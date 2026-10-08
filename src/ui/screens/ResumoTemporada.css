@@ -1,0 +1,32 @@
+/* v2.61: card do resumo da temporada por cima da próxima tela. Rola se a tela for baixa; animação só sem reduced motion (base.css). */
+.resumo__fundo { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: var(--espaco-4); background: var(--vidro-scrim); }
+.resumo {
+  display: grid; gap: var(--espaco-3); inline-size: min(100%, 24rem); max-block-size: calc(100dvh - 2 * var(--espaco-4)); overflow-y: auto; padding: var(--espaco-4); box-sizing: border-box;
+  border: var(--forma-borda-fina) solid var(--cor-linha); border-radius: var(--forma-raio-cartao);
+  background: var(--cor-superficie); color: var(--cor-texto); box-shadow: var(--forma-sombra-suave);
+  animation: resumo-entra 280ms cubic-bezier(0.2, 1, 0.4, 1) both;
+}
+.resumo__titulo { margin: 0; font-family: var(--fonte-titulo); font-size: var(--tipo-nome); font-weight: 900; line-height: 1.05; text-transform: uppercase; }
+.resumo__onde { margin: 0; font-weight: 600; opacity: 0.8; }
+.resumo__numeros { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--espaco-2); margin: 0; padding: 0; list-style: none; }
+.resumo__numeros li { display: grid; gap: 2px; justify-items: center; padding: var(--espaco-2); border: var(--forma-borda-fina) solid var(--cor-linha); border-radius: var(--forma-raio); text-align: center; }
+.resumo__numeros span { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.resumo__numeros strong { font-family: var(--fonte-titulo); font-size: 1.75rem; font-weight: 900; font-variant-numeric: tabular-nums; line-height: 1; }
+.resumo__over { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--espaco-2); margin: 0; font-weight: 700; }
+.resumo__variacao { font-family: var(--fonte-titulo); font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+.resumo__variacao[data-sentido='sobe'] { color: var(--cor-positivo); }
+.resumo__variacao[data-sentido='desce'] { color: var(--cor-negativo); }
+.resumo__atributos, .resumo__titulos { display: grid; gap: var(--espaco-1); margin: 0; padding: 0; list-style: none; }
+.resumo__atributos li::before { content: '• '; }
+.resumo__titulos { grid-auto-flow: row; }
+.resumo__titulos li { display: inline-flex; align-items: center; gap: var(--espaco-2); font-weight: 600; }
+.resumo__titulos .trofeu__arte { inline-size: 2rem; block-size: 2rem; object-fit: contain; }
+.resumo__tecnico { display: grid; gap: var(--espaco-1); padding: var(--espaco-3); border-inline-start: 4px solid var(--cor-destaque); background: color-mix(in srgb, var(--cor-destaque) 10%, transparent); border-radius: var(--forma-raio); }
+.resumo__tecnico h3 { margin: 0; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.resumo__tecnico p { margin: 0; line-height: 1.4; }
+.resumo__continuar {
+  min-block-size: var(--toque-compacto); padding: 0 var(--espaco-5); border: 2px solid var(--cor-texto); border-radius: 999px;
+  background: var(--cor-texto); color: var(--cor-superficie); font-family: var(--fonte-titulo); font-size: var(--tipo-opcao); font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer;
+}
+.resumo__continuar:focus-visible { outline: 3px solid var(--cor-foco); outline-offset: 3px; }
+@keyframes resumo-entra { from { opacity: 0; transform: translateY(16px) scale(0.97); } to { opacity: 1; transform: none; } }

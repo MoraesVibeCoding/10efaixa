@@ -16,6 +16,7 @@ import { LinhaDoTempo } from './LinhaDoTempo';
 import { PROPOSAL_EVENT } from '../../engine/proposals';
 import { Propostas } from './Propostas';
 import { Reuniao, ReuniaoResposta } from './Reuniao';
+import { ResumoTemporada } from './ResumoTemporada';
 import type { Look } from './look';
 import type { RitmoId } from './Ritmo';
 import './Career.css';
@@ -40,6 +41,8 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
   const [asked, setAsked] = useState(null as { year: number; semestre: number } | null);
   // T51b: o semestre cujas frases o jogador já viu; a linha "Neste semestre" só aparece na primeira decisão depois dele
   const [seenSemester, setSeenSemester] = useState('');
+  // v2.61: a temporada cujo resumo já foi visto (ou dispensado); o card abre uma vez por temporada, no Normal e no Completo
+  const [seenSeason, setSeenSeason] = useState('');
   // T55b: no fim, "Sua história" vem antes do cartão
   const [showCard, setShowCard] = useState(false);
   // v2.47: os números da última decisão; na próxima, o overall, a idade e o valor rolam deles
@@ -53,6 +56,8 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
   // tela nova a cada decisão: o foco vai para o título, senão o leitor de tela fica perdido no corpo da página
   useEffect(() => {
     if (choices.length === 0) return;
+    // v2.61: com o card do resumo da temporada aberto, o foco fica nele (e volta ao título quando ele fecha)
+    if (box.current?.querySelector('[role="alertdialog"]')) return;
     const h1 = box.current?.querySelector('h1');
     if (!h1) return;
     h1.tabIndex = -1;
@@ -72,8 +77,13 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
   const { view, eventId, index } = step;
   const semKey = view.ultimoSemestre ? `${view.ultimoSemestre.year}-${view.ultimoSemestre.semestre}` : '';
   const semestre = semKey !== seenSemester && view.ultimoSemestre ? semesterLines(view.ultimoSemestre.frases) : undefined;
+  const seasonKey = view.ultimaTemporada ? `${view.ultimaTemporada.year}` : '';
+  const resumoEl = ritmo !== 'rapido' && view.ultimaTemporada && seasonKey !== seenSeason
+    ? <ResumoTemporada key={seasonKey} resumo={view.ultimaTemporada} onClose={() => { setSeenSeason(seasonKey); box.current?.querySelector('h1')?.focus(); }} />
+    : null;
   function decide(choice: string) {
     setSeenSemester(semKey);
+    setSeenSeason(seasonKey);
     setChoices([...choices, choice]);
   }
   const resposta = answerOf(view.meetings, asked);
@@ -85,7 +95,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
     return (
       <div ref={box} className="carreira" data-temperamento={view.temperament}>
         <Reuniao
-          key={index} ideias={view.reuniao} player={meetingPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} anterior={anterior}
+          key={index} ideias={view.reuniao} player={meetingPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} semestre={Number(view.state.semestre) === 1 ? 1 : 2} anterior={anterior}
           scene={sceneOfCena('reuniao-comissao', meetingPlayer, visual, input.name, meetingClub)}
           onChoose={(choice) => {
             setAsked({ year: view.year, semestre: Number(view.state.semestre) });
@@ -93,6 +103,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
           }}
         />
         {respostaEl}
+        {resumoEl}
       </div>
     );
   }
@@ -107,6 +118,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
           podeRenovar={view.state.podeRenovar === true} player={contractPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} anterior={anterior}
           scene={sceneOfCena('assinatura-contrato', contractPlayer, visual, input.name, contractClub)} onChoose={decide}
         />
+        {resumoEl}
       </div>
     );
   }
@@ -132,6 +144,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
         }}
       />
       {respostaEl}
+      {resumoEl}
     </div>
   );
 }

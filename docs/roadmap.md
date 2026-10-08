@@ -26,6 +26,7 @@ Verificação atual: 1284 testes passando, typecheck e build OK, `verify` do CI 
 | **Etiquetas raras** | `perdeuFinal`, `trocouPeloRival`, `noClubeDeCoracao`, `foraDoEixo` quase nunca aparecem; ajustar ou ligar a eventos |
 | **"Bola parada"** | Ligar o progresso do foco ao marco "assumir a bola parada" |
 | **Manchete do cartão** | Marco na manchete final |
+| **Resumo da temporada (v2.61)** | **Feito:** card com números do ano, Over de-para, atributos em palavras e comentário do técnico (Normal e Completo); reuniões com rótulo de fim e meio de temporada |
 
 ### 2. Tarefas pendentes do SPEC
 | ID | Tarefa |

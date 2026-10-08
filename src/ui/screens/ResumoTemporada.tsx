@@ -1,0 +1,57 @@
+import { useEffect, useRef } from 'react';
+import type { SeasonSummary } from '../../engine/seasonSummary';
+import { t } from '../../i18n';
+import { clubName } from './clubText';
+import { semesterLines } from './careerView';
+import { coachComment, direction, variation } from './resumoText';
+import { TrophyIcon } from './TrophyIcon';
+import './ResumoTemporada.css';
+
+// v2.61 (SPEC 6.15): o resumo da temporada, num card por cima da próxima tela (Normal e Completo). Os números do ano são jogos, gols e
+// assistências; o Over vai de-para com a variação em %; os atributos entram só em palavras (CLAUDE.md); o comentário do técnico
+// tem até 3 frases montadas pelas chaves do motor. É um `div role="alertdialog"` (não `<dialog>`: o modal nativo travou no Safari do iPhone).
+// Abre com o foco em "Continuar"; Esc fecha; Tab fica preso no único botão.
+export interface ResumoTemporadaProps { resumo: SeasonSummary; onClose: () => void }
+
+export function ResumoTemporada({ resumo, onClose }: ResumoTemporadaProps) {
+  const close = useRef(null as HTMLButtonElement | null);
+  useEffect(() => { close.current?.focus(); }, []);
+  function onKey(e: React.KeyboardEvent) {
+    if (e.key === 'Escape') { e.stopPropagation(); onClose(); return; }
+    if (e.key === 'Tab') { e.preventDefault(); close.current?.focus(); }
+  }
+  const linhas = semesterLines(resumo.mudancas);
+  const fala = coachComment(resumo.comentario);
+  return (
+    <div className="resumo__fundo">
+      <div className="resumo" role="alertdialog" aria-modal="true" aria-labelledby="resumo-titulo" onKeyDown={onKey}>
+        <h2 id="resumo-titulo" className="resumo__titulo">{t('ui.resumoTemporada.titulo')}</h2>
+        <p className="resumo__onde">{`${clubName(resumo.clubId).nome} · ${t('ui.resumoTemporada.idade', { n: resumo.age })}`}</p>
+        <ul className="resumo__numeros" aria-label={t('ui.resumoTemporada.numeros')}>
+          <li><span>{t('ui.resumoTemporada.partidas')}</span><strong>{resumo.partidas}</strong></li>
+          <li><span>{t('ui.resumoTemporada.gols')}</span><strong>{resumo.gols}</strong></li>
+          <li><span>{t('ui.resumoTemporada.assistencias')}</span><strong>{resumo.assistencias}</strong></li>
+        </ul>
+        <p className="resumo__over">
+          <span>{t('ui.resumoTemporada.over', { de: resumo.overallDe, para: resumo.overallPara })}</span>
+          <strong className="resumo__variacao" data-sentido={direction(resumo.pct)}>{variation(resumo.pct)}</strong>
+        </p>
+        {linhas.length > 0 && (
+          <ul className="resumo__atributos" aria-label={t('ui.resumoTemporada.atributos')}>
+            {linhas.map((l) => <li key={l}>{l}</li>)}
+          </ul>
+        )}
+        {resumo.titulos.length > 0 && (
+          <ul className="resumo__titulos" aria-label={t('ui.resumoTemporada.titulos')}>
+            {resumo.titulos.map((c, k) => <li key={`${c}-${k}`}><TrophyIcon id={c} size={32} />{t(`ui.titulo.${c}`)}</li>)}
+          </ul>
+        )}
+        <section className="resumo__tecnico" aria-label={t('ui.resumoTemporada.tecnico')}>
+          <h3>{t('ui.resumoTemporada.tecnico')}</h3>
+          <p data-testid="comentario">{fala.join(' ')}</p>
+        </section>
+        <button ref={close} type="button" className="resumo__continuar" onClick={onClose}>{t('ui.resumoTemporada.continuar')}</button>
+      </div>
+    </div>
+  );
+}

@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import type { CreationInput } from '../../engine/player';
-import { runUntilDecision } from '../../state/careerRun';
+import { runUntilDecision, type Ritmo } from '../../state/careerRun';
+import { autoDecide } from '../../engine/career';
 import { autoChoice } from '../../engine/events';
 import { t } from '../../i18n';
 import { careerCode } from '../../engine/careerCode';
@@ -125,5 +126,39 @@ describe('carreira na tela (T51b)', () => {
       fireEvent.click(screen.getByRole('button', { name: t('ui.resultado.seguir') }));
     }
     expect(shownCount).toBeGreaterThan(3);
+  });
+});
+
+/** v2.61: as escolhas automáticas até a primeira tela que já traz o resumo de uma temporada fechada. */
+function choicesToFirstSummary(seed: number, ritmo: Ritmo): string[] {
+  const choices: string[] = [];
+  for (let guard = 0; guard < 400; guard++) {
+    const step = runUntilDecision(INPUT, seed, choices, ritmo);
+    if (step.kind === 'done') throw new Error('a carreira acabou sem resumo de temporada');
+    if (step.view.ultimaTemporada) return choices;
+    choices.push(autoDecide(step.eventId, step.view.temperament, () => step.view));
+  }
+  throw new Error('sem resumo de temporada');
+}
+
+describe('resumo da temporada na tela (v2.61)', () => {
+  it('no Normal, o card do resumo abre por cima da primeira tela depois do fim da temporada; Continuar fecha e ele não volta no mesmo ano', { timeout: 60_000 }, () => {
+    const choices = choicesToFirstSummary(11, 'normal');
+    render(<Career input={INPUT} look={LOOK} seed={11} ritmo="normal" initialChoices={choices} onRestart={() => {}} />);
+    const card = screen.getByRole('alertdialog', { name: t('ui.resumoTemporada.titulo') });
+    expect(card).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: t('ui.resumoTemporada.continuar') })).toHaveFocus();
+    fireEvent.click(screen.getByRole('button', { name: t('ui.resumoTemporada.continuar') }));
+    expect(screen.queryByRole('alertdialog', { name: t('ui.resumoTemporada.titulo') })).toBeNull();
+  });
+
+  it('no Completo também; no Rápido nunca', { timeout: 60_000 }, () => {
+    const completo = choicesToFirstSummary(11, 'completo');
+    const { unmount } = render(<Career input={INPUT} look={LOOK} seed={11} ritmo="completo" initialChoices={completo} onRestart={() => {}} />);
+    expect(screen.getByRole('alertdialog', { name: t('ui.resumoTemporada.titulo') })).toBeInTheDocument();
+    unmount();
+    const rapido = choicesToFirstSummary(11, 'rapido');
+    render(<Career input={INPUT} look={LOOK} seed={11} ritmo="rapido" initialChoices={rapido} onRestart={() => {}} />);
+    expect(screen.queryByRole('alertdialog', { name: t('ui.resumoTemporada.titulo') })).toBeNull();
   });
 });

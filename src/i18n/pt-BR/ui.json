@@ -245,6 +245,37 @@
   "diamanteFrase": "A várzea escondia um craque: o teto dele é maior que o normal.",
   "seguir": "Escolher o ritmo"
  },
+ "resumoTemporada": {
+  "titulo": "Resumo da temporada",
+  "idade": "{n} anos",
+  "numeros": "Números do ano",
+  "partidas": "Jogos",
+  "gols": "Gols",
+  "assistencias": "Assistências",
+  "over": "Over {de} para {para}",
+  "variacaoSobe": "+{pct}% no ano",
+  "variacaoDesce": "−{pct}% no ano",
+  "variacaoEstavel": "Estável no ano",
+  "atributos": "O que mudou",
+  "titulos": "Títulos do ano",
+  "tecnico": "O técnico comenta",
+  "comentario": {
+   "evolucao": {
+    "grande": "Foi um ano de salto: você evoluiu muito.",
+    "boa": "Foi um bom ano: você evoluiu de forma consistente.",
+    "estavel": "Foi um ano de manter o nível, sem grandes saltos.",
+    "queda": "Foi um ano para esquecer: você rendeu menos que no anterior."
+   },
+   "minutos": {
+    "muitos": "Você jogou quase sempre.",
+    "rodizio": "Você entrou em rodízio, com altos e baixos nos minutos.",
+    "poucos": "Você jogou pouco e precisa de mais minutos."
+   },
+   "titulo": "E ainda levantou taça: esse ano fica na história do clube.",
+   "destaque": "{atributo} foi o que mais me agradou."
+  },
+  "continuar": "Continuar"
+ },
  "reiniciar": {
   "botao": "Reiniciar carreira",
   "titulo": "Reiniciar a carreira?",
@@ -310,7 +341,10 @@
    }
   },
   "sala": "Sala de reuniões",
-  "fala": "{nome}, estamos na metade da temporada. Em que você quer evoluir neste semestre? Escolha uma das ideias.",
+  "fala": {
+   "1": "{nome}, a temporada passada fechou e o ano novo começa agora. Em que você quer evoluir neste semestre? Escolha uma das ideias.",
+   "2": "{nome}, estamos na metade da temporada. Em que você quer evoluir neste semestre? Escolha uma das ideias."
+  },
   "ideias": "Ideias de treino para o semestre",
   "toque": "Toque numa ideia para definir o foco de treino do semestre.",
   "ideia": {
