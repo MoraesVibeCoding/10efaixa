@@ -4,16 +4,10 @@
 
 ## Onde estamos
 
-- **Branch de trabalho:** `main` está em dia; os PRs #4 a #8 foram mergeados. Link de teste: https://10efaixa-9vpy.vercel.app (atualiza a partir do `main`).
-- **Verificação no `main`:** 985 testes passando (5 pulados de propósito: simulações longas), typecheck limpo e build OK.
-- **T57 concluída na branch `claude/eloquent-dirac-qnpqbi`** (SPEC v2.49; ainda sem PR nem merge): desafio do dia, link da carreira (`#c=`, sem nome) e rever carreira. Layout da abertura e do cartão conferido em 390×844 (Playwright instalado como dependência de desenvolvimento).
-- **Branch `claude/eloquent-dirac-qnpqbi` (a partir do `main` pós-T57), ainda sem PR:** SPEC v2.50 (propostas de clube): T28b–e **feitas** (propostas completas); falta a T28f (simulação pareada), na validação final. Decisão do usuário (v2.52): fazer toda a fila de decisões e histórias (T25c, T25d, T25e, T25b) e validar tudo no fim; lista em `docs/validacao-final.md` e v2.51 (linha do tempo "Sua carreira", T55f–h **feitas**; falta só conferir no celular real).
-- **T25c (marcos) em pausa:** o motor dos marcos (`src/engine/milestones.ts`, `src/data/milestones.json`) está no `main` da branch; os 20 marcos escritos (`events.json` e i18n) estão no commit `d5cdb21` e foram **revertidos** na branch para ficar verde; ao voltar à T25c, `git revert c5d95e8` os traz de volta e há 6 testes a ajustar (agent, events, preview, CenaPintada, careerView).
-- **T28g–k (tela de contratos) feitas** na branch `claude/eloquent-dirac-qnpqbi` (SPEC v2.54; ver `docs/validacao-final.md`). Reunião em 3 ideias (T52b–d) já está no `main` (PR #14).
-- **T25c (marcos) feita** na branch (20 marcos ligados, ritmos, figurinhas na gaveta e no álbum). Próximas: T25d (memória), T25e (eventos modulares), T25b (80+ eventos).
-- **Pedidos em fila (nesta ordem):** reunião em 3 ideias (T52b–d feita, em PR) → tela de contratos (`docs/proposta-tela-contratos.md`, aguarda aprovação) → marcos e catálogo. Feedback de equilíbrio: `docs/revisao-equilibrio-decisoes.md`.
-- **Bug em aberto (iPhone/Safari):** na reunião, "A comissão topou" não sai ao tocar em Seguir; não reproduzido no Chromium (36 combinações, toque simulado). Suspeita: `<dialog>` modal no Safari. Falta a versão do iOS ou autorização para trocar por um aviso comum.
-- **Próxima tarefa pela ordem da seção 14:** **T58** (Apoia.se, aviso legal e privacidade).
+> Texto antigo substituído em 2026-10-07. **Roadmap atualizado: `docs/roadmap.md`.** `main` na v2.60 (PR #20), 1284 testes, typecheck e build OK.
+
+- **Próxima:** T25b (catálogo de 80+ eventos, incluindo os de campo e postura); depois T29b, T50f, T54b, T58, T59, T60 ⛳, T61 ⛳.
+- **Bug em aberto (iPhone/Safari):** reunião, "A comissão topou" não sai ao tocar em Seguir (suspeita: `<dialog>`).
 
 ## Feito recentemente
 

@@ -75,3 +75,8 @@ Simulação pareada (`npm run sim:estilos`, 400 carreiras por estilo), antes (HE
 ## "Sua carreira" com gols, assistências e troféus (SPEC v2.60)
 - Cada temporada de profissional mostra "Gols: n" e "Assistências: n"; títulos do ano vêm com a miniatura do troféu criado por você (WebP transparente em `src/assets/trofeus/`, gerado por `docs/arte/processar_trofeus.py`). O selo de campeão e a gaveta usam as mesmas peças.
 - Validar: os troféus ficaram nítidos e sem borda azul? Algum troféu precisa de novo corte ou nova geração?
+
+## Catálogo T25b (SPEC 6.13c)
+- Lote 1 (15 eventos de campo e postura, aprovado) e lote 2 (15 de campo, clube e vida): fichas em `docs/lote-eventos-1.md` e `docs/lote-eventos-2.md`. Total no catálogo: 75 eventos (20 marcos, 25 originais, 30 de sorteio).
+- Validar nos textos: tom, custo de cada opção e se alguma situação soa estranha para alguma posição (o sorteio ainda não conhece a posição do jogador).
+- "Vaia" e "Clássico" usam a cena do estádio até as cenas pintadas existirem.
