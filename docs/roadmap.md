@@ -1,6 +1,6 @@
 # Roadmap do 10eFaixa
 
-> Atualizado em 2026-10-07 (SPEC v2.60, `main` em `55865a2`). Fonte da verdade: `SPEC.md` (seção 14 traz a lista completa de tarefas). Validação do usuário: `docs/validacao-final.md`.
+> Atualizado em 2026-10-08 (SPEC v2.60, catálogo com 84 eventos). Fonte da verdade: `SPEC.md` (seção 14 traz a lista completa de tarefas). Validação do usuário: `docs/validacao-final.md`.
 
 ## Já implementado
 
@@ -21,7 +21,7 @@ Verificação atual: 1284 testes passando, typecheck e build OK, `verify` do CI 
 ### 1. Fila atual de histórias e equilíbrio
 | Item | O que falta |
 |---|---|
-| **T25b — catálogo de eventos** | Hoje há **45 eventos** (20 marcos + 25 comuns); a meta é **80 ou mais**, escritos com a skill `10efaixa-narrativa` no formato modular, em lotes de ~15 aprovados por você. Inclui os eventos **dentro de campo e de postura**, que respondem ao seu feedback de que há decisões demais de reunião, contrato e vida pessoal e poucas de campo |
+| **T25b — catálogo de eventos** | **Meta atingida: 84 eventos** (20 marcos, 25 originais, 39 de sorteio em 3 lotes: campo e postura, campo/clube/vida, campo/rotina/vida). Lotes 1 e 2 aprovados; lote 3 aguarda aprovação. Falta só a medida final do equilíbrio de decisões |
 | **Equilíbrio das decisões** | Reduzir reuniões, contratos e vida pessoal e aumentar as decisões de campo (`docs/revisao-equilibrio-decisoes.md`); medir depois da T25b |
 | **Etiquetas raras** | `perdeuFinal`, `trocouPeloRival`, `noClubeDeCoracao`, `foraDoEixo` quase nunca aparecem; ajustar ou ligar a eventos |
 | **"Bola parada"** | Ligar o progresso do foco ao marco "assumir a bola parada" |

@@ -5748,6 +5748,794 @@
    "politica": {
     "padrao": "acenar-e-se-concentrar"
    }
+  },
+  {
+   "id": "confusao-no-meio-do-campo",
+   "importancia": 7,
+   "cena": "estadio",
+   "peso": 7,
+   "sorteio": true,
+   "pesoPorTemperamento": {
+    "esquentado": 1.4
+   },
+   "reforco": [
+    "vilao",
+    "capitao"
+   ],
+   "condicoes": [
+    [
+     "idade",
+     ">=",
+     18
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "entrar-para-apartar",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.04
+      ],
+      [
+       "idolatria",
+       "add",
+       2
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "entrar-na-briga",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       4
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.08
+      ],
+      [
+       "moral",
+       "add",
+       0.03
+      ]
+     ]
+    },
+    {
+     "id": "sair-de-perto",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "disciplina",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ],
+      [
+       "idolatria",
+       "add",
+       -2
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "entrar-para-apartar"
+   }
+  },
+  {
+   "id": "tecnico-grita-da-beira",
+   "importancia": 6,
+   "cena": "estadio",
+   "peso": 8,
+   "sorteio": true,
+   "pesoPorTemperamento": {
+    "esquentado": 1.2,
+    "lider": 1.1
+   },
+   "reforco": [
+    "moralBaixa",
+    "posicaoDisputada"
+   ],
+   "condicoes": [
+    [
+     "idade",
+     ">=",
+     18
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "responder-na-lata",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.03
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.08
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.04
+      ]
+     ]
+    },
+    {
+     "id": "fazer-sinal-de-entendido",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "conversar-no-intervalo",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.02
+      ],
+      [
+       "moral",
+       "add",
+       -0.01
+      ],
+      [
+       "disciplina",
+       "add",
+       0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "conversar-no-intervalo"
+   }
+  },
+  {
+   "id": "toque-leve-na-area",
+   "importancia": 6,
+   "cena": "estadio",
+   "peso": 7,
+   "sorteio": true,
+   "pesoPorTemperamento": {
+    "resenha": 1.3
+   },
+   "reforco": [
+    "moralBaixa",
+    "empresarioPressiona"
+   ],
+   "condicoes": [
+    [
+     "idade",
+     ">=",
+     18
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "cair-e-pedir",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       4
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.05
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       0.02
+      ]
+     ]
+    },
+    {
+     "id": "seguir-o-lance",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.02
+      ],
+      [
+       "disciplina",
+       "add",
+       0.03
+      ],
+      [
+       "idolatria",
+       "add",
+       -1
+      ]
+     ]
+    },
+    {
+     "id": "contar-ao-arbitro",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "disciplina",
+       "add",
+       0.04
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       0.03
+      ],
+      [
+       "idolatria",
+       "add",
+       -4
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "seguir-o-lance"
+   }
+  },
+  {
+   "id": "adversario-caido-e-bola-rolando",
+   "importancia": 5,
+   "cena": "estadio",
+   "peso": 7,
+   "sorteio": true,
+   "pesoPorTemperamento": {
+    "lider": 1.3
+   },
+   "reforco": [
+    "capitao",
+    "idolo"
+   ],
+   "condicoes": [
+    [
+     "idade",
+     ">=",
+     18
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "devolver-a-bola",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       -2
+      ],
+      [
+       "moral",
+       "add",
+       0.04
+      ],
+      [
+       "disciplina",
+       "add",
+       0.03
+      ]
+     ]
+    },
+    {
+     "id": "seguir-o-ataque",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       4
+      ],
+      [
+       "moral",
+       "add",
+       0.02
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "pedir-ao-arbitro",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.02
+      ],
+      [
+       "disciplina",
+       "add",
+       0.02
+      ],
+      [
+       "moral",
+       "add",
+       -0.01
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "pedir-ao-arbitro"
+   }
+  },
+  {
+   "id": "psicologo-do-clube",
+   "importancia": 5,
+   "cena": "vestiario",
+   "peso": 6,
+   "sorteio": true,
+   "pesoPorTemperamento": {
+    "frio": 1.2
+   },
+   "reforco": [
+    "moralBaixa",
+    "lesaoGrave"
+   ],
+   "condicoes": [
+    [
+     "idade",
+     ">=",
+     18
+    ],
+    [
+     "moral",
+     "<",
+     0.7
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "aceitar-e-ir",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.05
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "conversar-com-a-familia",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.03
+      ],
+      [
+       "disciplina",
+       "add",
+       0.02
+      ]
+     ]
+    },
+    {
+     "id": "ir-so-uma-vez",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.02
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       0.02
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.01
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "ir-so-uma-vez"
+   }
+  },
+  {
+   "id": "dieta-do-nutricionista",
+   "importancia": 4,
+   "cena": "treino",
+   "peso": 6,
+   "sorteio": true,
+   "pesoPorTemperamento": {
+    "frio": 1.2
+   },
+   "reforco": [
+    "veterano",
+    "capitao"
+   ],
+   "condicoes": [
+    [
+     "idade",
+     ">=",
+     21
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "seguir-a-risca",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "disciplina",
+       "add",
+       0.05
+      ],
+      [
+       "moral",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "negociar-um-dia-livre",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "disciplina",
+       "add",
+       0.02
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       0.02
+      ],
+      [
+       "moral",
+       "add",
+       0.01
+      ]
+     ]
+    },
+    {
+     "id": "aproveitar-o-churrasco",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.05
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.04
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "negociar-um-dia-livre"
+   }
+  },
+  {
+   "id": "foto-na-mesa-do-jantar",
+   "importancia": 4,
+   "cena": "casa-familia",
+   "peso": 6,
+   "sorteio": true,
+   "pesoPorTemperamento": {
+    "lider": 1.2,
+    "resenha": 1.1
+   },
+   "reforco": [
+    "idolo",
+    "vilao"
+   ],
+   "condicoes": [
+    [
+     "idade",
+     ">=",
+     18
+    ],
+    [
+     "idolatria",
+     ">=",
+     25
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "atender-todo-mundo",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       5
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ],
+      [
+       "disciplina",
+       "add",
+       0.01
+      ]
+     ]
+    },
+    {
+     "id": "fazer-piada-e-tirar-uma",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       3
+      ],
+      [
+       "moral",
+       "add",
+       0.03
+      ]
+     ]
+    },
+    {
+     "id": "pedir-paz-no-jantar",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       -5
+      ],
+      [
+       "moral",
+       "add",
+       0.02
+      ],
+      [
+       "disciplina",
+       "add",
+       0.01
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "atender-todo-mundo"
+   }
+  },
+  {
+   "id": "voo-atrasado-na-vespera",
+   "importancia": 5,
+   "cena": "aeroporto",
+   "peso": 6,
+   "sorteio": true,
+   "pesoPorTemperamento": {
+    "resenha": 1.2
+   },
+   "reforco": [
+    "foraDoEixo",
+    "capitao"
+   ],
+   "condicoes": [
+    [
+     "idade",
+     ">=",
+     18
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "organizar-o-grupo",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.01
+      ],
+      [
+       "disciplina",
+       "add",
+       0.02
+      ]
+     ]
+    },
+    {
+     "id": "animar-o-grupo",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.05
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.03
+      ],
+      [
+       "idolatria",
+       "add",
+       2
+      ]
+     ]
+    },
+    {
+     "id": "isolar-se-no-hotel",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "disciplina",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.01
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "organizar-o-grupo"
+   }
+  },
+  {
+   "id": "elogio-do-adversario",
+   "importancia": 4,
+   "cena": "entrevista",
+   "peso": 6,
+   "sorteio": true,
+   "pesoPorTemperamento": {
+    "lider": 1.2
+   },
+   "reforco": [
+    "idolo",
+    "convocado"
+   ],
+   "condicoes": [
+    [
+     "idade",
+     ">=",
+     20
+    ],
+    [
+     "idolatria",
+     ">=",
+     20
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "retribuir-o-elogio",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       3
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       0.02
+      ],
+      [
+       "moral",
+       "add",
+       0.02
+      ]
+     ]
+    },
+    {
+     "id": "agradecer-curto",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       1
+      ],
+      [
+       "disciplina",
+       "add",
+       0.02
+      ]
+     ]
+    },
+    {
+     "id": "brincar-de-si",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.04
+      ],
+      [
+       "idolatria",
+       "add",
+       2
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "retribuir-o-elogio"
+   }
   }
  ]
 }
