@@ -749,5 +749,260 @@
    "veterano": "Você já virou jogo assim, e sabe que o primeiro a falar muda o clima.",
    "moralBaixa": "Com a cabeça já pesada, falar parece mais difícil que correr."
   }
+ },
+ "companheiro-falha-no-gol": {
+  "titulo": "O erro do companheiro",
+  "texto": "O zagueiro perde a bola na saída e o time toma o gol. Ele fica parado, de mãos na cintura, olhando para o chão. A torcida já vaia, e a bola ainda está no fundo da rede.",
+  "opcoes": {
+   "gritar-com-ele": "Gritar com ele na frente da torcida",
+   "levantar-o-companheiro": "Ir até ele e dizer que o jogo continua",
+   "voltar-ao-meio": "Voltar ao meio-campo sem olhar para trás"
+  },
+  "abertura": {
+   "capitao": "Capitão grita ou abraça, e o time inteiro aprende com o que você escolher.",
+   "veterano": "Você já errou assim e lembra de quem te levantou."
+  },
+  "contexto": {
+   "moralBaixa": "Num dia de moral baixa, o erro do colega parece o seu.",
+   "vilao": "Com a torcida de pé atrás de você, qualquer grito vira manchete."
+  }
+ },
+ "tecnico-pede-sacrificio": {
+  "titulo": "Um favor para o time",
+  "texto": "O técnico te chama depois do treino. O time precisa de alguém para fechar a faixa do campo e correr por dois. Não é a função que te deixou conhecido, mas ele diz que a vaga é sua se aceitar.",
+  "opcoes": {
+   "aceitar-a-funcao": "Aceitar a função e dar o sangue",
+   "pedir-a-funcao-de-sempre": "Pedir para seguir na função de sempre",
+   "aceitar-por-um-mes": "Aceitar por um mês e voltar a conversar"
+  },
+  "abertura": {
+   "veterano": "Com a experiência, você sabe que sacrifício bem feito vira crédito.",
+   "jovem": "Para quem está começando, dizer não ao técnico custa caro."
+  },
+  "contexto": {
+   "posicaoDisputada": "Com a vaga em disputa, recusar pode abrir a porta para o concorrente.",
+   "empresarioPressiona": "Seu empresário avisou: fama se faz com gol, não com marcação."
+  }
+ },
+ "camisa-no-tunel": {
+  "titulo": "O menino na saída do túnel",
+  "texto": "Antes do jogo, um menino com a camisa velha do clube te espera na grade do túnel. O pai dele filma com o celular, e a segurança manda andar. O aquecimento já começou.",
+  "opcoes": {
+   "dar-a-camisa": "Parar e dar a camisa de aquecimento",
+   "prometer-depois-do-jogo": "Acenar e prometer a camisa depois do jogo",
+   "tirar-uma-foto": "Tirar uma foto rápida com o menino"
+  },
+  "abertura": {
+   "idolo": "Para o ídolo, cada gesto na grade vira história na cidade.",
+   "jovem": "No início de carreira, um pedido assim ainda é raro e dá orgulho."
+  },
+  "contexto": {
+   "noClubeDeCoracao": "Você já foi aquele menino na grade, com a camisa do mesmo clube.",
+   "campeaoNoAno": "Com o título no ano, os pedidos só aumentam."
+  }
+ },
+ "reforco-para-sua-posicao": {
+  "titulo": "O reforço da sua posição",
+  "texto": "A diretoria apresenta um reforço para a sua posição. Ele chega com nome na imprensa e salário alto, e o técnico o chama de opção importante. No vestiário, todo mundo olha para o seu primeiro cumprimento.",
+  "opcoes": {
+   "receber-de-braco-aberto": "Receber o reforço de braços abertos",
+   "provocar-e-mostrar-servico": "Provocar na brincadeira e mostrar serviço no treino",
+   "cumprimentar-e-esperar": "Cumprimentar sem festa e esperar a chance"
+  },
+  "abertura": {
+   "veterano": "Com a experiência, você sabe que reforço bom puxa o nível de todo mundo.",
+   "jovem": "No começo de carreira, ver um nome grande na sua posição assusta."
+  },
+  "contexto": {
+   "empresarioPressiona": "Seu empresário avisou: se ele jogar, você precisa de outra casa.",
+   "moralBaixa": "Com a moral baixa, o reforço soa como uma resposta que ninguém te deu."
+  }
+ },
+ "jogo-no-gramado-ruim": {
+  "titulo": "Jogo no campo alagado",
+  "texto": "Choveu a semana toda, e o gramado virou poça de lama. A bola não quica e o passe não rola, e o técnico pede só bola longa. Do banco, o preparador avisa que dá para tentar o drible, mas custa fôlego.",
+  "opcoes": {
+   "seguir-a-bola-longa": "Seguir o plano e jogar de bola longa",
+   "tentar-o-drible": "Tentar o drible mesmo na lama",
+   "rir-da-lama": "Rir da lama e chamar o time para jogar solto"
+  },
+  "abertura": {
+   "veterano": "Você já jogou em muito campo ruim e sabe que quem ri na lama rende mais.",
+   "jovem": "Nos primeiros anos, campo ruim ainda é a desculpa mais fácil."
+  },
+  "contexto": {
+   "foraDoEixo": "Longe dos grandes centros, gramado ruim é regra, e todo mundo aprende a viver com ele.",
+   "campeaoNoAno": "Com o título na esquina, ninguém quer arriscar nada na lama."
+  }
+ },
+ "companheiro-expulso": {
+  "titulo": "Time com um a menos",
+  "texto": "Seu companheiro de meio-campo é expulso aos trinta do segundo tempo, e o time segue na frente por um gol. O banco olha para você. O técnico faz o gesto de recuar o time.",
+  "opcoes": {
+   "fechar-a-casinha": "Recuar o time e fechar a casinha",
+   "pressionar-a-saida": "Pressionar a saída e ir atrás do segundo gol",
+   "reorganizar-a-marcacao": "Chamar o capitão e reorganizar a marcação"
+  },
+  "abertura": {
+   "capitao": "Com a faixa no braço, o time espera que você diga o que fazer.",
+   "veterano": "Você já jogou com um a menos e sabe que o primeiro minuto decide."
+  },
+  "contexto": {
+   "campeaoNoAno": "Com um título à vista, qualquer erro agora pesa em dobro.",
+   "moralBaixa": "Com a cabeça pesada, o jogo parece mais longo que o normal."
+  }
+ },
+ "cartao-pendurado": {
+  "titulo": "Pendurado para o clássico",
+  "texto": "Você está pendurado com dois amarelos, e o clássico é na semana que vem. Hoje o marcador te provoca em toda disputa. Se levar o terceiro, desfalca o time na partida mais importante.",
+  "opcoes": {
+   "entrar-firme": "Jogar no limite e entrar firme nas divididas",
+   "jogar-com-cautela": "Jogar com cautela e evitar a dividida",
+   "pedir-para-sair": "Pedir ao técnico para ser substituído antes"
+  },
+  "abertura": {
+   "vilao": "Com a fama que a torcida te deu, o árbitro já está de olho em você.",
+   "veterano": "Você já perdeu clássico por cartão bobo e sabe como dói."
+  },
+  "contexto": {
+   "capitao": "Com a faixa no braço, desfalcar o time é a pior das opções.",
+   "empresarioPressiona": "Seu empresário lembra que um clássico bem jogado vale uma proposta."
+  }
+ },
+ "projeto-social-convida": {
+  "titulo": "O convite do projeto do bairro",
+  "texto": "O projeto social do bairro onde você começou te convida para a festa de fim de ano, num campinho de terra. Tem fila de criança com a sua camisa. Mas é o único dia de folga da semana.",
+  "opcoes": {
+   "jogar-com-a-molecada": "Ir e jogar um tempo com a molecada",
+   "mandar-camisas": "Mandar camisas autografadas e um abraço",
+   "ficar-descansando": "Ficar descansando e prometer ir no ano que vem"
+  },
+  "abertura": {
+   "idolo": "Ídolo do clube virou orgulho do bairro, e o bairro cobra presença.",
+   "jovem": "Nos primeiros anos, o bairro ainda te chama de menino."
+  },
+  "contexto": {
+   "noClubeDeCoracao": "O campinho fica a duas ruas do estádio do clube que você sempre torceu.",
+   "empresarioPressiona": "Seu empresário prefere a foto no estádio a um campinho de terra."
+  }
+ },
+ "professor-da-base": {
+  "titulo": "O professor da base aparece",
+  "texto": "O treinador que te formou aparece na porta do centro de treinamento, mais velho e de boné. Ele quer um tempo de conversa e uma foto para o projeto dele. Você tem compromisso marcado.",
+  "opcoes": {
+   "parar-e-conversar": "Parar tudo e conversar com ele",
+   "marcar-um-almoco": "Marcar um almoço no domingo",
+   "foto-e-correr": "Tirar a foto e sair correndo"
+  },
+  "abertura": {
+   "veterano": "Os anos passam, e quem te formou envelhece junto com a sua carreira.",
+   "idolo": "Para o ídolo, o professor é a parte da história que ninguém conta."
+  },
+  "contexto": {
+   "capitao": "Com a faixa no braço, o que você fizer com ele vira exemplo para os garotos.",
+   "empresarioPressiona": "Seu empresário olha o relógio, e o professor percebe."
+  }
+ },
+ "portao-aberto-cobranca": {
+  "titulo": "Portão aberto, torcida em cima",
+  "texto": "O treino é aberto, e a torcida lota a arquibancada para cobrar resultado. Um grupo grita o seu nome com raiva, outro tenta defender. Cada exercício vira plateia.",
+  "opcoes": {
+   "ouvir-e-prometer": "Ir até a grade, ouvir e prometer reação",
+   "revidar-com-ironia": "Revidar com ironia e provocar de volta",
+   "treinar-de-cabeca-baixa": "Treinar de cabeça baixa, sem olhar para o lado"
+  },
+  "abertura": {
+   "vilao": "A torcida já tem um culpado, e hoje o treino aberto tem o seu nome.",
+   "jovem": "Jovem ainda, você nunca tinha ouvido a torcida tão de perto."
+  },
+  "contexto": {
+   "moralBaixa": "Com a moral baixa, cada grito da arquibancada soa como sentença.",
+   "capitao": "Com a faixa no braço, a torcida cobra mais de você que de qualquer um."
+  }
+ },
+ "pergunta-da-selecao": {
+  "titulo": "A pergunta sobre a Seleção",
+  "texto": "Na zona mista, o repórter pergunta se você se vê na próxima convocação e se merece mais que o outro da posição. Todo mundo escuta. A resposta vai passar no jornal da noite.",
+  "opcoes": {
+   "falar-de-humildade": "Falar de humildade e do trabalho no clube",
+   "cravar-que-merece": "Cravar que merece e que está pronto",
+   "brincar-e-desviar": "Brincar com a pergunta e desviar para a torcida"
+  },
+  "abertura": {
+   "convocado": "Quem já vestiu a camisa da Seleção sabe que cada palavra volta em dobro.",
+   "idolo": "Um ídolo pesa cada resposta, porque a torcida quer o melhor para ele."
+  },
+  "contexto": {
+   "empresarioPressiona": "Seu empresário combinou duas frases e pediu para você não sair delas.",
+   "capitao": "Com a faixa no braço, a resposta vale pelo clube todo."
+  }
+ },
+ "jogo-beneficente": {
+  "titulo": "Jogo beneficente no domingo",
+  "texto": "Uma campanha de arrecadação convida alguns jogadores para um jogo beneficente no domingo de folga. Vai ter televisão, ex-craques e foto com crianças. O preparador avisa que o corpo precisa de descanso.",
+  "opcoes": {
+   "jogar-um-tempo": "Ir, jogar um tempo e voltar para casa",
+   "jogar-o-jogo-inteiro": "Jogar o jogo inteiro e aproveitar a tarde",
+   "mandar-uma-doacao": "Mandar uma doação e ficar descansando"
+  },
+  "abertura": {
+   "idolo": "Convite para ídolo é pedido da cidade, e ninguém aceita um não de graça.",
+   "veterano": "Com os anos, o descanso ficou tão valioso quanto o jogo."
+  },
+  "contexto": {
+   "capitao": "Com a faixa, o grupo espera que você dê o exemplo na campanha.",
+   "noClubeDeCoracao": "É a camisa do clube de coração na campanha, e a vontade é de ir."
+  }
+ },
+ "palpite-do-pai": {
+  "titulo": "O palpite do seu pai",
+  "texto": "Seu pai liga depois do jogo e diz que o técnico erra na escalação e que você precisa falar com ele. Ele diz isso toda semana, mas hoje a voz está mais firme. A sua mãe, ao fundo, pede calma.",
+  "opcoes": {
+   "ouvir-com-carinho": "Ouvir com carinho e agradecer o apoio",
+   "cortar-a-conversa": "Cortar a conversa e pedir para ele não se meter",
+   "mudar-de-assunto": "Agradecer e mudar de assunto até desligar"
+  },
+  "abertura": {
+   "jovem": "Aos vinte e poucos, o pai ainda acha que manda no seu jogo.",
+   "idolo": "Mesmo ídolo, em casa você continua sendo o filho dele."
+  },
+  "contexto": {
+   "empresarioPressiona": "Seu empresário prefere que a família fale menos, e que a imprensa nem ouça.",
+   "moralBaixa": "Com a moral baixa, o palpite cai pior do que cairia."
+  }
+ },
+ "lista-sem-seu-nome": {
+  "titulo": "A lista sai e você não está",
+  "texto": "A convocação é divulgada, e o seu nome não aparece. Seu empresário já tinha dito que dava. No grupo da família, silêncio, e o celular não para de vibrar.",
+  "opcoes": {
+   "treinar-em-dobro": "Treinar em dobro e deixar a resposta para o campo",
+   "pedir-o-motivo": "Pedir ao empresário que descubra o que faltou",
+   "reclamar-no-grupo": "Reclamar no grupo e provar com gols depois"
+  },
+  "abertura": {
+   "jovem": "No começo de carreira, a primeira lista sem o seu nome dói mais.",
+   "veterano": "Você já viu muita lista sem o seu nome e sabe como ela vira combustível."
+  },
+  "contexto": {
+   "empresarioPressiona": "Seu empresário já falou com a imprensa antes de falar com você.",
+   "posicaoDisputada": "Com a vaga em disputa, o nome do concorrente na lista pesa em dobro."
+  }
+ },
+ "homenagem-no-estadio": {
+  "titulo": "Homenagem antes do jogo",
+  "texto": "O clube prepara uma homenagem antes da bola rolar: o telão passa lances seus e a torcida canta o seu nome de pé. O árbitro espera no círculo central. Você ainda tem um jogo para jogar.",
+  "opcoes": {
+   "agradecer-de-peito-aberto": "Agradecer de peito aberto, com a mão no peito",
+   "acenar-e-se-concentrar": "Acenar curto e se concentrar no jogo",
+   "puxar-o-coro": "Puxar o coro e chamar o time para cantar junto"
+  },
+  "abertura": {
+   "idolo": "Ídolo de verdade ouve o próprio nome e ainda tem medo de chorar.",
+   "veterano": "Com tantos anos de casa, cada homenagem lembra que o fim está mais perto."
+  },
+  "contexto": {
+   "noClubeDeCoracao": "Homenagem no clube de coração é o sonho do menino que olhava da arquibancada.",
+   "capitao": "Com a faixa no braço, a homenagem é do clube todo, não só sua."
+  }
  }
 }
