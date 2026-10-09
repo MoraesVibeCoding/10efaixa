@@ -254,6 +254,7 @@
   "seguir": "Escolher o ritmo"
  },
  "resumoTemporada": {
+  "semJogos": "Ano de formação: nenhum jogo como profissional ainda, mas cada treino contou.",
   "titulo": "Resumo da temporada",
   "idade": "{n} anos",
   "numeros": "Números do ano",

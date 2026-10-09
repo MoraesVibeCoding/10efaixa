@@ -10,6 +10,8 @@ export interface ContextFacts {
   minutosFracao: number;
   salarioAtrasos: number; convocado: boolean; subiuDivisao: boolean; caiuDivisao: boolean; foraDoEixo: boolean;
   empresarioPressiona: boolean; posicaoDisputada: boolean; noClubeDeCoracao: boolean; capitao: boolean; campeaoNoAno: boolean;
+  /** v2.67: ainda na base, na várzea ou no primeiro ano da carreira (libera os eventos de formação do catálogo). */
+  iniciante?: boolean;
 }
 export interface ContextTag { id: string; condicoes: Cond[] }
 export const CONTEXT_TAGS = data.etiquetas as unknown as ContextTag[];

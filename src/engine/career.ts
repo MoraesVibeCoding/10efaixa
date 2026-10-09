@@ -141,6 +141,8 @@ const AUTO = autoDecide;
 /** v2.64: o empréstimo como decisão (aceite pelo temperamento no automático, custo de recusar) e a venda fechada pelo empresário. */
 const LOAN = clubLifeCfg.emprestimo;
 const SALE_EVENT = 'empresario-forca-venda';
+/** v2.67: o "Primeiro passo" de cada origem, a primeira decisão da carreira. */
+const START_EVENT: Record<string, string> = { varzea: 'primeiro-passo-varzea', peneira: 'primeiro-passo-peneira', baseGrande: 'primeiro-passo-base' };
 
 const UF = new Map(CLUBS.map((c) => [c.id, c.uf]));
 const BRAZIL = new Set(CLUBS.map((c) => c.id));
@@ -236,6 +238,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       empresarioPressiona: agent.influence >= contextCfg.empresarioInfluenciaMin, posicaoDisputada: curRole === 'disputa',
       noClubeDeCoracao: !!clubId && clubId === input.heartClub, capitao: !!clubId && captainAt.has(clubId),
       campeaoNoAno: !!clubId && titles.some((t) => t.year === curYear && t.clubId === clubId),
+      iniciante: inYouth || varzeaLeft > 0 || curYear === startYear,
     };
     return contextCtx(facts, memorias, curYear);
   };
@@ -339,6 +342,17 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     const v = runVarzea({ state: input.state, startingOverall: player.startingOverall }, rng);
     varzeaLeft = v.semesters;
     varzeaClub = v.clubId;
+  }
+
+  // v2.67: a primeira decisão é o "Primeiro passo" da origem, aos 16, antes de qualquer semestre (o Over ainda é o da revelação)
+  {
+    const id = START_EVENT[input.origin] ?? START_EVENT.varzea!;
+    const st = { moral: morale, disciplina: discipline, relacaoTecnico: coachRelation, bonusMental: 0 };
+    const out = applyOption(st, id, ask(id, st));
+    morale = out.moral as number;
+    discipline = out.disciplina as number;
+    coachRelation = out.relacaoTecnico as number;
+    marcoMental = Math.min(EFFECTS.bonusMentalMax, marcoMental + (out.bonusMental as number));
   }
 
   for (let year = startYear, k = 0; ; year++, k++) {
@@ -568,6 +582,19 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
               agent = ch.agent; wealth -= ch.cost; morale = clamp(morale + ch.moraleDelta, 0, 1);
             }
           }
+        }
+      }
+      // v2.67: no segundo semestre do primeiro ano, um evento de formação (base, várzea) do catálogo, com gerador próprio
+      if (year === startYear && sem === 1) {
+        const startRng = createPrng(((seed >>> 0) ^ 0x16a5e) >>> 0);
+        const tagsNow = contextTags();
+        for (const id of drawCatalog({ ctx: contextNow(), tags: tagsNow, temperament: temp, used: usedCatalog, count: 1 }, startRng)) {
+          usedCatalog.add(id);
+          const st = { moral: morale, disciplina: discipline, relacaoTecnico: coachRelation };
+          const out = applyOption(st, id, ask(id, st), tagsNow);
+          morale = out.moral as number;
+          discipline = out.disciplina as number;
+          coachRelation = out.relacaoTecnico as number;
         }
       }
       // Convocação do semestre: segue a nota de visibilidade (sem clube, na várzea, não há convocação).

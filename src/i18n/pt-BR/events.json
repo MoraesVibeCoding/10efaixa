@@ -1166,5 +1166,59 @@
    "empresarioPressiona": "Seu empresário já recortou o vídeo para mostrar a outros clubes.",
    "capitao": "Com a faixa no braço, o elogio é um pouco do time todo."
   }
+ },
+ "primeiro-passo-varzea": {
+  "titulo": "Domingo no campo de terra",
+  "texto": "Dezesseis anos e o time do bairro já te chama de craque. No último domingo, um homem de boné anotou seu nome num caderninho. Seu pai pede para não se iludir; os amigos juram que é olheiro.",
+  "opcoes": {
+   "esperar-o-olheiro": "Jogar todo domingo e esperar o olheiro voltar",
+   "pedir-um-teste": "Ir atrás do olheiro e pedir um teste",
+   "virar-capitao-do-bairro": "Organizar o time e virar o capitão do bairro"
+  }
+ },
+ "primeiro-passo-peneira": {
+  "titulo": "A primeira noite no alojamento",
+  "texto": "Você passou na peneira. Agora são doze garotos num quarto, beliche rangendo e a sua mãe ligando toda noite. O preparador avisou: quem chora no primeiro mês volta para casa.",
+  "opcoes": {
+   "treinar-dobrado": "Treinar dobrado e engolir a saudade",
+   "puxar-a-resenha": "Puxar a resenha e fazer amizade no quarto",
+   "prometer-voltar-com-contrato": "Ligar para casa e prometer voltar com contrato"
+  }
+ },
+ "primeiro-passo-base": {
+  "titulo": "Primeiro treino no clube grande",
+  "texto": "Chuteira nova, uniforme com o nome do clube bordado e trinta garotos disputando onze vagas. O técnico da base já tem os preferidos dele, e o filho de um diretor joga na sua posição.",
+  "opcoes": {
+   "mostrar-no-treino": "Ficar quieto e mostrar no treino",
+   "cobrar-uma-chance": "Cobrar do técnico uma chance de verdade",
+   "ganhar-o-grupo": "Ganhar o grupo antes de ganhar a vaga"
+  }
+ },
+ "prova-ou-treino": {
+  "titulo": "Prova e treino no mesmo horário",
+  "texto": "A escola marcou prova no mesmo horário do treino. Sua mãe quer o boletim limpo; o técnico avisou que quem falta perde a vez no fim de semana.",
+  "opcoes": {
+   "fazer-a-prova": "Fazer a prova e chegar atrasado no treino",
+   "faltar-a-prova": "Faltar à prova e correr para o treino",
+   "remarcar-com-o-tecnico": "Conversar com o técnico e remarcar a prova"
+  }
+ },
+ "treino-com-os-profissionais": {
+  "titulo": "Treino com os profissionais",
+  "texto": "O técnico do time principal precisava completar o coletivo e lembrou de você. Do outro lado, um zagueiro de trinta anos que não gosta de garoto abusado. Todo mundo está olhando.",
+  "opcoes": {
+   "dar-caneta-no-zagueiro": "Partir para cima e dar uma caneta no zagueiro",
+   "jogar-simples": "Jogar simples e não errar um passe",
+   "conversar-com-o-zagueiro": "Puxar conversa com o zagueiro no fim do treino"
+  }
+ },
+ "baile-na-vespera": {
+  "titulo": "Baile na véspera do jogo",
+  "texto": "Os amigos da rua chamaram para o baile na véspera do jogo da base. Você não sai faz três meses, e o técnico mora a duas ruas dali.",
+  "opcoes": {
+   "ir-e-voltar-cedo": "Ir ao baile e prometer voltar cedo",
+   "ficar-em-casa": "Ficar em casa e dormir cedo",
+   "chamar-os-amigos-pro-jogo": "Chamar os amigos para ver o jogo no domingo"
+  }
  }
 }
