@@ -9,5 +9,18 @@
   },
   "enabledPlugins": {
     "previsao-do-contexto@10efaixa": true
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat \"$CLAUDE_PROJECT_DIR/.claude/skills/caveman/SKILL.md\" 2>/dev/null || true",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   }
 }
