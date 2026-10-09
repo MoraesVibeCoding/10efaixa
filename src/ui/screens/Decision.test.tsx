@@ -148,12 +148,13 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
   it('título do evento com os selos do jogador ao lado: idade, tempo de jogo, salário do mês e valor de mercado (v2.22, v2.33)', () => {
     setup();
     expect(screen.getByRole('heading', { level: 1, name: t(`events.${EVENT}.titulo`) })).toBeInTheDocument();
-    const selos = screen.getByRole('list', { name: t('ui.decisao.ficha') });
-    expect(within(selos).getByText(t('ui.decisao.idade', { idade: 17 }))).toBeInTheDocument();
-    expect(within(selos).getByText(t('ui.papel.titularRegular'))).toBeInTheDocument();
-    expect(within(selos).getByText(/R\$\s180\smil/)).toBeInTheDocument();
-    // v2.33: valor de mercado em euros junto do salário e do tempo de jogo
-    expect(within(selos).getByText(/^Valor\s€\s12,5\smi$/)).toBeInTheDocument();
+    // v2.62: idade, salário e valor ficam entre o nome e o Over; o papel vai para a linha de selos de baixo
+    const dados = screen.getByRole('list', { name: t('ui.decisao.ficha') });
+    expect(within(dados).getByText(t('ui.decisao.idade', { idade: 17 }))).toBeInTheDocument();
+    expect(within(dados).getByText(/R\$\s180\smil/)).toBeInTheDocument();
+    // v2.33: valor de mercado em euros junto do salário
+    expect(within(dados).getByText(/^Valor\s€\s12,5\smi$/)).toBeInTheDocument();
+    expect(within(screen.getByRole('list', { name: t('ui.decisao.fichaMais') })).getByText(t('ui.papel.titularRegular'))).toBeInTheDocument();
     // títulos, atributos e trajetória ficam na gaveta
     expect(screen.queryByRole('list', { name: t('ui.decisao.titulosLista') })).not.toBeInTheDocument();
   });
@@ -452,7 +453,33 @@ describe('variação B (T51c, SPEC v2.34)', () => {
     const topo = screen.getByRole('main').querySelector('.decisao__topo') as HTMLElement;
     expect(topo.querySelector('.figurinha--moldura')).not.toBeNull();
     expect(topo.querySelector('.decisao__over')).toHaveTextContent('78');
-    expect(within(topo).getByRole('list', { name: t('ui.decisao.ficha') })).toHaveTextContent(t('ui.decisao.titulosQtd', { n: 3 }));
+    expect(within(topo).getByRole('list', { name: t('ui.decisao.fichaMais') })).toHaveTextContent(t('ui.decisao.titulosQtd', { n: 3 }));
+  });
+
+  it('o Over tem a medalha da faixa por trás do número, do bronze ao diamante (v2.62)', () => {
+    show();
+    const over = screen.getByRole('main').querySelector('.decisao__over') as HTMLElement;
+    expect(over).toHaveAttribute('data-medalha', 'platina');
+    expect(over.querySelector('.decisao__over-medalha')).not.toBeNull();
+  });
+
+  it('a linha de selos de baixo recolhe e abre, e a escolha fica lembrada (v2.62)', () => {
+    localStorage.clear();
+    show();
+    const botao = screen.getByRole('button', { name: t('ui.decisao.recolherFicha') });
+    expect(botao).toHaveAttribute('aria-expanded', 'true');
+    fireEvent.click(botao);
+    expect(screen.queryByRole('list', { name: t('ui.decisao.fichaMais') })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: t('ui.decisao.mostrarFicha') })).toHaveAttribute('aria-expanded', 'false');
+    cleanup();
+    try {
+      show();
+      expect(screen.queryByRole('list', { name: t('ui.decisao.fichaMais') })).not.toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.mostrarFicha') }));
+      expect(screen.getByRole('list', { name: t('ui.decisao.fichaMais') })).toBeInTheDocument();
+    } finally {
+      localStorage.clear();
+    }
   });
 
   it('nada marcado: confirmar fica desligado e a caixa de detalhe convida a tocar numa opção', () => {
@@ -574,7 +601,7 @@ describe('evolução do semestre e idolatria (T51b, v2.41)', () => {
 
   it('o selo da torcida aparece na ficha do topo, em palavras', () => {
     show({}, { torcida: 'querido' });
-    const selos = screen.getByRole('list', { name: t('ui.decisao.ficha') });
+    const selos = screen.getByRole('list', { name: t('ui.decisao.fichaMais') });
     expect(within(selos).getByText(t('ui.idolatria.selo', { faixa: t('ui.idolatria.faixa.querido') }))).toBeInTheDocument();
   });
 

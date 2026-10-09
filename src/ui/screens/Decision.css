@@ -45,8 +45,8 @@
   z-index: 1;
   flex: none;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-areas: "quem over" "selos selos";
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas: "quem dados over" "mais mais mais";
   align-items: center;
   gap: var(--espaco-2) var(--espaco-3);
   padding: var(--espaco-2) var(--espaco-3) var(--espaco-3);
@@ -96,8 +96,49 @@
 .decisao__over { grid-area: over; display: grid; justify-items: center; line-height: 1; font-family: var(--fonte-titulo); font-variant-numeric: tabular-nums; }
 .decisao__over-rotulo { font-size: var(--tipo-apoio); font-weight: 800; letter-spacing: 0.08em; color: var(--cor-texto-suave); }
 .decisao__over-numero { font-size: 3rem; font-weight: 900; }
+/* v2.62: a medalha da faixa (do bronze ao diamante) por trás do número; a arte pintada cobre, o degradê é a reserva */
+.decisao__over-medalha {
+  display: grid;
+  place-items: center;
+  min-inline-size: 4.25rem;
+  aspect-ratio: 1;
+  padding: 0 0.35rem;
+  border: 2px solid var(--medalha-aro);
+  border-radius: 50%;
+  background: linear-gradient(160deg, var(--medalha-clara), var(--medalha-escura)) center / cover;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.45), var(--forma-sombra-suave);
+  color: var(--medalha-texto);
+}
+.decisao__over[data-medalha='bronze'] .decisao__over-numero,
+.decisao__over[data-medalha='esmeralda'] .decisao__over-numero,
+.decisao__over[data-medalha='diamante'] .decisao__over-numero { text-shadow: var(--forma-contorno-numero); }
 
-.selos { grid-area: selos; display: flex; flex-wrap: wrap; gap: 4px; margin: 0; padding: 0; list-style: none; }
+/* v2.62: idade, salário e valor entre o nome e o Over, um embaixo do outro */
+.decisao__dados { grid-area: dados; display: grid; gap: 1px; align-self: center; justify-items: end; margin: 0; padding: 0; list-style: none; font-size: var(--tipo-apoio); font-weight: 700; line-height: 1.25; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* v2.62: os outros selos numa linha, que o jogador pode recolher */
+.decisao__mais { grid-area: mais; display: flex; align-items: center; gap: var(--espaco-2); }
+.decisao__mais .selos { flex: 1; min-inline-size: 0; }
+.decisao__recolher {
+  flex: none;
+  display: grid;
+  place-items: center;
+  inline-size: 2rem;
+  block-size: 1.5rem;
+  margin-inline-start: auto;
+  padding: 0;
+  border: var(--forma-borda-fina) solid var(--cor-linha);
+  border-radius: 999px;
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.decisao__recolher::after { content: ''; position: absolute; inset: -10px; } /* área de toque maior que o desenho */
+.decisao__recolher { position: relative; }
+.decisao__recolher:focus-visible { outline-offset: 2px; }
+
+.selos { display: flex; flex-wrap: wrap; gap: 4px; margin: 0; padding: 0; list-style: none; }
 .selos li {
   padding: 1px 8px;
   border: var(--forma-borda-fina) solid var(--cor-linha);
@@ -373,7 +414,8 @@
     padding: 1.75rem;
   }
   .faixa { grid-area: faixa; }
-  .decisao__topo { grid-area: topo; }
+  .decisao__topo { grid-area: topo; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "quem over" "dados dados" "mais mais"; }
+  .decisao__dados { display: flex; flex-wrap: wrap; gap: 0 var(--espaco-3); }
   .decisao__painel { grid-area: painel; margin: 0; }
   .decisao__opcoes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .decisao__confirmar { justify-self: end; }
@@ -394,10 +436,20 @@
 @media (max-width: 63.99rem) {
   .decisao__topo { gap: var(--espaco-1) var(--espaco-2); padding: var(--espaco-2) var(--espaco-3); }
   .jogador__abrir { gap: var(--espaco-2); }
-  .jogador__abrir .figurinha { --w: 3.25rem; }
+  .jogador__abrir .figurinha { --w: 2.75rem; }
   .jogador__nome { font-size: 1.0625rem; }
   .jogador__clube, .jogador__mais { font-size: 0.875rem; }
   .decisao__over-numero { font-size: 2.25rem; }
+  .decisao__over-medalha { min-inline-size: 3.25rem; }
+  .decisao__over { padding-block-start: var(--espaco-2); } /* o botão de reiniciar fica no canto de cima */
+  .decisao__dados { font-size: 0.75rem; }
+  .jogador__clube, .jogador__mais { white-space: nowrap; }
+  .jogador__clube { overflow: hidden; text-overflow: ellipsis; }
+}
+/* v2.62: em tela estreita (até 380 px), idade, salário e valor descem para uma linha embaixo do nome */
+@media (max-width: 23.75rem) {
+  .decisao__topo { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "quem over" "dados dados" "mais mais"; }
+  .decisao__dados { display: flex; flex-wrap: wrap; gap: 0 var(--espaco-3); }
   .decisao__over-rotulo { font-size: 0.75rem; }
   .selos li { padding: 0 6px; font-size: 0.8125rem; line-height: 1.4; }
   .decisao__painel { gap: var(--espaco-2); padding: var(--espaco-3); }
