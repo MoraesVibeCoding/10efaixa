@@ -6,6 +6,11 @@
 }
 .reiniciar__botao svg { box-sizing: content-box; padding: 6px; border-radius: 50%; background: color-mix(in srgb, var(--cor-superficie) 92%, transparent); border: var(--forma-borda-fina) solid var(--cor-linha); box-shadow: var(--forma-sombra-suave); }
 .reiniciar__botao:focus-visible { outline: 3px solid var(--cor-foco); outline-offset: -4px; border-radius: 50%; }
+/* auditoria mobile (ui-ux-pro-max, fixed-element-offset): no celular o botão fixo cobria o texto quando a página rolava;
+   ali ele fica no alto da página e rola junto */
+@media (max-width: 63.99rem) {
+  .reiniciar__botao { position: absolute; }
+}
 /* com "Minha carreira", o resultado ou outro modal por cima, o botão some para não cobrir o X nem o título */
 :root:has(.gaveta, .resultado, dialog[open]) .reiniciar__botao { visibility: hidden; }
 .reiniciar__fundo { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: var(--espaco-5); background: var(--vidro-scrim); }

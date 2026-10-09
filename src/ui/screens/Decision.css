@@ -442,7 +442,10 @@
   .jogador__clube, .jogador__mais { font-size: 0.875rem; }
   .decisao__over-numero { font-size: 2.25rem; }
   .decisao__over-medalha { inline-size: 3.75rem; }
-  .decisao__over-medalha .decisao__over-rotulo { font-size: 0.625rem; }
+  .decisao__over-medalha .decisao__over-rotulo { font-size: 0.6875rem; }
+  /* auditoria mobile (ui-ux-pro-max, texto legível): na figurinha pequena o Over e o número saíam com 7 px; o Over já está
+     grande ao lado e o número fica para a figurinha grande (o nome segue no texto para o leitor de tela) */
+  .decisao__topo .figurinha__over-grande, .decisao__topo .figurinha__tarja-numero { display: none; }
   .decisao__over { padding-block-start: var(--espaco-3); } /* o botão de reiniciar fica no canto de cima */
   .decisao__dados { font-size: 0.75rem; }
   .jogador__mais { white-space: nowrap; }
