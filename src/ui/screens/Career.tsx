@@ -15,7 +15,7 @@ import { momentsBetween } from './moments';
 import events from '../../data/events.json';
 import { Cartao } from './Cartao';
 import { LinhaDoTempo } from './LinhaDoTempo';
-import { PROPOSAL_EVENT } from '../../engine/proposals';
+import { LOAN_EVENT, PROPOSAL_EVENT } from '../../engine/proposals';
 import { Propostas } from './Propostas';
 import { Reuniao, ReuniaoResposta } from './Reuniao';
 import { ResumoTemporada } from './ResumoTemporada';
@@ -121,8 +121,9 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
       </div>
     );
   }
-  if (eventId === PROPOSAL_EVENT) {
-    // T28k: tela de contratos (cartões + confirmar), no desenho da decisão; sem clube atual (contrato rescindido) não há o cartão do clube
+  if (eventId === PROPOSAL_EVENT || eventId === LOAN_EVENT) {
+    // T28k: tela de contratos (cartões + confirmar), no desenho da decisão; sem clube atual (contrato rescindido) não há o cartão do clube.
+    // v2.64: o empréstimo usa a mesma tela, com o cartão do destino e o do clube atual
     const contractPlayer = toDecisionPlayer(view, input, look, visual, eventId);
     const contractClub = view.clubId ? clubName(view.clubId).nome : t('ui.varzea');
     return (
@@ -130,7 +131,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
         <div className="carreira__tela" inert={resumoEl !== null}>
           <Propostas
             key={index} propostas={view.propostas ?? []} atual={view.atual} podeFicar={view.state.podeFicar === true} podeForcar={view.state.podeForcar === true}
-            podeRenovar={view.state.podeRenovar === true} player={contractPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} anterior={anterior}
+            podeRenovar={view.state.podeRenovar === true} emprestimo={eventId === LOAN_EVENT} player={contractPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} anterior={anterior}
             scene={sceneOfCena('assinatura-contrato', contractPlayer, visual, input.name, contractClub)} onChoose={decide}
           />
         </div>

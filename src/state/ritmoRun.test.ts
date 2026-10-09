@@ -2,7 +2,7 @@ import events from '../data/events.json';
 import flow from '../data/flow.json';
 import { autoDecide, simulateCareer } from '../engine/career';
 import { MILESTONES } from '../engine/milestones';
-import { PROPOSAL_EVENT } from '../engine/proposals';
+import { LOAN_EVENT, PROPOSAL_EVENT } from '../engine/proposals';
 import { MEETING_EVENT } from '../engine/meeting';
 import type { CreationInput } from '../engine/player';
 import { runUntilDecision, type Ritmo } from './careerRun';
@@ -23,7 +23,7 @@ function play(i: CreationInput, seed: number, ritmo: Ritmo) {
   for (let guard = 0; guard < 500; guard++) {
     const step = runUntilDecision(i, seed, choices, ritmo);
     if (step.kind === 'done') return { result: step.result, shown };
-    if (step.eventId !== MEETING_EVENT && step.eventId !== PROPOSAL_EVENT) (shown[step.view.year] ??= []).push(step.eventId);
+    if (step.eventId !== MEETING_EVENT && step.eventId !== PROPOSAL_EVENT && step.eventId !== LOAN_EVENT) (shown[step.view.year] ??= []).push(step.eventId);
     choices.push(autoDecide(step.eventId, step.view.temperament, () => step.view));
   }
   throw new Error('carreira não terminou');
@@ -32,7 +32,7 @@ function play(i: CreationInput, seed: number, ritmo: Ritmo) {
 /** Todos os eventos de cada ano (sem as reuniões, que têm regra própria), com as escolhas automáticas. */
 function allEvents(i: CreationInput, seed: number) {
   const byYear: Record<number, string[]> = {};
-  simulateCareer(i, seed, 2026, (e, t, v) => { if (e !== MEETING_EVENT && e !== PROPOSAL_EVENT) (byYear[v().year] ??= []).push(e); return autoDecide(e, t, v); });
+  simulateCareer(i, seed, 2026, (e, t, v) => { if (e !== MEETING_EVENT && e !== PROPOSAL_EVENT && e !== LOAN_EVENT) (byYear[v().year] ??= []).push(e); return autoDecide(e, t, v); });
   return byYear;
 }
 /** T25c: no Rápido os marcos de clube são sempre automáticos e não ocupam a vaga da temporada. */

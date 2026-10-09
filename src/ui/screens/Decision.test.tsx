@@ -5,6 +5,7 @@ import { act, cleanup, fireEvent, render, screen, within } from '@testing-librar
 import events from '../../data/events.json';
 import { previewOf } from '../../engine/preview';
 import { t } from '../../i18n';
+import { clubName } from './clubText';
 import { Decision } from './Decision';
 import { kitOf } from '../../art/kits';
 import libertaArt from '../../assets/trofeus/continental-principal.webp';
@@ -653,5 +654,23 @@ describe('números que rolam (v2.47)', () => {
     const { container } = show();
     expect(container.querySelector('.decisao__over-numero')).toHaveTextContent('78');
     expect(screen.queryByText(t('ui.decisao.idade', { idade: 16 }))).not.toBeInTheDocument();
+  });
+});
+
+// v2.64: a venda fechada pelo empresário mostra o cartão do clube comprador antes das opções.
+describe('venda pelo empresário com o clube à vista (v2.64)', () => {
+  const comprador = { clubId: 'flamengo', league: 'BRA-A', currency: 'BRL' as const, annualSalary: 2_400_000, years: 3, role: 'titularRegular' as const, staffQuality: 1, offAxis: false,
+    minutosFaixa: 'muitos' as const, nivelClube: 'boa' as const, marca: null, salarioMensal: 200_000, salarioPct: { pct: 27, sentido: 'sobe' as const }, valorProjetadoEUR: 9_000_000, valorPct: null, minutosVs: 'menos' as const };
+
+  it('o cartão do comprador aparece com clube, salário, papel e minutos; sem comprador, nada', () => {
+    render(<Decision eventId="empresario-forca-venda" age={24} progress={0.4} player={{ ...PLAYER, comprador, textoParams: { comprador: 'Flamengo' } }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    const card = screen.getByRole('group', { name: t('ui.venda.cartao') });
+    expect(within(card).getByText(clubName('flamengo').nome)).toBeInTheDocument();
+    expect(within(card).getByText(t('ui.proposta.papel.titularRegular'))).toBeInTheDocument();
+    expect(within(card).getByText(t('ui.proposta.minutosVs.menos'))).toBeInTheDocument();
+    expect(screen.getByText(/Flamengo/, { selector: '.decisao__historia' })).toBeInTheDocument();
+    cleanup();
+    setup();
+    expect(screen.queryByRole('group', { name: t('ui.venda.cartao') })).toBeNull();
   });
 });

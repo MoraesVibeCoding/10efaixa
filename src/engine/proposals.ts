@@ -6,6 +6,8 @@ import { expectedMinutes, minutesBand, type ClubLevelBand, type MinutesBand } fr
 // T28b (SPEC 6.12, v2.50): a decisão "proposta-clube", no mesmo molde da reunião (as opções mudam a cada temporada,
 // então a escolha é um texto conferido contra as propostas mostradas, e não uma opção fixa de events.json).
 export const PROPOSAL_EVENT = 'proposta-clube';
+/** v2.64: o empréstimo como decisão na mesma tela: o cartão do clube de destino e o do clube atual; a escolha é "aceitar:<destino>" ou "ficar". */
+export const LOAN_EVENT = 'emprestimo';
 export const STAY = 'ficar';
 const ACCEPT = 'aceitar:';
 const LOVE = 'amor:';
@@ -91,3 +93,7 @@ export function parseProposalChoice<T extends { clubId: string }>(
   }
   return null;
 }
+
+/** v2.64: a escolha do empréstimo vale só "ficar" ou "aceitar:<destino>" do cartão mostrado. */
+export const isLoanChoice = (choice: string, shown: readonly { clubId: string }[]): boolean =>
+  choice === STAY || (shown.length === 1 && choice === acceptChoice(shown[0]!.clubId));

@@ -653,6 +653,11 @@
        true
       ],
       [
+       "idolatria",
+       "add",
+       -5
+      ],
+      [
        "moral",
        "add",
        -0.03
@@ -664,14 +669,19 @@
      "jeito": "lider",
      "efeitos": [
       [
-       "moral",
+       "idolatria",
        "add",
-       -0.05
+       4
       ],
       [
        "relacaoTecnico",
        "add",
-       0.05
+       -0.08
+      ],
+      [
+       "moral",
+       "add",
+       -0.03
       ]
      ]
     },

@@ -103,10 +103,10 @@
  },
  "empresario-forca-venda": {
   "titulo": "Venda fechada sem você saber",
-  "texto": "Você soube pelo jornal: seu empresário acertou a sua venda e já recebeu a parte dele. A diretoria diz que o negócio está fechado. Ninguém perguntou o que você queria.",
+  "texto": "Você soube pelo jornal: seu empresário acertou a sua venda e já contou a comissão. O comprador: {comprador}. A diretoria topou; só falta a sua assinatura, e ninguém perguntou o que você queria.",
   "opcoes": {
-   "aceitar-venda": "Aceitar a transferência e fazer as malas",
-   "bater-o-pe": "Bater o pé e ficar no clube",
+   "aceitar-venda": "Assinar e ir para o novo clube",
+   "bater-o-pe": "Bater o pé, não assinar e ficar",
    "trocar-empresario": "Romper com o empresário"
   },
   "abertura": {

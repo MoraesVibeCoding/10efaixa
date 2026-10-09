@@ -179,3 +179,38 @@ describe('tela de contratos (T28k)', () => {
     expect(container.querySelectorAll('.propostas__item [role="img"]')).toHaveLength(0);
   });
 });
+
+// v2.64: o empréstimo na mesma tela: o cartão do clube atual ("ficar e brigar por espaço") e o do destino ("ir emprestado").
+describe('tela do empréstimo (v2.64)', () => {
+  const destino = proposta({ clubId: 'vitoria', years: 1, salarioPct: { pct: 0, sentido: 'igual' }, minutosVs: 'mais' });
+  function setupLoan(onChoose = vi.fn()) {
+    render(<Propostas emprestimo propostas={[destino]} atual={longo} podeFicar player={PLAYER} age={19} progress={0.1} scene={{ src: 'c.webp', alt: 'x' }} onChoose={onChoose} />);
+    return onChoose;
+  }
+
+  it('título e apoio próprios; o cartão do destino traz o selo do empréstimo', () => {
+    setupLoan();
+    expect(screen.getByRole('heading', { level: 1, name: t('ui.emprestimo.titulo') })).toHaveFocus();
+    expect(screen.getByText(t('ui.emprestimo.apoio'))).toBeInTheDocument();
+    expect(cards()).toHaveLength(2);
+    expect(screen.getByText(t('ui.emprestimo.selo'))).toBeInTheDocument();
+    expect(screen.queryByText(t('ui.proposta.selo.nova'))).toBeNull();
+  });
+
+  it('ir emprestado: o detalhe diz o que ganha e o que custa, sem negociar nem forçar; confirma "aceitar:<destino>"', () => {
+    const onChoose = setupLoan();
+    pick(1);
+    expect(screen.getByText(t('ui.emprestimo.ir'))).toBeInTheDocument();
+    expect(screen.queryByText(t('ui.proposta.modo.negociar'))).toBeNull();
+    fireEvent.click(confirmar());
+    expect(onChoose).toHaveBeenCalledWith('aceitar:vitoria');
+  });
+
+  it('ficar e brigar por espaço: confirma "ficar"', () => {
+    const onChoose = setupLoan();
+    pick(0);
+    expect(screen.getByText(t('ui.emprestimo.ficar'))).toBeInTheDocument();
+    fireEvent.click(confirmar());
+    expect(onChoose).toHaveBeenCalledWith('ficar');
+  });
+});

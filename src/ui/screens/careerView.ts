@@ -1,3 +1,4 @@
+import { clubName } from './clubText';
 import { memoryTextParams } from './memoryText';
 import events from '../../data/events.json';
 import { NATIONAL_PREFIX } from '../../art/kits';
@@ -7,6 +8,9 @@ import { t } from '../../i18n';
 import type { CreationInput } from '../../engine/player';
 import type { DecisionProps } from './Decision';
 import { previewAvatar, type Look } from './look';
+
+/** v2.64: a venda fechada pelo empresário traz o clube comprador. */
+const SALE_EVENT = 'empresario-forca-venda';
 
 // T51 (b): o que o motor sabe na hora da decisão vira a ficha da tela. A carreira começa aos 16 anos, em 2026.
 const START_AGE = 16;
@@ -26,6 +30,7 @@ export function uniformeFor(eventId: string, view: Pick<DecisionView, 'clubId' |
 }
 
 export function toDecisionPlayer(view: DecisionView, input: CreationInput, look: Look, visual?: string, eventId = ''): DecisionProps['player'] {
+  const sale = eventId === SALE_EVENT ? view.propostas?.[0] : undefined;
   return {
     visual, uniforme: uniformeFor(eventId, view),
     name: input.name, position: view.position, clubId: view.clubId ?? '', overall: view.overall,
@@ -33,7 +38,9 @@ export function toDecisionPlayer(view: DecisionView, input: CreationInput, look:
     // v2.62: a bandeira ao lado do nome depois da estreia pela seleção principal
     ...(view.marcos.some((m) => m.id === 'estreia-selecao') ? { selecao: view.nationality } : {}),
     marcos: view.marcos.map((m) => ({ id: m.id, ano: m.year, clubId: m.clubId })),
-    textoParams: memoryTextParams(view.memorias, view.year), etiquetas: view.etiquetas,
+    // v2.64: na venda pelo empresário, o clube comprador vira cartão e nome no texto
+    textoParams: { ...memoryTextParams(view.memorias, view.year), ...(sale ? { comprador: clubName(sale.clubId).nome } : {}) }, etiquetas: view.etiquetas,
+    ...(sale ? { comprador: sale } : {}),
     monthlySalary: view.monthlySalary, marketValueEUR: view.marketValueEUR, number: view.number, attributes: view.attributes,
     seasons: view.seasons.map((s) => ({ age: s.year - START_YEAR + START_AGE, clubId: s.clubId, overall: s.overall, ...torcidaOf(view.idolatrias, s.clubId) })),
     ...(view.clubId ? torcidaOf(view.idolatrias, view.clubId) : {}),

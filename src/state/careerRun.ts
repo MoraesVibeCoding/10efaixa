@@ -5,7 +5,7 @@ import { autoChoice } from '../engine/events';
 import { MEETING_EVENT, parseProposal } from '../engine/meeting';
 import { MILESTONES } from '../engine/milestones';
 import { ideaOf } from '../engine/meetingOptions';
-import { PROPOSAL_EVENT, parseProposalChoice } from '../engine/proposals';
+import { LOAN_EVENT, PROPOSAL_EVENT, isLoanChoice, parseProposalChoice } from '../engine/proposals';
 import type { CreationInput } from '../engine/player';
 
 // T51 (a): carreira jogada pela tela. O motor é determinístico, então continuar = refazer do começo com as escolhas
@@ -30,6 +30,7 @@ const MEETINGS = flow.reunioesNaTela as Record<Ritmo, number[]>;
 const CLUB_MILESTONES = new Set(MILESTONES.filter((m) => m.escopo === 'clube').map((m) => m.id));
 /** T28b (v2.50): em quais ritmos a proposta de clube chega à tela (desligado até a tela da T28d). */
 const PROPOSALS = flow.propostasNaTela as Record<Ritmo, boolean>;
+const LOANS = flow.emprestimoNaTela as Record<Ritmo, boolean>;
 
 /** Interrupção da simulação: chegou numa decisão que o jogador ainda não tomou. */
 class Pending {
@@ -74,6 +75,11 @@ function decider(run: Run, probe?: { year: number; found: string[] }): Decider {
       if (!onScreen) return autoDecide(eventId, temperament, () => v);
       return take(eventId, v);
     }
+    if (eventId === LOAN_EVENT) {
+      // v2.64: o empréstimo vai à tela como as propostas (fora da conta de decisões); no Rápido, o temperamento decide
+      if (!LOANS[run.ritmo] || (probe && v.year === probe.year)) return autoDecide(eventId, temperament, () => v);
+      return take(eventId, v);
+    }
     if (eventId === PROPOSAL_EVENT) {
       // T28b: a proposta de clube sempre vai à tela quando existe (sem entrar na conta de decisões por temporada); na simulação de olhar à frente é automática
       if (!PROPOSALS[run.ritmo] || (probe && v.year === probe.year)) return autoDecide(eventId, temperament, () => v);
@@ -106,6 +112,7 @@ function decider(run: Run, probe?: { year: number; found: string[] }): Decider {
     const choice = run.choices[i++]!;
     const meetingOk = () => { const p = parseProposal(choice); return p !== null && (!v.reuniao || ideaOf(v.reuniao, p.main, p.secondary) !== null); };
     const valid = eventId === MEETING_EVENT ? meetingOk()
+      : eventId === LOAN_EVENT ? isLoanChoice(choice, v.propostas ?? [])
       : eventId === PROPOSAL_EVENT ? parseProposalChoice(choice, v.propostas ?? [], v.state.podeFicar === true, (o) => o.marca === 'coracao', v.state.podeForcar === true, v.state.podeRenovar === true) !== null
       : OPTIONS.get(eventId)?.has(choice);
     if (!valid) throw new RangeError(`escolha inválida "${choice}" para ${eventId} (decisão ${i})`);

@@ -25,6 +25,8 @@ function playUntilProposals() {
     const resposta = document.querySelector('.reuniao__resposta');
     if (resposta) { fireEvent.click(resposta.querySelector('button')!); continue; }
     if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') })); continue; }
+    // v2.64: o empréstimo usa a tela de cartões; aqui ele fica (o primeiro cartão é o clube atual)
+    if (screen.queryByRole('heading', { level: 1, name: t('ui.emprestimo.titulo') })) { fireEvent.click(screen.getAllByRole('radio', { name: /./ })[0]!); fireEvent.click(screen.getByRole('button', { name: t('ui.proposta.confirmar') })); continue; }
     const el = document.querySelector('[data-evento]');
     if (!el) break;
     const choice = autoChoice(el.getAttribute('data-evento')!, document.querySelector('[data-temperamento]')!.getAttribute('data-temperamento')!);

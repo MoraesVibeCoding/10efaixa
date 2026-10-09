@@ -41,7 +41,7 @@ import { headlineOf } from './headline';
 import { legacyOf, type Legacy } from './legacy';
 import { honorFacts, honorsOf } from './honors';
 import { generateNickname } from './nickname';
-import { PROPOSAL_EVENT, RAISE, RENEW, STAY, acceptChoice, loveChoice, parseProposalChoice, proposalViewOf, type CurrentClubView, type ProposalView } from './proposals';
+import { LOAN_EVENT, PROPOSAL_EVENT, RAISE, RENEW, STAY, acceptChoice, loveChoice, parseProposalChoice, proposalViewOf, type CardContext, type CurrentClubView, type ProposalView } from './proposals';
 import { farewellOffer, retirementCheck, type RetireReason } from './retirement';
 import { simulateSeason, type ClubInfo, type Div, type Divisions, type Row } from './season';
 import { assignNumber, canGetArmband, canGetTen, rosterNumbers } from './shirt';
@@ -49,6 +49,7 @@ import { baseOffers, copinha, promotion, runPeneira, runVarzea } from './start';
 import { initialStates, simulateStates, type StateWorld } from './states';
 import { progressTraits, type TraitState } from './traits';
 import cfg from '../data/career.json';
+import clubLifeCfg from '../data/clubLife.json';
 import cups from '../data/cups.json';
 import europe from '../data/europe.json';
 
@@ -132,8 +133,11 @@ export interface DecisionView {
 /** Quem decide: o temperamento (simulação, ritmo Rápido) ou o jogador (tela). `view` só é montada se pedida. */
 export type Decider = (eventId: string, temperament: string, view: () => DecisionView) => string;
 /** Decisão automática (simulação e eventos fora da tela): na reunião, a sugestão do preparador; nos eventos, o temperamento. */
-export const autoDecide: Decider = (eventId, temperament, view) => (eventId === MEETING_EVENT || eventId === PROPOSAL_EVENT ? String(view().state.sugestao) : autoChoice(eventId, temperament));
+export const autoDecide: Decider = (eventId, temperament, view) => (eventId === MEETING_EVENT || eventId === PROPOSAL_EVENT || eventId === LOAN_EVENT ? String(view().state.sugestao) : autoChoice(eventId, temperament));
 const AUTO = autoDecide;
+/** v2.64: o empréstimo como decisão (aceite pelo temperamento no automático, custo de recusar) e a venda fechada pelo empresário. */
+const LOAN = clubLifeCfg.emprestimo;
+const SALE_EVENT = 'empresario-forca-venda';
 
 const UF = new Map(CLUBS.map((c) => [c.id, c.uf]));
 const BRAZIL = new Set(CLUBS.map((c) => c.id));
@@ -296,6 +300,31 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     else sign(id, salaryFor(marketValue(ov(evo), evo.age), leagueOf(id, divOf)), 2);
   };
 
+  // v2.64: os cartões da tela de propostas, também usados no empréstimo e na venda pelo empresário (o clube à vista)
+  const cardContextOf = (o: Offer, currentAnnualSalaryBRL: number | null): CardContext => ({
+    currentAnnualSalaryBRL, todayValueEUR: marketValue(ov(evo), evo.age),
+    currentExpectedMinutes: clubId ? expectedMinutes(ov(evo), effectiveRep(clubId), roleFor(ov(evo), effectiveRep(clubId), evo.age)) : null,
+    projectedValueEUR: projectValue({
+      evo, position, bonus: position === input.position ? arch.overallWeightBonus : undefined, clubRep: effectiveRep(o.clubId),
+      role: o.role, staffQuality: o.staffQuality, morale,
+    }).valueEUR * eliteValueFactor(o.clubId),
+  });
+  /** T28j (v2.54): o clube atual como primeiro cartão; com o contrato no fim (`due`), a renovação (e o pedido de aumento) saem dele. */
+  const currentCard = (k: Contract, due: boolean): CurrentClubView => {
+    const rep = effectiveRep(clubId!);
+    const role = roleFor(ov(evo), rep, evo.age);
+    const projected = projectValue({ evo, position, bonus: position === input.position ? arch.overallWeightBonus : undefined, clubRep: rep, role, staffQuality: clamp(0.8 + (rep / 100) * 0.4, 0.8, 1.2), morale }).valueEUR * eliteValueFactor(clubId!);
+    const renewalOf = (raise: boolean) => {
+      const r = renew(k, ov(evo) - contractOverall, raise);
+      return { salarioMensal: Math.round(r.annualSalary / 12), salarioPct: salaryChange(r.annualSalary, k.annualSalary), anos: r.years };
+    };
+    return {
+      clubId: clubId!, league: leagueOf(clubId!, divOf), currency: k.currency, salarioMensal: Math.round(k.annualSalary / 12), anosRestantes: Math.max(0, k.years - 1),
+      role, nivelClube: clubLevelOf(clubId!, rep), valorProjetadoEUR: projected, valorPct: valueChange(projected, marketValue(ov(evo), evo.age)),
+      renovacao: due ? renewalOf(false) : null, aumento: due ? renewalOf(true) : null,
+    };
+  };
+
   if (input.origin === 'baseGrande') {
     const offers = baseOffers({ state: input.state, heartClub: input.heartClub }, rng);
     join((offers.find((o) => o.heartClub) ?? offers[0]!).clubId, false, rng);
@@ -353,6 +382,9 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     let minutesSum = 0;
     let worldCup: { stage: string; titular: boolean; hero: boolean } | null = null;
     let wantsOut = false;
+    // v2.64: no máximo uma decisão de transferência por temporada (empréstimo, venda pelo empresário ou tela de propostas)
+    let transferAsked = false;
+    let saleTarget: Offer | null = null;
     let derbyYear = false;
     const capsBefore = selection.caps;
     // v2.61: o começo do ano, para o resumo da temporada comparar o Over e os atributos
@@ -448,7 +480,23 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         coachRelation = life.coachRelation;
         salaryDelays = life.salaryDelays;
         if (life.canRequestLeave && ask('salario-atrasado') === 'pedir-saida') wantsOut = true;
-        if (life.loanOffer && !parent && !loanTarget) loanTarget = life.loanOffer;
+        // v2.64: o empréstimo vira decisão, com o clube de destino à vista; oferecido no máximo uma vez por temporada
+        if (life.loanOffer && !parent && !loanTarget && !transferAsked && contract) {
+          transferAsked = true;
+          const k: Contract = contract;
+          const dest = life.loanOffer;
+          const rep = effectiveRep(dest);
+          const offer: Offer = {
+            clubId: dest, league: leagueOf(dest, divOf), currency: k.currency, annualSalary: k.annualSalary, years: cfg.emprestimoTemporadas,
+            role: roleFor(ov(evo), rep, evo.age), staffQuality: clamp(0.8 + (rep / 100) * 0.4, 0.8, 1.2),
+            heartClub: dest === input.heartClub, rivalOfCurrent: false, rivalOfHeart: false, offAxis: false,
+          };
+          const sugestao = (LOAN.aceitaPorTemperamento as Record<string, boolean>)[temp] ? acceptChoice(dest) : STAY;
+          const said = ask(LOAN_EVENT, { sugestao, podeFicar: true }, temp, { propostas: [proposalViewOf(offer, ov(evo), cardContextOf(offer, toBRL(k.annualSalary, k.currency)))], atual: currentCard(k, false) });
+          if (said === acceptChoice(dest)) loanTarget = dest;
+          else if (said === STAY) coachRelation = clamp(coachRelation + LOAN.recusa.relacaoTecnico, 0, 1);
+          else throw new RangeError(`empréstimo inválido: "${said}"`);
+        }
 
         // Disciplina: cartões pelo temperamento; suspensão tira minutos do próximo semestre.
         lastMinutes = minutes;
@@ -493,12 +541,27 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
           }
         } else if (ag.event === 'brigaClube') {
           coachRelation = applyOption({ relacaoTecnico: coachRelation }, 'empresario-briga-clube', ask('empresario-briga-clube')).relacaoTecnico as number;
-        } else if (ag.event === 'forcaVenda') {
-          const choice = ask('empresario-forca-venda');
-          if (choice === 'aceitar-venda') wantsOut = true;
-          else if (choice === 'trocar-empresario') {
-            const ch = changeAgent(wealth, 'paiTio', yr);
-            agent = ch.agent; wealth -= ch.cost; morale = clamp(morale + ch.moraleDelta, 0, 1);
+        } else if (ag.event === 'forcaVenda' && !transferAsked && !parent && contract) {
+          // v2.64: o empresário vende para a proposta real de maior comissão para ele; sem proposta no mercado, não há venda.
+          // Gerador próprio para não deslocar os outros sorteios do ano.
+          const saleRng = createPrng(((seed >>> 0) ^ Math.imul(year, 0x27d4eb2d) ^ Math.imul(sem + 1, 0x165667b1)) >>> 0);
+          const market = selectionEffect(prestige, sel, sel.rung);
+          const me = { overall: ov(evo), age: evo.age, clubId, heartClub: input.heartClub, temperament: temp, valueMultiplier: market.marketMultiplier, extraOffers: market.extraOffers };
+          const buyer = [...generateOffers(me, 'brasil', agent, saleRng, divOf), ...generateOffers(me, 'europa', agent, saleRng, divOf)]
+            .reduce<Offer | null>((best, o) => (!best || toBRL(o.annualSalary, o.currency) > toBRL(best.annualSalary, best.currency) ? o : best), null);
+          if (buyer) {
+            transferAsked = true;
+            const k: Contract = contract;
+            const st = { moral: morale, relacaoTecnico: coachRelation, idolatria: idol[clubId] ?? 0, aceitarProposta: false, trocarEmpresario: false };
+            const out = applyOption(st, SALE_EVENT, ask(SALE_EVENT, st, temp, { propostas: [proposalViewOf(buyer, ov(evo), cardContextOf(buyer, toBRL(k.annualSalary, k.currency)))] }));
+            morale = out.moral as number;
+            coachRelation = out.relacaoTecnico as number;
+            idol = { ...idol, [clubId]: out.idolatria as number };
+            if (out.aceitarProposta) saleTarget = buyer;
+            if (out.trocarEmpresario) {
+              const ch = changeAgent(wealth, 'paiTio', yr);
+              agent = ch.agent; wealth -= ch.cost; morale = clamp(morale + ch.moraleDelta, 0, 1);
+            }
           }
         }
       }
@@ -663,6 +726,11 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       parent = clubId;
       loanLeft = cfg.emprestimoTemporadas;
       join(loanTarget, true, yr);
+    } else if (saleTarget) {
+      // v2.64: a venda aceita leva exatamente ao clube comprador, com o contrato da proposta
+      join(saleTarget.clubId, false, yr, saleTarget);
+      salaryDelays = 0;
+      if (saleTarget.rivalOfCurrent) remember('trocouPeloRival', saleTarget.clubId);
     } else if (clubId && !inYouth && !parent) {
       const market = selectionEffect(prestige, sel, sel.rung);
       const me = { overall: ov(evo), age: evo.age, clubId, heartClub: input.heartClub, temperament: temp, valueMultiplier: market.marketMultiplier, extraOffers: market.extraOffers };
@@ -691,35 +759,13 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       let pick: Offer | null = null;
       let byLove = false;
       let forced = false;
-      const todayValue = marketValue(ov(evo), evo.age);
-      const cardContext = (o: Offer) => ({
-        currentAnnualSalaryBRL: current?.annualSalaryBRL ?? null, todayValueEUR: todayValue,
-        currentExpectedMinutes: clubId ? expectedMinutes(ov(evo), effectiveRep(clubId), roleFor(ov(evo), effectiveRep(clubId), evo.age)) : null,
-        projectedValueEUR: projectValue({
-          evo, position, bonus: position === input.position ? arch.overallWeightBonus : undefined, clubRep: effectiveRep(o.clubId),
-          role: o.role, staffQuality: o.staffQuality, morale,
-        }).valueEUR * eliteValueFactor(o.clubId),
-      });
+      const cardContext = (o: Offer) => cardContextOf(o, current?.annualSalaryBRL ?? null);
       const canForce = !!c && c.years > 1;
       // T28j (v2.54): o clube atual é o primeiro cartão; com o contrato no fim, a renovação (e o pedido de aumento) saem dele.
       const due = !!c && c.years - 1 <= 1;
-      const atualCard = (): CurrentClubView => {
-        const k = c!;
-        const rep = effectiveRep(clubId!);
-        const role = roleFor(me.overall, rep, evo.age);
-        const projected = projectValue({ evo, position, bonus: position === input.position ? arch.overallWeightBonus : undefined, clubRep: rep, role, staffQuality: clamp(0.8 + (rep / 100) * 0.4, 0.8, 1.2), morale }).valueEUR * eliteValueFactor(clubId!);
-        const renewalOf = (raise: boolean) => {
-          const r = renew(k, ov(evo) - contractOverall, raise);
-          return { salarioMensal: Math.round(r.annualSalary / 12), salarioPct: salaryChange(r.annualSalary, k.annualSalary), anos: r.years };
-        };
-        return {
-          clubId: clubId!, league: leagueOf(clubId!, divOf), currency: k.currency, salarioMensal: Math.round(k.annualSalary / 12), anosRestantes: Math.max(0, k.years - 1),
-          role, nivelClube: clubLevelOf(clubId!, rep), valorProjetadoEUR: projected, valorPct: valueChange(projected, todayValue),
-          renovacao: due ? renewalOf(false) : null, aumento: due ? renewalOf(true) : null,
-        };
-      };
+      const atualCard = (): CurrentClubView => currentCard(c!, due);
       let renewChoice: string | null = null; // saída forçada só com contrato por mais de um ano
-      if (!goingHome && !farewell) {
+      if (!goingHome && !farewell && !transferAsked) {
         const { shown, pick: auto } = rankOffers(me, offers, current);
         pick = auto;
         if (shown.length > 0) {

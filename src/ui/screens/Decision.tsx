@@ -20,6 +20,9 @@ import { useRolling } from '../useRolling';
 import { MOTION } from '../motion';
 import { Carimbo } from './Carimbo';
 import type { Moment } from './moments';
+import type { ProposalView } from '../../engine/proposals';
+import { proposalText } from './proposalText';
+import './Propostas.css';
 import './Decision.css';
 
 // T49 (amostra aprovada) e T51: uma decisão por tela, com a cena ao fundo. Só faixas e setas, nunca números de atributo.
@@ -63,6 +66,8 @@ export interface DecisionProps {
     etiquetas?: string[];
     /** T51b: a faixa da torcida no clube atual (idolatria em palavras, idolatry.json). */
     torcida?: string;
+    /** v2.64: na venda fechada pelo empresário, a proposta do clube comprador (cartão antes das opções). */
+    comprador?: ProposalView;
   };
   /** v2.47: os números da decisão anterior; o overall, a idade e o valor rolam deles até os de agora. */
   anterior?: Anterior;
@@ -522,6 +527,7 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
         {semestre && semestre.length > 0 ? <p className="decisao__semestre"><strong>{t('ui.evolucao.titulo')}:</strong> {semestre.join(' ')}</p> : null}
         <h1 className="decisao__titulo">{t(`events.${eventId}.titulo`)}</h1>
         {text && <p className="decisao__historia">{text}</p>}
+        {player.comprador && <Comprador p={player.comprador} />}
         <div className="decisao__opcoes" role="group" aria-label={t('ui.decisao.opcoes')}>
           {options.map((o) => {
             const risk = riskOf(eventId, o.id);
@@ -553,6 +559,28 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
       <Carimbo momentos={momentos ?? NONE} />
       {chosen !== null && <Result eventId={eventId} optionId={chosen} state={state} tags={player.etiquetas ?? []} auto={rapido} onDone={onDone} />}
     </main>
+  );
+}
+
+/** v2.64: o cartão do clube comprador na venda pelo empresário, no desenho dos cartões da tela de propostas (só leitura). */
+function Comprador({ p }: { p: ProposalView }) {
+  const x = proposalText(p);
+  return (
+    <div className="propostas__item decisao__comprador" role="group" aria-label={t('ui.venda.cartao')}>
+      <span className="propostas__topo">
+        <Emblema clubId={p.clubId} size={28} />
+        <span className="propostas__nome"><strong className="propostas__clube">{x.clube}</strong><span className="propostas__liga">{x.liga}</span></span>
+        <span className="propostas__selo">{t('ui.venda.selo')}</span>
+      </span>
+      <span className="propostas__financeiro">
+        <span>{x.salarioMes}{x.salarioVar && <> <span className={`propostas__var propostas__var--${x.salarioVar.sentido}`}>{x.salarioVar.texto}</span></>}</span>
+        {x.valorProj && <span>{x.valorProj}</span>}
+      </span>
+      <span className="propostas__tags">
+        <span className="propostas__tag">{x.papel}</span>
+        {x.minutosVs && <span className={`propostas__tag propostas__tag--${p.minutosVs}`}>{x.minutosVs}</span>}
+      </span>
+    </div>
   );
 }
 

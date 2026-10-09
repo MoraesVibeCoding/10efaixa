@@ -17,6 +17,8 @@ type Modo = 'aceitar' | 'negociar' | 'forcar' | 'amor' | 'renovar' | 'aumento' |
 export interface PropostasProps {
   propostas: ProposalView[]; atual?: CurrentClubView;
   podeFicar: boolean; podeForcar?: boolean; podeRenovar?: boolean;
+  /** v2.64: a decisão de empréstimo: o cartão do destino só se aceita ("ir emprestado"); o atual é "ficar e brigar por espaço". */
+  emprestimo?: boolean;
   player: DecisionProps['player']; age: number; progress: number; scene: DecisionProps['scene']; anterior?: DecisionProps['anterior'];
   onChoose: (choice: string) => void;
 }
@@ -34,7 +36,7 @@ function Estrelas({ n, nivel }: { n: number; nivel: string }) {
   );
 }
 
-export function Propostas({ propostas, atual, podeFicar, podeForcar = false, podeRenovar = false, player, age, progress, scene, anterior, onChoose }: PropostasProps) {
+export function Propostas({ propostas, atual, podeFicar, podeForcar = false, podeRenovar = false, emprestimo = false, player, age, progress, scene, anterior, onChoose }: PropostasProps) {
   const [picked, setPicked] = useState(null as string | null);
   const [modo, setModo] = useState(null as Modo | null);
   const [career, setCareer] = useState(false);
@@ -52,11 +54,13 @@ export function Propostas({ propostas, atual, podeFicar, podeForcar = false, pod
     document.addEventListener('keydown', onKey);
     return () => { document.removeEventListener('keydown', onKey); };
   }, [career]);
+  const tela = emprestimo ? 'emprestimo' : 'proposta';
   const percent = Math.round(Math.min(1, Math.max(0, progress)) * 100);
   const showAtual = podeFicar && atual !== undefined;
   const proposal = propostas.find((p) => p.clubId === picked);
   const modos: Modo[] = picked === ATUAL
     ? (podeRenovar ? ['renovar', 'aumento', 'naoRenovar'] : [])
+    : proposal && emprestimo ? []
     : proposal ? ['aceitar', 'negociar', ...(podeForcar ? ['forcar' as const] : []), ...(proposal.marca === 'coracao' ? ['amor' as const] : [])] : [];
 
   function choose(id: string) {
@@ -79,7 +83,21 @@ export function Propostas({ propostas, atual, podeFicar, podeForcar = false, pod
   function detail() {
     return (
           <section className="propostas__detalhe" aria-label={t('ui.proposta.detalhe')} aria-live="polite">
-            {picked === ATUAL && atual && (
+            {emprestimo && picked === ATUAL && (
+              <>
+                <p><strong>{t('ui.emprestimo.modo.ficar')}</strong></p>
+                <p>{t('ui.emprestimo.ficar')}</p>
+              </>
+            )}
+            {emprestimo && picked !== ATUAL && proposal && (
+              <>
+                <p>{t('ui.emprestimo.duracao')}</p>
+                <p>{proposalText(proposal).minutos}</p>
+                <p><strong>{t('ui.emprestimo.modo.ir')}</strong></p>
+                <p>{t('ui.emprestimo.ir')}</p>
+              </>
+            )}
+            {!emprestimo && picked === ATUAL && atual && (
               <>
                 <p>{currentText(atual).restam}</p>
                 {podeRenovar && atual.renovacao && atual.aumento && (
@@ -98,7 +116,7 @@ export function Propostas({ propostas, atual, podeFicar, podeForcar = false, pod
                 )}
               </>
             )}
-            {picked !== ATUAL && proposal && (
+            {!emprestimo && picked !== ATUAL && proposal && (
               <>
                 <p>{proposalText(proposal).salario}</p>
                 <p>{proposalText(proposal).contrato}</p>
@@ -120,7 +138,7 @@ export function Propostas({ propostas, atual, podeFicar, podeForcar = false, pod
     );
   }
   return (
-    <main className="decisao propostas" style={TRANSITION} data-tema="claro" data-evento="proposta-clube">
+    <main className="decisao propostas" style={TRANSITION} data-tema="claro" data-evento={emprestimo ? 'emprestimo' : 'proposta-clube'}>
       {scene.pintada
         ? <CenaPintada {...scene.pintada} alt={scene.alt} inert={career} />
         : <img className="decisao__cena" src={scene.src} alt={scene.alt} width={SCENE_SIZE[0]} height={SCENE_SIZE[1]} inert={career} />}
@@ -129,9 +147,9 @@ export function Propostas({ propostas, atual, podeFicar, podeForcar = false, pod
       </div>
       <PlayerBox player={player} age={age} anterior={anterior} open={career} opener={opener} onOpen={() => { setCareer(true); }} inert={career} />
       <form className="decisao__painel vidro propostas__painel" onSubmit={submit} inert={career} noValidate>
-        <p className="propostas__sala">{t('ui.proposta.sala')}</p>
-        <h1 className="decisao__titulo" ref={title} tabIndex={-1}>{t('ui.proposta.titulo')}</h1>
-        <p className="propostas__apoio">{t('ui.proposta.apoio')}</p>
+        <p className="propostas__sala">{t(`ui.${tela}.sala`)}</p>
+        <h1 className="decisao__titulo" ref={title} tabIndex={-1}>{t(`ui.${tela}.titulo`)}</h1>
+        <p className="propostas__apoio">{t(`ui.${tela}.apoio`)}</p>
         {player.etiquetas?.[0] && <p className="propostas__contexto">{t(`ui.proposta.contexto.${player.etiquetas[0]}`)}</p>}
         <div className="propostas__lista" role="group" aria-label={t('ui.proposta.cartoes')}>
           {showAtual && (() => {
@@ -166,7 +184,7 @@ export function Propostas({ propostas, atual, podeFicar, podeForcar = false, pod
                 <span className="propostas__topo">
                   <Emblema clubId={p.clubId} size={28} />
                   <span className="propostas__nome"><strong className="propostas__clube">{x.clube}</strong><span className="propostas__liga">{x.liga}</span></span>
-                  <span className="propostas__selo">{t('ui.proposta.selo.nova')}</span>
+                  <span className="propostas__selo">{t(emprestimo ? 'ui.emprestimo.selo' : 'ui.proposta.selo.nova')}</span>
                 </span>
                 <span className="propostas__financeiro">
                   <span>{x.salarioMes} <Variacao c={x.salarioVar} /></span>

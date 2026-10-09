@@ -428,6 +428,17 @@
   },
   "comecar": "Começar carreira"
  },
+ "venda": { "cartao": "Clube que comprou você", "selo": "Comprador" },
+ "emprestimo": {
+  "sala": "O clube quer te emprestar",
+  "titulo": "Proposta de empréstimo",
+  "apoio": "Uma temporada em outro clube para jogar mais. O salário segue pago pelo seu clube. Toque num cartão para ver os detalhes.",
+  "selo": "Empréstimo",
+  "duracao": "Por uma temporada; depois você volta ao seu clube.",
+  "modo": { "ir": "Ir emprestado", "ficar": "Ficar e brigar por espaço" },
+  "ir": "Você ganha: mais minutos e evolução mais rápida. Em troca: menos vitrine para a Seleção, e a torcida do seu clube fica um ano sem te ver.",
+  "ficar": "Você ganha: segue na vitrine do clube grande. Em troca: poucos minutos, e o técnico pode não gostar da recusa."
+ },
  "proposta": {
   "sala": "Mercado de transferências aberto",
   "titulo": "Propostas de contrato",

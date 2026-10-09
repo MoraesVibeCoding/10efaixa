@@ -21,7 +21,8 @@ const LOOK = { skin: 't6', hairStyle: 'curto', hairColor: 'preto', beard: null, 
 
 /** T28d: a tela de propostas, se for a da vez: fica no clube (ou, sem clube, aceita a primeira proposta). */
 function passProposals(): boolean {
-  if (!screen.queryByRole('heading', { level: 1, name: t('ui.proposta.titulo') })) return false;
+  // v2.64: o empréstimo usa a mesma tela (o primeiro cartão é o clube atual: ficar)
+  if (!screen.queryByRole('heading', { level: 1, name: t('ui.proposta.titulo') }) && !screen.queryByRole('heading', { level: 1, name: t('ui.emprestimo.titulo') })) return false;
   // o primeiro cartão é o clube atual (ficar ou renovar); sem clube, é a primeira proposta (aceitar)
   fireEvent.click(screen.getAllByRole('radio', { name: /./ })[0]!);
   fireEvent.click(screen.getByRole('button', { name: t('ui.proposta.confirmar') }));

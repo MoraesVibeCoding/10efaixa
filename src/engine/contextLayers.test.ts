@@ -2,6 +2,10 @@ import events from '../data/events.json';
 import ptEvents from '../i18n/pt-BR/events.json';
 import { CONTEXT_TAGS } from './contextTags';
 import { LIMITS, composeText, layerErrors, worstCase, type Layers } from './contextText';
+import { format } from '../i18n';
+
+/** v2.64: parâmetros que o motor sempre passa ao texto do evento (o clube comprador na venda), com um nome longo de clube. */
+const PARAMS = { comprador: 'Borussia Mönchengladbach' };
 
 // T25e: as camadas de texto do catálogo (abertura e contexto por etiqueta) seguem as regras da narrativa e cabem na tela.
 type Texts = Record<string, { texto?: string; abertura?: Record<string, string>; contexto?: Record<string, string> }>;
@@ -43,9 +47,10 @@ describe('camadas de texto do catálogo (T25e)', () => {
     for (let i = 0; i < 10_000; i++) {
       const [id, v] = WITH_LAYERS[Math.floor(rnd() * WITH_LAYERS.length)]!;
       const tags = ids.filter(() => rnd() < 0.35);
-      const text = composeText(layers(v), tags);
-      expect(text.startsWith(v.texto!) || text.includes(v.texto!), id).toBe(true);
-      expect(text.length, id).toBeLessThanOrEqual(worstCase(layers(v)));
+      const raw = composeText(layers(v), tags);
+      expect(raw.startsWith(v.texto!) || raw.includes(v.texto!), id).toBe(true);
+      expect(raw.length, id).toBeLessThanOrEqual(worstCase(layers(v)));
+      const text = format(raw, PARAMS);
       expect(text.length, id).toBeLessThanOrEqual(LIMITS.textoMax);
       expect(text, id).not.toMatch(/\{|\}|undefined/);
       const sentences = text.split(/(?<=[.!?])\s+/);
