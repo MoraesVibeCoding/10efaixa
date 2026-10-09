@@ -1,4 +1,5 @@
 import { kitOf, shirtPaint } from '../../art/kits';
+import cortes from '../../data/cortes.json';
 import { numberColor, sceneArt } from './cenaArte';
 import './CenaPintada.css';
 
@@ -8,7 +9,10 @@ export { CUTS, creationScene, cutForVisual, numberColor, sceneArt } from './cena
 // uniforme em cinza, a camisa no padrão e nas cores do clube e o calção (multiplicados pelo cinza, recortados pelas
 // máscaras) e o número nas costas quando o jogador está de uniforme. O quadro tem a proporção da pintura e cobre a
 // tela, então as máscaras e o número usam as mesmas coordenadas da imagem.
-export function CenaPintada({ scene, cut, clubId, number, alt, inert, decorativa = false }: { scene: string; cut: string; clubId: string; number?: number; alt: string; inert?: boolean; decorativa?: boolean }) {
+/** v2.62: o número nas costas só nas cenas listadas em cortes.json (hoje nenhuma: ficava torto com o jogador de lado). */
+const NUMERO_NAS_CENAS: readonly string[] = cortes.numeroNasCenas;
+
+export function CenaPintada({ scene, cut, clubId, number, alt, inert, decorativa = false, numeroNasCenas = NUMERO_NAS_CENAS }: { scene: string; cut: string; clubId: string; number?: number; alt: string; inert?: boolean; decorativa?: boolean; numeroNasCenas?: readonly string[] }) {
   const art = sceneArt(scene, cut);
   if (!art) return null;
   const kit = kitOf(clubId);
@@ -19,7 +23,7 @@ export function CenaPintada({ scene, cut, clubId, number, alt, inert, decorativa
       <img className="cena__pintura" src={art.src} alt="" width={art.largura} height={art.altura} fetchPriority="high" />
       <span className="cena__camisa" style={camisa} aria-hidden="true" />
       {art.calcao && <span className="cena__calcao" style={{ '--calcao-cor': kit.calcao, '--mascara': `url(${art.calcao})` } as React.CSSProperties} aria-hidden="true" />}
-      {art.numero && number !== undefined && (
+      {art.numero && number !== undefined && numeroNasCenas.includes(scene) && (
         <span
           className="cena__numero" aria-hidden="true"
           style={{ left: `${art.numero[0] * 100}%`, top: `${art.numero[1] * 100}%`, '--numero-altura': art.numero[2] * 0.85, '--numero-cor': numberColor(kit) } as React.CSSProperties}
