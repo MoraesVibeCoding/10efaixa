@@ -453,7 +453,32 @@ describe('variação B (T51c, SPEC v2.34)', () => {
     const topo = screen.getByRole('main').querySelector('.decisao__topo') as HTMLElement;
     expect(topo.querySelector('.figurinha--moldura')).not.toBeNull();
     expect(topo.querySelector('.decisao__over')).toHaveTextContent('78');
-    expect(within(topo).getByRole('list', { name: t('ui.decisao.fichaMais') })).toHaveTextContent(t('ui.decisao.titulosQtd', { n: 3 }));
+    // v2.62: os títulos viram miniaturas das taças, agrupadas por competição, com a quantidade numa bolinha
+    const tacas = within(topo).getByRole('list', { name: t('ui.decisao.titulosLinha') });
+    const itens = within(tacas).getAllByRole('listitem');
+    expect(itens).toHaveLength(2);
+    expect(itens[0]).toHaveTextContent(t('ui.decisao.tacaQtd', { nome: t('ui.titulo.estadual'), n: 2 }));
+    expect(itens[0]!.querySelector('.taca__qtd')).toHaveTextContent('2');
+    expect(itens[1]!.querySelector('.taca__qtd')).toBeNull();
+  });
+
+  it('sem títulos, nem taças nem "Sem títulos" (v2.62)', () => {
+    render(<Decision eventId={EVENT} age={24} progress={0.4} player={{ ...PLAYER, titles: [] }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    expect(screen.queryByRole('list', { name: t('ui.decisao.titulosLinha') })).not.toBeInTheDocument();
+    expect(screen.queryByText(t('ui.decisao.semTitulos'))).not.toBeInTheDocument();
+  });
+
+  it('com estreia na seleção principal, a bandeira do país e a sigla aparecem ao lado do nome (v2.62)', () => {
+    render(<Decision eventId={EVENT} age={24} progress={0.4} player={{ ...PLAYER, selecao: 'brasil' }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    const topo = screen.getByRole('main').querySelector('.decisao__topo') as HTMLElement;
+    expect(within(topo).getByText(t('ui.decisao.selecao', { pais: t('ui.pais.brasil') }))).toBeInTheDocument();
+    expect(topo.querySelector('.bandeira svg')).not.toBeNull();
+    expect(topo.querySelector('.bandeira')).toHaveTextContent(t('ui.sigla.brasil'));
+  });
+
+  it('sem seleção, sem bandeira (v2.62)', () => {
+    show();
+    expect(screen.getByRole('main').querySelector('.bandeira')).toBeNull();
   });
 
   it('o Over tem a medalha da faixa por trás do número, do bronze ao diamante (v2.62)', () => {

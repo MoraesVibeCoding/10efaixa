@@ -12,6 +12,7 @@ import { composeText } from '../../engine/contextText';
 import { clubLine, clubName } from './clubText';
 import { TrophyIcon } from './TrophyIcon';
 import { Emblema } from './Emblema';
+import { Bandeira } from './Bandeira';
 import { Figurinha, medalOf } from './Figurinha';
 import { Niveis } from './Niveis';
 import { CenaPintada } from './CenaPintada';
@@ -48,6 +49,8 @@ export interface DecisionProps {
     visual?: string;
     /** Camisa da figurinha (v2.37): o clube ou "selecao:<país>" nos eventos da Seleção. Sem ela, a do clube. */
     uniforme?: string;
+    /** v2.62: país da seleção principal, depois da estreia por ela: a bandeira ao lado do nome. */
+    selecao?: string;
     /** Marcos já alcançados ("selecao", "camisa10"): saem dos espaços vazios do álbum. */
     milestones?: string[];
     /** T25c: marcos vividos (primeiras vezes), do mais antigo ao mais novo: figurinhas do álbum e da gaveta. */
@@ -321,9 +324,14 @@ function Result({ eventId, optionId, state, tags, auto, onDone }: { eventId: str
 }
 
 /** Contagem de títulos na ficha do topo (v2.34): a lista completa fica na gaveta. */
-function titlesCount(n: number): string {
-  if (n === 0) return t('ui.decisao.semTitulos');
-  return n === 1 ? t('ui.decisao.tituloUm') : t('ui.decisao.titulosQtd', { n });
+/** v2.62: os títulos agrupados por competição, na ordem em que vieram, com a quantidade de cada. */
+function trophyGroups(titles: string[]): { id: string; n: number }[] {
+  const out: { id: string; n: number }[] = [];
+  for (const id of titles) {
+    const g = out.find((x) => x.id === id);
+    if (g) g.n++; else out.push({ id, n: 1 });
+  }
+  return out;
 }
 
 /** O que o leitor de tela ouve no botão da opção: cada consequência em palavras, o risco e o tempo fora (a tela mostra isso só no detalhe da marcada). */
@@ -421,7 +429,7 @@ export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert }
       <button ref={opener} type="button" className="jogador__abrir" aria-haspopup="dialog" aria-expanded={open} onClick={onOpen}>
         <Figurinha moldura tamanho="pequena" name={player.name} number={player.number} overall={player.overall} position={player.position} clubId={player.clubId} uniforme={player.uniforme} avatar={player.avatar} visual={player.visual} />
         <span className="jogador__quem">
-          <span className="jogador__nome" aria-hidden="true">{player.name}</span>
+          <span className="jogador__nome"><span aria-hidden="true">{player.name}</span>{player.selecao ? <Bandeira pais={player.selecao} /> : null}</span>
           <span className="jogador__clube"><Emblema clubId={player.clubId} size={18} />{clubLine(player.position, player.clubId)}</span>
           <span className="jogador__mais">
             {t('ui.carreira.titulo')}
@@ -439,18 +447,30 @@ export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert }
       </ul>
       {/* v2.62: a medalha da faixa por trás do número, do bronze ao diamante, marca a evolução */}
       <p className="decisao__over" aria-hidden="true" data-medalha={medal.nome}>
-        <span className="decisao__over-rotulo">{t('ui.figurinha.over')}</span>
         <span className="decisao__over-medalha" style={medal.art ? { backgroundImage: `url(${medal.art})` } : undefined}>
+          <span className="decisao__over-rotulo">{t('ui.figurinha.over')}</span>
           <span className="decisao__over-numero">{over}</span>
         </span>
       </p>
       <div className="decisao__mais">
         {!collapsed && (
-          <ul className="selos" aria-label={t('ui.decisao.fichaMais')}>
-            <li>{t(`ui.papel.${player.role}`)}</li>
-            <li>{titlesCount(player.titles.length)}</li>
-            {player.torcida ? <li>{t('ui.idolatria.selo', { faixa: t(`ui.idolatria.faixa.${player.torcida}`) })}</li> : null}
-          </ul>
+          <div className="decisao__linha">
+            {player.titles.length > 0 && (
+              <ul className="tacas" aria-label={t('ui.decisao.titulosLinha')}>
+                {trophyGroups(player.titles).map(({ id, n }) => (
+                  <li key={id} className="taca">
+                    <TrophyIcon id={id} size={26} />
+                    {n > 1 && <span className="taca__qtd" aria-hidden="true">{n}</span>}
+                    <span className="sr-only">{n > 1 ? t('ui.decisao.tacaQtd', { nome: t(`ui.titulo.${id}`), n }) : t(`ui.titulo.${id}`)}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <ul className="selos" aria-label={t('ui.decisao.fichaMais')}>
+              <li>{t(`ui.papel.${player.role}`)}</li>
+              {player.torcida ? <li>{t('ui.idolatria.selo', { faixa: t(`ui.idolatria.faixa.${player.torcida}`) })}</li> : null}
+            </ul>
+          </div>
         )}
         <button type="button" className="decisao__recolher" aria-expanded={!collapsed} onClick={toggle}
           aria-label={t(collapsed ? 'ui.decisao.mostrarFicha' : 'ui.decisao.recolherFicha')}>

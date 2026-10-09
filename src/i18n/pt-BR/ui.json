@@ -15,6 +15,9 @@
   "muda": "Muda",
   "ficha": "Ficha do jogador",
   "fichaMais": "Mais da ficha",
+  "titulosLinha": "Títulos",
+  "tacaQtd": "{nome}: {n}",
+  "selecao": "Seleção {pais}",
   "recolherFicha": "Recolher selos",
   "mostrarFicha": "Mostrar selos",
   "porMes": "{valor}/mês",
@@ -577,5 +580,7 @@
   "baixado": "Imagem baixada.",
   "copiado": "Texto copiado. É só colar no WhatsApp.",
   "naoCopiou": "Não deu para copiar o texto neste navegador."
- }
+ },
+ "pais": { "brasil": "Brasil", "italia": "Itália", "portugal": "Portugal", "espanha": "Espanha", "alemanha": "Alemanha" },
+ "sigla": { "brasil": "BRA", "italia": "ITA", "portugal": "POR", "espanha": "ESP", "alemanha": "ALE" }
 }

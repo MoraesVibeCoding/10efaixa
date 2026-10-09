@@ -41,6 +41,15 @@ describe('careerView (T51b): do motor para a tela de decisão', () => {
     expect(p[`mem_${marco.id.replace(/-/g, '_')}_ano`]).toBe(marco.year);
   });
 
+  it('bandeira da seleção (v2.62): só depois da estreia pela seleção principal, com o país do jogador', () => {
+    const base = viewAt(0);
+    expect(toDecisionPlayer(base, INPUT, LOOK).selecao).toBeUndefined();
+    const estreou = { ...base, nationality: 'italia', marcos: [...base.marcos, { id: 'estreia-selecao', year: 2030, clubId: 'flamengo' }] };
+    expect(toDecisionPlayer(estreou, INPUT, LOOK).selecao).toBe('italia');
+    const soConvocado = { ...base, marcos: [...base.marcos, { id: 'primeira-convocacao', year: 2030, clubId: 'flamengo' }] };
+    expect(toDecisionPlayer(soConvocado, INPUT, LOOK).selecao).toBeUndefined();
+  });
+
   it('leva os marcos já vividos (T25c), do mais antigo ao mais novo', () => {
     const early = toDecisionPlayer(viewAt(0), INPUT, LOOK);
     expect(early.marcos).toEqual([]);
