@@ -28,7 +28,7 @@ const startNew = () => fireEvent.click(screen.getByRole('button', { name: t('ui.
 /** T52: atravessa a reunião com a comissão (propõe a sugestão e fecha a resposta), se ela for a tela da vez. */
 function passMeetings() {
   for (let guard = 0; guard < 6; guard++) {
-    const resposta = document.querySelector('dialog.reuniao__resposta');
+    const resposta = document.querySelector('.reuniao__resposta');
     if (resposta) { fireEvent.click(resposta.querySelector('button')!); continue; }
     if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') })); continue; }
     // T28k: tela de contratos (primeiro cartão: fica ou renova; sem clube, aceita a primeira)

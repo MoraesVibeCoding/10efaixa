@@ -84,24 +84,37 @@ describe('tela da reunião em 3 ideias (T52d)', () => {
 describe('resposta da comissão (T52)', () => {
   it('aceita: diz os dois focos combinados', () => {
     render(<ReuniaoResposta resposta={{ response: 'aceita', focus: { main: 'passe', secondary: 'drible' } }} onDone={() => {}} />);
-    const dialog = screen.getByRole('dialog', { name: t('ui.reuniao.resposta.aceita.titulo') });
+    const dialog = screen.getByRole('alertdialog', { name: t('ui.reuniao.resposta.aceita.titulo') });
     expect(dialog).toHaveTextContent(t('ui.reuniao.resposta.aceita.texto', { principal: focusName('passe'), secundario: focusName('drible') }));
   });
 
   it('contrapropõe: o clube precisa de outra coisa, e o pedido fica como secundário', () => {
     render(<ReuniaoResposta resposta={{ response: 'contrapropoe', focus: { main: 'marcacao', secondary: 'passe' } }} onDone={() => {}} />);
-    expect(screen.getByRole('dialog', { name: t('ui.reuniao.resposta.contrapropoe.titulo') })).toHaveTextContent(t('ui.reuniao.resposta.contrapropoe.texto', { principal: focusName('marcacao'), secundario: focusName('passe') }));
+    expect(screen.getByRole('alertdialog', { name: t('ui.reuniao.resposta.contrapropoe.titulo') })).toHaveTextContent(t('ui.reuniao.resposta.contrapropoe.texto', { principal: focusName('marcacao'), secundario: focusName('passe') }));
   });
 
   it('recusa: o motivo em palavras (moral, relação com o técnico ou momento); "Seguir" fecha, uma vez só', () => {
     const onDone = vi.fn();
     render(<ReuniaoResposta resposta={{ response: 'recusa', reason: 'relacao', focus: {} }} onDone={onDone} />);
-    const dialog = screen.getByRole('dialog', { name: t('ui.reuniao.resposta.recusa.titulo') });
+    const dialog = screen.getByRole('alertdialog', { name: t('ui.reuniao.resposta.recusa.titulo') });
     expect(dialog).toHaveTextContent(t('ui.reuniao.resposta.recusa.relacao'));
     const seguir = within(dialog).getByRole('button', { name: t('ui.resultado.seguir') });
     expect(seguir).toHaveFocus();
     fireEvent.click(seguir);
     fireEvent.click(seguir);
+    expect(onDone).toHaveBeenCalledOnce();
+  });
+
+  it('é um alertdialog modal em div, sem <dialog> nativo (travava no Safari do iPhone); Esc fecha e o Tab fica no botão', () => {
+    const onDone = vi.fn();
+    const { container } = render(<ReuniaoResposta resposta={{ response: 'aceita', focus: { main: 'passe', secondary: 'drible' } }} onDone={onDone} />);
+    expect(container.querySelector('dialog')).toBeNull();
+    const dialog = screen.getByRole('alertdialog', { name: t('ui.reuniao.resposta.aceita.titulo') });
+    expect(dialog).toHaveAttribute('aria-modal', 'true');
+    const seguir = within(dialog).getByRole('button', { name: t('ui.resultado.seguir') });
+    fireEvent.keyDown(seguir, { key: 'Tab' });
+    expect(seguir).toHaveFocus();
+    fireEvent.keyDown(seguir, { key: 'Escape' });
     expect(onDone).toHaveBeenCalledOnce();
   });
 });

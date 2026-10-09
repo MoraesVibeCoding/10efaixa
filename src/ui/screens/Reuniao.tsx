@@ -104,9 +104,10 @@ export { focusName };
 
 export type ReuniaoRespostaProps = { resposta: Pick<MeetingResult, 'response' | 'reason' | 'focus'>; onDone: () => void };
 
-/** A resposta da comissão, por cima da próxima tela: aceita, contrapropõe (o clube precisa de outra coisa) ou recusa. */
+/** A resposta da comissão, por cima da próxima tela: aceita, contrapropõe (o clube precisa de outra coisa) ou recusa.
+ *  É um `div role="alertdialog"` (não `<dialog>`: o modal nativo travou no Safari do iPhone e "Seguir" não fechava).
+ *  Abre com o foco em "Seguir"; Esc fecha; Tab fica preso no único botão. */
 export function ReuniaoResposta({ resposta, onDone }: ReuniaoRespostaProps) {
-  const dialog = useRef(null as HTMLDialogElement | null);
   const button = useRef(null as HTMLButtonElement | null);
   const done = useRef(false);
   function finish() {
@@ -114,24 +115,22 @@ export function ReuniaoResposta({ resposta, onDone }: ReuniaoRespostaProps) {
     done.current = true;
     onDone();
   }
-  useEffect(() => {
-    const el = dialog.current;
-    if (el && !el.open) {
-      if (typeof el.showModal === 'function') el.showModal();
-      else el.setAttribute('open', '');
-    }
-    button.current?.focus();
-  }, []);
+  useEffect(() => { button.current?.focus(); }, []);
   const { response, reason, focus } = resposta;
   const text = response === 'recusa'
     ? t(`ui.reuniao.resposta.recusa.${reason ?? 'score'}`)
     : t(`ui.reuniao.resposta.${response}.texto`, { principal: focusName(focus.main ?? ''), secundario: focusName(focus.secondary ?? '') });
-  function onCancel(e: React.SyntheticEvent) { e.preventDefault(); finish(); }
+  function onKey(e: React.KeyboardEvent) {
+    if (e.key === 'Escape') { e.stopPropagation(); finish(); return; }
+    if (e.key === 'Tab') { e.preventDefault(); button.current?.focus(); }
+  }
   return (
-    <dialog ref={dialog} className="reuniao__resposta" aria-labelledby="reuniao-resposta-titulo" onCancel={onCancel}>
-      <h2 id="reuniao-resposta-titulo">{t(`ui.reuniao.resposta.${response}.titulo`)}</h2>
-      <p>{text}</p>
-      <button ref={button} type="button" onClick={finish}>{t('ui.resultado.seguir')}</button>
-    </dialog>
+    <div className="reuniao__resposta-fundo">
+      <div className="reuniao__resposta" role="alertdialog" aria-modal="true" aria-labelledby="reuniao-resposta-titulo" onKeyDown={onKey}>
+        <h2 id="reuniao-resposta-titulo">{t(`ui.reuniao.resposta.${response}.titulo`)}</h2>
+        <p>{text}</p>
+        <button ref={button} type="button" onClick={finish}>{t('ui.resultado.seguir')}</button>
+      </div>
+    </div>
   );
 }
