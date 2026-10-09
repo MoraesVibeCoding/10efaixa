@@ -390,7 +390,7 @@
 
 /* v2.62 (pedido do usuário): no celular a cena quase não aparecia. A caixa do jogador fica mais baixa (figurinha, Over e
    selos menores) e os detalhes da faixa de baixo (história e opções) descem um passo; o título fica como está.
-   O corpo segue em 1rem ou mais (tokens.json); só os selos, que são rótulos, ficam abaixo. */
+   O corpo segue em 1rem ou mais (tokens.json), menos os selos (rótulos) e a história (detalhe, decisão do usuário). */
 @media (max-width: 63.99rem) {
   .decisao__topo { gap: var(--espaco-1) var(--espaco-2); padding: var(--espaco-2) var(--espaco-3); }
   .jogador__abrir { gap: var(--espaco-2); }
@@ -401,8 +401,9 @@
   .decisao__over-rotulo { font-size: 0.75rem; }
   .selos li { padding: 0 6px; font-size: 0.8125rem; line-height: 1.4; }
   .decisao__painel { gap: var(--espaco-2); padding: var(--espaco-3); }
-  .decisao__historia { font-size: 1rem; line-height: 1.38; }
-  .decisao__semestre { font-size: 0.875rem; }
+  /* decisão do usuário (v2.62): a história é detalhe, não o principal; fica no tamanho de apoio, abaixo do 1rem do corpo */
+  .decisao__historia { font-size: 0.875rem; line-height: 1.4; }
+  .decisao__semestre { font-size: 0.8125rem; }
   .opcao__rotulo { font-size: 1.0625rem; }
   .decisao__detalhe { min-block-size: 2.2rem; font-size: 0.875rem; }
 }
