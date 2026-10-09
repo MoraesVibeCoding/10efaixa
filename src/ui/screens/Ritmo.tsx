@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { t } from '../../i18n';
+import { CenaPintada, cutForVisual } from './CenaPintada';
 import { Choices } from './Choices';
 import './Creation.css';
 import './Ritmo.css';
@@ -10,7 +11,8 @@ import './Ritmo.css';
 export type RitmoId = 'rapido' | 'normal' | 'completo';
 const RITMOS: RitmoId[] = ['rapido', 'normal', 'completo'];
 
-export function Ritmo({ onChoose, onBack }: { onChoose: (ritmo: RitmoId) => void; onBack: () => void }) {
+/** `visual` (v2.69): o recorte do jogador na cena do túnel ao fundo. */
+export function Ritmo({ onChoose, onBack, visual }: { onChoose: (ritmo: RitmoId) => void; onBack: () => void; visual?: string }) {
   const [value, setValue] = useState('normal' as RitmoId);
   const title = useRef(null as HTMLHeadingElement | null);
   useEffect(() => { title.current?.focus(); }, []);
@@ -21,12 +23,14 @@ export function Ritmo({ onChoose, onBack }: { onChoose: (ritmo: RitmoId) => void
   }
   return (
     <main className="criacao">
-      <form className="criacao__form" onSubmit={submit} noValidate>
+      {/* v2.69: cena ao fundo, como nos passos da criação (antes a tela ficava com meia tela vazia) */}
+      <CenaPintada scene="estadio" cut={cutForVisual(visual)} clubId="" alt="" decorativa />
+      <form className="criacao__form vidro" onSubmit={submit} noValidate>
         <header className="criacao__topo">
           <h1 className="criacao__titulo" ref={title} tabIndex={-1}>{t('ui.ritmo.titulo')}</h1>
         </header>
         <div className="criacao__passo ritmo">
-          <Choices id="ritmo" name="ritmo" legend={t('ui.ritmo.titulo')} options={options} variant="cartoes" value={value} onChange={(v) => setValue(v as RitmoId)} />
+          <Choices id="ritmo" name="ritmo" legend={t('ui.ritmo.legenda')} options={options} variant="cartoes" value={value} onChange={(v) => setValue(v as RitmoId)} />
         </div>
         <footer className="criacao__acoes">
           <button type="button" className="criacao__botao" onClick={onBack}>{t('ui.criacao.voltar')}</button>

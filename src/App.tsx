@@ -135,7 +135,7 @@ export function App({ seed, storage = browserStorage(), now = () => new Date(), 
     return withRestart(<Revelacao key={phase.round} name={input.name} number={input.shirtNumber} visual={visual} reveal={revealOf(input, phase.seed)} onContinue={() => setPhase({ ...phase, kind: 'ritmo' })} />);
   }
   if (phase.kind === 'ritmo') {
-    return withRestart(<Ritmo onChoose={(ritmo) => setPhase({ ...phase, kind: 'carreira', ritmo, choices: [] })} onBack={() => setPhase({ ...phase, kind: 'revelacao' })} />);
+    return withRestart(<Ritmo onChoose={(ritmo) => setPhase({ ...phase, kind: 'carreira', ritmo, choices: [] })} onBack={() => setPhase({ ...phase, kind: 'revelacao' })} visual={phase.created.visual} />);
   }
   if (phase.kind === 'carreira') {
     return withRestart(
@@ -143,12 +143,13 @@ export function App({ seed, storage = browserStorage(), now = () => new Date(), 
         ritmo={phase.ritmo} initialChoices={phase.choices} onProgress={onProgress} desafio={phase.desafio} onRestart={() => { startNew(); }} />,
     );
   }
-  return withRestart(
+  // v2.69: sem "Reiniciar" na criação (ainda não há carreira; o passo 1 tem o próprio Voltar)
+  return (
     <Creation
       key={phase.round}
       seed={phase.seed}
       onExit={() => setPhase({ kind: 'abertura', round: next })}
       onFinish={(c) => setPhase({ kind: 'revelacao', round: phase.round, created: c, seed: phase.seed, ...(phase.desafio === undefined ? {} : { desafio: phase.desafio }) })}
-    />,
+    />
   );
 }

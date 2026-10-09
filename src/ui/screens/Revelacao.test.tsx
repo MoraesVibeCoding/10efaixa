@@ -8,7 +8,7 @@ import type { Reveal } from './revealView';
 // T49i (SPEC 7, v2.34): a revelação do jogador num <dialog> modal de vidro. O jsdom não tem showModal: o teste o simula,
 // e o componente só o chama quando o navegador o oferece (MDN: Chrome 37, Safari 15.4, Firefox 98).
 const REVEAL: Reveal = {
-  overall: 41, isDiamond: false,
+  overall: 41, isDiamond: false, fortes: ['drible', 'mental', 'passe'],
   bands: [
     { id: 'finalizacao', band: 'fraco' }, { id: 'passe', band: 'regular' }, { id: 'habilidade', band: 'regular' }, { id: 'drible', band: 'bom' },
     { id: 'forca', band: 'fraco' }, { id: 'velocidade', band: 'regular' }, { id: 'fisico', band: 'fraco' }, { id: 'marcacao', band: 'fraco' },
@@ -26,12 +26,31 @@ beforeEach(() => {
 afterEach(() => { Reflect.deleteProperty(HTMLDialogElement.prototype, 'showModal'); });
 
 describe('revelação do jogador (T49i)', () => {
-  it('abre como modal, com o título como nome e o foco no botão de seguir para o ritmo', () => {
+  it('abre como modal, com o título como nome e o foco no título (v2.69: em 360 px o título não some rolando até o botão)', () => {
     show();
     const dialog = screen.getByRole('dialog', { name: t('ui.revelacao.titulo') });
     expect(HTMLDialogElement.prototype.showModal).toHaveBeenCalled();
     expect(dialog).toHaveClass('vidro');
-    expect(within(dialog).getByRole('button', { name: t('ui.revelacao.seguir') })).toHaveFocus();
+    expect(within(dialog).getByRole('heading', { level: 1, name: t('ui.revelacao.titulo') })).toHaveFocus();
+  });
+
+  it('v2.69: os 3 pontos fortes em destaque; os dez atributos ficam em "Ver todos"', () => {
+    show();
+    const fortes = screen.getByRole('list', { name: t('ui.revelacao.fortes') });
+    expect(within(fortes).getAllByRole('listitem').map((li) => li.textContent)).toEqual(['drible', 'mental', 'passe'].map((id) => t(`attributes.attribute.${id}`)));
+    expect(screen.getByText(t('ui.revelacao.verTodos'))).toBeInTheDocument();
+  });
+
+  it('v2.69: a faixa mais baixa aparece como "Cru" na revelação (quem começa ainda não é fraco, é cru)', () => {
+    show();
+    const list = screen.getByRole('list', { name: t('ui.revelacao.atributos') });
+    expect(within(list).getAllByRole('listitem')[0]).toHaveTextContent(t('ui.revelacao.cru'));
+    expect(list.textContent).not.toContain(t('attributes.band.fraco'));
+  });
+
+  it('v2.69: uma cena pintada decorativa fica atrás do vidro', () => {
+    const { container } = render(<Revelacao name="Dudu Maestro" number={10} visual="visual-03" reveal={REVEAL} onContinue={() => {}} />);
+    expect(container.querySelector('.revelacao__palco .cena')).not.toBeNull();
   });
 
   it('a figurinha com moldura traz o Over do sorteio; a camisa é neutra (ainda sem clube)', () => {
