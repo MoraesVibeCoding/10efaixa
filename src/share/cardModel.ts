@@ -16,7 +16,7 @@ export interface CardModel {
   idolos: { clubId: string; nome: string; coracao: boolean }[];
   veredito: string; rotulo: string; manchete: string; comentario: string;
   honrarias: string[]; frases: string[]; clubes: string[];
-  numeros: { id: 'jogos' | 'gols' | 'assistencias' | 'titulos' | 'patrimonio'; nome: string; valor: string }[];
+  numeros: { id: 'jogos' | 'gols' | 'assistencias' | 'titulos' | 'selecao' | 'patrimonio'; nome: string; valor: string }[];
   radar: { id: Attribute; nome: string; valor: number }[];
   codigo: string; alt: { narrativa: string; estatistica: string };
 }
@@ -40,6 +40,8 @@ export function cardModel(r: CareerResult, codigo: string): CardModel {
   const numeros = [
     n('jogos', r.stats.games.toLocaleString('pt-BR')), n('gols', r.stats.goals.toLocaleString('pt-BR')),
     n('assistencias', r.stats.assists.toLocaleString('pt-BR')), n('titulos', r.titles.length.toLocaleString('pt-BR')),
+    // v2.65: jogos e gols pela Seleção (base inclusive), só para quem jogou por ela
+    ...(r.selection.games > 0 ? [n('selecao', t('ui.cartao.selecaoValor', { jogos: r.selection.games, gols: r.selection.goals }))] : []),
     n('patrimonio', brl(r.wealthBRL)),
   ];
   const base = {

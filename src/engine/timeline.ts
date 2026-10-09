@@ -1,4 +1,5 @@
 import type { CareerResult } from './career';
+import type { NationalYear } from './nationalYear';
 
 // T55g (SPEC 6.15, v2.51): modelo da tela "Sua carreira": uma linha por temporada, em ordem de idade. Puro: o texto
 // (nome do clube, divisão, título) é montado na tela, em pt-BR; aqui só ids e números.
@@ -13,6 +14,8 @@ export interface TimelineRow {
   peak: boolean;
   /** Mudou de clube em relação à temporada anterior (a estreia não conta). */
   newClub: boolean;
+  /** v2.65: a Seleção do ano, só quando houve convocação. */
+  selecao?: NationalYear;
 }
 
 export function timelineOf({ seasons, titles }: TimelineInput): TimelineRow[] {
@@ -23,5 +26,6 @@ export function timelineOf({ seasons, titles }: TimelineInput): TimelineRow[] {
     titles: titles.filter((t) => t.year === s.year).map((t) => t.competition),
     peak: i === peakIndex,
     newClub: i > 0 && seasons[i - 1]!.clubId !== s.clubId,
+    ...(s.selecao ? { selecao: s.selecao } : {}),
   }));
 }

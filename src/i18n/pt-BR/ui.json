@@ -536,6 +536,15 @@
   "jogos": "Jogos: {n}",
   "gols": "Gols: {n}",
   "assistencias": "Assistências: {n}",
+  "selecao": {
+   "titulo": "Seleção no ano",
+   "degrau": { "sub17": "Seleção Sub-17", "sub20": "Seleção Sub-20", "olimpica": "Seleção Sub-23", "lista": "Seleção principal · convocado", "reserva": "Seleção principal · reserva", "titular": "Seleção principal · titular" },
+   "camisa10": "camisa 10",
+   "capitao": "capitão",
+   "torneio": "{torneio}: {fase}",
+   "nomes": { "copaDoMundo": "Mundial de Seleções", "copaAmerica": "Continental de Seleções", "olimpiadas": "Torneio Sub-23 dos Jogos" },
+   "fase": { "grupos": "fase de grupos", "dezesseis-avos": "16 avos de final", "oitavas": "oitavas de final", "quartas": "quartas de final", "semifinal": "semifinal", "final": "vice-campeão", "campeao": "campeão" }
+  },
   "outraLiga": "Outra liga",
   "divisao": {
    "BRA-A": "Série A",
@@ -564,8 +573,10 @@
    "gols": "Gols",
    "assistencias": "Assistências",
    "titulos": "Títulos",
+   "selecao": "Seleção (jogos/gols)",
    "patrimonio": "Patrimônio"
   },
+  "selecaoValor": "{jogos}/{gols}",
   "altNarrativa": "Cartão de carreira de {nome}, {apelido}. Veredito: {veredito}. Rótulo: {rotulo}. {manchete} {frases}.",
   "overMax": "Over máximo",
   "idoloCoracao": "Ídolo do clube de coração: {clube}",

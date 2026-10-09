@@ -43,8 +43,15 @@ describe('modelo do cartão final (T55c)', () => {
   });
 
   it('números da carreira: jogos, gols, assistências, títulos e patrimônio', () => {
-    expect(m.numeros.map((n) => n.id)).toEqual(['jogos', 'gols', 'assistencias', 'titulos', 'patrimonio']);
-    expect(m.numeros[0]!.valor).toBe(r.stats.games.toLocaleString('pt-BR'));
+    const semSelecao = cardModel({ ...r, selection: { ...r.selection, games: 0, goals: 0 } }, 'X');
+    expect(semSelecao.numeros.map((n) => n.id)).toEqual(['jogos', 'gols', 'assistencias', 'titulos', 'patrimonio']);
+    expect(semSelecao.numeros[0]!.valor).toBe(r.stats.games.toLocaleString('pt-BR'));
+  });
+
+  it('v2.65: com jogos pela Seleção (base inclusive), entram jogos e gols por ela', () => {
+    const x = cardModel({ ...r, selection: { ...r.selection, games: 52, goals: 18 } }, 'X');
+    expect(x.numeros.map((n) => n.id)).toEqual(['jogos', 'gols', 'assistencias', 'titulos', 'selecao', 'patrimonio']);
+    expect(x.numeros.find((n) => n.id === 'selecao')!.valor).toBe(t('ui.cartao.selecaoValor', { jogos: 52, gols: 18 }));
   });
 
   it('texto alternativo: o narrativo conta a história; o estatístico lê os números e o radar', () => {

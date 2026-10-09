@@ -41,7 +41,10 @@ describe('"Sua carreira" (T55h)', () => {
     const items = screen.getAllByRole('listitem');
     expect(rows.some((r) => r.division !== null)).toBe(true);
     rows.forEach((r, i) => {
-      const text = items[i]!.textContent ?? '';
+      // v2.65: os números da Seleção do ano ficam num bloco próprio; aqui contam só os do clube
+      const clube = items[i]!.cloneNode(true) as HTMLElement;
+      clube.querySelector('.linha__selecao')?.remove();
+      const text = clube.textContent ?? '';
       if (r.division === null) {
         expect(text).not.toContain('Jogos');
         expect(text).not.toContain('Gols');
@@ -85,5 +88,35 @@ describe('"Sua carreira" (T55h)', () => {
     expect(storyText({ id: 'primeiroTitulo', age: 21, competition: 'copaDoMundo' })).toBe('Ergueu a primeira taça aos 21: Mundial de Seleções');
     expect(storyText({ id: 'lesoes', age: 33, n: 1 })).toBe('Voltou de uma lesão grave');
     expect(storyText({ id: 'lesoes', age: 33, n: 2 })).toBe('Voltou de 2 lesões graves');
+  });
+});
+
+// v2.65: a Seleção ano a ano dentro do card do ano: degrau mais alto, jogos, gols, assistências e o torneio com a fase.
+describe('"Sua carreira": Seleção no card do ano (v2.65)', () => {
+  const careers = Array.from({ length: 60 }, (_, i) => simulateCareer(randomInput(createPrng(i + 1)), i + 1));
+  const comSelecao = careers.find((r) => r.seasons.some((s) => s.selecao?.tournaments.length))!;
+
+  it('o ano com convocação traz o bloco da Seleção; o ano sem convocação, não', () => {
+    render(<LinhaDoTempo result={comSelecao} onContinue={() => {}} />);
+    const items = screen.getAllByRole('listitem');
+    comSelecao.seasons.forEach((s, i) => {
+      const bloco = within(items[i]!).queryByRole('group', { name: t('ui.linhaDoTempo.selecao.titulo') });
+      if (!s.selecao) { expect(bloco, `${s.year}`).toBeNull(); return; }
+      expect(bloco, `${s.year}`).not.toBeNull();
+      const text = bloco!.textContent ?? '';
+      expect(text).toContain(t(`ui.linhaDoTempo.selecao.degrau.${s.selecao.rung}`));
+      expect(text).toContain(t('ui.linhaDoTempo.jogos', { n: s.selecao.games }));
+      expect(text).toContain(t('ui.linhaDoTempo.gols', { n: s.selecao.goals }));
+      expect(text).toContain(t('ui.linhaDoTempo.assistencias', { n: s.selecao.assists }));
+      for (const tr of s.selecao.tournaments) {
+        expect(text).toContain(t('ui.linhaDoTempo.selecao.torneio', { torneio: t(`ui.linhaDoTempo.selecao.nomes.${tr.tournament}`), fase: t(`ui.linhaDoTempo.selecao.fase.${tr.stage}`) }));
+      }
+    });
+  });
+
+  it('todo degrau, torneio e fase tem texto', () => {
+    for (const d of ['sub17', 'sub20', 'olimpica', 'lista', 'reserva', 'titular']) expect(t(`ui.linhaDoTempo.selecao.degrau.${d}`).length).toBeGreaterThan(0);
+    for (const n of ['copaDoMundo', 'copaAmerica', 'olimpiadas']) expect(t(`ui.linhaDoTempo.selecao.nomes.${n}`).length).toBeGreaterThan(0);
+    for (const f of ['grupos', 'dezesseis-avos', 'oitavas', 'quartas', 'semifinal', 'final', 'campeao']) expect(t(`ui.linhaDoTempo.selecao.fase.${f}`).length).toBeGreaterThan(0);
   });
 });
