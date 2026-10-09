@@ -1,7 +1,6 @@
 import creationData from '../../data/creation.json';
 import { archetypesFor } from '../../engine/archetypes';
 import { BUILDS } from '../../engine/biotype';
-import { MENTALITIES } from '../../engine/mentality';
 import { t } from '../../i18n';
 import { Choices, named, type Option } from './Choices';
 import { FIELD_SLOTS, POSITIONS, RANGES, hintOf, meters, slotOf, styleHint, withSlot, type OnField } from './onField';
@@ -44,8 +43,6 @@ export function OnFieldStep({ ids, field: f, errors, onChange, number = '' }: On
       <Choices id={`${ids}-temperamento`} name="temperament" legend={t('ui.criacao.emCampo.temperamento')}
         options={named(creationData.temperaments, 'creation.temperament')} value={f.temperament ?? ''}
         onChange={(v) => onChange({ ...f, temperament: v })} error={err('temperament')} hint={hintOf('creation.temperamentDica', f.temperament)} />
-      <Choices id={`${ids}-mentalidade`} name="mentality" legend={t('ui.criacao.emCampo.mentalidade')} options={named(MENTALITIES, 'creation.mentality')}
-        value={f.mentality ?? ''} onChange={(v) => onChange({ ...f, mentality: v })} hint={hintOf('creation.mentalityDica', f.mentality)} />
     </div>
   );
 }

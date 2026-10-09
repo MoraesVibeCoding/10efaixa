@@ -95,6 +95,8 @@
     "lider",
     "resenha"
   ],
+  "_comemoracaoPadrao": "v2.68: a comemoração é escolhida no marco do primeiro gol; sem gol na carreira, a manchete usa esta.",
+  "comemoracaoPadrao": "punhoCerrado",
   "celebrations": [
     "aviaozinho",
     "dancinha",

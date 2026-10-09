@@ -20,7 +20,8 @@ export interface CreationInput {
   archetypeId: string;
   biotype: Biotype;
   temperament: string;
-  celebration: string;
+  /** v2.68: escolhida no marco do primeiro gol; na criação, só em saves e links antigos. */
+  celebration?: string;
   origin: string;
   foot: string;
   /** Clube de coração (6.18): id de clube brasileiro ou null = "Nenhum". */
@@ -62,7 +63,7 @@ function validate(i: CreationInput): string[] {
   const arch = ARCHETYPES.find((a) => a.id === i.archetypeId);
   if (!arch?.positions.includes(i.position)) errors.push('archetype.invalid');
   if (!data.temperaments.includes(i.temperament)) errors.push('temperament.invalid');
-  if (!data.celebrations.includes(i.celebration)) errors.push('celebration.invalid');
+  if (i.celebration !== undefined && !data.celebrations.includes(i.celebration)) errors.push('celebration.invalid');
   if (!data.feet.includes(i.foot)) errors.push('foot.invalid');
   if (!ORIGINS[i.origin]) errors.push('origin.invalid');
   if (i.mentality !== undefined && !(MENTALITIES as readonly string[]).includes(i.mentality)) errors.push('mentality.invalid');

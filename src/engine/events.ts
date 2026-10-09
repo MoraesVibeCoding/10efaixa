@@ -38,9 +38,11 @@ export function validateEvents(d: unknown, sceneIds: string[]): string[] {
     if (!e.cena || !sceneIds.includes(e.cena)) errors.push(`${at}: cena ausente ou inexistente (${e.cena ?? 'nenhuma'})`);
     for (const [, op] of e.condicoes ?? []) if (!OPS[op]) errors.push(`${at}: operador inválido ${op}`);
     const opts = e.opcoes ?? [];
-    if (opts.length !== 1 && opts.length !== 3) errors.push(`${at}: precisa de 1 opção (só narrado) ou 3 (decisão), tem ${opts.length}`);
+    // v2.68: `todosOsJeitos` (só o marco da mentalidade, decisão do usuário) permite 4 opções, uma por temperamento
+    const decisao = (e as { todosOsJeitos?: boolean }).todosOsJeitos ? 4 : 3;
+    if (opts.length !== 1 && opts.length !== decisao) errors.push(`${at}: precisa de 1 opção (só narrado) ou ${decisao} (decisão), tem ${opts.length}`);
     const jeitos = opts.map((o) => o.jeito);
-    if (opts.length === 1 ? jeitos[0] !== undefined : new Set(jeitos).size !== 3 || jeitos.some((j) => !j || !TEMPERAMENTS.includes(j))) {
+    if (opts.length === 1 ? jeitos[0] !== undefined : new Set(jeitos).size !== decisao || jeitos.some((j) => !j || !TEMPERAMENTS.includes(j))) {
       errors.push(`${at}: cada opção de decisão precisa de um jeito válido e diferente (${jeitos.join(', ')})`);
     }
     for (const o of opts) {

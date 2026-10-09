@@ -14,8 +14,8 @@ const RANGES = raw.campos as Record<string, unknown>;
 const sentences = (s: string) => s.split(/(?<=[.!?])\s+/).filter(Boolean).length;
 
 describe('narrativa dos eventos (skill 10efaixa-narrativa)', () => {
-  it('toda decisão tem 3 opções (os antigos avisos também)', () => {
-    for (const e of EVENTS) expect(e.opcoes, e.id).toHaveLength(3);
+  it('toda decisão tem 3 opções (os antigos avisos também); só o marco da mentalidade tem 4 (v2.68, exceção aprovada)', () => {
+    for (const e of EVENTS) expect(e.opcoes, e.id).toHaveLength((e as { todosOsJeitos?: boolean }).todosOsJeitos ? 4 : 3);
   });
 
   it('todo evento tem situação de 2 a 3 frases e até 280 caracteres; título até 40; opção até 55, começando por maiúscula', () => {

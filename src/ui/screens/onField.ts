@@ -8,14 +8,14 @@ import { t } from '../../i18n';
 // T50d (SPEC 6.1, 6.2, 6.17, v2.30): tela 2 "em campo e cabeça", tudo que pesa no jogo. Só faixas e frases, sem números.
 export interface OnField {
   position: Position | null; archetypeId: string | null; foot: string; heightCm: number; build: string;
-  temperament: string | null; mentality: string | null;
+  temperament: string | null;
   /** v2.46: lado do lateral e da ponta (só figurinha e narrativa, nunca atributo); null nas outras posições. */
   side: Side | null;
 }
 export type Side = 'esquerdo' | 'direito';
 export const DEFAULT_FIELD: OnField = {
   position: null, archetypeId: null, foot: creationData.feet[0]!, heightCm: biotypeData.referenceHeightCm - 2, build: 'atletico',
-  temperament: null, mentality: null, side: null,
+  temperament: null, side: null,
 };
 
 /** v2.46: as 9 vagas do campo, da defesa ao ataque (também a ordem das setas do teclado). */
