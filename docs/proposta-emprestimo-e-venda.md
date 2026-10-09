@@ -47,3 +47,9 @@
 2. "Bater o pé" na venda: além da relação com a diretoria, deve haver chance de o clube **forçar** a venda mesmo assim?
 3. Se o jogador recusa o empréstimo, o clube pode oferecer de novo no semestre seguinte, ou só uma vez por temporada?
 4. Saves antigos: as escolhas salvas não têm essas decisões novas. Proposta: a versão do save sobe e o save antigo vira "carreira de outra versão" (como na v2.48), em vez de tentar converter.
+
+## Respostas do usuário (2026-10-09)
+1. **Empréstimo:** só duas opções, **"Ir emprestado"** e **"Ficar e brigar por espaço"** (sai "pedir outro destino").
+2. **Bater o pé na venda:** a venda cai e ele fica; a relação com a diretoria e o técnico piora. Sem venda forçada: "na vida real o clube pode te vender, mas se você não aceitar o contrato, você não se transfere".
+3. **Recusa do empréstimo:** o clube só oferece **uma vez por temporada**.
+4. **Saves antigos:** viram carreira de outra versão (dá para ver o cartão, não continuar), como na v2.48.
