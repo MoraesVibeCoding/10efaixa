@@ -7,6 +7,7 @@ coverage
 # ferramentas locais (caminhos da máquina) e pacote original
 .claude/*
 !.claude/skills/
+!.claude/settings.json
 .codex/
 files.zip
 

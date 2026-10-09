@@ -7,6 +7,34 @@
       "skillPath": "skills/baoyu-image-gen/SKILL.md",
       "computedHash": "90b3b4cd8ae115c3a8eedd69439485cb449b04879ac2c60ceaa7071ecddd44b2"
     },
+    "caveman": {
+      "source": "JuliusBrussee/caveman",
+      "ref": "v3.2.0",
+      "sourceType": "github",
+      "skillPath": "skills/caveman/SKILL.md",
+      "computedHash": "71b600c88c8d1d36f18c4875db23b53c5d6cb9ba3195e19451d6b1bb67db07c4"
+    },
+    "impeccable": {
+      "source": "pbakaus/impeccable",
+      "ref": "skill-v4.5.1",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/impeccable/SKILL.md",
+      "computedHash": "2bcdf54921341e745d5213f0291fbe457e0e98ac7e4e2b347300fcf331cac81b"
+    },
+    "megacave": {
+      "source": "JuliusBrussee/caveman",
+      "ref": "v3.2.0",
+      "sourceType": "github",
+      "skillPath": "skills/megacave/SKILL.md",
+      "computedHash": "60da384ce09cedf553e2b6dfe4669ffb4e53f34c3df8ce2c8012a32e06f8e187"
+    },
+    "ultracave": {
+      "source": "JuliusBrussee/caveman",
+      "ref": "v3.2.0",
+      "sourceType": "github",
+      "skillPath": "skills/ultracave/SKILL.md",
+      "computedHash": "d2e5de7e5e664e95c0c93ea0fb84c6b78a4bb2351c71964c453a8a35c63869eb"
+    },
     "web-games-v2": {
       "source": "diegosouzapw/awesome-omni-skills",
       "sourceType": "github",
