@@ -35,7 +35,7 @@ describe('"Sua carreira" (T55h)', () => {
     expect(screen.getAllByText(t('ui.linhaDoTempo.auge'))).toHaveLength(1);
   });
 
-  it('cada temporada de profissional mostra gols e assistências do ano; nas categorias de base, não (v2.60)', () => {
+  it('cada temporada de profissional mostra jogos, gols e assistências do ano; nas categorias de base, não (v2.60, v2.62)', () => {
     render(<LinhaDoTempo result={result} onContinue={() => {}} />);
     const rows = timelineOf(result);
     const items = screen.getAllByRole('listitem');
@@ -43,9 +43,11 @@ describe('"Sua carreira" (T55h)', () => {
     rows.forEach((r, i) => {
       const text = items[i]!.textContent ?? '';
       if (r.division === null) {
+        expect(text).not.toContain('Jogos');
         expect(text).not.toContain('Gols');
         expect(text).not.toContain('Assistências');
       } else {
+        expect(text).toContain(t('ui.linhaDoTempo.jogos', { n: r.games }));
         expect(text).toContain(t('ui.linhaDoTempo.gols', { n: r.goals }));
         expect(text).toContain(t('ui.linhaDoTempo.assistencias', { n: r.assists }));
       }
