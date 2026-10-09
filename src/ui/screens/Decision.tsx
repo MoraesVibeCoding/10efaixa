@@ -403,27 +403,13 @@ function Rolled({ final, shown }: { final: string; shown: string }) {
   return shown === final ? final : <><span aria-hidden="true">{shown}</span><span className="sr-only">{final}</span></>;
 }
 
-/** v2.62: a linha de selos de baixo pode ser recolhida; a escolha fica no aparelho (conveniência, sem dado pessoal). */
-const FICHA_KEY = '10efaixa:fichaRecolhida';
-function readCollapsed(): boolean {
-  try { return localStorage.getItem(FICHA_KEY) === '1'; } catch { return false; }
-}
-function writeCollapsed(v: boolean) {
-  try { if (v) localStorage.setItem(FICHA_KEY, '1'); else localStorage.removeItem(FICHA_KEY); } catch { /* sem armazenamento, só nesta tela */ }
-}
-
 export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert }: {
   player: DecisionProps['player']; age: number; anterior?: Anterior; open: boolean; opener: React.RefObject<HTMLButtonElement | null>; onOpen: () => void; inert: boolean;
 }) {
   const over = useRolling(player.overall, anterior?.overall);
   const idade = useRolling(age, anterior?.age);
   const valor = useRolling(player.marketValueEUR ?? 0, anterior?.marketValueEUR);
-  const [collapsed, setCollapsed] = useState(readCollapsed);
   const medal = medalOf(player.overall);
-  function toggle() {
-    setCollapsed(!collapsed);
-    writeCollapsed(!collapsed);
-  }
   return (
     <header className="decisao__topo vidro" inert={inert}>
       <button ref={opener} type="button" className="jogador__abrir" aria-haspopup="dialog" aria-expanded={open} onClick={onOpen}>
@@ -446,39 +432,26 @@ export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert }
         {player.marketValueEUR === undefined ? null : <li><Rolled final={valueText(player.marketValueEUR)} shown={valueText(valor)} /></li>}
       </ul>
       {/* v2.62: a medalha da faixa por trás do número, do bronze ao diamante, marca a evolução */}
-      <p className="decisao__over" aria-hidden="true" data-medalha={medal.nome}>
-        <span className="decisao__over-medalha" style={medal.art ? { backgroundImage: `url(${medal.art})` } : undefined}>
+      <div className="decisao__over">
+        <p className="decisao__over-medalha" aria-hidden="true" data-medalha={medal.nome} style={medal.art ? { backgroundImage: `url(${medal.art})` } : undefined}>
           <span className="decisao__over-rotulo">{t('ui.figurinha.over')}</span>
           <span className="decisao__over-numero">{over}</span>
-        </span>
-      </p>
-      <div className="decisao__mais">
-        {!collapsed && (
-          <div className="decisao__linha">
-            {player.titles.length > 0 && (
-              <ul className="tacas" aria-label={t('ui.decisao.titulosLinha')}>
-                {trophyGroups(player.titles).map(({ id, n }) => (
-                  <li key={id} className="taca">
-                    <TrophyIcon id={id} size={26} />
-                    {n > 1 && <span className="taca__qtd" aria-hidden="true">{n}</span>}
-                    <span className="sr-only">{n > 1 ? t('ui.decisao.tacaQtd', { nome: t(`ui.titulo.${id}`), n }) : t(`ui.titulo.${id}`)}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-            <ul className="selos" aria-label={t('ui.decisao.fichaMais')}>
-              <li>{t(`ui.papel.${player.role}`)}</li>
-              {player.torcida ? <li>{t('ui.idolatria.selo', { faixa: t(`ui.idolatria.faixa.${player.torcida}`) })}</li> : null}
-            </ul>
-          </div>
-        )}
-        <button type="button" className="decisao__recolher" aria-expanded={!collapsed} onClick={toggle}
-          aria-label={t(collapsed ? 'ui.decisao.mostrarFicha' : 'ui.decisao.recolherFicha')}>
-          <svg viewBox="0 0 16 10" width="12" height="8" aria-hidden="true" focusable="false">
-            <path d={collapsed ? 'M1.5 1.5 8 8l6.5-6.5' : 'M1.5 8.5 8 2l6.5 6.5'} fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="square" />
-          </svg>
-        </button>
+        </p>
+        {/* v2.62: o papel (tempo de jogo) embaixo do Over */}
+        <p className="decisao__papel">{t(`ui.papel.${player.role}`)}</p>
       </div>
+      {/* v2.62: embaixo, só as taças: uma por competição, com a quantidade numa bolinha */}
+      {player.titles.length > 0 && (
+        <ul className="tacas" aria-label={t('ui.decisao.titulosLinha')}>
+          {trophyGroups(player.titles).map(({ id, n }) => (
+            <li key={id} className="taca">
+              <TrophyIcon id={id} size={26} />
+              {n > 1 && <span className="taca__qtd" aria-hidden="true">{n}</span>}
+              <span className="sr-only">{n > 1 ? t('ui.decisao.tacaQtd', { nome: t(`ui.titulo.${id}`), n }) : t(`ui.titulo.${id}`)}</span>
+            </li>
+          ))}
+        </ul>
+      )}
     </header>
   );
 }

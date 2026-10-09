@@ -73,4 +73,9 @@ describe('card do resumo da temporada (v2.61)', () => {
     fireEvent.click(btn);
     expect(onClose).toHaveBeenCalledTimes(2);
   });
+
+  it('v2.62: mostra o que a torcida do clube vê em você, em palavras', () => {
+    render(<ResumoTemporada resumo={BASE} torcida="querido" onClose={() => {}} />);
+    expect(within(dialog()).getByText(t('ui.idolatria.selo', { faixa: t('ui.idolatria.faixa.querido') }))).toBeInTheDocument();
+  });
 });

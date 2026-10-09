@@ -11,9 +11,10 @@ import './ResumoTemporada.css';
 // assistências; o Over vai de-para com a variação em %; os atributos entram só em palavras (CLAUDE.md); o comentário do técnico
 // tem até 3 frases montadas pelas chaves do motor. É um `div role="alertdialog"` (não `<dialog>`: o modal nativo travou no Safari do iPhone).
 // Abre com o foco em "Continuar"; Esc fecha; Tab fica preso no único botão.
-export interface ResumoTemporadaProps { resumo: SeasonSummary; onClose: () => void }
+/** v2.62: `torcida` = faixa da idolatria no clube da temporada (o que a torcida vê em você), em palavras. */
+export interface ResumoTemporadaProps { resumo: SeasonSummary; torcida?: string; onClose: () => void }
 
-export function ResumoTemporada({ resumo, onClose }: ResumoTemporadaProps) {
+export function ResumoTemporada({ resumo, torcida, onClose }: ResumoTemporadaProps) {
   const close = useRef(null as HTMLButtonElement | null);
   useEffect(() => { close.current?.focus(); }, []);
   function onKey(e: React.KeyboardEvent) {
@@ -27,6 +28,7 @@ export function ResumoTemporada({ resumo, onClose }: ResumoTemporadaProps) {
       <div className="resumo" role="alertdialog" aria-modal="true" aria-labelledby="resumo-titulo" onKeyDown={onKey}>
         <h2 id="resumo-titulo" className="resumo__titulo">{t('ui.resumoTemporada.titulo')}</h2>
         <p className="resumo__onde">{`${clubName(resumo.clubId).nome} · ${t('ui.resumoTemporada.idade', { n: resumo.age })}`}</p>
+        {torcida && <p className="resumo__torcida">{t('ui.idolatria.selo', { faixa: t(`ui.idolatria.faixa.${torcida}`) })}</p>}
         <ul className="resumo__numeros" aria-label={t('ui.resumoTemporada.numeros')}>
           <li><span>{t('ui.resumoTemporada.partidas')}</span><strong>{resumo.partidas}</strong></li>
           <li><span>{t('ui.resumoTemporada.gols')}</span><strong>{resumo.gols}</strong></li>
