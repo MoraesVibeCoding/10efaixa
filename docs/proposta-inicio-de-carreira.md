@@ -62,3 +62,8 @@ A mentalidade tem **4 opções** e as decisões do jogo têm **3**. Qual caminho
 1. Início de carreira (seção 1).
 2. Criação mais curta (seção 2).
 3. Ajustes de tela (seção 3).
+
+## Respostas do usuário (2026-10-09)
+1. Proposta **aprovada**.
+2. Mentalidade: **(b)** o marco "Que profissional você vai ser?" é exceção à regra das 3 opções e mostra as 4.
+3. Pedido junto: revisar todas as telas com `/impeccable` (enquadramento, fontes e pontos de elevação da experiência, como animações e efeitos).
