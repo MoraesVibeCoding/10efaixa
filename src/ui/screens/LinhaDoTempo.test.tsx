@@ -120,3 +120,26 @@ describe('"Sua carreira": Seleção no card do ano (v2.65)', () => {
     for (const f of ['grupos', 'dezesseis-avos', 'oitavas', 'quartas', 'semifinal', 'final', 'campeao']) expect(t(`ui.linhaDoTempo.selecao.fase.${f}`).length).toBeGreaterThan(0);
   });
 });
+
+// v2.66 (direção B, escolhida pelo usuário): placar da carreira no topo e a faixa do Over em cada ano.
+describe('"Sua carreira" na direção B (v2.66)', () => {
+  it('o placar do topo traz jogos, gols, títulos e o Over do auge da carreira', () => {
+    render(<LinhaDoTempo result={result} onContinue={() => {}} />);
+    const placar = screen.getByRole('group', { name: t('ui.linhaDoTempo.placar.titulo') });
+    const text = placar.textContent ?? '';
+    expect(text).toContain(`${result.stats.games.toLocaleString('pt-BR')}${t('ui.linhaDoTempo.placar.jogos')}`);
+    expect(text).toContain(`${result.stats.goals.toLocaleString('pt-BR')}${t('ui.linhaDoTempo.placar.gols')}`);
+    expect(text).toContain(`${result.titles.length}${t('ui.linhaDoTempo.placar.titulos')}`);
+    expect(text).toContain(`${result.peakOverall}${t('ui.linhaDoTempo.placar.auge')}`);
+  });
+
+  it('cada ano tem a faixa do Over (decorativa, o número já está no texto) na largura do Over', () => {
+    const { container } = render(<LinhaDoTempo result={result} onContinue={() => {}} />);
+    const bars = container.querySelectorAll('.linha__faixa');
+    expect(bars).toHaveLength(result.seasons.length);
+    bars.forEach((b, i) => {
+      expect(b).toHaveAttribute('aria-hidden', 'true');
+      expect((b.firstElementChild as HTMLElement).style.inlineSize).toBe(`${timelineOf(result)[i]!.overall}%`);
+    });
+  });
+});

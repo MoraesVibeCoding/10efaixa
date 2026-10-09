@@ -8,37 +8,53 @@ import { TrophyIcon } from './TrophyIcon';
 import './LinhaDoTempo.css';
 
 // T55h (SPEC 6.15, v2.51): "Sua carreira", antes do cartão final: uma linha por temporada com idade, clube e divisão,
-// Over (número: exceção do overall, SPEC v2.51) e os títulos do ano. v2.65: a Seleção do ano dentro do card, quando houve convocação. As frases antigas seguem no cartão narrativo.
+// Over (número: exceção do overall, SPEC v2.51) e os títulos do ano. As frases antigas seguem no cartão narrativo.
+// v2.65: a Seleção do ano dentro do card, quando houve convocação.
+// v2.66 (direção B "Súmula"): placar da carreira no topo e a faixa do Over em cada ano (a curva da carreira de relance);
+// um traço marca a troca de clube e a Seleção vem num selo amarelo.
 /** Nome da divisão pelo id do mercado; id novo sem texto cai em "Outra liga" em vez de quebrar a tela. */
 export function divisionLabel(division: string | null): string {
   if (division === null) return '';
   try { return t(`ui.linhaDoTempo.divisao.${division}`); } catch { return t('ui.linhaDoTempo.outraLiga'); }
 }
 
+const num = (n: number) => n.toLocaleString('pt-BR');
+
 export function LinhaDoTempo({ result, onContinue }: { result: CareerResult; onContinue: () => void }) {
   const rows = timelineOf(result);
   const title = useRef(null as HTMLHeadingElement | null);
   useEffect(() => { title.current?.focus(); }, []);
+  const placar = [
+    [num(result.stats.games), 'jogos'], [num(result.stats.goals), 'gols'], [num(result.titles.length), 'titulos'], [String(result.peakOverall), 'auge'],
+  ] as const;
   return (
     <main className="linha" data-tema="claro">
+      <header className="linha__placar" role="group" aria-label={t('ui.linhaDoTempo.placar.titulo')}>
+        <p className="linha__nome">{result.player.name}</p>
+        <div className="linha__placar-nums">
+          {placar.map(([v, k]) => (
+            <span key={k} className={k === 'auge' ? 'linha__placar-n linha__placar-n--auge' : 'linha__placar-n'}><b>{v}</b><span>{t(`ui.linhaDoTempo.placar.${k}`)}</span></span>
+          ))}
+        </div>
+      </header>
       <h1 className="linha__titulo" ref={title} tabIndex={-1}>{t('ui.linhaDoTempo.titulo')}</h1>
-      <p className="linha__nome">{result.player.name}</p>
       <ol className="linha__lista">
         {rows.map((r) => (
-          <li key={r.year} className={r.peak ? 'linha__item linha__item--auge' : 'linha__item'}>
-            <span className="linha__idade">{t('ui.linhaDoTempo.idade', { n: r.age })}</span>
+          <li key={r.year} className={['linha__item', r.peak && 'linha__item--auge', r.newClub && 'linha__item--troca'].filter(Boolean).join(' ')}>
+            <span className="linha__idade"><span aria-hidden="true">{r.age}</span><span className="sr-only">{t('ui.linhaDoTempo.idade', { n: r.age })}</span></span>
             <span className="linha__clube">
               <Emblema clubId={r.clubId} size={20} />
               {clubName(r.clubId).nome}
             </span>
-            {(r.division !== null || r.newClub) && (
+            <span className="linha__over"><span className="sr-only">{t('ui.linhaDoTempo.overSr')} </span>{r.overall}</span>
+            <span className="linha__faixa" aria-hidden="true"><span style={{ inlineSize: `${r.overall}%` }} /></span>
+            {(r.division !== null || r.newClub || r.peak) && (
               <span className="linha__divisao">
                 {divisionLabel(r.division)}
                 {r.newClub && <strong className="linha__novo">{r.division !== null ? ' · ' : ''}{t('ui.linhaDoTempo.novoClube')}</strong>}
+                {r.peak && <strong className="linha__auge">{t('ui.linhaDoTempo.auge')}</strong>}
               </span>
             )}
-            <span className="linha__over">{t('ui.linhaDoTempo.over', { n: r.overall })}</span>
-            {r.peak && <strong className="linha__auge">{t('ui.linhaDoTempo.auge')}</strong>}
             {r.division !== null && (
               <span className="linha__numeros">
                 <span>{t('ui.linhaDoTempo.jogos', { n: r.games })}</span>
