@@ -217,7 +217,7 @@ describe('App: desafio do dia (T57c)', () => {
 // T57d (SPEC 6.15, v2.49): abrir um link "#c=..." revê a carreira, só leitura, sem tocar no save.
 describe('App: rever carreira por link (T57d)', () => {
   const linkInput = {
-    shirtNumber: 10, state: 'BA', position: 'meia' as const, archetypeId: 'classico10',
+    shirtNumber: 11, state: 'BA', position: 'meia' as const, archetypeId: 'classico10',
     biotype: { heightCm: 176, build: 'atletico' as const }, temperament: 'resenha', celebration: 'aviaozinho',
     origin: 'baseGrande', foot: 'direita', heartClub: 'bahia',
   };

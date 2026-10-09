@@ -44,7 +44,7 @@ describe('selo do desafio (T57c)', () => {
 describe('copiar link (T57e)', () => {
   const link: CareerLinkData = {
     seed: 11, ritmo: 'normal', visual: 'visual-01', choices: ['a'], codigo: '10F-7K3Q-9M2X',
-    input: { shirtNumber: 10, state: 'BA', position: 'meia', archetypeId: 'classico10', biotype: { heightCm: 176, build: 'atletico' }, temperament: 'resenha', celebration: 'aviaozinho', origin: 'baseGrande', foot: 'direita', heartClub: 'bahia' },
+    input: { shirtNumber: 11, state: 'BA', position: 'meia', archetypeId: 'classico10', biotype: { heightCm: 176, build: 'atletico' }, temperament: 'resenha', celebration: 'aviaozinho', origin: 'baseGrande', foot: 'direita', heartClub: 'bahia' },
   };
 
   it('copia o endereço da página com o fragmento do link e avisa', async () => {

@@ -8,7 +8,7 @@ import { runUntilDecision, type Ritmo } from './careerRun';
 // T52 (SPEC 6.5, v2.40): a reunião com a comissão vira uma decisão ("reuniao", escolha "principal|secundário").
 // Rápido: sempre automática; Normal: a do 2º semestre; Completo: as 2. Só com clube. A tela abre com a sugestão.
 const input = (over: Partial<CreationInput> = {}): CreationInput => ({
-  name: 'Jogador Teste', shirtNumber: 10, state: 'BA', position: 'meia', archetypeId: 'classico10',
+  name: 'Jogador Teste', shirtNumber: 11, state: 'BA', position: 'meia', archetypeId: 'classico10',
   biotype: { heightCm: 176, build: 'atletico' }, temperament: 'resenha', celebration: 'aviaozinho',
   origin: 'baseGrande', foot: 'direita', heartClub: 'bahia', ...over,
 });

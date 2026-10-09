@@ -7,7 +7,7 @@ import { careerLinkFragment, parseCareerLink, type CareerLinkData } from './care
 
 // T57b (SPEC 6.15, v2.49): link da carreira no fragmento da URL, sem nome nem apelido, com leitura estrita.
 const input: Omit<CreationInput, 'name'> = {
-  shirtNumber: 10, state: 'BA', position: 'meia', archetypeId: 'classico10',
+  shirtNumber: 11, state: 'BA', position: 'meia', archetypeId: 'classico10',
   biotype: { heightCm: 176, build: 'atletico' }, temperament: 'resenha', celebration: 'aviaozinho',
   origin: 'baseGrande', foot: 'direita', heartClub: 'bahia',
 };

@@ -6,16 +6,16 @@ import { t } from '../i18n';
 // disparam (dados em milestones.json); o texto e as opções são eventos comuns de events.json.
 const base: MilestoneFacts = {
   clubId: 'bahia', proDebut: false, clubDebut: false, titular: false, golsAno: 0, golsCarreira: 0, assistenciasCarreira: 0,
-  golsNoClube: 0, cobrador: false, titulosCarreira: 0, finalAno: false, classico: false, capitao: false, convocado: false,
+  golsNoClube: 0, cobrador: false, titulosCarreira: 0, finalAno: false, classico: false, capitao: false, camisa10: false, convocado: false,
   jogosSelecao: 0, golsSelecaoAno: 0, copa: false, exterior: false, estreouSelecao: false,
 };
 const fire = (over: Partial<MilestoneFacts>, done: string[] = []) => fireMilestones({ ...base, ...over }, new Set(done)).fired.map((m) => m.id);
 
 describe('marcos da carreira (T25c)', () => {
-  it('são 20: 15 de carreira e 5 de clube, ids únicos, todos com gatilho', () => {
-    expect(data.marcos).toHaveLength(20);
-    expect(new Set(data.marcos.map((m) => m.id)).size).toBe(20);
-    expect(data.marcos.filter((m) => m.escopo === 'carreira')).toHaveLength(15);
+  it('são 21: 16 de carreira (a camisa 10 entrou na v2.63) e 5 de clube, ids únicos, todos com gatilho', () => {
+    expect(data.marcos).toHaveLength(21);
+    expect(new Set(data.marcos.map((m) => m.id)).size).toBe(21);
+    expect(data.marcos.filter((m) => m.escopo === 'carreira')).toHaveLength(16);
     expect(data.marcos.filter((m) => m.escopo === 'clube')).toHaveLength(5);
     for (const m of data.marcos) expect(m.gatilho.length, m.id).toBeGreaterThan(0);
   });

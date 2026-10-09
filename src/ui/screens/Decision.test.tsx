@@ -477,6 +477,16 @@ describe('variação B (T51c, SPEC v2.34)', () => {
     expect(topo.querySelector('.bandeira')).toHaveTextContent(t('ui.sigla.brasil'));
   });
 
+  it('v2.63: com a 10 e a faixa, selos "10" e "C" ao lado do nome; sem elas, nada', () => {
+    render(<Decision eventId={EVENT} age={24} progress={0.4} player={{ ...PLAYER, number: 10, capitao: true }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    const topo = screen.getByRole('main').querySelector('.decisao__topo') as HTMLElement;
+    expect(within(topo).getByText(t('ui.decisao.selo10Texto'))).toBeInTheDocument();
+    expect(within(topo).getByText(t('ui.decisao.seloCapitaoTexto'))).toBeInTheDocument();
+    cleanup();
+    render(<Decision eventId={EVENT} age={24} progress={0.4} player={{ ...PLAYER, number: 7 }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    expect(screen.getByRole('main').querySelector('.selo-conquista')).toBeNull();
+  });
+
   it('sem seleção, sem bandeira (v2.62)', () => {
     show();
     expect(screen.getByRole('main').querySelector('.bandeira')).toBeNull();

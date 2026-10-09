@@ -51,6 +51,8 @@ export interface DecisionProps {
     uniforme?: string;
     /** v2.62: país da seleção principal, depois da estreia por ela: a bandeira ao lado do nome. */
     selecao?: string;
+    /** v2.63: capitão do clube atual: o selo "C" ao lado do nome (a 10 vem do número). */
+    capitao?: boolean;
     /** Marcos já alcançados ("selecao", "camisa10"): saem dos espaços vazios do álbum. */
     milestones?: string[];
     /** T25c: marcos vividos (primeiras vezes), do mais antigo ao mais novo: figurinhas do álbum e da gaveta. */
@@ -415,7 +417,10 @@ export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert }
       <button ref={opener} type="button" className="jogador__abrir" aria-haspopup="dialog" aria-expanded={open} onClick={onOpen}>
         <Figurinha moldura tamanho="pequena" name={player.name} number={player.number} overall={player.overall} position={player.position} clubId={player.clubId} uniforme={player.uniforme} avatar={player.avatar} visual={player.visual} />
         <span className="jogador__quem">
-          <span className="jogador__nome"><span aria-hidden="true">{player.name}</span>{player.selecao ? <Bandeira pais={player.selecao} /> : null}</span>
+          <span className="jogador__nome"><span aria-hidden="true">{player.name}</span>{player.selecao ? <Bandeira pais={player.selecao} /> : null}
+            {/* v2.63: a 10 e a faixa são conquistas: selos ao lado do nome enquanto valem */}
+            {player.number === 10 && <span className="selo-conquista"><span aria-hidden="true">{t('ui.decisao.selo10')}</span><span className="sr-only">{t('ui.decisao.selo10Texto')}</span></span>}
+            {player.capitao && <span className="selo-conquista"><span aria-hidden="true">{t('ui.decisao.seloCapitao')}</span><span className="sr-only">{t('ui.decisao.seloCapitaoTexto')}</span></span>}</span>
           <span className="jogador__clube"><Emblema clubId={player.clubId} size={18} />{clubLine(player.position, player.clubId)}</span>
           <span className="jogador__mais">
             {t('ui.carreira.titulo')}

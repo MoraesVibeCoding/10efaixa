@@ -1,13 +1,12 @@
 import type { CreationInput } from '../engine/player';
 import { dailySeed } from '../engine/daily';
 import { runUntilDecision } from './careerRun';
-import archetypeMigration from '../data/archetypeMigration.json';
 
 // T54 (SPEC 6.16, v2.39): a carreira salva no aparelho a cada decisão. O motor é determinístico, então o save é só
 // criação + semente + ritmo + escolhas; continuar = refazer a carreira até a próxima decisão (careerRun).
 // Fica só no aparelho (localStorage): nada vai para servidor, analytics ou URL. Uma carreira ativa por vez.
 export const SAVE_KEY = '10efaixa:carreira';
-export const SAVE_VERSION = 3;
+export const SAVE_VERSION = 4;
 const RITMOS = ['rapido', 'normal', 'completo'] as const;
 
 export interface SaveData {
@@ -22,23 +21,11 @@ export type SaveResult = { ok: true; save: SaveData } | { ok: false; reason: 'ne
 /** O pedaço do localStorage que o save usa (dá para testar com um armazenamento de mentira). */
 export interface SaveStorage { getItem(k: string): string | null; setItem(k: string, v: string): void; removeItem(k: string): void }
 
-/** Migrações por versão: cada uma leva um save da versão `n` para `n + 1`. */
-const MIGRATIONS: Record<number, (old: Record<string, unknown>) => Record<string, unknown>> = {
-  // v1 → v2 (T53): no v1 toda decisão ia para a tela em qualquer ritmo; as escolhas salvas só fazem sentido com essa
-  // regra, que hoje é a do Completo.
-  1: (old) => ({ ...old, versao: 2, ritmo: 'completo' }),
-  // v2 → v3 (v2.48): estilos que saíram da posição viram o mais parecido dela (archetypeMigration.json)
-  2: (old) => ({ ...old, versao: 3, created: convertStyle(old.created) }),
-};
-
-const CONVERSAO = archetypeMigration.conversao as Record<string, string>;
-
-function convertStyle(created: unknown): unknown {
-  if (!isObject(created) || !isObject(created.input)) return created;
-  const { position, archetypeId } = created.input as { position?: unknown; archetypeId?: unknown };
-  const to = CONVERSAO[`${String(position)}:${String(archetypeId)}`];
-  return to ? { ...created, input: { ...created.input, archetypeId: to } } : created;
-}
+/** Migrações por versão: cada uma leva um save da versão `n` para `n + 1`.
+ * v2.63: o marco "A camisa 10 é sua" entrou na sequência de decisões, então as escolhas salvas antes dele (v1 a v3) não
+ * refazem mais a mesma carreira. As migrações antigas (v1 → v2: ritmo Completo; v2 → v3: estilos revistos da v2.48) saíram:
+ * todo save anterior à v4 vira "carreira de outra versão" (decisão do usuário, 2026-10-09). */
+const MIGRATIONS: Record<number, (old: Record<string, unknown>) => Record<string, unknown>> = {};
 
 const isObject = (x: unknown): x is Record<string, unknown> => typeof x === 'object' && x !== null && !Array.isArray(x);
 

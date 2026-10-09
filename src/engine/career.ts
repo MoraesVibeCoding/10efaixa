@@ -112,6 +112,8 @@ export interface DecisionView {
   ultimoSemestre?: { year: number; semestre: 1 | 2; frases: Feedback[] };
   /** v2.61: o resumo da última temporada profissional fechada (a tela mostra num card no Normal e no Completo). */
   ultimaTemporada?: SeasonSummary;
+  /** v2.63: capitão do clube atual (a faixa do clube); a tela mostra o selo "C". */
+  capitao: boolean;
   /** T51b: idolatria (−100 a 100) em cada clube por onde passou; a tela mostra só a faixa. */
   idolatrias: Record<string, number>;
   /** T25c: os marcos já vividos, do mais antigo ao mais novo (álbum da carreira). */
@@ -188,6 +190,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let peakAttributes = { ...evo.attributes };
   let peakClubId: string | null = null;
   let wearsTen = false;
+  /** v2.63: a 10 vestida (depois do marco "camisa-10"); vale em todo clube seguinte. */
+  let tenShirt = false;
   let captain = false;
   let seasonsAtClub = 0;
   const injuries = { leve: 0, media: 0, grave: 0 };
@@ -257,7 +261,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       moral: morale, disciplina: discipline, relacaoTecnico: coachRelation, patrimonio: wealth, salarioFator: 1,
       idolatria: clubId ? idol[clubId] ?? 0 : 0, idolatriaCoracao: input.heartClub ? idol[input.heartClub] ?? 0 : 0, ...memoryCtx(memorias, curYear), ...state,
     },
-    seasons: [...seasons], titles: [...titles], marcos: marcos.map(({ id, year, clubId: club }) => ({ id, year, clubId: club })), memorias: memorias.map((x) => ({ ...x })), etiquetas: contextTags(), nationality: selection.nationality, meetings: [...meetings], idolatrias: { ...idol }, ...(ultimoSemestre && { ultimoSemestre }), ...(ultimaTemporada && { ultimaTemporada }),
+    seasons: [...seasons], titles: [...titles], marcos: marcos.map(({ id, year, clubId: club }) => ({ id, year, clubId: club })), memorias: memorias.map((x) => ({ ...x })), etiquetas: contextTags(), nationality: selection.nationality, capitao: clubId ? captainAt.has(clubId) : false, meetings: [...meetings], idolatrias: { ...idol }, ...(ultimoSemestre && { ultimoSemestre }), ...(ultimaTemporada && { ultimaTemporada }),
   }));
   const earn = (amount: number, currency: Contract['currency']) => { const before = wealth; wealth = addToWealth(wealth, amount, currency, agent); earned += Math.max(0, wealth - before); };
   const awards: CareerResult['awards'] = [];
@@ -284,7 +288,9 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     clubId = id;
     seasonsAtClub = 0;
     idol = afterTransfer(idol, from, id, input.heartClub);
-    spells.push({ clubId: id, fromAge: evo.age, toAge: evo.age, number: assignNumber(input.shirtNumber, rosterNumbers(r)), loan });
+    // v2.63: com a 10 conquistada ela vai junto; o sorteio do elenco acontece igual para não mudar os outros sorteios
+    const number = assignNumber(input.shirtNumber, rosterNumbers(r));
+    spells.push({ clubId: id, fromAge: evo.age, toAge: evo.age, number: tenShirt ? 10 : number, loan });
     if (loan) return;
     if (offer) sign(id, offer.annualSalary, offer.years);
     else sign(id, salaryFor(marketValue(ov(evo), evo.age), leagueOf(id, divOf)), 2);
@@ -612,7 +618,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         clubId, proDebut: proSeasons === 1, clubDebut: seasonsAtClub === 1, titular: avgMinutes >= FACTS.titularMinutos,
         golsAno: seasonGoals, golsCarreira: stats.goals, assistenciasCarreira: stats.assists, golsNoClube: goalsAtClub[clubId] ?? 0,
         cobrador: cobradorClub === clubId || traits.traits.includes('cobrador'), titulosCarreira: titles.length,
-        finalAno: wonThisYear || cdb.runnerUp === clubId, classico: derbyYear, capitao: captainAt.has(clubId),
+        finalAno: wonThisYear || cdb.runnerUp === clubId, classico: derbyYear, capitao: captainAt.has(clubId), camisa10: wearsTen,
         convocado: Object.values(selection.callUps).some((n) => n > 0), jogosSelecao: selection.caps,
         golsSelecaoAno: selection.caps > capsBefore ? Math.floor(seasonGoals * FACTS.golsSelecaoFracao) : 0,
         copa: worldCup !== null, exterior: !BRAZIL.has(clubId), estreouSelecao: selection.caps > 0,
@@ -629,6 +635,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         coachRelation = clamp(out.relacaoTecnico as number, 0, 1);
         marcoMental = Math.min(EFFECTS.bonusMentalMax, marcoMental + (out.bonusMental as number));
         if (out.cobrador) cobradorClub = clubId;
+        if (m.id === 'camisa-10') { tenShirt = true; spells.at(-1)!.number = 10; }
         marcos.push({ id: m.id, year, age: Math.floor(evo.age - 1), clubId, option });
         remember(m.id, clubId);
       }
@@ -795,7 +802,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   selection.oriundoCampeao = selection.dual === 'aceitou' && selection.tournaments.some((t) => t.stage === 'campeao' && t.team !== 'brasil');
   selection.esperouOBrasil = selection.dual === 'recusou' && selection.caps > 0;
   const result = {
-    player, spells, titles, peakOverall, peakAge, peakAttributes, peakClubId: peakClubId ?? spells[0]?.clubId ?? '', endAge: evo.age, wearsTen, captain, idolatry: idol, negotiations, forcedExits,
+    player, spells, titles, peakOverall, peakAge, peakAttributes, peakClubId: peakClubId ?? spells[0]?.clubId ?? '', endAge: evo.age, wearsTen: tenShirt, captain, idolatry: idol, negotiations, forcedExits,
     wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, selection, stats, awards, retirement, farewell, cards, finalTemperament: temp, houseBought, discipline, seasons, earnedBRL: earned, decisiveDerbies, marcos, memorias,
   };
   // Sorteios novos ficam por último para não alterar nenhum resultado anterior da mesma semente.

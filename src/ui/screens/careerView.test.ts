@@ -10,7 +10,7 @@ import { PROPOSAL_EVENT } from '../../engine/proposals';
 const pickFirst = (id: string) => events.eventos.find((e) => e.id === id)!.opcoes[0]!.id;
 
 const INPUT: CreationInput = {
-  name: 'Dudu Maestro', shirtNumber: 10, state: 'BA', position: 'meia', archetypeId: 'classico10',
+  name: 'Dudu Maestro', shirtNumber: 11, state: 'BA', position: 'meia', archetypeId: 'classico10',
   biotype: { heightCm: 184, build: 'forte' }, temperament: 'resenha', celebration: 'aviaozinho',
   origin: 'baseGrande', foot: 'direita', heartClub: 'bahia',
 };
@@ -48,6 +48,12 @@ describe('careerView (T51b): do motor para a tela de decisão', () => {
     expect(toDecisionPlayer(estreou, INPUT, LOOK).selecao).toBe('italia');
     const soConvocado = { ...base, marcos: [...base.marcos, { id: 'primeira-convocacao', year: 2030, clubId: 'flamengo' }] };
     expect(toDecisionPlayer(soConvocado, INPUT, LOOK).selecao).toBeUndefined();
+  });
+
+  it('v2.63: leva se ele é capitão do clube atual', () => {
+    const base = viewAt(0);
+    expect(toDecisionPlayer(base, INPUT, LOOK).capitao).toBe(false);
+    expect(toDecisionPlayer({ ...base, capitao: true }, INPUT, LOOK).capitao).toBe(true);
   });
 
   it('leva os marcos já vividos (T25c), do mais antigo ao mais novo', () => {

@@ -12,7 +12,7 @@ vi.mock('../../data/flow.json', async (original) => {
 });
 
 const INPUT: CreationInput = {
-  name: 'Dudu Maestro', shirtNumber: 10, state: 'BA', position: 'meia', archetypeId: 'classico10',
+  name: 'Dudu Maestro', shirtNumber: 11, state: 'BA', position: 'meia', archetypeId: 'classico10',
   biotype: { heightCm: 176, build: 'atletico' }, temperament: 'resenha', celebration: 'aviaozinho',
   origin: 'baseGrande', foot: 'direita', heartClub: 'bahia',
 };

@@ -2668,6 +2668,77 @@
    "marco": true
   },
   {
+   "id": "camisa-10",
+   "importancia": 10,
+   "cena": "vestiario",
+   "peso": 10,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "prometer-gols",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "idolatria",
+       "add",
+       6
+      ],
+      [
+       "moral",
+       "add",
+       0.03
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "agradecer-ao-grupo",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.03
+      ],
+      [
+       "idolatria",
+       "add",
+       2
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "seguir-treinando",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "bonusMental",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "agradecer-ao-grupo"
+   },
+   "marco": true
+  },
+  {
    "id": "primeira-bracadeira",
    "importancia": 10,
    "cena": "vestiario",

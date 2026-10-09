@@ -29,7 +29,7 @@ export function toDecisionPlayer(view: DecisionView, input: CreationInput, look:
   return {
     visual, uniforme: uniformeFor(eventId, view),
     name: input.name, position: view.position, clubId: view.clubId ?? '', overall: view.overall,
-    titles: view.titles.map((x) => x.competition), role: view.role,
+    titles: view.titles.map((x) => x.competition), role: view.role, capitao: view.capitao,
     // v2.62: a bandeira ao lado do nome depois da estreia pela seleção principal
     ...(view.marcos.some((m) => m.id === 'estreia-selecao') ? { selecao: view.nationality } : {}),
     marcos: view.marcos.map((m) => ({ id: m.id, ano: m.year, clubId: m.clubId })),

@@ -6,7 +6,7 @@ import { SAVE_KEY, SAVE_VERSION, clearSave, parseSave, peekSave, readSave, valid
 // T54 (SPEC 6.16, v2.39): a carreira salva no aparelho a cada decisão. O save é criação + semente + ritmo + escolhas;
 // a carreira é refeita a partir dele (motor determinístico). Nada sai do aparelho.
 const INPUT: CreationInput = {
-  name: 'Dudu Maestro', shirtNumber: 10, state: 'BA', position: 'meia', archetypeId: 'classico10',
+  name: 'Dudu Maestro', shirtNumber: 11, state: 'BA', position: 'meia', archetypeId: 'classico10',
   biotype: { heightCm: 184, build: 'forte' }, temperament: 'resenha', celebration: 'aviaozinho',
   origin: 'baseGrande', foot: 'direita', heartClub: 'bahia',
 };
@@ -68,36 +68,9 @@ describe('save da carreira (T54)', () => {
     expect(validateSave({ ...SAVE, choices: ['opcao-que-nao-existe'] })).toEqual({ ok: false, reason: 'danificado' });
   });
 
-  it('migração v1 → v2 (T53): no v1 toda decisão ia para a tela; o save vira Completo, que mantém essa regra', () => {
-    expect(SAVE_VERSION).toBe(3);
-    const v1 = JSON.stringify({ versao: 1, ...SAVE, ritmo: 'rapido', choices: ['x'] });
-    expect(parseSave(v1)).toEqual({ ok: true, save: { ...SAVE, ritmo: 'completo', choices: ['x'] } });
-  });
-});
-
-// v2.48: os estilos que saíram viram o mais parecido da mesma posição; os que ficaram não mudam
-describe('migração v2 → v3 (v2.48, estilos revistos)', () => {
-  const v2 = (position: CreationInput['position'], archetypeId: string) =>
-    JSON.stringify({ versao: 2, ...SAVE, created: { ...SAVE.created, input: { ...INPUT, position, archetypeId } } });
-  const styleOf = (raw: string) => { const r = parseSave(raw); return r.ok ? r.save.created.input.archetypeId : null; };
-
-  it.each([
-    ['goleiro', 'pegadorPenalti', 'goleiroSeguro'],
-    ['ponta', 'pontaDriblador', 'ousado'],
-    ['ponta', 'magico', 'ousado'],
-    ['ponta', 'pontaInvertido', 'pontaTrabalhador'],
-    ['ponta', 'arrancador', 'pontaArtilheiro'],
-    ['atacante', 'magico', 'arrancador'],
-    ['meia', 'regente', 'classico10'],
-    ['meia', 'motorzinho', 'classico10'],
-  ] as const)('%s %s → %s', (position, from, to) => {
-    expect(styleOf(v2(position, from))).toBe(to);
-  });
-
-  it('estilo que continua na posição não muda', () => {
-    expect(styleOf(v2('meia', 'magico'))).toBe('magico');
-    expect(styleOf(v2('volante', 'regente'))).toBe('regente');
-    expect(styleOf(v2('atacante', 'arrancador'))).toBe('arrancador');
+  it('v2.63: saves das versões 1 a 3 viram carreira de outra versão (o marco da camisa 10 mudou a sequência de decisões)', () => {
+    expect(SAVE_VERSION).toBe(4);
+    for (const versao of [1, 2, 3]) expect(parseSave(JSON.stringify({ ...SAVE, versao }))).toEqual({ ok: false, reason: 'versao' });
   });
 });
 

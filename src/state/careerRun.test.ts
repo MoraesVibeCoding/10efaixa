@@ -12,7 +12,7 @@ const auto = (step: Extract<CareerStep, { kind: 'decision' }>) => autoDecide(ste
 
 // T51 (a): a carreira para em cada decisão e continua refazendo do começo com as escolhas já feitas (motor determinístico).
 const input = (over: Partial<CreationInput> = {}): CreationInput => ({
-  name: 'Jogador Teste', shirtNumber: 10, state: 'BA', position: 'meia', archetypeId: 'classico10',
+  name: 'Jogador Teste', shirtNumber: 11, state: 'BA', position: 'meia', archetypeId: 'classico10',
   biotype: { heightCm: 176, build: 'atletico' }, temperament: 'resenha', celebration: 'aviaozinho',
   origin: 'baseGrande', foot: 'direita', heartClub: 'bahia', ...over,
 });
