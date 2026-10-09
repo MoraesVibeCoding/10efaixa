@@ -1,0 +1,13 @@
+{
+  "extraKnownMarketplaces": {
+    "10efaixa": {
+      "source": {
+        "source": "github",
+        "repo": "MoraesVibeCoding/10efaixa"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "previsao-do-contexto@10efaixa": true
+  }
+}
