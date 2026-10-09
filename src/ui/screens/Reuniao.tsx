@@ -23,6 +23,8 @@ export interface ReuniaoProps {
   player: DecisionProps['player'];
   age: number;
   progress: number;
+  /** v2.61: 1 = balanço do fim da temporada e planejamento do ano; 2 = meio da temporada. */
+  semestre: 1 | 2;
   scene: DecisionProps['scene'];
   anterior?: DecisionProps['anterior'];
   onChoose: (choice: string) => void;
@@ -30,7 +32,7 @@ export interface ReuniaoProps {
 
 function agradoText(a: Agrado) { return t(`ui.reuniao.agrado.${a}`); }
 
-export function Reuniao({ ideias, player, age, progress, scene, anterior, onChoose }: ReuniaoProps) {
+export function Reuniao({ ideias, player, age, progress, semestre, scene, anterior, onChoose }: ReuniaoProps) {
   const [picked, setPicked] = useState(null as Idea | null);
   const [career, setCareer] = useState(false);
   const opener = useRef(null as HTMLButtonElement | null);
@@ -67,7 +69,7 @@ export function Reuniao({ ideias, player, age, progress, scene, anterior, onChoo
       <form className="decisao__painel vidro reuniao__painel" onSubmit={submit} inert={career} noValidate>
         <p className="reuniao__sala">{t('ui.reuniao.sala')}</p>
         <h1 className="decisao__titulo" ref={title} tabIndex={-1}>{t('ui.reuniao.titulo')}</h1>
-        <p className="reuniao__fala"><strong>{t('ui.reuniao.treinador')}</strong> {t('ui.reuniao.fala', { nome: player.name })}</p>
+        <p className="reuniao__fala"><strong>{t('ui.reuniao.treinador')}</strong> {t(`ui.reuniao.fala.${semestre}`, { nome: player.name })}</p>
         <div className="reuniao__ideias" role="radiogroup" aria-label={t('ui.reuniao.ideias')}>
           {IDEAS.map((id) => {
             const { proposal, agrado } = ideias[id];

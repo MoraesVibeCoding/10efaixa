@@ -80,3 +80,9 @@ Simulação pareada (`npm run sim:estilos`, 400 carreiras por estilo), antes (HE
 - Lote 1 (15 eventos de campo e postura, aprovado) e lote 2 (15 de campo, clube e vida): fichas em `docs/lote-eventos-1.md` e `docs/lote-eventos-2.md`. Total no catálogo: 75 eventos (20 marcos, 25 originais, 30 de sorteio).
 - Validar nos textos: tom, custo de cada opção e se alguma situação soa estranha para alguma posição (o sorteio ainda não conhece a posição do jogador).
 - "Vaia" e "Clássico" usam a cena do estádio até as cenas pintadas existirem.
+- Lote 3 (9 eventos de campo, rotina e vida): ficha em `docs/lote-eventos-3.md`. Catálogo: **84 eventos** (meta de 80 atingida). Simulação pareada (400 carreiras por estilo): "Lenda" 7,17% → 7,41% com os 39 eventos de sorteio (faixa 5,5–9,3%), dentro do ruído da amostra.
+
+## Reuniões e resumo da temporada (SPEC v2.61)
+- Reuniões na tela como você sugeriu: Rápido nenhuma, Normal 1 por temporada (meio do ano), Completo 2. A reunião do 1º semestre agora se apresenta como balanço do fim da temporada e planejamento do ano (a fala não diz mais "metade da temporada").
+- Resumo da temporada (Normal e Completo, nunca no Rápido): card por cima da primeira tela depois do fim do ano, com jogos, gols e assistências, Over de-para com a variação em %, atributos só em palavras, troféus do ano e comentário do técnico (até 3 frases). Limiares em `src/data/seasonSummary.json`.
+- Validar nos textos (`ui.resumoTemporada`): o tom do técnico e se as três frases combinam bem; se o limiar de "salto" (+5%) e "bom ano" (+2%) está certo para a sua sensação de jogo.

@@ -13,6 +13,7 @@ import { callUp, coachFor, isPrincipal, selectionEffect, updatePrestige, visibil
 import { evolveSemester, type EvoState, type Focus } from './evolution';
 import { projectValue, salaryChange, valueChange } from './contractCard';
 import { semesterFeedback, type Feedback } from './feedback';
+import { summarizeSeason, type SeasonSummary } from './seasonSummary';
 import { mentalityEffects } from './mentality';
 import { afterClassico, afterSemester, afterTransfer, type Idolatry } from './idolatry';
 import { decayRelapse, graveDecision, semesterInjury } from './injuries';
@@ -109,6 +110,8 @@ export interface DecisionView {
   reuniao?: MeetingOptions;
   /** T51b: o último semestre fechado e o que mais mudou nele (até 2 frases, sem número). */
   ultimoSemestre?: { year: number; semestre: 1 | 2; frases: Feedback[] };
+  /** v2.61: o resumo da última temporada profissional fechada (a tela mostra num card no Normal e no Completo). */
+  ultimaTemporada?: SeasonSummary;
   /** T51b: idolatria (−100 a 100) em cada clube por onde passou; a tela mostra só a faixa. */
   idolatrias: Record<string, number>;
   /** T25c: os marcos já vividos, do mais antigo ao mais novo (álbum da carreira). */
@@ -242,6 +245,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let curRole: Role = 'jovemPromessa';
   const meetings: DecisionView['meetings'] = [];
   let ultimoSemestre: DecisionView['ultimoSemestre'];
+  let ultimaTemporada: DecisionView['ultimaTemporada'];
   /** Toda decisão passa por aqui (T51): o padrão é a escolha do temperamento, como antes. */
   const ask = (eventId: string, state: Record<string, number | string | boolean> = {}, who = temp, extra: Pick<DecisionView, 'propostas' | 'reuniao' | 'atual'> = {}) => decide(eventId, who, () => ({
     ...extra,
@@ -253,7 +257,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       moral: morale, disciplina: discipline, relacaoTecnico: coachRelation, patrimonio: wealth, salarioFator: 1,
       idolatria: clubId ? idol[clubId] ?? 0 : 0, idolatriaCoracao: input.heartClub ? idol[input.heartClub] ?? 0 : 0, ...memoryCtx(memorias, curYear), ...state,
     },
-    seasons: [...seasons], titles: [...titles], marcos: marcos.map(({ id, year, clubId: club }) => ({ id, year, clubId: club })), memorias: memorias.map((x) => ({ ...x })), etiquetas: contextTags(), nationality: selection.nationality, meetings: [...meetings], idolatrias: { ...idol }, ...(ultimoSemestre && { ultimoSemestre }),
+    seasons: [...seasons], titles: [...titles], marcos: marcos.map(({ id, year, clubId: club }) => ({ id, year, clubId: club })), memorias: memorias.map((x) => ({ ...x })), etiquetas: contextTags(), nationality: selection.nationality, meetings: [...meetings], idolatrias: { ...idol }, ...(ultimoSemestre && { ultimoSemestre }), ...(ultimaTemporada && { ultimaTemporada }),
   }));
   const earn = (amount: number, currency: Contract['currency']) => { const before = wealth; wealth = addToWealth(wealth, amount, currency, agent); earned += Math.max(0, wealth - before); };
   const awards: CareerResult['awards'] = [];
@@ -345,6 +349,9 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     let wantsOut = false;
     let derbyYear = false;
     const capsBefore = selection.caps;
+    // v2.61: o começo do ano, para o resumo da temporada comparar o Over e os atributos
+    const ovStart = ov(evo);
+    const attrsStart = { ...evo.attributes };
 
     for (let sem = 0; sem < 2; sem++) {
       let minutes: number;
@@ -563,12 +570,14 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     // Números e prêmios da temporada (só no profissional).
     let seasonGoals = 0;
     let seasonAssists = 0;
+    let seasonGames = 0;
     if (clubId && !inYouth) {
       const raw = seasonStats({ position, overall: ov(evo), minutes: avgMinutes, league, teamResult, setPieceTaker: traits.traits.includes('cobrador') }, yr);
       // T25c: cobrador do time (marco "assumir a bola parada") faz alguns gols a mais; o goleiro cobrador segue stats.json
       const st = cobradorClub === clubId && position !== 'goleiro' ? { ...raw, goals: Math.round(raw.goals * (1 + EFFECTS.cobradorGolsExtra)) } : raw;
       seasonGoals = st.goals;
       seasonAssists = st.assists;
+      seasonGames = st.games;
       goalsAtClub[clubId] = (goalsAtClub[clubId] ?? 0) + st.goals;
       stats = addStats(stats, st);
       const won = seasonAwards({
@@ -578,6 +587,12 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       for (const award of won) if (award !== 'revelacao' || !awards.some((a) => a.award === 'revelacao')) awards.push({ year, award });
     }
     seasons.push({ year, age: evo.age - 1, clubId: seasonClub, division: league, minutes: avgMinutes, overall: ov(evo), goals: seasonGoals, assists: seasonAssists });
+    if (clubId && !inYouth) {
+      ultimaTemporada = summarizeSeason({
+        year, age: evo.age - 1, clubId: seasonClub, division: league, games: seasonGames, goals: seasonGoals, assists: seasonAssists, minutes: avgMinutes,
+        overallBefore: ovStart, overallAfter: ov(evo), attrsBefore: attrsStart, attrsAfter: evo.attributes, titles: titles.filter((t) => t.year === year).map((t) => t.competition),
+      });
+    }
 
     // Camisa 10 e faixa do clube por evento.
     if (clubId && !inYouth) {

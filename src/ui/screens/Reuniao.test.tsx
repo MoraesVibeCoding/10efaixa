@@ -15,8 +15,8 @@ const IDEIAS: MeetingOptions = {
   mescla: { proposal: { main: 'fisico', secondary: 'drible' }, agrado: 'possivel' },
   ousada: { proposal: { main: 'drible', secondary: 'finalizacao' }, agrado: 'pouco' },
 };
-const setup = (onChoose = vi.fn()) => {
-  render(<Reuniao ideias={IDEIAS} player={PLAYER} age={19} progress={0.1} scene={{ src: 'c.webp', alt: 'Sala de reuniões' }} onChoose={onChoose} />);
+const setup = (onChoose = vi.fn(), semestre: 1 | 2 = 2) => {
+  render(<Reuniao ideias={IDEIAS} player={PLAYER} age={19} progress={0.1} semestre={semestre} scene={{ src: 'c.webp', alt: 'Sala de reuniões' }} onChoose={onChoose} />);
   return onChoose;
 };
 const cards = () => within(screen.getByRole('radiogroup', { name: t('ui.reuniao.ideias') })).getAllByRole('radio');
@@ -26,8 +26,16 @@ describe('tela da reunião em 3 ideias (T52d)', () => {
     setup();
     expect(screen.getByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })).toBeInTheDocument();
     expect(screen.getByText(t('ui.reuniao.sala'))).toBeInTheDocument();
-    expect(screen.getByText(t('ui.reuniao.fala', { nome: 'Pedro' }))).toBeInTheDocument();
+    expect(screen.getByText(t('ui.reuniao.fala.2', { nome: 'Pedro' }))).toBeInTheDocument();
     expect(screen.getByRole('button', { name: new RegExp(t('ui.carreira.titulo')) })).toBeInTheDocument();
+  });
+
+  it('a reunião do 1º semestre é o balanço do fim da temporada; a do 2º é a do meio do ano (v2.61)', () => {
+    setup(vi.fn(), 1);
+    expect(screen.getByText(t('ui.reuniao.fala.1', { nome: 'Pedro' }))).toBeInTheDocument();
+    expect(screen.queryByText(t('ui.reuniao.fala.2', { nome: 'Pedro' }))).toBeNull();
+    expect(t('ui.reuniao.fala.1', { nome: 'Pedro' })).not.toContain('metade da temporada');
+    expect(t('ui.reuniao.fala.2', { nome: 'Pedro' })).toContain('metade da temporada');
   });
 
   it('três cartões em grupo de rádio, cada um com os dois focos', () => {

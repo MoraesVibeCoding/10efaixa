@@ -1,0 +1,7 @@
+{
+ "_nota": "v2.61 (SPEC 6.15): resumo da temporada. mudaAno e forteAno: variação de atributo no ano a partir da qual entra no resumo e conta como forte (o dobro do limiar semestral de feedback.json); maxAtributos: quantos atributos aparecem. Variação do Over em %: grande a partir de +5%, boa a partir de +2%, estável até −2% (abaixo disso, queda). Minutos: as mesmas faixas de minutes.json (muitos, rodízio, poucos).",
+ "mudaAno": 3,
+ "forteAno": 8,
+ "maxAtributos": 3,
+ "pct": { "grande": 5, "boa": 2, "queda": -2 }
+}

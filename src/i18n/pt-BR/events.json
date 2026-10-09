@@ -1004,5 +1004,158 @@
    "noClubeDeCoracao": "Homenagem no clube de coração é o sonho do menino que olhava da arquibancada.",
    "capitao": "Com a faixa no braço, a homenagem é do clube todo, não só sua."
   }
+ },
+ "confusao-no-meio-do-campo": {
+  "titulo": "Confusão no meio do campo",
+  "texto": "Uma dividida mais forte e os dois times se empurram no meio do campo. O árbitro apita sem parar, e o banco de reservas invade a linha lateral. Alguém puxa o seu braço.",
+  "opcoes": {
+   "entrar-para-apartar": "Entrar no meio para apartar a briga",
+   "entrar-na-briga": "Entrar na confusão e defender o companheiro",
+   "sair-de-perto": "Sair de perto e esperar o árbitro resolver"
+  },
+  "abertura": {
+   "capitao": "Com a faixa no braço, o juiz vem falar primeiro com você.",
+   "vilao": "Com a fama que você tem, o árbitro já vai direto no seu nome."
+  },
+  "contexto": {
+   "moralBaixa": "Com a cabeça quente, a confusão parece o lugar certo para descarregar.",
+   "veterano": "Você já viu muita briga começar assim e sabe como termina."
+  }
+ },
+ "tecnico-grita-da-beira": {
+  "titulo": "O técnico grita da beira",
+  "texto": "O técnico berra o seu nome da lateral, com o dedo em riste, na frente do estádio inteiro. Você errou uma marcação, mas o grito veio de longe e sem explicação. A câmera já está em você.",
+  "opcoes": {
+   "responder-na-lata": "Responder na lata, de longe",
+   "fazer-sinal-de-entendido": "Fazer sinal de entendido e voltar à posição",
+   "conversar-no-intervalo": "Deixar a conversa para o intervalo"
+  },
+  "abertura": {
+   "veterano": "Você já levou muito grito e sabe separar o técnico do homem.",
+   "jovem": "No começo de carreira, o primeiro grito do técnico fica na cabeça."
+  },
+  "contexto": {
+   "posicaoDisputada": "Com a vaga em disputa, qualquer resposta vira argumento contra você.",
+   "moralBaixa": "Com a moral baixa, o grito pesa mais que o erro."
+  }
+ },
+ "toque-leve-na-area": {
+  "titulo": "Um toque leve na área",
+  "texto": "Aos quarenta do segundo tempo, no empate, o zagueiro encosta de leve em você dentro da área. Dá para cair e pedir o pênalti. O árbitro está a cinco metros, e o estádio já grita.",
+  "opcoes": {
+   "cair-e-pedir": "Cair e pedir o pênalti",
+   "seguir-o-lance": "Seguir o lance e tentar a finalização",
+   "contar-ao-arbitro": "Levantar e dizer ao árbitro que foi só um toque"
+  },
+  "abertura": {
+   "veterano": "Você já viu muito jogo decidido num toque que ninguém viu.",
+   "jovem": "Aprendendo o jogo, você ouve de todo lado que isso faz parte."
+  },
+  "contexto": {
+   "capitao": "Com a faixa no braço, o que você fizer vira exemplo para a molecada.",
+   "empresarioPressiona": "Seu empresário avisou: gol e pênalti contam, o resto ninguém lembra."
+  }
+ },
+ "adversario-caido-e-bola-rolando": {
+  "titulo": "O adversário caído e a bola rolando",
+  "texto": "Um jogador do outro time cai com a mão no joelho, mas o árbitro manda o jogo seguir. Você está de frente para o gol, com a bola nos pés. O estádio inteiro pede o ataque.",
+  "opcoes": {
+   "devolver-a-bola": "Chutar a bola para fora e parar o jogo",
+   "seguir-o-ataque": "Seguir o ataque e finalizar",
+   "pedir-ao-arbitro": "Pedir ao árbitro para parar o jogo"
+  },
+  "abertura": {
+   "capitao": "Capitão pensa no que o time vai dizer de si depois.",
+   "veterano": "Com a idade, você sabe que o jogo dura noventa minutos e a fama dura anos."
+  },
+  "contexto": {
+   "idolo": "Para o ídolo, o aplauso da torcida e o do adversário contam do mesmo jeito.",
+   "moralBaixa": "Com a moral baixa, a vontade é de aproveitar cada chance."
+  }
+ },
+ "psicologo-do-clube": {
+  "titulo": "O convite do psicólogo do clube",
+  "texto": "O clube contratou um psicólogo, e o técnico sugere uma conversa com você. Você anda calado, e no elenco todo mundo reparou. A primeira sessão é na terça, antes do treino.",
+  "opcoes": {
+   "aceitar-e-ir": "Aceitar e ir já na terça",
+   "conversar-com-a-familia": "Recusar e desabafar com a família",
+   "ir-so-uma-vez": "Ir só uma vez, para ver como é"
+  },
+  "abertura": {
+   "veterano": "Com os anos de estrada, ninguém precisa te explicar o que é pressão.",
+   "jovem": "No começo de carreira, falar da cabeça ainda parece fraqueza."
+  },
+  "contexto": {
+   "lesaoGrave": "Depois da lesão grave, a cabeça demora mais que o joelho para voltar.",
+   "salarioAtrasado": "Com o salário atrasado, pensar em outra coisa que não dinheiro é luxo."
+  }
+ },
+ "dieta-do-nutricionista": {
+  "titulo": "A dieta do nutricionista",
+  "texto": "O nutricionista entrega o novo cardápio: nada de frito, nada de refrigerante, sobremesa só no domingo. O churrasco da família é no sábado. O preparador já avisou que vai pesar todo mundo na segunda.",
+  "opcoes": {
+   "seguir-a-risca": "Seguir o cardápio à risca, até no churrasco",
+   "negociar-um-dia-livre": "Negociar um dia livre por mês com o nutricionista",
+   "aproveitar-o-churrasco": "Aproveitar o churrasco e compensar na semana"
+  },
+  "abertura": {
+   "veterano": "Com os anos, o corpo já não perdoa o que você comia aos dezoito.",
+   "jovem": "Aos vinte e poucos, ninguém acha que sobremesa pesa."
+  },
+  "contexto": {
+   "capitao": "Com a faixa no braço, o seu prato vira exemplo no refeitório.",
+   "moralBaixa": "Com a moral baixa, a comida vira o único conforto do dia."
+  }
+ },
+ "foto-na-mesa-do-jantar": {
+  "titulo": "Foto na mesa do jantar",
+  "texto": "Num jantar de domingo com a família, um torcedor se aproxima da mesa com o celular. Atrás dele, mais quatro esperam a vez. Sua mãe está no meio da sobremesa, e o prato esfriou.",
+  "opcoes": {
+   "atender-todo-mundo": "Atender todos, mesmo com o prato esfriando",
+   "fazer-piada-e-tirar-uma": "Fazer uma piada, tirar uma foto e voltar à mesa",
+   "pedir-paz-no-jantar": "Pedir, seco, que deixem o jantar em paz"
+  },
+  "abertura": {
+   "idolo": "Quando o ídolo senta à mesa, o restaurante inteiro fica de olho.",
+   "vilao": "Para quem a torcida vaiou na semana, até a foto vira teste."
+  },
+  "contexto": {
+   "empresarioPressiona": "Seu empresário diz que cada foto bem tirada vale mais que um comercial.",
+   "noClubeDeCoracao": "Com a camisa do clube de coração, todo olhar na rua vira cobrança."
+  }
+ },
+ "voo-atrasado-na-vespera": {
+  "titulo": "Voo atrasado na véspera",
+  "texto": "O voo do time atrasa cinco horas, e o jogo é amanhã às quatro da tarde. O elenco se espalha pelo aeroporto, cansado e de cara fechada. O preparador sugere dormir cedo, mas o saguão está cheio de torcedores.",
+  "opcoes": {
+   "organizar-o-grupo": "Reunir o elenco e dormir no primeiro hotel",
+   "animar-o-grupo": "Animar o grupo com resenha até o embarque",
+   "isolar-se-no-hotel": "Ir sozinho para o hotel e se isolar"
+  },
+  "abertura": {
+   "capitao": "Com a faixa no braço, o grupo olha para você para saber o ânimo.",
+   "veterano": "Você já dormiu em muito saguão e sabe que ninguém joga bem sem descanso."
+  },
+  "contexto": {
+   "foraDoEixo": "Longe dos grandes centros, voo atrasado é parte do calendário.",
+   "campeaoNoAno": "Com o título à vista, ninguém quer perder o sono por causa de um voo."
+  }
+ },
+ "elogio-do-adversario": {
+  "titulo": "O elogio do adversário",
+  "texto": "Depois do jogo, o craque do time rival diz na entrevista que você é o melhor da posição que ele já enfrentou. O repórter te mostra o vídeo e pergunta o que você acha. Os seus companheiros olham de longe.",
+  "opcoes": {
+   "retribuir-o-elogio": "Retribuir o elogio com respeito",
+   "agradecer-curto": "Agradecer em uma frase e mudar de assunto",
+   "brincar-de-si": "Brincar que ele só estava sendo gentil"
+  },
+  "abertura": {
+   "idolo": "Elogio de adversário vale mais que o de torcedor, e todo mundo sabe.",
+   "convocado": "Quem veste a camisa da Seleção aprende a pesar até um elogio."
+  },
+  "contexto": {
+   "empresarioPressiona": "Seu empresário já recortou o vídeo para mostrar a outros clubes.",
+   "capitao": "Com a faixa no braço, o elogio é um pouco do time todo."
+  }
  }
 }
