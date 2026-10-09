@@ -133,31 +133,35 @@ function rr(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: n
 }
 
 const H = CARD_SIZE.height;
-const GLASS = tokens.vidro.claro;
 const THEME = tokens.temas.claro;
-// figurinha grande (v2.34): moldura 1 : 1,22, respiro de 9% da largura, foto em 80% da largura
-const FW = 560;
+// v2.66 (direção C): figurinha menor no campo verde, faixa de capitão com o veredito e o conteúdo num painel de papel sólido.
+// figurinha: moldura 1 : 1,22, respiro de 9% da largura, foto em 80% da largura
+const FW = 480;
 const FX = (W - FW) / 2;
-const FY = 40;
+const FY = 36;
 const FH = Math.round(FW * 1.22);
 const EM = FW / 10;
-// painel de vidro, por baixo da figurinha
-const GY = FY + FH + 24;
+// faixa do veredito, logo abaixo da figurinha, e o painel de papel por baixo dela
+const BAND_Y = FY + FH + 34;
+const BAND_H = 84;
+const GY = BAND_Y + 22;
 const GX = 40;
 const GW = W - 2 * GX;
+/** Pé do painel: nenhum texto do cartão passa daqui (o rodapé fica no verde, embaixo). */
 const GB = H - 70;
 const PAD = 44;
+const BAND_TILT = -0.05;
 
-/** Fundo: as cores do clube do auge em faixas diagonais, escurecidas pelo marinho (o vidro só fica sobre "outra coisa"). */
-function backdrop(ctx: CanvasRenderingContext2D, kit: Kit) {
-  const colors = kit.camisa.length > 1 ? kit.camisa : [kit.camisa[0]!, kit.detalhe];
-  ctx.save();
-  ctx.translate(W / 2, H / 2); ctx.rotate(-Math.PI / 6); ctx.translate(-W, -H);
-  const step = 120;
-  for (let i = 0, p = 0; p < 2 * H; i++, p += step) { ctx.fillStyle = colors[i % colors.length]!; ctx.fillRect(0, p, 2 * W, step); }
-  ctx.restore();
-  ctx.fillStyle = 'rgba(20, 33, 61, 0.72)';
+/** Fundo: verde de gramado liso, com o número da camisa gigante e apagado atrás da figurinha. */
+function backdrop(ctx: CanvasRenderingContext2D, m: CardModel) {
+  ctx.fillStyle = P.gramado;
   ctx.fillRect(0, 0, W, H);
+  const num = String(m.numero);
+  ctx.save();
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.14)';
+  font(ctx, 820, TITLE, 900);
+  ctx.fillText(num, (W - ctx.measureText(num).width) / 2, FY + FH - 10);
+  ctx.restore();
 }
 
 /** A figurinha do álbum em tamanho grande: moldura de metal, foto com as faixas do clube, Over, tarja e emblema. */
@@ -218,24 +222,36 @@ function figurinha(ctx: CanvasRenderingContext2D, m: CardModel, images: CardImag
   ctx.fillText(m.nome.toUpperCase(), tx + 0.6 * EM, ty + th * 0.66);
 }
 
-/** Painel de vidro (v2.34): o papel com alfa e borda clara por cima do fundo. */
-function glass(ctx: CanvasRenderingContext2D) {
+/** Painel de papel sólido com sombra suave (o vidro fica para as telas com cena por trás). */
+function panel(ctx: CanvasRenderingContext2D) {
+  ctx.save();
+  ctx.shadowColor = 'rgba(9, 26, 17, 0.28)'; ctx.shadowBlur = 24; ctx.shadowOffsetY = 8;
   rr(ctx, GX, GY, GW, GB - GY, 24);
-  ctx.fillStyle = `rgba(248, 245, 238, ${GLASS.alfa})`; ctx.fill();
-  ctx.strokeStyle = `rgba(255, 255, 255, ${GLASS.bordaAlfa})`; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = THEME.superficie; ctx.fill();
+  ctx.restore();
 }
 
-/** Selo do veredito (a antiga faixa amarela), rótulo e a linha "apelido · posição do clube". Devolve onde o conteúdo continua. */
-function verdict(ctx: CanvasRenderingContext2D, m: CardModel): number {
-  const x = GX + PAD; const width = GW - 2 * PAD;
+/** A faixa de capitão (amarelo braçadeira), inclinada e passando das bordas, com o veredito. */
+function band(ctx: CanvasRenderingContext2D, m: CardModel) {
   const v = m.veredito.toUpperCase();
-  const size = fit(ctx, v, TITLE, 900, 46, 26, width - 48);
-  const w = ctx.measureText(v).width + 48;
+  ctx.save();
+  ctx.translate(W / 2, BAND_Y + BAND_H / 2);
+  ctx.rotate(BAND_TILT);
+  ctx.shadowColor = 'rgba(9, 26, 17, 0.3)'; ctx.shadowBlur = 16; ctx.shadowOffsetY = 6;
   ctx.fillStyle = P.amarelo;
-  rr(ctx, x, GY + 32, w, size + 22, (size + 22) / 2); ctx.fill();
-  ctx.fillStyle = P.marinho;
-  ctx.fillText(v, x + 24, GY + 32 + size * 0.86 + 9);
-  let y = GY + 32 + size + 22 + 40;
+  ctx.fillRect(-W / 2 - 40, -BAND_H / 2, W + 80, BAND_H);
+  ctx.shadowColor = 'transparent';
+  ctx.fillStyle = P.tinta;
+  const size = fit(ctx, v, TITLE, 900, 56, 28, W - 2 * PAD - 40);
+  ctx.fillText(v, -ctx.measureText(v).width / 2, size * 0.36);
+  ctx.restore();
+}
+
+/** Rótulo, a linha "apelido · posição · clube" e onde virou ídolo. Devolve onde o conteúdo continua. */
+function header(ctx: CanvasRenderingContext2D, m: CardModel): number {
+  const x = GX + PAD; const width = GW - 2 * PAD;
+  let y = GY + 122;
+  ctx.fillStyle = P.tinta;
   fit(ctx, m.rotulo, TEXT, 700, 30, 20, width);
   ctx.fillText(m.rotulo, x, y);
   y += 38;
@@ -247,7 +263,7 @@ function verdict(ctx: CanvasRenderingContext2D, m: CardModel): number {
   if (m.idolos.length) {
     y += 36;
     const line = idolLine(m.idolos);
-    ctx.fillStyle = m.idolos[0]!.coracao ? P.verde : P.marinho;
+    ctx.fillStyle = m.idolos[0]!.coracao ? P.gramado : P.tinta;
     fit(ctx, line, TEXT, 700, 26, 16, width);
     ctx.fillText(line, x, y);
   }
@@ -256,50 +272,53 @@ function verdict(ctx: CanvasRenderingContext2D, m: CardModel): number {
 
 function narrative(ctx: CanvasRenderingContext2D, m: CardModel, y0: number) {
   const x = GX + PAD; const width = GW - 2 * PAD;
-  ctx.fillStyle = P.marinho;
+  ctx.fillStyle = P.tinta;
   font(ctx, 30, TEXT, 700);
   let y = paragraph(ctx, m.manchete, x, y0, width, 38, y0 + 38) + 8;
-  // até 4 frases, uma linha cada: a fonte diminui até caber, nunca corta (T55d)
+  // honrarias em pílulas numa linha (a fonte diminui até a linha caber), logo depois da manchete: nunca caem no pé
+  if (m.honrarias.length) {
+    const labels = m.honrarias.map((h) => `★ ${h}`);
+    let size = 22;
+    for (; size > 14; size--) {
+      font(ctx, size, TEXT, 700);
+      if (labels.reduce((sum, l) => sum + ctx.measureText(l).width + 2 * size + 12, 0) <= width) break;
+    }
+    let px = x;
+    const top = y - size * 1.1;
+    for (const l of labels) {
+      const w = ctx.measureText(l).width + 2 * size;
+      ctx.fillStyle = P.tinta; rr(ctx, px, top, w, size * 1.7, size * 0.85); ctx.fill();
+      ctx.fillStyle = P.papel; ctx.fillText(l, px + size, top + size * 1.2);
+      px += w + 12;
+    }
+    y = top + size * 1.7 + 44;
+  }
+  // até 4 frases, uma linha cada (a fonte diminui até caber, nunca corta); só as que cabem antes do pé do painel
   for (const f of m.frases) {
-    ctx.fillStyle = P.verde; ctx.fillRect(x, y - 16, 10, 10);
-    ctx.fillStyle = P.marinho;
+    if (y > GB - 24) break;
+    ctx.fillStyle = P.gramado; ctx.fillRect(x, y - 16, 10, 10);
+    ctx.fillStyle = P.tinta;
     fit(ctx, f, TEXT, 400, 28, 16, width - 24);
     ctx.fillText(f, x + 24, y);
-    y += 46;
-  }
-  // honrarias em pílulas numa linha (a fonte diminui até a linha caber)
-  if (!m.honrarias.length) return;
-  const labels = m.honrarias.map((h) => `★ ${h}`);
-  let size = 22;
-  for (; size > 14; size--) {
-    font(ctx, size, TEXT, 700);
-    if (labels.reduce((sum, l) => sum + ctx.measureText(l).width + 2 * size + 12, 0) <= width) break;
-  }
-  let px = x;
-  // as honrarias ficam no pé do vidro
-  const top = Math.max(y - 20, GB - 32 - size * 1.7);
-  for (const l of labels) {
-    const w = ctx.measureText(l).width + 2 * size;
-    ctx.fillStyle = P.marinho; rr(ctx, px, top, w, size * 1.7, size * 0.85); ctx.fill();
-    ctx.fillStyle = P.papel; ctx.fillText(l, px + size, top + size * 1.2);
-    px += w + 12;
+    y += 44;
   }
 }
 
 function statistics(ctx: CanvasRenderingContext2D, m: CardModel, y0: number) {
   const x = GX + PAD; const width = GW - 2 * PAD;
-  // números da carreira numa linha de cinco
+  // números da carreira numa linha
   const col = width / m.numeros.length;
   m.numeros.forEach((n, i) => {
-    ctx.fillStyle = P.marinho;
+    ctx.fillStyle = P.tinta;
     fit(ctx, n.valor, TITLE, 900, 44, 22, col - 12);
     ctx.fillText(n.valor, x + i * col, y0 + 8);
-    fit(ctx, n.nome.toUpperCase(), TITLE, 800, 20, 14, col - 12);
+    fit(ctx, n.nome.toUpperCase(), TITLE, 800, 20, 12, col - 12);
     ctx.fillStyle = THEME.textoSuave;
     ctx.fillText(n.nome.toUpperCase(), x + i * col, y0 + 36);
   });
   // radar dos 10 atributos no auge, escala 0–100
-  const r = Math.min(92, (GB - (y0 + 70)) / 2 - 34);
+  // o rótulo de baixo fica a 1,14 do raio e mais 18 px: o raio é o maior que ainda cabe no painel
+  const r = Math.min(130, ((GB - (y0 + 70)) / 2 - 24) / 1.14);
   const [cx, cy] = [W / 2, (y0 + 70 + GB) / 2];
   const pt = (i: number, v: number) => {
     const a = -Math.PI / 2 + (i * 2 * Math.PI) / m.radar.length;
@@ -315,8 +334,8 @@ function statistics(ctx: CanvasRenderingContext2D, m: CardModel, y0: number) {
   m.radar.forEach((a, i) => { const [px, py] = pt(i, Math.min(1, a.valor / 100)); if (i) ctx.lineTo(px, py); else ctx.moveTo(px, py); });
   ctx.closePath();
   ctx.fillStyle = 'rgba(30, 123, 79, 0.35)'; ctx.fill();
-  ctx.strokeStyle = P.verde; ctx.lineWidth = 4; ctx.stroke();
-  ctx.fillStyle = P.marinho;
+  ctx.strokeStyle = P.gramado; ctx.lineWidth = 4; ctx.stroke();
+  ctx.fillStyle = P.tinta;
   font(ctx, 20, TEXT, 700);
   // rótulo alinhado pelo lado em que está, para nunca invadir o polígono
   m.radar.forEach((a, i) => {
@@ -334,13 +353,14 @@ function statistics(ctx: CanvasRenderingContext2D, m: CardModel, y0: number) {
 /** Desenha o cartão inteiro no contexto (1080×1350). Imagens opcionais: sem elas, ficam as cores (metal e clube). */
 export function drawCard(ctx: CanvasRenderingContext2D, m: CardModel, version: CardVersion, images: CardImages = {}) {
   ctx.textBaseline = 'alphabetic';
-  backdrop(ctx, kitOf(m.clubeAuge));
-  // v2.62: a figurinha veste o último clube profissional (o fundo segue com as cores do clube do auge)
+  backdrop(ctx, m);
+  // v2.62: a figurinha veste o último clube profissional
   figurinha(ctx, m, images, kitOf(m.clubeFigurinha));
-  glass(ctx);
-  const y = verdict(ctx, m);
+  panel(ctx);
+  band(ctx, m);
+  const y = header(ctx, m);
   if (version === 'narrativa') narrative(ctx, m, y); else statistics(ctx, m, y);
-  // rodapé sobre o fundo: código da carreira e a marca
+  // rodapé sobre o verde: código da carreira e a marca
   ctx.fillStyle = P.papel;
   font(ctx, 26, TITLE, 800);
   ctx.fillText(`${t('ui.cartao.codigo')} ${m.codigo}`, GX + 8, H - 26);
