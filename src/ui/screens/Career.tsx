@@ -1,3 +1,4 @@
+import { flushSync } from 'react-dom';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { DecisionView } from '../../engine/career';
 import { careerCode } from '../../engine/careerCode';
@@ -79,7 +80,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
   const semestre = semKey !== seenSemester && view.ultimoSemestre ? semesterLines(view.ultimoSemestre.frases) : undefined;
   const seasonKey = view.ultimaTemporada ? `${view.ultimaTemporada.year}` : '';
   const resumoEl = ritmo !== 'rapido' && view.ultimaTemporada && seasonKey !== seenSeason
-    ? <ResumoTemporada key={seasonKey} resumo={view.ultimaTemporada} onClose={() => { setSeenSeason(seasonKey); box.current?.querySelector('h1')?.focus(); }} />
+    ? <ResumoTemporada key={seasonKey} resumo={view.ultimaTemporada} onClose={() => { closeCard(() => { setSeenSeason(seasonKey); }); }} />
     : null;
   function decide(choice: string) {
     setSeenSemester(semKey);
@@ -87,21 +88,33 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
     setChoices([...choices, choice]);
   }
   const resposta = answerOf(view.meetings, asked);
-  const respostaEl = resposta ? <ReuniaoResposta key={`${asked!.year}-${asked!.semestre}`} resposta={resposta} onDone={() => { setAsked(null); }} /> : null;
+  const respostaEl = resposta ? <ReuniaoResposta key={`${asked!.year}-${asked!.semestre}`} resposta={resposta} onDone={() => { closeCard(() => { setAsked(null); }); }} /> : null;
+  /** Fecha um card e devolve o foco: ao card que ainda estiver aberto ou ao título da tela. O flushSync tira o `inert` antes do foco. */
+  function closeCard(update: () => void) {
+    flushSync(update);
+    const card = box.current?.querySelector<HTMLElement>('[role="alertdialog"] button');
+    if (card) { card.focus(); return; }
+    const h1 = box.current?.querySelector('h1');
+    if (!h1) return;
+    h1.tabIndex = -1;
+    h1.focus();
+  }
   if (eventId === MEETING_EVENT && view.reuniao) {
     // T52d: reunião em 3 ideias, no desenho da decisão (cena da sala de reuniões e o card do jogador de sempre)
     const meetingPlayer = toDecisionPlayer(view, input, look, visual, eventId);
     const meetingClub = view.clubId ? clubName(view.clubId).nome : t('ui.varzea');
     return (
       <div ref={box} className="carreira" data-temperamento={view.temperament}>
-        <Reuniao
-          key={index} ideias={view.reuniao} player={meetingPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} semestre={Number(view.state.semestre) === 1 ? 1 : 2} anterior={anterior}
-          scene={sceneOfCena('reuniao-comissao', meetingPlayer, visual, input.name, meetingClub)}
-          onChoose={(choice) => {
-            setAsked({ year: view.year, semestre: Number(view.state.semestre) });
-            decide(choice);
-          }}
-        />
+        <div className="carreira__tela" inert={respostaEl !== null || resumoEl !== null}>
+          <Reuniao
+            key={index} ideias={view.reuniao} player={meetingPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} semestre={Number(view.state.semestre) === 1 ? 1 : 2} anterior={anterior}
+            scene={sceneOfCena('reuniao-comissao', meetingPlayer, visual, input.name, meetingClub)}
+            onChoose={(choice) => {
+              setAsked({ year: view.year, semestre: Number(view.state.semestre) });
+              decide(choice);
+            }}
+          />
+        </div>
         {respostaEl}
         {resumoEl}
       </div>
@@ -113,11 +126,13 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
     const contractClub = view.clubId ? clubName(view.clubId).nome : t('ui.varzea');
     return (
       <div ref={box} className="carreira" data-temperamento={view.temperament}>
-        <Propostas
-          key={index} propostas={view.propostas ?? []} atual={view.atual} podeFicar={view.state.podeFicar === true} podeForcar={view.state.podeForcar === true}
-          podeRenovar={view.state.podeRenovar === true} player={contractPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} anterior={anterior}
-          scene={sceneOfCena('assinatura-contrato', contractPlayer, visual, input.name, contractClub)} onChoose={decide}
-        />
+        <div className="carreira__tela" inert={resumoEl !== null}>
+          <Propostas
+            key={index} propostas={view.propostas ?? []} atual={view.atual} podeFicar={view.state.podeFicar === true} podeForcar={view.state.podeForcar === true}
+            podeRenovar={view.state.podeRenovar === true} player={contractPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} anterior={anterior}
+            scene={sceneOfCena('assinatura-contrato', contractPlayer, visual, input.name, contractClub)} onChoose={decide}
+          />
+        </div>
         {resumoEl}
       </div>
     );
@@ -126,23 +141,25 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
   const clube = view.clubId ? clubName(view.clubId).nome : t('ui.varzea');
   return (
     <div ref={box} className="carreira" data-temperamento={view.temperament} data-semestre={semKey}>
-      <Decision
-        key={index}
-        eventId={eventId}
-        age={Math.floor(view.age)}
-        progress={careerProgress(view.age)}
-        scene={sceneFor(eventId, player, visual, input.name, clube)}
-        player={player}
-        state={view.state}
-        ritmo={ritmo}
-        semestre={semestre}
-        anterior={anterior}
-        momentos={momentos}
-        onContinue={(choice) => {
-          setAnterior({ overall: player.overall, age: Math.floor(view.age), marketValueEUR: player.marketValueEUR, titles: view.titles, seasons: view.seasons });
-          decide(choice);
-        }}
-      />
+      <div className="carreira__tela" inert={respostaEl !== null || resumoEl !== null}>
+        <Decision
+          key={index}
+          eventId={eventId}
+          age={Math.floor(view.age)}
+          progress={careerProgress(view.age)}
+          scene={sceneFor(eventId, player, visual, input.name, clube)}
+          player={player}
+          state={view.state}
+          ritmo={ritmo}
+          semestre={semestre}
+          anterior={anterior}
+          momentos={momentos}
+          onContinue={(choice) => {
+            setAnterior({ overall: player.overall, age: Math.floor(view.age), marketValueEUR: player.marketValueEUR, titles: view.titles, seasons: view.seasons });
+            decide(choice);
+          }}
+        />
+      </div>
       {respostaEl}
       {resumoEl}
     </div>

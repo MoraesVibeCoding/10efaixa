@@ -22,7 +22,7 @@ const onProposalScreen = () => screen.queryByRole('heading', { level: 1, name: t
 /** Joga até a primeira tela de propostas (reunião aceita a sugestão, eventos com a escolha do temperamento). */
 function playUntilProposals() {
   for (let guard = 0; guard < 400 && !onProposalScreen(); guard++) {
-    const resposta = document.querySelector('dialog.reuniao__resposta');
+    const resposta = document.querySelector('.reuniao__resposta');
     if (resposta) { fireEvent.click(resposta.querySelector('button')!); continue; }
     if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') })); continue; }
     const el = document.querySelector('[data-evento]');

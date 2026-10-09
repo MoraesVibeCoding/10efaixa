@@ -43,7 +43,7 @@ describe('carreira na tela (T51b)', () => {
     render(<Career input={INPUT} look={LOOK} visual={VISUAIS[0]!.id} seed={11} onRestart={onRestart} onProgress={onProgress} />);
     for (let guard = 0; guard < 400 && !screen.queryByRole('heading', { level: 1, name: t('ui.linhaDoTempo.titulo') }); guard++) {
       // T52: resposta da comissão por cima da tela; reunião aceita a sugestão do preparador (o mesmo do automático)
-      const resposta = document.querySelector('dialog.reuniao__resposta');
+      const resposta = document.querySelector('.reuniao__resposta');
       if (resposta) { fireEvent.click(resposta.querySelector('button')!); continue; }
       if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') })); continue; }
       if (passProposals()) continue;
@@ -99,11 +99,11 @@ describe('carreira na tela (T51b)', () => {
     }
     expect(screen.getByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })).toBeInTheDocument();
     fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') }));
-    const dialog = document.querySelector('dialog.reuniao__resposta') as HTMLElement;
+    const dialog = document.querySelector('.reuniao__resposta') as HTMLElement;
     expect(dialog).not.toBeNull();
     expect(dialog.querySelector('h2')!.textContent).toMatch(new RegExp([t('ui.reuniao.resposta.aceita.titulo'), t('ui.reuniao.resposta.contrapropoe.titulo'), t('ui.reuniao.resposta.recusa.titulo')].join('|')));
     fireEvent.click(dialog.querySelector('button')!);
-    expect(document.querySelector('dialog.reuniao__resposta')).toBeNull();
+    expect(document.querySelector('.reuniao__resposta')).toBeNull();
   });
 
   it('a linha "Neste semestre" aparece só na primeira decisão depois de cada semestre (T51b)', { timeout: 60_000 }, () => {
@@ -111,7 +111,7 @@ describe('carreira na tela (T51b)', () => {
     const seen = new Set<string>();
     let shownCount = 0;
     for (let guard = 0; guard < 120 && !screen.queryByRole('heading', { level: 1, name: t('ui.fim.titulo') }); guard++) {
-      const resposta = document.querySelector('dialog.reuniao__resposta');
+      const resposta = document.querySelector('.reuniao__resposta');
       if (resposta) { fireEvent.click(resposta.querySelector('button')!); continue; }
       if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') })); continue; }
       if (passProposals()) continue;
@@ -148,8 +148,14 @@ describe('resumo da temporada na tela (v2.61)', () => {
     const card = screen.getByRole('alertdialog', { name: t('ui.resumoTemporada.titulo') });
     expect(card).toBeInTheDocument();
     expect(screen.getByRole('button', { name: t('ui.resumoTemporada.continuar') })).toHaveFocus();
+    // com o card aberto, a tela de baixo fica inerte (o leitor de tela não navega por trás do card)
+    const h1 = document.querySelector('h1')!;
+    expect(h1.closest('[inert]')).not.toBeNull();
+    expect(card.closest('[inert]')).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: t('ui.resumoTemporada.continuar') }));
     expect(screen.queryByRole('alertdialog', { name: t('ui.resumoTemporada.titulo') })).toBeNull();
+    expect(document.querySelector('h1')!.closest('[inert]')).toBeNull();
+    expect(document.querySelector('h1')).toHaveFocus();
   });
 
   it('no Completo também; no Rápido nunca', { timeout: 60_000 }, () => {
