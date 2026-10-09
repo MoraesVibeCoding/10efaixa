@@ -148,8 +148,14 @@ describe('resumo da temporada na tela (v2.61)', () => {
     const card = screen.getByRole('alertdialog', { name: t('ui.resumoTemporada.titulo') });
     expect(card).toBeInTheDocument();
     expect(screen.getByRole('button', { name: t('ui.resumoTemporada.continuar') })).toHaveFocus();
+    // com o card aberto, a tela de baixo fica inerte (o leitor de tela não navega por trás do card)
+    const h1 = document.querySelector('h1')!;
+    expect(h1.closest('[inert]')).not.toBeNull();
+    expect(card.closest('[inert]')).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: t('ui.resumoTemporada.continuar') }));
     expect(screen.queryByRole('alertdialog', { name: t('ui.resumoTemporada.titulo') })).toBeNull();
+    expect(document.querySelector('h1')!.closest('[inert]')).toBeNull();
+    expect(document.querySelector('h1')).toHaveFocus();
   });
 
   it('no Completo também; no Rápido nunca', { timeout: 60_000 }, () => {

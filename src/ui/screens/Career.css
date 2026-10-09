@@ -1,2 +1,4 @@
 /* T51 (b): a carreira não cria caixa própria; quem desenha a tela é a decisão ou o resumo. */
 .carreira { display: contents; }
+/* v2.61: invólucro da tela de baixo, só para ficar inerte com um card por cima; não cria caixa. */
+.carreira__tela { display: contents; }
