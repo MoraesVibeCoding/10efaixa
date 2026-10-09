@@ -387,3 +387,22 @@
 .opcao { transition: background-color var(--transicao, 300ms) ease, border-color var(--transicao, 300ms) ease, opacity var(--transicao, 300ms) ease, transform var(--transicao, 300ms) ease; }
 .decisao[data-resultado='aberto'] .opcao[aria-pressed='true'] { transform: scale(1.02); }
 @keyframes decisao-entra { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* v2.62 (pedido do usuário): no celular a cena quase não aparecia. A caixa do jogador fica mais baixa (figurinha, Over e
+   selos menores) e os detalhes da faixa de baixo (história e opções) descem um passo; o título fica como está.
+   O corpo segue em 1rem ou mais (tokens.json); só os selos, que são rótulos, ficam abaixo. */
+@media (max-width: 63.99rem) {
+  .decisao__topo { gap: var(--espaco-1) var(--espaco-2); padding: var(--espaco-2) var(--espaco-3); }
+  .jogador__abrir { gap: var(--espaco-2); }
+  .jogador__abrir .figurinha { --w: 3.25rem; }
+  .jogador__nome { font-size: 1.0625rem; }
+  .jogador__clube, .jogador__mais { font-size: 0.875rem; }
+  .decisao__over-numero { font-size: 2.25rem; }
+  .decisao__over-rotulo { font-size: 0.75rem; }
+  .selos li { padding: 0 6px; font-size: 0.8125rem; line-height: 1.4; }
+  .decisao__painel { gap: var(--espaco-2); padding: var(--espaco-3); }
+  .decisao__historia { font-size: 1rem; line-height: 1.38; }
+  .decisao__semestre { font-size: 0.875rem; }
+  .opcao__rotulo { font-size: 1.0625rem; }
+  .decisao__detalhe { min-block-size: 2.2rem; font-size: 0.875rem; }
+}
