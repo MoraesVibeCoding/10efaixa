@@ -10,7 +10,7 @@ import { runUntilDecision, type Ritmo } from './careerRun';
 // T53 (SPEC 6.16, v2.39): quantas decisões chegam à tela por temporada. Rápido: 1, o evento de maior importância da
 // temporada; Normal: até 3, os mais importantes; Completo: todas. As outras o temperamento decide (escolha automática).
 const input = (over: Partial<CreationInput> = {}): CreationInput => ({
-  name: 'Jogador Teste', shirtNumber: 10, state: 'BA', position: 'meia', archetypeId: 'classico10',
+  name: 'Jogador Teste', shirtNumber: 11, state: 'BA', position: 'meia', archetypeId: 'classico10',
   biotype: { heightCm: 176, build: 'atletico' }, temperament: 'resenha', celebration: 'aviaozinho',
   origin: 'baseGrande', foot: 'direita', heartClub: 'bahia', ...over,
 });

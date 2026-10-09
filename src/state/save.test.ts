@@ -6,7 +6,7 @@ import { SAVE_KEY, SAVE_VERSION, clearSave, parseSave, peekSave, readSave, valid
 // T54 (SPEC 6.16, v2.39): a carreira salva no aparelho a cada decisão. O save é criação + semente + ritmo + escolhas;
 // a carreira é refeita a partir dele (motor determinístico). Nada sai do aparelho.
 const INPUT: CreationInput = {
-  name: 'Dudu Maestro', shirtNumber: 10, state: 'BA', position: 'meia', archetypeId: 'classico10',
+  name: 'Dudu Maestro', shirtNumber: 11, state: 'BA', position: 'meia', archetypeId: 'classico10',
   biotype: { heightCm: 184, build: 'forte' }, temperament: 'resenha', celebration: 'aviaozinho',
   origin: 'baseGrande', foot: 'direita', heartClub: 'bahia',
 };

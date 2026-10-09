@@ -42,7 +42,7 @@ describe('criação (T50, v2.30)', () => {
     expect(title('quemE')).toBeInTheDocument();
     expect(screen.getByText(t('ui.criacao.progresso', { passo: 1, total: CREATION_STEPS.length }))).toBeInTheDocument();
     expect(field('nome')).toHaveAttribute('autocomplete', 'off');
-    expect(field('numero')).toHaveValue('10');
+    expect(field('numero')).toHaveValue('7');
     expect(field('estado')).toHaveValue('');
     expect(field('clube')).toHaveValue('');
   });
@@ -75,6 +75,15 @@ describe('criação (T50, v2.30)', () => {
       fireEvent.change(field('numero'), { target: { value: '100' } });
       advance();
       expect(field('numero')).toHaveAttribute('aria-invalid', 'true');
+    });
+
+    it('v2.63: a 10 não se escolhe na criação (se conquista em campo)', () => {
+      setup();
+      fillIdentity();
+      fireEvent.change(field('numero'), { target: { value: '10' } });
+      advance();
+      expect(field('numero')).toHaveAttribute('aria-invalid', 'true');
+      expect(field('numero')).toHaveAccessibleDescription(t('creation.error.shirtNumber.reserved'));
     });
 
     it('corrigir um campo limpa só o erro dele', () => {
@@ -215,7 +224,7 @@ describe('tela 2: em campo e cabeça (T50d, v2.30)', () => {
     const pe = radio('emCampo.posicao', 'Ponta esquerda');
     fireEvent.click(pe);
     expect(pe).toBeChecked();
-    expect(pe.closest('label')).toHaveTextContent('10');
+    expect(pe.closest('label')).toHaveTextContent('7');
     expect(radio('emCampo.posicao', 'Atacante').closest('label')).toHaveTextContent('ATA');
   });
 
@@ -317,7 +326,7 @@ describe('tela 3: tipo de início e fim da criação (T50e, v2.30)', () => {
     expect(onFinish).toHaveBeenCalledOnce();
     const { input, look } = onFinish.mock.calls[0]![0];
     expect(createPlayer(input, createPrng(1)).ok).toBe(true);
-    expect(input).toMatchObject({ name: 'Dudu Maestro', shirtNumber: 10, state: 'BA', heartClub: null, position: 'atacante', archetypeId: 'matador', temperament: 'frio', celebration: 'aviaozinho', origin: 'varzea' });
+    expect(input).toMatchObject({ name: 'Dudu Maestro', shirtNumber: 7, state: 'BA', heartClub: null, position: 'atacante', archetypeId: 'matador', temperament: 'frio', celebration: 'aviaozinho', origin: 'varzea' });
     for (const k of Object.keys(look)) expect(input).not.toHaveProperty(k);
     expect(look).toHaveProperty('skin');
     const { visual } = onFinish.mock.calls[0]![0];

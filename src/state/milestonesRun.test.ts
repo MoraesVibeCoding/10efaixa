@@ -9,7 +9,7 @@ import { runUntilDecision, type Ritmo } from './careerRun';
 // T25c (SPEC 6.13b, "Encaixe nos ritmos"): marcos de carreira chegam à tela em todos os ritmos, com prioridade sobre os eventos comuns
 // (ocupam uma das vagas da temporada); marcos de clube só no Normal e no Completo (no Rápido o temperamento decide).
 const input: CreationInput = {
-  name: 'Jogador Teste', shirtNumber: 10, state: 'BA', position: 'meia', archetypeId: 'classico10',
+  name: 'Jogador Teste', shirtNumber: 11, state: 'BA', position: 'meia', archetypeId: 'classico10',
   biotype: { heightCm: 176, build: 'atletico' }, temperament: 'resenha', celebration: 'aviaozinho',
   origin: 'baseGrande', foot: 'direita', heartClub: 'bahia',
 };

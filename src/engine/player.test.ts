@@ -6,7 +6,7 @@ import { createPrng } from './prng';
 import data from '../data/creation.json';
 
 const base: CreationInput = {
-  name: 'Zé Pequeno da Silva', shirtNumber: 10, state: 'BA', position: 'atacante',
+  name: 'Zé Pequeno da Silva', shirtNumber: 11, state: 'BA', position: 'atacante',
   archetypeId: 'matador', biotype: { heightCm: 172, build: 'atletico' },
   temperament: 'frio', celebration: 'aviaozinho', origin: 'varzea', foot: 'esquerda', heartClub: 'bahia',
 };
@@ -136,6 +136,8 @@ describe('criação do jogador', () => {
     [{ celebration: 'nada' }, 'celebration.invalid'],
     [{ foot: 'ambas' }, 'foot.invalid'],
     [{ shirtNumber: 100 }, 'shirtNumber.invalid'],
+    // v2.63: a 10 não se escolhe, se conquista
+    [{ shirtNumber: 10 }, 'shirtNumber.reserved'],
     [{ heartClub: 'barcelona' }, 'heartClub.invalid'],
     [{ biotype: { heightCm: 172, build: 'gigante' as never } }, 'build.invalid'],
   ])('recusa entrada inválida %j → %s', (input, error) => {

@@ -1,3 +1,4 @@
+import shirtCfg from '../../data/shirt.json';
 import { useEffect, useId, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import type { AvatarSpec } from '../../art/avatar';
 import creationData from '../../data/creation.json';
@@ -45,6 +46,7 @@ function identityErrors(id: Identity): Errors {
   if (name !== 'ok') errors.name = `creation.error.name.${name}`;
   const n = Number(id.number);
   if (!/^\d{1,2}$/.test(id.number.trim()) || n < 1 || n > 99) errors.number = 'creation.error.shirtNumber.invalid';
+  else if (shirtCfg.reservados.includes(n)) errors.number = 'creation.error.shirtNumber.reserved';
   if (!creationData.states.includes(id.state)) errors.state = 'creation.error.state.invalid';
   if (!id.celebration) errors.celebration = 'creation.error.celebration.invalid';
   return errors;
@@ -58,7 +60,7 @@ export function Creation({ onExit, onFinish, seed = Date.now() }: CreationProps)
   const rng = useRef(null as ReturnType<typeof createPrng> | null);
   rng.current ??= createPrng(seed);
   const [flow, setFlow] = useState({ screen: 'criacao', step: 0 } as FlowState);
-  const [identity, setIdentity] = useState({ name: '', number: '10', state: '', heartClub: '', celebration: null } as Identity);
+  const [identity, setIdentity] = useState({ name: '', number: '7', state: '', heartClub: '', celebration: null } as Identity);
   const [visualId, setVisualId] = useState(() => { return randomVisual(rng.current!); });
   const [field, setField] = useState(DEFAULT_FIELD);
   const [origin, setOrigin] = useState(null as string | null);

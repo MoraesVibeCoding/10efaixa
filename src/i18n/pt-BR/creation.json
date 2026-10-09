@@ -65,6 +65,7 @@
     "name.tooLong": "O nome pode ter no máximo 24 caracteres.",
     "name.blocked": "Esse nome não pode ser usado. Escolha outro.",
     "shirtNumber.invalid": "Escolha um número de 1 a 99.",
+    "shirtNumber.reserved": "A 10 não se escolhe: se conquista em campo. Escolha outro número.",
     "state.invalid": "Escolha um estado da lista.",
     "height.outOfRange": "Essa altura está fora da faixa da posição.",
     "build.invalid": "Escolha uma compleição da lista.",

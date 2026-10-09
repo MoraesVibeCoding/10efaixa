@@ -1,3 +1,4 @@
+import shirtCfg from '../data/shirt.json';
 import { ATTRIBUTES, type Attributes } from './attributes';
 import { ARCHETYPES, type Archetype } from './archetypes';
 import { CLUBS } from './clubs';
@@ -9,6 +10,8 @@ import { pickWeighted, type Prng } from './prng';
 import data from '../data/creation.json';
 
 // Seção 6.1. Erros são chaves de i18n (src/i18n/pt-BR/creation.json).
+const RESERVED_NUMBERS: readonly number[] = shirtCfg.reservados;
+
 export interface CreationInput {
   name: string;
   shirtNumber: number;
@@ -51,6 +54,8 @@ function validate(i: CreationInput): string[] {
   const name = checkName(i.name);
   if (name !== 'ok') errors.push(`name.${name}`);
   if (!Number.isInteger(i.shirtNumber) || i.shirtNumber < 1 || i.shirtNumber > 99) errors.push('shirtNumber.invalid');
+  // v2.63 (SPEC 6.7): os números reservados (a 10) não se escolhem; se conquistam em campo
+  else if (RESERVED_NUMBERS.includes(i.shirtNumber)) errors.push('shirtNumber.reserved');
   if (!data.states.includes(i.state)) errors.push('state.invalid');
   if (!isHeightAllowed(i.position, i.biotype.heightCm)) errors.push('height.outOfRange');
   if (!BUILDS.includes(i.biotype.build)) errors.push('build.invalid');

@@ -8,7 +8,7 @@ import { reviewLink } from './reviewLink';
 
 // T57d (SPEC 6.15, v2.49): rever a carreira do link. Refaz com o motor; só abre se as escolhas fecham uma carreira inteira.
 const input: Omit<CreationInput, 'name'> = {
-  shirtNumber: 10, state: 'BA', position: 'meia', archetypeId: 'classico10',
+  shirtNumber: 11, state: 'BA', position: 'meia', archetypeId: 'classico10',
   biotype: { heightCm: 176, build: 'atletico' }, temperament: 'resenha', celebration: 'aviaozinho',
   origin: 'baseGrande', foot: 'direita', heartClub: 'bahia',
 };

@@ -3,7 +3,7 @@ import type { CreationInput } from './player';
 
 // T55a (SPEC 6.15): código curto da carreira no cartão; os dados para refazer vão no link (T56).
 const input: CreationInput = {
-  name: 'Jogador Teste', shirtNumber: 10, state: 'SP', position: 'meia', archetypeId: 'armador',
+  name: 'Jogador Teste', shirtNumber: 11, state: 'SP', position: 'meia', archetypeId: 'armador',
   biotype: { heightCm: 175, build: 'atletico' }, temperament: 'frio', celebration: 'aviaozinho',
   origin: 'varzea', foot: 'direita', heartClub: null,
 };

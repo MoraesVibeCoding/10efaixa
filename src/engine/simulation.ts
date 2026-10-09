@@ -29,7 +29,7 @@ export function randomInput(rng: Prng): CreationInput {
   const arch = pick(rng, archetypesFor(position));
   const range = biotype.heightRangesCm[position];
   return {
-    name: 'Jogador Simulado', shirtNumber: rng.int(1, 99), state: pick(rng, creation.states), position,
+    name: 'Jogador Simulado', shirtNumber: notTen(rng.int(1, 99)), state: pick(rng, creation.states), position,
     archetypeId: arch.id, biotype: { heightCm: rng.int(range.min, range.max), build: pick(rng, BUILDS) },
     temperament: pick(rng, creation.temperaments), celebration: pick(rng, creation.celebrations),
     origin: pick(rng, Object.keys(creation.origins)), foot: pick(rng, creation.feet), heartClub: null,
@@ -152,3 +152,5 @@ export function runMass(n: number, seed: number): MassReport {
   };
 }
 
+/** v2.63: a 10 não se escolhe; o sorteio troca pelo 11 (sem sorteio a mais, para não mudar as carreiras simuladas). */
+function notTen(n: number) { return n === 10 ? 11 : n; }
