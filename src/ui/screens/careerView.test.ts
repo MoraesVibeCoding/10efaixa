@@ -50,6 +50,12 @@ describe('careerView (T51b): do motor para a tela de decisão', () => {
     expect(toDecisionPlayer(soConvocado, INPUT, LOOK).selecao).toBeUndefined();
   });
 
+  it('v2.63: leva se ele é capitão do clube atual', () => {
+    const base = viewAt(0);
+    expect(toDecisionPlayer(base, INPUT, LOOK).capitao).toBe(false);
+    expect(toDecisionPlayer({ ...base, capitao: true }, INPUT, LOOK).capitao).toBe(true);
+  });
+
   it('leva os marcos já vividos (T25c), do mais antigo ao mais novo', () => {
     const early = toDecisionPlayer(viewAt(0), INPUT, LOOK);
     expect(early.marcos).toEqual([]);

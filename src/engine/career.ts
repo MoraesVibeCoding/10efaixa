@@ -112,6 +112,8 @@ export interface DecisionView {
   ultimoSemestre?: { year: number; semestre: 1 | 2; frases: Feedback[] };
   /** v2.61: o resumo da última temporada profissional fechada (a tela mostra num card no Normal e no Completo). */
   ultimaTemporada?: SeasonSummary;
+  /** v2.63: capitão do clube atual (a faixa do clube); a tela mostra o selo "C". */
+  capitao: boolean;
   /** T51b: idolatria (−100 a 100) em cada clube por onde passou; a tela mostra só a faixa. */
   idolatrias: Record<string, number>;
   /** T25c: os marcos já vividos, do mais antigo ao mais novo (álbum da carreira). */
@@ -259,7 +261,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       moral: morale, disciplina: discipline, relacaoTecnico: coachRelation, patrimonio: wealth, salarioFator: 1,
       idolatria: clubId ? idol[clubId] ?? 0 : 0, idolatriaCoracao: input.heartClub ? idol[input.heartClub] ?? 0 : 0, ...memoryCtx(memorias, curYear), ...state,
     },
-    seasons: [...seasons], titles: [...titles], marcos: marcos.map(({ id, year, clubId: club }) => ({ id, year, clubId: club })), memorias: memorias.map((x) => ({ ...x })), etiquetas: contextTags(), nationality: selection.nationality, meetings: [...meetings], idolatrias: { ...idol }, ...(ultimoSemestre && { ultimoSemestre }), ...(ultimaTemporada && { ultimaTemporada }),
+    seasons: [...seasons], titles: [...titles], marcos: marcos.map(({ id, year, clubId: club }) => ({ id, year, clubId: club })), memorias: memorias.map((x) => ({ ...x })), etiquetas: contextTags(), nationality: selection.nationality, capitao: clubId ? captainAt.has(clubId) : false, meetings: [...meetings], idolatrias: { ...idol }, ...(ultimoSemestre && { ultimoSemestre }), ...(ultimaTemporada && { ultimaTemporada }),
   }));
   const earn = (amount: number, currency: Contract['currency']) => { const before = wealth; wealth = addToWealth(wealth, amount, currency, agent); earned += Math.max(0, wealth - before); };
   const awards: CareerResult['awards'] = [];
