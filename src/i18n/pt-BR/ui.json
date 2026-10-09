@@ -14,6 +14,9 @@
   "emTroca": "Em troca",
   "muda": "Muda",
   "ficha": "Ficha do jogador",
+  "titulosLinha": "Títulos",
+  "tacaQtd": "{nome}: {n}",
+  "selecao": "Seleção {pais}",
   "porMes": "{valor}/mês",
   "valor": "Valor {valor}",
   "confirmar": "Confirmar escolha",
@@ -514,6 +517,7 @@
   "over": "Over {n}",
   "auge": "Auge",
   "novoClube": "Novo clube",
+  "jogos": "Jogos: {n}",
   "gols": "Gols: {n}",
   "assistencias": "Assistências: {n}",
   "outraLiga": "Outra liga",
@@ -548,6 +552,9 @@
   },
   "altNarrativa": "Cartão de carreira de {nome}, {apelido}. Veredito: {veredito}. Rótulo: {rotulo}. {manchete} {frases}.",
   "overMax": "Over máximo",
+  "idoloCoracao": "Ídolo do clube de coração: {clube}",
+  "idolo": "Ídolo: {clubes}",
+  "idoloTambem": "Ídolo também: {clubes}",
   "honrarias": "Honrarias",
   "codigo": "Código",
   "titulo": "Seu cartão",
@@ -570,5 +577,7 @@
   "baixado": "Imagem baixada.",
   "copiado": "Texto copiado. É só colar no WhatsApp.",
   "naoCopiou": "Não deu para copiar o texto neste navegador."
- }
+ },
+ "pais": { "brasil": "Brasil", "italia": "Itália", "portugal": "Portugal", "espanha": "Espanha", "alemanha": "Alemanha" },
+ "sigla": { "brasil": "BRA", "italia": "ITA", "portugal": "POR", "espanha": "ESP", "alemanha": "ALE" }
 }

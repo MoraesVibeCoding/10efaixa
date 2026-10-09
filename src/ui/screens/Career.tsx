@@ -1,6 +1,7 @@
 import { flushSync } from 'react-dom';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { DecisionView } from '../../engine/career';
+import { idolBand } from '../../engine/feedback';
 import { careerCode } from '../../engine/careerCode';
 import { MEETING_EVENT } from '../../engine/meeting';
 import type { CreationInput } from '../../engine/player';
@@ -80,7 +81,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
   const semestre = semKey !== seenSemester && view.ultimoSemestre ? semesterLines(view.ultimoSemestre.frases) : undefined;
   const seasonKey = view.ultimaTemporada ? `${view.ultimaTemporada.year}` : '';
   const resumoEl = ritmo !== 'rapido' && view.ultimaTemporada && seasonKey !== seenSeason
-    ? <ResumoTemporada key={seasonKey} resumo={view.ultimaTemporada} onClose={() => { closeCard(() => { setSeenSeason(seasonKey); }); }} />
+    ? <ResumoTemporada key={seasonKey} resumo={view.ultimaTemporada} torcida={torcidaDe(view.idolatrias, view.ultimaTemporada.clubId)} onClose={() => { closeCard(() => { setSeenSeason(seasonKey); }); }} />
     : null;
   function decide(choice: string) {
     setSeenSemester(semKey);
@@ -164,6 +165,12 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
       {resumoEl}
     </div>
   );
+}
+
+/** v2.62: a faixa da torcida no clube da temporada, para o resumo (sem idolatria ainda, nada). */
+function torcidaDe(idolatrias: Record<string, number>, clubId: string) {
+  const v = idolatrias[clubId];
+  return v === undefined ? undefined : idolBand(v);
 }
 
 /** A resposta da reunião que o jogador acabou de fazer, no histórico de reuniões da carreira (T52). Função declarada:

@@ -1,7 +1,7 @@
 import { simulateCareer } from '../engine/career';
 import { createPrng } from '../engine/prng';
 import { randomInput } from '../engine/simulation';
-import { cardModel } from './cardModel';
+import { cardModel, idolLine } from './cardModel';
 import { CARD_SIZE, drawCard } from './drawCard';
 
 // T55d (SPEC 6.15): o desenho em Canvas 2D; aqui um contexto falso grava o texto desenhado (o jsdom não tem canvas).
@@ -45,5 +45,14 @@ describe('desenho do cartão (T55d)', () => {
     for (const a of m.radar) { expect(text).toContain(a.nome); expect(text).toContain(String(a.valor)); }
     expect(text).toContain(m.codigo);
     expect(text).not.toContain(m.frases[0]!);
+  });
+
+  it('ídolos: a linha dos clubes onde virou ídolo aparece nas duas versões (v2.62)', () => {
+    const x = { ...m, idolos: [{ clubId: 'bahia', nome: 'Bahia', coracao: true }, { clubId: 'santos', nome: 'Santos', coracao: false }] };
+    for (const v of ['narrativa', 'estatistica'] as const) {
+      const { ctx, all } = fakeCtx();
+      drawCard(ctx, x, v);
+      expect(all()).toContain(idolLine(x.idolos));
+    }
   });
 });

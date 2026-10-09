@@ -1,5 +1,7 @@
 {
  "_nota": "T60a: corte de cabelo das cenas pintadas (docs/arte/cenas/<cena>/<corte>) para cada cabelo da criação (avatar.json → styles.hair). As cenas mostram o jogador de costas: vale o volume e o comprimento.",
+ "_numeroNasCenas": "v2.62 (pedido do usuário): o número nas costas fica desligado; entram aqui as cenas em que ele volta (por exemplo, as de jogo ou da Seleção), depois de conferidas.",
+ "numeroNasCenas": [],
  "cortes": ["curto", "cacheado-medio", "liso-medio", "cacheado-grande", "liso-grande", "careca"],
  "porCabelo": {
   "raspado": "careca",

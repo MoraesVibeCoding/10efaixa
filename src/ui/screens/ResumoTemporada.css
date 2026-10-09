@@ -8,6 +8,7 @@
 }
 .resumo__titulo { margin: 0; font-family: var(--fonte-titulo); font-size: var(--tipo-nome); font-weight: 900; line-height: 1.05; text-transform: uppercase; }
 .resumo__onde { margin: 0; font-weight: 600; opacity: 0.8; }
+.resumo__torcida { justify-self: start; margin: 0; padding: 1px 8px; border: var(--forma-borda-fina) solid var(--cor-linha); border-radius: 999px; font-size: 0.875rem; font-weight: 700; }
 .resumo__numeros { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--espaco-2); margin: 0; padding: 0; list-style: none; }
 .resumo__numeros li { display: grid; gap: 2px; justify-items: center; padding: var(--espaco-2); border: var(--forma-borda-fina) solid var(--cor-linha); border-radius: var(--forma-raio); text-align: center; }
 .resumo__numeros span { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; }

@@ -17,13 +17,18 @@ describe('cenas pintadas (T60a)', () => {
     for (const style of avatar.styles.hair) expect(CUTS).toContain(cutForVisual(undefined, style));
   });
 
-  it('pinta a camisa com o padrão do clube e põe o número nas costas na cena de uniforme', () => {
-    const { container } = render(<CenaPintada scene="gol" cut="curto" clubId="flamengo" number={9} alt="Zé comemora o gol" />);
+  it('pinta a camisa com o padrão do clube e põe o número nas costas na cena de uniforme ligada em cortes.json', () => {
+    const { container } = render(<CenaPintada scene="gol" cut="curto" clubId="flamengo" number={9} numeroNasCenas={['gol']} alt="Zé comemora o gol" />);
     expect(screen.getByRole('img', { name: 'Zé comemora o gol' })).toBeInTheDocument();
     const camisa = container.querySelector('.cena__camisa') as HTMLElement;
     expect(camisa.style.getPropertyValue('--camisa-desenho')).toBe(shirtPaint(kitOf('flamengo')));
     expect(container.querySelector('.cena__calcao')).not.toBeNull();
     expect(container.querySelector('.cena__numero')).toHaveTextContent('9');
+  });
+
+  it('v2.62: o número nas costas fica desligado por padrão (lista numeroNasCenas vazia em cortes.json)', () => {
+    const { container } = render(<CenaPintada scene="gol" cut="curto" clubId="flamengo" number={9} alt="x" />);
+    expect(container.querySelector('.cena__numero')).toBeNull();
   });
 
   it('de camiseta (em casa com a família), sem número', () => {

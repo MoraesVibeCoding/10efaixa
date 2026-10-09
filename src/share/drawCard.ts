@@ -3,7 +3,7 @@ import { toBand } from '../engine/attributes';
 import { t } from '../i18n';
 import tokens from '../ui/theme/tokens.json';
 import { clubName } from '../ui/screens/clubText';
-import type { CardModel } from './cardModel';
+import { idolLine, type CardModel } from './cardModel';
 
 // T55d (SPEC 6.15, v2.42): o cartão 1080×1350 em Canvas 2D, nas versões narrativa e estatística.
 // APIs conferidas na MDN (mdn/content): CanvasRenderingContext2D.globalCompositeOperation aceita "destination-in"
@@ -243,6 +243,14 @@ function verdict(ctx: CanvasRenderingContext2D, m: CardModel): number {
   const who = `${m.apelido} · ${m.posicao} · ${clubName(m.clubeAuge).nome}`;
   fit(ctx, who, TEXT, 400, 26, 18, width);
   ctx.fillText(who, x, y);
+  // v2.62: onde virou ídolo; o clube de coração vem primeiro e a linha fica em verde, em destaque
+  if (m.idolos.length) {
+    y += 36;
+    const line = idolLine(m.idolos);
+    ctx.fillStyle = m.idolos[0]!.coracao ? P.verde : P.marinho;
+    fit(ctx, line, TEXT, 700, 26, 16, width);
+    ctx.fillText(line, x, y);
+  }
   return y + 50;
 }
 
@@ -325,10 +333,10 @@ function statistics(ctx: CanvasRenderingContext2D, m: CardModel, y0: number) {
 
 /** Desenha o cartão inteiro no contexto (1080×1350). Imagens opcionais: sem elas, ficam as cores (metal e clube). */
 export function drawCard(ctx: CanvasRenderingContext2D, m: CardModel, version: CardVersion, images: CardImages = {}) {
-  const kit = kitOf(m.clubeAuge);
   ctx.textBaseline = 'alphabetic';
-  backdrop(ctx, kit);
-  figurinha(ctx, m, images, kit);
+  backdrop(ctx, kitOf(m.clubeAuge));
+  // v2.62: a figurinha veste o último clube profissional (o fundo segue com as cores do clube do auge)
+  figurinha(ctx, m, images, kitOf(m.clubeFigurinha));
   glass(ctx);
   const y = verdict(ctx, m);
   if (version === 'narrativa') narrative(ctx, m, y); else statistics(ctx, m, y);

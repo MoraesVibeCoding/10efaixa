@@ -58,6 +58,12 @@ export function Figurinha({ name, number, overall, position, clubId = '', avatar
   return comum;
 }
 
+/** v2.62: a medalha da faixa do Over (nome do metal e arte pintada), para quem desenha o Over fora da figurinha. */
+export function medalOf(overall: number): { nome: string; art?: string } {
+  const nome = MEDALS[toBand(overall).key]!.nome;
+  return { nome, art: CARD_ART[`../../assets/cartoes-over/${nome}.webp`] };
+}
+
 function OverCard({ overall }: { overall: number }) {
   const medal = MEDALS[toBand(overall).key]!.nome;
   const art = CARD_ART[`../../assets/cartoes-over/${medal}.webp`];

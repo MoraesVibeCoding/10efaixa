@@ -87,7 +87,7 @@ export interface CareerResult {
   negotiations: { year: number; clubId: string; result: 'melhorou' | 'igual' | 'sumiu' }[];
   /** T28e: saídas forçadas (antes do fim do contrato) e se o jogador virou vilão da torcida do clube que deixou. */
   forcedExits: { year: number; fromClubId: string; toClubId: string; villain: boolean }[];
-  seasons: { year: number; age: number; clubId: string; division: string | null; minutes: number; overall: number; goals: number; assists: number }[];
+  seasons: { year: number; age: number; clubId: string; division: string | null; minutes: number; overall: number; games: number; goals: number; assists: number }[];
 }
 
 /** T51: o momento de uma decisão, para a tela mostrar o jogador como ele está ali. */
@@ -586,7 +586,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       }, yr);
       for (const award of won) if (award !== 'revelacao' || !awards.some((a) => a.award === 'revelacao')) awards.push({ year, award });
     }
-    seasons.push({ year, age: evo.age - 1, clubId: seasonClub, division: league, minutes: avgMinutes, overall: ov(evo), goals: seasonGoals, assists: seasonAssists });
+    seasons.push({ year, age: evo.age - 1, clubId: seasonClub, division: league, minutes: avgMinutes, overall: ov(evo), games: seasonGames, goals: seasonGoals, assists: seasonAssists });
     if (clubId && !inYouth) {
       ultimaTemporada = summarizeSeason({
         year, age: evo.age - 1, clubId: seasonClub, division: league, games: seasonGames, goals: seasonGoals, assists: seasonAssists, minutes: avgMinutes,

@@ -45,8 +45,8 @@
   z-index: 1;
   flex: none;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-areas: "quem over" "selos selos";
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas: "quem dados over" "tacas tacas tacas";
   align-items: center;
   gap: var(--espaco-2) var(--espaco-3);
   padding: var(--espaco-2) var(--espaco-3) var(--espaco-3);
@@ -93,11 +93,53 @@
 .jogador__mais { display: inline-flex; align-items: center; gap: var(--espaco-2); color: var(--cor-positivo); }
 
 /* o Over em número (v2.16): o único número de atributo da tela, grande ao lado da figurinha */
-.decisao__over { grid-area: over; display: grid; justify-items: center; line-height: 1; font-family: var(--fonte-titulo); font-variant-numeric: tabular-nums; }
+.decisao__over { grid-area: over; display: grid; justify-items: center; align-content: start; gap: var(--espaco-1); line-height: 1; font-family: var(--fonte-titulo); font-variant-numeric: tabular-nums; }
+.decisao__over p { margin: 0; }
+/* v2.62: o papel (tempo de jogo) embaixo do Over, em letra de apoio */
+.decisao__papel { max-inline-size: 6.5rem; font-family: var(--fonte-texto); font-size: 0.75rem; font-weight: 700; line-height: 1.2; text-align: center; color: var(--cor-texto-suave); }
 .decisao__over-rotulo { font-size: var(--tipo-apoio); font-weight: 800; letter-spacing: 0.08em; color: var(--cor-texto-suave); }
 .decisao__over-numero { font-size: 3rem; font-weight: 900; }
+/* v2.62: o Over num quadro com o metal da faixa (bronze ao diamante), na proporção da arte (quadrada, 256×256), com
+   "OVR" dentro em cima do número. A arte pintada cobre o quadro; o degradê é a reserva */
+.decisao__over-medalha {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  inline-size: 4.75rem;
+  aspect-ratio: 1;
+  border: 2px solid var(--medalha-aro);
+  border-radius: 0.3rem;
+  background: linear-gradient(160deg, var(--medalha-clara), var(--medalha-escura)) center / cover;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.45), var(--forma-sombra-suave);
+  color: var(--medalha-texto);
+}
+.decisao__over-medalha .decisao__over-rotulo { color: inherit; opacity: 0.85; }
+.decisao__over-medalha[data-medalha='bronze'] .decisao__over-numero,
+.decisao__over-medalha[data-medalha='esmeralda'] .decisao__over-numero,
+.decisao__over-medalha[data-medalha='diamante'] .decisao__over-numero { text-shadow: var(--forma-contorno-numero); }
 
-.selos { grid-area: selos; display: flex; flex-wrap: wrap; gap: 4px; margin: 0; padding: 0; list-style: none; }
+/* v2.62: bandeira da seleção ao lado do nome (depois da estreia pela principal) */
+.jogador__nome { display: flex; flex-wrap: wrap; align-items: center; gap: 2px var(--espaco-2); }
+.bandeira { display: inline-flex; align-items: center; gap: 4px; padding: 1px 6px 1px 3px; border-radius: 999px; background: var(--cor-fundo); font-family: var(--fonte-texto); font-size: 0.6875rem; font-weight: 800; letter-spacing: 0.04em; line-height: 1.3; }
+.bandeira svg { flex: none; border-radius: 2px; box-shadow: 0 0 0 1px rgb(0 0 0 / 0.15); }
+
+/* v2.62: embaixo, só as taças em miniatura, uma por competição, com a quantidade numa bolinha */
+.tacas { grid-area: tacas; display: flex; flex-wrap: wrap; gap: 4px 10px; margin: 0; padding: 0; list-style: none; }
+.taca { position: relative; display: grid; place-items: center; inline-size: 1.75rem; block-size: 1.75rem; }
+.taca .trofeu__arte { inline-size: 100%; block-size: 100%; object-fit: contain; }
+.taca__qtd {
+  position: absolute; inset-block-start: -3px; inset-inline-end: -5px;
+  min-inline-size: 1rem; block-size: 1rem; padding: 0 3px; box-sizing: border-box;
+  display: grid; place-items: center; border-radius: 999px;
+  background: var(--cor-texto); color: var(--cor-superficie);
+  font-size: 0.625rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums;
+}
+
+/* v2.62: idade, salário e valor entre o nome e o Over, um embaixo do outro */
+.decisao__dados { grid-area: dados; display: grid; gap: 1px; align-self: center; justify-items: end; margin: 0; padding: 0; list-style: none; font-size: var(--tipo-apoio); font-weight: 700; line-height: 1.25; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+
+.selos { display: flex; flex-wrap: wrap; gap: 4px; margin: 0; padding: 0; list-style: none; }
 .selos li {
   padding: 1px 8px;
   border: var(--forma-borda-fina) solid var(--cor-linha);
@@ -365,7 +407,7 @@
 @media (min-width: 64rem) {
   .decisao {
     display: grid;
-    grid-template-columns: 20rem minmax(0, 1fr);
+    grid-template-columns: 24rem minmax(0, 1fr); /* v2.62: 24rem para a caixa do topo com bandeira e o Over em quadro */
     grid-template-areas: "faixa faixa" "topo ." "album ." "album painel";
     grid-template-rows: auto auto minmax(0, 1fr) auto;
     gap: var(--espaco-4) 1.75rem;
@@ -373,7 +415,8 @@
     padding: 1.75rem;
   }
   .faixa { grid-area: faixa; }
-  .decisao__topo { grid-area: topo; }
+  .decisao__topo { grid-area: topo; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "quem over" "dados dados" "tacas tacas"; }
+  .decisao__dados { display: flex; flex-wrap: wrap; gap: 0 var(--espaco-3); }
   .decisao__painel { grid-area: painel; margin: 0; }
   .decisao__opcoes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .decisao__confirmar { justify-self: end; }
@@ -387,3 +430,37 @@
 .opcao { transition: background-color var(--transicao, 300ms) ease, border-color var(--transicao, 300ms) ease, opacity var(--transicao, 300ms) ease, transform var(--transicao, 300ms) ease; }
 .decisao[data-resultado='aberto'] .opcao[aria-pressed='true'] { transform: scale(1.02); }
 @keyframes decisao-entra { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* v2.62 (pedido do usuário): no celular a cena quase não aparecia. A caixa do jogador fica mais baixa (figurinha, Over e
+   selos menores) e os detalhes da faixa de baixo (história e opções) descem um passo; o título fica como está.
+   O corpo segue em 1rem ou mais (tokens.json), menos os selos (rótulos) e a história (detalhe, decisão do usuário). */
+@media (max-width: 63.99rem) {
+  .decisao__topo { gap: var(--espaco-1) var(--espaco-2); padding: var(--espaco-2) var(--espaco-3); }
+  .jogador__abrir { gap: var(--espaco-2); }
+  .jogador__abrir .figurinha { --w: 2.75rem; }
+  .jogador__nome { font-size: 1.0625rem; }
+  .jogador__clube, .jogador__mais { font-size: 0.875rem; }
+  .decisao__over-numero { font-size: 2.25rem; }
+  .decisao__over-medalha { inline-size: 3.75rem; }
+  .decisao__over-medalha .decisao__over-rotulo { font-size: 0.6875rem; }
+  /* auditoria mobile (ui-ux-pro-max, texto legível): na figurinha pequena o Over e o número saíam com 7 px; o Over já está
+     grande ao lado e o número fica para a figurinha grande (o nome segue no texto para o leitor de tela) */
+  .decisao__topo .figurinha__over-grande, .decisao__topo .figurinha__tarja-numero { display: none; }
+  .decisao__over { padding-block-start: var(--espaco-3); } /* o botão de reiniciar fica no canto de cima */
+  .decisao__dados { font-size: 0.75rem; }
+  .jogador__mais { white-space: nowrap; }
+}
+/* v2.62: no celular (até 420 px), idade, salário e valor descem para uma linha embaixo do nome: entre o nome e o Over
+   não cabem com nome, bandeira e clube compridos */
+@media (max-width: 26.25rem) {
+  .decisao__topo { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "quem over" "dados dados" "tacas tacas"; }
+  .decisao__dados { display: flex; flex-wrap: wrap; gap: 0 var(--espaco-3); }
+  .decisao__over-rotulo { font-size: 0.75rem; }
+  .selos li { padding: 0 6px; font-size: 0.8125rem; line-height: 1.4; }
+  .decisao__painel { gap: var(--espaco-2); padding: var(--espaco-3); }
+  /* decisão do usuário (v2.62): a história é detalhe, não o principal; fica no tamanho de apoio, abaixo do 1rem do corpo */
+  .decisao__historia { font-size: 0.875rem; line-height: 1.4; }
+  .decisao__semestre { font-size: 0.8125rem; }
+  .opcao__rotulo { font-size: 1.0625rem; }
+  .decisao__detalhe { min-block-size: 2.2rem; font-size: 0.875rem; }
+}

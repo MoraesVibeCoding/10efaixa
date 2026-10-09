@@ -41,6 +41,7 @@ export function LinhaDoTempo({ result, onContinue }: { result: CareerResult; onC
             {r.peak && <strong className="linha__auge">{t('ui.linhaDoTempo.auge')}</strong>}
             {r.division !== null && (
               <span className="linha__numeros">
+                <span>{t('ui.linhaDoTempo.jogos', { n: r.games })}</span>
                 <span>{t('ui.linhaDoTempo.gols', { n: r.goals })}</span>
                 <span>{t('ui.linhaDoTempo.assistencias', { n: r.assists })}</span>
               </span>

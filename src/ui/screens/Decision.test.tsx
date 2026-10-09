@@ -148,12 +148,14 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
   it('título do evento com os selos do jogador ao lado: idade, tempo de jogo, salário do mês e valor de mercado (v2.22, v2.33)', () => {
     setup();
     expect(screen.getByRole('heading', { level: 1, name: t(`events.${EVENT}.titulo`) })).toBeInTheDocument();
-    const selos = screen.getByRole('list', { name: t('ui.decisao.ficha') });
-    expect(within(selos).getByText(t('ui.decisao.idade', { idade: 17 }))).toBeInTheDocument();
-    expect(within(selos).getByText(t('ui.papel.titularRegular'))).toBeInTheDocument();
-    expect(within(selos).getByText(/R\$\s180\smil/)).toBeInTheDocument();
-    // v2.33: valor de mercado em euros junto do salário e do tempo de jogo
-    expect(within(selos).getByText(/^Valor\s€\s12,5\smi$/)).toBeInTheDocument();
+    // v2.62: idade, salário e valor ficam entre o nome e o Over; o papel vai para a linha de selos de baixo
+    const dados = screen.getByRole('list', { name: t('ui.decisao.ficha') });
+    expect(within(dados).getByText(t('ui.decisao.idade', { idade: 17 }))).toBeInTheDocument();
+    expect(within(dados).getByText(/R\$\s180\smil/)).toBeInTheDocument();
+    // v2.33: valor de mercado em euros junto do salário
+    expect(within(dados).getByText(/^Valor\s€\s12,5\smi$/)).toBeInTheDocument();
+    // v2.62: o papel (tempo de jogo) fica embaixo do Over
+    expect(screen.getByRole('main').querySelector('.decisao__papel')).toHaveTextContent(t('ui.papel.titularRegular'));
     // títulos, atributos e trajetória ficam na gaveta
     expect(screen.queryByRole('list', { name: t('ui.decisao.titulosLista') })).not.toBeInTheDocument();
   });
@@ -452,7 +454,39 @@ describe('variação B (T51c, SPEC v2.34)', () => {
     const topo = screen.getByRole('main').querySelector('.decisao__topo') as HTMLElement;
     expect(topo.querySelector('.figurinha--moldura')).not.toBeNull();
     expect(topo.querySelector('.decisao__over')).toHaveTextContent('78');
-    expect(within(topo).getByRole('list', { name: t('ui.decisao.ficha') })).toHaveTextContent(t('ui.decisao.titulosQtd', { n: 3 }));
+    // v2.62: os títulos viram miniaturas das taças, agrupadas por competição, com a quantidade numa bolinha
+    const tacas = within(topo).getByRole('list', { name: t('ui.decisao.titulosLinha') });
+    const itens = within(tacas).getAllByRole('listitem');
+    expect(itens).toHaveLength(2);
+    expect(itens[0]).toHaveTextContent(t('ui.decisao.tacaQtd', { nome: t('ui.titulo.estadual'), n: 2 }));
+    expect(itens[0]!.querySelector('.taca__qtd')).toHaveTextContent('2');
+    expect(itens[1]!.querySelector('.taca__qtd')).toBeNull();
+  });
+
+  it('sem títulos, nem taças nem "Sem títulos" (v2.62)', () => {
+    render(<Decision eventId={EVENT} age={24} progress={0.4} player={{ ...PLAYER, titles: [] }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    expect(screen.queryByRole('list', { name: t('ui.decisao.titulosLinha') })).not.toBeInTheDocument();
+    expect(screen.queryByText(t('ui.decisao.semTitulos'))).not.toBeInTheDocument();
+  });
+
+  it('com estreia na seleção principal, a bandeira do país e a sigla aparecem ao lado do nome (v2.62)', () => {
+    render(<Decision eventId={EVENT} age={24} progress={0.4} player={{ ...PLAYER, selecao: 'brasil' }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    const topo = screen.getByRole('main').querySelector('.decisao__topo') as HTMLElement;
+    expect(within(topo).getByText(t('ui.decisao.selecao', { pais: t('ui.pais.brasil') }))).toBeInTheDocument();
+    expect(topo.querySelector('.bandeira svg')).not.toBeNull();
+    expect(topo.querySelector('.bandeira')).toHaveTextContent(t('ui.sigla.brasil'));
+  });
+
+  it('sem seleção, sem bandeira (v2.62)', () => {
+    show();
+    expect(screen.getByRole('main').querySelector('.bandeira')).toBeNull();
+  });
+
+  it('o Over tem a medalha da faixa por trás do número, do bronze ao diamante (v2.62)', () => {
+    show();
+    const medalha = screen.getByRole('main').querySelector('.decisao__over .decisao__over-medalha') as HTMLElement;
+    expect(medalha).toHaveAttribute('data-medalha', 'platina');
+    expect(medalha).toHaveTextContent('78');
   });
 
   it('nada marcado: confirmar fica desligado e a caixa de detalhe convida a tocar numa opção', () => {
@@ -572,10 +606,9 @@ describe('evolução do semestre e idolatria (T51b, v2.41)', () => {
     expect(screen.queryByText(new RegExp(t('ui.evolucao.titulo')))).not.toBeInTheDocument();
   });
 
-  it('o selo da torcida aparece na ficha do topo, em palavras', () => {
+  it('v2.62: a torcida não fica no topo (vai para o resumo da temporada e o cartão final)', () => {
     show({}, { torcida: 'querido' });
-    const selos = screen.getByRole('list', { name: t('ui.decisao.ficha') });
-    expect(within(selos).getByText(t('ui.idolatria.selo', { faixa: t('ui.idolatria.faixa.querido') }))).toBeInTheDocument();
+    expect(screen.queryByText(t('ui.idolatria.selo', { faixa: t('ui.idolatria.faixa.querido') }))).not.toBeInTheDocument();
   });
 
   it('na trajetória de "Minha carreira", a torcida de cada clube em palavras', () => {

@@ -10,12 +10,27 @@ const r = simulateCareer(randomInput(createPrng(3)), 3);
 const m = cardModel(r, '10F-7K3Q-9M2X');
 
 describe('modelo do cartão final (T55c)', () => {
-  it('auge: clube, número da camisa nesse clube e os 10 atributos do pico em número', () => {
+  it('auge: clube e os 10 atributos do pico em número', () => {
     expect(m.clubeAuge).toBe(r.peakClubId);
-    expect(m.numero).toBe(r.spells.find((s) => s.clubId === r.peakClubId)!.number);
     expect(m.radar.map((a) => a.id)).toEqual([...ATTRIBUTES]);
     for (const a of m.radar) expect(a.valor).toBe(Math.round(r.peakAttributes[a.id]));
     expect(m.overall).toBe(r.peakOverall);
+  });
+
+  it('a figurinha veste o último clube profissional: clube e número da camisa nele (v2.62)', () => {
+    const last = r.seasons.filter((x) => x.division !== null).at(-1)!.clubId;
+    expect(m.clubeFigurinha).toBe(last);
+    expect(m.numero).toBe(r.spells.filter((x) => x.clubId === last).at(-1)!.number);
+  });
+
+  it('ídolos: os clubes com idolatria de ídolo, o clube de coração primeiro e marcado (v2.62)', () => {
+    const base = { ...r, idolatry: { santos: 90, flamengo: 20, bahia: 80, vasco: 76 }, player: { ...r.player, heartClub: 'bahia' } };
+    const x = cardModel(base, 'X');
+    expect(x.idolos.map((i) => i.clubId)).toEqual(['bahia', 'santos', 'vasco']);
+    expect(x.idolos.map((i) => i.coracao)).toEqual([true, false, false]);
+    expect(x.alt.narrativa).toContain(t('ui.cartao.idoloCoracao', { clube: 'Bahia' }));
+    const sem = cardModel({ ...r, idolatry: { santos: 74 } }, 'X');
+    expect(sem.idolos).toEqual([]);
   });
 
   it('veredito, rótulo principal, até 3 honrarias, até 4 frases e o código', () => {
