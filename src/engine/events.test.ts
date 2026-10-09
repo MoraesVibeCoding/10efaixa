@@ -43,7 +43,7 @@ describe('motor de eventos e dilemas (T25)', () => {
 
   it('marcos da carreira nunca entram no sorteio comum (só o motor de marcos os dispara)', () => {
     const marcos = (raw.eventos as { id: string; marco?: boolean }[]).filter((e) => e.marco).map((e) => e.id);
-    expect(marcos.length).toBe(20);
+    expect(marcos.length).toBe(21); // v2.63: a camisa 10
     for (const s of [ctx(), ctx({ moral: 1 }), ctx({ contratoAnosRestantes: 1 })]) {
       for (const id of marcos) expect(eligibleEvents(s)).not.toContain(id);
     }

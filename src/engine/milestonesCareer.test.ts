@@ -90,3 +90,28 @@ describe('marcos dentro da carreira (T25c)', () => {
     expect(withCooker).toBeGreaterThanOrEqual(without);
   });
 });
+
+// v2.63 (SPEC 6.7): a camisa 10 do clube é conquista; vira marco e, dali em diante, o número é 10 em todo clube.
+describe('camisa 10 conquistada (v2.63)', () => {
+  const careers = Array.from({ length: 60 }, (_, i) => run(i + 1));
+
+  it('quem vestiu a 10 passou pelo marco "camisa-10"; quem não passou, nunca veste a 10', () => {
+    let com = 0;
+    for (const r of careers) {
+      const marco = r.marcos.find((m) => m.id === 'camisa-10');
+      const usou = r.spells.some((s) => s.number === 10);
+      expect(usou, `${r.player.name}`).toBe(marco !== undefined);
+      expect(r.wearsTen).toBe(marco !== undefined);
+      if (marco) com++;
+    }
+    expect(com).toBeGreaterThan(0);
+  });
+
+  it('depois do marco, a 10 fica: todo clube seguinte também é com a 10', () => {
+    for (const r of careers) {
+      const i = r.spells.findIndex((s) => s.number === 10);
+      if (i < 0) continue;
+      for (const s of r.spells.slice(i)) expect(s.number).toBe(10);
+    }
+  });
+});

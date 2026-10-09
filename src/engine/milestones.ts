@@ -21,6 +21,8 @@ export interface MilestoneFacts {
   finalAno: boolean;
   classico: boolean;
   capitao: boolean;
+  /** v2.63: virou a referência do clube (regra da 10 em shirt.json): a camisa 10 é dele. */
+  camisa10: boolean;
   convocado: boolean;
   jogosSelecao: number;
   golsSelecaoAno: number;

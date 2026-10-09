@@ -432,6 +432,15 @@
    "compartilhar-com-o-time": "Dividir as cobranças com o resto do elenco"
   }
  },
+ "camisa-10": {
+  "titulo": "A camisa 10 é sua",
+  "texto": "O roupeiro deixa a camisa no seu armário, dobrada, com o 10 virado para cima. Ninguém precisou anunciar: o vestiário já sabia. A torcida vai cobrar como cobra de quem veste a 10, e seu pai já pediu foto.",
+  "opcoes": {
+   "prometer-gols": "Vestir a 10 e prometer gols à torcida",
+   "agradecer-ao-grupo": "Agradecer ao grupo e vestir sem festa",
+   "seguir-treinando": "Tratar como número e seguir treinando"
+  }
+ },
  "primeira-bracadeira": {
   "titulo": "A braçadeira no seu braço",
   "texto": "O capitão se machucou e o técnico estica a braçadeira na sua direção, sem cerimônia. Os mais velhos acompanham com os olhos. Liderar é falar quando ninguém quer ouvir.",

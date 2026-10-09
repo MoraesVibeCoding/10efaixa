@@ -12,6 +12,7 @@
   "cobradorGolsExtra": 0.1
  },
  "marcos": [
+  { "id": "camisa-10", "escopo": "carreira", "gatilho": [["camisa10", "==", true]] },
   { "id": "estreia-profissional", "escopo": "carreira", "gatilho": [["proDebut", "==", true]] },
   { "id": "estreia-no-clube", "escopo": "clube", "espelho": "estreia-profissional", "gatilho": [["clubDebut", "==", true]] },
   { "id": "primeira-titularidade", "escopo": "carreira", "gatilho": [["titular", "==", true]] },
