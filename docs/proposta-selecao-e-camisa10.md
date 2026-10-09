@@ -52,3 +52,9 @@
 2. Gols pela Seleção nas **seleções de base** (Sub-17, Sub-20, Olímpica) também contam no total da carreira, ou só os da principal?
 3. A camisa 10 no clube: depois de conquistada, ele **perde** a 10 ao trocar de clube (tem de conquistar de novo no novo clube)?
 4. O número 7, 9 e outros "históricos" também viram conquista, ou só o 10?
+
+## Respostas do usuário (2026-10-09)
+1. A Seleção fica **dentro do card do ano** na linha do tempo.
+2. Gols e jogos nas **seleções de base contam** no total da carreira.
+3. Ao trocar de clube **a 10 permanece**: conquistada uma vez, ele segue com ela.
+4. Só **o 10 e a faixa de capitão** viram conquista; os outros números seguem escolhidos.
