@@ -31,6 +31,7 @@ import { coachProposal } from './positionChange';
 import { createPlayer, type CreationInput, type Player } from './player';
 import { createPrng, type Prng } from './prng';
 import { TOURNAMENTS, eligible, playTournament, type NTournament } from './tournaments';
+import { addCallUp, addTournament, type CalledRung, type NationalYear } from './nationalYear';
 import { isEditionYear } from './calendar';
 import tcfg from '../data/nationalTournaments.json';
 import { cutOffset, invited, residenceCountry, teamName, teamStrength } from './dualNationality';
@@ -65,7 +66,8 @@ export interface CareerResult {
   injuries: { leve: number; media: number; grave: number };
   finalPosition: Position; positionChanges: number;
   /** Seleção: semestres convocado por degrau; caps = convocações para a principal. */
-  selection: { callUps: Record<Exclude<Rung, 'nenhum'>, number>; caps: number; ten: number; captain: number;
+  /** v2.65: games, goals e assists somam todas as seleções (base inclusive); mainGames só a principal. */
+  selection: { callUps: Record<Exclude<Rung, 'nenhum'>, number>; caps: number; ten: number; captain: number; games: number; goals: number; assists: number; mainGames: number;
     tournaments: { year: number; tournament: NTournament; team: string; stage: string; hero: boolean; villain: boolean }[];
     /** Dupla nacionalidade (T38): seleção defendida e a resposta ao convite. */
     nationality: string; dual: 'aceitou' | 'recusou' | null; oriundoCampeao: boolean; esperouOBrasil: boolean;
@@ -88,7 +90,8 @@ export interface CareerResult {
   negotiations: { year: number; clubId: string; result: 'melhorou' | 'igual' | 'sumiu' }[];
   /** T28e: saídas forçadas (antes do fim do contrato) e se o jogador virou vilão da torcida do clube que deixou. */
   forcedExits: { year: number; fromClubId: string; toClubId: string; villain: boolean }[];
-  seasons: { year: number; age: number; clubId: string; division: string | null; minutes: number; overall: number; games: number; goals: number; assists: number }[];
+  /** v2.65: `selecao` só no ano com convocação (degrau mais alto, jogos, gols, assistências e torneios do ano). */
+  seasons: { year: number; age: number; clubId: string; division: string | null; minutes: number; overall: number; games: number; goals: number; assists: number; selecao?: NationalYear }[];
 }
 
 /** T51: o momento de uma decisão, para a tela mostrar o jogador como ele está ali. */
@@ -212,7 +215,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let farewellAsked = false;
   let sel: CallUp = { rung: 'nenhum', ten: false, captain: false };
   let prestige = 0;
-  const selection: CareerResult['selection'] = { callUps: { sub17: 0, sub20: 0, olimpica: 0, lista: 0, reserva: 0, titular: 0 }, caps: 0, ten: 0, captain: 0, tournaments: [], nationality: 'brasil', dual: null, oriundoCampeao: false, esperouOBrasil: false };
+  const selection: CareerResult['selection'] = { callUps: { sub17: 0, sub20: 0, olimpica: 0, lista: 0, reserva: 0, titular: 0 }, caps: 0, ten: 0, captain: 0, games: 0, goals: 0, assists: 0, mainGames: 0, tournaments: [], nationality: 'brasil', dual: null, oriundoCampeao: false, esperouOBrasil: false };
   const heritage = player.dualNationality; // sorteada na criação (6.1); também pode ser descoberta por residência
   let nation: string | null = null; // null = Brasil
   let stats: SeasonStats = ZERO_STATS;
@@ -386,7 +389,9 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     let transferAsked = false;
     let saleTarget: Offer | null = null;
     let derbyYear = false;
-    const capsBefore = selection.caps;
+    // v2.65: a Seleção do ano, com gerador próprio para não deslocar os outros sorteios
+    let natYear: NationalYear | null = null;
+    const natRng = createPrng(((seed >>> 0) ^ Math.imul(year, 0x2c1b3c6d) ^ 0x5e1ec4) >>> 0);
     // v2.61: o começo do ano, para o resumo da temporada comparar o Over e os atributos
     const ovStart = ov(evo);
     const attrsStart = { ...evo.attributes };
@@ -585,6 +590,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         if (isPrincipal(next.rung)) selection.caps++;
         if (next.ten) selection.ten++;
         if (next.captain) selection.captain++;
+        if (next.rung !== 'nenhum') natYear = addCallUp(natYear, { ...next, rung: next.rung }, position, ov(evo), natRng);
       }
       // Torneios de seleções no meio do ano (calendário da T14); título com a Seleção é permanente.
       if (sem === 0) {
@@ -600,6 +606,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
           if (res.injured) outLeft = Math.max(outLeft, fxT.lesaoSemestresFora);
           if (t === 'copaDoMundo') worldCup = { stage: res.stage, titular: sel.rung === 'titular', hero: res.hero };
           selection.tournaments.push({ year, tournament: t, team: selection.nationality, stage: res.stage, hero: res.hero, villain: res.villain });
+          natYear = addTournament(natYear, { tournament: t, stage: res.stage, matches: res.matches, principal: tcfg.torneios[t].degrau === 'principal', rung: sel.rung as CalledRung }, position, ov(evo), natRng);
         }
       }
       const o = ov(evo);
@@ -655,7 +662,10 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       }, yr);
       for (const award of won) if (award !== 'revelacao' || !awards.some((a) => a.award === 'revelacao')) awards.push({ year, award });
     }
-    seasons.push({ year, age: evo.age - 1, clubId: seasonClub, division: league, minutes: avgMinutes, overall: ov(evo), games: seasonGames, goals: seasonGoals, assists: seasonAssists });
+    seasons.push({ year, age: evo.age - 1, clubId: seasonClub, division: league, minutes: avgMinutes, overall: ov(evo), games: seasonGames, goals: seasonGoals, assists: seasonAssists, ...(natYear ? { selecao: natYear } : {}) });
+    if (natYear) {
+      selection.games += natYear.games; selection.goals += natYear.goals; selection.assists += natYear.assists; selection.mainGames += natYear.mainGames;
+    }
     if (clubId && !inYouth) {
       ultimaTemporada = summarizeSeason({
         year, age: evo.age - 1, clubId: seasonClub, division: league, games: seasonGames, goals: seasonGoals, assists: seasonAssists, minutes: avgMinutes,
@@ -683,7 +693,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         cobrador: cobradorClub === clubId || traits.traits.includes('cobrador'), titulosCarreira: titles.length,
         finalAno: wonThisYear || cdb.runnerUp === clubId, classico: derbyYear, capitao: captainAt.has(clubId), camisa10: wearsTen,
         convocado: Object.values(selection.callUps).some((n) => n > 0), jogosSelecao: selection.caps,
-        golsSelecaoAno: selection.caps > capsBefore ? Math.floor(seasonGoals * FACTS.golsSelecaoFracao) : 0,
+        golsSelecaoAno: natYear?.mainGoals ?? 0,
         copa: worldCup !== null, exterior: !BRAZIL.has(clubId), estreouSelecao: selection.caps > 0,
       };
       const { fired, silenced } = fireMilestones(facts, doneMarcos);

@@ -34,6 +34,18 @@
 .linha__over { grid-row: 1; grid-column: 3; font-family: var(--fonte-titulo); font-weight: 800; }
 .linha__auge { grid-column: 3; font-size: 0.75rem; text-transform: uppercase; text-align: end; }
 .linha__numeros { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: 0 var(--espaco-3); font-size: 0.875rem; font-variant-numeric: tabular-nums; }
+.linha__selecao {
+  grid-column: 2 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-block-start: var(--espaco-1);
+  padding: var(--espaco-1) var(--espaco-2);
+  border-inline-start: 3px solid var(--cor-destaque);
+  font-size: 0.875rem;
+}
+.linha__selecao-degrau { font-weight: 700; }
+.linha__selecao .linha__numeros { grid-column: auto; }
 .linha__titulos { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: var(--espaco-1) var(--espaco-3); font-size: 0.9rem; font-weight: 600; }
 .linha__taca { display: inline-flex; align-items: center; gap: var(--espaco-1); }
 .linha__taca .trofeu__arte { inline-size: 1.75rem; block-size: 1.75rem; object-fit: contain; }

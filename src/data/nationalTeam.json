@@ -57,6 +57,12 @@
    "forma"
   ]
  },
+ "jogos": {
+  "_nota": "v2.65: jogos por semestre convocado (data FIFA) por degrau, números de balanceamento. Referência: calendário internacional masculino da FIFA 2025-2030 (janelas de março, junho, setembro, outubro e novembro, cerca de 2 jogos cada, uns 10 por ano), lembrado pelo assistente em 2026-10-09 e não conferido em fonte (rede bloqueada no ambiente). Na base, menos jogos (amistosos e torneios de base). nivel: a força média dos jogos de cada seleção, como o nivelLiga de stats.json; chanceMaxPorJogo: teto da chance de gol ou assistência num jogo.",
+  "porConvocacao": { "sub17": 3, "sub20": 3, "olimpica": 2, "lista": 1, "reserva": 2, "titular": 4 },
+  "nivel": { "sub17": 60, "sub20": 66, "olimpica": 72, "principal": 80 },
+  "chanceMaxPorJogo": 0.9
+ },
  "base": [
   {
    "degrau": "sub17",

@@ -8,7 +8,7 @@ import { TrophyIcon } from './TrophyIcon';
 import './LinhaDoTempo.css';
 
 // T55h (SPEC 6.15, v2.51): "Sua carreira", antes do cartão final: uma linha por temporada com idade, clube e divisão,
-// Over (número: exceção do overall, SPEC v2.51) e os títulos do ano. As frases antigas seguem no cartão narrativo.
+// Over (número: exceção do overall, SPEC v2.51) e os títulos do ano. v2.65: a Seleção do ano dentro do card, quando houve convocação. As frases antigas seguem no cartão narrativo.
 /** Nome da divisão pelo id do mercado; id novo sem texto cai em "Outra liga" em vez de quebrar a tela. */
 export function divisionLabel(division: string | null): string {
   if (division === null) return '';
@@ -44,6 +44,25 @@ export function LinhaDoTempo({ result, onContinue }: { result: CareerResult; onC
                 <span>{t('ui.linhaDoTempo.jogos', { n: r.games })}</span>
                 <span>{t('ui.linhaDoTempo.gols', { n: r.goals })}</span>
                 <span>{t('ui.linhaDoTempo.assistencias', { n: r.assists })}</span>
+              </span>
+            )}
+            {r.selecao && (
+              <span className="linha__selecao" role="group" aria-label={t('ui.linhaDoTempo.selecao.titulo')}>
+                <strong className="linha__selecao-degrau">
+                  {t(`ui.linhaDoTempo.selecao.degrau.${r.selecao.rung}`)}
+                  {r.selecao.ten && ` · ${t('ui.linhaDoTempo.selecao.camisa10')}`}
+                  {r.selecao.captain && ` · ${t('ui.linhaDoTempo.selecao.capitao')}`}
+                </strong>
+                <span className="linha__numeros">
+                  <span>{t('ui.linhaDoTempo.jogos', { n: r.selecao.games })}</span>
+                  <span>{t('ui.linhaDoTempo.gols', { n: r.selecao.goals })}</span>
+                  <span>{t('ui.linhaDoTempo.assistencias', { n: r.selecao.assists })}</span>
+                </span>
+                {r.selecao.tournaments.map((x) => (
+                  <span key={x.tournament} className="linha__selecao-torneio">
+                    {t('ui.linhaDoTempo.selecao.torneio', { torneio: t(`ui.linhaDoTempo.selecao.nomes.${x.tournament}`), fase: t(`ui.linhaDoTempo.selecao.fase.${x.stage}`) })}
+                  </span>
+                ))}
               </span>
             )}
             {r.titles.length > 0 && (

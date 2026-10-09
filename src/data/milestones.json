@@ -2,9 +2,8 @@
  "_nota": "Marcos da carreira (SPEC 6.13b, v2.29; T25c): primeiras vezes que viram cena com 3 opções. A ordem do arquivo é a prioridade. Gatilhos usam os fatos de MilestoneFacts (src/engine/milestones.ts) e a mesma sintaxe de condição de events.json. 'espelho': marco de clube que fica de fora na mesma temporada em que o de carreira correspondente dispara.",
  "maxPorTemporada": 2,
  "fatos": {
-  "_nota": "Como o motor transforma a temporada em fatos dos gatilhos. titularMinutos: fração mínima de minutos para contar como titular; golsSelecaoFracao: parte dos gols da temporada que conta como gol pela Seleção (estimativa, sem sorteio novo) quando o jogador foi à Seleção principal no ano.",
-  "titularMinutos": 0.6,
-  "golsSelecaoFracao": 0.15
+  "_nota": "Como o motor transforma a temporada em fatos dos gatilhos. titularMinutos: fração mínima de minutos para contar como titular. v2.65: os gols pela Seleção principal do ano vêm da Seleção ano a ano (nationalYear.ts); saiu a estimativa golsSelecaoFracao.",
+  "titularMinutos": 0.6
  },
  "efeitos": {
   "_nota": "bonusMentalMax: teto do multiplicador de crescimento de Mental que os marcos somam (1 + soma dos bonusMental); cobradorGolsExtra: fração a mais de gols da temporada de quem é cobrador do time (linha; o goleiro cobrador segue stats.json).",
