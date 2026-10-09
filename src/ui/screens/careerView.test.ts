@@ -3,9 +3,10 @@ import { simulateCareer } from '../../engine/career';
 import { runUntilDecision } from '../../state/careerRun';
 import events from '../../data/events.json';
 import { t } from '../../i18n';
+import { clubName } from './clubText';
 import { careerProgress, semesterLines, toDecisionPlayer, uniformeFor } from './careerView';
 import { MEETING_EVENT } from '../../engine/meeting';
-import { PROPOSAL_EVENT } from '../../engine/proposals';
+import { LOAN_EVENT, PROPOSAL_EVENT } from '../../engine/proposals';
 
 const pickFirst = (id: string) => events.eventos.find((e) => e.id === id)!.opcoes[0]!.id;
 
@@ -21,7 +22,7 @@ function viewAt(n: number) {
   const choices: string[] = [];
   let step = runUntilDecision(INPUT, 11, choices);
   while (step.kind === 'decision' && choices.length < n) {
-    choices.push(step.eventId === MEETING_EVENT || step.eventId === PROPOSAL_EVENT ? String(step.view.state.sugestao) : pickFirst(step.eventId));
+    choices.push(step.eventId === MEETING_EVENT || step.eventId === PROPOSAL_EVENT || step.eventId === LOAN_EVENT ? String(step.view.state.sugestao) : pickFirst(step.eventId));
     const next = runUntilDecision(INPUT, 11, choices);
     if (next.kind !== 'decision') break;
     step = next;
@@ -54,6 +55,18 @@ describe('careerView (T51b): do motor para a tela de decisão', () => {
     const base = viewAt(0);
     expect(toDecisionPlayer(base, INPUT, LOOK).capitao).toBe(false);
     expect(toDecisionPlayer({ ...base, capitao: true }, INPUT, LOOK).capitao).toBe(true);
+  });
+
+  it('v2.64: na venda pelo empresário leva o clube comprador (cartão e nome no texto); nos outros eventos, não', () => {
+    const base = viewAt(0);
+    const comprador = { clubId: 'flamengo', league: 'BRA-A', currency: 'BRL' as const, annualSalary: 2_400_000, years: 3, role: 'titularRegular' as const, staffQuality: 1, offAxis: false,
+      minutosFaixa: 'muitos' as const, nivelClube: 'boa' as const, marca: null, salarioMensal: 200_000, salarioPct: null, valorProjetadoEUR: null, valorPct: null, minutosVs: null };
+    const venda = toDecisionPlayer({ ...base, propostas: [comprador] }, INPUT, LOOK, undefined, 'empresario-forca-venda');
+    expect(venda.comprador).toEqual(comprador);
+    expect(venda.textoParams!.comprador).toBe(clubName('flamengo').nome);
+    const outro = toDecisionPlayer(base, INPUT, LOOK, undefined, 'festa');
+    expect(outro.comprador).toBeUndefined();
+    expect(outro.textoParams!.comprador).toBeUndefined();
   });
 
   it('leva os marcos já vividos (T25c), do mais antigo ao mais novo', () => {

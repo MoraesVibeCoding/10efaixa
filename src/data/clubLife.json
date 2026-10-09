@@ -1,6 +1,10 @@
 {
- "_nota": "Vida de clube por semestre (SPEC 6.9; T23). Calibrar com npm run sim.",
+ "_nota": "Vida de clube por semestre (SPEC 6.9; T23). Calibrar com npm run sim. v2.64: o empréstimo vira decisão (docs/proposta-emprestimo-e-venda.md); no automático aceita quem tem o temperamento marcado; recusar custa relação com o técnico.",
  "tecnico": { "trocaBase": 0.08, "porPosicaoAbaixo": 0.05, "max": 0.8, "relacaoInicial": 0.5 },
  "salario": { "atrasoBase": 0.45, "porReputacao": 0.0045, "min": 0.02, "atrasosParaPedirSaida": 1 },
- "emprestimo": { "idadeMax": 23, "minutosMax": 0.3, "chance": 0.5, "reputacaoAbaixo": [10, 40] }
+ "emprestimo": {
+  "idadeMax": 23, "minutosMax": 0.3, "chance": 0.5, "reputacaoAbaixo": [10, 40],
+  "aceitaPorTemperamento": { "frio": true, "esquentado": true, "resenha": true, "lider": false },
+  "recusa": { "relacaoTecnico": -0.05 }
+ }
 }
