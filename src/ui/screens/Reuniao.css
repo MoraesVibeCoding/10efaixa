@@ -26,30 +26,17 @@
 .ideia__dica--pouco { color: var(--cor-negativo); }
 .ideia__dica--muito { color: var(--cor-positivo); }
 .reuniao__toque { margin: 0; text-align: center; font-size: 0.875rem; opacity: 0.85; }
-/* resposta da comissão: cartão de papel sobre o scrim, como o resultado da decisão (div, não <dialog>: Safari do iPhone) */
-.reuniao__resposta-fundo { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: var(--espaco-4); background: var(--vidro-scrim); }
-.reuniao__resposta {
-  inline-size: min(100%, 22rem);
-  padding: var(--espaco-4);
-  border: var(--forma-borda-fina) solid var(--cor-linha);
-  border-radius: var(--forma-raio-cartao);
-  background: var(--cor-superficie);
-  color: var(--cor-texto);
-  box-shadow: var(--forma-sombra-suave);
-  display: grid;
-  gap: var(--espaco-3);
-  box-sizing: border-box;
-}
+/* resposta da comissão: a folha por cima da página (div, não <dialog>: Safari do iPhone) */
+.reuniao__resposta { display: grid; gap: var(--espaco-3); } /* v2.81: caixa, fundo e entrada da folha (folha.css) */
 .reuniao__resposta h2 { font-size: var(--tipo-nome); font-weight: 900; line-height: 1.05; }
 .reuniao__resposta p { line-height: 1.4; }
 .reuniao__resposta button {
-  justify-self: end;
+  /* v2.81: o botão principal do jogo (verde cheio, na largura da folha) */
   min-block-size: var(--toque-compacto);
-  padding: 0 var(--espaco-5);
   border: 0;
   border-radius: 999px;
-  background: var(--cor-texto);
-  color: var(--cor-superficie);
+  background: var(--cor-destaque);
+  color: var(--cor-sobre-destaque);
   font-family: var(--fonte-titulo);
   font-size: var(--tipo-opcao);
   font-weight: 800;

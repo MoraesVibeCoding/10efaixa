@@ -8,9 +8,11 @@ import { TrophyIcon } from './TrophyIcon';
 import { medalOf } from './Figurinha';
 import { useRolling } from '../useRolling';
 import { useSaida } from '../useSaida';
+import '../folha.css';
 import './ResumoTemporada.css';
 
-// v2.61 (SPEC 6.15): o resumo da temporada, num card por cima da próxima tela (Normal e Completo). Os números do ano são jogos, gols e
+// v2.61 (SPEC 6.15): o resumo da temporada, num card por cima da próxima tela (Normal e Completo). v2.81 (Álbum): o card é a
+// folha que sobe do pé por cima da página (folha.css). Os números do ano são jogos, gols e
 // assistências; o Over vai de-para com a variação em %; os atributos entram só em palavras (CLAUDE.md); o comentário do técnico
 // tem até 3 frases montadas pelas chaves do motor. É um `div role="alertdialog"` (não `<dialog>`: o modal nativo travou no Safari do iPhone).
 // Abre com o foco em "Continuar"; Esc fecha; Tab fica preso no único botão.
@@ -33,8 +35,8 @@ export function ResumoTemporada({ resumo, torcida, onClose }: ResumoTemporadaPro
   const medalha = medalOf(over);
   const troca = medalOf(resumo.overallDe).nome !== medalOf(resumo.overallPara).nome;
   return (
-    <div className="resumo__fundo" data-saindo={saindo || undefined}>
-      <div className="resumo" role="alertdialog" aria-modal="true" aria-labelledby="resumo-titulo" onKeyDown={onKey}>
+    <div className="resumo__fundo folha__fundo" data-saindo={saindo || undefined}>
+      <div className="resumo folha" role="alertdialog" aria-modal="true" aria-labelledby="resumo-titulo" onKeyDown={onKey}>
         <h2 id="resumo-titulo" className="resumo__titulo">{t('ui.resumoTemporada.titulo')}</h2>
         <p className="resumo__onde">{`${clubName(resumo.clubId).nome} · ${t('ui.resumoTemporada.idade', { n: resumo.age })}`}</p>
         {torcida && <p className="resumo__torcida">{t('ui.idolatria.selo', { faixa: t(`ui.idolatria.faixa.${torcida}`) })}</p>}

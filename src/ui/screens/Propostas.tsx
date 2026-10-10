@@ -1,7 +1,8 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { STAY, RAISE, RENEW, acceptChoice, forceChoice, loveChoice, negotiateChoice, type CurrentClubView, type ProposalView } from '../../engine/proposals';
 import { t } from '../../i18n';
-import { Career as CareerDrawer, CenaFoto, PlayerBox, TRANSITION, type DecisionProps } from './Decision';
+import { Career as CareerDrawer, CenaFoto, PaginaCabecalho, PlayerBox, TRANSITION, type DecisionProps } from './Decision';
+import '../folha.css';
 import { Emblema } from './Emblema';
 import { currentText, money, proposalText, type ChangeText } from './proposalText';
 import './Propostas.css';
@@ -17,6 +18,8 @@ export interface PropostasProps {
   /** v2.64: a decisão de empréstimo: o cartão do destino só se aceita ("ir emprestado"); o atual é "ficar e brigar por espaço". */
   emprestimo?: boolean;
   player: DecisionProps['player']; age: number; progress: number; scene: DecisionProps['scene']; anterior?: DecisionProps['anterior'];
+  /** v2.81 (Álbum): a linha da página, como na decisão. */
+  pagina?: DecisionProps['pagina'];
   onChoose: (choice: string) => void;
 }
 
@@ -33,7 +36,7 @@ function Estrelas({ n, nivel }: { n: number; nivel: string }) {
   );
 }
 
-export function Propostas({ propostas, atual, podeFicar, podeForcar = false, podeRenovar = false, emprestimo = false, player, age, progress, scene, anterior, onChoose }: PropostasProps) {
+export function Propostas({ propostas, atual, podeFicar, podeForcar = false, podeRenovar = false, emprestimo = false, player, age, progress, scene, anterior, pagina, onChoose }: PropostasProps) {
   const [picked, setPicked] = useState(null as string | null);
   const [modo, setModo] = useState(null as Modo | null);
   const [career, setCareer] = useState(false);
@@ -52,7 +55,6 @@ export function Propostas({ propostas, atual, podeFicar, podeForcar = false, pod
     return () => { document.removeEventListener('keydown', onKey); };
   }, [career]);
   const tela = emprestimo ? 'emprestimo' : 'proposta';
-  const percent = Math.round(Math.min(1, Math.max(0, progress)) * 100);
   const showAtual = podeFicar && atual !== undefined;
   const proposal = propostas.find((p) => p.clubId === picked);
   const modos: Modo[] = picked === ATUAL
@@ -136,13 +138,12 @@ export function Propostas({ propostas, atual, podeFicar, podeForcar = false, pod
   }
   return (
     <main className="decisao propostas" style={TRANSITION} data-tema="claro" data-evento={emprestimo ? 'emprestimo' : 'proposta-clube'}>
-      <div inert={career} className="faixa" role="progressbar" aria-label={t('ui.decisao.progresso')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent} aria-valuetext={t('ui.decisao.idade', { idade: age })}>
-        <span className="faixa__feito" style={{ inlineSize: `${percent}%` }} />
-      </div>
+      <PaginaCabecalho pagina={pagina} progress={progress} age={age} inert={career} />
       <PlayerBox player={player} age={age} anterior={anterior} open={career} opener={opener} onOpen={() => { setCareer(true); }} inert={career} />
-      {/* v2.81 (Álbum): a cena é uma foto colada na página, embaixo do card do jogador */}
-      <CenaFoto scene={scene} inert={career} />
-      <form className="decisao__painel propostas__painel" onSubmit={submit} inert={career} noValidate>
+      {/* v2.81 (Álbum): a cena é uma foto colada na página, embaixo do card do jogador; escurece sob a folha */}
+      <CenaFoto scene={scene} inert={career} atras />
+      {/* v2.81 (Álbum): os cartões sobem numa folha por cima da página da história */}
+      <form className="decisao__painel propostas__painel folha folha--pagina" onSubmit={submit} inert={career} noValidate>
         <p className="propostas__sala">{t(`ui.${tela}.sala`)}</p>
         <h1 className="decisao__titulo" ref={title} tabIndex={-1}>{t(`ui.${tela}.titulo`)}</h1>
         <p className="propostas__apoio">{t(`ui.${tela}.apoio`)}</p>

@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import type { MeetingResult } from '../../engine/meeting';
 import type { Agrado, Idea, MeetingOptions } from '../../engine/meetingOptions';
 import { t } from '../../i18n';
-import { Career as CareerDrawer, CenaFoto, PlayerBox, TRANSITION, type DecisionProps } from './Decision';
+import { useSaida } from '../useSaida';
+import { Career as CareerDrawer, CenaFoto, PaginaCabecalho, PlayerBox, TRANSITION, type DecisionProps } from './Decision';
+import '../folha.css';
 import './Reuniao.css';
 
 // T52d (SPEC 6.5, v2.53): reunião com a comissão em 3 ideias, no desenho aprovado: o card do jogador (o de sempre), a fala do
@@ -25,12 +27,14 @@ export interface ReuniaoProps {
   semestre: 1 | 2;
   scene: DecisionProps['scene'];
   anterior?: DecisionProps['anterior'];
+  /** v2.81 (Álbum): a linha da página, como na decisão. */
+  pagina?: DecisionProps['pagina'];
   onChoose: (choice: string) => void;
 }
 
 function agradoText(a: Agrado) { return t(`ui.reuniao.agrado.${a}`); }
 
-export function Reuniao({ ideias, player, age, progress, semestre, scene, anterior, onChoose }: ReuniaoProps) {
+export function Reuniao({ ideias, player, age, progress, semestre, scene, anterior, pagina, onChoose }: ReuniaoProps) {
   const [picked, setPicked] = useState(null as Idea | null);
   const [career, setCareer] = useState(false);
   const opener = useRef(null as HTMLButtonElement | null);
@@ -48,7 +52,6 @@ export function Reuniao({ ideias, player, age, progress, semestre, scene, anteri
     document.addEventListener('keydown', onKey);
     return () => { document.removeEventListener('keydown', onKey); };
   }, [career]);
-  const percent = Math.round(Math.min(1, Math.max(0, progress)) * 100);
   function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!picked) return;
@@ -57,9 +60,7 @@ export function Reuniao({ ideias, player, age, progress, semestre, scene, anteri
   }
   return (
     <main className="decisao reuniao" style={TRANSITION} data-tema="claro" data-evento="reuniao">
-      <div inert={career} className="faixa" role="progressbar" aria-label={t('ui.decisao.progresso')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent} aria-valuetext={t('ui.decisao.idade', { idade: age })}>
-        <span className="faixa__feito" style={{ inlineSize: `${percent}%` }} />
-      </div>
+      <PaginaCabecalho pagina={pagina} progress={progress} age={age} inert={career} />
       <PlayerBox player={player} age={age} anterior={anterior} open={career} opener={opener} onOpen={() => { setCareer(true); }} inert={career} />
       {/* v2.81 (Álbum): a cena é uma foto colada na página, embaixo do card do jogador */}
       <CenaFoto scene={scene} inert={career} />
@@ -112,6 +113,8 @@ export function ReuniaoResposta({ resposta, onDone }: ReuniaoRespostaProps) {
     done.current = true;
     onDone();
   }
+  // v2.81: a folha desce (150 ms) antes de seguir pelo botão; Esc segue na hora
+  const { saindo, fechar } = useSaida(finish);
   useEffect(() => { button.current?.focus(); }, []);
   const { response, reason, focus } = resposta;
   const text = response === 'recusa'
@@ -122,11 +125,11 @@ export function ReuniaoResposta({ resposta, onDone }: ReuniaoRespostaProps) {
     if (e.key === 'Tab') { e.preventDefault(); button.current?.focus(); }
   }
   return (
-    <div className="reuniao__resposta-fundo">
-      <div className="reuniao__resposta" role="alertdialog" aria-modal="true" aria-labelledby="reuniao-resposta-titulo" onKeyDown={onKey}>
+    <div className="reuniao__resposta-fundo folha__fundo" data-saindo={saindo || undefined}>
+      <div className="reuniao__resposta folha" role="alertdialog" aria-modal="true" aria-labelledby="reuniao-resposta-titulo" onKeyDown={onKey}>
         <h2 id="reuniao-resposta-titulo">{t(`ui.reuniao.resposta.${response}.titulo`)}</h2>
         <p>{text}</p>
-        <button ref={button} type="button" onClick={finish}>{t('ui.resultado.seguir')}</button>
+        <button ref={button} type="button" onClick={fechar}>{t('ui.resultado.seguir')}</button>
       </div>
     </div>
   );
