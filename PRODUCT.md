@@ -28,10 +28,10 @@ Um simulador de carreira rápido e compartilhável na língua do torcedor brasil
 
 - Carreira completa sem cadastro, com save local no navegador.
 - Três ritmos: Rápido (~5 min), Normal (~15 min), Completo (livre).
-- Uma decisão por tela, sempre com uma cena pintada ao fundo. As cenas têm os 40% de baixo escuros para receber os painéis da interface.
+- Uma decisão por tela, sempre com uma cena pintada. Desde a v2.81 (direção "Álbum") a carreira é um álbum: a cena vira uma foto na página de papel, com o texto e as opções embaixo; propostas, empréstimo e resumo da temporada são cards que sobem por cima da página.
 - Toda decisão tem três opções, cada uma ligada a um temperamento (Frio, Esquentado, Líder, Resenha); a tela marca a que combina com o jogador.
 - Antes de decidir, o jogador vê a prévia das consequências de cada opção em sentido e intensidade, nunca em números (T41b), em duas linhas: "Você ganha" e "Em troca".
-- A caixa do jogador mostra sempre idade, tempo de jogo e salário, e abre a gaveta "Minha carreira" (atributos em faixas, títulos e trajetória por temporada).
+- O card pequeno do jogador (v2.81) mostra sempre foto e Over, nome, bandeira, posição, clube, idade, salário, valor e as miniaturas dos troféus; a etiqueta "Carreira ›" abre "Minha carreira" (jogos, gols, assistências, títulos e trajetória).
 - No fim, um cartão 1080×1350 para compartilhar, com veredito, rótulo e os números do auge.
 
 ## Capabilities and Constraints
@@ -45,10 +45,10 @@ Um simulador de carreira rápido e compartilhável na língua do torcedor brasil
 ## Brand Commitments
 
 - Nome: **10eFaixa**. O número gigante é o elemento memorável; a faixa horizontal carrega informação (progresso, faixas de atributo, veredito).
-- Paleta fixa (SPEC 7): Papel `#EEE9DF`, Marinho de vestiário `#14213D`, Verde gramado `#1E7B4F` (cor de base), Amarelo braçadeira `#FFC21A` (marca: abertura e faixa de capitão), Vermelho cartão `#D62839` (só lesão, queda e alerta), Cinza de linha `#C9CFC6`.
+- Paleta fixa (SPEC 7, v2.81, sem azul): Papel `#EEE9DF`, Tinta `#0F2A1C`, Verde gramado `#006731` (única cor de ação), Verde-escuro `#0B4A2A` (selos), Verde-noite `#0B2A1B` (capa e contracapa), Amarelo braçadeira `#FFC21A` (marca, veredito, metas), Ouro `#B08D57` (moldura dos cards grandes), Vermelho cartão `#D62839` (só lesão, queda e alerta), Cinza de linha `#C9CFC6`.
 - Tipografia fixa: Oswald (números e títulos) e Archivo (texto), v2.76, sempre com fonte reserva.
-- Tema claro (e escuro): papel creme, tinta marinho e verde gramado como cor de base. **Desde a v2.34**, superfícies sólidas com borda fina e sombra suave, e vidro fosco só em sobreposições (prévia da criação, caixa do jogador e faixa de baixo da decisão, revelação do overall), com fallback sólido. A figurinha com moldura por faixa de overall é a unidade visual do jogador. Dourado e metais só como cor de raridade.
-- Movimento: dois momentos animados (o número "carimbando" na abertura e a figurinha "colando" na revelação do overall), ambos desligados com `prefers-reduced-motion`.
+- Tema sempre claro (v2.75). **Desde a v2.81, direção "Álbum":** a abertura é a capa e o fim de carreira é a contracapa, em verde-noite; as telas da carreira são páginas de papel creme com superfícies sólidas, borda fina e sombra suave; nada inclinado; o vidro fosco da v2.34 sai.
+- Movimento (v2.81): capa com a figurinha colando e o "10" carimbando, cards de início e fim colando com as metas preenchidas uma a uma, card de fim virando uma vez, cards de proposta e resumo subindo; tudo reto, sem rotação, e pronto sem movimento com `prefers-reduced-motion`.
 - Tom de voz: direto, coloquial, frases curtas, sabor de narração de rádio. Botões dizem o que acontece ("Aceitar proposta", "Ficar no clube"). Zoeira só com o próprio jogador.
 - Sem escudos oficiais, sem marcas, sem imagem de pessoa real.
 

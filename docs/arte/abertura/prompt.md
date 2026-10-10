@@ -66,3 +66,7 @@ MUST NOT APPEAR
 - [ ] Costas da camisa lisas e escuras, sem número
 - [ ] Topo (15%) e base (28%) escuros e vazios
 - [ ] Sem texto, escudo, logo ou marca d'água
+
+## Versão sem azul (v2.81, direção "Álbum")
+
+A abertura virou a **capa do álbum** em verde-noite (`#0B2A1B`), e a arte do túnel entra como a figurinha da capa, com moldura de ouro. Na arte final, gerar uma versão **sem azul**: camisa e calção em tom neutro escuro (grafite) ou verde-escuro, paredes do túnel em cinza-esverdeado ou concreto, luz do estádio quente. A **faixa de capitão amarela** continua sendo o único ponto de cor viva. As demais regras desta conferência continuam valendo; o "10" segue sendo estampado por código, nunca na arte.
