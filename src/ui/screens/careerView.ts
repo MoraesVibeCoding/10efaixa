@@ -13,8 +13,9 @@ import { previewAvatar, type Look } from './look';
 const SALE_EVENT = 'empresario-forca-venda';
 
 // T51 (b): o que o motor sabe na hora da decisão vira a ficha da tela. A carreira começa aos 16 anos, em 2026.
-const START_AGE = 16;
-const START_YEAR = 2026;
+/** A carreira começa aos 16 anos, em 2026 (página 1 do álbum). */
+export const START_AGE = 16;
+export const START_YEAR = 2026;
 /** Fim de referência da barra de progresso: a aposentadoria varia, a barra só não pode passar do fim. */
 const END_AGE = 40;
 

@@ -69,3 +69,21 @@ describe('cards sobre a história (v2.81)', () => {
     expect(f).not.toMatch(/rotate/);
   });
 });
+
+// v2.81: a folha entra deslizando de baixo (translateY 100%); o foco no título ao abrir não pode rolar a página até a posição
+// de entrada da folha (no ritmo, a página ficava rolada ~460 px depois da animação)
+describe('foco ao abrir uma folha não rola a página (v2.81)', () => {
+  it('ritmo, propostas e resumo focam sem rolar', async () => {
+    const { Ritmo } = await import('./Ritmo');
+    const focus = vi.spyOn(HTMLElement.prototype, 'focus');
+    render(<Ritmo onChoose={() => {}} onBack={() => {}} />);
+    expect(focus).toHaveBeenLastCalledWith({ preventScroll: true });
+    cleanup();
+    render(<Propostas propostas={[PROPOSTA]} podeFicar player={PLAYER} age={24} progress={0.4} scene={scene} onChoose={() => {}} />);
+    expect(focus).toHaveBeenLastCalledWith({ preventScroll: true });
+    cleanup();
+    render(<ResumoTemporada resumo={RESUMO} onClose={() => {}} />);
+    expect(focus).toHaveBeenLastCalledWith({ preventScroll: true });
+    focus.mockRestore();
+  });
+});

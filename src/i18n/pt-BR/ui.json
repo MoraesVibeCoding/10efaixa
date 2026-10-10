@@ -265,7 +265,26 @@
   "atributos": "Como ele começa",
   "diamante": "Diamante bruto",
   "diamanteFrase": "A várzea escondia um craque: o teto dele é maior que o normal.",
-  "seguir": "Escolher o ritmo"
+  "seguir": "Escolher o ritmo",
+  "origem": { "varzea": "Do terrão do bairro", "peneira": "Um entre trezentos na peneira", "baseGrande": "Criado na base do clube" },
+  "linha": "{posicao} · {estado} · {idade} anos",
+  "metas": { "titulo": "Metas do álbum", "dez": "Vestir a 10 da Seleção", "faixa": "Usar a faixa de capitão" },
+  "virar": "Virar o card",
+  "ficha": {
+   "titulo": "Ficha do jogador",
+   "camisa": "Camisa {n}",
+   "origem": "Origem",
+   "origemValor": "{origem} · {estado}",
+   "estilo": "Estilo",
+   "estiloValor": "{estilo} · {pe}",
+   "pe": { "direita": "pé direito", "esquerda": "pé esquerdo" },
+   "fisico": "Físico",
+   "fisicoValor": "{altura} m · {compleicao}",
+   "temperamento": "Temperamento",
+   "sonho": "O sonho",
+   "sonhoClube": "Vestir a camisa {prep} {clube}",
+   "semSonho": "Sem clube de coração: o sonho é jogar"
+  }
  },
  "resumoTemporada": {
   "semJogos": "Ano de formação: nenhum jogo como profissional ainda, mas cada treino contou.",
@@ -311,6 +330,9 @@
   "titulo": "10eFaixa",
   "lema": "Da várzea à aposentadoria. Uma carreira, as suas escolhas.",
   "novaCarreira": "Nova carreira",
+  "marca": { "dez": "10", "e": "e", "faixa": "Faixa" },
+  "selo": "Álbum da carreira",
+  "salvoLinha": "{posicao} · camisa {numero}",
   "desafio": "Desafio do dia ({data})",
   "continuar": "Continuar a carreira de {nome}",
   "continuarSemNome": "Continuar a carreira salva",

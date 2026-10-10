@@ -42,7 +42,8 @@ export function Propostas({ propostas, atual, podeFicar, podeForcar = false, pod
   const [career, setCareer] = useState(false);
   const opener = useRef(null as HTMLButtonElement | null);
   const title = useRef(null as HTMLHeadingElement | null);
-  useEffect(() => { title.current?.focus(); }, []);
+  // v2.81: a folha entra deslizando de baixo; o foco não rola a página até a posição de entrada dela
+  useEffect(() => { title.current?.focus({ preventScroll: true }); }, []);
   const wasOpen = useRef(false);
   useEffect(() => {
     if (wasOpen.current && !career) opener.current?.focus();

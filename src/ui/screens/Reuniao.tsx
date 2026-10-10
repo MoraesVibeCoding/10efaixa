@@ -115,7 +115,8 @@ export function ReuniaoResposta({ resposta, onDone }: ReuniaoRespostaProps) {
   }
   // v2.81: a folha desce (150 ms) antes de seguir pelo botão; Esc segue na hora
   const { saindo, fechar } = useSaida(finish);
-  useEffect(() => { button.current?.focus(); }, []);
+  // v2.81: a folha entra deslizando de baixo; o foco não rola a página até a posição de entrada dela
+  useEffect(() => { button.current?.focus({ preventScroll: true }); }, []);
   const { response, reason, focus } = resposta;
   const text = response === 'recusa'
     ? t(`ui.reuniao.resposta.recusa.${reason ?? 'score'}`)
