@@ -214,16 +214,17 @@ function IdentityStep({ c }: { c: StepCtx }) {
             <Field id={`${ids}-numero`} label={t('ui.criacao.quemE.numero')}>
               <input id={`${ids}-numero`} type="text" inputMode="numeric" value={id.number} maxLength={2} autoComplete="off"
                 {...errorProps(c, 'number')} onChange={(e) => change('number', e.target.value)} />
-              <FieldError c={c} k="number" />
             </Field>
             <Field id={`${ids}-estado`} label={t('ui.criacao.quemE.estado')}>
               <select id={`${ids}-estado`} value={id.state} {...errorProps(c, 'state')} onChange={(e) => change('state', e.target.value)}>
                 <option value="">{t('ui.criacao.quemE.escolhaEstado')}</option>
                 {creationData.states.map((uf) => <option key={uf} value={uf}>{t(`creation.state.${uf}`)}</option>)}
               </select>
-              <FieldError c={c} k="state" />
             </Field>
           </div>
+          {/* v2.69: os erros do número e do estado na largura toda, embaixo da linha (o do 10 quebrava em 9 linhas na coluna estreita) */}
+          <FieldError c={c} k="number" />
+          <FieldError c={c} k="state" />
           <Field id={`${ids}-clube`} label={t('ui.criacao.quemE.clube')}>
             <select id={`${ids}-clube`} value={id.heartClub} onChange={(e) => change('heartClub', e.target.value)}>
               <option value="">{t('ui.criacao.quemE.nenhum')}</option>

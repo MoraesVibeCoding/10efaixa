@@ -19,7 +19,8 @@
 
 .criacao__passo { flex: 1; align-content: start; display: grid; gap: var(--espaco-2); min-inline-size: 0; }
 .criacao__campo { display: grid; gap: 2px; min-inline-size: 0; }
-.criacao__campo label, .escolhas__rotulo { font-family: var(--fonte-texto); font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cor-positivo); }
+/* v2.69: rótulos com 14 px (antes 13) */
+.criacao__campo label, .escolhas__rotulo { font-family: var(--fonte-texto); font-size: 0.875rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cor-positivo); }
 .criacao__campo input, .criacao__campo select {
   inline-size: 100%;
   min-block-size: var(--toque-compacto);
@@ -48,8 +49,15 @@
   touch-action: manipulation;
 }
 .criacao__botao--principal {
+  /* v2.69: o botão principal do jogo é um só: verde cheio, Oswald em caixa alta (o mesmo da decisão e da revelação) */
+  border-color: var(--cor-destaque);
+  border-radius: 999px;
   background: var(--cor-destaque);
   color: var(--cor-sobre-destaque);
+  font-family: var(--fonte-titulo);
+  font-size: var(--tipo-opcao);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   /* v2.46: sombra verde sob o botão principal, como na referência */
   box-shadow: 0 12px 28px -10px color-mix(in srgb, var(--cor-destaque) 60%, transparent);
 }
@@ -62,7 +70,7 @@
 .quem { display: grid; gap: 0.375rem; min-inline-size: 0; }
 .quem__topo { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--espaco-3); align-items: start; }
 .quem__campos { display: grid; gap: var(--espaco-1); min-inline-size: 0; }
-.quem__linha { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); gap: var(--espaco-2); }
+.quem__linha { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); gap: var(--espaco-2); align-items: start; }
 .criacao__previa { display: grid; justify-items: center; }
 
 /* visual: título com "Sortear" ao lado (v2.30) */
@@ -87,7 +95,7 @@
 /* v2.46 (decisão do usuário): as pílulas quebram linha, tudo à vista, sem deslizar. Antes era uma faixa que deslizava para o
    passo caber em 390×844 sem rolar; agora o passo "em campo" pode rolar dentro do painel, que é a troca escolhida. */
 .escolhas__cabeca { display: grid; align-content: center; min-inline-size: 0; }
-.escolhas__escolhida { font-size: 0.8125rem; line-height: 1.15; color: var(--cor-texto-suave); }
+.escolhas__escolhida { font-size: 0.875rem; line-height: 1.15; color: var(--cor-texto-suave); }
 .escolhas__lista {
   display: flex;
   flex-wrap: wrap;
@@ -189,7 +197,7 @@
 /* altura: controle deslizante com o valor ao lado */
 .escolhas--altura { row-gap: 0; }
 .altura { display: flex; align-items: center; gap: var(--espaco-2); min-block-size: var(--toque-compacto); }
-.altura input { flex: 1; min-inline-size: 0; accent-color: var(--cor-destaque); }
+.altura input { flex: 1; min-inline-size: 0; block-size: 2.75rem; /* v2.69: área de toque de 44 px (antes 16) */ accent-color: var(--cor-destaque); cursor: pointer; }
 .altura__valor { min-inline-size: 3.5rem; font-weight: 700; font-variant-numeric: tabular-nums; text-align: end; }
 
 /* tela 3 (T50e): tipo de início em cartões empilhados, nome em cima e a frase embaixo */

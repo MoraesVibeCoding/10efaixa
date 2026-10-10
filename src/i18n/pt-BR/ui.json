@@ -247,6 +247,10 @@
  },
  "varzea": "time da várzea",
  "revelacao": {
+  "fortes": "Seus pontos fortes",
+  "fortesApoio": "Tudo ainda está cru: cada atributo pode crescer até o seu teto.",
+  "verTodos": "Ver todos os atributos",
+  "cru": "Cru",
   "titulo": "Nasce um jogador",
   "subtitulo": "{nome}, este é o seu ponto de partida.",
   "atributos": "Como ele começa",
@@ -415,6 +419,7 @@
   }
  },
  "ritmo": {
+  "legenda": "Ritmo da carreira",
   "titulo": "Como você quer jogar?",
   "rapido": {
    "nome": "Rápido",
@@ -422,7 +427,7 @@
   },
   "normal": {
    "nome": "Normal",
-   "detalhe": "Uns 20 minutos. Duas ou três decisões por temporada, com tempo para pensar."
+   "detalhe": "Uns 15 minutos. Duas ou três decisões por temporada, com tempo para pensar."
   },
   "completo": {
    "nome": "Completo",

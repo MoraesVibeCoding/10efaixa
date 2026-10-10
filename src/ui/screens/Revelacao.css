@@ -1,6 +1,17 @@
 /* T49i (v2.34): revelação do jogador. Modal de vidro (glass.css) sobre o scrim do tema; a figurinha "cola" no álbum.
    Sintaxe conferida na MDN (mdn/content): <dialog> com showModal, ::backdrop e o evento cancel (Esc). */
-.revelacao__palco { min-block-size: 100dvh; background: var(--cor-fundo); }
+/* a cena (fixa, z-index -1) aparece atrás do vidro: o palco não pinta fundo por cima dela */
+.revelacao__palco { position: relative; min-block-size: 100dvh; }
+.revelacao__titulo:focus { outline: none; }
+/* v2.69: os 3 pontos fortes em pílulas (só nomes); os dez atributos ficam em "Ver todos" */
+.revelacao__fortes { justify-self: stretch; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--espaco-2); margin: 0; padding: 0; list-style: none; }
+.revelacao__fortes li { padding: 0.25rem 0.75rem; border-radius: 999px; background: var(--cor-destaque); color: var(--cor-sobre-destaque); font-family: var(--fonte-titulo); font-size: var(--tipo-opcao); font-weight: 700; }
+.revelacao__apoio { margin: 0; color: var(--cor-texto-suave); text-align: center; line-height: 1.35; }
+.revelacao__todos { justify-self: stretch; }
+.revelacao__todos summary { min-block-size: 2.75rem; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--cor-texto); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.revelacao__todos[open] { display: grid; gap: var(--espaco-2); }
+/* o nome inteiro na figurinha grande: quebra em até duas linhas em vez de cortar */
+.revelacao__figurinha .figurinha__tarja-nome { white-space: normal; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.05; }
 
 .revelacao {
   inline-size: min(100% - 2rem, 24rem);
@@ -45,8 +56,8 @@
   min-block-size: var(--toque-compacto);
   border: 0;
   border-radius: 999px;
-  background: var(--cor-texto);
-  color: var(--cor-superficie);
+  background: var(--cor-destaque);
+  color: var(--cor-sobre-destaque);
   font-family: var(--fonte-titulo);
   font-size: var(--tipo-opcao);
   font-weight: 800;
@@ -62,7 +73,7 @@
   .revelacao { inline-size: min(100% - 4rem, 46rem); }
   .revelacao[open] {
     grid-template-columns: 15rem minmax(0, 1fr);
-    grid-template-areas: "titulo titulo" "sub sub" "fig rotulo" "fig niveis" "selo niveis" "selo comecar";
+    grid-template-areas: "titulo titulo" "sub sub" "fig rotulo" "fig fortes" "fig apoio" "selo todos" "selo comecar";
     column-gap: var(--espaco-6);
     align-items: start;
   }
@@ -71,7 +82,10 @@
   .revelacao__figurinha { grid-area: fig; inline-size: 13rem; justify-self: center; }
   .revelacao__selo { grid-area: selo; }
   .revelacao__rotulo { grid-area: rotulo; }
-  .revelacao .niveis { grid-area: niveis; }
+  .revelacao__fortes { grid-area: fortes; justify-content: start; }
+  .revelacao__apoio { grid-area: apoio; text-align: start; }
+  .revelacao__todos { grid-area: todos; }
+  .revelacao__todos .revelacao__rotulo { grid-area: auto; }
   .revelacao__comecar { grid-area: comecar; align-self: end; }
 }
 

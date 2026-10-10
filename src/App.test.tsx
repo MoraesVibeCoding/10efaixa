@@ -285,11 +285,11 @@ describe('App: reiniciar a carreira em qualquer tela (v2.56)', () => {
   const reiniciar = () => screen.getByRole('button', { name: t('ui.reiniciar.botao') });
   const toRitmo = () => { fireEvent.click(screen.getByRole('button', { name: t('ui.revelacao.seguir') })); };
 
-  it('a abertura não tem o botão (ainda não há carreira); criação, revelação, ritmo e carreira têm', () => {
+  it('a abertura e a criação não têm o botão (v2.69: ainda não há carreira; a criação tem o próprio Voltar); revelação, ritmo e carreira têm', () => {
     render(<App seed={11} />);
     expect(screen.queryByRole('button', { name: t('ui.reiniciar.botao') })).toBeNull();
     startNew();
-    expect(reiniciar()).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: t('ui.reiniciar.botao') })).toBeNull();
     createPlayer(false);
     expect(reiniciar()).toBeInTheDocument(); // revelação
     toRitmo();
@@ -328,11 +328,10 @@ describe('App: reiniciar a carreira em qualquer tela (v2.56)', () => {
     expect(screen.queryByRole('button', { name: t('ui.reiniciar.botao') })).toBeNull();
   });
 
-  it('na criação também reinicia (volta à abertura)', () => {
+  it('na criação, o "Voltar" do primeiro passo volta à abertura (v2.69: o Reiniciar saiu da criação)', () => {
     render(<App seed={11} />);
     startNew();
-    fireEvent.click(reiniciar());
-    fireEvent.click(screen.getByRole('button', { name: t('ui.reiniciar.confirmar') }));
+    fireEvent.click(screen.getByRole('button', { name: t('ui.criacao.voltar') }));
     expect(screen.getByRole('button', { name: t('ui.abertura.novaCarreira') })).toBeInTheDocument();
   });
 });

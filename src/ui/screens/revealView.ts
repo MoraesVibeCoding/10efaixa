@@ -7,7 +7,8 @@ import { createPrng } from '../../engine/prng';
 // T49i (SPEC 6.1, v2.34): o sorteio revelado depois da criação. Mesma semente da carreira (simulateCareer também começa
 // por createPlayer), então o Over mostrado é o do jogador que vai jogar. Só o Over sai em número; atributos em faixa e
 // o potencial continua oculto.
-export interface Reveal { overall: number; isDiamond: boolean; bands: { id: Attribute; band: string }[] }
+/** v2.69: `fortes` são os 3 atributos mais altos do jogador (só os nomes, nunca o número), em destaque na revelação. */
+export interface Reveal { overall: number; isDiamond: boolean; bands: { id: Attribute; band: string }[]; fortes: Attribute[] }
 
 export function revealOf(input: CreationInput, seed: number): Reveal {
   const created = createPlayer(input, createPrng(seed));
@@ -18,5 +19,6 @@ export function revealOf(input: CreationInput, seed: number): Reveal {
     overall: overall(attributes, position, arch.overallWeightBonus),
     isDiamond,
     bands: ATTRIBUTES.map((id) => ({ id, band: toBand(attributes[id]).key })),
+    fortes: [...ATTRIBUTES].sort((a, b) => attributes[b] - attributes[a]).slice(0, 3),
   };
 }
