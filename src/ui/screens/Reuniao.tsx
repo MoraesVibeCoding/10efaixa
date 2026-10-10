@@ -2,15 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import type { MeetingResult } from '../../engine/meeting';
 import type { Agrado, Idea, MeetingOptions } from '../../engine/meetingOptions';
 import { t } from '../../i18n';
-import { Career as CareerDrawer, PlayerBox, TRANSITION, type DecisionProps } from './Decision';
-import { CenaPintada } from './CenaPintada';
+import { Career as CareerDrawer, CenaFoto, PlayerBox, TRANSITION, type DecisionProps } from './Decision';
 import './Reuniao.css';
 
 // T52d (SPEC 6.5, v2.53): reunião com a comissão em 3 ideias, no desenho aprovado: o card do jogador (o de sempre), a fala do
 // treinador e três cartões selecionáveis (óbvia, mescla, ousada); "Propor ao técnico" só depois de escolher. Sem números.
 const focusName = (f: string) => (f === 'bolaParada' || f === 'pernaRuim' ? t(`ui.reuniao.foco.${f}`) : t(`attributes.attribute.${f}`));
 const IDEAS: Idea[] = ['obvia', 'mescla', 'ousada'];
-const SCENE_SIZE = [1856, 2304] as const;
 
 const ICON: Record<Idea, string> = {
   obvia: 'M5 4h14v17H5zM9 4V2h6v2M8 12h8M8 16h5',
@@ -64,11 +62,7 @@ export function Reuniao({ ideias, player, age, progress, semestre, scene, anteri
       </div>
       <PlayerBox player={player} age={age} anterior={anterior} open={career} opener={opener} onOpen={() => { setCareer(true); }} inert={career} />
       {/* v2.81 (Álbum): a cena é uma foto colada na página, embaixo do card do jogador */}
-      <div className="decisao__foto">
-        {scene.pintada
-          ? <CenaPintada {...scene.pintada} alt={scene.alt} inert={career} foto />
-          : <img className="decisao__cena" src={scene.src} alt={scene.alt} width={SCENE_SIZE[0]} height={SCENE_SIZE[1]} inert={career} />}
-      </div>
+      <CenaFoto scene={scene} inert={career} />
       <form className="decisao__painel reuniao__painel" onSubmit={submit} inert={career} noValidate>
         <p className="reuniao__sala">{t('ui.reuniao.sala')}</p>
         <h1 className="decisao__titulo" ref={title} tabIndex={-1}>{t('ui.reuniao.titulo')}</h1>

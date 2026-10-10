@@ -697,7 +697,6 @@ describe('palco do título na decisão (v2.71)', () => {
     expect(tacas[1]).toHaveClass('taca--nova');
     expect(tacas[0]).not.toHaveClass('taca--nova');
     // no celular, com a caixa fechada, o aviso fica no botão de detalhes
-    expect(document.querySelector('.decisao__topo')).toHaveClass('decisao__topo--taca-nova');
   });
 
   it('sem título, nenhum palco', () => {

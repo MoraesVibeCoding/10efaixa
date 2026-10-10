@@ -67,7 +67,7 @@ describe('saídas dos cards (v2.72)', () => {
 
   it('gaveta "Minha carreira": o botão fecha depois da saída', () => {
     render(<Decision eventId={EVENT} age={20} progress={0.3} player={PLAYER} scene={{ src: 'c.webp', alt: 'cena' }} />);
-    fireEvent.click(document.querySelector('.jogador__abrir')!);
+    fireEvent.click(document.querySelector('.card-jogador__carreira')!);
     fireEvent.click(screen.getByRole('button', { name: t('ui.carreira.fechar') }));
     expect(document.querySelector('.gaveta')).toHaveAttribute('data-saindo');
     act(() => { vi.advanceTimersByTime(MOTION.saidaMs); });

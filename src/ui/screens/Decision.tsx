@@ -191,7 +191,7 @@ function marcoLabel(m: { id: string; ano: number; clubId: string }): string {
  * assistências, como no resumo da temporada. */
 function careerNumbers(seasons: Season[], position: string): { id: string; n: number }[] {
   const sum = (k: 'games' | 'goals' | 'assists' | 'cleanSheets') => seasons.reduce((acc, s) => acc + (s[k] ?? 0), 0);
-  const jogos = { id: 'jogos', n: sum('games') };
+  const jogos = { id: 'partidas', n: sum('games') };
   return position === 'goleiro' ? [jogos, { id: 'semSofrerGol', n: sum('cleanSheets') }] : [jogos, { id: 'gols', n: sum('goals') }, { id: 'assistencias', n: sum('assists') }];
 }
 
@@ -220,7 +220,7 @@ export function Career({ player, onClose }: { player: DecisionProps['player']; o
         </header>
         <ul className="gaveta__numeros" aria-label={t('ui.carreira.numeros')}>
           {careerNumbers(player.seasons ?? [], player.position).map(({ id, n }) => (
-            <li key={id}><strong>{n}</strong><span>{t(`ui.carreira.${id}`)}</span></li>
+            <li key={id}><strong>{n}</strong><span>{t(`ui.resumoTemporada.${id}`)}</span></li>
           ))}
         </ul>
         {player.attributes && (
@@ -276,6 +276,18 @@ export function Career({ player, onClose }: { player: DecisionProps['player']; o
 // as cenas são pintadas em 4:5 (docs/briefing-arte.md); largura e altura reservam o espaço antes de a imagem chegar
 const SCENE_SIZE = [1856, 2304] as const;
 
+/** v2.81 (Álbum): a cena como foto colada na página (decisão, reunião e propostas); `children` vai por cima (o carimbo). */
+export function CenaFoto({ scene, inert, children }: { scene: DecisionProps['scene']; inert: boolean; children?: React.ReactNode }) {
+  return (
+    <div className="decisao__foto">
+      {scene.pintada
+        ? <CenaPintada {...scene.pintada} alt={scene.alt} inert={inert} foto />
+        : <img className="decisao__cena" src={scene.src} alt={scene.alt} width={SCENE_SIZE[0]} height={SCENE_SIZE[1]} fetchPriority="high" inert={inert} />}
+      {children}
+    </div>
+  );
+}
+
 function riskText(risk: Risk): string {
   return t('ui.risco.tarja', { tipo: t(`ui.risco.tipo.${risk.tipo}`), faixa: t(`ui.risco.${risk.faixa}`) });
 }
@@ -323,16 +335,16 @@ function outcomeText(o: Outcome): string {
   return t('ui.resultado.pontos', { sinal, n: Math.round(o.unidade === 'pontos100' ? abs * 100 : abs) });
 }
 
-/** v2.81: ganho vai para "Você ganha"; o resto (perda), para "Em troca". */
-function isGain(o: Outcome) { return o.delta > 0; }
-function isCost(o: Outcome) { return !isGain(o); }
+/** v2.81: o resultado em dois grupos: ganho em "Você ganha"; o resto em "Em troca". O índice da cascata segue entre os grupos. */
+function outcomeGroups(outcome: Outcome[]) {
+  const ganha: Outcome[] = [];
+  const emTroca: Outcome[] = [];
+  for (const o of outcome) (o.delta > 0 ? ganha : emTroca).push(o);
+  return [['ganha', ganha, 'resultado__ganho', 0], ['emTroca', emTroca, 'resultado__perda', ganha.length]] as const;
+}
 
 /** O que a escolha rendeu de verdade, por cima da tela desfocada; fecha pelo botão ou Esc e, no ritmo Rápido, sozinho depois de um instante. */
-function Result({ eventId, optionId, state, tags, auto, onDone }: { eventId: string; optionId: string; state: Ctx; tags: readonly string[]; auto: boolean; onDone: () => void }) {
-  const outcome = outcomeOf(state, eventId, optionId, tags);
-  const verdict = outcomeVerdict(outcome);
-  const ganhos = outcome.filter(isGain);
-  const grupos = [['ganha', ganhos, 'resultado__ganho', 0], ['emTroca', outcome.filter(isCost), 'resultado__perda', ganhos.length]] as const;
+function Result({ eventId, optionId, outcome, verdict, auto, onDone }: { eventId: string; optionId: string; outcome: Outcome[]; verdict: string; auto: boolean; onDone: () => void }) {
   const button = useRef<HTMLButtonElement>(null);
   // v2.72: o card sai (150 ms) antes de seguir; Esc (na Decisão) segue na hora
   const { saindo, fechar } = useSaida(onDone);
@@ -344,13 +356,13 @@ function Result({ eventId, optionId, state, tags, auto, onDone }: { eventId: str
   }, [fechar, auto]);
   return (
     <div className="resultado" data-saindo={saindo || undefined}>
-      <div className={`resultado__caixa caixa resultado--${verdict}`} role="dialog" aria-modal="true" aria-label={t(`ui.resultado.${verdict}`)}>
+      <div className="resultado__caixa" role="dialog" aria-modal="true" aria-label={t(`ui.resultado.${verdict}`)}>
         {/* v2.81 (Álbum): o veredito é o carimbo na foto da cena; aqui fica o que você escolheu e o que rendeu */}
         <p className="resultado__rotulo">{t('ui.resultado.voceEscolheu')}</p>
         <p className="resultado__escolha">{t(`events.${eventId}.opcoes.${optionId}`)}</p>
         {outcome.length === 0 && <p className="resultado__vazio">{t('ui.resultado.semEfeito')}</p>}
         {/* v2.71 (momento 5): as linhas entram em cascata, na ordem */}
-        {grupos.map(([rotulo, itens, classe, antes]) => itens.length > 0 && (
+        {outcomeGroups(outcome).map(([rotulo, itens, classe, antes]) => itens.length > 0 && (
           <section key={rotulo} className={`resultado__grupo ${classe}`}>
             <h2 className="resultado__grupo-titulo" aria-hidden="true">{t(`ui.decisao.${rotulo}`)}</h2>
             <ul className="resultado__lista" aria-label={t(`ui.decisao.${rotulo}`)}>
@@ -467,7 +479,7 @@ export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert, 
   const novasFigurinhas = anterior?.cromos === undefined ? 0 : player.titles.length + (player.marcos?.length ?? 0) - anterior.cromos;
   const troca = anterior !== undefined && medalOf(anterior.overall).nome !== medalOf(player.overall).nome;
   return (
-    <header className={`decisao__topo card-jogador${novas.length > 0 ? ' decisao__topo--taca-nova' : ''}`} inert={inert}>
+    <header className="decisao__topo card-jogador" inert={inert}>
       <div className="card-jogador__foto">
         <Figurinha moldura tamanho="pequena" name={player.name} number={player.number} overall={player.overall} position={player.position} clubId={player.clubId} uniforme={player.uniforme} avatar={player.avatar} visual={player.visual} />
         <div className="decisao__over">
@@ -502,7 +514,7 @@ export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert, 
             </ul>
           )}
           {player.titles.length > 0 && <span className="tacas__total" aria-hidden="true">{player.titles.length}</span>}
-          <button ref={opener} type="button" className="jogador__abrir card-jogador__carreira" aria-haspopup="dialog" aria-expanded={open}
+          <button ref={opener} type="button" className="card-jogador__carreira" aria-haspopup="dialog" aria-expanded={open}
             aria-label={novasFigurinhas > 0 ? `${t('ui.carreira.titulo')}, ${t('ui.album.novas', { n: novasFigurinhas })}` : t('ui.carreira.titulo')} onClick={onOpen}>
             {t('ui.carreira.etiqueta')}
             {novasFigurinhas > 0 && <span className="jogador__novas" aria-hidden="true">+{novasFigurinhas}</span>}
@@ -540,7 +552,9 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
     onChoose?.(id);
   }
   const options = events.eventos.find((e) => e.id === eventId)?.opcoes ?? [];
-  const verdict = useMemo(() => (chosen === null ? null : outcomeVerdict(outcomeOf(state, eventId, chosen, player.etiquetas ?? []))), [chosen, state, eventId, player.etiquetas]);
+  // o que a escolha rendeu: calculado uma vez, para o carimbo e para o resultado
+  const outcome = useMemo(() => (chosen === null ? null : outcomeOf(state, eventId, chosen, player.etiquetas ?? [])), [chosen, state, eventId, player.etiquetas]);
+  const verdict = outcome === null ? null : outcomeVerdict(outcome);
   const percent = Math.round(Math.min(1, Math.max(0, progress)) * 100);
   const text = eventText(eventId, player.etiquetas ?? [], player.textoParams);
   const pressed = chosen ?? marked;
@@ -569,7 +583,7 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
       const el = root.current?.querySelector<HTMLElement>(`.taca--nova[data-taca="${id}"]`);
       if (!el || typeof el.animate !== 'function') continue;
       const d = el.getBoundingClientRect();
-      // escondida (caixa fechada no celular): o ponto dourado no botão avisa, sem voo
+      // ainda sem tamanho (fora da tela): sem voo
       if (d.width < 2) continue;
       const dx = o.left + o.width / 2 - (d.left + d.width / 2);
       const dy = o.top + o.height / 2 - (d.top + d.height / 2);
@@ -616,13 +630,10 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
         <span className="faixa__feito" style={{ inlineSize: `${percent}%` }} />
       </div>
       <PlayerBox player={player} age={age} anterior={anterior} open={career} opener={opener} onOpen={() => { setCareer(true); }} inert={overlay} novas={novas} />
-      {/* v2.81 (Álbum): a cena é uma foto colada na página; o resultado carimba a foto, reto */}
-      <div className="decisao__foto">
-        {scene.pintada
-          ? <CenaPintada {...scene.pintada} alt={scene.alt} inert={overlay} foto />
-          : <img className="decisao__cena" src={scene.src} alt={scene.alt} width={SCENE_SIZE[0]} height={SCENE_SIZE[1]} fetchPriority="high" inert={overlay} />}
+      {/* v2.81 (Álbum): a cena é uma foto colada na página; o resultado carimba a foto */}
+      <CenaFoto scene={scene} inert={overlay}>
         {verdict !== null && <span className={`decisao__carimbo resultado__veredito decisao__carimbo--${verdict}`} aria-hidden="true">{t(`ui.resultado.carimbo.${verdict}`)}</span>}
-      </div>
+      </CenaFoto>
       <div className="decisao__painel" inert={overlay}>
         {semestre && semestre.length > 0 ? <p className="decisao__semestre"><strong>{t('ui.evolucao.titulo')}:</strong> {semestre.join(' ')}</p> : null}
         <h1 ref={titulo} tabIndex={-1} className="decisao__titulo">{t(`events.${eventId}.titulo`)}</h1>
@@ -658,7 +669,7 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
       {career && <Career player={player} onClose={() => { setCareer(false); }} />}
       {palco && <Palco titulos={titulos} onClose={fecharPalco} />}
       <Carimbo momentos={palcoVisto ? carimbos : NONE} />
-      {chosen !== null && <Result eventId={eventId} optionId={chosen} state={state} tags={player.etiquetas ?? []} auto={rapido} onDone={onDone} />}
+      {chosen !== null && outcome !== null && verdict !== null && <Result eventId={eventId} optionId={chosen} outcome={outcome} verdict={verdict} auto={rapido} onDone={onDone} />}
     </main>
   );
 }

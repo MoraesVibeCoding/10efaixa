@@ -96,11 +96,7 @@
   "colOver": "OVR",
   "atributos": "Atributos",
   "etiqueta": "Carreira",
-  "numeros": "Números da carreira",
-  "jogos": "Jogos",
-  "gols": "Gols",
-  "assistencias": "Assistências",
-  "semSofrerGol": "Sem sofrer gol"
+  "numeros": "Números da carreira"
  },
  "risco": {
   "frase": "risco {faixa}",

@@ -92,15 +92,15 @@ describe('"Minha carreira": números da carreira até agora (v2.81)', () => {
 
   it('jogos, gols e assistências somados', () => {
     const numeros = abrir();
-    expect(within(numeros).getByText(t('ui.carreira.jogos')).closest('li')).toHaveTextContent('58');
-    expect(within(numeros).getByText(t('ui.carreira.gols')).closest('li')).toHaveTextContent('12');
-    expect(within(numeros).getByText(t('ui.carreira.assistencias')).closest('li')).toHaveTextContent('9');
+    expect(within(numeros).getByText(t('ui.resumoTemporada.partidas')).closest('li')).toHaveTextContent('58');
+    expect(within(numeros).getByText(t('ui.resumoTemporada.gols')).closest('li')).toHaveTextContent('12');
+    expect(within(numeros).getByText(t('ui.resumoTemporada.assistencias')).closest('li')).toHaveTextContent('9');
   });
 
   it('goleiro: jogos e jogos sem sofrer gol', () => {
     const numeros = abrir('goleiro');
-    expect(within(numeros).getByText(t('ui.carreira.semSofrerGol')).closest('li')).toHaveTextContent('1');
-    expect(within(numeros).queryByText(t('ui.carreira.gols'))).toBeNull();
+    expect(within(numeros).getByText(t('ui.resumoTemporada.semSofrerGol')).closest('li')).toHaveTextContent('1');
+    expect(within(numeros).queryByText(t('ui.resumoTemporada.gols'))).toBeNull();
   });
 });
 

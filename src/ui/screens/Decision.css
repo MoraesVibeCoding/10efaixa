@@ -4,9 +4,12 @@
 .decisao {
   position: relative;
   isolation: isolate;
+  /* o vão entre os blocos da página e a borda da foto: o detalhe da marcada usa os dois para cair sobre a foto */
+  --pagina-vao: var(--espaco-2);
+  --foto-borda: 5px;
   display: flex;
   flex-direction: column;
-  gap: var(--espaco-2);
+  gap: var(--pagina-vao);
   min-block-size: 100dvh; /* T49j: em tela baixa (360x640) a página cresce e rola; nunca corta o "Confirmar escolha" */
   max-inline-size: 30rem;
   margin-inline: auto;
@@ -14,13 +17,6 @@
   overflow-x: clip;
   background: var(--cor-fundo);
   color: var(--cor-texto);
-}
-
-.caixa {
-  border: var(--forma-borda-fina) solid var(--cor-linha);
-  border-radius: var(--forma-raio);
-  background: var(--cor-superficie);
-  box-shadow: var(--forma-sombra-suave);
 }
 
 /* a linha da página: "Temporada 2032" e "Pág. 7", em letra de rótulo */
@@ -46,8 +42,8 @@
   min-block-size: 7rem;
   overflow: hidden;
   container-type: size;
-  margin-inline: -6px;
-  border: 5px solid var(--cor-superficie);
+  margin-inline: calc(-1 * (var(--foto-borda) + 1px));
+  border: var(--foto-borda) solid var(--cor-superficie);
   border-radius: var(--forma-raio-cartao);
   background: var(--cor-trilho);
   box-shadow: var(--forma-sombra-suave);
@@ -84,13 +80,14 @@
   text-transform: uppercase;
   white-space: nowrap;
   color: var(--cor-texto);
-  box-shadow: 0 6px 18px rgb(15 42 28 / 0.25);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--cor-texto) 25%, transparent);
 }
 .decisao__carimbo--positivo { color: var(--cor-positivo); }
 .decisao__carimbo--negativo { color: var(--cor-negativo); }
 
-/* progresso da carreira: um fio no alto da tela */
-.faixa { flex: none; margin-block-start: -4px; block-size: 4px; border-radius: 999px; background: var(--cor-trilho); overflow: hidden; }
+/* progresso da carreira: um fio no alto da tela, colado na linha da página quando ela existe */
+.pagina__topo + .faixa { margin-block-start: -4px; }
+.faixa { flex: none; block-size: 4px; border-radius: 999px; background: var(--cor-trilho); overflow: hidden; }
 .faixa__feito { display: block; block-size: 100%; min-inline-size: 4px; background: var(--cor-destaque); }
 
 /* ---------- card pequeno do jogador (v2.81): foto com o Over, nome, clube, a ficha, as taças e "Carreira ›" */
@@ -199,18 +196,6 @@
   letter-spacing: 0.01em;
 }
 
-.selos { display: flex; flex-wrap: wrap; gap: 4px; margin: 0; padding: 0; list-style: none; }
-.selos li {
-  padding: 1px 8px;
-  border: var(--forma-borda-fina) solid var(--cor-linha);
-  border-radius: 999px;
-  background: var(--cor-superficie);
-  font-size: var(--tipo-apoio);
-  font-weight: 700;
-  line-height: 1.35;
-  white-space: nowrap;
-}
-
 /* ---------- o painel no papel: o que aconteceu e o que você faz; a sobra de altura fica para a foto */
 .decisao__painel {
   position: relative;
@@ -285,12 +270,12 @@
 .decisao__painel > .decisao__detalhe {
   position: absolute;
   inset-inline: var(--espaco-1);
-  inset-block-end: calc(100% + var(--espaco-2) + 5px + var(--espaco-1));
+  inset-block-end: calc(100% + var(--pagina-vao) + var(--foto-borda) + var(--espaco-1));
   z-index: 1;
   padding: var(--espaco-2) var(--espaco-3);
   border-radius: var(--forma-raio);
   background: var(--cor-superficie);
-  box-shadow: 0 4px 14px rgb(15 42 28 / 0.28);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--cor-texto) 28%, transparent);
   animation: detalhe-entra 160ms ease-out both;
 }
 .decisao__painel > .decisao__detalhe--vazio { justify-self: start; inset-inline-end: auto; padding: 2px var(--espaco-3); border-radius: 999px; background: rgb(255 255 255 / 0.92); color: var(--cor-texto); font-size: var(--tipo-miudo); }
@@ -327,15 +312,7 @@
    você escolheu, "Você ganha" e "Em troca" em caixas com o fio da cor, e "Seguir". O resto da página fica inerte. */
 .decisao[data-resultado='aberto'] .decisao__painel { display: none; }
 .resultado { flex: none; display: grid; }
-.resultado__caixa {
-  display: grid;
-  gap: var(--espaco-2);
-  padding: var(--espaco-1) var(--espaco-1) 0;
-  border: 0;
-  background: none;
-  box-shadow: none;
-}
-.resultado__veredito { font-family: var(--fonte-titulo); font-size: var(--tipo-titulo); font-weight: 900; line-height: 1; text-transform: uppercase; }
+.resultado__caixa { display: grid; gap: var(--espaco-2); padding: var(--espaco-1) var(--espaco-1) 0; }
 .resultado__rotulo { font-family: var(--fonte-titulo); font-size: var(--tipo-miudo); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cor-texto-suave); }
 .resultado__escolha { font-family: var(--fonte-titulo); font-size: var(--tipo-nome); font-weight: 800; line-height: 1.05; text-transform: uppercase; text-wrap: balance; }
 .resultado__vazio { line-height: 1.4; }
@@ -489,7 +466,8 @@
     grid-template-columns: 24rem minmax(0, 1fr);
     grid-template-areas: "pagina pagina" "faixa faixa" "topo foto" "album foto" "album painel" "album resultado";
     grid-template-rows: auto auto auto minmax(14rem, 1fr) auto auto;
-    gap: var(--espaco-4) 1.75rem;
+    --pagina-vao: var(--espaco-4);
+    gap: var(--pagina-vao) 1.75rem;
     max-inline-size: 80rem;
     padding: 1.75rem;
   }
@@ -533,7 +511,6 @@
 /* v2.62: no celular (até 420 px) a história fica em 1rem (v2.73, decisão do usuário) e as opções e o detalhe descem um
    passo, para a foto da cena ficar com mais altura */
 @media (max-width: 26.25rem) {
-  .selos li { padding: 0 6px; font-size: 0.875rem; line-height: 1.4; }
   .decisao__historia { font-size: 1rem; line-height: 1.45; }
   .decisao__semestre { font-size: 0.875rem; }
   .opcao__rotulo { font-size: 1.0625rem; }

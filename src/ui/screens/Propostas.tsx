@@ -1,16 +1,13 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { STAY, RAISE, RENEW, acceptChoice, forceChoice, loveChoice, negotiateChoice, type CurrentClubView, type ProposalView } from '../../engine/proposals';
 import { t } from '../../i18n';
-import { Career as CareerDrawer, PlayerBox, TRANSITION, type DecisionProps } from './Decision';
-import { CenaPintada } from './CenaPintada';
+import { Career as CareerDrawer, CenaFoto, PlayerBox, TRANSITION, type DecisionProps } from './Decision';
 import { Emblema } from './Emblema';
 import { currentText, money, proposalText, type ChangeText } from './proposalText';
 import './Propostas.css';
 
 // T28k (SPEC 6.12, v2.54): tela de contratos no desenho aprovado: o card do jogador (o de sempre), cartões selecionáveis (o clube atual
 // primeiro: "Renovação" com o contrato no fim, "Seu time atual" fora disso) e "Confirmar escolha". Salário por mês com %, valor projetado
-// (estimativa), reputação em estrelas e papel; no detalhe do cartão escolhido, o modo de fechar (aceitar, negociar, forçar, por amor, renovar).
-const SCENE_SIZE = [1856, 2304] as const;
 const ATUAL = 'atual';
 type Modo = 'aceitar' | 'negociar' | 'forcar' | 'amor' | 'renovar' | 'aumento' | 'naoRenovar';
 
@@ -144,11 +141,7 @@ export function Propostas({ propostas, atual, podeFicar, podeForcar = false, pod
       </div>
       <PlayerBox player={player} age={age} anterior={anterior} open={career} opener={opener} onOpen={() => { setCareer(true); }} inert={career} />
       {/* v2.81 (Álbum): a cena é uma foto colada na página, embaixo do card do jogador */}
-      <div className="decisao__foto">
-        {scene.pintada
-          ? <CenaPintada {...scene.pintada} alt={scene.alt} inert={career} foto />
-          : <img className="decisao__cena" src={scene.src} alt={scene.alt} width={SCENE_SIZE[0]} height={SCENE_SIZE[1]} inert={career} />}
-      </div>
+      <CenaFoto scene={scene} inert={career} />
       <form className="decisao__painel propostas__painel" onSubmit={submit} inert={career} noValidate>
         <p className="propostas__sala">{t(`ui.${tela}.sala`)}</p>
         <h1 className="decisao__titulo" ref={title} tabIndex={-1}>{t(`ui.${tela}.titulo`)}</h1>
