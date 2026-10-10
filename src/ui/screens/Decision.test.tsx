@@ -774,8 +774,9 @@ describe('ritmo da decisão (v2.71)', () => {
     vi.useRealTimers();
   });
 
-  it('a opção marcada dá um pulo', () => {
-    expect(css).toMatch(/\.opcao\[aria-pressed='true'\]\s*\{[^}]*animation:\s*opcao-marca/);
+  // revisão pela web-animation-design: o pulo ao marcar virou o toque que afunda (também não anima ao marcar pelo teclado)
+  it('a opção afunda ao toque', () => {
+    expect(css).toMatch(/\.opcao:active\s*\{[^}]*transform:\s*scale\(0\.97\)/);
   });
 
   it('a cena entra com fade e "respira" devagar (Ken Burns)', () => {

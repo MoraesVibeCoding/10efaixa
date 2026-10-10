@@ -212,7 +212,8 @@
 
 /* marcada: verde cheio, como na criação */
 .opcao[aria-pressed='true'] { background: var(--cor-destaque); border-color: var(--cor-destaque); color: var(--cor-sobre-destaque); }
-.opcao:active { transform: translateY(1px); }
+/* v2.71 (web-animation-design): o toque afunda o botão, rápido */
+.opcao:active { transform: scale(0.97); }
 .opcao:disabled { cursor: default; opacity: 0.55; }
 
 /* medidor de risco (T49c): 4 segmentos num tom só; risco é custo, então vermelho */
@@ -315,7 +316,6 @@
   .resultado__seguir:hover { background: var(--cor-texto); }
   .gaveta__fechar:hover { background: var(--cor-fundo); }
 }
-.resultado__seguir:active { transform: translate(1px, 1px); }
 
 /* ---------- gaveta "Minha carreira": sobe do pé da tela; o que está atrás fica levemente desfocado, como no resultado */
 .gaveta {
@@ -431,25 +431,26 @@
 /* v2.47: a decisão nova entra com fade e leve subida; a escolhida realça e as outras apagam (base.css zera com reduced motion) */
 .decisao__topo, .decisao__painel { animation: decisao-entra var(--transicao, 300ms) ease-out both; }
 .decisao__painel { animation-delay: calc(var(--transicao, 300ms) / 3); }
-.opcao { transition: background-color var(--transicao, 300ms) ease, border-color var(--transicao, 300ms) ease, opacity var(--transicao, 300ms) ease, transform var(--transicao, 300ms) ease; }
+.opcao { transition: background-color var(--transicao, 300ms) ease, border-color var(--transicao, 300ms) ease, opacity var(--transicao, 300ms) ease, transform 100ms ease-out; }
 .decisao[data-resultado='aberto'] .opcao[aria-pressed='true'] { transform: scale(1.02); }
-/* v2.71 (momento 7): tocar na opção dá um pulo curto, para o toque ser sentido */
-.opcao[aria-pressed='true'] { animation: opcao-marca 260ms cubic-bezier(0.2, 1.6, 0.4, 1); }
-@keyframes opcao-marca { 0% { scale: 0.96; } 60% { scale: 1.03; } 100% { scale: 1; } }
-/* v2.71 (momento 5): o resultado entra em cascata: veredito carimba, depois a escolha, as linhas uma a uma e o botão */
-.resultado__veredito { animation: resultado-veredito 380ms cubic-bezier(0.2, 1.4, 0.4, 1) both; }
-.resultado__escolha { animation: decisao-entra 260ms ease-out 180ms both; }
-.resultado__lista li { animation: resultado-linha 260ms ease-out calc(300ms + var(--i, 0) * 110ms) both; }
-.resultado__seguir { animation: decisao-entra 260ms ease-out 450ms both; }
-@keyframes resultado-veredito { from { opacity: 0; transform: scale(1.8); } to { opacity: 1; transform: none; } }
+/* v2.71 (momento 5): o resultado entra em cascata. Aparece a cada decisão (web-animation-design: frequente = rápido e
+   sem rebote): tudo pronto em até ~400 ms. No Rápido, sem cascata. */
+.resultado__veredito { animation: resultado-veredito 200ms ease-out both; }
+.resultado__escolha { animation: decisao-entra 160ms ease-out 60ms both; }
+.resultado__lista li { animation: resultado-linha 160ms ease-out calc(100ms + var(--i, 0) * 40ms) both; }
+/* backwards: depois de entrar, a animação solta o transform e o toque (base.css) funciona */
+.resultado__seguir { animation: decisao-entra 160ms ease-out 180ms backwards; }
+.decisao[data-ritmo='rapido'] :is(.resultado__veredito, .resultado__escolha, .resultado__lista li, .resultado__seguir) { animation: none; }
+.decisao[data-ritmo='rapido'] .cena { animation: none; }
+@keyframes resultado-veredito { from { opacity: 0; transform: scale(1.15); } to { opacity: 1; transform: none; } }
 @keyframes resultado-linha { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: none; } }
 /* v2.71 (momento 8): "+N" figurinhas novas ao lado de "Minha carreira" */
 .jogador__novas {
   display: inline-grid; place-items: center; min-inline-size: 1.5rem; padding: 0 6px; border-radius: 999px;
   background: var(--paleta-ouro); color: var(--cor-texto); font-size: 0.875rem; font-weight: 800; line-height: 1.4;
-  animation: novas-chega 600ms cubic-bezier(0.2, 1.6, 0.4, 1) 400ms both;
+  animation: novas-chega 250ms ease-out 300ms both;
 }
-@keyframes novas-chega { from { opacity: 0; transform: scale(0.3) translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes novas-chega { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: none; } }
 @keyframes decisao-entra { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
 /* v2.62 (pedido do usuário): no celular a cena quase não aparecia. A caixa do jogador fica mais baixa (figurinha, Over e
@@ -486,6 +487,8 @@
   .jogador__abrir .figurinha__tarja { display: none; }
   /* v2.71: fechada, a caixa avisa a taça nova com um ponto dourado no botão (a taça está lá dentro) */
   .jogador__detalhes { position: relative; }
+  /* área de toque de 44 px sem mudar o desenho (o botão tem 28 px de altura) */
+  .jogador__detalhes::before { content: ''; position: absolute; inset: -8px 0; }
   .decisao__topo--taca-nova:not(.decisao__topo--aberto) .jogador__detalhes::after {
     content: ''; position: absolute; inset-block-start: 0; inset-inline-end: 6px; inline-size: 10px; block-size: 10px; border-radius: 50%;
     background: var(--paleta-ouro); box-shadow: 0 0 0 2px var(--cor-superficie);

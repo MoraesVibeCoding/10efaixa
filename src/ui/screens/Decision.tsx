@@ -553,7 +553,7 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
   }, [overlay, career, palco, onDone]);
 
   return (
-    <main ref={root} className="decisao" style={TRANSITION} data-tema="claro" data-evento={eventId} data-resultado={chosen === null ? 'fechado' : 'aberto'}>
+    <main ref={root} className="decisao" style={TRANSITION} data-tema="claro" data-ritmo={ritmo} data-evento={eventId} data-resultado={chosen === null ? 'fechado' : 'aberto'}>
       {scene.pintada
         ? <CenaPintada {...scene.pintada} alt={scene.alt} inert={overlay} livre={livre} />
         : <img className="decisao__cena" src={scene.src} alt={scene.alt} width={SCENE_SIZE[0]} height={SCENE_SIZE[1]} fetchPriority="high" inert={overlay} />}
