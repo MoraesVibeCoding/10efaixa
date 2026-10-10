@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import type { SeasonSummary } from '../../engine/seasonSummary';
 import { t } from '../../i18n';
@@ -86,5 +88,42 @@ describe('resumo de um ano sem jogos como profissional (v2.67)', () => {
     setup({ ...BASE, partidas: 0, gols: 0, assistencias: 0, titulos: [] });
     expect(within(dialog()).queryByRole('list', { name: t('ui.resumoTemporada.numeros') })).toBeNull();
     expect(within(dialog()).getByText(t('ui.resumoTemporada.semJogos'))).toBeInTheDocument();
+  });
+});
+
+// v2.71 (momento 2): o Over rola do de ao para dentro da medalha, que troca de metal quando a faixa muda, e a variação carimba.
+describe('resumo com o Over rolando (v2.71)', () => {
+  afterEach(() => { vi.unstubAllGlobals(); });
+  const SOBE_FAIXA = { ...BASE, overallDe: 72, overallPara: 76, pct: 6 };
+
+  it('com movimento, a medalha começa no Over e no metal de antes; o texto acessível já é o final', () => {
+    vi.stubGlobal('matchMedia', (q: string) => ({ matches: false, media: q }));
+    vi.stubGlobal('requestAnimationFrame', () => 0);
+    vi.stubGlobal('cancelAnimationFrame', () => {});
+    setup(SOBE_FAIXA);
+    const medalha = document.querySelector('.resumo__medalha')!;
+    expect(medalha).toHaveAttribute('aria-hidden', 'true');
+    expect(medalha).toHaveTextContent('72');
+    expect(medalha).toHaveAttribute('data-medalha', 'ouro');
+    expect(screen.getByText(t('ui.resumoTemporada.over', { de: 72, para: 76 }))).toBeInTheDocument();
+  });
+
+  it('sem movimento, a medalha final; a troca de faixa fica marcada', () => {
+    vi.stubGlobal('matchMedia', (q: string) => ({ matches: q.includes('reduce'), media: q }));
+    setup(SOBE_FAIXA);
+    const medalha = document.querySelector('.resumo__medalha')!;
+    expect(medalha).toHaveTextContent('76');
+    expect(medalha).toHaveAttribute('data-medalha', 'platina');
+    expect(medalha).toHaveClass('resumo__medalha--troca');
+  });
+
+  it('mesma faixa: sem a marca de troca', () => {
+    setup(BASE);
+    expect(document.querySelector('.resumo__medalha')).not.toHaveClass('resumo__medalha--troca');
+  });
+
+  it('CSS: a variação carimba depois do Over rolar', () => {
+    const css = readFileSync(resolve(__dirname, 'ResumoTemporada.css'), 'utf8');
+    expect(css).toMatch(/\.resumo__variacao\s*\{[^}]*animation:\s*resumo-carimbo/);
   });
 });

@@ -76,9 +76,10 @@ export function Cartao({ result, code, visual, desafio, link, onJogar, onRestart
       </div>
       <canvas ref={canvas} className="cartao__imagem" role="img" aria-label={model.alt[version]} width={CARD_SIZE.width} height={CARD_SIZE.height} />
       <div className="cartao__acoes">
-        {onJogar && <button type="button" className="cartao__compartilhar" onClick={onJogar}>{t('ui.rever.jogar')}</button>}
-        {nativeShare && <button type="button" className="cartao__compartilhar" disabled={!file} onClick={() => { void share(); }}>{t('ui.compartilhar.compartilhar')}</button>}
-        <button type="button" disabled={!file} onClick={download}>{t('ui.compartilhar.baixar')}</button>
+        {/* v2.71 (momento 10): uma ação principal só, a primeira que existir: jogar (rever), compartilhar ou baixar a imagem */}
+        {onJogar && <button type="button" className="cartao__principal" onClick={onJogar}>{t('ui.rever.jogar')}</button>}
+        {nativeShare && <button type="button" className={onJogar ? undefined : 'cartao__principal'} disabled={!file} onClick={() => { void share(); }}>{t('ui.compartilhar.compartilhar')}</button>}
+        <button type="button" className={onJogar || nativeShare ? undefined : 'cartao__principal'} disabled={!file} onClick={download}>{t('ui.compartilhar.baixar')}</button>
         <button type="button" onClick={() => { void copy(); }}>{t('ui.compartilhar.copiar')}</button>
         {link && <button type="button" onClick={() => { void copyLink(); }}>{t('ui.compartilhar.copiarLink')}</button>}
       </div>

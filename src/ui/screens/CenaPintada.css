@@ -10,7 +10,16 @@
   inset-block-start: calc((100dvh - var(--cena-largura) / var(--cena-razao)) * 0.3);
   container-type: size;
   overflow: hidden;
+  /* v2.71 (momento 6): a cena nova entra com fade curto (a cada decisão) e "respira" devagar (Ken Burns de 4%), na GPU;
+     base.css zera com reduced motion */
+  transform-origin: 50% 30%;
+  will-change: scale;
+  animation: cena-entra 200ms ease-out both, cena-respira 30s ease-in-out 200ms infinite alternate;
 }
+/* a mesma cena da tela anterior não pisca: só segue respirando */
+.cena[data-repete] { animation-name: none, cena-respira; }
+@keyframes cena-entra { from { opacity: 0; } to { opacity: 1; } }
+@keyframes cena-respira { from { scale: 1; } to { scale: 1.04; } }
 .cena__pintura { display: block; inline-size: 100%; block-size: 100%; }
 .cena__camisa, .cena__calcao {
   position: absolute;

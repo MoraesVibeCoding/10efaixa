@@ -31,9 +31,15 @@ function useJanela(ativo: boolean) {
   return j;
 }
 
+/** v2.71: a última cena mostrada; a mesma de novo (decisão seguinte no mesmo lugar) entra sem fade. */
+let ultimaCena = '';
+
 /** `livre` (v2.70): onde o ponto focal deve cair na tela e o fim da caixa do topo (px); sem ele, a cena fica ancorada a 30% como antes. */
 export function CenaPintada({ scene, cut, clubId, number, alt, inert, decorativa = false, numeroNasCenas = NUMERO_NAS_CENAS, livre }: { scene: string; cut: string; clubId: string; number?: number; alt: string; inert?: boolean; decorativa?: boolean; numeroNasCenas?: readonly string[]; livre?: Livre }) {
   const janela = useJanela(livre !== undefined);
+  const chave = `${scene}|${cut}|${clubId}`;
+  const [repete] = useState(() => chave === ultimaCena);
+  useEffect(() => { ultimaCena = chave; }, [chave]);
   const art = sceneArt(scene, cut);
   if (!art) return null;
   const kit = kitOf(clubId);
@@ -46,7 +52,7 @@ export function CenaPintada({ scene, cut, clubId, number, alt, inert, decorativa
   } as React.CSSProperties;
   const camisa = { '--camisa-cor': kit.camisa[0], '--camisa-desenho': shirtPaint(kit), '--mascara': `url(${art.camisa})` } as React.CSSProperties;
   return (
-    <div className="cena" data-cena={scene} role={decorativa ? undefined : 'img'} aria-label={decorativa ? undefined : alt} aria-hidden={decorativa || undefined} style={frame} inert={inert}>
+    <div className="cena" data-cena={scene} data-repete={repete || undefined} role={decorativa ? undefined : 'img'} aria-label={decorativa ? undefined : alt} aria-hidden={decorativa || undefined} style={frame} inert={inert}>
       <img className="cena__pintura" src={art.src} alt="" width={art.largura} height={art.altura} fetchPriority="high" />
       <span className="cena__camisa" style={camisa} aria-hidden="true" />
       {art.calcao && <span className="cena__calcao" style={{ '--calcao-cor': kit.calcao, '--mascara': `url(${art.calcao})` } as React.CSSProperties} aria-hidden="true" />}

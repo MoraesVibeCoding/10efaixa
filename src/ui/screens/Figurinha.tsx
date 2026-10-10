@@ -15,6 +15,8 @@ export interface FigurinhaProps {
   name: string; number?: number;
   /** Sem overall, posição e clube (criação, T50): sem cartão do OVR, emblema e linha do clube; faixas no uniforme neutro. */
   overall?: number; position?: string; clubId?: string;
+  /** v2.71: o Over que aparece enquanto conta (número e metal da moldura); o leitor de tela recebe `overall`. */
+  mostrado?: number;
   /** Aparência do jogador; o uniforme vem do clube. Sem ela, a figurinha fica só com o fundo. */
   avatar?: AvatarSpec;
   /** v2.36: id do visual escolhido (visuais.json). Com ele, a figurinha usa o retrato pintado, não o busto em desenho. */
@@ -31,7 +33,7 @@ const PAINTED = import.meta.glob('../../assets/visuais/*.webp', { eager: true, q
 const paintedOf = (id: string | undefined) => (id ? PAINTED[`../../assets/visuais/${id}.webp`] : undefined);
 const CARD_ART = import.meta.glob('../../assets/cartoes-over/*.webp', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
 
-export function Figurinha({ name, number, overall, position, clubId = '', avatar, visual, moldura = false, tamanho = 'pequena', uniforme }: FigurinhaProps) {
+export function Figurinha({ name, number, overall, mostrado, position, clubId = '', avatar, visual, moldura = false, tamanho = 'pequena', uniforme }: FigurinhaProps) {
   const shirt = uniforme ?? clubId;
   const kit = kitOf(shirt);
   const painted = paintedOf(visual);
@@ -40,7 +42,7 @@ export function Figurinha({ name, number, overall, position, clubId = '', avatar
   const portraitClass = painted ? 'figurinha__retrato figurinha__retrato--pintado' : 'figurinha__retrato';
   const stripes = { '--faixa1': kit.camisa[0], '--faixa2': kit.camisa[1] ?? kit.detalhe } as React.CSSProperties;
   if (moldura && overall !== undefined) {
-    return <Moldurada {...{ name, number, overall, bust, stripes, tamanho, portraitClass }} camisa={painted && visual ? <Camisa visual={visual} clubId={shirt} className="figurinha__camisa" /> : null} />;
+    return <Moldurada {...{ name, number, overall, mostrado: mostrado ?? overall, bust, stripes, tamanho, portraitClass }} camisa={painted && visual ? <Camisa visual={visual} clubId={shirt} className="figurinha__camisa" /> : null} />;
   }
   const comum = (
     <span className="figurinha">
@@ -76,9 +78,10 @@ function OverCard({ overall }: { overall: number }) {
 }
 
 // v2.34: a figurinha dentro da moldura do metal da faixa; a arte vem de `medalha` (tokens) pela faixa de bands.json.
-function Moldurada({ name, number, overall, bust, stripes, tamanho, portraitClass, camisa }: { name: string; number?: number; overall: number; bust: string | null; stripes: React.CSSProperties; tamanho: 'pequena' | 'grande'; portraitClass: string; camisa: React.ReactNode }) {
+function Moldurada({ name, number, overall, mostrado, bust, stripes, tamanho, portraitClass, camisa }: { name: string; number?: number; overall: number; mostrado: number; bust: string | null; stripes: React.CSSProperties; tamanho: 'pequena' | 'grande'; portraitClass: string; camisa: React.ReactNode }) {
   const band = toBand(overall);
-  const medal = MEDALS[band.key]!.nome;
+  // v2.71: o metal e o número seguem o valor que está contando; o leitor de tela recebe o final
+  const medal = MEDALS[toBand(mostrado).key]!.nome;
   const art = CARD_ART[`../../assets/cartoes-over/${medal}.webp`];
   return (
     <span className={`figurinha figurinha--moldura figurinha--${tamanho}`} data-medalha={medal} style={art ? { backgroundImage: `url(${art})` } : undefined}>
@@ -86,7 +89,7 @@ function Moldurada({ name, number, overall, bust, stripes, tamanho, portraitClas
         {bust && <img className={portraitClass} src={bust} alt="" width="220" height="220" />}
         {camisa}
         <span className="sr-only">{t('ui.figurinha.over')} {overall}{t('ui.decisao.faixaOver', { faixa: t(`attributes.band.${band.key}`) })}</span>
-        <span className="figurinha__over-grande" aria-hidden="true">{overall}</span>
+        <span className="figurinha__over-grande" aria-hidden="true">{mostrado}</span>
       </span>
       <span className="figurinha__tarja">
         <span className={tamanho === 'pequena' ? 'figurinha__tarja-nome sr-only' : 'figurinha__tarja-nome'}>{name}</span>

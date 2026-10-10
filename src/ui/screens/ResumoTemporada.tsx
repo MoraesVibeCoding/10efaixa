@@ -5,6 +5,8 @@ import { clubName } from './clubText';
 import { semesterLines } from './careerView';
 import { coachComment, direction, variation } from './resumoText';
 import { TrophyIcon } from './TrophyIcon';
+import { medalOf } from './Figurinha';
+import { useRolling } from '../useRolling';
 import './ResumoTemporada.css';
 
 // v2.61 (SPEC 6.15): o resumo da temporada, num card por cima da próxima tela (Normal e Completo). Os números do ano são jogos, gols e
@@ -23,6 +25,10 @@ export function ResumoTemporada({ resumo, torcida, onClose }: ResumoTemporadaPro
   }
   const linhas = semesterLines(resumo.mudancas);
   const fala = coachComment(resumo.comentario);
+  // v2.71 (momento 2): o Over rola do de ao para dentro da medalha, que troca de metal se a faixa mudou
+  const over = useRolling(resumo.overallPara, resumo.overallDe);
+  const medalha = medalOf(over);
+  const troca = medalOf(resumo.overallDe).nome !== medalOf(resumo.overallPara).nome;
   return (
     <div className="resumo__fundo">
       <div className="resumo" role="alertdialog" aria-modal="true" aria-labelledby="resumo-titulo" onKeyDown={onKey}>
@@ -38,6 +44,7 @@ export function ResumoTemporada({ resumo, torcida, onClose }: ResumoTemporadaPro
           </ul>
         ) : <p className="resumo__formacao">{t('ui.resumoTemporada.semJogos')}</p>}
         <p className="resumo__over">
+          <span className={`resumo__medalha${troca ? ' resumo__medalha--troca' : ''}`} aria-hidden="true" data-medalha={medalha.nome} style={medalha.art ? { backgroundImage: `url(${medalha.art})` } : undefined}>{over}</span>
           <span>{t('ui.resumoTemporada.over', { de: resumo.overallDe, para: resumo.overallPara })}</span>
           <strong className="resumo__variacao" data-sentido={direction(resumo.pct)}>{variation(resumo.pct)}</strong>
         </p>

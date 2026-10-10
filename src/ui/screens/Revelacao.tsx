@@ -3,6 +3,8 @@ import { t } from '../../i18n';
 import { CenaPintada, cutForVisual } from './CenaPintada';
 import { Figurinha } from './Figurinha';
 import { Niveis } from './Niveis';
+import { MOTION } from '../motion';
+import { useRolling } from '../useRolling';
 import type { Reveal } from './revealView';
 import './Revelacao.css';
 
@@ -15,6 +17,8 @@ export function Revelacao({ name, number, visual, reveal, onContinue }: Revelaca
   const dialog = useRef(null as HTMLDialogElement | null);
   const title = useRef(null as HTMLHeadingElement | null);
   const done = useRef(false);
+  // v2.71 (momento 1): o Over conta do 1 até o sorteado, passando pelos metais; sem movimento, já é o final
+  const over = useRolling(reveal.overall, 1, MOTION.revelarMs);
   function finish() {
     if (done.current) return;
     done.current = true;
@@ -42,7 +46,7 @@ export function Revelacao({ name, number, visual, reveal, onContinue }: Revelaca
         <h1 id="revelacao-titulo" className="revelacao__titulo" ref={title} tabIndex={-1}>{t('ui.revelacao.titulo')}</h1>
         <p id="revelacao-sub" className="revelacao__sub">{t('ui.revelacao.subtitulo', { nome: name })}</p>
         <div className="revelacao__figurinha">
-          <Figurinha moldura tamanho="grande" name={name} number={number} overall={reveal.overall} visual={visual} />
+          <Figurinha moldura tamanho="grande" name={name} number={number} overall={reveal.overall} mostrado={over} visual={visual} />
         </div>
         {reveal.isDiamond ? <Diamante /> : null}
         <h2 id="revelacao-fortes" className="revelacao__rotulo">{t('ui.revelacao.fortes')}</h2>

@@ -5,6 +5,8 @@ import { t } from '../../i18n';
 import { clubName } from './clubText';
 import { Emblema } from './Emblema';
 import { TrophyIcon } from './TrophyIcon';
+import { MOTION } from '../motion';
+import { useRolling } from '../useRolling';
 import './LinhaDoTempo.css';
 
 // T55h (SPEC 6.15, v2.51): "Sua carreira", antes do cartão final: uma linha por temporada com idade, clube e divisão,
@@ -20,12 +22,18 @@ export function divisionLabel(division: string | null): string {
 
 const num = (n: number) => n.toLocaleString('pt-BR');
 
+/** v2.71 (momento 9): o número do placar conta do zero; o leitor de tela recebe só o final. */
+function Contando({ n }: { n: number }) {
+  const shown = useRolling(n, 0, MOTION.revelarMs);
+  return shown === n ? <b>{num(n)}</b> : <b><span aria-hidden="true">{num(shown)}</span><span className="sr-only">{num(n)}</span></b>;
+}
+
 export function LinhaDoTempo({ result, onContinue }: { result: CareerResult; onContinue: () => void }) {
   const rows = timelineOf(result);
   const title = useRef(null as HTMLHeadingElement | null);
   useEffect(() => { title.current?.focus(); }, []);
   const placar = [
-    [num(result.stats.games), 'jogos'], [num(result.stats.goals), 'gols'], [num(result.titles.length), 'titulos'], [String(result.peakOverall), 'auge'],
+    [result.stats.games, 'jogos'], [result.stats.goals, 'gols'], [result.titles.length, 'titulos'], [result.peakOverall, 'auge'],
   ] as const;
   return (
     <main className="linha" data-tema="claro">
@@ -33,13 +41,13 @@ export function LinhaDoTempo({ result, onContinue }: { result: CareerResult; onC
         <p className="linha__nome">{result.player.name}</p>
         <div className="linha__placar-nums">
           {placar.map(([v, k]) => (
-            <span key={k} className={k === 'auge' ? 'linha__placar-n linha__placar-n--auge' : 'linha__placar-n'}><b>{v}</b><span>{t(`ui.linhaDoTempo.placar.${k}`)}</span></span>
+            <span key={k} className={k === 'auge' ? 'linha__placar-n linha__placar-n--auge' : 'linha__placar-n'}><Contando n={v} /><span>{t(`ui.linhaDoTempo.placar.${k}`)}</span></span>
           ))}
         </div>
       </header>
       <h1 className="linha__titulo" ref={title} tabIndex={-1}>{t('ui.linhaDoTempo.titulo')}</h1>
       <ol className="linha__lista">
-        {rows.map((r) => (
+        {rows.map((r, i) => (
           <li key={r.year} className={['linha__item', r.peak && 'linha__item--auge', r.newClub && 'linha__item--troca'].filter(Boolean).join(' ')}>
             <span className="linha__idade"><span aria-hidden="true">{r.age}</span><span className="sr-only">{t('ui.linhaDoTempo.idade', { n: r.age })}</span></span>
             <span className="linha__clube">
@@ -47,7 +55,7 @@ export function LinhaDoTempo({ result, onContinue }: { result: CareerResult; onC
               {clubName(r.clubId).nome}
             </span>
             <span className="linha__over"><span className="sr-only">{t('ui.linhaDoTempo.overSr')} </span>{r.overall}</span>
-            <span className="linha__faixa" aria-hidden="true"><span style={{ inlineSize: `${r.overall}%` }} /></span>
+            <span className="linha__faixa" aria-hidden="true"><span style={{ inlineSize: `${r.overall}%`, '--i': i } as React.CSSProperties} /></span>
             {(r.division !== null || r.newClub || r.peak) && (
               <span className="linha__divisao">
                 {divisionLabel(r.division)}

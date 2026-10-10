@@ -14,7 +14,19 @@
 .resumo__numeros span { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; }
 .resumo__numeros strong { font-family: var(--fonte-titulo); font-size: 1.75rem; font-weight: 900; font-variant-numeric: tabular-nums; line-height: 1; }
 .resumo__over { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--espaco-2); margin: 0; font-weight: 700; }
-.resumo__variacao { font-family: var(--fonte-titulo); font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+.resumo__over { justify-content: start; }
+/* v2.71 (momento 2): o Over rola na medalha do metal da faixa; trocou de faixa, ela brilha; a variação carimba depois */
+.resumo__medalha {
+  display: grid; place-items: center; inline-size: 3rem; aspect-ratio: 1; align-self: center;
+  border: 2px solid var(--medalha-aro); border-radius: 0.3rem;
+  background: linear-gradient(160deg, var(--medalha-clara), var(--medalha-escura)) center / cover;
+  color: var(--medalha-texto); font-family: var(--fonte-titulo); font-size: 1.5rem; font-weight: 900; font-variant-numeric: tabular-nums;
+}
+.resumo__medalha[data-medalha='bronze'], .resumo__medalha[data-medalha='esmeralda'], .resumo__medalha[data-medalha='diamante'] { text-shadow: var(--forma-contorno-numero); }
+.resumo__medalha--troca { animation: medalha-troca 700ms ease-out 450ms both; }
+.resumo__variacao { margin-inline-start: auto; font-family: var(--fonte-titulo); font-size: 1.25rem; font-variant-numeric: tabular-nums; animation: resumo-carimbo 400ms cubic-bezier(0.2, 1.4, 0.4, 1) 750ms both; }
+@keyframes resumo-carimbo { from { opacity: 0; transform: scale(2) rotate(-8deg); } to { opacity: 1; transform: rotate(-3deg); } }
+@keyframes medalha-troca { 0% { transform: none; box-shadow: 0 0 0 0 var(--paleta-ouro); } 40% { transform: scale(1.18); } 100% { transform: none; box-shadow: 0 0 0 14px transparent; } }
 .resumo__variacao[data-sentido='sobe'] { color: var(--cor-positivo); }
 .resumo__variacao[data-sentido='desce'] { color: var(--cor-negativo); }
 .resumo__atributos, .resumo__titulos { display: grid; gap: var(--espaco-1); margin: 0; padding: 0; list-style: none; }

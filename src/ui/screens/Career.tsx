@@ -156,8 +156,9 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
           semestre={semestre}
           anterior={anterior}
           momentos={momentos}
+          pausado={respostaEl !== null || resumoEl !== null}
           onContinue={(choice) => {
-            setAnterior({ overall: player.overall, age: Math.floor(view.age), marketValueEUR: player.marketValueEUR, titles: view.titles, seasons: view.seasons });
+            setAnterior({ overall: player.overall, age: Math.floor(view.age), marketValueEUR: player.marketValueEUR, titles: view.titles, seasons: view.seasons, cromos: view.titles.length + view.marcos.length });
             decide(choice);
           }}
         />

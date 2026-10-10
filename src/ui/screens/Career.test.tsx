@@ -46,6 +46,9 @@ describe('carreira na tela (T51b)', () => {
       // T52: resposta da comissão por cima da tela; reunião aceita a sugestão do preparador (o mesmo do automático)
       const resposta = document.querySelector('.reuniao__resposta');
       if (resposta) { fireEvent.click(resposta.querySelector('button')!); continue; }
+      // v2.71: o palco do título fecha antes de decidir, como o jogador faria
+      const palco = document.querySelector('.palco button');
+      if (palco) { fireEvent.click(palco); continue; }
       if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') })); continue; }
       if (passProposals()) continue;
       const eventId = document.querySelector('[data-evento]')!.getAttribute('data-evento')!;
@@ -114,6 +117,9 @@ describe('carreira na tela (T51b)', () => {
     for (let guard = 0; guard < 120 && !screen.queryByRole('heading', { level: 1, name: t('ui.fim.titulo') }); guard++) {
       const resposta = document.querySelector('.reuniao__resposta');
       if (resposta) { fireEvent.click(resposta.querySelector('button')!); continue; }
+      // v2.71: o palco do título fecha antes de decidir, como o jogador faria
+      const palco = document.querySelector('.palco button');
+      if (palco) { fireEvent.click(palco); continue; }
       if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') })); continue; }
       if (passProposals()) continue;
       const key = document.querySelector('.carreira')!.getAttribute('data-semestre') ?? '';

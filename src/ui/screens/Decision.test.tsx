@@ -690,3 +690,108 @@ describe('caixa do topo compacta (v2.70)', () => {
     expect(topo).toHaveClass('decisao__topo--aberto');
   });
 });
+
+// v2.71 (momento 4): o título do ano tem palco; a decisão atrás fica inerte, e depois a taça nova "chega" na caixa do topo.
+// Acesso e rebaixamento seguem no carimbo, depois do palco.
+describe('palco do título na decisão (v2.71)', () => {
+  const comTitulo = () => render(
+    <Decision eventId={EVENT} age={24} progress={0.4} player={{ ...PLAYER, titles: ['estadual', 'serieA'] }} scene={{ src: 'c.webp', alt: 'cena' }}
+      momentos={[{ kind: 'titulo', competition: 'serieA' }, { kind: 'acesso' }]} />,
+  );
+
+  it('o palco abre com a decisão inerte; Seguir fecha, devolve o foco ao evento e solta o carimbo do acesso', () => {
+    comTitulo();
+    expect(screen.getByRole('dialog', { name: t('ui.momento.titulo') })).toBeInTheDocument();
+    expect(document.querySelector('.decisao__painel')).toHaveAttribute('inert');
+    expect(screen.getByRole('status')).not.toHaveTextContent(t('ui.momento.acesso'));
+    fireEvent.click(screen.getByRole('button', { name: t('ui.palco.seguir') }));
+    expect(screen.queryByRole('dialog', { name: t('ui.momento.titulo') })).toBeNull();
+    expect(document.querySelector('.decisao__painel')).not.toHaveAttribute('inert');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveFocus();
+    expect(screen.getByRole('status')).toHaveTextContent(t('ui.momento.acesso'));
+  });
+
+  it('a taça nova ganha destaque na caixa do topo', () => {
+    comTitulo();
+    fireEvent.click(screen.getByRole('button', { name: t('ui.palco.seguir') }));
+    const tacas = document.querySelectorAll('.taca');
+    expect(tacas[1]).toHaveClass('taca--nova');
+    expect(tacas[0]).not.toHaveClass('taca--nova');
+    // no celular, com a caixa fechada, o aviso fica no botão de detalhes
+    expect(document.querySelector('.decisao__topo')).toHaveClass('decisao__topo--taca-nova');
+  });
+
+  it('sem título, nenhum palco', () => {
+    setup();
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
+});
+
+describe('palco do título espera o card de cima (v2.71)', () => {
+  it('pausado (resumo da temporada aberto), o palco não abre; ao soltar, abre', () => {
+    const props = { eventId: EVENT, age: 24, progress: 0.4, player: PLAYER, scene: { src: 'c.webp', alt: 'cena' }, momentos: [{ kind: 'titulo' as const, competition: 'serieA' }] };
+    const { rerender } = render(<Decision {...props} pausado />);
+    expect(screen.queryByRole('dialog')).toBeNull();
+    rerender(<Decision {...props} pausado={false} />);
+    expect(screen.getByRole('dialog', { name: t('ui.momento.titulo') })).toBeInTheDocument();
+  });
+});
+
+// v2.71 (momento 3): quando o Over muda de faixa, a medalha da caixa do topo troca de metal no meio da rolagem e brilha.
+describe('mudança de faixa no topo (v2.71)', () => {
+  afterEach(() => { vi.unstubAllGlobals(); });
+  const show = (antes: number) => render(<Decision eventId={EVENT} age={17} progress={0.05} player={PLAYER} anterior={{ overall: antes, age: 17 }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+
+  it('com movimento, começa no metal de antes e marca a troca', () => {
+    vi.stubGlobal('matchMedia', (q: string) => ({ matches: false, media: q }));
+    vi.stubGlobal('requestAnimationFrame', () => 0);
+    vi.stubGlobal('cancelAnimationFrame', () => {});
+    show(70);
+    const m = document.querySelector('.decisao__over-medalha')!;
+    expect(m).toHaveAttribute('data-medalha', 'ouro');
+    expect(m).toHaveClass('decisao__over-medalha--troca');
+  });
+
+  it('na mesma faixa, sem a marca', () => {
+    show(76);
+    expect(document.querySelector('.decisao__over-medalha')).not.toHaveClass('decisao__over-medalha--troca');
+  });
+});
+
+// v2.71 (momentos 5, 6, 7 e 8): o resultado entra em cascata, a cena entra e "respira", a opção marcada dá um pulo
+// e as figurinhas novas do álbum aparecem como "+N" em "Minha carreira".
+describe('ritmo da decisão (v2.71)', () => {
+  const css = readFileSync(resolve(__dirname, 'Decision.css'), 'utf8');
+
+  it('resultado em cascata: cada linha tem a sua ordem e a animação usa essa ordem', () => {
+    vi.useFakeTimers();
+    render(<Decision eventId={EVENT} age={17} progress={0.05} player={PLAYER} state={STATE} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    fireEvent.click(document.querySelector(`[data-opcao-id="${def.opcoes[0]!.id}"]`)!);
+    fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
+    const itens = [...document.querySelectorAll<HTMLElement>('.resultado__lista li')];
+    itens.forEach((li, i) => { expect(li.style.getPropertyValue('--i')).toBe(String(i)); });
+    expect(css).toMatch(/\.resultado__lista li\s*\{[^}]*animation:\s*resultado-linha[^}]*var\(--i/);
+    vi.useRealTimers();
+  });
+
+  // revisão pela web-animation-design: o pulo ao marcar virou o toque que afunda (também não anima ao marcar pelo teclado)
+  it('a opção afunda ao toque', () => {
+    expect(css).toMatch(/\.opcao:active\s*\{[^}]*transform:\s*scale\(0\.97\)/);
+  });
+
+  it('a cena entra com fade e "respira" devagar (Ken Burns)', () => {
+    const cena = readFileSync(resolve(__dirname, 'CenaPintada.css'), 'utf8');
+    expect(cena).toMatch(/\.cena\s*\{[^}]*animation:\s*cena-entra[^;]*,\s*cena-respira/);
+  });
+
+  it('figurinha nova: "+N" em "Minha carreira", com texto para o leitor de tela; sem anterior, nada', () => {
+    const marcos = [{ id: 'estreia-profissional', ano: 2027, clubId: 'flamengo' }];
+    render(<Decision eventId={EVENT} age={17} progress={0.05} player={{ ...PLAYER, marcos }} anterior={{ overall: 78, age: 17, cromos: 2 }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    const badge = document.querySelector('.jogador__novas')!;
+    expect(badge).toHaveTextContent('+2');
+    expect(screen.getByText(t('ui.album.novas', { n: 2 }))).toHaveClass('sr-only');
+    cleanup();
+    render(<Decision eventId={EVENT} age={17} progress={0.05} player={{ ...PLAYER, marcos }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    expect(document.querySelector('.jogador__novas')).toBeNull();
+  });
+});
