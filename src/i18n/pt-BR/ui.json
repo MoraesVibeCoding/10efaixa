@@ -1,5 +1,6 @@
 {
  "decisao": {
+  "maisDetalhes": "Mais detalhes: idade, salário, valor, papel e títulos",
   "progresso": "Progresso da carreira",
   "idade": "{idade} anos",
   "anos": "anos",

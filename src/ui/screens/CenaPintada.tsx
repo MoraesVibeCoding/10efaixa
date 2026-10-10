@@ -1,5 +1,9 @@
 import { kitOf, shirtPaint } from '../../art/kits';
 import cortes from '../../data/cortes.json';
+import foco from '../../data/cenaFoco.json';
+import { useEffect, useState } from 'react';
+import { sceneFrame } from './sceneFrame';
+import type { Livre } from '../useLivreMeio';
 import { numberColor, sceneArt } from './cenaArte';
 import './CenaPintada.css';
 
@@ -12,11 +16,34 @@ export { CUTS, creationScene, cutForVisual, numberColor, sceneArt } from './cena
 /** v2.62: o número nas costas só nas cenas listadas em cortes.json (hoje nenhuma: ficava torto com o jogador de lado). */
 const NUMERO_NAS_CENAS: readonly string[] = cortes.numeroNasCenas;
 
-export function CenaPintada({ scene, cut, clubId, number, alt, inert, decorativa = false, numeroNasCenas = NUMERO_NAS_CENAS }: { scene: string; cut: string; clubId: string; number?: number; alt: string; inert?: boolean; decorativa?: boolean; numeroNasCenas?: readonly string[] }) {
+/** v2.70: altura do ponto focal (a cabeça) de cada cena, em fração da pintura (cenaFoco.json). */
+const FOCO = foco.cenas as Record<string, number>;
+
+/** v2.70: o tamanho da janela, para posicionar a cena pelo ponto focal (só quando a tela mede o espaço livre). */
+function useJanela(ativo: boolean) {
+  const [j, setJ] = useState(() => ({ w: typeof window === 'undefined' ? 0 : window.innerWidth, h: typeof window === 'undefined' ? 0 : window.innerHeight }));
+  useEffect(() => {
+    if (!ativo) return undefined;
+    const r = () => setJ({ w: window.innerWidth, h: window.innerHeight });
+    window.addEventListener('resize', r);
+    return () => window.removeEventListener('resize', r);
+  }, [ativo]);
+  return j;
+}
+
+/** `livre` (v2.70): onde o ponto focal deve cair na tela e o fim da caixa do topo (px); sem ele, a cena fica ancorada a 30% como antes. */
+export function CenaPintada({ scene, cut, clubId, number, alt, inert, decorativa = false, numeroNasCenas = NUMERO_NAS_CENAS, livre }: { scene: string; cut: string; clubId: string; number?: number; alt: string; inert?: boolean; decorativa?: boolean; numeroNasCenas?: readonly string[]; livre?: Livre }) {
+  const janela = useJanela(livre !== undefined);
   const art = sceneArt(scene, cut);
   if (!art) return null;
   const kit = kitOf(clubId);
-  const frame = { '--cena-proporcao': `${art.largura} / ${art.altura}`, '--cena-razao': art.largura / art.altura } as React.CSSProperties;
+  const razao = art.largura / art.altura;
+  const posicao = livre === undefined || !janela.w ? null
+    : sceneFrame({ largura: janela.w, altura: janela.h, razao, focoY: FOCO[scene] ?? foco.padrao, livreMeio: livre.meio, topoLivre: livre.topo });
+  const frame = {
+    '--cena-proporcao': `${art.largura} / ${art.altura}`, '--cena-razao': razao,
+    ...(posicao ? { inlineSize: `${posicao.width}px`, insetInlineStart: `${posicao.left}px`, insetBlockStart: `${posicao.top}px` } : {}),
+  } as React.CSSProperties;
   const camisa = { '--camisa-cor': kit.camisa[0], '--camisa-desenho': shirtPaint(kit), '--mascara': `url(${art.camisa})` } as React.CSSProperties;
   return (
     <div className="cena" data-cena={scene} role={decorativa ? undefined : 'img'} aria-label={decorativa ? undefined : alt} aria-hidden={decorativa || undefined} style={frame} inert={inert}>

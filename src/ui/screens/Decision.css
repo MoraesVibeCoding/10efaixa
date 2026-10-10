@@ -450,7 +450,22 @@
   .decisao__over { padding-block-start: var(--espaco-3); } /* o botão de reiniciar fica no canto de cima */
   .decisao__dados { font-size: 0.75rem; }
   .jogador__mais { white-space: nowrap; }
+  /* v2.70 (enquadramento): a caixa fica numa linha; idade, salário, valor, papel e taças abrem no botão. Fechados, saem da
+     vista mas seguem para o leitor de tela (mesma técnica do sr-only) */
+  .decisao__topo:not(.decisao__topo--aberto) :is(.decisao__dados, .decisao__papel, .tacas) {
+    position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  }
+  .jogador__detalhes {
+    display: grid; place-items: center; inline-size: 2.75rem; block-size: 1.75rem; margin-block-start: -2px;
+    border: 0; border-radius: 999px; background: transparent; color: var(--cor-texto); cursor: pointer; touch-action: manipulation;
+  }
+  .jogador__detalhes svg { transition: transform var(--transicao, 300ms) ease; }
+  .jogador__detalhes[aria-expanded='true'] svg { transform: rotate(180deg); }
+  .jogador__detalhes:focus-visible { outline: 3px solid var(--cor-foco); outline-offset: 1px; }
+  /* a figurinha pequena sem a tarja (ficava uma faixa preta vazia) */
+  .jogador__abrir .figurinha__tarja { display: none; }
 }
+@media (min-width: 64rem) { .jogador__detalhes { display: none; } }
 /* v2.62: no celular (até 420 px), idade, salário e valor descem para uma linha embaixo do nome: entre o nome e o Over
    não cabem com nome, bandeira e clube compridos */
 @media (max-width: 26.25rem) {

@@ -1,0 +1,5 @@
+{
+ "_nota": "v2.70 (enquadramento): altura do ponto focal de cada cena (a cabeça do jogador), em fração da altura da pintura (0 = topo, 1 = pé). A tela posiciona a pintura para esse ponto cair no meio do espaço livre entre a caixa do topo e o painel. Cena sem valor usa o padrão. Medido nas pinturas de 1080×1341 (cabeça entre 24% e 31% da altura).",
+ "padrao": 0.28,
+ "cenas": {}
+}
