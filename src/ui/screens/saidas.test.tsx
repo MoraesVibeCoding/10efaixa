@@ -89,14 +89,15 @@ describe('CSS das entradas e saídas (v2.72)', () => {
     expect(ms(anim(d, '.gaveta'))).toBe(ms(anim(d, '.gaveta__folha')));
   });
 
+  // v2.81: o resumo (e a resposta da reunião) é a folha de folha.css
   it('o resumo: fundo e card no mesmo tempo', () => {
-    const r = css('ResumoTemporada.css');
-    expect(ms(anim(r, '.resumo__fundo'))).toBe(ms(anim(r, '.resumo')));
+    const r = css('../folha.css');
+    expect(ms(anim(r, '.folha__fundo'))).toBe(ms(anim(r, '.folha')));
   });
 
   it('cada card tem a saída com a duração de saidaMs', () => {
-    const all = css('Decision.css') + css('ResumoTemporada.css') + css('Palco.css');
-    for (const sel of ['.resultado[data-saindo]', '.gaveta[data-saindo]', '.resumo__fundo[data-saindo]', '.palco[data-saindo]']) {
+    const all = css('Decision.css') + css('../folha.css') + css('Palco.css');
+    for (const sel of ['.resultado[data-saindo]', '.gaveta[data-saindo]', '.folha__fundo[data-saindo]', '.palco[data-saindo]']) {
       expect(all, sel).toMatch(new RegExp(`${sel.replace(/[[\]]/g, '\\$&')} \\{[^}]*animation:[^;]*${MOTION.saidaMs}ms`));
     }
   });

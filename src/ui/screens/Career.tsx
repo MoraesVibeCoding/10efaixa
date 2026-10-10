@@ -88,6 +88,8 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
     setSeenSeason(seasonKey);
     setChoices([...choices, choice]);
   }
+  // v2.81 (Álbum): a página do álbum desta temporada (temporadas fechadas + 1)
+  const pagina = { ano: view.year, numero: view.seasons.length + 1 };
   const resposta = answerOf(view.meetings, asked);
   const respostaEl = resposta ? <ReuniaoResposta key={`${asked!.year}-${asked!.semestre}`} resposta={resposta} onDone={() => { closeCard(() => { setAsked(null); }); }} /> : null;
   /** Fecha um card e devolve o foco: ao card que ainda estiver aberto ou ao título da tela. O flushSync tira o `inert` antes do foco. */
@@ -109,7 +111,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
         <div className="carreira__tela" inert={respostaEl !== null || resumoEl !== null}>
           {/* revisão das telas: a resposta da reunião anterior não fica por cima de outra reunião igual; esta entra quando ela fecha */}
           {respostaEl === null && <Reuniao
-            key={index} ideias={view.reuniao} player={meetingPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} semestre={Number(view.state.semestre) === 1 ? 1 : 2} anterior={anterior}
+            key={index} ideias={view.reuniao} player={meetingPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} semestre={Number(view.state.semestre) === 1 ? 1 : 2} anterior={anterior} pagina={pagina}
             scene={sceneOfCena('reuniao-comissao', meetingPlayer, visual, input.name, meetingClub)}
             onChoose={(choice) => {
               setAsked({ year: view.year, semestre: Number(view.state.semestre) });
@@ -132,7 +134,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
         <div className="carreira__tela" inert={resumoEl !== null}>
           <Propostas
             key={index} propostas={view.propostas ?? []} atual={view.atual} podeFicar={view.state.podeFicar === true} podeForcar={view.state.podeForcar === true}
-            podeRenovar={view.state.podeRenovar === true} emprestimo={eventId === LOAN_EVENT} player={contractPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} anterior={anterior}
+            podeRenovar={view.state.podeRenovar === true} emprestimo={eventId === LOAN_EVENT} player={contractPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} anterior={anterior} pagina={pagina}
             scene={sceneOfCena('assinatura-contrato', contractPlayer, visual, input.name, contractClub)} onChoose={decide}
           />
         </div>
@@ -157,7 +159,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
           semestre={semestre}
           anterior={anterior}
           momentos={momentos}
-          pagina={{ ano: view.year, numero: view.seasons.length + 1 }}
+          pagina={pagina}
           pausado={respostaEl !== null || resumoEl !== null}
           onContinue={(choice) => {
             setAnterior({ overall: player.overall, age: Math.floor(view.age), marketValueEUR: player.marketValueEUR, titles: view.titles, seasons: view.seasons, cromos: view.titles.length + view.marcos.length });

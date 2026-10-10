@@ -276,10 +276,31 @@ export function Career({ player, onClose }: { player: DecisionProps['player']; o
 // as cenas são pintadas em 4:5 (docs/briefing-arte.md); largura e altura reservam o espaço antes de a imagem chegar
 const SCENE_SIZE = [1856, 2304] as const;
 
-/** v2.81 (Álbum): a cena como foto colada na página (decisão, reunião e propostas); `children` vai por cima (o carimbo). */
-export function CenaFoto({ scene, inert, children }: { scene: DecisionProps['scene']; inert: boolean; children?: React.ReactNode }) {
+/** v2.81 (Álbum): o alto da página (decisão, reunião e propostas): a linha "Temporada 2032 · Pág. 7" e o fio de progresso da carreira. */
+export function PaginaCabecalho({ pagina, progress, age, inert }: { pagina?: { ano: number; numero: number }; progress: number; age: number; inert: boolean }) {
+  const percent = Math.round(Math.min(1, Math.max(0, progress)) * 100);
   return (
-    <div className="decisao__foto">
+    <>
+      {pagina && (
+        <p className="pagina__topo" inert={inert}>
+          <span>{t('ui.pagina.temporada', { ano: pagina.ano })}</span>
+          <span>{t('ui.pagina.numero', { n: pagina.numero })}</span>
+        </p>
+      )}
+      <div
+        inert={inert} className="faixa" role="progressbar" aria-label={t('ui.decisao.progresso')}
+        aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent} aria-valuetext={t('ui.decisao.idade', { idade: age })}
+      >
+        <span className="faixa__feito" style={{ inlineSize: `${percent}%` }} />
+      </div>
+    </>
+  );
+}
+
+/** v2.81 (Álbum): a cena como foto colada na página (decisão, reunião e propostas); `children` vai por cima (o carimbo). */
+export function CenaFoto({ scene, inert, atras = false, children }: { scene: DecisionProps['scene']; inert: boolean; /** um card sobe por cima: a foto escurece */ atras?: boolean; children?: React.ReactNode }) {
+  return (
+    <div className={atras ? 'decisao__foto decisao__foto--atras' : 'decisao__foto'}>
       {scene.pintada
         ? <CenaPintada {...scene.pintada} alt={scene.alt} inert={inert} foto />
         : <img className="decisao__cena" src={scene.src} alt={scene.alt} width={SCENE_SIZE[0]} height={SCENE_SIZE[1]} fetchPriority="high" inert={inert} />}
@@ -555,7 +576,6 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
   // o que a escolha rendeu: calculado uma vez, para o carimbo e para o resultado
   const outcome = useMemo(() => (chosen === null ? null : outcomeOf(state, eventId, chosen, player.etiquetas ?? [])), [chosen, state, eventId, player.etiquetas]);
   const verdict = outcome === null ? null : outcomeVerdict(outcome);
-  const percent = Math.round(Math.min(1, Math.max(0, progress)) * 100);
   const text = eventText(eventId, player.etiquetas ?? [], player.textoParams);
   const pressed = chosen ?? marked;
   // v2.71 (momento 4): os títulos do ano têm palco antes da decisão; acesso e rebaixamento carimbam depois dele
@@ -617,18 +637,7 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
 
   return (
     <main ref={root} className="decisao" style={TRANSITION} data-tema="claro" data-ritmo={ritmo} data-evento={eventId} data-resultado={chosen === null ? 'fechado' : 'aberto'}>
-      {pagina && (
-        <p className="pagina__topo" inert={overlay}>
-          <span>{t('ui.pagina.temporada', { ano: pagina.ano })}</span>
-          <span>{t('ui.pagina.numero', { n: pagina.numero })}</span>
-        </p>
-      )}
-      <div
-        inert={overlay} className="faixa" role="progressbar" aria-label={t('ui.decisao.progresso')}
-        aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent} aria-valuetext={t('ui.decisao.idade', { idade: age })}
-      >
-        <span className="faixa__feito" style={{ inlineSize: `${percent}%` }} />
-      </div>
+      <PaginaCabecalho pagina={pagina} progress={progress} age={age} inert={overlay} />
       <PlayerBox player={player} age={age} anterior={anterior} open={career} opener={opener} onOpen={() => { setCareer(true); }} inert={overlay} novas={novas} />
       {/* v2.81 (Álbum): a cena é uma foto colada na página; o resultado carimba a foto */}
       <CenaFoto scene={scene} inert={overlay}>

@@ -1,0 +1,56 @@
+/* v2.81 (direção "Álbum", PR 2): a folha, o card que sobe do pé por cima da página da história (resumo da temporada,
+   resposta da reunião, propostas). Papel, cantos de cima arredondados, uma alça e sombra para cima; reta, sem rebote.
+   Entra em 250 ms e sai em 150 ms (web-animation-design, v2.72); base.css zera com prefers-reduced-motion. */
+.folha__fundo {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  align-items: end;
+  justify-items: center;
+  /* a página atrás continua à vista, escurecida pelo verde-noite */
+  background: color-mix(in srgb, var(--paleta-noite) 45%, transparent);
+  animation: folha-fundo 250ms ease-out both;
+}
+.folha__fundo[data-saindo] { animation: folha-fundo-sai 150ms ease-out forwards; }
+.folha {
+  position: relative;
+  box-sizing: border-box;
+  inline-size: min(100%, 30rem);
+  max-block-size: 90dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--espaco-5) var(--espaco-4) calc(var(--espaco-4) + env(safe-area-inset-bottom));
+  border-radius: 1.25rem 1.25rem 0 0;
+  background: var(--cor-fundo);
+  color: var(--cor-texto);
+  box-shadow: 0 -8px 24px color-mix(in srgb, var(--cor-texto) 25%, transparent);
+  animation: folha-sobe 250ms ease-out both;
+}
+/* a alça: avisa que é uma folha por cima, não uma tela nova */
+.folha::before {
+  content: '';
+  position: absolute;
+  inset-block-start: var(--espaco-2);
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  inline-size: 2.5rem;
+  block-size: 4px;
+  border-radius: 999px;
+  background: var(--cor-trilho);
+}
+[data-saindo] .folha { animation: folha-desce 150ms ease-out forwards; }
+@keyframes folha-sobe { from { transform: translateY(100%); } to { transform: none; } }
+@keyframes folha-desce { to { transform: translateY(100%); } }
+@keyframes folha-fundo { from { opacity: 0; } to { opacity: 1; } }
+@keyframes folha-fundo-sai { to { opacity: 0; } }
+
+/* a folha dentro da própria página (propostas): sobe por cima da foto da cena e fica no fluxo, sem fundo escuro (o card
+   do jogador segue à mão); no celular encosta nas bordas e no pé da tela */
+.folha--pagina { inline-size: auto; max-block-size: none; overflow: visible; }
+@media (max-width: 63.99rem) {
+  .folha--pagina { margin: calc(-1 * var(--espaco-6)) calc(-1 * var(--espaco-3)) calc(-1 * (var(--espaco-3) + env(safe-area-inset-bottom))); }
+}
+@media (min-width: 64rem) {
+  .folha--pagina { border-radius: 1.25rem; }
+}

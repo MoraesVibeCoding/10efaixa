@@ -48,6 +48,8 @@
   background: var(--cor-trilho);
   box-shadow: var(--forma-sombra-suave);
 }
+/* um card sobe por cima (propostas): a foto fica atrás, escurecida */
+.decisao__foto--atras { filter: brightness(0.6) saturate(0.85); }
 .decisao__cena {
   display: block;
   inline-size: 100%;
