@@ -674,3 +674,19 @@ describe('venda pelo empresário com o clube à vista (v2.64)', () => {
     expect(screen.queryByRole('group', { name: t('ui.venda.cartao') })).toBeNull();
   });
 });
+
+// v2.70 (enquadramento): no celular a caixa do topo fica numa linha; idade, salário, valor, papel e taças abrem num botão
+// (e seguem disponíveis ao leitor de tela, só escondidos da vista).
+describe('caixa do topo compacta (v2.70)', () => {
+  it('um botão "Mais detalhes" abre e fecha os dados, com aria-expanded', () => {
+    render(<Decision eventId="salario-atrasado" age={24} progress={0.4} player={PLAYER} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    const botao = screen.getByRole('button', { name: t('ui.decisao.maisDetalhes') });
+    expect(botao).toHaveAttribute('aria-expanded', 'false');
+    const topo = document.querySelector('.decisao__topo')!;
+    expect(topo).not.toHaveClass('decisao__topo--aberto');
+    expect(screen.getByRole('list', { name: t('ui.decisao.ficha') })).toBeInTheDocument();
+    fireEvent.click(botao);
+    expect(botao).toHaveAttribute('aria-expanded', 'true');
+    expect(topo).toHaveClass('decisao__topo--aberto');
+  });
+});

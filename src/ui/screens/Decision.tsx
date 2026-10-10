@@ -18,6 +18,7 @@ import { Niveis } from './Niveis';
 import { CenaPintada } from './CenaPintada';
 import { useRolling } from '../useRolling';
 import { MOTION } from '../motion';
+import { useLivreMeio } from '../useLivreMeio';
 import { Carimbo } from './Carimbo';
 import type { Moment } from './moments';
 import type { ProposalView } from '../../engine/proposals';
@@ -410,6 +411,9 @@ function Rolled({ final, shown }: { final: string; shown: string }) {
   return shown === final ? final : <><span aria-hidden="true">{shown}</span><span className="sr-only">{final}</span></>;
 }
 
+/** v2.70: a caixa do topo aberta ou fechada (no celular), lembrada entre as decisões enquanto o jogo está aberto. */
+let topoAberto = false;
+
 export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert }: {
   player: DecisionProps['player']; age: number; anterior?: Anterior; open: boolean; opener: React.RefObject<HTMLButtonElement | null>; onOpen: () => void; inert: boolean;
 }) {
@@ -417,8 +421,11 @@ export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert }
   const idade = useRolling(age, anterior?.age);
   const valor = useRolling(player.marketValueEUR ?? 0, anterior?.marketValueEUR);
   const medal = medalOf(player.overall);
+  // v2.70 (enquadramento): no celular a caixa fica numa linha; os dados abrem no botão e a escolha vale até fechar o jogo
+  const [aberto, setAberto] = useState(topoAberto);
+  const alternar = () => { topoAberto = !aberto; setAberto(topoAberto); };
   return (
-    <header className="decisao__topo vidro" inert={inert}>
+    <header className={`decisao__topo${aberto ? ' decisao__topo--aberto' : ''} vidro`} inert={inert}>
       <button ref={opener} type="button" className="jogador__abrir" aria-haspopup="dialog" aria-expanded={open} onClick={onOpen}>
         <Figurinha moldura tamanho="pequena" name={player.name} number={player.number} overall={player.overall} position={player.position} clubId={player.clubId} uniforme={player.uniforme} avatar={player.avatar} visual={player.visual} />
         <span className="jogador__quem">
@@ -449,6 +456,10 @@ export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert }
         </p>
         {/* v2.62: o papel (tempo de jogo) embaixo do Over */}
         <p className="decisao__papel">{t(`ui.papel.${player.role}`)}</p>
+        <button type="button" className="jogador__detalhes" aria-expanded={aberto} onClick={alternar}>
+          <span className="sr-only">{t('ui.decisao.maisDetalhes')}</span>
+          <svg viewBox="0 0 16 10" width="14" height="9" aria-hidden="true" focusable="false"><path d="M1.5 1.5 8 8l6.5-6.5" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="square" /></svg>
+        </button>
       </div>
       {/* v2.62: embaixo, só as taças: uma por competição, com a quantidade numa bolinha */}
       {player.titles.length > 0 && (
@@ -468,6 +479,9 @@ export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert }
 
 export function Decision({ eventId, age, progress, scene, player, anterior, momentos, state = {}, ritmo = 'normal', semestre, onChoose, onContinue }: DecisionProps) {
   const [career, setCareer] = useState(false);
+  // v2.70: a cena encaixa a cabeça do jogador no meio do espaço entre a caixa do topo e o painel
+  const root = useRef(null as HTMLElement | null);
+  const livre = useLivreMeio(root, '.decisao__topo', '.decisao__painel');
   // sem genérico aqui: a guarda de texto fora do i18n confunde o genérico com JSX
   const opener = useRef(null as HTMLButtonElement | null);
   // v2.34: no Normal tocar marca e "Confirmar escolha" decide; no Rápido tocar já decide
@@ -512,9 +526,9 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
   }, [overlay, career, onDone]);
 
   return (
-    <main className="decisao" style={TRANSITION} data-tema="claro" data-evento={eventId} data-resultado={chosen === null ? 'fechado' : 'aberto'}>
+    <main ref={root} className="decisao" style={TRANSITION} data-tema="claro" data-evento={eventId} data-resultado={chosen === null ? 'fechado' : 'aberto'}>
       {scene.pintada
-        ? <CenaPintada {...scene.pintada} alt={scene.alt} inert={overlay} />
+        ? <CenaPintada {...scene.pintada} alt={scene.alt} inert={overlay} livre={livre} />
         : <img className="decisao__cena" src={scene.src} alt={scene.alt} width={SCENE_SIZE[0]} height={SCENE_SIZE[1]} fetchPriority="high" inert={overlay} />}
       <div
         inert={overlay} className="faixa" role="progressbar" aria-label={t('ui.decisao.progresso')}
