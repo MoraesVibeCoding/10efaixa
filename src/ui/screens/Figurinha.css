@@ -73,7 +73,7 @@
   text-transform: uppercase;
   overflow-wrap: break-word;
 }
-.figurinha__clube { font-size: 0.75rem; line-height: 1.25; color: var(--cor-texto-suave); }
+.figurinha__clube { font-size: 0.875rem; line-height: 1.25; color: var(--cor-texto-suave); }
 /* emblema do clube no canto de baixo, à direita (simplificado: a figurinha é pequena) */
 .figurinha__emblema { position: absolute; inset-inline-end: 5px; inset-block-end: 6px; display: flex; }
 

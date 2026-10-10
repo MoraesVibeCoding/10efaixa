@@ -80,3 +80,41 @@ describe('cartão na direção C (v2.66)', () => {
     expect(at[0]!.s).toBe(String(m.numero));
   });
 });
+
+// v2.73 (revisão /impeccable): o cartão é visto pequeno (prévia do WhatsApp, ~300 px de largura); nenhum texto abaixo do
+// mínimo legível no desenho de 1080 px. Frase longa quebra em linhas, nunca encolhe.
+describe('cartão legível na prévia (v2.73)', () => {
+  function sizesCtx() {
+    const sizes: { s: string; px: number }[] = [];
+    const base = fakeCtx();
+    const ctx = new Proxy(base.ctx as unknown as Record<string, unknown>, {
+      get(target, prop: string) {
+        if (prop === 'fillText') return (s: string, x: number, y: number) => { sizes.push({ s, px: parseFloat(String(target.font).match(/(\d+(\.\d+)?)px/)![1]!) }); (target.fillText as (a: string, b: number, c: number) => void)(s, x, y); };
+        return target[prop];
+      },
+      set(target, prop: string, v) { target[prop] = v; return true; },
+    });
+    return { ctx: ctx as unknown as CanvasRenderingContext2D, sizes, all: base.all };
+  }
+  const longo = {
+    ...m,
+    apelido: 'Apelido Bem Comprido Mesmo', rotulo: 'Lenda absoluta do futebol mundial',
+    honrarias: ['Melhor do mundo 3x', 'Artilheiro histórico', 'Campeão mundial', 'Bola de prata'],
+    frases: ['Atravessou o oceano aos 21 para vestir a camisa de um gigante europeu', 'Eleito o melhor do mundo aos 25, depois de uma temporada inesquecível', 'Virou ídolo e jogou 12 temporadas no mesmo clube'],
+  };
+
+  it.each(['narrativa', 'estatistica'] as const)('%s: todo texto com pelo menos 30 px no desenho de 1080', (v) => {
+    for (const x of [m, longo]) {
+      const { ctx, sizes } = sizesCtx();
+      drawCard(ctx, x, v);
+      const small = sizes.filter((z) => z.px < 30);
+      expect(small, small.map((z) => `${z.px}px ${z.s}`).join(' | ')).toEqual([]);
+    }
+  });
+
+  it('frase longa quebra em linhas e aparece inteira', () => {
+    const { ctx, all } = sizesCtx();
+    drawCard(ctx, longo, 'narrativa');
+    expect(all()).toContain(longo.frases[0]);
+  });
+});

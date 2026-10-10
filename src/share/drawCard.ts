@@ -18,6 +18,8 @@ const TITLE = tokens.fontes.titulo;
 const TEXT = tokens.fontes.texto;
 const MEDALS = tokens.medalha as unknown as Record<string, { clara: string; escura: string; aro: string; texto: string }>;
 const W = CARD_SIZE.width;
+/** v2.73: o menor texto do cartão (tokens.json): visto na prévia do WhatsApp ainda se lê. */
+const MIN = tokens.cartao.textoMin;
 
 function font(ctx: CanvasRenderingContext2D, size: number, family: string, weight = 400, style = '') {
   ctx.font = `${style} ${weight} ${size}px ${family}`.trim();
@@ -44,6 +46,18 @@ function wrap(ctx: CanvasRenderingContext2D, text: string, width: number): strin
   }
   if (line) lines.push(line);
   return lines;
+}
+
+/**
+ * v2.73: o texto no maior tamanho (até `max`) em que cabe numa linha; se nem no mínimo cabe, quebra em linhas no mínimo
+ * (nunca encolhe abaixo de `MIN`). Desenha a partir de `y` e devolve a linha seguinte.
+ */
+function block(ctx: CanvasRenderingContext2D, text: string, family: string, weight: number, max: number, x: number, y: number, width: number): number {
+  const size = fit(ctx, text, family, weight, max, MIN, width);
+  const lh = Math.round(size * 1.25);
+  const lines = wrap(ctx, text, width);
+  lines.forEach((l, i) => { ctx.fillText(l, x, y + i * lh); });
+  return y + lines.length * lh;
 }
 
 /** Texto em parágrafo até `maxY`; devolve onde parou. */
@@ -202,10 +216,12 @@ function figurinha(ctx: CanvasRenderingContext2D, m: CardModel, images: CardImag
     const [ex, ey, es] = [px + pw - 1.9 * EM, py + 0.3 * EM, 1.6 * EM];
     ctx.drawImage(images.emblem, ex, ey, es, es);
     if (images.emblemSigla) {
-      font(ctx, es * 0.24, TITLE, 900);
+      const ss = Math.max(es * 0.24, MIN);
+      font(ctx, ss, TITLE, 900);
       const sw = ctx.measureText(images.emblemSigla).width;
-      ctx.fillStyle = THEME.superficie; ctx.fillRect(ex + (es - sw) / 2 - 3, ey + es * 0.38, sw + 6, es * 0.26);
-      ctx.fillStyle = THEME.texto; ctx.fillText(images.emblemSigla, ex + (es - sw) / 2, ey + es * 0.38 + es * 0.21);
+      const sy = ey + (es - ss * 1.1) / 2;
+      ctx.fillStyle = THEME.superficie; ctx.fillRect(ex + (es - sw) / 2 - 3, sy, sw + 6, ss * 1.1);
+      ctx.fillStyle = THEME.texto; ctx.fillText(images.emblemSigla, ex + (es - sw) / 2, sy + ss * 0.9);
     }
   }
 
@@ -218,7 +234,7 @@ function figurinha(ctx: CanvasRenderingContext2D, m: CardModel, images: CardImag
   font(ctx, 1.6 * EM, TITLE, 900);
   const nw = ctx.measureText(num).width;
   ctx.fillText(num, tx + tw - 0.6 * EM - nw, ty + th * 0.72);
-  fit(ctx, m.nome.toUpperCase(), TITLE, 900, 0.92 * EM, 0.5 * EM, tw - nw - 1.8 * EM);
+  fit(ctx, m.nome.toUpperCase(), TITLE, 900, 0.92 * EM, MIN, tw - nw - 1.8 * EM);
   ctx.fillText(m.nome.toUpperCase(), tx + 0.6 * EM, ty + th * 0.66);
 }
 
@@ -242,7 +258,7 @@ function band(ctx: CanvasRenderingContext2D, m: CardModel) {
   ctx.fillRect(-W / 2 - 40, -BAND_H / 2, W + 80, BAND_H);
   ctx.shadowColor = 'transparent';
   ctx.fillStyle = P.tinta;
-  const size = fit(ctx, v, TITLE, 900, 56, 28, W - 2 * PAD - 40);
+  const size = fit(ctx, v, TITLE, 900, 56, MIN, W - 2 * PAD - 40);
   ctx.fillText(v, -ctx.measureText(v).width / 2, size * 0.36);
   ctx.restore();
 }
@@ -250,57 +266,52 @@ function band(ctx: CanvasRenderingContext2D, m: CardModel) {
 /** Rótulo, a linha "apelido · posição · clube" e onde virou ídolo. Devolve onde o conteúdo continua. */
 function header(ctx: CanvasRenderingContext2D, m: CardModel): number {
   const x = GX + PAD; const width = GW - 2 * PAD;
-  let y = GY + 122;
+  let y = GY + 108;
   ctx.fillStyle = P.tinta;
-  fit(ctx, m.rotulo, TEXT, 700, 30, 20, width);
-  ctx.fillText(m.rotulo, x, y);
-  y += 38;
+  y = block(ctx, m.rotulo, TEXT, 700, 36, x, y, width);
   ctx.fillStyle = THEME.textoSuave;
   const who = `${m.apelido} · ${m.posicao} · ${clubName(m.clubeAuge).nome}`;
-  fit(ctx, who, TEXT, 400, 26, 18, width);
-  ctx.fillText(who, x, y);
+  y = block(ctx, who, TEXT, 400, 32, x, y, width);
   // v2.62: onde virou ídolo; o clube de coração vem primeiro e a linha fica em verde, em destaque
   if (m.idolos.length) {
-    y += 36;
     const line = idolLine(m.idolos);
     ctx.fillStyle = m.idolos[0]!.coracao ? P.gramado : P.tinta;
-    fit(ctx, line, TEXT, 700, 26, 16, width);
-    ctx.fillText(line, x, y);
+    y = block(ctx, line, TEXT, 700, 32, x, y, width);
   }
-  return y + 50;
+  return y + 14;
 }
 
 function narrative(ctx: CanvasRenderingContext2D, m: CardModel, y0: number) {
   const x = GX + PAD; const width = GW - 2 * PAD;
   ctx.fillStyle = P.tinta;
-  font(ctx, 30, TEXT, 700);
-  let y = paragraph(ctx, m.manchete, x, y0, width, 38, y0 + 38) + 8;
-  // honrarias em pílulas numa linha (a fonte diminui até a linha caber), logo depois da manchete: nunca caem no pé
+  font(ctx, 34, TEXT, 700);
+  let y = paragraph(ctx, m.manchete, x, y0 + 10, width, 42, y0 + 52) + 6;
+  // v2.73: honrarias em pílulas de tamanho fixo (MIN), em quantas linhas precisarem, logo depois da manchete
   if (m.honrarias.length) {
-    const labels = m.honrarias.map((h) => `★ ${h}`);
-    let size = 22;
-    for (; size > 14; size--) {
-      font(ctx, size, TEXT, 700);
-      if (labels.reduce((sum, l) => sum + ctx.measureText(l).width + 2 * size + 12, 0) <= width) break;
-    }
+    const size = MIN;
+    const ph = size * 1.6;
+    font(ctx, size, TEXT, 700);
     let px = x;
-    const top = y - size * 1.1;
-    for (const l of labels) {
-      const w = ctx.measureText(l).width + 2 * size;
-      ctx.fillStyle = P.tinta; rr(ctx, px, top, w, size * 1.7, size * 0.85); ctx.fill();
-      ctx.fillStyle = P.papel; ctx.fillText(l, px + size, top + size * 1.2);
-      px += w + 12;
+    let top = y - size * 0.9;
+    for (const l of m.honrarias.map((h) => `★ ${h}`)) {
+      const w = ctx.measureText(l).width + 1.6 * size;
+      if (px > x && px + w > x + width) { px = x; top += ph + 10; }
+      ctx.fillStyle = P.tinta; rr(ctx, px, top, w, ph, ph / 2); ctx.fill();
+      ctx.fillStyle = P.papel; ctx.fillText(l, px + 0.8 * size, top + size * 1.12);
+      px += w + 10;
     }
-    y = top + size * 1.7 + 44;
+    y = top + ph + 46;
   }
-  // até 4 frases, uma linha cada (a fonte diminui até caber, nunca corta); só as que cabem antes do pé do painel
+  // v2.73: as frases quebram em linhas no tamanho mínimo legível (nunca encolhem); entram só as que cabem inteiras
+  font(ctx, MIN, TEXT, 400);
+  const lh = Math.round(MIN * 1.3);
   for (const f of m.frases) {
-    if (y > GB - 24) break;
-    ctx.fillStyle = P.gramado; ctx.fillRect(x, y - 16, 10, 10);
+    const lines = wrap(ctx, f, width - 28);
+    if (y + (lines.length - 1) * lh > GB - 24) break;
+    ctx.fillStyle = P.gramado; ctx.fillRect(x, y - 18, 12, 12);
     ctx.fillStyle = P.tinta;
-    fit(ctx, f, TEXT, 400, 28, 16, width - 24);
-    ctx.fillText(f, x + 24, y);
-    y += 44;
+    lines.forEach((l, i) => { ctx.fillText(l, x + 28, y + i * lh); });
+    y += lines.length * lh + 8;
   }
 }
 
@@ -310,16 +321,16 @@ function statistics(ctx: CanvasRenderingContext2D, m: CardModel, y0: number) {
   const col = width / m.numeros.length;
   m.numeros.forEach((n, i) => {
     ctx.fillStyle = P.tinta;
-    fit(ctx, n.valor, TITLE, 900, 44, 22, col - 12);
-    ctx.fillText(n.valor, x + i * col, y0 + 8);
-    fit(ctx, n.nome.toUpperCase(), TITLE, 800, 20, 12, col - 12);
+    fit(ctx, n.valor, TITLE, 900, 52, MIN, col - 12);
+    ctx.fillText(n.valor, x + i * col, y0 + 14);
+    fit(ctx, n.nome.toUpperCase(), TITLE, 800, MIN, MIN, col - 12);
     ctx.fillStyle = THEME.textoSuave;
-    ctx.fillText(n.nome.toUpperCase(), x + i * col, y0 + 36);
+    ctx.fillText(n.nome.toUpperCase(), x + i * col, y0 + 50);
   });
   // radar dos 10 atributos no auge, escala 0–100
   // o rótulo de baixo fica a 1,14 do raio e mais 18 px: o raio é o maior que ainda cabe no painel
-  const r = Math.min(130, ((GB - (y0 + 70)) / 2 - 24) / 1.14);
-  const [cx, cy] = [W / 2, (y0 + 70 + GB) / 2];
+  const r = Math.min(120, ((GB - (y0 + 84)) / 2 - 30) / 1.14);
+  const [cx, cy] = [W / 2, (y0 + 84 + GB) / 2];
   const pt = (i: number, v: number) => {
     const a = -Math.PI / 2 + (i * 2 * Math.PI) / m.radar.length;
     return [cx + Math.cos(a) * r * v, cy + Math.sin(a) * r * v] as const;
@@ -336,7 +347,7 @@ function statistics(ctx: CanvasRenderingContext2D, m: CardModel, y0: number) {
   ctx.fillStyle = 'rgba(30, 123, 79, 0.35)'; ctx.fill();
   ctx.strokeStyle = P.gramado; ctx.lineWidth = 4; ctx.stroke();
   ctx.fillStyle = P.tinta;
-  font(ctx, 20, TEXT, 700);
+  font(ctx, MIN, TEXT, 700);
   // rótulo alinhado pelo lado em que está, para nunca invadir o polígono
   m.radar.forEach((a, i) => {
     const ang = -Math.PI / 2 + (i * 2 * Math.PI) / m.radar.length;
@@ -345,7 +356,7 @@ function statistics(ctx: CanvasRenderingContext2D, m: CardModel, y0: number) {
     const w = ctx.measureText(label).width;
     const cos = Math.cos(ang);
     const left = cos > 0.2 ? px + 4 : cos < -0.2 ? px - 4 - w : px - w / 2;
-    const dy = Math.sin(ang) > 0.5 ? 18 : Math.sin(ang) < -0.5 ? -6 : 7;
+    const dy = Math.sin(ang) > 0.5 ? 28 : Math.sin(ang) < -0.5 ? -8 : 10;
     ctx.fillText(label, left, py + dy);
   });
 }
@@ -362,7 +373,7 @@ export function drawCard(ctx: CanvasRenderingContext2D, m: CardModel, version: C
   if (version === 'narrativa') narrative(ctx, m, y); else statistics(ctx, m, y);
   // rodapé sobre o verde: código da carreira e a marca
   ctx.fillStyle = P.papel;
-  font(ctx, 26, TITLE, 800);
+  font(ctx, MIN, TITLE, 800);
   ctx.fillText(`${t('ui.cartao.codigo')} ${m.codigo}`, GX + 8, H - 26);
   const brand = t('app.title');
   ctx.fillText(brand, W - GX - 8 - ctx.measureText(brand).width, H - 26);

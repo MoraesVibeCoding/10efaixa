@@ -96,7 +96,7 @@
 .decisao__over { grid-area: over; display: grid; justify-items: center; align-content: start; gap: var(--espaco-1); line-height: 1; font-family: var(--fonte-titulo); font-variant-numeric: tabular-nums; }
 .decisao__over p { margin: 0; }
 /* v2.62: o papel (tempo de jogo) embaixo do Over, em letra de apoio */
-.decisao__papel { max-inline-size: 6.5rem; font-family: var(--fonte-texto); font-size: 0.75rem; font-weight: 700; line-height: 1.2; text-align: center; color: var(--cor-texto-suave); }
+.decisao__papel { max-inline-size: 6.5rem; font-family: var(--fonte-texto); font-size: 0.875rem; font-weight: 700; line-height: 1.2; text-align: center; color: var(--cor-texto-suave); }
 .decisao__over-rotulo { font-size: var(--tipo-apoio); font-weight: 800; letter-spacing: 0.08em; color: var(--cor-texto-suave); }
 .decisao__over-numero { font-size: 3rem; font-weight: 900; }
 /* v2.62: o Over num quadro com o metal da faixa (bronze ao diamante), na proporção da arte (quadrada, 256×256), com
@@ -123,8 +123,8 @@
 
 /* v2.62: bandeira da seleção ao lado do nome (depois da estreia pela principal) */
 .jogador__nome { display: flex; flex-wrap: wrap; align-items: center; gap: 2px var(--espaco-2); }
-.bandeira { display: inline-flex; align-items: center; gap: 4px; padding: 1px 6px 1px 3px; border-radius: 999px; background: var(--cor-fundo); font-family: var(--fonte-texto); font-size: 0.6875rem; font-weight: 800; letter-spacing: 0.04em; line-height: 1.3; }
-.selo-conquista { display: inline-grid; place-items: center; min-inline-size: 1.25rem; block-size: 1.25rem; padding: 0 4px; border-radius: 0.3rem; background: var(--cor-texto); color: var(--cor-superficie); font-family: var(--fonte-titulo); font-size: 0.75rem; font-weight: 900; line-height: 1; }
+.bandeira { display: inline-flex; align-items: center; gap: 4px; padding: 1px 6px 1px 3px; border-radius: 999px; background: var(--cor-fundo); font-family: var(--fonte-texto); font-size: 0.875rem; font-weight: 800; letter-spacing: 0.04em; line-height: 1.3; }
+.selo-conquista { display: inline-grid; place-items: center; min-inline-size: 1.25rem; block-size: 1.25rem; padding: 0 4px; border-radius: 0.3rem; background: var(--cor-texto); color: var(--cor-superficie); font-family: var(--fonte-titulo); font-size: 0.875rem; font-weight: 900; line-height: 1; }
 .bandeira svg { flex: none; border-radius: 2px; box-shadow: 0 0 0 1px rgb(0 0 0 / 0.15); }
 
 /* v2.62: embaixo, só as taças em miniatura, uma por competição, com a quantidade numa bolinha */
@@ -136,7 +136,7 @@
   min-inline-size: 1rem; block-size: 1rem; padding: 0 3px; box-sizing: border-box;
   display: grid; place-items: center; border-radius: 999px;
   background: var(--cor-texto); color: var(--cor-superficie);
-  font-size: 0.625rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums;
+  font-size: 0.875rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums;
 }
 
 /* v2.62: idade, salário e valor entre o nome e o Over, um embaixo do outro */
@@ -240,8 +240,9 @@
   padding: 0 var(--espaco-5);
   border: 0;
   border-radius: 999px;
-  background: var(--cor-texto);
-  color: var(--cor-superficie);
+  /* v2.73: o botão principal do jogo é um só (verde cheio, Oswald em caixa alta, pílula) */
+  background: var(--cor-destaque);
+  color: var(--cor-sobre-destaque);
   font-family: var(--fonte-titulo);
   font-size: var(--tipo-opcao);
   font-weight: 800;
@@ -300,8 +301,8 @@
   justify-self: end;
   min-block-size: 2.75rem;
   padding: 0 var(--espaco-5);
-  border: var(--forma-borda-fina) solid var(--cor-linha);
-  border-radius: var(--forma-raio);
+  border: 0;
+  border-radius: 999px; /* v2.73: botão principal único */
   background: var(--cor-destaque);
   color: var(--cor-sobre-destaque);
   font-family: var(--fonte-titulo);
@@ -313,7 +314,7 @@
   touch-action: manipulation;
 }
 @media (hover: hover) {
-  .resultado__seguir:hover { background: var(--cor-texto); }
+  .resultado__seguir:hover { background: color-mix(in srgb, var(--cor-destaque) 80%, black); }
   .gaveta__fechar:hover { background: var(--cor-fundo); }
 }
 
@@ -466,12 +467,12 @@
   .jogador__clube, .jogador__mais { font-size: 0.875rem; }
   .decisao__over-numero { font-size: 2.25rem; }
   .decisao__over-medalha { inline-size: 3.75rem; }
-  .decisao__over-medalha .decisao__over-rotulo { font-size: 0.6875rem; }
+  .decisao__over-medalha .decisao__over-rotulo { font-size: 0.875rem; }
   /* auditoria mobile (ui-ux-pro-max, texto legível): na figurinha pequena o Over e o número saíam com 7 px; o Over já está
      grande ao lado e o número fica para a figurinha grande (o nome segue no texto para o leitor de tela) */
   .decisao__topo .figurinha__over-grande, .decisao__topo .figurinha__tarja-numero { display: none; }
   .decisao__over { padding-block-start: var(--espaco-3); } /* o botão de reiniciar fica no canto de cima */
-  .decisao__dados { font-size: 0.75rem; }
+  .decisao__dados { font-size: 0.875rem; }
   .jogador__mais { white-space: nowrap; }
   /* v2.70 (enquadramento): a caixa fica numa linha; idade, salário, valor, papel e taças abrem no botão. Fechados, saem da
      vista mas seguem para o leitor de tela (mesma técnica do sr-only) */
@@ -504,12 +505,13 @@
 @media (max-width: 26.25rem) {
   .decisao__topo { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "quem over" "dados dados" "tacas tacas"; }
   .decisao__dados { display: flex; flex-wrap: wrap; gap: 0 var(--espaco-3); }
-  .decisao__over-rotulo { font-size: 0.75rem; }
-  .selos li { padding: 0 6px; font-size: 0.8125rem; line-height: 1.4; }
+  .decisao__over-rotulo { font-size: 0.875rem; }
+  .selos li { padding: 0 6px; font-size: 0.875rem; line-height: 1.4; }
   .decisao__painel { gap: var(--espaco-2); padding: var(--espaco-3); }
   /* decisão do usuário (v2.62): a história é detalhe, não o principal; fica no tamanho de apoio, abaixo do 1rem do corpo */
-  .decisao__historia { font-size: 0.875rem; line-height: 1.4; }
-  .decisao__semestre { font-size: 0.8125rem; }
+  /* v2.73 (decisão do usuário): a história volta a 1rem no celular */
+  .decisao__historia { font-size: 1rem; line-height: 1.45; }
+  .decisao__semestre { font-size: 0.875rem; }
   .opcao__rotulo { font-size: 1.0625rem; }
   .decisao__detalhe { min-block-size: 2.2rem; font-size: 0.875rem; }
 }
