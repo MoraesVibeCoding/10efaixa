@@ -1,8 +1,9 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-// v2.46: Oswald (títulos) e Inter (texto), auto-hospedadas (Fontsource, OFL-1.1)
+// v2.46 Oswald (títulos); v2.76 Archivo (texto); v2.77 itálico da Archivo nas falas. Auto-hospedadas (Fontsource, OFL-1.1)
 import '@fontsource-variable/oswald';
 import '@fontsource-variable/archivo';
+import '@fontsource-variable/archivo/wght-italic.css';
 import { App } from './App';
 import { themeCss } from './ui/theme/theme';
 import './ui/base.css';

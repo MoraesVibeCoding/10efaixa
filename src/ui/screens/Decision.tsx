@@ -25,6 +25,7 @@ import { Palco } from './Palco';
 import type { Moment } from './moments';
 import type { ProposalView } from '../../engine/proposals';
 import { proposalText } from './proposalText';
+import { comFalas } from '../falas';
 import './Propostas.css';
 import './Decision.css';
 
@@ -594,7 +595,7 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
       <div className="decisao__painel vidro" inert={overlay}>
         {semestre && semestre.length > 0 ? <p className="decisao__semestre"><strong>{t('ui.evolucao.titulo')}:</strong> {semestre.join(' ')}</p> : null}
         <h1 ref={titulo} tabIndex={-1} className="decisao__titulo">{t(`events.${eventId}.titulo`)}</h1>
-        {text && <p className="decisao__historia">{text}</p>}
+        {text && <p className="decisao__historia">{comFalas(text)}</p>}
         {player.comprador && <Comprador p={player.comprador} />}
         <div className="decisao__opcoes" role="group" aria-label={t('ui.decisao.opcoes')}>
           {options.map((o) => {

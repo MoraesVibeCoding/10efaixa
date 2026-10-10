@@ -73,7 +73,7 @@ export function Reuniao({ ideias, player, age, progress, semestre, scene, anteri
       <form className="decisao__painel vidro reuniao__painel" onSubmit={submit} inert={career} noValidate>
         <p className="reuniao__sala">{t('ui.reuniao.sala')}</p>
         <h1 className="decisao__titulo" ref={title} tabIndex={-1}>{t('ui.reuniao.titulo')}</h1>
-        <p className="reuniao__fala"><strong>{t('ui.reuniao.treinador')}</strong> {t(`ui.reuniao.fala.${semestre}`, { nome: player.name })}</p>
+        <p className="reuniao__fala"><strong>{t('ui.reuniao.treinador')}</strong> <q className="fala">{t(`ui.reuniao.fala.${semestre}`, { nome: player.name })}</q></p>
         <div className="reuniao__ideias" role="radiogroup" aria-label={t('ui.reuniao.ideias')}>
           {IDEAS.map((id) => {
             const { proposal, agrado } = ideias[id];
