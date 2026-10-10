@@ -21,18 +21,19 @@ const PLAYER = { name: 'Zé', position: 'meia', clubId: 'santos', overall: 70, t
 const option = (id: string) => screen.getByRole('button', { name: new RegExp(t(`events.${EVENT}.opcoes.${id}`)) });
 const css = readFileSync(resolve(__dirname, 'Decision.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
 
-describe('1. a marcada vale sozinha em 1 s (sem "Confirmar escolha")', () => {
+describe('1. a marcada vale sozinha em 2 s (sem "Confirmar escolha")', () => {
   beforeEach(() => { vi.useFakeTimers(); });
   afterEach(() => { vi.useRealTimers(); });
   const show = () => { const onChoose = vi.fn(); render(<Decision eventId={EVENT} age={24} progress={0.4} player={PLAYER} scene={{ src: 'c.webp', alt: 'cena' }} onChoose={onChoose} />); return onChoose; };
 
-  it('o tempo vem dos dados (1 s) e não há mais o botão de confirmar', () => {
-    expect(previewCfg.decideMs).toBe(1000);
+  it('o tempo vem dos dados (2 s) e não há mais o botão de confirmar', () => {
+    // pedido do usuário: subir de 1 s para 2 s antes de mesclar
+    expect(previewCfg.decideMs).toBe(2000);
     show();
     expect(screen.queryByRole('button', { name: /Confirmar escolha/i })).toBeNull();
   });
 
-  it('marcar e esperar 1 s decide; antes disso, não', () => {
+  it('marcar e esperar o tempo decide; antes disso, não', () => {
     const onChoose = show();
     fireEvent.click(option(A!));
     expect(option(A!)).toHaveAttribute('aria-pressed', 'true');
@@ -45,11 +46,11 @@ describe('1. a marcada vale sozinha em 1 s (sem "Confirmar escolha")', () => {
   it('trocar de opção recomeça o tempo; vale a última', () => {
     const onChoose = show();
     fireEvent.click(option(A!));
-    act(() => { vi.advanceTimersByTime(600); });
+    act(() => { vi.advanceTimersByTime(previewCfg.decideMs - 400); });
     fireEvent.click(option(B!));
-    act(() => { vi.advanceTimersByTime(600); });
+    act(() => { vi.advanceTimersByTime(previewCfg.decideMs - 1); });
     expect(onChoose).not.toHaveBeenCalled();
-    act(() => { vi.advanceTimersByTime(400); });
+    act(() => { vi.advanceTimersByTime(1); });
     expect(onChoose).toHaveBeenCalledOnce();
     expect(onChoose).toHaveBeenCalledWith(B);
   });

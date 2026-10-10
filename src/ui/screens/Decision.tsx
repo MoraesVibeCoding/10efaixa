@@ -557,7 +557,7 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
   // sem genérico aqui: a guarda de texto fora do i18n confunde o genérico com JSX
   const opener = useRef(null as HTMLButtonElement | null);
   // v2.34: no Rápido tocar já decide. Pedido do usuário (2026-10-10): no Normal e no Completo tocar marca e, sem trocar,
-  // a marcada vale sozinha em `decideMs` (1 s); tocar de novo nela decide na hora. O botão "Confirmar escolha" saiu.
+  // a marcada vale sozinha em `decideMs` (2 s); tocar de novo nela decide na hora. O botão "Confirmar escolha" saiu.
   const [marked, setMarked] = useState(null as string | null);
   const [chosen, setChosen] = useState<string | null>(null);
   const rapido = ritmo === 'rapido';
