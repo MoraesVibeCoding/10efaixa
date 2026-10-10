@@ -1,47 +1,146 @@
-/* T49i (v2.34): revelação do jogador. Modal de vidro (glass.css) sobre o scrim do tema; a figurinha "cola" no álbum.
-   Sintaxe conferida na MDN (mdn/content): <dialog> com showModal, ::backdrop e o evento cancel (Esc). */
-/* a cena (fixa, z-index -1) aparece atrás do vidro: o palco não pinta fundo por cima dela */
-.revelacao__palco { position: relative; min-block-size: 100dvh; }
+/* T49i (v2.34) e v2.81 (direção "Álbum"): a revelação é a página 1 do álbum, em papel, com o card grande "Nasce um
+   jogador" de frente e verso. <dialog> com showModal, ::backdrop e o evento cancel (Esc), conferidos na MDN (mdn/content).
+   Nada inclinado: a figurinha cola reta e o card vira em 3D (rotateY), com o verso de costas. */
+.revelacao__palco { position: relative; min-block-size: 100dvh; background: var(--cor-fundo); }
 .revelacao__titulo:focus { outline: none; }
-/* v2.69: os 3 pontos fortes em pílulas (só nomes); os dez atributos ficam em "Ver todos" */
-.revelacao__fortes { justify-self: stretch; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--espaco-2); margin: 0; padding: 0; list-style: none; }
-.revelacao__fortes li { padding: 0.25rem 0.75rem; border-radius: 999px; background: var(--cor-destaque); color: var(--cor-sobre-destaque); font-family: var(--fonte-titulo); font-size: var(--tipo-opcao); font-weight: 700; }
-.revelacao__apoio { margin: 0; color: var(--cor-texto-suave); text-align: center; line-height: 1.35; }
-.revelacao__todos { justify-self: stretch; }
-.revelacao__todos summary { min-block-size: 2.75rem; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--cor-texto); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
-.revelacao__todos[open] { display: grid; gap: var(--espaco-2); }
-/* o nome inteiro na figurinha grande: quebra em até duas linhas em vez de cortar */
-.revelacao__figurinha .figurinha__tarja-nome { white-space: normal; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.05; }
 
 .revelacao {
-  inline-size: min(100% - 2rem, 24rem);
-  max-block-size: calc(100dvh - 1rem);
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: 30rem;
+  max-block-size: 100dvh;
+  min-block-size: 100dvh;
+  margin: 0 auto;
   overflow-y: auto;
-  padding: var(--espaco-4);
-  border-radius: var(--forma-raio-cartao);
+  padding: var(--espaco-2) var(--espaco-4) calc(var(--espaco-4) + env(safe-area-inset-bottom));
+  border: 0;
+  background: var(--cor-fundo);
   color: var(--cor-texto);
 }
-.revelacao[open] { display: grid; gap: var(--espaco-3); justify-items: center; }
-.revelacao::backdrop { background: var(--vidro-scrim); }
+.revelacao[open] { display: grid; gap: var(--espaco-2); align-content: start; justify-items: center; }
+.revelacao::backdrop { background: var(--cor-fundo); }
+.revelacao .pagina__topo { justify-self: stretch; }
 
 .revelacao__titulo { font-size: var(--tipo-titulo); font-weight: 900; line-height: 1; text-transform: uppercase; text-align: center; }
 .revelacao__sub { color: var(--cor-texto-suave); line-height: 1.35; text-align: center; }
-.revelacao__rotulo { justify-self: stretch; font-family: var(--fonte-titulo); font-size: var(--tipo-apoio); font-weight: 800; color: var(--cor-texto-suave); }
+.revelacao__rotulo { justify-self: stretch; margin: 0; font-family: var(--fonte-titulo); font-size: var(--tipo-apoio); font-weight: 800; color: var(--cor-texto-suave); }
 .revelacao .niveis { justify-self: stretch; gap: 6px; }
+.revelacao__todos { justify-self: stretch; }
+.revelacao__todos summary { min-block-size: 2.75rem; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--cor-texto); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.revelacao__todos[open] { display: grid; gap: var(--espaco-2); }
 
-/* a figurinha chega de cima, girada, e assenta com um leve aperto: colar no álbum */
-.revelacao__figurinha { inline-size: min(13rem, 18dvh); /* limitada pela altura: com o selo do diamante ainda cabe sem rolar */ transform-origin: 50% 90%; animation: colar 700ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
-@keyframes colar {
-  0% { opacity: 0; transform: translateY(-1.5rem) rotate(-9deg) scale(1.12); }
-  60% { opacity: 1; transform: translateY(0) rotate(1.5deg) scale(0.97); }
-  100% { opacity: 1; transform: rotate(-1deg) scale(1); }
+/* ---------- o card "Nasce um jogador": as duas faces na mesma célula; o card vira em 3D */
+.nasce { display: grid; justify-items: center; gap: var(--espaco-2); inline-size: 100%; perspective: 1400px; }
+.nasce__card {
+  display: grid;
+  inline-size: min(100%, 22rem);
+  transform-style: preserve-3d;
+  transition: transform 600ms cubic-bezier(0.645, 0.045, 0.355, 1);
 }
+.nasce[data-lado='verso'] .nasce__card { transform: rotateY(180deg); }
+.nasce__face {
+  grid-area: 1 / 1;
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  gap: var(--espaco-2);
+  box-sizing: border-box;
+  padding: var(--espaco-3);
+  border: 5px solid var(--paleta-ouro-moldura);
+  border-radius: 1rem;
+  background: var(--cor-superficie);
+  box-shadow: 0 12px 26px color-mix(in srgb, var(--cor-texto) 22%, transparent);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.nasce__verso { transform: rotateY(180deg); justify-items: stretch; }
+/* a frente fica no meio da altura do card (o verso, mais longo, dita a altura) */
+.nasce__frente { align-content: center; }
+
+/* frente: a figurinha grande, o selo da origem por cima do pé dela, a linha e as metas */
+.revelacao__figurinha { position: relative; inline-size: min(13rem, 30dvh); animation: colar 600ms cubic-bezier(0.2, 0.9, 0.3, 1) both; }
+/* o nome inteiro na figurinha grande: quebra em até duas linhas em vez de cortar */
+.revelacao__figurinha .figurinha__tarja-nome { white-space: normal; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.05; }
+.nasce__origem {
+  position: absolute;
+  inset-block-start: 0.6rem;
+  inset-inline-end: -0.6rem;
+  padding: 3px 10px;
+  border: 2px solid var(--cor-texto);
+  border-radius: 999px;
+  background: var(--cor-fundo);
+  font-family: var(--fonte-titulo);
+  font-size: var(--tipo-miudo);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.nasce__linha { display: flex; align-items: center; gap: var(--espaco-2); margin: 0; color: var(--cor-texto-suave); font-weight: 600; }
+.nasce__metas { display: grid; grid-template-columns: 1fr 1fr; gap: var(--espaco-2); inline-size: 100%; margin: 0; padding: 0; list-style: none; }
+.nasce__metas li {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  min-block-size: 3.5rem;
+  padding: 0 var(--espaco-2);
+  border: 2.5px dashed color-mix(in srgb, var(--cor-texto) 35%, transparent);
+  border-radius: var(--forma-raio-cartao);
+  color: var(--cor-texto-suave);
+  font-family: var(--fonte-titulo);
+  font-size: var(--tipo-miudo);
+  font-weight: 700;
+  line-height: 1.15;
+  text-transform: uppercase;
+  animation: meta-aparece 300ms ease-out both;
+}
+.nasce__metas li:nth-child(1) { animation-delay: 700ms; }
+.nasce__metas li:nth-child(2) { animation-delay: 850ms; }
+@media (prefers-reduced-motion: reduce) { .nasce__metas li { animation: none; } }
+.nasce__meta-marca { flex: none; font-size: 1.75rem; font-weight: 900; line-height: 1; }
+/* a faixa de capitão desenhada: uma braçadeira tracejada */
+.nasce__meta-marca--faixa { inline-size: 1.75rem; block-size: 0.9rem; border: 2.5px dashed currentColor; border-radius: 3px; }
+
+/* verso: a ficha */
+.nasce__ficha-titulo { display: flex; justify-content: space-between; align-items: baseline; gap: var(--espaco-3); margin: 0; padding-block-end: var(--espaco-1); border-block-end: 2px solid var(--cor-texto); font-size: var(--tipo-nome); font-weight: 900; line-height: 1; text-transform: uppercase; }
+.nasce__camisa { font-size: var(--tipo-apoio); }
+.nasce__ficha { display: grid; margin: 0; }
+.nasce__ficha div { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: var(--espaco-2); padding-block: var(--espaco-1); border-block-end: 1px solid var(--cor-trilho); }
+.nasce__ficha dt { font-family: var(--fonte-titulo); font-size: var(--tipo-miudo); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cor-texto-suave); }
+.nasce__ficha dd { margin: 0; font-size: var(--tipo-miudo); line-height: 1.3; }
+.nasce__fortes { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.nasce__fortes li { display: flex; justify-content: space-between; align-items: center; font-weight: 700; }
+.nasce__estrelas { display: inline-flex; gap: 2px; }
+.nasce__estrela { inline-size: 0.95rem; block-size: 0.95rem; background: color-mix(in srgb, var(--cor-texto) 18%, transparent); clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+.nasce__estrela--cheia { background: var(--paleta-ouro-moldura); }
+.nasce__sonho { display: grid; gap: 2px; margin: 0; }
+.nasce__sonho-rotulo { font-family: var(--fonte-titulo); font-size: var(--tipo-miudo); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cor-texto-suave); }
+.nasce__sonho-valor { display: flex; align-items: center; gap: var(--espaco-2); font-weight: 700; }
+
+.nasce__virar {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  min-block-size: 2.75rem;
+  padding: 0 var(--espaco-3);
+  border: 0;
+  background: none;
+  color: var(--cor-texto);
+  font-family: var(--fonte-titulo);
+  font-size: var(--tipo-apoio);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.nasce__virar:focus-visible { outline: 3px solid var(--cor-foco); outline-offset: 2px; }
 
 /* selo dourado: as cores da medalha de ouro (tokens), com o texto dela, de contraste conferido */
 .revelacao__selo {
   display: grid;
   gap: 2px;
   justify-self: stretch;
+  margin: 0;
   padding: var(--espaco-2) var(--espaco-3);
   border-radius: var(--forma-raio);
   background: linear-gradient(135deg, var(--medalha-clara), var(--medalha-escura));
@@ -68,29 +167,11 @@
 }
 .revelacao__comecar:focus-visible { outline-offset: 3px; }
 
-/* computador: figurinha e selo à esquerda, atributos e o botão à direita */
-@media (min-width: 64rem) {
-  .revelacao { inline-size: min(100% - 4rem, 46rem); }
-  .revelacao[open] {
-    grid-template-columns: 15rem minmax(0, 1fr);
-    grid-template-areas: "titulo titulo" "sub sub" "fig rotulo" "fig fortes" "fig apoio" "selo todos" "selo comecar";
-    column-gap: var(--espaco-6);
-    align-items: start;
-  }
-  .revelacao__titulo { grid-area: titulo; }
-  .revelacao__sub { grid-area: sub; }
-  .revelacao__figurinha { grid-area: fig; inline-size: 13rem; justify-self: center; }
-  .revelacao__selo { grid-area: selo; }
-  .revelacao__rotulo { grid-area: rotulo; }
-  .revelacao__fortes { grid-area: fortes; justify-content: start; }
-  .revelacao__apoio { grid-area: apoio; text-align: start; }
-  .revelacao__todos { grid-area: todos; }
-  .revelacao__todos .revelacao__rotulo { grid-area: auto; }
-  .revelacao__comecar { grid-area: comecar; align-self: end; }
-}
+/* a figurinha desce e cola na página: chega um pouco maior e alta e assenta; reta */
+@keyframes colar { from { opacity: 0; transform: translateY(-1.5rem) scale(1.08); } to { opacity: 1; transform: none; } }
+@keyframes meta-aparece { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: none; } }
 
 /* v2.71 (momento 1): um reflexo passa pela figurinha quando o Over termina de contar */
-.revelacao__figurinha { position: relative; }
 .revelacao__figurinha::after {
   content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
   background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.55) 50%, transparent 65%) 0 0 / 300% 100% no-repeat;
@@ -100,6 +181,6 @@
 @keyframes revelacao-reflexo { from { background-position: 120% 0; } to { background-position: -20% 0; } }
 
 @media (prefers-reduced-motion: reduce) {
-  .revelacao__figurinha { animation: none; transform: rotate(-1deg); }
+  .revelacao__figurinha { animation: none; }
   .revelacao__figurinha::after { display: none; }
 }

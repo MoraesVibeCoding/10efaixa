@@ -87,13 +87,17 @@ export function clearSave(storage: SaveStorage): void {
   try { storage.removeItem(SAVE_KEY); } catch { /* nada a apagar se o armazenamento não abre */ }
 }
 
-export type SavePeek = { status: 'nenhum' } | { status: 'salvo'; name: string } | { status: 'invalido' };
+/** v2.81 (Álbum): a carreira salva traz também posição, camisa e visual, para o card pequeno da capa. */
+export type SavePeek = { status: 'nenhum' } | { status: 'salvo'; name: string; position: string; shirtNumber: number; visual: string } | { status: 'invalido' };
 
 /** Para a abertura: nada salvo, carreira salva (o nome vai em "Continuar a carreira de ...") ou save inválido, que
  * também mostra "Continuar" para o jogador ver o aviso e decidir (SPEC 6.16: mensagem clara, sem travar). */
 export function peekSave(storage: SaveStorage): SavePeek {
   const r = readSave(storage);
-  if (r.ok) return { status: 'salvo', name: r.save.created.input.name };
+  if (r.ok) {
+    const { input, visual } = r.save.created;
+    return { status: 'salvo', name: input.name, position: input.position, shirtNumber: input.shirtNumber, visual };
+  }
   return r.reason === 'nenhum' ? { status: 'nenhum' } : { status: 'invalido' };
 }
 

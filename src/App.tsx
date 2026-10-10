@@ -132,7 +132,7 @@ export function App({ seed, storage = browserStorage(), now = () => new Date(), 
   if (phase.kind === 'revelacao') {
     const { input, visual } = phase.created;
     // mesma semente da carreira: o Over revelado é o do jogador que vai jogar
-    return withRestart(<Revelacao key={phase.round} name={input.name} number={input.shirtNumber} visual={visual} reveal={revealOf(input, phase.seed)} onContinue={() => setPhase({ ...phase, kind: 'ritmo' })} />);
+    return withRestart(<Revelacao key={phase.round} input={input} visual={visual} reveal={revealOf(input, phase.seed)} onContinue={() => setPhase({ ...phase, kind: 'ritmo' })} />);
   }
   if (phase.kind === 'ritmo') {
     return withRestart(<Ritmo onChoose={(ritmo) => setPhase({ ...phase, kind: 'carreira', ritmo, choices: [] })} onBack={() => setPhase({ ...phase, kind: 'revelacao' })} visual={phase.created.visual} />);

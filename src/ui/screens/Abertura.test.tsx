@@ -32,18 +32,20 @@ describe('abertura (T48)', () => {
     const css = readFileSync(resolve(__dirname, 'Abertura.css'), 'utf8');
     expect(css).toMatch(/@keyframes\s+carimbar/);
     expect(css).toMatch(/\.abertura__numero\s*\{[^}]*animation:[^;]*carimbar/);
-    expect(css).toMatch(/@media\s*\(prefers-reduced-motion:\s*reduce\)\s*\{[^@]*\.abertura__numero\s*\{[^}]*animation:\s*none/);
+    // v2.81: a capa inteira fica montada sem movimento (o número entre as peças da capa)
+    expect(css).toMatch(/@media\s*\(prefers-reduced-motion:\s*reduce\)\s*\{[^@]*\.abertura__numero[^{]*\{[^}]*animation:\s*none/);
   });
 
-  it('CSS: a arte some em degradê nas laterais (sem borda visível no computador, v2.39)', () => {
+  // v2.81 (Álbum): a arte deixou de cobrir a tela (o degradê nas laterais da v2.39 existia para a arte de tela cheia no
+  // computador); agora é a figurinha da capa, inteira (4:5) numa moldura, e cabe na altura da tela
+  it('CSS: a arte é a figurinha da capa, inteira na proporção 4:5, e cabe na altura da tela', () => {
     const css = readFileSync(resolve(__dirname, 'Abertura.css'), 'utf8');
-    for (const p of ['-webkit-mask-image', 'mask-image']) {
-      expect(css).toMatch(new RegExp(`\\.abertura__arte img\\s*\\{[^}]*(^|[^-])${p}:\\s*linear-gradient\\(to right, transparent`, 'm'));
-    }
+    expect(css).toMatch(/\.abertura__arte \{[^}]*aspect-ratio:\s*4 \/ 5/);
+    expect(css).toMatch(/\.abertura__figurinha \{[^}]*inline-size:\s*min\([^;]*100dvh/);
   });
 
   describe('com carreira salva (T54, v2.39)', () => {
-    const show = (saved: { status: 'salvo'; name: string } | { status: 'invalido' } = { status: 'salvo', name: 'Dudu Maestro' }) => {
+    const show = (saved: { status: 'salvo'; name: string; position: string; shirtNumber: number; visual: string } | { status: 'invalido' } = { status: 'salvo', name: 'Dudu Maestro', position: 'meia', shirtNumber: 10, visual: 'visual-01' }) => {
       const onNew = vi.fn(); const onContinue = vi.fn();
       render(<Abertura saved={saved} onNew={onNew} onDesafio={() => {}} dia="2026-10-07" onContinue={onContinue} />);
       return { onNew, onContinue };
@@ -107,7 +109,7 @@ describe('abertura: desafio do dia (T57c)', () => {
   it('com carreira salva, pergunta antes de apagar e só então começa o desafio', () => {
     const onDesafio = vi.fn();
     const onNew = vi.fn();
-    render(<Abertura saved={{ status: 'salvo', name: 'Dudu' }} onNew={onNew} onDesafio={onDesafio} dia="2026-10-07" onContinue={() => {}} />);
+    render(<Abertura saved={{ status: 'salvo', name: 'Dudu', position: 'meia', shirtNumber: 10, visual: 'visual-01' }} onNew={onNew} onDesafio={onDesafio} dia="2026-10-07" onContinue={() => {}} />);
     fireEvent.click(screen.getByRole('button', { name: label }));
     expect(onDesafio).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole('button', { name: t('ui.abertura.confirmar.apagar') }));
@@ -117,7 +119,7 @@ describe('abertura: desafio do dia (T57c)', () => {
 
   it('cancelar a pergunta não começa nada', () => {
     const onDesafio = vi.fn();
-    render(<Abertura saved={{ status: 'salvo', name: 'Dudu' }} onNew={() => {}} onDesafio={onDesafio} dia="2026-10-07" onContinue={() => {}} />);
+    render(<Abertura saved={{ status: 'salvo', name: 'Dudu', position: 'meia', shirtNumber: 10, visual: 'visual-01' }} onNew={() => {}} onDesafio={onDesafio} dia="2026-10-07" onContinue={() => {}} />);
     fireEvent.click(screen.getByRole('button', { name: label }));
     fireEvent.click(screen.getByRole('button', { name: t('ui.abertura.confirmar.cancelar') }));
     expect(onDesafio).not.toHaveBeenCalled();

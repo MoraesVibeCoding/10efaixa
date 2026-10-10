@@ -1,34 +1,58 @@
-/* T48 (v2.34): abertura. A arte 4:5 fica centrada e inteira na altura da tela, sobre o marinho do túnel; o "10" é
-   posicionado dentro dela, então cai sempre nas costas da camisa, em qualquer formato de tela. */
+/* T48 (v2.34) e v2.81 (direção "Álbum", proposta A): a abertura é a capa do álbum. Verde-noite com faixas de grama
+   cortada; a marca; a arte do túnel como figurinha da capa, com moldura de ouro e o selo "Álbum da carreira"; os botões.
+   A capa se monta numa animação curta (tempos abaixo, ~1,9 s): os refletores acendem, a figurinha desce e cola, o "10"
+   carimba nas costas, um brilho dourado passa uma vez na moldura e os botões sobem. Só transform e opacity; nada gira.
+   Um toque pula para o fim (data-pronta); base.css zera tudo com prefers-reduced-motion. */
 .abertura {
   position: relative;
   display: grid;
   grid-template-rows: auto 1fr auto;
+  justify-items: center;
+  gap: var(--espaco-4);
   min-block-size: 100dvh;
-  overflow: hidden;
-  background: var(--paleta-noite);
-  color: var(--cor-texto);
+  padding: calc(var(--espaco-6) + env(safe-area-inset-top)) var(--espaco-5) calc(var(--espaco-5) + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  overflow-x: clip;
+  background: repeating-linear-gradient(180deg, var(--paleta-noite) 0 4.5rem, var(--paleta-noite-faixa) 4.5rem 9rem);
+  color: var(--paleta-papel);
+}
+/* os refletores: uma luz de cima que acende e assenta */
+.abertura::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 45% at 50% 0%, color-mix(in srgb, var(--paleta-papel) 22%, transparent), transparent 70%);
+  pointer-events: none;
+  animation: capa-luzes 400ms ease-out both;
 }
 
+.abertura__topo { position: relative; display: grid; gap: var(--espaco-2); justify-items: center; text-align: center; }
+.abertura__marca { margin: 0; font-size: 3.25rem; font-weight: 900; line-height: 1; letter-spacing: 0.01em; text-transform: uppercase; color: var(--paleta-amarelo); animation: capa-sobe 300ms ease-out 300ms both; }
+/* o "e" de "10 e Faixa" em minúscula, no papel: lê "10 e Faixa", a camisa e a braçadeira */
+.abertura__marca-e { text-transform: none; color: var(--paleta-papel); }
+.abertura__lema { max-inline-size: 20rem; margin: 0; font-size: var(--tipo-corpo); line-height: 1.4; color: var(--paleta-papel); animation: capa-sobe 300ms ease-out 1500ms both; }
+
+/* a figurinha da capa: a arte 4:5 inteira numa moldura de ouro; cabe na altura da tela (a página nunca corta os botões) */
+.abertura__figurinha {
+  position: relative;
+  align-self: center;
+  inline-size: min(78vw, 19rem, calc((100dvh - var(--capa-resto, 26rem)) * 0.8));
+  min-inline-size: 11rem;
+  padding: 8px;
+  border: 6px solid var(--paleta-ouro-moldura);
+  border-radius: 1rem;
+  background: var(--paleta-papel);
+  box-shadow: 0 18px 36px color-mix(in srgb, black 45%, transparent);
+  animation: capa-cola 600ms cubic-bezier(0.2, 0.9, 0.3, 1) 300ms both;
+}
 .abertura__arte {
-  position: absolute;
-  inset-block: 0;
-  inset-inline-start: 50%;
-  block-size: 100%;
+  position: relative;
   aspect-ratio: 4 / 5;
-  translate: -50% 0;
+  overflow: hidden;
+  border-radius: 0.6rem;
   container-type: size; /* o "10" é medido na própria arte (cqh/cqw: Chrome 105, Safari 16, Firefox 110; MDN browser-compat-data) */
 }
-.abertura__arte img {
-  display: block;
-  inline-size: 100%;
-  block-size: 100%;
-  object-fit: cover;
-  /* v2.39: no computador a arte não cobre a largura; as laterais somem em degradê para o marinho, sem borda.
-     No celular essas pontas ficam fora da tela (a caixa é mais larga que ela), então nada muda lá. */
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
-}
+.abertura__arte img { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; }
 
 /* o número da camisa, como estampado: medido na arte, a gola fica a 34% da altura, a barra a 58% e o centro das
    costas a 50,6% da largura; o "10" fica centrado nas costas, entre 40% e 50% da altura */
@@ -44,43 +68,49 @@
   font-variant-numeric: tabular-nums;
   color: var(--paleta-papel);
   opacity: 0.92;
-  animation: carimbar 650ms cubic-bezier(0.2, 0.9, 0.3, 1.1) 250ms both;
+  animation: carimbar 650ms cubic-bezier(0.2, 0.9, 0.3, 1.1) 900ms both;
 }
-/* carimbo: chega grande e girado, bate e assenta */
-@keyframes carimbar {
-  0% { opacity: 0; transform: scale(2.4) rotate(-12deg); }
-  65% { opacity: 0.92; transform: scale(0.94) rotate(1deg); }
-  100% { opacity: 0.92; transform: scale(1) rotate(0deg); }
+/* o brilho dourado que passa uma vez pela figurinha depois do carimbo */
+.abertura__brilho {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 35%, color-mix(in srgb, var(--paleta-amarelo) 55%, transparent) 50%, transparent 65%);
+  transform: translateX(-120%);
+  pointer-events: none;
+  animation: capa-brilho 700ms ease-in-out 1500ms both;
 }
-
-/* faixas escuras em cima e embaixo, para o texto ler bem sobre qualquer ponto da arte */
-.abertura__topo,
-.abertura__acoes { position: relative; z-index: 1; padding-inline: var(--espaco-5); }
-.abertura__topo {
-  display: grid;
-  gap: var(--espaco-2);
-  justify-items: center;
-  padding-block: calc(var(--espaco-6) + env(safe-area-inset-top)) var(--espaco-7);
-  background: linear-gradient(var(--paleta-noite) 55%, transparent);
-  text-align: center;
+.abertura__selo {
+  position: absolute;
+  inset-block-end: -0.9rem;
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: var(--paleta-amarelo);
+  color: var(--paleta-tinta);
+  font-family: var(--fonte-titulo);
+  font-size: var(--tipo-miudo);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
-.abertura__marca { font-size: 3rem; font-weight: 900; line-height: 1; letter-spacing: 0.01em; color: var(--paleta-amarelo); }
-.abertura__lema { max-inline-size: 22rem; font-size: var(--tipo-corpo); line-height: 1.4; color: var(--paleta-papel); }
 
 .abertura__acoes {
-  grid-row: 3;
+  position: relative;
   display: grid;
   justify-items: center;
-  padding-block: var(--espaco-7) calc(var(--espaco-6) + env(safe-area-inset-bottom));
-  background: linear-gradient(transparent, var(--paleta-noite) 45%);
+  gap: var(--espaco-3);
+  inline-size: min(100%, 22rem);
+  animation: capa-sobe 300ms ease-out 1600ms both;
 }
 .abertura__botao {
-  inline-size: min(100%, 20rem);
+  inline-size: 100%;
   min-block-size: var(--toque-minimo);
   border: 0;
   border-radius: 999px;
   background: var(--paleta-amarelo);
-  color: var(--paleta-noite);
+  color: var(--paleta-tinta);
   font-family: var(--fonte-titulo);
   font-size: var(--tipo-opcao);
   font-weight: 800;
@@ -90,14 +120,58 @@
   touch-action: manipulation;
 }
 .abertura__botao:focus-visible { outline: 3px solid var(--paleta-papel); outline-offset: 3px; }
+.abertura__botao--secundario { background: transparent; color: var(--paleta-papel); box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--paleta-papel) 80%, transparent); }
+/* "Desafio do dia" (e "Nova carreira" com carreira salva): pequenos, lado a lado */
+.abertura__secundarios { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--espaco-2); inline-size: 100%; }
+.abertura__secundarios > .abertura__botao:not(.abertura__botao--pequeno) { flex: 1 1 100%; }
+.abertura__botao--pequeno { inline-size: auto; min-block-size: 2.75rem; padding: 0 var(--espaco-4); font-size: var(--tipo-apoio); }
 
-@media (prefers-reduced-motion: reduce) {
-  .abertura__numero { animation: none; }
+/* com carreira salva: o card pequeno do jogador na capa; a figurinha da capa encolhe para o card e os três botões caberem */
+.abertura:has(.abertura__salvo) { --capa-resto: 34rem; }
+.abertura__salvo {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-3);
+  inline-size: 100%;
+  box-sizing: border-box;
+  padding: var(--espaco-2) var(--espaco-3);
+  border: 2.5px solid var(--paleta-ouro-moldura);
+  border-radius: var(--forma-raio-cartao);
+  background: var(--paleta-papel);
+  color: var(--paleta-tinta);
 }
+.abertura__salvo .figurinha { flex: none; inline-size: 3.25rem; padding: 2px; }
+.abertura__salvo :is(.figurinha__nome, .figurinha__numero) { display: none; }
+.abertura__salvo-texto { display: grid; gap: 2px; }
+.abertura__salvo-texto strong { font-family: var(--fonte-titulo); font-size: var(--tipo-opcao); font-weight: 900; line-height: 1; text-transform: uppercase; }
+.abertura__salvo-texto span { font-size: var(--tipo-miudo); color: var(--paleta-tinta); opacity: 0.8; }
 
-/* T54: com carreira salva, "Nova carreira" fica secundária (contorno) abaixo de "Continuar" */
-.abertura__acoes { gap: var(--espaco-3); }
-.abertura__botao--secundario { background: transparent; color: var(--paleta-papel); box-shadow: inset 0 0 0 2px var(--paleta-papel); }
+/* v2.47: aviso legal discreto, no pé, sobre o verde-noite (papel sobre o verde-noite passa folgado de 4,5:1) */
+.abertura__aviso { max-inline-size: 22rem; margin: 0; font-size: var(--tipo-apoio); line-height: 1.35; text-align: center; color: var(--paleta-papel); opacity: 0.85; }
+
+@keyframes capa-luzes { from { opacity: 0; } to { opacity: 1; } }
+/* a figurinha desce e cola: chega um pouco maior e alta, assenta com a sombra fechando; sem girar */
+@keyframes capa-cola { from { opacity: 0; transform: translateY(-24px) scale(1.06); } to { opacity: 1; transform: none; } }
+/* carimbo: chega grande, bate e assenta; sem girar (v2.81: nada inclinado na capa) */
+@keyframes carimbar {
+  0% { opacity: 0; transform: scale(2.4); }
+  65% { opacity: 0.92; transform: scale(0.94); }
+  100% { opacity: 0.92; transform: scale(1); }
+}
+@keyframes capa-brilho { from { transform: translateX(-120%); } to { transform: translateX(120%); } }
+@keyframes capa-sobe { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* um toque pula a montagem: tudo no estado final */
+.abertura[data-pronta]::before,
+.abertura[data-pronta] :is(.abertura__marca, .abertura__lema, .abertura__figurinha, .abertura__numero, .abertura__brilho, .abertura__acoes) { animation: none; }
+.abertura[data-pronta] .abertura__brilho { opacity: 0; }
+
+/* sem movimento: a capa já montada (base.css só encurta a duração; os atrasos deixariam lema e botões escondidos) */
+@media (prefers-reduced-motion: reduce) {
+  .abertura::before,
+  .abertura :is(.abertura__marca, .abertura__lema, .abertura__figurinha, .abertura__numero, .abertura__brilho, .abertura__acoes) { animation: none; }
+  .abertura__brilho { opacity: 0; }
+}
 
 /* "Começar outra carreira?": papel sólido sobre o scrim; o padrão é Cancelar (foco), apagar fica em vermelho */
 .abertura__confirmar {
@@ -126,5 +200,3 @@
 }
 .abertura__confirmar-acoes .abertura__apagar { border-color: var(--cor-negativo); background: var(--cor-negativo); color: var(--cor-sobre-destaque); }
 
-/* v2.47: aviso legal discreto, no pé, sobre o marinho (papel sobre marinho passa folgado de 4,5:1) */
-.abertura__aviso { max-inline-size: 22rem; margin: var(--espaco-2) 0 0; font-size: var(--tipo-apoio); line-height: 1.35; text-align: center; color: var(--paleta-papel); opacity: 0.85; }

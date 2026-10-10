@@ -23,7 +23,8 @@ export function ResumoTemporada({ resumo, torcida, onClose }: ResumoTemporadaPro
   const close = useRef(null as HTMLButtonElement | null);
   // v2.72: o card sai (150 ms) antes de fechar; Esc fecha na hora (ação de teclado não anima)
   const { saindo, fechar } = useSaida(onClose);
-  useEffect(() => { close.current?.focus(); }, []);
+  // v2.81: a folha entra deslizando de baixo; o foco não rola a página até a posição de entrada dela
+  useEffect(() => { close.current?.focus({ preventScroll: true }); }, []);
   function onKey(e: React.KeyboardEvent) {
     if (e.key === 'Escape') { e.stopPropagation(); onClose(); return; }
     if (e.key === 'Tab') { e.preventDefault(); close.current?.focus(); }

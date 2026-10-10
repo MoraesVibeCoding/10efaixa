@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { t } from '../../i18n';
 import { CenaPintada, cutForVisual } from './CenaPintada';
 import { Choices } from './Choices';
+import '../folha.css';
 import './Creation.css';
 import './Ritmo.css';
 
@@ -15,7 +16,8 @@ const RITMOS: RitmoId[] = ['rapido', 'normal', 'completo'];
 export function Ritmo({ onChoose, onBack, visual }: { onChoose: (ritmo: RitmoId) => void; onBack: () => void; visual?: string }) {
   const [value, setValue] = useState('normal' as RitmoId);
   const title = useRef(null as HTMLHeadingElement | null);
-  useEffect(() => { title.current?.focus(); }, []);
+  // v2.81: a folha entra deslizando de baixo; o foco não rola a página até a posição de entrada dela
+  useEffect(() => { title.current?.focus({ preventScroll: true }); }, []);
   const options = RITMOS.map((id) => ({ id, label: t(`ui.ritmo.${id}.nome`), detail: t(`ui.ritmo.${id}.detalhe`) }));
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -25,7 +27,7 @@ export function Ritmo({ onChoose, onBack, visual }: { onChoose: (ritmo: RitmoId)
     <main className="criacao">
       {/* v2.69: cena ao fundo, como nos passos da criação (antes a tela ficava com meia tela vazia) */}
       <CenaPintada scene="estadio" cut={cutForVisual(visual)} clubId="" alt="" decorativa />
-      <form className="criacao__form vidro" onSubmit={submit} noValidate>
+      <form className="criacao__form folha" onSubmit={submit} noValidate>
         <header className="criacao__topo">
           <h1 className="criacao__titulo" ref={title} tabIndex={-1}>{t('ui.ritmo.titulo')}</h1>
         </header>

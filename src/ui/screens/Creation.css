@@ -241,11 +241,15 @@
   .criacao__form--larga .criacao__acoes { grid-area: acoes; align-self: end; }
 }
 
-/* T60b (referência de layout da v2.12): a cena pintada ao fundo e o passo num painel de vidro encostado no pé da tela.
-   Passo curto deixa a cena à mostra em cima; passo longo ocupa a tela, sem forçar rolagem. */
+/* T60b (referência de layout da v2.12): a cena pintada ao fundo e o passo num painel encostado no pé da tela.
+   Passo curto deixa a cena à mostra em cima; passo longo ocupa a tela, sem forçar rolagem. v2.81 (Álbum): o painel
+   de vidro vira a folha de papel (folha.css), que cresce com o passo (sem a altura máxima nem a rolagem da folha). */
 .criacao { position: relative; isolation: isolate; align-content: end; }
-.criacao__form.vidro {
+.criacao__form.folha {
   margin-block: var(--espaco-3) 0;
-  border-radius: var(--forma-raio-cartao) var(--forma-raio-cartao) 0 0;
-  padding-block-end: calc(var(--espaco-3) + env(safe-area-inset-bottom));
+  max-block-size: none;
+  overflow: visible;
+}
+@media (min-width: 64rem) {
+  .criacao__form--larga.folha { inline-size: min(100%, 64rem); }
 }

@@ -18,6 +18,7 @@ import { toCreationInput } from './draft';
 import { firstStepOf, pageOf, pagesFor } from './pages';
 import { CenaPintada, creationScene, cutForVisual } from './CenaPintada';
 import { useWide } from './useWide';
+import '../folha.css';
 import './Creation.css';
 
 // T50 (SPEC 6.1, v2.30; v2.35): criação em quatro telas, na ordem de flow.json e pela máquina da T48.
@@ -79,7 +80,7 @@ export function Creation({ onExit, onFinish, seed = Date.now() }: CreationProps)
   useEffect(() => {
     if (shown.current === pageIndex) return;
     shown.current = pageIndex;
-    titleRef.current?.focus();
+    titleRef.current?.focus({ preventScroll: true }); // v2.81: a folha entra deslizando; o foco não rola a página
   }, [pageIndex]);
 
   /** Anda na máquina da T48 até o começo da página pedida (no computador, uma página pula dois passos). */
@@ -124,7 +125,7 @@ export function Creation({ onExit, onFinish, seed = Date.now() }: CreationProps)
     <main className="criacao">
       {/* T60b: cena pintada ao fundo do passo (decorativa), uniforme neutro: ainda não há clube */}
       <CenaPintada scene={creationScene(page[0]!, origin)} cut={cutForVisual(visualId)} clubId="" alt="" decorativa />
-      <form className={page.length > 1 ? 'criacao__form criacao__form--larga vidro' : 'criacao__form vidro'} onSubmit={submit} noValidate>
+      <form className={page.length > 1 ? 'criacao__form criacao__form--larga folha' : 'criacao__form folha'} onSubmit={submit} noValidate>
         <header className="criacao__topo">
           <p className="criacao__progresso">{progressText(pageIndex, pages.length)}</p>
           <span className="criacao__trilho" aria-hidden="true"><span style={{ inlineSize: `${((pageIndex + 1) / pages.length) * 100}%` }} /></span>

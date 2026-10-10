@@ -56,7 +56,8 @@ describe('save da carreira (T54)', () => {
     const store = memory();
     expect(peekSave(store)).toEqual({ status: 'nenhum' });
     writeSave(store, SAVE);
-    expect(peekSave(store)).toEqual({ status: 'salvo', name: 'Dudu Maestro' });
+    // v2.81 (Álbum): a capa mostra o card pequeno da carreira salva: nome, posição, camisa e o visual (retrato)
+    expect(peekSave(store)).toEqual({ status: 'salvo', name: 'Dudu Maestro', position: 'meia', shirtNumber: 11, visual: 'visual-03' });
     store.data.set(SAVE_KEY, '{nada');
     expect(peekSave(store)).toEqual({ status: 'invalido' });
   });
