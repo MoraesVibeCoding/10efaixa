@@ -46,7 +46,8 @@
   min-block-size: 7rem;
   overflow: hidden;
   container-type: size;
-  border: 6px solid var(--cor-superficie);
+  margin-inline: -6px;
+  border: 5px solid var(--cor-superficie);
   border-radius: var(--forma-raio-cartao);
   background: var(--cor-trilho);
   box-shadow: var(--forma-sombra-suave);
@@ -59,29 +60,37 @@
   object-position: 50% 30%;
 }
 
-/* o carimbo do resultado: bate reto na foto, no canto de baixo, na cor do veredito */
+/* o carimbo do resultado (v2.81, pedido do usuário: "podem vir tortos e maiores"): grande, inclinado como carimbo de
+   borracha, no meio da foto, na cor do veredito. A inclinação usa `rotate` (propriedade própria), para a batida da
+   entrada (resultado-veredito, em `transform`) não desfazer o ângulo. */
 .decisao__carimbo {
   position: absolute;
-  inset-inline-start: var(--espaco-3);
-  inset-block-end: var(--espaco-3);
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
   z-index: 1;
-  padding: var(--espaco-1) var(--espaco-3);
-  border: 3px solid currentColor;
+  translate: -50% -50%;
+  rotate: -9deg;
+  padding: var(--espaco-1) var(--espaco-4);
+  border: 4px solid currentColor;
   border-radius: var(--forma-raio);
-  background: rgb(255 255 255 / 0.88);
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  background: rgb(255 255 255 / 0.9);
   font-family: var(--fonte-titulo);
-  font-size: var(--tipo-titulo);
+  font-size: clamp(2.25rem, 13cqw, 3.5rem);
   font-weight: 900;
   line-height: 1;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
+  white-space: nowrap;
   color: var(--cor-texto);
+  box-shadow: 0 6px 18px rgb(15 42 28 / 0.25);
 }
 .decisao__carimbo--positivo { color: var(--cor-positivo); }
 .decisao__carimbo--negativo { color: var(--cor-negativo); }
 
 /* progresso da carreira: um fio no alto da tela */
-.faixa { flex: none; block-size: 4px; border-radius: 999px; background: var(--cor-trilho); overflow: hidden; }
+.faixa { flex: none; margin-block-start: -4px; block-size: 4px; border-radius: 999px; background: var(--cor-trilho); overflow: hidden; }
 .faixa__feito { display: block; block-size: 100%; min-inline-size: 4px; background: var(--cor-destaque); }
 
 /* ---------- card pequeno do jogador (v2.81): foto com o Over, nome, clube, a ficha, as taças e "Carreira ›" */
@@ -90,21 +99,21 @@
   z-index: 1;
   flex: none;
   display: grid;
-  grid-template-columns: 4.5rem minmax(0, 1fr);
+  grid-template-columns: 4rem minmax(0, 1fr);
   align-items: start;
-  gap: var(--espaco-3);
-  padding: var(--espaco-2);
+  gap: var(--espaco-1) 0.625rem;
+  padding: 6px var(--espaco-2);
   border: 2.5px solid var(--paleta-ouro-moldura);
   border-radius: var(--forma-raio-cartao);
   background: var(--cor-superficie);
   box-shadow: var(--forma-sombra-suave);
 }
 .card-jogador__foto { position: relative; }
-.card-jogador__foto .figurinha { --w: 4.5rem; }
+.card-jogador__foto .figurinha { --w: 4rem; }
 /* na figurinha pequena o Over e o número saíam com 7 px; o Over vai no selo e a tarja some (o nome segue no texto) */
 .card-jogador__foto :is(.figurinha__over-grande, .figurinha__tarja-numero, .figurinha__tarja) { display: none; }
-.card-jogador__info { display: grid; gap: 2px; min-inline-size: 0; }
-.jogador__nome { display: flex; flex-wrap: wrap; align-items: center; gap: 2px var(--espaco-2); margin: 0; font-family: var(--fonte-titulo); font-size: 1.125rem; font-weight: 900; line-height: 1.05; text-transform: uppercase; }
+.card-jogador__info { display: grid; gap: 1px; min-inline-size: 0; }
+.jogador__nome { display: flex; flex-wrap: wrap; align-items: center; gap: 2px var(--espaco-2); margin: 0; font-family: var(--fonte-titulo); font-size: 1.0625rem; font-weight: 900; line-height: 1.05; text-transform: uppercase; }
 .jogador__clube { display: flex; align-items: center; gap: var(--espaco-1); margin: 0; font-size: var(--tipo-miudo); line-height: 1.25; color: var(--cor-texto-suave); }
 .jogador__clube .emblema { flex: none; }
 
@@ -140,9 +149,9 @@
 .decisao__papel { color: var(--cor-texto-suave); }
 
 /* embaixo: as taças em miniatura, o total e a etiqueta "Carreira ›" à direita */
-.card-jogador__base { display: flex; align-items: center; gap: var(--espaco-2); min-block-size: 2rem; }
+.card-jogador__base { display: flex; align-items: center; gap: var(--espaco-2); min-block-size: 1.625rem; }
 .tacas { display: flex; flex-wrap: wrap; gap: 2px 6px; margin: 0; padding: 0; list-style: none; }
-.taca { position: relative; display: grid; place-items: center; inline-size: 1.375rem; block-size: 1.375rem; }
+.taca { position: relative; display: grid; place-items: center; inline-size: 1.25rem; block-size: 1.25rem; }
 .taca .trofeu__arte { inline-size: 100%; block-size: 100%; object-fit: contain; }
 .taca__qtd {
   position: absolute; inset-block-start: -4px; inset-inline-end: -6px;
@@ -159,7 +168,7 @@
   align-items: center;
   gap: 5px;
   margin-inline-start: auto;
-  block-size: 1.75rem;
+  block-size: 1.625rem;
   padding: 0 var(--espaco-3);
   border: 0;
   border-radius: 999px;
@@ -270,7 +279,22 @@
 .opcao[aria-pressed='true'] .medidor s[data-cheio] { background: var(--cor-sobre-destaque); }
 
 /* detalhe da marcada: risco e tempo fora por escrito, depois "Você ganha" em cima e "Em troca" embaixo */
-.decisao__detalhe { display: grid; gap: 2px; min-block-size: 2.6rem; align-content: center; font-size: var(--tipo-apoio); line-height: 1.3; color: var(--cor-texto-suave); }
+.decisao__detalhe { display: grid; gap: 2px; align-content: center; font-size: var(--tipo-apoio); line-height: 1.3; color: var(--cor-texto-suave); }
+/* v2.81 (pedido do usuário: fotos maiores): a dica e o detalhe da marcada não ocupam linha própria; ficam sobre a parte de
+   baixo da foto da cena, num papel com sombra. No HTML continuam depois das opções (ordem de leitura igual). */
+.decisao__painel > .decisao__detalhe {
+  position: absolute;
+  inset-inline: var(--espaco-1);
+  inset-block-end: calc(100% + var(--espaco-2) + 5px + var(--espaco-1));
+  z-index: 1;
+  padding: var(--espaco-2) var(--espaco-3);
+  border-radius: var(--forma-raio);
+  background: var(--cor-superficie);
+  box-shadow: 0 4px 14px rgb(15 42 28 / 0.28);
+  animation: detalhe-entra 160ms ease-out both;
+}
+.decisao__painel > .decisao__detalhe--vazio { justify-self: start; inset-inline-end: auto; padding: 2px var(--espaco-3); border-radius: 999px; background: rgb(255 255 255 / 0.92); color: var(--cor-texto); font-size: var(--tipo-miudo); }
+@keyframes detalhe-entra { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 .detalhe__risco { display: flex; flex-wrap: wrap; gap: 0 var(--espaco-3); font-weight: 700; color: var(--cor-negativo); }
 .opcao__fora { color: var(--cor-texto-suave); }
 .previa__linha { display: grid; grid-template-columns: 5.25rem minmax(0, 1fr); align-items: baseline; column-gap: var(--espaco-3); }
@@ -513,7 +537,7 @@
   .decisao__historia { font-size: 1rem; line-height: 1.45; }
   .decisao__semestre { font-size: 0.875rem; }
   .opcao__rotulo { font-size: 1.0625rem; }
-  .decisao__detalhe { min-block-size: 2.2rem; font-size: 0.875rem; }
+  .decisao__detalhe { font-size: 0.875rem; }
 }
 
 /* v2.71 (momento 4): a taça nova chega na estante da caixa do topo depois do palco; base.css zera com reduced motion */

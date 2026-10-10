@@ -6,7 +6,7 @@ import { Decision } from './Decision';
 
 // v2.81 (direção "Álbum", aprovada pelo usuário em 2026-10-10): a decisão é uma página do álbum. No topo, a linha da
 // página e o card pequeno do jogador (com a etiqueta "Carreira ›"); a cena vira uma foto na página, e o texto e as
-// opções ficam no papel. O vidro sai. O resultado carimba a foto, reto, e separa "Você ganha" de "Em troca".
+// opções ficam no papel. O vidro sai. O resultado carimba a foto (inclinado) e separa "Você ganha" de "Em troca".
 afterEach(cleanup);
 
 const PLAYER = {
@@ -61,14 +61,15 @@ describe('decisão como página do álbum (v2.81)', () => {
     expect(document.querySelector('.tacas__total')).toHaveTextContent('3');
   });
 
-  it('o resultado carimba a foto da cena (reto) e separa "Você ganha" de "Em troca"', () => {
+  it('o resultado carimba a foto da cena (inclinado, como carimbo de borracha) e separa "Você ganha" de "Em troca"', () => {
     show();
     fireEvent.click(screen.getByRole('button', { name: new RegExp(t('events.salario-atrasado.opcoes.ficar')) }));
     fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
     const carimbo = document.querySelector('.decisao__foto .decisao__carimbo') as HTMLElement;
     expect(carimbo).toHaveTextContent(t('ui.resultado.carimbo.misto'));
     expect(carimbo).toHaveAttribute('aria-hidden', 'true');
-    expect(css).not.toMatch(/\.decisao__carimbo[^{]*\{[^}]*rotate/);
+    // v2.81 (pedido do usuário: "podem vir tortos e maiores"): o carimbo é a exceção do "nada inclinado"
+    expect(css).toMatch(/\n\.decisao__carimbo \{[^}]*rotate:\s*-9deg/);
     const dialog = screen.getByRole('dialog', { name: t('ui.resultado.misto') });
     expect(within(dialog).getByText(t('ui.resultado.voceEscolheu'))).toBeInTheDocument();
     expect(within(dialog).getByRole('list', { name: t('ui.decisao.ganha') })).toHaveTextContent(t('ui.resultado.pontos', { sinal: '+', n: 5 }));
@@ -100,5 +101,14 @@ describe('"Minha carreira": números da carreira até agora (v2.81)', () => {
     const numeros = abrir('goleiro');
     expect(within(numeros).getByText(t('ui.carreira.semSofrerGol')).closest('li')).toHaveTextContent('1');
     expect(within(numeros).queryByText(t('ui.carreira.gols'))).toBeNull();
+  });
+});
+
+// v2.81 (pedido do usuário: "valorizar as fotos"): a dica e o detalhe da marcada ficam sobre a parte de baixo da foto, sem
+// linha própria, e a foto ganha essa altura. No HTML seguem depois das opções (a ordem de leitura não muda).
+describe('foto maior: dica e detalhe sobre a foto (v2.81)', () => {
+  it('a dica e o detalhe são posicionados sobre a foto, sem reservar altura no painel', () => {
+    expect(css).toMatch(/\.decisao__painel > \.decisao__detalhe \{[^}]*position:\s*absolute/);
+    expect(css).not.toMatch(/\n\.decisao__detalhe \{[^}]*min-block-size/);
   });
 });
