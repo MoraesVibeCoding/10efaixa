@@ -29,14 +29,13 @@ type Glass = { cor: string; alfa: number; borda: string; bordaAlfa: number; scri
 const rgb = (hex: string, alpha: number) => `rgb(${[16, 8, 0].map((s) => (parseInt(hex.slice(1), 16) >> s) & 255).join(' ')} / ${alpha})`;
 const glassVars = (g: Glass) => `--vidro-fundo: ${rgb(g.cor, g.alfa)}; --vidro-borda: ${rgb(g.borda, g.bordaAlfa)}; --vidro-scrim: ${rgb(g.scrim, g.scrimAlfa)};`;
 
-/** Claro por padrão; escuro pela preferência do aparelho; `data-tema` força um dos dois (telas com cena usam "escuro"). */
+/** Sempre claro (v2.75: o tema escuro saiu da v1; o modo escuro do aparelho não muda mais o jogo); `data-tema="escuro"` só na abertura da marca. */
 export function themeCss(): string {
   const { claro, escuro } = tokens.temas;
   const fixed = [vars('fonte', tokens.fontes), vars('tipo', tokens.tipo), vars('espaco', tokens.espaco), vars('toque', tokens.toque), vars('forma', tokens.forma), vars('paleta', tokens.paleta), `--vidro-desfoque: ${tokens.vidro.desfoque}; --vidro-saturacao: ${tokens.vidro.saturacao};`].join(' ');
   const medals = Object.entries(tokens.medalha).filter(([k]) => !k.startsWith('_')).map(([, m]) => m as { nome: string; clara: string; escura: string; aro: string; texto: string });
   return [
     `:root { ${fixed} ${colors(claro)} ${glassVars(tokens.vidro.claro)} color-scheme: light; }`,
-    `@media (prefers-color-scheme: dark) { :root { ${colors(escuro)} ${glassVars(tokens.vidro.escuro)} color-scheme: dark; } }`,
     `[data-tema="claro"] { ${colors(claro)} ${glassVars(tokens.vidro.claro)} color-scheme: light; }`,
     `[data-tema="escuro"] { ${colors(escuro)} ${glassVars(tokens.vidro.escuro)} color-scheme: dark; }`,
     // a página inteira acompanha a tela escura com cena, para não sobrar moldura clara em volta dela
