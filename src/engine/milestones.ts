@@ -30,7 +30,9 @@ export interface MilestoneFacts {
   exterior: boolean;
   estreouSelecao: boolean;
 }
-export interface MilestoneDef { id: string; escopo: 'carreira' | 'clube'; gatilho: Cond[]; espelho?: string }
+/** v2.78: quando a cena acontece na temporada (sem momento: no fim, pelo desempenho do ano). */
+export type MilestoneMoment = 'chegada' | 'convocacao' | 'copa' | 'fim';
+export interface MilestoneDef { id: string; escopo: 'carreira' | 'clube'; gatilho: Cond[]; espelho?: string | string[]; momento?: MilestoneMoment }
 
 export const MILESTONES = data.marcos as unknown as MilestoneDef[];
 export const MAX_PER_SEASON = data.maxPorTemporada;
@@ -48,16 +50,21 @@ export interface MilestoneResult {
   silenced: string[];
 }
 
-/** `done` = chaves já vividas (ou silenciadas) até aqui. */
-export function fireMilestones(facts: MilestoneFacts, done: ReadonlySet<string>): MilestoneResult {
+/** v2.78: o momento do marco (sem momento nos dados, é o fim da temporada). */
+export const momentOf = (m: MilestoneDef): MilestoneMoment => m.momento ?? 'fim';
+
+/** `done` = chaves já vividas (ou silenciadas) até aqui. Só os marcos do `momento` pedido; o limite por temporada vale só no fim. */
+export function fireMilestones(facts: MilestoneFacts, done: ReadonlySet<string>, momento: MilestoneMoment = 'fim'): MilestoneResult {
   const ctx = facts as unknown as Record<string, number | string | boolean>;
   const fired: MilestoneDef[] = [];
   const silenced: string[] = [];
   for (const m of MILESTONES) {
+    if (momentOf(m) !== momento) continue;
     const key = m.escopo === 'clube' ? milestoneKey(m.id, facts.clubId) : milestoneKey(m.id);
     if (done.has(key) || !m.gatilho.every((c) => holds(ctx, c))) continue;
-    if (m.espelho && fired.some((f) => f.id === m.espelho)) { silenced.push(key); continue; }
-    if (fired.length >= MAX_PER_SEASON) continue;
+    const mirrors = [m.espelho ?? []].flat();
+    if (fired.some((f) => mirrors.includes(f.id))) { silenced.push(key); continue; }
+    if (momento === 'fim' && fired.length >= MAX_PER_SEASON) continue;
     fired.push(m);
   }
   return { fired, silenced };
