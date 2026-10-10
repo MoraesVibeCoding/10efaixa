@@ -62,3 +62,15 @@ describe('modelo do cartão final (T55c)', () => {
     for (const a of m.radar) expect(m.alt.estatistica).toContain(`${a.nome} ${a.valor}`);
   });
 });
+
+// Revisão das telas: no cartão do goleiro, jogos sem sofrer gol no lugar de gols e assistências.
+describe('cartão do goleiro', () => {
+  it('números com jogos sem sofrer gol, sem gols e assistências', () => {
+    const r = simulateCareer(randomInput(createPrng(7)), 7);
+    const ids = cardModel(r, 'X').numeros.map((n) => n.id);
+    expect(ids).toContain('semSofrerGol');
+    expect(ids).not.toContain('gols');
+    expect(ids).not.toContain('assistencias');
+    expect(cardModel(r, 'X').numeros.find((n) => n.id === 'semSofrerGol')!.valor).toBe(r.stats.cleanSheets.toLocaleString('pt-BR'));
+  });
+});

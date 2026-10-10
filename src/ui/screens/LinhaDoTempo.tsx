@@ -32,8 +32,10 @@ export function LinhaDoTempo({ result, onContinue }: { result: CareerResult; onC
   const rows = timelineOf(result);
   const title = useRef(null as HTMLHeadingElement | null);
   useEffect(() => { title.current?.focus(); }, []);
+  // revisão das telas: o goleiro vê os jogos sem sofrer gol no lugar dos gols
+  const goleiro = result.player.position === 'goleiro';
   const placar = [
-    [result.stats.games, 'jogos'], [result.stats.goals, 'gols'], [result.titles.length, 'titulos'], [result.peakOverall, 'auge'],
+    [result.stats.games, 'jogos'], goleiro ? [result.stats.cleanSheets, 'semSofrerGol'] as const : [result.stats.goals, 'gols'] as const, [result.titles.length, 'titulos'], [result.peakOverall, 'auge'],
   ] as const;
   return (
     <main className="linha" data-tema="claro">
@@ -66,8 +68,12 @@ export function LinhaDoTempo({ result, onContinue }: { result: CareerResult; onC
             {r.division !== null && (
               <span className="linha__numeros">
                 <span>{t('ui.linhaDoTempo.jogos', { n: r.games })}</span>
-                <span>{t('ui.linhaDoTempo.gols', { n: r.goals })}</span>
-                <span>{t('ui.linhaDoTempo.assistencias', { n: r.assists })}</span>
+                {goleiro
+                  ? <span>{t('ui.linhaDoTempo.semSofrerGol', { n: r.cleanSheets })}</span>
+                  : <>
+                    <span>{t('ui.linhaDoTempo.gols', { n: r.goals })}</span>
+                    <span>{t('ui.linhaDoTempo.assistencias', { n: r.assists })}</span>
+                  </>}
               </span>
             )}
             {r.selecao && (
