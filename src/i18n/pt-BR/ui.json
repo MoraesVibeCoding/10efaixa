@@ -4,7 +4,6 @@
   "vezes": "{n} vezes no ano"
  },
  "decisao": {
-  "maisDetalhes": "Mais detalhes: idade, salário, valor, papel e títulos",
   "progresso": "Progresso da carreira",
   "idade": "{idade} anos",
   "anos": "anos",
@@ -80,7 +79,9 @@
   "pontos": "{sinal}{n} pontos",
   "palavra": "{sinal} um pouco",
   "porcento": "{sinal}{n}%",
-  "dinheiro": "{sinal}{valor}"
+  "dinheiro": "{sinal}{valor}",
+  "voceEscolheu": "Você escolheu",
+  "carimbo": { "positivo": "Deu certo", "negativo": "Saiu caro", "misto": "Meio a meio", "neutro": "Decidido" }
  },
  "carreira": {
   "titulo": "Minha carreira",
@@ -93,7 +94,9 @@
   "colIdade": "Idade",
   "colClube": "Clube",
   "colOver": "OVR",
-  "atributos": "Atributos"
+  "atributos": "Atributos",
+  "etiqueta": "Carreira",
+  "numeros": "Números da carreira"
  },
  "risco": {
   "frase": "risco {faixa}",
@@ -442,6 +445,7 @@
   },
   "comecar": "Começar carreira"
  },
+ "pagina": { "temporada": "Temporada {ano}", "numero": "Pág. {n}" },
  "venda": { "cartao": "Clube que comprou você", "selo": "Comprador" },
  "emprestimo": {
   "sala": "O clube quer te emprestar",

@@ -42,7 +42,7 @@ export function toDecisionPlayer(view: DecisionView, input: CreationInput, look:
     textoParams: { ...memoryTextParams(view.memorias, view.year), ...(sale ? { comprador: clubName(sale.clubId).nome } : {}) }, etiquetas: view.etiquetas,
     ...(sale ? { comprador: sale } : {}),
     monthlySalary: view.monthlySalary, marketValueEUR: view.marketValueEUR, number: view.number, attributes: view.attributes,
-    seasons: view.seasons.map((s) => ({ age: s.year - START_YEAR + START_AGE, clubId: s.clubId, overall: s.overall, ...torcidaOf(view.idolatrias, s.clubId) })),
+    seasons: view.seasons.map((s) => ({ age: s.year - START_YEAR + START_AGE, clubId: s.clubId, overall: s.overall, games: s.games, goals: s.goals, assists: s.assists, cleanSheets: s.cleanSheets, ...torcidaOf(view.idolatrias, s.clubId) })),
     ...(view.clubId ? torcidaOf(view.idolatrias, view.clubId) : {}),
     // Aparência é só visual; altura e compleição vêm da criação (as únicas que pesam no jogo).
     avatar: { ...previewAvatar(look), heightCm: input.biotype.heightCm, build: input.biotype.build, age: Math.floor(view.age) },

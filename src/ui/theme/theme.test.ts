@@ -10,14 +10,39 @@ describe('tokens visuais (T49, SPEC 7)', () => {
     expect(contrast('#14213D', '#14213D')).toBe(1);
   });
 
-  it('a paleta é a do SPEC (v2.46, visual mesclado): menta, tinta e gramado como base; ouro para o destaque', () => {
+  // v2.81 (direção "Álbum", aprovada pelo usuário em 2026-10-10): papel creme de volta ao fundo, tinta verde quase preta
+  // e nenhum azul; capa e contracapa em verde-noite, selos em verde-escuro, moldura dos cards grandes em ouro
+  it('a paleta é a do SPEC (v2.81, Álbum): papel, tinta e gramado como base, verde-noite na capa; sem marinho nem menta', () => {
     expect(tokens.paleta).toEqual({
-      papel: '#EEE9DF', marinho: '#14213D', verde: '#1E7B4F', amarelo: '#FFC21A', vermelho: '#D62839', linha: '#C9CFC6',
-      ouro: '#DA942C', menta: '#E8F6EC', tinta: '#091A11', gramado: '#006731',
+      papel: '#EEE9DF', tinta: '#0F2A1C', gramado: '#006731', verdeEscuro: '#0B4A2A', noite: '#0B2A1B', noiteFaixa: '#0E3122',
+      amarelo: '#FFC21A', ouro: '#DA942C', ouroMoldura: '#B08D57', vermelho: '#D62839', linha: '#C9CFC6',
     });
-    expect(tokens.temas.claro.fundo).toBe(tokens.paleta.menta);
+    expect(tokens.temas.claro.fundo).toBe(tokens.paleta.papel);
     expect(tokens.temas.claro.texto).toBe(tokens.paleta.tinta);
     expect(tokens.temas.claro.destaque).toBe(tokens.paleta.gramado);
+    expect(tokens.vidro.claro.scrim).toBe(tokens.paleta.noite);
+  });
+
+  // v2.81: o azul só aparece na bandeira e nos uniformes (dados de clube), nunca na interface. As medalhas são metais de
+  // raridade (platina e diamante puxam para o frio) e ficam de fora.
+  it('nenhuma cor azul na paleta, nos temas e no vidro', () => {
+    const hue = (hex: string) => {
+      const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255) as [number, number, number];
+      const max = Math.max(r, g, b); const min = Math.min(r, g, b); const d = max - min;
+      if (d === 0) return { h: 0, s: 0 };
+      const h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+      return { h: (h * 60 + 360) % 360, s: d / (1 - Math.abs(max + min - 1)) };
+    };
+    const hexes: [string, string][] = [];
+    const walk = (o: unknown, path: string) => {
+      if (typeof o === 'string' && /^#[0-9A-Fa-f]{6}$/.test(o)) hexes.push([path, o]);
+      else if (o && typeof o === 'object') for (const [k, v] of Object.entries(o)) walk(v, `${path}.${k}`);
+    };
+    walk({ paleta: tokens.paleta, temas: tokens.temas, vidro: tokens.vidro }, 'tokens');
+    for (const [path, hex] of hexes) {
+      const { h, s } = hue(hex);
+      expect.soft(s > 0.2 && h >= 190 && h <= 260, `${path} ${hex} é azul`).toBe(false);
+    }
   });
 
   it('todo par de texto passa em AA (4,5:1) e todo par gráfico em 3:1, nos dois temas', () => {
@@ -122,12 +147,16 @@ describe('vidro (T49f, SPEC 7 v2.34)', () => {
 });
 
 describe('paleta como variável (T48 abertura)', () => {
-  it('cada cor da paleta vira --paleta-*: a abertura usa o amarelo da braçadeira (marca) sobre o marinho', () => {
+  it('cada cor da paleta vira --paleta-*: a capa usa o amarelo da braçadeira (marca) sobre o verde-noite (v2.81)', () => {
     const css = themeCss();
-    for (const [k, v] of Object.entries(tokens.paleta)) expect(css).toContain(`--paleta-${k}: ${v};`);
+    for (const [k, v] of Object.entries(tokens.paleta)) expect(css).toContain(`--paleta-${k.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase())}: ${v};`);
   });
 
-  it('amarelo da marca sobre o marinho passa em AA para texto grande e normal', () => {
-    expect(contrast(tokens.paleta.amarelo, tokens.paleta.marinho)).toBeGreaterThanOrEqual(4.5);
+  it('na capa e na contracapa: amarelo e papel sobre o verde-noite, branco sobre o verde-escuro dos selos, em AA', () => {
+    expect(contrast(tokens.paleta.amarelo, tokens.paleta.noite)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(tokens.paleta.papel, tokens.paleta.noite)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(tokens.paleta.papel, tokens.paleta.noiteFaixa)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast('#FFFFFF', tokens.paleta.verdeEscuro)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(tokens.paleta.tinta, tokens.paleta.amarelo)).toBeGreaterThanOrEqual(4.5);
   });
 });

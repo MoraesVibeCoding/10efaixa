@@ -19,7 +19,6 @@ import { CenaPintada } from './CenaPintada';
 import { useRolling } from '../useRolling';
 import { useSaida } from '../useSaida';
 import { MOTION, reducedMotion } from '../motion';
-import { useLivreMeio } from '../useLivreMeio';
 import { Carimbo } from './Carimbo';
 import { Palco } from './Palco';
 import type { Moment } from './moments';
@@ -77,6 +76,8 @@ export interface DecisionProps {
   anterior?: Anterior;
   /** v2.47: o que aconteceu desde a decisão anterior (título, acesso, rebaixamento): vira carimbo por cima da tela. */
   momentos?: Moment[];
+  /** v2.81 (Álbum): a linha da página ("Temporada 2032 · Pág. 7"): o ano da temporada e a página (temporadas vividas + 1). */
+  pagina?: { ano: number; numero: number };
   /** v2.71: um card está por cima (resumo da temporada, resposta da reunião); o palco do título espera */
   pausado?: boolean;
   /** Situação atual do jogador (moral, torcida, patrimônio…): o resultado da escolha mostra o ganho e a perda reais sobre ela. */
@@ -92,7 +93,11 @@ export interface DecisionProps {
 
 export interface Anterior { overall: number; age: number; marketValueEUR?: number; /** v2.71: títulos + marcos na decisão anterior (as figurinhas novas viram "+N") */ cromos?: number }
 
-interface Season { age: number; clubId: string; overall: number; /** T51b: faixa da torcida naquele clube. */ torcida?: string }
+interface Season {
+  age: number; clubId: string; overall: number; /** T51b: faixa da torcida naquele clube. */ torcida?: string;
+  /** v2.81: os números da temporada, somados em "Minha carreira". */
+  games?: number; goals?: number; assists?: number; cleanSheets?: number;
+}
 
 const ARROW = { sobe: 'M6 1 11 8H7.6v7H4.4V8H1z', desce: 'M6 15 1 8h3.4V1h3.2v7H11z', muda: 'M1 5.5 5 2v2.4h10v2.2H5V9zM15 10.5 11 14v-2.4H1V9.4h10V7z' };
 
@@ -182,6 +187,14 @@ function marcoLabel(m: { id: string; ano: number; clubId: string }): string {
   return t('ui.album.cromoMarco', { marco: t(`ui.album.marco.${m.id}`), clube: clubName(m.clubId).nome, ano: m.ano });
 }
 
+/** v2.81: os números da carreira até agora (temporadas fechadas). O goleiro vê jogos sem sofrer gol no lugar de gols e
+ * assistências, como no resumo da temporada. */
+function careerNumbers(seasons: Season[], position: string): { id: string; n: number }[] {
+  const sum = (k: 'games' | 'goals' | 'assists' | 'cleanSheets') => seasons.reduce((acc, s) => acc + (s[k] ?? 0), 0);
+  const jogos = { id: 'partidas', n: sum('games') };
+  return position === 'goleiro' ? [jogos, { id: 'semSofrerGol', n: sum('cleanSheets') }] : [jogos, { id: 'gols', n: sum('goals') }, { id: 'assistencias', n: sum('assists') }];
+}
+
 function recentFirst(seasons: Season[]) {
   return [...seasons].reverse();
 }
@@ -205,6 +218,11 @@ export function Career({ player, onClose }: { player: DecisionProps['player']; o
             <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><path d="M2 2l12 12M14 2 2 14" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="square" /></svg>
           </button>
         </header>
+        <ul className="gaveta__numeros" aria-label={t('ui.carreira.numeros')}>
+          {careerNumbers(player.seasons ?? [], player.position).map(({ id, n }) => (
+            <li key={id}><strong>{n}</strong><span>{t(`ui.resumoTemporada.${id}`)}</span></li>
+          ))}
+        </ul>
         {player.attributes && (
           <section className="gaveta__bloco">
             <h3 id="gaveta-atributos">{t('ui.carreira.atributos')}</h3>
@@ -258,6 +276,18 @@ export function Career({ player, onClose }: { player: DecisionProps['player']; o
 // as cenas são pintadas em 4:5 (docs/briefing-arte.md); largura e altura reservam o espaço antes de a imagem chegar
 const SCENE_SIZE = [1856, 2304] as const;
 
+/** v2.81 (Álbum): a cena como foto colada na página (decisão, reunião e propostas); `children` vai por cima (o carimbo). */
+export function CenaFoto({ scene, inert, children }: { scene: DecisionProps['scene']; inert: boolean; children?: React.ReactNode }) {
+  return (
+    <div className="decisao__foto">
+      {scene.pintada
+        ? <CenaPintada {...scene.pintada} alt={scene.alt} inert={inert} foto />
+        : <img className="decisao__cena" src={scene.src} alt={scene.alt} width={SCENE_SIZE[0]} height={SCENE_SIZE[1]} fetchPriority="high" inert={inert} />}
+      {children}
+    </div>
+  );
+}
+
 function riskText(risk: Risk): string {
   return t('ui.risco.tarja', { tipo: t(`ui.risco.tipo.${risk.tipo}`), faixa: t(`ui.risco.${risk.faixa}`) });
 }
@@ -305,10 +335,16 @@ function outcomeText(o: Outcome): string {
   return t('ui.resultado.pontos', { sinal, n: Math.round(o.unidade === 'pontos100' ? abs * 100 : abs) });
 }
 
+/** v2.81: o resultado em dois grupos: ganho em "Você ganha"; o resto em "Em troca". O índice da cascata segue entre os grupos. */
+function outcomeGroups(outcome: Outcome[]) {
+  const ganha: Outcome[] = [];
+  const emTroca: Outcome[] = [];
+  for (const o of outcome) (o.delta > 0 ? ganha : emTroca).push(o);
+  return [['ganha', ganha, 'resultado__ganho', 0], ['emTroca', emTroca, 'resultado__perda', ganha.length]] as const;
+}
+
 /** O que a escolha rendeu de verdade, por cima da tela desfocada; fecha pelo botão ou Esc e, no ritmo Rápido, sozinho depois de um instante. */
-function Result({ eventId, optionId, state, tags, auto, onDone }: { eventId: string; optionId: string; state: Ctx; tags: readonly string[]; auto: boolean; onDone: () => void }) {
-  const outcome = outcomeOf(state, eventId, optionId, tags);
-  const verdict = outcomeVerdict(outcome);
+function Result({ eventId, optionId, outcome, verdict, auto, onDone }: { eventId: string; optionId: string; outcome: Outcome[]; verdict: string; auto: boolean; onDone: () => void }) {
   const button = useRef<HTMLButtonElement>(null);
   // v2.72: o card sai (150 ms) antes de seguir; Esc (na Decisão) segue na hora
   const { saindo, fechar } = useSaida(onDone);
@@ -320,21 +356,25 @@ function Result({ eventId, optionId, state, tags, auto, onDone }: { eventId: str
   }, [fechar, auto]);
   return (
     <div className="resultado" data-saindo={saindo || undefined}>
-      <div className={`resultado__caixa caixa resultado--${verdict}`} role="dialog" aria-modal="true" aria-label={t(`ui.resultado.${verdict}`)}>
-        <p className="resultado__veredito" aria-hidden="true">{t(`ui.resultado.${verdict}`)}</p>
+      <div className="resultado__caixa" role="dialog" aria-modal="true" aria-label={t(`ui.resultado.${verdict}`)}>
+        {/* v2.81 (Álbum): o veredito é o carimbo na foto da cena; aqui fica o que você escolheu e o que rendeu */}
+        <p className="resultado__rotulo">{t('ui.resultado.voceEscolheu')}</p>
         <p className="resultado__escolha">{t(`events.${eventId}.opcoes.${optionId}`)}</p>
         {outcome.length === 0 && <p className="resultado__vazio">{t('ui.resultado.semEfeito')}</p>}
-        {outcome.length > 0 && (
-          <ul className="resultado__lista">
-            {/* v2.71 (momento 5): as linhas entram em cascata, na ordem */}
-            {outcome.map((o, i) => (
-              <li key={o.campo} className={o.delta > 0 ? 'resultado__ganho' : 'resultado__perda'} style={{ '--i': i } as React.CSSProperties}>
-                <span>{t(`preview.campo.${o.campo}`)}</span>
-                <strong>{outcomeText(o)}</strong>
-              </li>
-            ))}
-          </ul>
-        )}
+        {/* v2.71 (momento 5): as linhas entram em cascata, na ordem */}
+        {outcomeGroups(outcome).map(([rotulo, itens, classe, antes]) => itens.length > 0 && (
+          <section key={rotulo} className={`resultado__grupo ${classe}`}>
+            <h2 className="resultado__grupo-titulo" aria-hidden="true">{t(`ui.decisao.${rotulo}`)}</h2>
+            <ul className="resultado__lista" aria-label={t(`ui.decisao.${rotulo}`)}>
+              {itens.map((o, i) => (
+                <li key={o.campo} className={classe} style={{ '--i': antes + i } as React.CSSProperties}>
+                  <span>{t(`preview.campo.${o.campo}`)}</span>
+                  <strong>{outcomeText(o)}</strong>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
         <button ref={button} type="button" className="resultado__seguir" onClick={fechar}>{t('ui.resultado.seguir')}</button>
       </div>
     </div>
@@ -421,9 +461,10 @@ function Rolled({ final, shown }: { final: string; shown: string }) {
   return shown === final ? final : <><span aria-hidden="true">{shown}</span><span className="sr-only">{final}</span></>;
 }
 
-/** v2.70: a caixa do topo aberta ou fechada (no celular), lembrada entre as decisões enquanto o jogo está aberto. */
-let topoAberto = false;
-
+/** v2.81 (Álbum): o card pequeno do jogador no topo da página. Foto com o Over em número (num selo verde-escuro, com o aro
+ * no metal da faixa), nome, bandeira e selos, posição e clube, a ficha (idade, salário, valor e papel) sempre à vista, as
+ * miniaturas das taças com o total e a etiqueta pequena "Carreira ›", que abre "Minha carreira". O botão de abrir os
+ * detalhes da v2.70 saiu: ele existia porque a caixa de vidro cobria a cena; na página a ficha cabe inteira. */
 export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert, novas = NO_TITLES }: {
   player: DecisionProps['player']; age: number; anterior?: Anterior; open: boolean; opener: React.RefObject<HTMLButtonElement | null>; onOpen: () => void; inert: boolean;
   /** v2.71: competições com taça nova neste ano (ganham o pulo de chegada na estante) */
@@ -432,73 +473,64 @@ export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert, 
   const over = useRolling(player.overall, anterior?.overall);
   const idade = useRolling(age, anterior?.age);
   const valor = useRolling(player.marketValueEUR ?? 0, anterior?.marketValueEUR);
-  // v2.71 (momento 3): o metal acompanha o número que rola; mudou de faixa, a medalha brilha na troca
+  // v2.71 (momento 3): o metal acompanha o número que rola; mudou de faixa, o selo brilha na troca
   const medal = medalOf(over);
   // v2.71 (momento 8): figurinhas que chegaram ao álbum desde a decisão anterior
   const novasFigurinhas = anterior?.cromos === undefined ? 0 : player.titles.length + (player.marcos?.length ?? 0) - anterior.cromos;
   const troca = anterior !== undefined && medalOf(anterior.overall).nome !== medalOf(player.overall).nome;
-  // v2.70 (enquadramento): no celular a caixa fica numa linha; os dados abrem no botão e a escolha vale até fechar o jogo
-  const [aberto, setAberto] = useState(topoAberto);
-  const alternar = () => { topoAberto = !aberto; setAberto(topoAberto); };
   return (
-    <header className={`decisao__topo${aberto ? ' decisao__topo--aberto' : ''}${novas.length > 0 ? ' decisao__topo--taca-nova' : ''} vidro`} inert={inert}>
-      <button ref={opener} type="button" className="jogador__abrir" aria-haspopup="dialog" aria-expanded={open} onClick={onOpen}>
+    <header className="decisao__topo card-jogador" inert={inert}>
+      <div className="card-jogador__foto">
         <Figurinha moldura tamanho="pequena" name={player.name} number={player.number} overall={player.overall} position={player.position} clubId={player.clubId} uniforme={player.uniforme} avatar={player.avatar} visual={player.visual} />
-        <span className="jogador__quem">
-          <span className="jogador__nome"><span aria-hidden="true">{player.name}</span>{player.selecao ? <Bandeira pais={player.selecao} /> : null}
-            {/* v2.63: a 10 e a faixa são conquistas: selos ao lado do nome enquanto valem */}
-            {player.number === 10 && <span className="selo-conquista"><span aria-hidden="true">{t('ui.decisao.selo10')}</span><span className="sr-only">{t('ui.decisao.selo10Texto')}</span></span>}
-            {player.capitao && <span className="selo-conquista"><span aria-hidden="true">{t('ui.decisao.seloCapitao')}</span><span className="sr-only">{t('ui.decisao.seloCapitaoTexto')}</span></span>}</span>
-          <span className="jogador__clube"><Emblema clubId={player.clubId} size={18} />{clubLine(player.position, player.clubId)}</span>
-          <span className="jogador__mais">
-            {t('ui.carreira.titulo')}
-            {novasFigurinhas > 0 && <><span className="jogador__novas" aria-hidden="true">+{novasFigurinhas}</span><span className="sr-only">{t('ui.album.novas', { n: novasFigurinhas })}</span></>}
-            <svg viewBox="0 0 10 16" width="7" height="11" aria-hidden="true" focusable="false">
+        <div className="decisao__over">
+          <p className={`decisao__over-medalha${troca ? ' decisao__over-medalha--troca' : ''}`} aria-hidden="true" data-medalha={medal.nome}>
+            <span className="decisao__over-rotulo">{t('ui.figurinha.over')}</span>
+            <span className="decisao__over-numero">{over}</span>
+          </p>
+        </div>
+      </div>
+      <div className="card-jogador__info">
+        <p className="jogador__nome"><span>{player.name}</span>{player.selecao ? <Bandeira pais={player.selecao} /> : null}
+          {/* v2.63: a 10 e a faixa são conquistas: selos ao lado do nome enquanto valem */}
+          {player.number === 10 && <span className="selo-conquista"><span aria-hidden="true">{t('ui.decisao.selo10')}</span><span className="sr-only">{t('ui.decisao.selo10Texto')}</span></span>}
+          {player.capitao && <span className="selo-conquista"><span aria-hidden="true">{t('ui.decisao.seloCapitao')}</span><span className="sr-only">{t('ui.decisao.seloCapitaoTexto')}</span></span>}</p>
+        <p className="jogador__clube"><Emblema clubId={player.clubId} size={18} />{clubLine(player.position, player.clubId)}</p>
+        {/* duas linhas: idade e papel; salário e valor */}
+        <ul className="decisao__dados" aria-label={t('ui.decisao.ficha')}>
+          <li><span><Rolled final={ageText(age)} shown={ageText(idade)} /></span><span className="decisao__papel">{t(`ui.papel.${player.role}`)}</span></li>
+          <li><span>{t('ui.decisao.porMes', { valor: money(player.monthlySalary.amount, player.monthlySalary.currency) })}</span>
+            {player.marketValueEUR === undefined ? null : <span><Rolled final={valueText(player.marketValueEUR)} shown={valueText(valor)} /></span>}</li>
+        </ul>
+        <div className="card-jogador__base">
+          {player.titles.length > 0 && (
+            <ul className="tacas" aria-label={t('ui.decisao.titulosLinha')}>
+              {trophyGroups(player.titles).map(({ id, n }) => (
+                <li key={id} className={novas.includes(id) ? 'taca taca--nova' : 'taca'} data-taca={id}>
+                  <TrophyIcon id={id} size={22} />
+                  {n > 1 && <span className="taca__qtd" aria-hidden="true">{n}</span>}
+                  <span className="sr-only">{n > 1 ? t('ui.decisao.tacaQtd', { nome: t(`ui.titulo.${id}`), n }) : t(`ui.titulo.${id}`)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+          {player.titles.length > 0 && <span className="tacas__total" aria-hidden="true">{player.titles.length}</span>}
+          <button ref={opener} type="button" className="card-jogador__carreira" aria-haspopup="dialog" aria-expanded={open}
+            aria-label={novasFigurinhas > 0 ? `${t('ui.carreira.titulo')}, ${t('ui.album.novas', { n: novasFigurinhas })}` : t('ui.carreira.titulo')} onClick={onOpen}>
+            {t('ui.carreira.etiqueta')}
+            {novasFigurinhas > 0 && <span className="jogador__novas" aria-hidden="true">+{novasFigurinhas}</span>}
+            <svg viewBox="0 0 10 16" width="6" height="10" aria-hidden="true" focusable="false">
               <path d="M1.5 1.5 8 8l-6.5 6.5" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="square" />
             </svg>
-          </span>
-        </span>
-      </button>
-      {/* v2.62: idade, salário e valor entre o nome e o Over */}
-      <ul className="decisao__dados" aria-label={t('ui.decisao.ficha')}>
-        <li><Rolled final={ageText(age)} shown={ageText(idade)} /></li>
-        <li>{t('ui.decisao.porMes', { valor: money(player.monthlySalary.amount, player.monthlySalary.currency) })}</li>
-        {player.marketValueEUR === undefined ? null : <li><Rolled final={valueText(player.marketValueEUR)} shown={valueText(valor)} /></li>}
-      </ul>
-      {/* v2.62: a medalha da faixa por trás do número, do bronze ao diamante, marca a evolução */}
-      <div className="decisao__over">
-        <p className={`decisao__over-medalha${troca ? ' decisao__over-medalha--troca' : ''}`} aria-hidden="true" data-medalha={medal.nome} style={medal.art ? { backgroundImage: `url(${medal.art})` } : undefined}>
-          <span className="decisao__over-rotulo">{t('ui.figurinha.over')}</span>
-          <span className="decisao__over-numero">{over}</span>
-        </p>
-        {/* v2.62: o papel (tempo de jogo) embaixo do Over */}
-        <p className="decisao__papel">{t(`ui.papel.${player.role}`)}</p>
-        <button type="button" className="jogador__detalhes" aria-expanded={aberto} onClick={alternar}>
-          <span className="sr-only">{t('ui.decisao.maisDetalhes')}</span>
-          <svg viewBox="0 0 16 10" width="14" height="9" aria-hidden="true" focusable="false"><path d="M1.5 1.5 8 8l6.5-6.5" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="square" /></svg>
-        </button>
+          </button>
+        </div>
       </div>
-      {/* v2.62: embaixo, só as taças: uma por competição, com a quantidade numa bolinha */}
-      {player.titles.length > 0 && (
-        <ul className="tacas" aria-label={t('ui.decisao.titulosLinha')}>
-          {trophyGroups(player.titles).map(({ id, n }) => (
-            <li key={id} className={novas.includes(id) ? 'taca taca--nova' : 'taca'} data-taca={id}>
-              <TrophyIcon id={id} size={26} />
-              {n > 1 && <span className="taca__qtd" aria-hidden="true">{n}</span>}
-              <span className="sr-only">{n > 1 ? t('ui.decisao.tacaQtd', { nome: t(`ui.titulo.${id}`), n }) : t(`ui.titulo.${id}`)}</span>
-            </li>
-          ))}
-        </ul>
-      )}
     </header>
   );
 }
 
-export function Decision({ eventId, age, progress, scene, player, anterior, momentos, pausado = false, state = {}, ritmo = 'normal', semestre, onChoose, onContinue }: DecisionProps) {
+export function Decision({ eventId, age, progress, scene, player, anterior, momentos, pagina, pausado = false, state = {}, ritmo = 'normal', semestre, onChoose, onContinue }: DecisionProps) {
   const [career, setCareer] = useState(false);
-  // v2.70: a cena encaixa a cabeça do jogador no meio do espaço entre a caixa do topo e o painel
   const root = useRef(null as HTMLElement | null);
-  const livre = useLivreMeio(root, '.decisao__topo', '.decisao__painel');
   // sem genérico aqui: a guarda de texto fora do i18n confunde o genérico com JSX
   const opener = useRef(null as HTMLButtonElement | null);
   // v2.34: no Normal tocar marca e "Confirmar escolha" decide; no Rápido tocar já decide
@@ -520,6 +552,9 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
     onChoose?.(id);
   }
   const options = events.eventos.find((e) => e.id === eventId)?.opcoes ?? [];
+  // o que a escolha rendeu: calculado uma vez, para o carimbo e para o resultado
+  const outcome = useMemo(() => (chosen === null ? null : outcomeOf(state, eventId, chosen, player.etiquetas ?? [])), [chosen, state, eventId, player.etiquetas]);
+  const verdict = outcome === null ? null : outcomeVerdict(outcome);
   const percent = Math.round(Math.min(1, Math.max(0, progress)) * 100);
   const text = eventText(eventId, player.etiquetas ?? [], player.textoParams);
   const pressed = chosen ?? marked;
@@ -548,7 +583,7 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
       const el = root.current?.querySelector<HTMLElement>(`.taca--nova[data-taca="${id}"]`);
       if (!el || typeof el.animate !== 'function') continue;
       const d = el.getBoundingClientRect();
-      // escondida (caixa fechada no celular): o ponto dourado no botão avisa, sem voo
+      // ainda sem tamanho (fora da tela): sem voo
       if (d.width < 2) continue;
       const dx = o.left + o.width / 2 - (d.left + d.width / 2);
       const dy = o.top + o.height / 2 - (d.top + d.height / 2);
@@ -582,9 +617,12 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
 
   return (
     <main ref={root} className="decisao" style={TRANSITION} data-tema="claro" data-ritmo={ritmo} data-evento={eventId} data-resultado={chosen === null ? 'fechado' : 'aberto'}>
-      {scene.pintada
-        ? <CenaPintada {...scene.pintada} alt={scene.alt} inert={overlay} livre={livre} />
-        : <img className="decisao__cena" src={scene.src} alt={scene.alt} width={SCENE_SIZE[0]} height={SCENE_SIZE[1]} fetchPriority="high" inert={overlay} />}
+      {pagina && (
+        <p className="pagina__topo" inert={overlay}>
+          <span>{t('ui.pagina.temporada', { ano: pagina.ano })}</span>
+          <span>{t('ui.pagina.numero', { n: pagina.numero })}</span>
+        </p>
+      )}
       <div
         inert={overlay} className="faixa" role="progressbar" aria-label={t('ui.decisao.progresso')}
         aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent} aria-valuetext={t('ui.decisao.idade', { idade: age })}
@@ -592,7 +630,11 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
         <span className="faixa__feito" style={{ inlineSize: `${percent}%` }} />
       </div>
       <PlayerBox player={player} age={age} anterior={anterior} open={career} opener={opener} onOpen={() => { setCareer(true); }} inert={overlay} novas={novas} />
-      <div className="decisao__painel vidro" inert={overlay}>
+      {/* v2.81 (Álbum): a cena é uma foto colada na página; o resultado carimba a foto */}
+      <CenaFoto scene={scene} inert={overlay}>
+        {verdict !== null && <span className={`decisao__carimbo resultado__veredito decisao__carimbo--${verdict}`} aria-hidden="true">{t(`ui.resultado.carimbo.${verdict}`)}</span>}
+      </CenaFoto>
+      <div className="decisao__painel" inert={overlay}>
         {semestre && semestre.length > 0 ? <p className="decisao__semestre"><strong>{t('ui.evolucao.titulo')}:</strong> {semestre.join(' ')}</p> : null}
         <h1 ref={titulo} tabIndex={-1} className="decisao__titulo">{t(`events.${eventId}.titulo`)}</h1>
         {text && <p className="decisao__historia">{comFalas(text)}</p>}
@@ -627,7 +669,7 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
       {career && <Career player={player} onClose={() => { setCareer(false); }} />}
       {palco && <Palco titulos={titulos} onClose={fecharPalco} />}
       <Carimbo momentos={palcoVisto ? carimbos : NONE} />
-      {chosen !== null && <Result eventId={eventId} optionId={chosen} state={state} tags={player.etiquetas ?? []} auto={rapido} onDone={onDone} />}
+      {chosen !== null && outcome !== null && verdict !== null && <Result eventId={eventId} optionId={chosen} outcome={outcome} verdict={verdict} auto={rapido} onDone={onDone} />}
     </main>
   );
 }

@@ -2,16 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import type { MeetingResult } from '../../engine/meeting';
 import type { Agrado, Idea, MeetingOptions } from '../../engine/meetingOptions';
 import { t } from '../../i18n';
-import { Career as CareerDrawer, PlayerBox, TRANSITION, type DecisionProps } from './Decision';
-import { CenaPintada } from './CenaPintada';
-import { useLivreMeio } from '../useLivreMeio';
+import { Career as CareerDrawer, CenaFoto, PlayerBox, TRANSITION, type DecisionProps } from './Decision';
 import './Reuniao.css';
 
 // T52d (SPEC 6.5, v2.53): reunião com a comissão em 3 ideias, no desenho aprovado: o card do jogador (o de sempre), a fala do
 // treinador e três cartões selecionáveis (óbvia, mescla, ousada); "Propor ao técnico" só depois de escolher. Sem números.
 const focusName = (f: string) => (f === 'bolaParada' || f === 'pernaRuim' ? t(`ui.reuniao.foco.${f}`) : t(`attributes.attribute.${f}`));
 const IDEAS: Idea[] = ['obvia', 'mescla', 'ousada'];
-const SCENE_SIZE = [1856, 2304] as const;
 
 const ICON: Record<Idea, string> = {
   obvia: 'M5 4h14v17H5zM9 4V2h6v2M8 12h8M8 16h5',
@@ -38,9 +35,6 @@ export function Reuniao({ ideias, player, age, progress, semestre, scene, anteri
   const [career, setCareer] = useState(false);
   const opener = useRef(null as HTMLButtonElement | null);
   const title = useRef(null as HTMLHeadingElement | null);
-  // v2.70: a cena encaixa a cabeça no espaço entre a caixa do topo e o painel, como na decisão
-  const root = useRef(null as HTMLElement | null);
-  const livre = useLivreMeio(root, '.decisao__topo', '.decisao__painel');
   useEffect(() => { title.current?.focus(); }, []);
   // a gaveta "Minha carreira" fecha com Esc e devolve o foco à caixa do jogador, como na decisão
   const wasOpen = useRef(false);
@@ -62,15 +56,14 @@ export function Reuniao({ ideias, player, age, progress, semestre, scene, anteri
     onChoose(`${main}|${secondary}`);
   }
   return (
-    <main ref={root} className="decisao reuniao" style={TRANSITION} data-tema="claro" data-evento="reuniao">
-      {scene.pintada
-        ? <CenaPintada {...scene.pintada} alt={scene.alt} inert={career} livre={livre} />
-        : <img className="decisao__cena" src={scene.src} alt={scene.alt} width={SCENE_SIZE[0]} height={SCENE_SIZE[1]} inert={career} />}
+    <main className="decisao reuniao" style={TRANSITION} data-tema="claro" data-evento="reuniao">
       <div inert={career} className="faixa" role="progressbar" aria-label={t('ui.decisao.progresso')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent} aria-valuetext={t('ui.decisao.idade', { idade: age })}>
         <span className="faixa__feito" style={{ inlineSize: `${percent}%` }} />
       </div>
       <PlayerBox player={player} age={age} anterior={anterior} open={career} opener={opener} onOpen={() => { setCareer(true); }} inert={career} />
-      <form className="decisao__painel vidro reuniao__painel" onSubmit={submit} inert={career} noValidate>
+      {/* v2.81 (Álbum): a cena é uma foto colada na página, embaixo do card do jogador */}
+      <CenaFoto scene={scene} inert={career} />
+      <form className="decisao__painel reuniao__painel" onSubmit={submit} inert={career} noValidate>
         <p className="reuniao__sala">{t('ui.reuniao.sala')}</p>
         <h1 className="decisao__titulo" ref={title} tabIndex={-1}>{t('ui.reuniao.titulo')}</h1>
         <p className="reuniao__fala"><strong>{t('ui.reuniao.treinador')}</strong> <q className="fala">{t(`ui.reuniao.fala.${semestre}`, { nome: player.name })}</q></p>

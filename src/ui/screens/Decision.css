@@ -1,12 +1,15 @@
-/* Tela de decisão (SPEC v2.34, variação B): a cena ocupa a tela; por cima, duas camadas de vidro (glass.css):
-   a caixa do jogador no topo, sempre à vista, e a faixa de baixo com o evento, as opções e o detalhe da marcada.
-   Superfícies com borda fina e sombra suave; a borda grossa e a sombra dura da v2.19 saíram. */
+/* Tela de decisão (SPEC v2.81, direção "Álbum"): uma página de papel do álbum. No topo, a linha da página e o card
+   pequeno do jogador; no meio, a cena como foto colada (borda branca, ocupa a sobra de altura); embaixo, no papel, o
+   evento, as opções e o detalhe da marcada. O vidro da v2.34 saiu. Nada inclinado. */
 .decisao {
   position: relative;
   isolation: isolate;
+  /* o vão entre os blocos da página e a borda da foto: o detalhe da marcada usa os dois para cair sobre a foto */
+  --pagina-vao: var(--espaco-2);
+  --foto-borda: 5px;
   display: flex;
   flex-direction: column;
-  gap: var(--espaco-2);
+  gap: var(--pagina-vao);
   min-block-size: 100dvh; /* T49j: em tela baixa (360x640) a página cresce e rola; nunca corta o "Confirmar escolha" */
   max-inline-size: 30rem;
   margin-inline: auto;
@@ -16,71 +19,173 @@
   color: var(--cor-texto);
 }
 
-.caixa {
-  border: var(--forma-borda-fina) solid var(--cor-linha);
-  border-radius: var(--forma-raio);
-  background: var(--cor-superficie);
-  box-shadow: var(--forma-sombra-suave);
+/* a linha da página: "Temporada 2032" e "Pág. 7", em letra de rótulo */
+.pagina__topo {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--espaco-3);
+  margin: 0;
+  padding-inline: var(--espaco-1);
+  font-family: var(--fonte-titulo);
+  font-size: var(--tipo-miudo);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
 }
 
-/* a pintura é 4:5: cobre a tela inteira, com o rosto do jogador na faixa que fica entre o topo e a faixa de baixo;
-   fixa ao fundo, para continuar atrás quando a página rola numa tela baixa */
+/* a cena como foto colada na página: borda branca, sombra suave, reta; cresce para ocupar a sobra de altura e nunca
+   fica menor que 7rem (a página rola antes de a foto sumir; 7rem cabe o pior caso, o marco de 4 opções, em 390×844) */
+.decisao__foto {
+  position: relative;
+  flex: 1 1 7rem;
+  min-block-size: 7rem;
+  overflow: hidden;
+  container-type: size;
+  margin-inline: calc(-1 * (var(--foto-borda) + 1px));
+  border: var(--foto-borda) solid var(--cor-superficie);
+  border-radius: var(--forma-raio-cartao);
+  background: var(--cor-trilho);
+  box-shadow: var(--forma-sombra-suave);
+}
 .decisao__cena {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
+  display: block;
   inline-size: 100%;
   block-size: 100%;
   object-fit: cover;
   object-position: 50% 30%;
 }
 
-/* progresso da carreira: um fio no alto da tela */
+/* o carimbo do resultado (v2.81, pedido do usuário: "podem vir tortos e maiores"): grande, inclinado como carimbo de
+   borracha, no meio da foto, na cor do veredito. A inclinação usa `rotate` (propriedade própria), para a batida da
+   entrada (resultado-veredito, em `transform`) não desfazer o ângulo. */
+.decisao__carimbo {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  z-index: 1;
+  translate: -50% -50%;
+  rotate: -9deg;
+  padding: var(--espaco-1) var(--espaco-4);
+  border: 4px solid currentColor;
+  border-radius: var(--forma-raio);
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  background: rgb(255 255 255 / 0.9);
+  font-family: var(--fonte-titulo);
+  font-size: clamp(2.25rem, 13cqw, 3.5rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--cor-texto);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--cor-texto) 25%, transparent);
+}
+.decisao__carimbo--positivo { color: var(--cor-positivo); }
+.decisao__carimbo--negativo { color: var(--cor-negativo); }
+
+/* progresso da carreira: um fio no alto da tela, colado na linha da página quando ela existe */
+.pagina__topo + .faixa { margin-block-start: -4px; }
 .faixa { flex: none; block-size: 4px; border-radius: 999px; background: var(--cor-trilho); overflow: hidden; }
 .faixa__feito { display: block; block-size: 100%; min-inline-size: 4px; background: var(--cor-destaque); }
 
-/* ---------- caixa do jogador (topo, vidro): figurinha que abre "Minha carreira", o Over grande e a ficha */
+/* ---------- card pequeno do jogador (v2.81): foto com o Over, nome, clube, a ficha, as taças e "Carreira ›" */
 .decisao__topo {
   position: relative;
   z-index: 1;
   flex: none;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
-  grid-template-areas: "quem dados over" "tacas tacas tacas";
-  align-items: center;
-  gap: var(--espaco-2) var(--espaco-3);
-  padding: var(--espaco-2) var(--espaco-3) var(--espaco-3);
-  border-radius: var(--forma-raio);
+  grid-template-columns: 4rem minmax(0, 1fr);
+  align-items: start;
+  gap: var(--espaco-1) 0.625rem;
+  padding: 6px var(--espaco-2);
+  border: 2.5px solid var(--paleta-ouro-moldura);
+  border-radius: var(--forma-raio-cartao);
+  background: var(--cor-superficie);
+  box-shadow: var(--forma-sombra-suave);
 }
-.jogador__abrir {
-  grid-area: quem;
+.card-jogador__foto { position: relative; }
+.card-jogador__foto .figurinha { --w: 4rem; }
+/* na figurinha pequena o Over e o número saíam com 7 px; o Over vai no selo e a tarja some (o nome segue no texto) */
+.card-jogador__foto :is(.figurinha__over-grande, .figurinha__tarja-numero, .figurinha__tarja) { display: none; }
+.card-jogador__info { display: grid; gap: 1px; min-inline-size: 0; }
+.jogador__nome { display: flex; flex-wrap: wrap; align-items: center; gap: 2px var(--espaco-2); margin: 0; font-family: var(--fonte-titulo); font-size: 1.0625rem; font-weight: 900; line-height: 1.05; text-transform: uppercase; }
+.jogador__clube { display: flex; align-items: center; gap: var(--espaco-1); margin: 0; font-size: var(--tipo-miudo); line-height: 1.25; color: var(--cor-texto-suave); }
+.jogador__clube .emblema { flex: none; }
+
+/* o Over (v2.16, o único número de atributo da tela) num selo verde-escuro no canto da foto; o aro tem o metal da faixa */
+.decisao__over { position: absolute; inset-block-end: 3px; inset-inline: 3px; line-height: 1; font-family: var(--fonte-titulo); font-variant-numeric: tabular-nums; }
+.decisao__over p { margin: 0; }
+.decisao__over-medalha {
   display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+  padding: 2px 4px;
+  border: 2px solid var(--medalha-clara);
+  border-radius: 0.3rem;
+  background: var(--paleta-verde-escuro);
+  color: var(--cor-sobre-destaque);
+}
+.decisao__over-rotulo { font-size: 0.875rem; font-weight: 800; letter-spacing: 0.04em; opacity: 0.85; }
+.decisao__over-numero { font-size: 1.25rem; font-weight: 900; }
+/* v2.71 (momento 3): subiu (ou caiu) de faixa, o selo pulsa no meio da rolagem, quando o metal troca */
+.decisao__over-medalha--troca { animation: medalha-troca 700ms ease-out 350ms both; }
+@keyframes medalha-troca { 0% { transform: none; box-shadow: 0 0 0 0 var(--paleta-ouro); } 40% { transform: scale(1.18); } 100% { transform: none; box-shadow: 0 0 0 14px transparent; } }
+
+/* v2.62: bandeira da seleção ao lado do nome (depois da estreia pela principal) */
+.bandeira { display: inline-flex; align-items: center; gap: 4px; padding: 1px 6px 1px 3px; border-radius: 999px; background: var(--cor-fundo); font-family: var(--fonte-texto); font-size: 0.875rem; font-weight: 800; letter-spacing: 0.04em; line-height: 1.3; }
+.selo-conquista { display: inline-grid; place-items: center; min-inline-size: 1.25rem; block-size: 1.25rem; padding: 0 4px; border-radius: 0.3rem; background: var(--cor-texto); color: var(--cor-superficie); font-family: var(--fonte-titulo); font-size: 0.875rem; font-weight: 900; line-height: 1; }
+.bandeira svg { flex: none; border-radius: 2px; box-shadow: 0 0 0 1px rgb(0 0 0 / 0.15); }
+
+/* a ficha: idade, salário, valor e papel numa linha que quebra */
+.decisao__dados { display: grid; margin: 0; padding: 0; list-style: none; font-size: var(--tipo-miudo); font-weight: 700; line-height: 1.3; font-variant-numeric: tabular-nums; }
+.decisao__dados li { display: flex; flex-wrap: wrap; gap: 0 var(--espaco-2); }
+.decisao__dados span + span::before { content: '·'; margin-inline-end: var(--espaco-2); color: var(--cor-texto-suave); }
+.decisao__papel { color: var(--cor-texto-suave); }
+
+/* embaixo: as taças em miniatura, o total e a etiqueta "Carreira ›" à direita */
+.card-jogador__base { display: flex; align-items: center; gap: var(--espaco-2); min-block-size: 1.625rem; }
+.tacas { display: flex; flex-wrap: wrap; gap: 2px 6px; margin: 0; padding: 0; list-style: none; }
+.taca { position: relative; display: grid; place-items: center; inline-size: 1.25rem; block-size: 1.25rem; }
+.taca .trofeu__arte { inline-size: 100%; block-size: 100%; object-fit: contain; }
+.taca__qtd {
+  position: absolute; inset-block-start: -4px; inset-inline-end: -6px;
+  min-inline-size: 1rem; block-size: 1rem; padding: 0 3px; box-sizing: border-box;
+  display: grid; place-items: center; border-radius: 999px;
+  background: var(--cor-texto); color: var(--cor-superficie);
+  font-size: 0.875rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums;
+}
+.tacas__total { font-family: var(--fonte-titulo); font-size: var(--tipo-miudo); font-weight: 800; color: var(--cor-texto-suave); font-variant-numeric: tabular-nums; }
+/* a etiqueta pequena "Carreira ›" (verde-escuro), com alvo de toque de 44 px por fora do desenho */
+.card-jogador__carreira {
+  position: relative;
+  display: inline-flex;
   align-items: center;
-  gap: var(--espaco-3);
-  min-inline-size: 0;
-  padding: 0;
+  gap: 5px;
+  margin-inline-start: auto;
+  block-size: 1.625rem;
+  padding: 0 var(--espaco-3);
   border: 0;
-  border-radius: var(--forma-raio);
-  background: none;
-  color: inherit;
-  font: inherit;
-  text-align: start;
+  border-radius: 999px;
+  background: var(--paleta-verde-escuro);
+  color: var(--cor-sobre-destaque);
+  font-family: var(--fonte-titulo);
+  font-size: var(--tipo-miudo);
+  font-weight: 700;
+  letter-spacing: 0.02em;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
-.jogador__abrir:focus-visible { outline-offset: 4px; }
-.jogador__abrir .figurinha { flex: none; --w: 4.25rem; }
-.jogador__quem { display: grid; gap: 2px; min-inline-size: 0; }
-.jogador__nome { font-family: var(--fonte-titulo); font-size: var(--tipo-opcao); font-weight: 900; line-height: 1.05; text-transform: uppercase; }
-.jogador__clube { display: flex; align-items: center; gap: var(--espaco-1); font-size: var(--tipo-apoio); line-height: 1.25; color: var(--cor-texto-suave); }
-.jogador__clube .emblema { flex: none; }
+.card-jogador__carreira::before { content: ''; position: absolute; inset: -8px -4px; }
+.card-jogador__carreira:focus-visible { outline: 3px solid var(--cor-foco); outline-offset: 2px; }
 @media (hover: hover) {
-  .jogador__abrir:hover .jogador__mais { text-decoration: underline; }
+  .card-jogador__carreira:hover { background: var(--paleta-gramado); }
 }
 
 /* rótulos pequenos em caixa normal (v2.26): a caixa alta fica para os títulos */
-.jogador__mais,
 .previa__rotulo,
 .gaveta__bloco h3,
 .trajetoria th {
@@ -90,81 +195,15 @@
   line-height: 1.15;
   letter-spacing: 0.01em;
 }
-.jogador__mais { display: inline-flex; align-items: center; gap: var(--espaco-2); color: var(--cor-positivo); }
 
-/* o Over em número (v2.16): o único número de atributo da tela, grande ao lado da figurinha */
-.decisao__over { grid-area: over; display: grid; justify-items: center; align-content: start; gap: var(--espaco-1); line-height: 1; font-family: var(--fonte-titulo); font-variant-numeric: tabular-nums; }
-.decisao__over p { margin: 0; }
-/* v2.62: o papel (tempo de jogo) embaixo do Over, em letra de apoio */
-.decisao__papel { max-inline-size: 6.5rem; font-family: var(--fonte-texto); font-size: 0.875rem; font-weight: 700; line-height: 1.2; text-align: center; color: var(--cor-texto-suave); }
-.decisao__over-rotulo { font-size: var(--tipo-apoio); font-weight: 800; letter-spacing: 0.08em; color: var(--cor-texto-suave); }
-.decisao__over-numero { font-size: 3rem; font-weight: 900; }
-/* v2.62: o Over num quadro com o metal da faixa (bronze ao diamante), na proporção da arte (quadrada, 256×256), com
-   "OVR" dentro em cima do número. A arte pintada cobre o quadro; o degradê é a reserva */
-.decisao__over-medalha {
-  display: grid;
-  place-items: center;
-  align-content: center;
-  inline-size: 4.75rem;
-  aspect-ratio: 1;
-  border: 2px solid var(--medalha-aro);
-  border-radius: 0.3rem;
-  background: linear-gradient(160deg, var(--medalha-clara), var(--medalha-escura)) center / cover;
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.45), var(--forma-sombra-suave);
-  color: var(--medalha-texto);
-}
-.decisao__over-medalha .decisao__over-rotulo { color: inherit; opacity: 0.85; }
-/* v2.71 (momento 3): subiu (ou caiu) de faixa, a medalha pulsa no meio da rolagem, quando o metal troca */
-.decisao__over-medalha--troca { animation: medalha-troca 700ms ease-out 350ms both; }
-@keyframes medalha-troca { 0% { transform: none; box-shadow: 0 0 0 0 var(--paleta-ouro); } 40% { transform: scale(1.18); } 100% { transform: none; box-shadow: 0 0 0 14px transparent; } }
-.decisao__over-medalha[data-medalha='bronze'] .decisao__over-numero,
-.decisao__over-medalha[data-medalha='esmeralda'] .decisao__over-numero,
-.decisao__over-medalha[data-medalha='diamante'] .decisao__over-numero { text-shadow: var(--forma-contorno-numero); }
-
-/* v2.62: bandeira da seleção ao lado do nome (depois da estreia pela principal) */
-.jogador__nome { display: flex; flex-wrap: wrap; align-items: center; gap: 2px var(--espaco-2); }
-.bandeira { display: inline-flex; align-items: center; gap: 4px; padding: 1px 6px 1px 3px; border-radius: 999px; background: var(--cor-fundo); font-family: var(--fonte-texto); font-size: 0.875rem; font-weight: 800; letter-spacing: 0.04em; line-height: 1.3; }
-.selo-conquista { display: inline-grid; place-items: center; min-inline-size: 1.25rem; block-size: 1.25rem; padding: 0 4px; border-radius: 0.3rem; background: var(--cor-texto); color: var(--cor-superficie); font-family: var(--fonte-titulo); font-size: 0.875rem; font-weight: 900; line-height: 1; }
-.bandeira svg { flex: none; border-radius: 2px; box-shadow: 0 0 0 1px rgb(0 0 0 / 0.15); }
-
-/* v2.62: embaixo, só as taças em miniatura, uma por competição, com a quantidade numa bolinha */
-.tacas { grid-area: tacas; display: flex; flex-wrap: wrap; gap: 4px 10px; margin: 0; padding: 0; list-style: none; }
-.taca { position: relative; display: grid; place-items: center; inline-size: 1.75rem; block-size: 1.75rem; }
-.taca .trofeu__arte { inline-size: 100%; block-size: 100%; object-fit: contain; }
-.taca__qtd {
-  position: absolute; inset-block-start: -3px; inset-inline-end: -5px;
-  min-inline-size: 1rem; block-size: 1rem; padding: 0 3px; box-sizing: border-box;
-  display: grid; place-items: center; border-radius: 999px;
-  background: var(--cor-texto); color: var(--cor-superficie);
-  font-size: 0.875rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums;
-}
-
-/* v2.62: idade, salário e valor entre o nome e o Over, um embaixo do outro */
-.decisao__dados { grid-area: dados; display: grid; gap: 1px; align-self: center; justify-items: end; margin: 0; padding: 0; list-style: none; font-size: var(--tipo-apoio); font-weight: 700; line-height: 1.25; white-space: nowrap; font-variant-numeric: tabular-nums; }
-
-
-.selos { display: flex; flex-wrap: wrap; gap: 4px; margin: 0; padding: 0; list-style: none; }
-.selos li {
-  padding: 1px 8px;
-  border: var(--forma-borda-fina) solid var(--cor-linha);
-  border-radius: 999px;
-  background: var(--cor-superficie);
-  font-size: var(--tipo-apoio);
-  font-weight: 700;
-  line-height: 1.35;
-  white-space: nowrap;
-}
-
-/* ---------- faixa de baixo (vidro): o que aconteceu e o que você faz; a sobra de altura fica para a cena */
+/* ---------- o painel no papel: o que aconteceu e o que você faz; a sobra de altura fica para a foto */
 .decisao__painel {
   position: relative;
   z-index: 1;
   flex: none;
   display: grid;
   gap: var(--espaco-2);
-  margin-block-start: auto;
-  padding: var(--espaco-3);
-  border-radius: var(--forma-raio);
+  padding: var(--espaco-1) var(--espaco-1) 0;
 }
 .decisao__titulo {
   font-size: var(--tipo-titulo);
@@ -225,7 +264,22 @@
 .opcao[aria-pressed='true'] .medidor s[data-cheio] { background: var(--cor-sobre-destaque); }
 
 /* detalhe da marcada: risco e tempo fora por escrito, depois "Você ganha" em cima e "Em troca" embaixo */
-.decisao__detalhe { display: grid; gap: 2px; min-block-size: 2.6rem; align-content: center; font-size: var(--tipo-apoio); line-height: 1.3; color: var(--cor-texto-suave); }
+.decisao__detalhe { display: grid; gap: 2px; align-content: center; font-size: var(--tipo-apoio); line-height: 1.3; color: var(--cor-texto-suave); }
+/* v2.81 (pedido do usuário: fotos maiores): a dica e o detalhe da marcada não ocupam linha própria; ficam sobre a parte de
+   baixo da foto da cena, num papel com sombra. No HTML continuam depois das opções (ordem de leitura igual). */
+.decisao__painel > .decisao__detalhe {
+  position: absolute;
+  inset-inline: var(--espaco-1);
+  inset-block-end: calc(100% + var(--pagina-vao) + var(--foto-borda) + var(--espaco-1));
+  z-index: 1;
+  padding: var(--espaco-2) var(--espaco-3);
+  border-radius: var(--forma-raio);
+  background: var(--cor-superficie);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--cor-texto) 28%, transparent);
+  animation: detalhe-entra 160ms ease-out both;
+}
+.decisao__painel > .decisao__detalhe--vazio { justify-self: start; inset-inline-end: auto; padding: 2px var(--espaco-3); border-radius: 999px; background: rgb(255 255 255 / 0.92); color: var(--cor-texto); font-size: var(--tipo-miudo); }
+@keyframes detalhe-entra { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 .detalhe__risco { display: flex; flex-wrap: wrap; gap: 0 var(--espaco-3); font-weight: 700; color: var(--cor-negativo); }
 .opcao__fora { color: var(--cor-texto-suave); }
 .previa__linha { display: grid; grid-template-columns: 5.25rem minmax(0, 1fr); align-items: baseline; column-gap: var(--espaco-3); }
@@ -254,52 +308,41 @@
 .decisao__confirmar:focus-visible { outline-offset: 3px; }
 .decisao__confirmar:disabled { cursor: default; background: var(--cor-trilho); color: var(--cor-texto-suave); }
 
-/* ---------- o que a escolha rendeu: um cartão menor por cima da tela, que fica levemente desfocada */
-.resultado {
-  position: fixed; /* presa à tela: numa página que rola, não some no meio dela */
-  inset: 0;
-  z-index: 2; /* acima da caixa do jogador e da faixa de baixo (z-index 1) */
-  display: grid;
-  place-items: center;
-  padding: var(--espaco-5);
-  background: color-mix(in srgb, var(--cor-fundo) 35%, transparent);
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
-}
-.resultado__caixa {
-  display: grid;
-  gap: var(--espaco-3);
-  inline-size: min(100%, 20rem);
-  padding: var(--espaco-4);
-}
-.resultado__veredito {
-  font-family: var(--fonte-titulo);
-  font-size: var(--tipo-titulo);
-  font-weight: 900;
-  line-height: 1;
-  text-transform: uppercase;
-  text-wrap: balance;
-}
-.resultado--positivo .resultado__veredito { color: var(--cor-positivo); }
-.resultado--negativo .resultado__veredito { color: var(--cor-negativo); }
-.resultado__escolha { color: var(--cor-texto-suave); line-height: 1.3; }
+/* ---------- o que a escolha rendeu (v2.81, Álbum): o veredito carimba a foto; no lugar do painel, no papel, fica o que
+   você escolheu, "Você ganha" e "Em troca" em caixas com o fio da cor, e "Seguir". O resto da página fica inerte. */
+.decisao[data-resultado='aberto'] .decisao__painel { display: none; }
+.resultado { flex: none; display: grid; }
+.resultado__caixa { display: grid; gap: var(--espaco-2); padding: var(--espaco-1) var(--espaco-1) 0; }
+.resultado__rotulo { font-family: var(--fonte-titulo); font-size: var(--tipo-miudo); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cor-texto-suave); }
+.resultado__escolha { font-family: var(--fonte-titulo); font-size: var(--tipo-nome); font-weight: 800; line-height: 1.05; text-transform: uppercase; text-wrap: balance; }
 .resultado__vazio { line-height: 1.4; }
-.resultado__lista { display: grid; margin: 0; padding: 0; list-style: none; border-block-start: var(--forma-borda-fina) solid var(--cor-linha); }
+.resultado__grupo {
+  display: grid;
+  gap: var(--espaco-1);
+  padding: var(--espaco-2) var(--espaco-3);
+  border-inline-start: 4px solid currentColor;
+  border-radius: var(--forma-raio);
+  background: var(--cor-superficie);
+  box-shadow: var(--forma-sombra-suave);
+}
+.resultado__grupo.resultado__ganho { color: var(--cor-positivo); }
+.resultado__grupo.resultado__perda { color: var(--cor-negativo); }
+.resultado__grupo-titulo { margin: 0; font-family: var(--fonte-titulo); font-size: var(--tipo-miudo); font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+.resultado__lista { display: grid; margin: 0; padding: 0; list-style: none; color: var(--cor-texto); }
 .resultado__lista li {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   gap: var(--espaco-3);
-  padding-block: var(--espaco-2);
-  border-block-end: 1px solid var(--cor-trilho);
+  padding-block: 2px;
   line-height: 1.3;
 }
 .resultado__lista strong { flex: none; font-family: var(--fonte-titulo); font-size: var(--tipo-opcao); font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .resultado__ganho strong { color: var(--cor-positivo); }
 .resultado__perda strong { color: var(--cor-negativo); }
 .resultado__seguir {
-  justify-self: end;
-  min-block-size: 2.75rem;
+  margin-block-start: var(--espaco-1);
+  min-block-size: var(--toque-compacto);
   padding: 0 var(--espaco-5);
   border: 0;
   border-radius: 999px; /* v2.73: botão principal único */
@@ -361,6 +404,11 @@
 .gaveta__fechar:active { background: var(--cor-destaque); color: var(--cor-sobre-destaque); }
 
 .gaveta__bloco { display: grid; gap: var(--espaco-2); }
+/* v2.81: os números da carreira até agora, em fichas de papel no alto da gaveta */
+.gaveta__numeros { display: grid; grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr)); gap: var(--espaco-2); margin: 0; padding: 0; list-style: none; }
+.gaveta__numeros li { display: grid; justify-items: center; padding: var(--espaco-2) 0; border-radius: var(--forma-raio-cartao); background: var(--cor-superficie); box-shadow: var(--forma-sombra-suave); }
+.gaveta__numeros strong { font-family: var(--fonte-titulo); font-size: 1.75rem; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
+.gaveta__numeros span { font-family: var(--fonte-titulo); font-size: var(--tipo-miudo); font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--cor-texto-suave); }
 .gaveta__bloco h3 { color: var(--cor-texto-suave); }
 .gaveta__vazio { color: var(--cor-texto-suave); line-height: 1.4; }
 
@@ -410,29 +458,33 @@
 .album__cromo strong { font-family: var(--fonte-titulo); font-weight: 900; }
 .album__vazio { border: var(--forma-borda-fina) dashed var(--cor-texto-suave); color: var(--cor-texto-suave); }
 
-/* ---------- computador (v2.34): a cena continua cobrindo a tela; caixa do jogador e álbum à esquerda, a faixa de baixo com as três opções lado a lado */
+/* ---------- computador (v2.81): a página abre em duas colunas: card do jogador e álbum à esquerda; foto da cena e
+   painel (com as três opções lado a lado) à direita */
 @media (min-width: 64rem) {
   .decisao {
     display: grid;
-    grid-template-columns: 24rem minmax(0, 1fr); /* v2.62: 24rem para a caixa do topo com bandeira e o Over em quadro */
-    grid-template-areas: "faixa faixa" "topo ." "album ." "album painel";
-    grid-template-rows: auto auto minmax(0, 1fr) auto;
-    gap: var(--espaco-4) 1.75rem;
-    max-inline-size: none;
+    grid-template-columns: 24rem minmax(0, 1fr);
+    grid-template-areas: "pagina pagina" "faixa faixa" "topo foto" "album foto" "album painel" "album resultado";
+    grid-template-rows: auto auto auto minmax(14rem, 1fr) auto auto;
+    --pagina-vao: var(--espaco-4);
+    gap: var(--pagina-vao) 1.75rem;
+    max-inline-size: 80rem;
     padding: 1.75rem;
   }
+  .pagina__topo { grid-area: pagina; }
   .faixa { grid-area: faixa; }
-  .decisao__topo { grid-area: topo; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "quem over" "dados dados" "tacas tacas"; }
-  .decisao__dados { display: flex; flex-wrap: wrap; gap: 0 var(--espaco-3); }
+  .decisao__topo { grid-area: topo; }
+  .decisao__foto { grid-area: foto; }
   .decisao__painel { grid-area: painel; margin: 0; }
+  .resultado { grid-area: resultado; }
   .decisao__opcoes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .decisao__confirmar { justify-self: end; }
-  /* sobre a cena o álbum precisa de chão próprio: superfície sólida (o vidro já tem as duas camadas da tela) */
-  .album { grid-area: album; align-self: end; display: grid; gap: var(--espaco-3); padding: var(--espaco-3); border: var(--forma-borda-fina) solid var(--cor-linha); border-radius: var(--forma-raio); background: var(--cor-superficie); box-shadow: var(--forma-sombra-suave); }
+  .album { grid-area: album; align-self: start; display: grid; gap: var(--espaco-3); padding: var(--espaco-3); border: var(--forma-borda-fina) solid var(--cor-linha); border-radius: var(--forma-raio); background: var(--cor-superficie); box-shadow: var(--forma-sombra-suave); }
 }
 
 /* v2.47: a decisão nova entra com fade e leve subida; a escolhida realça e as outras apagam (base.css zera com reduced motion) */
-.decisao__topo, .decisao__painel { animation: decisao-entra var(--transicao, 300ms) ease-out both; }
+.decisao__topo, .decisao__foto, .decisao__painel { animation: decisao-entra var(--transicao, 300ms) ease-out both; }
+.decisao__foto { animation-delay: calc(var(--transicao, 300ms) / 6); }
 .decisao__painel { animation-delay: calc(var(--transicao, 300ms) / 3); }
 .opcao { transition: background-color var(--transicao, 300ms) ease, border-color var(--transicao, 300ms) ease, opacity var(--transicao, 300ms) ease, transform 100ms ease-out; }
 .decisao[data-resultado='aberto'] .opcao[aria-pressed='true'] { transform: scale(1.02); }
@@ -447,7 +499,7 @@
 .decisao[data-ritmo='rapido'] .cena { animation: none; }
 @keyframes resultado-veredito { from { opacity: 0; transform: scale(1.15); } to { opacity: 1; transform: none; } }
 @keyframes resultado-linha { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: none; } }
-/* v2.71 (momento 8): "+N" figurinhas novas ao lado de "Minha carreira" */
+/* v2.71 (momento 8): "+N" figurinhas novas na etiqueta "Carreira ›" */
 .jogador__novas {
   display: inline-grid; place-items: center; min-inline-size: 1.5rem; padding: 0 6px; border-radius: 999px;
   background: var(--paleta-ouro); color: var(--cor-texto); font-size: 0.875rem; font-weight: 800; line-height: 1.4;
@@ -456,64 +508,13 @@
 @keyframes novas-chega { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: none; } }
 @keyframes decisao-entra { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
-/* v2.62 (pedido do usuário): no celular a cena quase não aparecia. A caixa do jogador fica mais baixa (figurinha, Over e
-   selos menores) e os detalhes da faixa de baixo (história e opções) descem um passo; o título fica como está.
-   O corpo segue em 1rem ou mais (tokens.json), menos os selos (rótulos) e a história (detalhe, decisão do usuário). */
-@media (max-width: 63.99rem) {
-  .decisao__topo { gap: var(--espaco-1) var(--espaco-2); padding: var(--espaco-2) var(--espaco-3); }
-  .jogador__abrir { gap: var(--espaco-2); }
-  .jogador__abrir .figurinha { --w: 2.75rem; }
-  .jogador__nome { font-size: 1.0625rem; }
-  .jogador__clube, .jogador__mais { font-size: 0.875rem; }
-  .decisao__over-numero { font-size: 2.25rem; }
-  .decisao__over-medalha { inline-size: 3.75rem; }
-  .decisao__over-medalha .decisao__over-rotulo { font-size: 0.875rem; }
-  /* auditoria mobile (ui-ux-pro-max, texto legível): na figurinha pequena o Over e o número saíam com 7 px; o Over já está
-     grande ao lado e o número fica para a figurinha grande (o nome segue no texto para o leitor de tela) */
-  .decisao__topo .figurinha__over-grande, .decisao__topo .figurinha__tarja-numero { display: none; }
-  .decisao__over { padding-block-start: var(--espaco-3); } /* o botão de reiniciar fica no canto de cima */
-  .decisao__dados { font-size: 0.875rem; }
-  .jogador__mais { white-space: nowrap; }
-  /* v2.70 (enquadramento): a caixa fica numa linha; idade, salário, valor, papel e taças abrem no botão. Fechados, saem da
-     vista mas seguem para o leitor de tela (mesma técnica do sr-only) */
-  .decisao__topo:not(.decisao__topo--aberto) :is(.decisao__dados, .decisao__papel, .tacas) {
-    position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
-  }
-  .jogador__detalhes {
-    display: grid; place-items: center; inline-size: 2.75rem; block-size: 1.75rem; margin-block-start: -2px;
-    border: 0; border-radius: 999px; background: transparent; color: var(--cor-texto); cursor: pointer; touch-action: manipulation;
-  }
-  .jogador__detalhes svg { transition: transform var(--transicao, 300ms) ease; }
-  .jogador__detalhes[aria-expanded='true'] svg { transform: rotate(180deg); }
-  .jogador__detalhes:focus-visible { outline: 3px solid var(--cor-foco); outline-offset: 1px; }
-  /* a figurinha pequena sem a tarja (ficava uma faixa preta vazia) */
-  .jogador__abrir .figurinha__tarja { display: none; }
-  /* v2.71: fechada, a caixa avisa a taça nova com um ponto dourado no botão (a taça está lá dentro) */
-  .jogador__detalhes { position: relative; }
-  /* área de toque de 44 px sem mudar o desenho (o botão tem 28 px de altura) */
-  .jogador__detalhes::before { content: ''; position: absolute; inset: -8px 0; }
-  .decisao__topo--taca-nova:not(.decisao__topo--aberto) .jogador__detalhes::after {
-    content: ''; position: absolute; inset-block-start: 0; inset-inline-end: 6px; inline-size: 10px; block-size: 10px; border-radius: 50%;
-    background: var(--paleta-ouro); box-shadow: 0 0 0 2px var(--cor-superficie);
-    animation: taca-ponto 900ms ease-out 3 both;
-  }
-}
-@keyframes taca-ponto { 0% { transform: scale(0.4); } 50% { transform: scale(1.4); } 100% { transform: scale(1); } }
-@media (min-width: 64rem) { .jogador__detalhes { display: none; } }
-/* v2.62: no celular (até 420 px), idade, salário e valor descem para uma linha embaixo do nome: entre o nome e o Over
-   não cabem com nome, bandeira e clube compridos */
+/* v2.62: no celular (até 420 px) a história fica em 1rem (v2.73, decisão do usuário) e as opções e o detalhe descem um
+   passo, para a foto da cena ficar com mais altura */
 @media (max-width: 26.25rem) {
-  .decisao__topo { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "quem over" "dados dados" "tacas tacas"; }
-  .decisao__dados { display: flex; flex-wrap: wrap; gap: 0 var(--espaco-3); }
-  .decisao__over-rotulo { font-size: 0.875rem; }
-  .selos li { padding: 0 6px; font-size: 0.875rem; line-height: 1.4; }
-  .decisao__painel { gap: var(--espaco-2); padding: var(--espaco-3); }
-  /* decisão do usuário (v2.62): a história é detalhe, não o principal; fica no tamanho de apoio, abaixo do 1rem do corpo */
-  /* v2.73 (decisão do usuário): a história volta a 1rem no celular */
   .decisao__historia { font-size: 1rem; line-height: 1.45; }
   .decisao__semestre { font-size: 0.875rem; }
   .opcao__rotulo { font-size: 1.0625rem; }
-  .decisao__detalhe { min-block-size: 2.2rem; font-size: 0.875rem; }
+  .decisao__detalhe { font-size: 0.875rem; }
 }
 
 /* v2.71 (momento 4): a taça nova chega na estante da caixa do topo depois do palco; base.css zera com reduced motion */

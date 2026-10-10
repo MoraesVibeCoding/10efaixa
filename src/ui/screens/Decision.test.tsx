@@ -134,15 +134,17 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
     expect(bar).toHaveAttribute('aria-valuetext', t('ui.decisao.idade', { idade: 17 }));
   });
 
-  it('figurinha do jogador (SPEC v2.26): nome, "meia do Flamengo", OVR na medalha da faixa; é o botão que abre "Minha carreira"', () => {
+  // v2.81 (Álbum): o card pequeno traz a figurinha e o Over num selo com o aro no metal da faixa; quem abre "Minha
+  // carreira" é a etiqueta "Carreira ›" (DecisionAlbum.test.tsx)
+  it('figurinha do jogador (SPEC v2.26, v2.81): nome, "meia do Flamengo" e o OVR no selo com o metal da faixa', () => {
     setup();
-    const card = screen.getByRole('button', { name: new RegExp(t('ui.carreira.titulo')) });
+    const card = document.querySelector('.decisao__topo') as HTMLElement;
     expect(card.querySelector('.figurinha')).not.toBeNull();
-    expect(card).toHaveAccessibleName(/Dudu Maestro/);
-    expect(within(card).getByText(t('ui.figurinha.posicaoNoClube', { posicao: t('positions.meia'), prep: t('ui.figurinha.prep.o'), clube: 'Flamengo' }))).toBeInTheDocument();
-    const over = within(card).getByText('78').closest('[data-medalha]');
+    expect(card.querySelector('.jogador__nome')).toHaveTextContent('Dudu Maestro');
+    expect(within(card).getAllByText(t('ui.figurinha.posicaoNoClube', { posicao: t('positions.meia'), prep: t('ui.figurinha.prep.o'), clube: 'Flamengo' })).length).toBeGreaterThan(0);
+    const over = card.querySelector('.decisao__over-medalha');
+    expect(over).toHaveTextContent('78');
     expect(over).toHaveAttribute('data-medalha', 'platina');
-    expect((over as HTMLElement).style.backgroundImage).toMatch(/platina/);
     expect(within(card).getByText(new RegExp(t('attributes.band.muitoBom')))).toBeInTheDocument();
   });
 
@@ -405,10 +407,11 @@ describe('contraste das cores de texto (T49c)', () => {
 });
 
 describe('camadas (T49c)', () => {
-  it('gaveta e resultado ficam acima da caixa do jogador e da faixa de baixo, que ficam sobre a cena', () => {
+  // v2.81: o resultado entra no lugar do painel, na página; só a gaveta fica por cima
+  it('a gaveta fica acima do card do jogador e do painel', () => {
     const css = readFileSync(resolve(__dirname, 'Decision.css'), 'utf8');
     const z = (sel: string) => Number(new RegExp(`\\n\\${sel} \\{[^}]*z-index:\\s*(\\d+)`).exec(css)?.[1] ?? 0);
-    for (const over of ['.gaveta', '.resultado']) {
+    for (const over of ['.gaveta']) {
       for (const under of ['.decisao__topo', '.decisao__painel']) expect(z(over)).toBeGreaterThan(z(under));
     }
     expect(z('.decisao__topo')).toBeGreaterThan(0);
@@ -428,7 +431,7 @@ describe('emblemas na tela (T49d)', () => {
 
   it('a caixa do jogador traz o emblema do clube ao lado da linha "meia do Flamengo" (v2.34)', () => {
     setup();
-    const card = screen.getByRole('button', { name: new RegExp(t('ui.carreira.titulo')) });
+    const card = document.querySelector('.decisao__topo') as HTMLElement;
     expect(card.querySelector('.jogador__clube .emblema')).toHaveAttribute('data-emblema', 'flamengo');
   });
 });
@@ -441,14 +444,6 @@ describe('variação B (T51c, SPEC v2.34)', () => {
   };
   const option = (eventId: string, id: string) => screen.getByRole('button', { name: new RegExp(t(`events.${eventId}.opcoes.${id}`)) });
   const confirm = () => screen.getByRole('button', { name: t('ui.decisao.confirmar') });
-
-  it('a cena ocupa a tela; caixa do jogador no topo e faixa de baixo em vidro (as duas camadas da tela)', () => {
-    show();
-    const main = screen.getByRole('main');
-    expect(main.querySelector('.decisao__topo')).toHaveClass('vidro');
-    expect(main.querySelector('.decisao__painel')).toHaveClass('vidro');
-    expect(main.querySelectorAll('.vidro')).toHaveLength(2);
-  });
 
   it('a caixa do topo mostra a figurinha com moldura, o Over grande e a contagem de títulos', () => {
     show();
@@ -562,10 +557,10 @@ describe('tela pequena (T49j): nada fica cortado', () => {
     expect(rule('.decisao')).toMatch(/min-block-size:\s*100dvh/);
   });
 
-  it('a cena fica fixa ao fundo; gaveta e resultado ficam presos à tela, não ao meio de uma página alta', () => {
-    expect(rule('.decisao__cena')).toMatch(/position:\s*fixed/);
+  // v2.81: a cena é uma foto na página, com altura mínima (a página rola antes de a foto sumir); a gaveta segue presa à tela
+  it('a foto da cena tem altura mínima; a gaveta fica presa à tela, não ao meio de uma página alta', () => {
+    expect(rule('.decisao__foto')).toMatch(/min-block-size:\s*7rem/);
     expect(rule('.gaveta')).toMatch(/position:\s*fixed/);
-    expect(rule('.resultado')).toMatch(/position:\s*fixed/);
   });
 });
 
@@ -675,22 +670,6 @@ describe('venda pelo empresário com o clube à vista (v2.64)', () => {
   });
 });
 
-// v2.70 (enquadramento): no celular a caixa do topo fica numa linha; idade, salário, valor, papel e taças abrem num botão
-// (e seguem disponíveis ao leitor de tela, só escondidos da vista).
-describe('caixa do topo compacta (v2.70)', () => {
-  it('um botão "Mais detalhes" abre e fecha os dados, com aria-expanded', () => {
-    render(<Decision eventId="salario-atrasado" age={24} progress={0.4} player={PLAYER} scene={{ src: 'c.webp', alt: 'cena' }} />);
-    const botao = screen.getByRole('button', { name: t('ui.decisao.maisDetalhes') });
-    expect(botao).toHaveAttribute('aria-expanded', 'false');
-    const topo = document.querySelector('.decisao__topo')!;
-    expect(topo).not.toHaveClass('decisao__topo--aberto');
-    expect(screen.getByRole('list', { name: t('ui.decisao.ficha') })).toBeInTheDocument();
-    fireEvent.click(botao);
-    expect(botao).toHaveAttribute('aria-expanded', 'true');
-    expect(topo).toHaveClass('decisao__topo--aberto');
-  });
-});
-
 // v2.71 (momento 4): o título do ano tem palco; a decisão atrás fica inerte, e depois a taça nova "chega" na caixa do topo.
 // Acesso e rebaixamento seguem no carimbo, depois do palco.
 describe('palco do título na decisão (v2.71)', () => {
@@ -718,7 +697,6 @@ describe('palco do título na decisão (v2.71)', () => {
     expect(tacas[1]).toHaveClass('taca--nova');
     expect(tacas[0]).not.toHaveClass('taca--nova');
     // no celular, com a caixa fechada, o aviso fica no botão de detalhes
-    expect(document.querySelector('.decisao__topo')).toHaveClass('decisao__topo--taca-nova');
   });
 
   it('sem título, nenhum palco', () => {
@@ -789,7 +767,7 @@ describe('ritmo da decisão (v2.71)', () => {
     render(<Decision eventId={EVENT} age={17} progress={0.05} player={{ ...PLAYER, marcos }} anterior={{ overall: 78, age: 17, cromos: 2 }} scene={{ src: 'c.webp', alt: 'cena' }} />);
     const badge = document.querySelector('.jogador__novas')!;
     expect(badge).toHaveTextContent('+2');
-    expect(screen.getByText(t('ui.album.novas', { n: 2 }))).toHaveClass('sr-only');
+    expect(screen.getByRole('button', { name: new RegExp(t('ui.album.novas', { n: 2 })) })).toHaveClass('card-jogador__carreira');
     cleanup();
     render(<Decision eventId={EVENT} age={17} progress={0.05} player={{ ...PLAYER, marcos }} scene={{ src: 'c.webp', alt: 'cena' }} />);
     expect(document.querySelector('.jogador__novas')).toBeNull();

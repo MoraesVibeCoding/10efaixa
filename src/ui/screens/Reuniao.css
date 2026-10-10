@@ -1,4 +1,4 @@
-/* T52d: reunião em 3 ideias. Usa a casca da decisão (cena, faixa, card do jogador, painel de vidro); aqui só os cartões. */
+/* T52d: reunião em 3 ideias. Usa a casca da decisão (v2.81: página do álbum com o card do jogador, a foto da cena e o painel no papel); aqui só os cartões. */
 .reuniao__painel { display: flex; flex-direction: column; gap: var(--espaco-2); }
 .reuniao__sala { margin: 0; text-align: center; font-size: 0.875rem; opacity: 0.85; }
 .reuniao__fala { margin: 0; font-size: 0.9rem; line-height: 1.35; }
