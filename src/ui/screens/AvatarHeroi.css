@@ -33,7 +33,7 @@
   background: var(--cor-sigla-contorno);
   color: var(--cor-sigla-texto);
 }
-.heroi__rotulo { display: block; font-size: 0.8125rem; opacity: 0.9; }
+.heroi__rotulo { display: block; font-size: 0.875rem; opacity: 0.9; }
 .heroi__nome { display: block; font-family: var(--fonte-titulo); font-size: 1.5rem; font-weight: 900; line-height: 1; }
 .heroi__setas { display: flex; gap: var(--espaco-1); }
 .heroi__seta {

@@ -178,7 +178,7 @@
   background: var(--cor-superficie);
   color: var(--paleta-gramado);
   font-family: var(--fonte-titulo);
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   font-weight: 700;
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cpath d='M20 4 L6 11 L0 26 L11 30 L13 24 L13 57 L47 57 L47 24 L49 30 L60 26 L54 11 L40 4 C38 11 22 11 20 4Z'/%3E%3C/svg%3E") center / contain no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cpath d='M20 4 L6 11 L0 26 L11 30 L13 24 L13 57 L47 57 L47 24 L49 30 L60 26 L54 11 L40 4 C38 11 22 11 20 4Z'/%3E%3C/svg%3E") center / contain no-repeat;

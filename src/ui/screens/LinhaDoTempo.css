@@ -19,7 +19,7 @@
 .linha__placar-nums { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--espaco-2); }
 .linha__placar-n { display: flex; flex-direction: column; min-inline-size: 0; }
 .linha__placar-n b { font-family: var(--fonte-titulo); font-size: 2rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
-.linha__placar-n > span { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.linha__placar-n > span { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.04em; }
 .linha__placar-n--auge b { color: #FFC21A; }
 .linha__lista { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; background: var(--cor-superficie); border: var(--forma-borda-fina) solid var(--cor-linha); border-radius: var(--forma-raio); overflow: hidden; margin-block-end: 4.5rem; }
 .linha__item {
@@ -48,7 +48,7 @@
 .linha__item--auge .linha__faixa > span { background: #FFC21A; box-shadow: inset 0 0 0 1px rgb(9 26 17 / 0.25); }
 .linha__divisao { grid-column: 2 / -1; font-size: 0.875rem; color: var(--cor-texto-suave); }
 .linha__novo { font-weight: 700; color: var(--cor-texto); }
-.linha__auge { margin-inline-start: var(--espaco-2); padding: 0 0.4rem; border-radius: 4px; background: var(--cor-texto); color: #FFC21A; font-family: var(--fonte-titulo); font-size: 0.75rem; text-transform: uppercase; }
+.linha__auge { margin-inline-start: var(--espaco-2); padding: 0 0.4rem; border-radius: 4px; background: var(--cor-texto); color: #FFC21A; font-family: var(--fonte-titulo); font-size: 0.875rem; text-transform: uppercase; }
 .linha__numeros { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: 0 var(--espaco-3); font-size: 0.875rem; font-variant-numeric: tabular-nums; }
 /* v2.65/v2.66: a Seleção do ano num selo amarelo, como a braçadeira */
 .linha__selecao { grid-column: 2 / -1; display: flex; flex-direction: column; gap: 2px; margin-block-start: var(--espaco-1); font-size: 0.875rem; }
@@ -65,11 +65,14 @@
   margin-block-start: auto;
   border: 0;
   border-radius: 999px;
-  background: var(--cor-texto);
-  color: var(--cor-fundo);
+  /* v2.73: botão principal único (verde, Oswald em caixa alta) */
+  background: var(--cor-destaque);
+  color: var(--cor-sobre-destaque);
   font-family: var(--fonte-titulo);
   font-size: var(--tipo-opcao);
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   cursor: pointer;
 }
 .linha__cartao:focus-visible { outline: 3px solid var(--cor-destaque); outline-offset: 3px; }
