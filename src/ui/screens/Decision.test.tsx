@@ -757,3 +757,40 @@ describe('mudança de faixa no topo (v2.71)', () => {
     expect(document.querySelector('.decisao__over-medalha')).not.toHaveClass('decisao__over-medalha--troca');
   });
 });
+
+// v2.71 (momentos 5, 6, 7 e 8): o resultado entra em cascata, a cena entra e "respira", a opção marcada dá um pulo
+// e as figurinhas novas do álbum aparecem como "+N" em "Minha carreira".
+describe('ritmo da decisão (v2.71)', () => {
+  const css = readFileSync(resolve(__dirname, 'Decision.css'), 'utf8');
+
+  it('resultado em cascata: cada linha tem a sua ordem e a animação usa essa ordem', () => {
+    vi.useFakeTimers();
+    render(<Decision eventId={EVENT} age={17} progress={0.05} player={PLAYER} state={STATE} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    fireEvent.click(document.querySelector(`[data-opcao-id="${def.opcoes[0]!.id}"]`)!);
+    fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
+    const itens = [...document.querySelectorAll<HTMLElement>('.resultado__lista li')];
+    itens.forEach((li, i) => { expect(li.style.getPropertyValue('--i')).toBe(String(i)); });
+    expect(css).toMatch(/\.resultado__lista li\s*\{[^}]*animation:\s*resultado-linha[^}]*var\(--i/);
+    vi.useRealTimers();
+  });
+
+  it('a opção marcada dá um pulo', () => {
+    expect(css).toMatch(/\.opcao\[aria-pressed='true'\]\s*\{[^}]*animation:\s*opcao-marca/);
+  });
+
+  it('a cena entra com fade e "respira" devagar (Ken Burns)', () => {
+    const cena = readFileSync(resolve(__dirname, 'CenaPintada.css'), 'utf8');
+    expect(cena).toMatch(/\.cena\s*\{[^}]*animation:\s*cena-entra[^;]*,\s*cena-respira/);
+  });
+
+  it('figurinha nova: "+N" em "Minha carreira", com texto para o leitor de tela; sem anterior, nada', () => {
+    const marcos = [{ id: 'estreia-profissional', ano: 2027, clubId: 'flamengo' }];
+    render(<Decision eventId={EVENT} age={17} progress={0.05} player={{ ...PLAYER, marcos }} anterior={{ overall: 78, age: 17, cromos: 2 }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    const badge = document.querySelector('.jogador__novas')!;
+    expect(badge).toHaveTextContent('+2');
+    expect(screen.getByText(t('ui.album.novas', { n: 2 }))).toHaveClass('sr-only');
+    cleanup();
+    render(<Decision eventId={EVENT} age={17} progress={0.05} player={{ ...PLAYER, marcos }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    expect(document.querySelector('.jogador__novas')).toBeNull();
+  });
+});

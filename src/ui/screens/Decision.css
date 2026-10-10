@@ -433,6 +433,23 @@
 .decisao__painel { animation-delay: calc(var(--transicao, 300ms) / 3); }
 .opcao { transition: background-color var(--transicao, 300ms) ease, border-color var(--transicao, 300ms) ease, opacity var(--transicao, 300ms) ease, transform var(--transicao, 300ms) ease; }
 .decisao[data-resultado='aberto'] .opcao[aria-pressed='true'] { transform: scale(1.02); }
+/* v2.71 (momento 7): tocar na opção dá um pulo curto, para o toque ser sentido */
+.opcao[aria-pressed='true'] { animation: opcao-marca 260ms cubic-bezier(0.2, 1.6, 0.4, 1); }
+@keyframes opcao-marca { 0% { scale: 0.96; } 60% { scale: 1.03; } 100% { scale: 1; } }
+/* v2.71 (momento 5): o resultado entra em cascata: veredito carimba, depois a escolha, as linhas uma a uma e o botão */
+.resultado__veredito { animation: resultado-veredito 380ms cubic-bezier(0.2, 1.4, 0.4, 1) both; }
+.resultado__escolha { animation: decisao-entra 260ms ease-out 180ms both; }
+.resultado__lista li { animation: resultado-linha 260ms ease-out calc(300ms + var(--i, 0) * 110ms) both; }
+.resultado__seguir { animation: decisao-entra 260ms ease-out 450ms both; }
+@keyframes resultado-veredito { from { opacity: 0; transform: scale(1.8); } to { opacity: 1; transform: none; } }
+@keyframes resultado-linha { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: none; } }
+/* v2.71 (momento 8): "+N" figurinhas novas ao lado de "Minha carreira" */
+.jogador__novas {
+  display: inline-grid; place-items: center; min-inline-size: 1.5rem; padding: 0 6px; border-radius: 999px;
+  background: var(--paleta-ouro); color: var(--cor-texto); font-size: 0.875rem; font-weight: 800; line-height: 1.4;
+  animation: novas-chega 600ms cubic-bezier(0.2, 1.6, 0.4, 1) 400ms both;
+}
+@keyframes novas-chega { from { opacity: 0; transform: scale(0.3) translateY(8px); } to { opacity: 1; transform: none; } }
 @keyframes decisao-entra { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
 /* v2.62 (pedido do usuário): no celular a cena quase não aparecia. A caixa do jogador fica mais baixa (figurinha, Over e

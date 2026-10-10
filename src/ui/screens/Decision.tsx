@@ -88,7 +88,7 @@ export interface DecisionProps {
   onContinue?: (optionId: string, state: Ctx) => void;
 }
 
-export interface Anterior { overall: number; age: number; marketValueEUR?: number }
+export interface Anterior { overall: number; age: number; marketValueEUR?: number; /** v2.71: títulos + marcos na decisão anterior (as figurinhas novas viram "+N") */ cromos?: number }
 
 interface Season { age: number; clubId: string; overall: number; /** T51b: faixa da torcida naquele clube. */ torcida?: string }
 
@@ -320,8 +320,9 @@ function Result({ eventId, optionId, state, tags, auto, onDone }: { eventId: str
         {outcome.length === 0 && <p className="resultado__vazio">{t('ui.resultado.semEfeito')}</p>}
         {outcome.length > 0 && (
           <ul className="resultado__lista">
-            {outcome.map((o) => (
-              <li key={o.campo} className={o.delta > 0 ? 'resultado__ganho' : 'resultado__perda'}>
+            {outcome.map((o, i) => (
+              // v2.71 (momento 5): as linhas entram em cascata, na ordem
+              <li key={o.campo} className={o.delta > 0 ? 'resultado__ganho' : 'resultado__perda'} style={{ '--i': i } as React.CSSProperties}>
                 <span>{t(`preview.campo.${o.campo}`)}</span>
                 <strong>{outcomeText(o)}</strong>
               </li>
@@ -427,6 +428,8 @@ export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert, 
   const valor = useRolling(player.marketValueEUR ?? 0, anterior?.marketValueEUR);
   // v2.71 (momento 3): o metal acompanha o número que rola; mudou de faixa, a medalha brilha na troca
   const medal = medalOf(over);
+  // v2.71 (momento 8): figurinhas que chegaram ao álbum desde a decisão anterior
+  const novasFigurinhas = anterior?.cromos === undefined ? 0 : player.titles.length + (player.marcos?.length ?? 0) - anterior.cromos;
   const troca = anterior !== undefined && medalOf(anterior.overall).nome !== medalOf(player.overall).nome;
   // v2.70 (enquadramento): no celular a caixa fica numa linha; os dados abrem no botão e a escolha vale até fechar o jogo
   const [aberto, setAberto] = useState(topoAberto);
@@ -443,6 +446,7 @@ export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert, 
           <span className="jogador__clube"><Emblema clubId={player.clubId} size={18} />{clubLine(player.position, player.clubId)}</span>
           <span className="jogador__mais">
             {t('ui.carreira.titulo')}
+            {novasFigurinhas > 0 && <><span className="jogador__novas" aria-hidden="true">+{novasFigurinhas}</span><span className="sr-only">{t('ui.album.novas', { n: novasFigurinhas })}</span></>}
             <svg viewBox="0 0 10 16" width="7" height="11" aria-hidden="true" focusable="false">
               <path d="M1.5 1.5 8 8l-6.5 6.5" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="square" />
             </svg>

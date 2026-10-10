@@ -121,6 +121,7 @@
   "over": "OVR"
  },
  "album": {
+  "novas": "Figurinhas novas no álbum: {n}",
   "titulo": "Álbum da carreira",
   "conquistas": "Conquistas",
   "marco": {
