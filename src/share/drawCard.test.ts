@@ -35,16 +35,23 @@ describe('desenho do cartão (T55d)', () => {
     const { ctx, all } = fakeCtx();
     drawCard(ctx, m, 'narrativa');
     const text = all();
-    for (const s of [m.nome.toUpperCase(), m.apelido, m.veredito.toUpperCase(), m.rotulo, m.codigo, ...m.honrarias, ...m.frases]) expect(text, s).toContain(s);
+    // v2.79: o nome longo que não cabe ao lado do número vira só o primeiro nome (o completo segue no texto alternativo)
+    for (const s of [m.nome.toUpperCase().split(' ')[0]!, m.apelido, m.veredito.toUpperCase(), m.rotulo, m.codigo, ...m.honrarias, ...m.frases]) expect(text, s).toContain(s);
     expect(text).toContain(m.manchete.split(' ').slice(0, 3).join(' '));
   });
 
-  it('estatístico: números da carreira, radar com os números do pico e código; sem as frases', () => {
-    const { ctx, all } = fakeCtx();
+  it('estatístico (v2.79): números em fichas, Seleção e patrimônio por extenso, os 10 atributos em fichas da maior para a menor; sem as frases', () => {
+    const { ctx, all, at } = fakeCtx();
     drawCard(ctx, m, 'estatistica');
     const text = all();
-    for (const n of m.numeros) { expect(text).toContain(n.valor); expect(text).toContain(n.nome.toUpperCase()); }
-    for (const a of m.radar) { expect(text).toContain(a.nome); expect(text).toContain(String(a.valor)); }
+    for (const n of m.numeros) {
+      expect(text).toContain(n.valor);
+      expect(text).toContain(n.id === 'selecao' || n.id === 'patrimonio' ? `${n.nome}: ${n.valor}` : n.nome.toUpperCase());
+    }
+    const nomes = new Set(m.radar.map((a) => a.nome.toUpperCase()));
+    const ordem = at.filter((a) => nomes.has(a.s)).map((a) => a.s);
+    expect(ordem).toEqual([...m.radar].sort((a, b) => b.valor - a.valor).map((a) => a.nome.toUpperCase()));
+    for (const a of m.radar) expect(text).toContain(String(a.valor));
     expect(text).toContain(m.codigo);
     expect(text).not.toContain(m.frases[0]!);
   });
@@ -137,5 +144,40 @@ describe('manchete com cara de jornal (v2.77)', () => {
     const linha = fonts.find((f) => f.s.includes(' ') && m.manchete.startsWith(f.s));
     expect(linha?.font).toContain(tokens.fontes.titulo);
     expect(linha?.font).not.toMatch(/italic/);
+  });
+});
+
+// v2.79 (achado do usuário: "as infos estão sobrepostas"): nenhum texto do cartão encosta em outro, nas duas versões.
+// A faixa (desenhada girada) e o número gigante do fundo ficam de fora: são camadas de trás ou de outra orientação.
+describe('nada sobreposto (v2.79)', () => {
+  type Box = { s: string; x0: number; x1: number; y0: number; y1: number };
+  function boxesOf(x: typeof m, v: 'narrativa' | 'estatistica'): Box[] {
+    const boxes: Box[] = [];
+    const base = fakeCtx();
+    const ctx = new Proxy(base.ctx as unknown as Record<string, unknown>, {
+      get(target, prop: string) {
+        if (prop === 'fillText') return (s: string, px: number, py: number) => {
+          const size = parseFloat(String(target.font).match(/(\d+(\.\d+)?)px/)![1]!);
+          const w = (target.measureText as (t: string) => { width: number })(s).width;
+          boxes.push({ s, x0: px, x1: px + w, y0: py - 0.72 * size, y1: py + 0.12 * size });
+        };
+        return target[prop];
+      },
+      set(target, prop: string, val) { target[prop] = val; return true; },
+    });
+    drawCard(ctx as unknown as CanvasRenderingContext2D, x, v);
+    return boxes.slice(1).filter((b) => b.s !== x.veredito.toUpperCase());
+  }
+  const hit = (a: Box, b: Box) => Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0) > 2 && Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0) > 2;
+  const careers = Array.from({ length: 40 }, (_, i) => cardModel(simulateCareer(randomInput(createPrng(i + 1)), i + 1), '10F-AAAA-BBBB'));
+  const longo = { ...m, nome: 'Jogador Com Nome Bem Comprido', numeros: m.numeros.map((n) => (n.id === 'patrimonio' ? { ...n, valor: 'R$ 1.234,5 mi' } : n)) };
+
+  it.each(['narrativa', 'estatistica'] as const)('%s: nenhum par de textos se sobrepõe', (v) => {
+    for (const x of [...careers, longo]) {
+      const b = boxesOf(x, v);
+      const pares: string[] = [];
+      for (let i = 0; i < b.length; i++) for (let j = i + 1; j < b.length; j++) if (hit(b[i]!, b[j]!)) pares.push(`${b[i]!.s} × ${b[j]!.s}`);
+      expect(pares, x.nome).toEqual([]);
+    }
   });
 });
