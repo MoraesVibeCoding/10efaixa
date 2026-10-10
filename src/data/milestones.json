@@ -1,5 +1,5 @@
 {
- "_nota": "Marcos da carreira (SPEC 6.13b, v2.29; T25c): primeiras vezes que viram cena com 3 opções. A ordem do arquivo é a prioridade. Gatilhos usam os fatos de MilestoneFacts (src/engine/milestones.ts) e a mesma sintaxe de condição de events.json. 'espelho': marco de clube que fica de fora na mesma temporada em que o de carreira correspondente dispara.",
+ "_nota": "Marcos da carreira (SPEC 6.13b, v2.29; T25c): primeiras vezes que viram cena com 3 opções. A ordem do arquivo é a prioridade. Gatilhos usam os fatos de MilestoneFacts (src/engine/milestones.ts) e a mesma sintaxe de condição de events.json. 'espelho': marco de clube que fica de fora na mesma temporada em que o de carreira correspondente dispara (um ou uma lista). v2.78 'momento': quando a cena acontece na temporada: 'chegada' abre a temporada, antes da 1ª reunião (estreias); 'convocacao' logo depois da convocação; 'copa' antes de jogar a Copa; sem momento, no fim da temporada (é o desempenho do ano). maxPorTemporada vale só para os do fim da temporada.",
  "maxPorTemporada": 2,
  "fatos": {
   "_nota": "Como o motor transforma a temporada em fatos dos gatilhos. titularMinutos: fração mínima de minutos para contar como titular. v2.65: os gols pela Seleção principal do ano vêm da Seleção ano a ano (nationalYear.ts); saiu a estimativa golsSelecaoFracao.",
@@ -12,9 +12,10 @@
  },
  "marcos": [
   { "id": "camisa-10", "escopo": "carreira", "gatilho": [["camisa10", "==", true]] },
-  { "id": "estreia-profissional", "escopo": "carreira", "gatilho": [["proDebut", "==", true]] },
-  { "id": "mentalidade", "escopo": "carreira", "gatilho": [["proDebut", "==", true]] },
-  { "id": "estreia-no-clube", "escopo": "clube", "espelho": "estreia-profissional", "gatilho": [["clubDebut", "==", true]] },
+  { "id": "estreia-profissional", "escopo": "carreira", "momento": "chegada", "gatilho": [["proDebut", "==", true]] },
+  { "id": "mentalidade", "escopo": "carreira", "momento": "chegada", "gatilho": [["proDebut", "==", true]] },
+  { "id": "estreia-exterior", "escopo": "carreira", "momento": "chegada", "gatilho": [["exterior", "==", true]] },
+  { "id": "estreia-no-clube", "escopo": "clube", "momento": "chegada", "espelho": ["estreia-profissional", "estreia-exterior"], "gatilho": [["clubDebut", "==", true]] },
   { "id": "primeira-titularidade", "escopo": "carreira", "gatilho": [["titular", "==", true]] },
   { "id": "primeiro-gol", "escopo": "carreira", "gatilho": [["golsCarreira", ">=", 1]] },
   { "id": "primeiro-gol-no-clube", "escopo": "clube", "espelho": "primeiro-gol", "gatilho": [["golsNoClube", ">=", 1]] },
@@ -28,10 +29,9 @@
   { "id": "bola-parada-no-clube", "escopo": "clube", "espelho": "assumir-faltas", "gatilho": [["titular", "==", true], ["golsNoClube", ">=", 3], ["cobrador", "==", false]] },
   { "id": "primeira-bracadeira", "escopo": "carreira", "gatilho": [["capitao", "==", true]] },
   { "id": "bracadeira-no-clube", "escopo": "clube", "espelho": "primeira-bracadeira", "gatilho": [["capitao", "==", true]] },
-  { "id": "primeira-convocacao", "escopo": "carreira", "gatilho": [["convocado", "==", true]] },
-  { "id": "estreia-selecao", "escopo": "carreira", "gatilho": [["jogosSelecao", ">=", 1]] },
+  { "id": "primeira-convocacao", "escopo": "carreira", "momento": "convocacao", "gatilho": [["convocado", "==", true]] },
+  { "id": "estreia-selecao", "escopo": "carreira", "momento": "convocacao", "gatilho": [["jogosSelecao", ">=", 1]] },
   { "id": "primeiro-gol-selecao", "escopo": "carreira", "gatilho": [["estreouSelecao", "==", true], ["golsSelecaoAno", ">=", 1]] },
-  { "id": "primeira-copa", "escopo": "carreira", "gatilho": [["copa", "==", true]] },
-  { "id": "estreia-exterior", "escopo": "carreira", "gatilho": [["exterior", "==", true]] }
+  { "id": "primeira-copa", "escopo": "carreira", "momento": "copa", "gatilho": [["copa", "==", true]] }
  ]
 }

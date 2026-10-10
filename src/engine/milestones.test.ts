@@ -1,4 +1,4 @@
-import { fireMilestones, milestoneKey, type MilestoneFacts } from './milestones';
+import { fireMilestones, milestoneKey, type MilestoneFacts, type MilestoneMoment } from './milestones';
 import data from '../data/milestones.json';
 import { t } from '../i18n';
 
@@ -9,7 +9,9 @@ const base: MilestoneFacts = {
   golsNoClube: 0, cobrador: false, titulosCarreira: 0, finalAno: false, classico: false, capitao: false, camisa10: false, convocado: false,
   jogosSelecao: 0, golsSelecaoAno: 0, copa: false, exterior: false, estreouSelecao: false,
 };
-const fire = (over: Partial<MilestoneFacts>, done: string[] = []) => fireMilestones({ ...base, ...over }, new Set(done)).fired.map((m) => m.id);
+const fire = (over: Partial<MilestoneFacts>, done: string[] = [], momento: MilestoneMoment = 'fim') => fireMilestones({ ...base, ...over }, new Set(done), momento).fired.map((m) => m.id);
+// v2.78: a chegada abre a temporada (estreias); a convocação e a Copa vêm na hora delas
+const chegada = (over: Partial<MilestoneFacts>, done: string[] = []) => fire(over, done, 'chegada');
 
 describe('marcos da carreira (T25c)', () => {
   it('são 22: 17 de carreira (a camisa 10 entrou na v2.63, a mentalidade na v2.68) e 5 de clube, ids únicos, todos com gatilho', () => {
@@ -25,24 +27,26 @@ describe('marcos da carreira (T25c)', () => {
   });
 
   it('a estreia profissional dispara na primeira temporada no profissional, uma vez só', () => {
-    expect(fire({ proDebut: true })).toEqual(['estreia-profissional', 'mentalidade']); // v2.68: a mentalidade vem com a estreia
-    expect(fire({ proDebut: true }, [milestoneKey('estreia-profissional'), milestoneKey('mentalidade')])).toEqual([]);
+    expect(chegada({ proDebut: true })).toEqual(['estreia-profissional', 'mentalidade']); // v2.68: a mentalidade vem com a estreia
+    expect(chegada({ proDebut: true }, [milestoneKey('estreia-profissional'), milestoneKey('mentalidade')])).toEqual([]);
   });
 
   it('o marco do clube é do clube: estreia em outro clube dispara de novo; no mesmo clube não', () => {
     const k = (id: string, c: string) => milestoneKey(id, c);
-    expect(fire({ clubDebut: true, clubId: 'sport' }, [k('estreia-no-clube', 'bahia')])).toEqual(['estreia-no-clube']);
-    expect(fire({ clubDebut: true, clubId: 'sport' }, [k('estreia-no-clube', 'sport')])).toEqual([]);
+    expect(chegada({ clubDebut: true, clubId: 'sport' }, [k('estreia-no-clube', 'bahia')])).toEqual(['estreia-no-clube']);
+    expect(chegada({ clubDebut: true, clubId: 'sport' }, [k('estreia-no-clube', 'sport')])).toEqual([]);
   });
 
   it('o marco de clube espelho de um de carreira fica de fora na mesma temporada (a estreia no 1º clube é a profissional)', () => {
-    expect(fire({ proDebut: true, clubDebut: true })).toEqual(['estreia-profissional', 'mentalidade']);
+    expect(chegada({ proDebut: true, clubDebut: true })).toEqual(['estreia-profissional', 'mentalidade']);
+    // v2.78: a chegada ao exterior toma o lugar da chegada ao clube (uma cena de chegada só)
+    expect(chegada({ clubDebut: true, exterior: true, clubId: 'porto' }, [milestoneKey('estreia-profissional'), milestoneKey('mentalidade')])).toEqual(['estreia-exterior']);
   });
 
   it('no máximo 2 marcos por temporada, na ordem de prioridade dos dados; o resto espera a próxima', () => {
     const many = fire({ proDebut: true, titular: true, golsCarreira: 1, golsNoClube: 1, assistenciasCarreira: 1, finalAno: true });
     expect(many).toHaveLength(data.maxPorTemporada);
-    expect(many[0]).toBe('estreia-profissional');
+    expect(many[0]).toBe('primeira-titularidade'); // v2.78: a estreia é da chegada, fora do limite do fim da temporada
     const later = fire({ titular: true, golsCarreira: 1, assistenciasCarreira: 1 }, [milestoneKey('estreia-profissional')]);
     expect(later).toHaveLength(data.maxPorTemporada);
   });
@@ -50,8 +54,11 @@ describe('marcos da carreira (T25c)', () => {
   it('condições vêm dos dados: primeiro gol exige gol na carreira; título exige título; Copa exige Copa', () => {
     expect(fire({ golsCarreira: 1 })).toEqual(['primeiro-gol']);
     expect(fire({ titulosCarreira: 1 })).toEqual(['primeiro-titulo']);
-    expect(fire({ copa: true })).toEqual(['primeira-copa']);
-    expect(fire({ exterior: true })).toEqual(['estreia-exterior']);
+    expect(fire({ copa: true }, [], 'copa')).toEqual(['primeira-copa']);
+    expect(chegada({ exterior: true })).toEqual(['estreia-exterior']);
+    expect(fire({ convocado: true, jogosSelecao: 1 }, [], 'convocacao')).toEqual(['primeira-convocacao', 'estreia-selecao']);
+    // cada marco só no seu momento
+    expect(fire({ proDebut: true, exterior: true, copa: true, convocado: true })).toEqual([]);
   });
 
   it('cobrador: assumir as faltas só para quem ainda não cobra', () => {

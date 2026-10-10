@@ -22,7 +22,7 @@ import { drawCatalog, drawCount } from './contextDraw';
 import { contextCtx, tagsOf } from './contextTags';
 import contextCfg from '../data/context.json';
 import { ONCE, memoryCtx, type Memory } from './memory';
-import { EFFECTS, FACTS, fireMilestones, milestoneKey, type MilestoneFacts } from './milestones';
+import { EFFECTS, FACTS, fireMilestones, milestoneKey, type MilestoneFacts, type MilestoneMoment } from './milestones';
 import { MEETING_EVENT, autoProposal, encodeProposal, meetingScore, parseProposal, staffMeeting, type MeetingResult } from './meeting';
 import { MEETING_IDEAS, TRUST, drawClubNeed, ideaOf, meetingOptions, type Idea, type MeetingOptions } from './meetingOptions';
 import { expectedMinutes, minutesShare, roleFor, squadLevel, updateForm, updateMorale, type Role } from './minutes';
@@ -249,7 +249,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   const usedCatalog = new Set<string>();
   // T25d: memória da carreira (id, ano, idade e clube); os marcos da T25c também entram
   const memorias: Memory[] = [];
-  const remember = (id: string, club: string) => { if (ONCE.has(id) && memorias.some((x) => x.id === id)) return; memorias.push({ id, year: curYear, age: Math.floor(evo.age - 1), clubId: club }); };
+  // v2.78: quem lembra no meio da temporada (marcos da chegada, da convocação, da Copa) passa a idade da temporada
+  const remember = (id: string, club: string, age = Math.floor(evo.age - 1)) => { if (ONCE.has(id) && memorias.some((x) => x.id === id)) return; memorias.push({ id, year: curYear, age, clubId: club }); };
   // T25c: marcos da carreira (primeiras vezes)
   const marcos: CareerResult['marcos'] = [];
   const doneMarcos = new Set<string>();
@@ -364,6 +365,51 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     marcoMental = Math.min(EFFECTS.bonusMentalMax, marcoMental + (out.bonusMental as number));
   }
 
+  /**
+   * Marcos da carreira (6.13b) de um momento da temporada (v2.78): cada um vira decisão e aplica os efeitos.
+   * A chegada abre a temporada, a convocação e a Copa vêm na hora delas, o resto no fim (desempenho do ano).
+   */
+  const liveMilestones = (momento: MilestoneMoment, facts: MilestoneFacts, year: number, seasonAge: number) => {
+    const clubId = facts.clubId;
+    const { fired, silenced } = fireMilestones(facts, doneMarcos, momento);
+    for (const k of silenced) doneMarcos.add(k);
+    for (const m of fired) {
+      doneMarcos.add(milestoneKey(m.id, m.escopo === 'clube' ? clubId : undefined));
+      const before = { moral: morale, idolatria: idol[clubId] ?? 0, relacaoTecnico: coachRelation, bonusMental: 0, cobrador: false, comemoracao: '', mentalidade: '' } as Record<string, number | string | boolean>;
+      const option = ask(m.id, before);
+      const out = applyOption(before, m.id, option);
+      morale = out.moral as number;
+      idol = { ...idol, [clubId]: out.idolatria as number };
+      coachRelation = clamp(out.relacaoTecnico as number, 0, 1);
+      marcoMental = Math.min(EFFECTS.bonusMentalMax, marcoMental + (out.bonusMental as number));
+      if (out.cobrador) cobradorClub = clubId;
+      if (m.id === 'camisa-10') { tenShirt = true; spells.at(-1)!.number = 10; }
+      // a comemoração escolhida na criação (save ou link antigo) continua valendo; sem ela, vale a do primeiro gol
+      if (out.comemoracao && input.celebration === undefined) celebration = out.comemoracao as string;
+      if (out.mentalidade) {
+        // v2.68: a mentalidade passa a pesar na evolução daqui em diante (crescimento, ruído e declínio)
+        mentality = out.mentalidade as string;
+        const fxM = mentalityEffects(mentality);
+        mentalityGrowth = fxM.growth;
+        evo = { ...evo, ...fxM.evo };
+      }
+      marcos.push({ id: m.id, year, age: Math.floor(seasonAge), clubId, option });
+      remember(m.id, clubId, Math.floor(seasonAge));
+    }
+  };
+  /**
+   * v2.78: a chegada a um clube do profissional. "Uma vez só" vem do registro dos marcos vividos (por carreira ou por clube),
+   * então os fatos só dizem onde ele está: estreia no profissional, no clube e, fora do Brasil, no exterior.
+   */
+  const arrive = (club: string, year: number, seasonAge: number) =>
+    liveMilestones('chegada', factsNow(club, { proDebut: true, clubDebut: true, exterior: !BRAZIL.has(club) }), year, seasonAge);
+  /** Fatos de um momento do meio da temporada: só o que aquele momento olha (o resto fica neutro). */
+  const factsNow = (clubId: string, over: Partial<MilestoneFacts>): MilestoneFacts => ({
+    clubId, proDebut: false, clubDebut: false, titular: false, golsAno: 0, golsCarreira: 0, assistenciasCarreira: 0, golsNoClube: 0,
+    cobrador: false, titulosCarreira: 0, finalAno: false, classico: false, capitao: false, camisa10: false, convocado: false,
+    jogosSelecao: 0, golsSelecaoAno: 0, copa: false, exterior: false, estreouSelecao: false, ...over,
+  });
+
   for (let year = startYear, k = 0; ; year++, k++) {
     curYear = year;
     const yr = createPrng(Math.imul(seed + 1, 0x9e3779b1) ^ Math.imul(k + 1, 0x85ebca6b));
@@ -376,6 +422,10 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       if (p.promoted) inYouth = false;
       else if (p.released) { inYouth = false; join(runPeneira({ state: input.state, startingOverall: ov(evo) }, yr).clubId, false, yr); }
     }
+
+    // v2.78: a idade da temporada (a mesma do resumo) e a chegada, que abre a temporada antes de qualquer decisão no clube
+    const seasonAge = evo.age;
+    if (clubId && !inYouth) arrive(clubId, year, seasonAge);
 
     // Temporada do mundo; o clube do jogador recebe o efeito dele.
     const boost = clubId && !inYouth
@@ -493,7 +543,11 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       traits = { position: tr.position, traits: tr.traits, latentTrait: tr.latentTrait, progress: tr.progress };
 
       if (varzeaLeft > 0) {
-        if (--varzeaLeft === 0) join(varzeaClub!, false, yr);
+        if (--varzeaLeft === 0) {
+          join(varzeaClub!, false, yr);
+          // v2.78: saiu da várzea no meio do ano: a chegada é agora, não na temporada seguinte
+          if (clubId && !inYouth) arrive(clubId, year, seasonAge);
+        }
       } else if (!inYouth && clubId) {
         minutesSum += minutes;
         const perf = clamp(form * 2 - 1, -1, 1);
@@ -629,11 +683,15 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         if (next.ten) selection.ten++;
         if (next.captain) selection.captain++;
         if (next.rung !== 'nenhum') natYear = addCallUp(natYear, { ...next, rung: next.rung }, position, ov(evo), natRng);
+        // v2.78: a primeira convocação e a estreia pela Seleção na hora, antes das decisões da Seleção
+        if (!inYouth) liveMilestones('convocacao', factsNow(clubId, { convocado: Object.values(selection.callUps).some((n) => n > 0), jogosSelecao: selection.caps }), year, seasonAge);
       }
       // Torneios de seleções no meio do ano (calendário da T14); título com a Seleção é permanente.
       if (sem === 0) {
         for (const t of TOURNAMENTS) {
           if (!isEditionYear(t, year) || !eligible(t, sel.rung, evo.age, nation ? teamName(nation) : undefined)) continue;
+          // v2.78: a primeira Copa abre a Copa, antes das decisões dela
+          if (t === 'copaDoMundo' && clubId && !inYouth) liveMilestones('copa', factsNow(clubId, { copa: true }), year, seasonAge);
           const tr = createPrng(Math.imul(seed + 7, 0x9e3779b1) ^ Math.imul(year, 0x85ebca6b) ^ TOURNAMENTS.indexOf(t));
           const res = playTournament({ tournament: t, rung: sel.rung, overall: ov(evo), mental: evo.attributes.mental, teamStrength: nation ? teamStrength(nation) : undefined }, (e) => ask(e), tr);
           const fxT = tcfg.efeitos;
@@ -736,31 +794,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         golsSelecaoAno: natYear?.mainGoals ?? 0,
         copa: worldCup !== null, exterior: !BRAZIL.has(clubId), estreouSelecao: selection.caps > 0,
       };
-      const { fired, silenced } = fireMilestones(facts, doneMarcos);
-      for (const k of silenced) doneMarcos.add(k);
-      for (const m of fired) {
-        doneMarcos.add(milestoneKey(m.id, m.escopo === 'clube' ? clubId : undefined));
-        const before = { moral: morale, idolatria: idol[clubId] ?? 0, relacaoTecnico: coachRelation, bonusMental: 0, cobrador: false, comemoracao: '', mentalidade: '' } as Record<string, number | string | boolean>;
-        const option = ask(m.id, before);
-        const out = applyOption(before, m.id, option);
-        morale = out.moral as number;
-        idol = { ...idol, [clubId]: out.idolatria as number };
-        coachRelation = clamp(out.relacaoTecnico as number, 0, 1);
-        marcoMental = Math.min(EFFECTS.bonusMentalMax, marcoMental + (out.bonusMental as number));
-        if (out.cobrador) cobradorClub = clubId;
-        if (m.id === 'camisa-10') { tenShirt = true; spells.at(-1)!.number = 10; }
-        // a comemoração escolhida na criação (save ou link antigo) continua valendo; sem ela, vale a do primeiro gol
-        if (out.comemoracao && input.celebration === undefined) celebration = out.comemoracao as string;
-        if (out.mentalidade) {
-          // v2.68: a mentalidade passa a pesar na evolução daqui em diante (crescimento, ruído e declínio)
-          mentality = out.mentalidade as string;
-          const fxM = mentalityEffects(mentality);
-          mentalityGrowth = fxM.growth;
-          evo = { ...evo, ...fxM.evo };
-        }
-        marcos.push({ id: m.id, year, age: Math.floor(evo.age - 1), clubId, option });
-        remember(m.id, clubId);
-      }
+      liveMilestones('fim', facts, year, seasonAge);
     }
 
     // Mudança de posição proposta pelo técnico (6.6), decidida pela política do temperamento.

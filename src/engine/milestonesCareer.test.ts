@@ -1,13 +1,15 @@
 import { autoDecide, simulateCareer, type Decider } from './career';
-import { MAX_PER_SEASON, MILESTONES, milestoneKey } from './milestones';
+import { MAX_PER_SEASON, MILESTONES, milestoneKey, momentOf } from './milestones';
 import { createPrng } from './prng';
 import { randomInput } from './simulation';
+import clubs from '../data/clubs.json';
 
 // T25c (SPEC 6.13b): os marcos disparam dentro da carreira, pelos fatos do motor; cada um vira uma decisão (3 opções) e os efeitos
 // valem (Mental, moral, idolatria, relação, cobrador).
 const SEEDS = [1, 2, 3, 4, 5, 6, 7, 8];
 const IDS = new Set(MILESTONES.map((m) => m.id));
 const run = (seed: number, decide?: Decider) => simulateCareer(randomInput(createPrng(seed)), seed, 2026, decide);
+const BRAZIL = new Set(clubs.clubs.map((c) => c.id));
 const CLUB = new Set(MILESTONES.filter((m) => m.escopo === 'clube').map((m) => m.id));
 
 describe('marcos dentro da carreira (T25c)', () => {
@@ -18,12 +20,13 @@ describe('marcos dentro da carreira (T25c)', () => {
     }
   });
 
-  it('no máximo o limite de marcos por temporada, e só marcos dos dados', () => {
+  it('no máximo o limite de marcos de fim de temporada por temporada (v2.78: chegada, convocação e Copa ficam fora), e só marcos dos dados', () => {
+    const FIM = new Set(MILESTONES.filter((m) => momentOf(m) === 'fim').map((m) => m.id));
     for (const seed of SEEDS) {
       const byYear = new Map<number, number>();
       for (const m of run(seed).marcos) {
         expect(IDS.has(m.id)).toBe(true);
-        byYear.set(m.year, (byYear.get(m.year) ?? 0) + 1);
+        if (FIM.has(m.id)) byYear.set(m.year, (byYear.get(m.year) ?? 0) + 1);
       }
       for (const n of byYear.values()) expect(n).toBeLessThanOrEqual(MAX_PER_SEASON);
     }
@@ -113,5 +116,63 @@ describe('camisa 10 conquistada (v2.63)', () => {
       if (i < 0) continue;
       for (const s of r.spells.slice(i)) expect(s.number).toBe(10);
     }
+  });
+});
+
+// v2.78 (achado do usuário): cada cena no momento em que acontece. A chegada (estreia no profissional, no clube, no exterior)
+// abre a temporada, antes de qualquer decisão no clube; a convocação e a Copa vêm antes das decisões da Seleção.
+describe('ordem das cenas (v2.78)', () => {
+  type Step = { id: string; year: number; clubId: string | null };
+  const CHEGADA = new Set(MILESTONES.filter((m) => m.momento === 'chegada').map((m) => m.id));
+  const runs = Array.from({ length: 80 }, (_, i) => {
+    const steps: Step[] = [];
+    const r = run(i + 1, (id, t, view) => { const v = view(); steps.push({ id, year: v.year, clubId: v.clubId }); return autoDecide(id, t, view); });
+    return { r, steps };
+  });
+  const at = (steps: Step[], id: string, year?: number) => steps.findIndex((s) => s.id === id && (year === undefined || s.year === year));
+
+  it('a cena de chegada abre a temporada: nenhuma decisão no clube antes dela', () => {
+    let n = 0;
+    for (const { r, steps } of runs) {
+      for (const m of r.marcos.filter((x) => CHEGADA.has(x.id))) {
+        const before = steps.slice(0, at(steps, m.id, m.year)).filter((s) => s.year === m.year && s.clubId === m.clubId && !CHEGADA.has(s.id) && !s.id.startsWith('primeiro-passo'));
+        expect(before.map((s) => s.id), `${m.id} ${m.year}`).toEqual([]);
+        n++;
+      }
+    }
+    expect(n).toBeGreaterThan(100);
+  });
+
+  it('a chegada ao exterior é na primeira temporada fora do Brasil, e no lugar da chegada ao clube (uma cena só)', () => {
+    let n = 0;
+    for (const { r } of runs) {
+      const ext = r.marcos.find((m) => m.id === 'estreia-exterior');
+      if (!ext) continue;
+      n++;
+      const firstAbroad = r.seasons.find((s) => s.clubId !== null && !BRAZIL.has(s.clubId));
+      expect(ext.year, r.player.name).toBe(firstAbroad!.year);
+      expect(r.marcos.some((m) => m.id === 'estreia-no-clube' && m.clubId === ext.clubId && m.year === ext.year)).toBe(false);
+    }
+    expect(n).toBeGreaterThan(20);
+  });
+
+  it('a primeira convocação vem antes de qualquer decisão da Seleção; a primeira Copa, antes das decisões da Copa', () => {
+    let conv = 0; let copa = 0;
+    for (const { r, steps } of runs) {
+      const pc = r.marcos.find((m) => m.id === 'primeira-convocacao');
+      if (pc) {
+        conv++;
+        const i = at(steps, 'primeira-convocacao');
+        expect(steps.slice(0, i).filter((s) => s.id === 'pergunta-da-selecao' || s.id.startsWith('copa-')).map((s) => s.id)).toEqual([]);
+      }
+      const cp = r.marcos.find((m) => m.id === 'primeira-copa');
+      if (cp) {
+        copa++;
+        const i = at(steps, 'primeira-copa');
+        expect(steps.slice(0, i).filter((s) => s.year === cp.year && s.id.startsWith('copa-')).map((s) => s.id)).toEqual([]);
+      }
+    }
+    expect(conv).toBeGreaterThan(20);
+    expect(copa).toBeGreaterThan(5);
   });
 });
