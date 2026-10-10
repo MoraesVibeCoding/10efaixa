@@ -62,10 +62,12 @@ describe('tokens visuais (T49, SPEC 7)', () => {
     expect(parseFloat(tokens.toque.compacto)).toBeGreaterThanOrEqual(2.75);
   });
 
-  it('CSS: claro por padrão, escuro pela preferência do aparelho e forçado por data-tema', () => {
+  // v2.75 (tema escuro fora da v1, decisão do usuário): o aparelho no modo escuro não escurece mais a criação, o ritmo e a
+  // revelação, que destoavam da carreira toda clara. Só a abertura força o escuro da marca por data-tema.
+  it('CSS: sempre claro (o modo escuro do aparelho não muda o tema); escuro só forçado por data-tema', () => {
     const css = themeCss();
     expect(css).toContain(`--cor-fundo: ${tokens.temas.claro.fundo}`);
-    expect(css).toMatch(/@media \(prefers-color-scheme: dark\)/);
+    expect(css).not.toMatch(/prefers-color-scheme/);
     expect(css).toContain('[data-tema="escuro"]');
     expect(css).toContain('[data-tema="claro"]');
     expect(css).toContain(`--cor-fundo: ${tokens.temas.escuro.fundo}`);

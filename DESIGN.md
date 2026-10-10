@@ -130,7 +130,7 @@ components:
 >
 > **Estado deste documento (2026-10-06, T49j).** Regenerado com as telas construídas na direção **v2.34 "Álbum com vidro"** e na v2.37 (uniforme na figurinha). O frontmatter é gerado do `src/ui/theme/tokens.json`; se os dois divergirem, vale o `tokens.json`. Telas cobertas: criação (4 passos), revelação do jogador, decisão (variação B), gaveta "Minha carreira" e resultado da escolha. Abertura, ritmo, mercado, torneio e fim de carreira ainda não têm o visual novo.
 
-Os tokens viram variáveis CSS em `src/ui/theme/theme.ts` (`--cor-*`, `--fonte-*`, `--tipo-*`, `--espaco-*`, `--toque-*`, `--forma-*`, `--vidro-*`, `--medalha-*`). As cores levam o prefixo do tema no frontmatter (`claro-`, `escuro-`) porque o formato não tem temas. A criação e a revelação seguem o tema do aparelho; a decisão é sempre clara (`data-tema="claro"`), porque a cena pintada pede papel e tinta.
+Os tokens viram variáveis CSS em `src/ui/theme/theme.ts` (`--cor-*`, `--fonte-*`, `--tipo-*`, `--espaco-*`, `--toque-*`, `--forma-*`, `--vidro-*`, `--medalha-*`). As cores levam o prefixo do tema no frontmatter (`claro-`, `escuro-`) porque o formato não tem temas. Desde a v2.75 o jogo é sempre claro (o modo escuro do aparelho não muda nada); só a abertura força o escuro da marca (`data-tema="escuro"`).
 
 ## Overview
 
