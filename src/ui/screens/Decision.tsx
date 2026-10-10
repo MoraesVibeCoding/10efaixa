@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import events from '../../data/events.json';
 import legacy from '../../data/legacy.json';
 import album from '../../data/album.json';
@@ -18,7 +18,7 @@ import { Niveis } from './Niveis';
 import { CenaPintada } from './CenaPintada';
 import { useRolling } from '../useRolling';
 import { useSaida } from '../useSaida';
-import { MOTION } from '../motion';
+import { MOTION, reducedMotion } from '../motion';
 import { useLivreMeio } from '../useLivreMeio';
 import { Carimbo } from './Carimbo';
 import { Palco } from './Palco';
@@ -481,7 +481,7 @@ export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert, 
       {player.titles.length > 0 && (
         <ul className="tacas" aria-label={t('ui.decisao.titulosLinha')}>
           {trophyGroups(player.titles).map(({ id, n }) => (
-            <li key={id} className={novas.includes(id) ? 'taca taca--nova' : 'taca'}>
+            <li key={id} className={novas.includes(id) ? 'taca taca--nova' : 'taca'} data-taca={id}>
               <TrophyIcon id={id} size={26} />
               {n > 1 && <span className="taca__qtd" aria-hidden="true">{n}</span>}
               <span className="sr-only">{n > 1 ? t('ui.decisao.tacaQtd', { nome: t(`ui.titulo.${id}`), n }) : t(`ui.titulo.${id}`)}</span>
@@ -532,7 +532,29 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
   const palco = !palcoVisto && !pausado;
   const [novas, setNovas] = useState(NO_TITLES);
   const titulo = useRef(null as HTMLHeadingElement | null);
-  function fecharPalco() { setPalcoVisto(true); setNovas(titulos); }
+  // v2.72 (FLIP): onde cada taça estava no palco, para ela voar até a estante do topo
+  const voo = useRef(new Map<string, DOMRect>());
+  function fecharPalco() {
+    voo.current = new Map([...(root.current?.querySelectorAll<HTMLElement>('.palco__taca[data-taca]') ?? [])].map((li) => [li.dataset.taca!, li.getBoundingClientRect()]));
+    setPalcoVisto(true);
+    setNovas(titulos);
+  }
+  useLayoutEffect(() => {
+    const origens = voo.current;
+    voo.current = new Map();
+    if (origens.size === 0 || reducedMotion()) return;
+    for (const [id, o] of origens) {
+      const el = root.current?.querySelector<HTMLElement>(`.taca--nova[data-taca="${id}"]`);
+      if (!el || typeof el.animate !== 'function') continue;
+      const d = el.getBoundingClientRect();
+      // escondida (caixa fechada no celular): o ponto dourado no botão avisa, sem voo
+      if (d.width < 2) continue;
+      const dx = o.left + o.width / 2 - (d.left + d.width / 2);
+      const dy = o.top + o.height / 2 - (d.top + d.height / 2);
+      // movimento na tela: ease-in-out (web-animation-design)
+      el.animate([{ transform: `translate(${dx}px, ${dy}px) scale(${o.width / d.width})` }, { transform: 'none' }], { duration: MOTION.vooMs, easing: 'cubic-bezier(0.645, 0.045, 0.355, 1)' });
+    }
+  }, [novas]);
   const wasPalco = useRef(palco);
   useEffect(() => {
     if (wasPalco.current && !palco) titulo.current?.focus();

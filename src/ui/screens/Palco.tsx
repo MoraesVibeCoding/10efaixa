@@ -37,7 +37,7 @@ export function Palco({ titulos, onClose }: { titulos: string[]; onClose: () => 
         <h2 id="palco-titulo" className="palco__titulo">{t('ui.momento.titulo')}</h2>
         <ul className="palco__tacas">
           {grupos.map(({ id, n }) => (
-            <li key={id} className="palco__taca">
+            <li key={id} className="palco__taca" data-taca={id}>
               <TrophyIcon id={id} size={96} />
               <span className="palco__nome">{t(`ui.titulo.${id}`)}</span>
               {n > 1 && <span className="palco__vezes">{t('ui.palco.vezes', { n })}</span>}
