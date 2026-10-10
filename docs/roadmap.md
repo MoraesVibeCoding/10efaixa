@@ -1,6 +1,6 @@
 # Roadmap do 10eFaixa
 
-> Atualizado em 2026-10-10 (SPEC v2.80, `main` com os PRs #27 a #45 mesclados). Fonte da verdade: `SPEC.md` (seção 14 traz a lista completa de tarefas). Validação do usuário: `docs/validacao-final.md`.
+> Atualizado em 2026-10-10 (SPEC v2.81, `main` com os PRs #27 a #45 mesclados). Fonte da verdade: `SPEC.md` (seção 14 traz a lista completa de tarefas). Validação do usuário: `docs/validacao-final.md`.
 
 ## Já implementado
 
@@ -27,6 +27,8 @@ Verificação em 2026-10-10: 1448 testes passando (5 pulados), typecheck e build
 | **Mais falas diretas** | Só 3 eventos têm fala entre aspas (em itálico desde a v2.77); trocar falas indiretas por diretas é mudança de texto de evento e precisa de aprovação |
 
 ## A fazer (na ordem prevista)
+
+**Agora: direção "Álbum" (v2.81)**, em 4 PRs: (1) paleta sem azul, card pequeno do jogador com "Carreira ›", decisão e resultado; (2) reunião, propostas, empréstimo e resumo como cards sobre a história; (3) capa (abertura A com animação), criação, card "Nasce um jogador" e ritmo; (4) "Sua carreira", palco do título, card de fim de carreira em frente e verso e cartão de compartilhar.
 
 ### 1. Fila atual de histórias e equilíbrio
 | Item | O que falta |
