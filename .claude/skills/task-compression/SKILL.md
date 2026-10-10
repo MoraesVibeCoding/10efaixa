@@ -75,4 +75,4 @@ Never compress away:
 
 ## No 10eFaixa
 
-A divisão em fases segue a seção 14 do `SPEC.md` (uma tarefa por vez, subtarefas como T55a, T55b…). Ao fim de cada subtarefa, atualize `docs/current-task.md` (feito, decisões, pendente, validação) — é ele que se lê ao retomar, não o histórico.
+A divisão em fases segue a seção 14 do `SPEC.md` (uma tarefa por vez, subtarefas como T55a, T55b…). Ao fim de cada subtarefa, atualize `docs/roadmap.md` (feito, decisões, pendente, validação) — é ele que se lê ao retomar; as notas antigas ficam em `docs/historico/`.
