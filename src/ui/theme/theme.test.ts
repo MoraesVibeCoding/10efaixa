@@ -46,9 +46,9 @@ describe('tokens visuais (T49, SPEC 7)', () => {
     expect(themeCss()).toContain('[data-medalha="diamante"]');
   });
 
-  it('fontes do SPEC (v2.46: Oswald e Inter), sempre com reserva do sistema', () => {
+  it('fontes do SPEC (v2.46 Oswald; v2.76 Archivo no texto), sempre com reserva do sistema', () => {
     expect(tokens.fontes.titulo).toMatch(/^'Oswald Variable'/);
-    expect(tokens.fontes.texto).toMatch(/^'Inter Variable'/);
+    expect(tokens.fontes.texto).toMatch(/^'Archivo Variable'/);
     for (const stack of Object.values(tokens.fontes)) expect(stack.split(',').length).toBeGreaterThanOrEqual(3);
     expect(tokens.fontes.titulo).toMatch(/sans-serif$/);
     expect(tokens.fontes.texto).toMatch(/sans-serif$/);
