@@ -54,7 +54,8 @@ describe('carreira na tela (T51b)', () => {
       const eventId = document.querySelector('[data-evento]')!.getAttribute('data-evento')!;
       const choice = autoChoice(eventId, document.querySelector('[data-temperamento]')!.getAttribute('data-temperamento')!);
       fireEvent.click(document.querySelector(`[data-opcao-id="${choice}"]`)!);
-      fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
+      // pedido do usuário (sem "Confirmar escolha"): tocar de novo na marcada decide na hora
+      fireEvent.click(document.querySelector(`[data-opcao-id="${choice}"]`)!);
       fireEvent.click(screen.getByRole('button', { name: t('ui.resultado.seguir') }));
     }
     // T55b: "Sua história" antes do resumo
@@ -98,7 +99,8 @@ describe('carreira na tela (T51b)', () => {
       if (passProposals()) continue;
       const eventId = document.querySelector('[data-evento]')!.getAttribute('data-evento')!;
       fireEvent.click(document.querySelector(`[data-opcao-id="${autoChoice(eventId, document.querySelector('[data-temperamento]')!.getAttribute('data-temperamento')!)}"]`)!);
-      fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
+      // pedido do usuário (sem "Confirmar escolha"): tocar de novo na marcada decide na hora
+      fireEvent.click(document.querySelector(`[data-opcao-id="${autoChoice(eventId, document.querySelector('[data-temperamento]')!.getAttribute('data-temperamento')!)}"]`)!);
       fireEvent.click(screen.getByRole('button', { name: t('ui.resultado.seguir') }));
     }
     expect(screen.getByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })).toBeInTheDocument();
@@ -129,7 +131,8 @@ describe('carreira na tela (T51b)', () => {
       seen.add(key);
       const eventId = document.querySelector('[data-evento]')!.getAttribute('data-evento')!;
       fireEvent.click(document.querySelector(`[data-opcao-id="${autoChoice(eventId, document.querySelector('[data-temperamento]')!.getAttribute('data-temperamento')!)}"]`)!);
-      fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
+      // pedido do usuário (sem "Confirmar escolha"): tocar de novo na marcada decide na hora
+      fireEvent.click(document.querySelector(`[data-opcao-id="${autoChoice(eventId, document.querySelector('[data-temperamento]')!.getAttribute('data-temperamento')!)}"]`)!);
       fireEvent.click(screen.getByRole('button', { name: t('ui.resultado.seguir') }));
     }
     expect(shownCount).toBeGreaterThan(3);

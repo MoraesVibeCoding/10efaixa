@@ -23,6 +23,7 @@ export function careerProgress(age: number): number {
   return Math.min(1, Math.max(0, (age - START_AGE) / (END_AGE - START_AGE)));
 }
 
+const BASE_RUNGS: ReadonlySet<string> = new Set(['sub17', 'sub20', 'olimpica']);
 const NATIONAL_EVENTS = new Set(events.eventos.filter((e) => (e as { contexto?: string }).contexto === 'selecao').map((e) => e.id));
 
 /** Camisa da figurinha (v2.37): nos eventos da Seleção, a do país que o jogador defende; nos demais, a do clube. */
@@ -34,6 +35,8 @@ export function toDecisionPlayer(view: DecisionView, input: CreationInput, look:
   const sale = eventId === SALE_EVENT ? view.propostas?.[0] : undefined;
   return {
     visual, uniforme: uniformeFor(eventId, view),
+    // pedido do usuário: nos eventos da Seleção de base, a categoria (a principal não leva selo)
+    ...(NATIONAL_EVENTS.has(eventId) && BASE_RUNGS.has(view.selecaoDegrau) ? { categoriaSelecao: view.selecaoDegrau as 'sub17' | 'sub20' | 'olimpica' } : {}),
     name: input.name, position: view.position, clubId: view.clubId ?? '', overall: view.overall,
     titles: view.titles.map((x) => x.competition), role: view.role, capitao: view.capitao,
     // v2.62: a bandeira ao lado do nome depois da estreia pela seleção principal

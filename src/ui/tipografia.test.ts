@@ -45,7 +45,8 @@ describe('tipografia (v2.73)', () => {
   });
 
   it('história da decisão em 1rem no celular, com linha arejada', () => {
-    expect(css['Decision.css']).toMatch(/\.decisao__historia \{ font-size: 1rem; line-height: 1\.45;/);
+    // pedido do usuário (2026-10-10): 1rem, que encolhe com a página (--texto-escala) até o piso de 14 px para não rolar
+    expect(css['Decision.css']).toMatch(/\.decisao__historia \{ font-size: max\(0\.875rem, calc\(1rem \* var\(--texto-escala, 1\)\)\); line-height: 1\.45;/);
   });
 
   it('o comentário do técnico sem a barra lateral colorida', () => {

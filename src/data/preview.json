@@ -27,6 +27,8 @@
   "bonusMental": "palavra"
  },
  "resultadoMs": 2600,
+ "_decideMs": "pedido do usuário (2026-10-10): sem \"Confirmar escolha\"; a opção marcada vale sozinha depois deste tempo se ele não trocar (tocar de novo decide na hora)",
+ "decideMs": 1000,
  "risco": {
   "_nota": "Faixa de risco em palavras (SPEC v2.23: nunca percentual). Limite superior exclusivo de cada faixa; acima do último, muitoAlto.",
   "baixo": 0.1,

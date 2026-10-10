@@ -27,8 +27,7 @@
   "seloCapitaoTexto": "Capitão do clube",
   "porMes": "{valor}/mês",
   "valor": "Valor {valor}",
-  "confirmar": "Confirmar escolha",
-  "marque": "Toque numa opção para ver o que você ganha e o que dá em troca.",
+  "marque": "Toque numa opção: se não trocar, ela vale em 1 segundo.",
   "titulosQtd": "{n} títulos",
   "tituloUm": "1 título",
   "semTitulos": "Sem títulos"

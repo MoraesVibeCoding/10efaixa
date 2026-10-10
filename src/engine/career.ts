@@ -135,6 +135,8 @@ export interface DecisionView {
   atual?: CurrentClubView;
   /** Seleção que o jogador defende agora ("brasil" ou o país da dupla nacionalidade aceita): a camisa nos eventos da Seleção (v2.37). */
   nationality: string;
+  /** Degrau da Seleção agora (sub17, sub20, olimpica, lista, reserva, titular ou nenhum): a tela diz a categoria nos eventos da Seleção de base. */
+  selecaoDegrau: Rung;
 }
 /** Quem decide: o temperamento (simulação, ritmo Rápido) ou o jogador (tela). `view` só é montada se pedida. */
 export type Decider = (eventId: string, temperament: string, view: () => DecisionView) => string;
@@ -281,7 +283,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       moral: morale, disciplina: discipline, relacaoTecnico: coachRelation, patrimonio: wealth, salarioFator: 1,
       idolatria: clubId ? idol[clubId] ?? 0 : 0, idolatriaCoracao: input.heartClub ? idol[input.heartClub] ?? 0 : 0, ...memoryCtx(memorias, curYear), ...state,
     },
-    seasons: [...seasons], titles: [...titles], marcos: marcos.map(({ id, year, clubId: club }) => ({ id, year, clubId: club })), memorias: memorias.map((x) => ({ ...x })), etiquetas: contextTags(), nationality: selection.nationality, capitao: clubId ? captainAt.has(clubId) : false, meetings: [...meetings], idolatrias: { ...idol }, ...(ultimoSemestre && { ultimoSemestre }), ...(ultimaTemporada && { ultimaTemporada }),
+    seasons: [...seasons], titles: [...titles], marcos: marcos.map(({ id, year, clubId: club }) => ({ id, year, clubId: club })), memorias: memorias.map((x) => ({ ...x })), etiquetas: contextTags(), nationality: selection.nationality, selecaoDegrau: sel.rung, capitao: clubId ? captainAt.has(clubId) : false, meetings: [...meetings], idolatrias: { ...idol }, ...(ultimoSemestre && { ultimoSemestre }), ...(ultimaTemporada && { ultimaTemporada }),
   }));
   const earn = (amount: number, currency: Contract['currency']) => { const before = wealth; wealth = addToWealth(wealth, amount, currency, agent); earned += Math.max(0, wealth - before); };
   const awards: CareerResult['awards'] = [];
