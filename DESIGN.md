@@ -2,19 +2,19 @@
 name: 10eFaixa
 description: Simulador de carreira do futebol brasileiro; o jogador é uma figurinha de álbum, a cena ocupa a tela e o vidro só aparece por cima dela.
 colors:
-  claro-fundo: "#EEE9DF"
-  claro-superficie: "#F8F5EE"
-  claro-texto: "#14213D"
-  claro-textoSuave: "#4E5968"
-  claro-linha: "#14213D"
-  claro-trilho: "#D5CEC0"
-  claro-destaque: "#1E7B4F"
+  claro-fundo: "#E8F6EC"
+  claro-superficie: "#FFFFFF"
+  claro-texto: "#091A11"
+  claro-textoSuave: "#43534A"
+  claro-linha: "#6E8A79"
+  claro-trilho: "#CFE3D5"
+  claro-destaque: "#006731"
   claro-sobreDestaque: "#FFFFFF"
-  claro-positivo: "#18683F"
+  claro-positivo: "#006731"
   claro-negativo: "#B81E2E"
-  claro-foco: "#14213D"
+  claro-foco: "#006731"
   claro-siglaTexto: "#FFFFFF"
-  claro-siglaContorno: "#14213D"
+  claro-siglaContorno: "#091A11"
   escuro-fundo: "#212222"
   escuro-superficie: "#2C2D2D"
   escuro-texto: "#F2F4EF"
@@ -40,42 +40,47 @@ colors:
   medalha-diamante: "#7448E0"
 typography:
   over:
-    fontFamily: "'Big Shoulders Display Variable', 'Arial Narrow', 'Roboto Condensed', 'Helvetica Neue', sans-serif"
+    fontFamily: "'Oswald Variable', 'Arial Narrow', 'Roboto Condensed', sans-serif"
     fontSize: "3rem"
     fontWeight: 900
     lineHeight: 1
   titulo:
-    fontFamily: "'Big Shoulders Display Variable', 'Arial Narrow', 'Roboto Condensed', 'Helvetica Neue', sans-serif"
+    fontFamily: "'Oswald Variable', 'Arial Narrow', 'Roboto Condensed', sans-serif"
     fontSize: "1.75rem"
     fontWeight: 900
     lineHeight: 1
   nome:
-    fontFamily: "'Big Shoulders Display Variable', 'Arial Narrow', 'Roboto Condensed', 'Helvetica Neue', sans-serif"
+    fontFamily: "'Oswald Variable', 'Arial Narrow', 'Roboto Condensed', sans-serif"
     fontSize: "1.5rem"
     fontWeight: 900
     lineHeight: 1.05
   opcao:
-    fontFamily: "'Atkinson Hyperlegible', 'Verdana', 'Segoe UI', sans-serif"
+    fontFamily: "'Archivo Variable', 'Segoe UI', 'Helvetica Neue', sans-serif"
     fontSize: "1.1875rem"
     fontWeight: 700
     lineHeight: 1.2
   historia:
-    fontFamily: "'Atkinson Hyperlegible', 'Verdana', 'Segoe UI', sans-serif"
+    fontFamily: "'Archivo Variable', 'Segoe UI', 'Helvetica Neue', sans-serif"
     fontSize: "1.125rem"
     fontWeight: 400
     lineHeight: 1.4
   corpo:
-    fontFamily: "'Atkinson Hyperlegible', 'Verdana', 'Segoe UI', sans-serif"
+    fontFamily: "'Archivo Variable', 'Segoe UI', 'Helvetica Neue', sans-serif"
     fontSize: "1.0625rem"
     fontWeight: 400
     lineHeight: 1.5
   apoio:
-    fontFamily: "'Atkinson Hyperlegible', 'Verdana', 'Segoe UI', sans-serif"
+    fontFamily: "'Archivo Variable', 'Segoe UI', 'Helvetica Neue', sans-serif"
     fontSize: "0.9375rem"
     fontWeight: 400
     lineHeight: 1.3
+  miudo:
+    fontFamily: "'Archivo Variable', 'Segoe UI', 'Helvetica Neue', sans-serif"
+    fontSize: "0.875rem"
+    fontWeight: 400
+    lineHeight: 1.3
   rotulo:
-    fontFamily: "'Big Shoulders Display Variable', 'Arial Narrow', 'Roboto Condensed', 'Helvetica Neue', sans-serif"
+    fontFamily: "'Oswald Variable', 'Arial Narrow', 'Roboto Condensed', sans-serif"
     fontSize: "0.9375rem"
     fontWeight: 800
     lineHeight: 1.15
@@ -126,9 +131,11 @@ components:
 
 # Design System: 10eFaixa
 
+> **Atualização (2026-10-10, v2.73).** Frontmatter refeito do `tokens.json`: tema claro em verde gramado (`#006731`) sobre menta (`#E8F6EC`) e tinta `#091A11`; Oswald (display) desde a v2.46; texto em Archivo desde a v2.76 (antes Inter). Regras novas: **um só botão principal** (verde cheio, Oswald em caixa alta, pílula; a abertura mantém o amarelo da marca), **nenhum texto abaixo de 14 px** (teste em `src/ui/tipografia.test.ts`), cartão do WhatsApp com texto ≥ 30 px no desenho de 1080 (`cartao.textoMin`) e movimento por frequência de uso (v2.71–v2.72: o que se repete a cada decisão é curto e sem rebote; os momentos raros — palco do título, revelação, cartão — podem ser especiais; saídas em 150 ms; tudo some com `prefers-reduced-motion`). O tema escuro está fora da v1.
+>
 > **Estado deste documento (2026-10-06, T49j).** Regenerado com as telas construídas na direção **v2.34 "Álbum com vidro"** e na v2.37 (uniforme na figurinha). O frontmatter é gerado do `src/ui/theme/tokens.json`; se os dois divergirem, vale o `tokens.json`. Telas cobertas: criação (4 passos), revelação do jogador, decisão (variação B), gaveta "Minha carreira" e resultado da escolha. Abertura, ritmo, mercado, torneio e fim de carreira ainda não têm o visual novo.
 
-Os tokens viram variáveis CSS em `src/ui/theme/theme.ts` (`--cor-*`, `--fonte-*`, `--tipo-*`, `--espaco-*`, `--toque-*`, `--forma-*`, `--vidro-*`, `--medalha-*`). As cores levam o prefixo do tema no frontmatter (`claro-`, `escuro-`) porque o formato não tem temas. A criação e a revelação seguem o tema do aparelho; a decisão é sempre clara (`data-tema="claro"`), porque a cena pintada pede papel e tinta.
+Os tokens viram variáveis CSS em `src/ui/theme/theme.ts` (`--cor-*`, `--fonte-*`, `--tipo-*`, `--espaco-*`, `--toque-*`, `--forma-*`, `--vidro-*`, `--medalha-*`). As cores levam o prefixo do tema no frontmatter (`claro-`, `escuro-`) porque o formato não tem temas. Desde a v2.75 o jogo é sempre claro (o modo escuro do aparelho não muda nada); só a abertura força o escuro da marca (`data-tema="escuro"`).
 
 ## Overview
 
@@ -136,7 +143,7 @@ Os tokens viram variáveis CSS em `src/ui/theme/theme.ts` (`--cor-*`, `--fonte-*
 
 O jogador é uma figurinha: retrato pintado, número, Over na moeda da faixa e moldura no metal dessa faixa, do bronze ao diamante. A carreira é o álbum sendo preenchido. Na decisão, a cena pintada ocupa a tela inteira e o que se lê fica por cima dela, em vidro fosco: a caixa do jogador no topo e a faixa da decisão embaixo. Fora dessas sobreposições, as superfícies são papel creme sólido com borda fina e sombra suave.
 
-A densidade é de celular com uma mão: uma decisão por tela, opções de uma linha encostadas no polegar, nada rola a partir de 390×844. O que é placar (Over, nome, título) é condensado e pesado; o que se lê é Atkinson Hyperlegible, grande e folgado.
+A densidade é de celular com uma mão: uma decisão por tela, opções de uma linha encostadas no polegar, nada rola a partir de 390×844. O que é placar (Over, nome, título) é condensado e pesado; o que se lê é Archivo (v2.76), grande e folgado; o que alguém diz vai em itálico.
 
 **Key Characteristics:**
 - Figurinha com moldura por faixa de overall (`bands.json` → `medalha` nos tokens).
@@ -171,7 +178,7 @@ Papel, tinta e gramado. Todo par de texto usado em tela está em `contraste` no 
 
 ## Typography
 
-**Display:** Big Shoulders Display Variable (Over, títulos, nomes, rótulos), auto-hospedada. **Texto:** Atkinson Hyperlegible 400 e 700. Fallbacks no `tokens.json`.
+**Display:** Oswald Variable (Over, títulos, nomes, rótulos e botões), auto-hospedada (v2.46). **Texto:** Archivo Variable 400 e 700 (v2.76; antes Inter), com itálico verdadeiro para falas (v2.77). Piso de 14 px no degrau `miudo`. Fallbacks no `tokens.json`.
 
 ### Hierarchy
 - **Over** (3rem, 900): o número grande na caixa do jogador. O único número de atributo em tela.

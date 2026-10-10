@@ -57,15 +57,20 @@ describe('tokens visuais (T49, SPEC 7)', () => {
   it('texto nunca pequeno e alvo de toque confortável', () => {
     expect(parseFloat(tokens.tipo.corpo)).toBeGreaterThanOrEqual(1);
     expect(parseFloat(tokens.tipo.apoio)).toBeGreaterThanOrEqual(0.875);
+    // v2.76: o piso de 14 px (v2.73) vira degrau da escala, para o DESIGN.md e o CSS falarem a mesma língua
+    expect((tokens.tipo as Record<string, string>).miudo).toBe('0.875rem');
+    expect(themeCss()).toContain('--tipo-miudo: 0.875rem');
     expect(parseFloat(tokens.toque.minimo)).toBeGreaterThanOrEqual(3);
     // T50: faixas de escolha da criação; nunca abaixo dos 44 px (2,75rem) do WCAG 2.5.5.
     expect(parseFloat(tokens.toque.compacto)).toBeGreaterThanOrEqual(2.75);
   });
 
-  it('CSS: claro por padrão, escuro pela preferência do aparelho e forçado por data-tema', () => {
+  // v2.75 (tema escuro fora da v1, decisão do usuário): o aparelho no modo escuro não escurece mais a criação, o ritmo e a
+  // revelação, que destoavam da carreira toda clara. Só a abertura força o escuro da marca por data-tema.
+  it('CSS: sempre claro (o modo escuro do aparelho não muda o tema); escuro só forçado por data-tema', () => {
     const css = themeCss();
     expect(css).toContain(`--cor-fundo: ${tokens.temas.claro.fundo}`);
-    expect(css).toMatch(/@media \(prefers-color-scheme: dark\)/);
+    expect(css).not.toMatch(/prefers-color-scheme/);
     expect(css).toContain('[data-tema="escuro"]');
     expect(css).toContain('[data-tema="claro"]');
     expect(css).toContain(`--cor-fundo: ${tokens.temas.escuro.fundo}`);

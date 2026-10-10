@@ -15,7 +15,7 @@ const EVENT = 'salario-atrasado';
 const OPCAO = events.eventos.find((e) => e.id === EVENT)!.opcoes[0]!.id;
 const PLAYER = { name: 'Zé', position: 'meia', clubId: 'flamengo', overall: 70, titles: [], role: 'titularRegular', monthlySalary: { amount: 1, currency: 'BRL' as const } };
 const RESUMO: SeasonSummary = {
-  year: 2030, age: 22, clubId: 'santos', division: 'BRA-A', partidas: 34, gols: 9, assistencias: 5, overallDe: 70, overallPara: 74, pct: 6,
+  year: 2030, age: 22, clubId: 'santos', division: 'BRA-A', partidas: 34, gols: 9, assistencias: 5, semSofrerGol: 0, goleiro: false, overallDe: 70, overallPara: 74, pct: 6,
   mudancas: [], titulos: [], comentario: { evolucao: 'grande', minutos: 'muitos', destaque: 'passe', titulo: false },
 };
 const css = (f: string) => readFileSync(resolve(__dirname, f), 'utf8');
