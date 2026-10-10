@@ -9,6 +9,8 @@ import type { Feedback } from './feedback';
 export interface SeasonSummaryInput {
   year: number; age: number; clubId: string; division: string | null;
   games: number; goals: number; assists: number;
+  /** Revisão das telas: jogos sem sofrer gol e se é goleiro (o resumo do goleiro mostra este número no lugar de gols). */
+  cleanSheets?: number; goleiro?: boolean;
   /** Fração de minutos do ano (0–1). */
   minutes: number;
   overallBefore: number; overallAfter: number;
@@ -21,6 +23,8 @@ export type MinutosFaixa = 'muitos' | 'rodizio' | 'poucos';
 export interface SeasonSummary {
   year: number; age: number; clubId: string; division: string | null;
   partidas: number; gols: number; assistencias: number;
+  /** Jogos sem sofrer gol no ano; o goleiro vê este número no lugar de gols e assistências. */
+  semSofrerGol: number; goleiro: boolean;
   overallDe: number; overallPara: number;
   /** Variação do Over no ano, em % inteiro (pode ser negativa). */
   pct: number;
@@ -53,7 +57,7 @@ export function summarizeSeason(i: SeasonSummaryInput): SeasonSummary {
   const subiu = mudancas.find((m) => m.sentido === 'sobe');
   return {
     year: i.year, age: i.age, clubId: i.clubId, division: i.division,
-    partidas: i.games, gols: i.goals, assistencias: i.assists,
+    partidas: i.games, gols: i.goals, assistencias: i.assists, semSofrerGol: i.cleanSheets ?? 0, goleiro: i.goleiro ?? false,
     overallDe: i.overallBefore, overallPara: i.overallAfter, pct, mudancas, titulos: [...i.titles],
     comentario: { evolucao: evolucaoOf(pct), minutos: minutosOf(i.minutes), destaque: subiu?.atributo ?? null, titulo: i.titles.length > 0 },
   };

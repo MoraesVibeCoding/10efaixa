@@ -94,7 +94,7 @@ export interface CareerResult {
   /** T28e: saídas forçadas (antes do fim do contrato) e se o jogador virou vilão da torcida do clube que deixou. */
   forcedExits: { year: number; fromClubId: string; toClubId: string; villain: boolean }[];
   /** v2.65: `selecao` só no ano com convocação (degrau mais alto, jogos, gols, assistências e torneios do ano). */
-  seasons: { year: number; age: number; clubId: string; division: string | null; minutes: number; overall: number; games: number; goals: number; assists: number; selecao?: NationalYear }[];
+  seasons: { year: number; age: number; clubId: string; division: string | null; minutes: number; overall: number; games: number; goals: number; assists: number; cleanSheets: number; selecao?: NationalYear }[];
 }
 
 /** T51: o momento de uma decisão, para a tela mostrar o jogador como ele está ali. */
@@ -685,6 +685,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     let seasonGoals = 0;
     let seasonAssists = 0;
     let seasonGames = 0;
+    let seasonCleanSheets = 0;
     if (clubId && !inYouth) {
       const raw = seasonStats({ position, overall: ov(evo), minutes: avgMinutes, league, teamResult, setPieceTaker: traits.traits.includes('cobrador') }, yr);
       // T25c: cobrador do time (marco "assumir a bola parada") faz alguns gols a mais; o goleiro cobrador segue stats.json
@@ -692,6 +693,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       seasonGoals = st.goals;
       seasonAssists = st.assists;
       seasonGames = st.games;
+      seasonCleanSheets = st.cleanSheets;
       goalsAtClub[clubId] = (goalsAtClub[clubId] ?? 0) + st.goals;
       stats = addStats(stats, st);
       const won = seasonAwards({
@@ -700,13 +702,13 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       }, yr);
       for (const award of won) if (award !== 'revelacao' || !awards.some((a) => a.award === 'revelacao')) awards.push({ year, award });
     }
-    seasons.push({ year, age: evo.age - 1, clubId: seasonClub, division: league, minutes: avgMinutes, overall: ov(evo), games: seasonGames, goals: seasonGoals, assists: seasonAssists, ...(natYear ? { selecao: natYear } : {}) });
+    seasons.push({ year, age: evo.age - 1, clubId: seasonClub, division: league, minutes: avgMinutes, overall: ov(evo), games: seasonGames, goals: seasonGoals, assists: seasonAssists, cleanSheets: seasonCleanSheets, ...(natYear ? { selecao: natYear } : {}) });
     if (natYear) {
       selection.games += natYear.games; selection.goals += natYear.goals; selection.assists += natYear.assists; selection.mainGames += natYear.mainGames;
     }
     if (clubId && !inYouth) {
       ultimaTemporada = summarizeSeason({
-        year, age: evo.age - 1, clubId: seasonClub, division: league, games: seasonGames, goals: seasonGoals, assists: seasonAssists, minutes: avgMinutes,
+        year, age: evo.age - 1, clubId: seasonClub, division: league, games: seasonGames, goals: seasonGoals, assists: seasonAssists, cleanSheets: seasonCleanSheets, goleiro: position === 'goleiro', minutes: avgMinutes,
         overallBefore: ovStart, overallAfter: ov(evo), attrsBefore: attrsStart, attrsAfter: evo.attributes, titles: titles.filter((t) => t.year === year).map((t) => t.competition),
       });
     }

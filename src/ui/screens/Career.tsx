@@ -107,14 +107,15 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
     return (
       <div ref={box} className="carreira" data-temperamento={view.temperament}>
         <div className="carreira__tela" inert={respostaEl !== null || resumoEl !== null}>
-          <Reuniao
+          {/* revisão das telas: a resposta da reunião anterior não fica por cima de outra reunião igual; esta entra quando ela fecha */}
+          {respostaEl === null && <Reuniao
             key={index} ideias={view.reuniao} player={meetingPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} semestre={Number(view.state.semestre) === 1 ? 1 : 2} anterior={anterior}
             scene={sceneOfCena('reuniao-comissao', meetingPlayer, visual, input.name, meetingClub)}
             onChoose={(choice) => {
               setAsked({ year: view.year, semestre: Number(view.state.semestre) });
               decide(choice);
             }}
-          />
+          />}
         </div>
         {respostaEl}
         {resumoEl}

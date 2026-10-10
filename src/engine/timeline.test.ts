@@ -4,7 +4,7 @@ import { randomInput } from './simulation';
 import { timelineOf, type TimelineInput } from './timeline';
 
 // T55g (SPEC 6.15, v2.51): o modelo da tela "Sua carreira": uma linha por temporada, em ordem de idade.
-const row = (age: number, clubId: string, overall: number, division: string | null = 'BRA-A') => ({ year: 2026 + age - 16, age, clubId, division, minutes: 0.8, overall, games: age + 10, goals: age - 10, assists: age - 14 });
+const row = (age: number, clubId: string, overall: number, division: string | null = 'BRA-A') => ({ year: 2026 + age - 16, age, clubId, division, minutes: 0.8, overall, games: age + 10, goals: age - 10, assists: age - 14, cleanSheets: 0 });
 const input = (over: Partial<TimelineInput> = {}): TimelineInput => ({
   seasons: [row(16, 'santos', 60), row(17, 'santos', 66), row(18, 'santos', 72), row(19, 'benfica', 72, 'POR'), row(20, 'benfica', 70, 'POR')],
   titles: [], ...over,

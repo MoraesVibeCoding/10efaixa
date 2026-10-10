@@ -176,3 +176,19 @@ describe('placar contando no tamanho certo (v2.71, regressão)', () => {
     expect(css).toMatch(/\.linha__placar-n > span\s*\{[^}]*font-size:/);
   });
 });
+
+// Revisão das telas: o goleiro via "0 gols" no placar e em cada ano; agora vê jogos sem sofrer gol.
+describe('"Sua carreira" do goleiro', () => {
+  const goleiro = simulateCareer(randomInput(createPrng(7)), 7);
+
+  it('placar e anos mostram jogos sem sofrer gol, sem gols e assistências do clube', () => {
+    expect(goleiro.player.position).toBe('goleiro');
+    render(<LinhaDoTempo result={goleiro} onContinue={() => {}} />);
+    const placar = screen.getByRole('group', { name: t('ui.linhaDoTempo.placar.titulo') });
+    expect(placar).toHaveTextContent(`${goleiro.stats.cleanSheets.toLocaleString('pt-BR')}${t('ui.linhaDoTempo.placar.semSofrerGol')}`);
+    expect(placar).not.toHaveTextContent(t('ui.linhaDoTempo.placar.gols'));
+    const linha = document.querySelector('.linha__numeros')!;
+    expect(linha.textContent).toMatch(new RegExp(t('ui.linhaDoTempo.semSofrerGol', { n: 0 }).replace('0', '\\d+')));
+    expect(linha.textContent).not.toMatch(/Gols:/);
+  });
+});
