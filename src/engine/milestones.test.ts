@@ -43,10 +43,13 @@ describe('marcos da carreira (T25c)', () => {
     expect(chegada({ clubDebut: true, exterior: true, clubId: 'porto' }, [milestoneKey('estreia-profissional'), milestoneKey('mentalidade')])).toEqual(['estreia-exterior']);
   });
 
-  it('no máximo 2 marcos por temporada, na ordem de prioridade dos dados; o resto espera a próxima', () => {
+  it('no máximo o limite de marcos por temporada (v2.80: 3), na ordem de prioridade dos dados; o resto espera a próxima', () => {
     const many = fire({ proDebut: true, titular: true, golsCarreira: 1, golsNoClube: 1, assistenciasCarreira: 1, finalAno: true });
     expect(many).toHaveLength(data.maxPorTemporada);
-    expect(many[0]).toBe('primeira-titularidade'); // v2.78: a estreia é da chegada, fora do limite do fim da temporada
+    // v2.78: a estreia é da chegada, fora do limite; v2.80: a final vem na frente
+    expect(many).toEqual(['primeira-final', 'primeira-titularidade', 'primeiro-gol']);
+    // com título no mesmo ano, a final fica em silêncio e o título entra no lugar dela
+    expect(fire({ titular: true, golsCarreira: 1, finalAno: true, titulosCarreira: 1 })).toEqual(['primeiro-titulo', 'primeira-titularidade', 'primeiro-gol']);
     const later = fire({ titular: true, golsCarreira: 1, assistenciasCarreira: 1 }, [milestoneKey('estreia-profissional')]);
     expect(later).toHaveLength(data.maxPorTemporada);
   });

@@ -6,7 +6,7 @@ import { runUntilDecision } from './careerRun';
 // criação + semente + ritmo + escolhas; continuar = refazer a carreira até a próxima decisão (careerRun).
 // Fica só no aparelho (localStorage): nada vai para servidor, analytics ou URL. Uma carreira ativa por vez.
 export const SAVE_KEY = '10efaixa:carreira';
-export const SAVE_VERSION = 9;
+export const SAVE_VERSION = 10;
 const RITMOS = ['rapido', 'normal', 'completo'] as const;
 
 export interface SaveData {
@@ -29,7 +29,8 @@ export interface SaveStorage { getItem(k: string): string | null; setItem(k: str
  * v2.65: o marco "primeiro gol pela Seleção" passou a usar os gols reais do ano (Seleção ano a ano); os saves v5 também.
  * v2.67: o "Primeiro passo" da origem virou a primeira decisão e o primeiro ano ganhou um evento de formação; os saves v6 também.
  * v2.68: o marco da mentalidade entrou na estreia profissional; os saves v7 também.
- * v2.78: as cenas de chegada, convocação e Copa passaram a vir na hora em que acontecem (ordem das decisões mudou); os saves v8 também. */
+ * v2.78: as cenas de chegada, convocação e Copa passaram a vir na hora em que acontecem (ordem das decisões mudou); os saves v8 também.
+ * v2.80: final e título na frente da fila do fim da temporada, com limite 3; os saves v9 também. */
 const MIGRATIONS: Record<number, (old: Record<string, unknown>) => Record<string, unknown>> = {};
 
 const isObject = (x: unknown): x is Record<string, unknown> => typeof x === 'object' && x !== null && !Array.isArray(x);

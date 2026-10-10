@@ -176,3 +176,31 @@ describe('ordem das cenas (v2.78)', () => {
     expect(copa).toBeGreaterThan(5);
   });
 });
+
+// v2.80 (escolha do usuário: "3"): título e final na frente da fila do fim da temporada e limite de 3; as primeiras vezes do
+// desempenho aparecem no ano em que aconteceram, não na temporada seguinte.
+describe('primeiras vezes do fim da temporada no ano certo (v2.80)', () => {
+  const careers = Array.from({ length: 80 }, (_, i) => run(i + 1));
+  const atraso = (id: string, ano: (r: (typeof careers)[number]) => number | undefined) => careers.filter((r) => {
+    const m = r.marcos.find((x) => x.id === id);
+    const y = ano(r);
+    return m !== undefined && y !== undefined && m.year !== y;
+  }).map((r) => r.player.name);
+
+  it('primeiro título e primeiro gol saem no ano do fato; a primeira assistência quase sempre', () => {
+    expect(atraso('primeiro-titulo', (r) => r.titles.length ? Math.min(...r.titles.map((t) => t.year)) : undefined)).toEqual([]);
+    expect(atraso('primeiro-gol', (r) => r.seasons.find((s) => s.goals > 0)?.year)).toEqual([]);
+    // com limite 3, a estreia que já vem com título, titularidade, gol e assistência deixa a assistência para o ano seguinte
+    // (medido: 2 de 80 carreiras; antes da v2.78, 77%)
+    expect(atraso('primeira-assistencia', (r) => r.seasons.find((s) => s.assists > 0)?.year).length).toBeLessThanOrEqual(4);
+  });
+
+  it('título e final vêm antes dos outros marcos do fim da temporada', () => {
+    const fim = MILESTONES.filter((m) => momentOf(m) === 'fim').map((m) => m.id);
+    expect(fim.indexOf('primeira-final')).toBeLessThan(fim.indexOf('primeira-titularidade'));
+    // a final fica em silêncio no ano do primeiro título: a cena do título conta a final
+    expect(MILESTONES.find((m) => m.id === 'primeira-final')!.espelho).toBe('primeiro-titulo');
+    expect(fim.indexOf('primeiro-titulo')).toBeLessThan(fim.indexOf('primeira-titularidade'));
+    expect(MAX_PER_SEASON).toBe(3);
+  });
+});
