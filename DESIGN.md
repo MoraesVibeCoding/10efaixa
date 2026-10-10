@@ -55,23 +55,28 @@ typography:
     fontWeight: 900
     lineHeight: 1.05
   opcao:
-    fontFamily: "'Inter Variable', 'Segoe UI', 'Helvetica Neue', sans-serif"
+    fontFamily: "'Archivo Variable', 'Segoe UI', 'Helvetica Neue', sans-serif"
     fontSize: "1.1875rem"
     fontWeight: 700
     lineHeight: 1.2
   historia:
-    fontFamily: "'Inter Variable', 'Segoe UI', 'Helvetica Neue', sans-serif"
+    fontFamily: "'Archivo Variable', 'Segoe UI', 'Helvetica Neue', sans-serif"
     fontSize: "1.125rem"
     fontWeight: 400
     lineHeight: 1.4
   corpo:
-    fontFamily: "'Inter Variable', 'Segoe UI', 'Helvetica Neue', sans-serif"
+    fontFamily: "'Archivo Variable', 'Segoe UI', 'Helvetica Neue', sans-serif"
     fontSize: "1.0625rem"
     fontWeight: 400
     lineHeight: 1.5
   apoio:
-    fontFamily: "'Inter Variable', 'Segoe UI', 'Helvetica Neue', sans-serif"
+    fontFamily: "'Archivo Variable', 'Segoe UI', 'Helvetica Neue', sans-serif"
     fontSize: "0.9375rem"
+    fontWeight: 400
+    lineHeight: 1.3
+  miudo:
+    fontFamily: "'Archivo Variable', 'Segoe UI', 'Helvetica Neue', sans-serif"
+    fontSize: "0.875rem"
     fontWeight: 400
     lineHeight: 1.3
   rotulo:
@@ -126,7 +131,7 @@ components:
 
 # Design System: 10eFaixa
 
-> **Atualização (2026-10-10, v2.73).** Frontmatter refeito do `tokens.json`: tema claro em verde gramado (`#006731`) sobre menta (`#E8F6EC`) e tinta `#091A11`; Oswald (display) e Inter (texto) desde a v2.46. Regras novas: **um só botão principal** (verde cheio, Oswald em caixa alta, pílula; a abertura mantém o amarelo da marca), **nenhum texto abaixo de 14 px** (teste em `src/ui/tipografia.test.ts`), cartão do WhatsApp com texto ≥ 30 px no desenho de 1080 (`cartao.textoMin`) e movimento por frequência de uso (v2.71–v2.72: o que se repete a cada decisão é curto e sem rebote; os momentos raros — palco do título, revelação, cartão — podem ser especiais; saídas em 150 ms; tudo some com `prefers-reduced-motion`). O tema escuro está fora da v1.
+> **Atualização (2026-10-10, v2.73).** Frontmatter refeito do `tokens.json`: tema claro em verde gramado (`#006731`) sobre menta (`#E8F6EC`) e tinta `#091A11`; Oswald (display) desde a v2.46; texto em Archivo desde a v2.76 (antes Inter). Regras novas: **um só botão principal** (verde cheio, Oswald em caixa alta, pílula; a abertura mantém o amarelo da marca), **nenhum texto abaixo de 14 px** (teste em `src/ui/tipografia.test.ts`), cartão do WhatsApp com texto ≥ 30 px no desenho de 1080 (`cartao.textoMin`) e movimento por frequência de uso (v2.71–v2.72: o que se repete a cada decisão é curto e sem rebote; os momentos raros — palco do título, revelação, cartão — podem ser especiais; saídas em 150 ms; tudo some com `prefers-reduced-motion`). O tema escuro está fora da v1.
 >
 > **Estado deste documento (2026-10-06, T49j).** Regenerado com as telas construídas na direção **v2.34 "Álbum com vidro"** e na v2.37 (uniforme na figurinha). O frontmatter é gerado do `src/ui/theme/tokens.json`; se os dois divergirem, vale o `tokens.json`. Telas cobertas: criação (4 passos), revelação do jogador, decisão (variação B), gaveta "Minha carreira" e resultado da escolha. Abertura, ritmo, mercado, torneio e fim de carreira ainda não têm o visual novo.
 
@@ -138,7 +143,7 @@ Os tokens viram variáveis CSS em `src/ui/theme/theme.ts` (`--cor-*`, `--fonte-*
 
 O jogador é uma figurinha: retrato pintado, número, Over na moeda da faixa e moldura no metal dessa faixa, do bronze ao diamante. A carreira é o álbum sendo preenchido. Na decisão, a cena pintada ocupa a tela inteira e o que se lê fica por cima dela, em vidro fosco: a caixa do jogador no topo e a faixa da decisão embaixo. Fora dessas sobreposições, as superfícies são papel creme sólido com borda fina e sombra suave.
 
-A densidade é de celular com uma mão: uma decisão por tela, opções de uma linha encostadas no polegar, nada rola a partir de 390×844. O que é placar (Over, nome, título) é condensado e pesado; o que se lê é Inter, grande e folgado.
+A densidade é de celular com uma mão: uma decisão por tela, opções de uma linha encostadas no polegar, nada rola a partir de 390×844. O que é placar (Over, nome, título) é condensado e pesado; o que se lê é Archivo (v2.76), grande e folgado; o que alguém diz vai em itálico.
 
 **Key Characteristics:**
 - Figurinha com moldura por faixa de overall (`bands.json` → `medalha` nos tokens).
@@ -173,7 +178,7 @@ Papel, tinta e gramado. Todo par de texto usado em tela está em `contraste` no 
 
 ## Typography
 
-**Display:** Oswald Variable (Over, títulos, nomes, rótulos e botões), auto-hospedada (v2.46). **Texto:** Inter Variable 400 e 700. Fallbacks no `tokens.json`.
+**Display:** Oswald Variable (Over, títulos, nomes, rótulos e botões), auto-hospedada (v2.46). **Texto:** Archivo Variable 400 e 700 (v2.76; antes Inter), com itálico verdadeiro para falas (v2.77). Piso de 14 px no degrau `miudo`. Fallbacks no `tokens.json`.
 
 ### Hierarchy
 - **Over** (3rem, 900): o número grande na caixa do jogador. O único número de atributo em tela.

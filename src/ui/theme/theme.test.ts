@@ -57,6 +57,9 @@ describe('tokens visuais (T49, SPEC 7)', () => {
   it('texto nunca pequeno e alvo de toque confortável', () => {
     expect(parseFloat(tokens.tipo.corpo)).toBeGreaterThanOrEqual(1);
     expect(parseFloat(tokens.tipo.apoio)).toBeGreaterThanOrEqual(0.875);
+    // v2.76: o piso de 14 px (v2.73) vira degrau da escala, para o DESIGN.md e o CSS falarem a mesma língua
+    expect((tokens.tipo as Record<string, string>).miudo).toBe('0.875rem');
+    expect(themeCss()).toContain('--tipo-miudo: 0.875rem');
     expect(parseFloat(tokens.toque.minimo)).toBeGreaterThanOrEqual(3);
     // T50: faixas de escolha da criação; nunca abaixo dos 44 px (2,75rem) do WCAG 2.5.5.
     expect(parseFloat(tokens.toque.compacto)).toBeGreaterThanOrEqual(2.75);
