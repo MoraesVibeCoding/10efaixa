@@ -42,8 +42,13 @@ export function ResumoTemporada({ resumo, torcida, onClose }: ResumoTemporadaPro
         {resumo.partidas > 0 ? (
           <ul className="resumo__numeros" aria-label={t('ui.resumoTemporada.numeros')}>
             <li><span>{t('ui.resumoTemporada.partidas')}</span><strong>{resumo.partidas}</strong></li>
-            <li><span>{t('ui.resumoTemporada.gols')}</span><strong>{resumo.gols}</strong></li>
-            <li><span>{t('ui.resumoTemporada.assistencias')}</span><strong>{resumo.assistencias}</strong></li>
+            {/* revisão das telas: o goleiro vê os jogos sem sofrer gol no lugar de gols e assistências */}
+            {resumo.goleiro
+              ? <li><span>{t('ui.resumoTemporada.semSofrerGol')}</span><strong>{resumo.semSofrerGol}</strong></li>
+              : <>
+                <li><span>{t('ui.resumoTemporada.gols')}</span><strong>{resumo.gols}</strong></li>
+                <li><span>{t('ui.resumoTemporada.assistencias')}</span><strong>{resumo.assistencias}</strong></li>
+              </>}
           </ul>
         ) : <p className="resumo__formacao">{t('ui.resumoTemporada.semJogos')}</p>}
         <p className="resumo__over">
