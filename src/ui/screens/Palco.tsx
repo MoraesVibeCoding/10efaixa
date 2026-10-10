@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { t } from '../../i18n';
 import { reducedMotion } from '../motion';
+import { useSaida } from '../useSaida';
 import { TrophyIcon } from './TrophyIcon';
 import './Palco.css';
 
@@ -12,6 +13,8 @@ const CONFETE = Array.from({ length: 18 }, (_, i) => ({ x: (i * 37) % 100, atras
 export function Palco({ titulos, onClose }: { titulos: string[]; onClose: () => void }) {
   const seguir = useRef(null as HTMLButtonElement | null);
   const [mexe] = useState(() => !reducedMotion());
+  // v2.72: "Seguir" sai (150 ms) antes de fechar; Esc fecha na hora
+  const { saindo, fechar } = useSaida(onClose);
   const grupos: { id: string; n: number }[] = [];
   for (const id of titulos) {
     const g = grupos.find((x) => x.id === id);
@@ -24,7 +27,7 @@ export function Palco({ titulos, onClose }: { titulos: string[]; onClose: () => 
     return () => document.removeEventListener('keydown', onKey);
   }, [onClose]);
   return (
-    <div className="palco">
+    <div className="palco" data-saindo={saindo || undefined}>
       {mexe && (
         <div className="palco__confete" aria-hidden="true">
           {CONFETE.map((c, i) => <i key={i} data-cor={c.cor} style={{ insetInlineStart: `${c.x}%`, animationDelay: `${c.atraso}ms` }} />)}
@@ -41,7 +44,7 @@ export function Palco({ titulos, onClose }: { titulos: string[]; onClose: () => 
             </li>
           ))}
         </ul>
-        <button ref={seguir} type="button" className="palco__seguir" onClick={onClose}>{t('ui.palco.seguir')}</button>
+        <button ref={seguir} type="button" className="palco__seguir" onClick={fechar}>{t('ui.palco.seguir')}</button>
       </div>
     </div>
   );

@@ -1,10 +1,16 @@
 /* v2.61: card do resumo da temporada por cima da próxima tela. Rola se a tela for baixa; animação só sem reduced motion (base.css). */
-.resumo__fundo { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: var(--espaco-4); background: var(--vidro-scrim); }
+.resumo__fundo { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: var(--espaco-4); background: var(--vidro-scrim); animation: resumo-fundo 250ms ease-out both; }
+/* v2.72: fundo e card entram juntos (250 ms) e saem juntos (150 ms) */
+.resumo__fundo[data-saindo] { animation: resumo-fundo-sai 150ms ease-out forwards; }
+.resumo__fundo[data-saindo] .resumo { animation: resumo-sai 150ms ease-out forwards; }
+@keyframes resumo-fundo { from { opacity: 0; } to { opacity: 1; } }
+@keyframes resumo-fundo-sai { to { opacity: 0; } }
+@keyframes resumo-sai { to { opacity: 0; transform: scale(0.96); } }
 .resumo {
   display: grid; gap: var(--espaco-3); inline-size: min(100%, 24rem); max-block-size: calc(100dvh - 2 * var(--espaco-4)); overflow-y: auto; padding: var(--espaco-4); box-sizing: border-box;
   border: var(--forma-borda-fina) solid var(--cor-linha); border-radius: var(--forma-raio-cartao);
   background: var(--cor-superficie); color: var(--cor-texto); box-shadow: var(--forma-sombra-suave);
-  animation: resumo-entra 280ms cubic-bezier(0.2, 1, 0.4, 1) both;
+  animation: resumo-entra 250ms cubic-bezier(0.2, 1, 0.4, 1) both;
 }
 .resumo__titulo { margin: 0; font-family: var(--fonte-titulo); font-size: var(--tipo-nome); font-weight: 900; line-height: 1.05; text-transform: uppercase; }
 .resumo__onde { margin: 0; font-weight: 600; opacity: 0.8; }

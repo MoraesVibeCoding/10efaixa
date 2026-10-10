@@ -7,6 +7,7 @@ import { coachComment, direction, variation } from './resumoText';
 import { TrophyIcon } from './TrophyIcon';
 import { medalOf } from './Figurinha';
 import { useRolling } from '../useRolling';
+import { useSaida } from '../useSaida';
 import './ResumoTemporada.css';
 
 // v2.61 (SPEC 6.15): o resumo da temporada, num card por cima da próxima tela (Normal e Completo). Os números do ano são jogos, gols e
@@ -18,6 +19,8 @@ export interface ResumoTemporadaProps { resumo: SeasonSummary; torcida?: string;
 
 export function ResumoTemporada({ resumo, torcida, onClose }: ResumoTemporadaProps) {
   const close = useRef(null as HTMLButtonElement | null);
+  // v2.72: o card sai (150 ms) antes de fechar; Esc fecha na hora (ação de teclado não anima)
+  const { saindo, fechar } = useSaida(onClose);
   useEffect(() => { close.current?.focus(); }, []);
   function onKey(e: React.KeyboardEvent) {
     if (e.key === 'Escape') { e.stopPropagation(); onClose(); return; }
@@ -30,7 +33,7 @@ export function ResumoTemporada({ resumo, torcida, onClose }: ResumoTemporadaPro
   const medalha = medalOf(over);
   const troca = medalOf(resumo.overallDe).nome !== medalOf(resumo.overallPara).nome;
   return (
-    <div className="resumo__fundo">
+    <div className="resumo__fundo" data-saindo={saindo || undefined}>
       <div className="resumo" role="alertdialog" aria-modal="true" aria-labelledby="resumo-titulo" onKeyDown={onKey}>
         <h2 id="resumo-titulo" className="resumo__titulo">{t('ui.resumoTemporada.titulo')}</h2>
         <p className="resumo__onde">{`${clubName(resumo.clubId).nome} · ${t('ui.resumoTemporada.idade', { n: resumo.age })}`}</p>
@@ -62,7 +65,7 @@ export function ResumoTemporada({ resumo, torcida, onClose }: ResumoTemporadaPro
           <h3>{t('ui.resumoTemporada.tecnico')}</h3>
           <p data-testid="comentario">{fala.join(' ')}</p>
         </section>
-        <button ref={close} type="button" className="resumo__continuar" onClick={onClose}>{t('ui.resumoTemporada.continuar')}</button>
+        <button ref={close} type="button" className="resumo__continuar" onClick={fechar}>{t('ui.resumoTemporada.continuar')}</button>
       </div>
     </div>
   );

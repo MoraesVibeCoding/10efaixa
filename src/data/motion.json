@@ -4,5 +4,6 @@
  "revelarMs": 1200,
  "transicaoMs": 300,
  "carimboMs": 1500,
+ "saidaMs": 150,
  "celebracaoMs": 1800
 }

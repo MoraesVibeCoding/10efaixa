@@ -327,6 +327,7 @@
   background: color-mix(in srgb, var(--cor-fundo) 35%, transparent);
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
+  animation: fundo-entra 250ms ease-out both; /* v2.72: fundo e folha no mesmo tempo */
 }
 .gaveta__folha {
   display: grid;
@@ -340,6 +341,7 @@
   background: var(--cor-fundo);
   box-shadow: var(--forma-sombra-suave);
   scrollbar-color: var(--cor-destaque) var(--cor-fundo);
+  animation: gaveta-sobe 250ms ease-out both; /* v2.72: sobe do pé da tela */
 }
 .gaveta__topo { display: flex; justify-content: space-between; align-items: center; gap: var(--espaco-3); }
 .gaveta__topo h2 { font-size: var(--tipo-titulo); font-weight: 900; line-height: 1; text-transform: uppercase; }
@@ -519,3 +521,15 @@
   60% { transform: translateY(-4px) scale(1.15); opacity: 1; filter: drop-shadow(0 0 8px var(--paleta-ouro)); }
   100% { transform: none; filter: none; }
 }
+
+/* v2.72 (web-animation-design): os cards saem em 150 ms (uns 20% mais rápido que a entrada) antes de sumir; base.css zera
+   com reduced motion e o JS fecha na hora */
+.resultado[data-saindo] { animation: fundo-sai 150ms ease-out forwards; }
+.resultado[data-saindo] .resultado__caixa { animation: card-sai 150ms ease-out forwards; }
+.gaveta[data-saindo] { animation: fundo-sai 150ms ease-out forwards; }
+.gaveta[data-saindo] .gaveta__folha { animation: gaveta-desce 150ms ease-out forwards; }
+@keyframes fundo-entra { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fundo-sai { to { opacity: 0; } }
+@keyframes card-sai { to { opacity: 0; transform: scale(0.96); } }
+@keyframes gaveta-sobe { from { transform: translateY(100%); } to { transform: none; } }
+@keyframes gaveta-desce { to { transform: translateY(100%); } }

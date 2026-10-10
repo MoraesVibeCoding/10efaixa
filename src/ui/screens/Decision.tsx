@@ -17,6 +17,7 @@ import { Figurinha, medalOf } from './Figurinha';
 import { Niveis } from './Niveis';
 import { CenaPintada } from './CenaPintada';
 import { useRolling } from '../useRolling';
+import { useSaida } from '../useSaida';
 import { MOTION } from '../motion';
 import { useLivreMeio } from '../useLivreMeio';
 import { Carimbo } from './Carimbo';
@@ -188,16 +189,18 @@ function recentFirst(seasons: Season[]) {
 export function Career({ player, onClose }: { player: DecisionProps['player']; onClose: () => void }) {
   const close = useRef<HTMLButtonElement>(null);
   useEffect(() => { close.current?.focus(); }, []);
+  // v2.72: a gaveta desce (150 ms) antes de fechar; Esc (na Decisão) fecha na hora
+  const { saindo, fechar } = useSaida(onClose);
   const seasons = recentFirst(player.seasons ?? []);
   return (
-    <div className="gaveta" onClick={onClose}>
+    <div className="gaveta" data-saindo={saindo || undefined} onClick={fechar}>
       <div
         className="gaveta__folha" role="dialog" aria-modal="true" aria-labelledby="gaveta-titulo"
         onClick={(e) => { e.stopPropagation(); }}
       >
         <header className="gaveta__topo">
           <h2 id="gaveta-titulo">{t('ui.carreira.titulo')}</h2>
-          <button ref={close} type="button" className="gaveta__fechar" aria-label={t('ui.carreira.fechar')} onClick={onClose}>
+          <button ref={close} type="button" className="gaveta__fechar" aria-label={t('ui.carreira.fechar')} onClick={fechar}>
             <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><path d="M2 2l12 12M14 2 2 14" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="square" /></svg>
           </button>
         </header>
@@ -306,14 +309,16 @@ function Result({ eventId, optionId, state, tags, auto, onDone }: { eventId: str
   const outcome = outcomeOf(state, eventId, optionId, tags);
   const verdict = outcomeVerdict(outcome);
   const button = useRef<HTMLButtonElement>(null);
+  // v2.72: o card sai (150 ms) antes de seguir; Esc (na Decisão) segue na hora
+  const { saindo, fechar } = useSaida(onDone);
   useEffect(() => {
     button.current?.focus();
     if (!auto) return undefined;
-    const timer = setTimeout(onDone, previewCfg.resultadoMs);
+    const timer = setTimeout(fechar, previewCfg.resultadoMs);
     return () => clearTimeout(timer);
-  }, [onDone, auto]);
+  }, [fechar, auto]);
   return (
-    <div className="resultado">
+    <div className="resultado" data-saindo={saindo || undefined}>
       <div className={`resultado__caixa caixa resultado--${verdict}`} role="dialog" aria-modal="true" aria-label={t(`ui.resultado.${verdict}`)}>
         <p className="resultado__veredito" aria-hidden="true">{t(`ui.resultado.${verdict}`)}</p>
         <p className="resultado__escolha">{t(`events.${eventId}.opcoes.${optionId}`)}</p>
@@ -329,7 +334,7 @@ function Result({ eventId, optionId, state, tags, auto, onDone }: { eventId: str
             ))}
           </ul>
         )}
-        <button ref={button} type="button" className="resultado__seguir" onClick={onDone}>{t('ui.resultado.seguir')}</button>
+        <button ref={button} type="button" className="resultado__seguir" onClick={fechar}>{t('ui.resultado.seguir')}</button>
       </div>
     </div>
   );
