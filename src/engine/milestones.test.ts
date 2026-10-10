@@ -12,10 +12,10 @@ const base: MilestoneFacts = {
 const fire = (over: Partial<MilestoneFacts>, done: string[] = []) => fireMilestones({ ...base, ...over }, new Set(done)).fired.map((m) => m.id);
 
 describe('marcos da carreira (T25c)', () => {
-  it('são 21: 16 de carreira (a camisa 10 entrou na v2.63) e 5 de clube, ids únicos, todos com gatilho', () => {
-    expect(data.marcos).toHaveLength(21);
-    expect(new Set(data.marcos.map((m) => m.id)).size).toBe(21);
-    expect(data.marcos.filter((m) => m.escopo === 'carreira')).toHaveLength(16);
+  it('são 22: 17 de carreira (a camisa 10 entrou na v2.63, a mentalidade na v2.68) e 5 de clube, ids únicos, todos com gatilho', () => {
+    expect(data.marcos).toHaveLength(22);
+    expect(new Set(data.marcos.map((m) => m.id)).size).toBe(22);
+    expect(data.marcos.filter((m) => m.escopo === 'carreira')).toHaveLength(17);
     expect(data.marcos.filter((m) => m.escopo === 'clube')).toHaveLength(5);
     for (const m of data.marcos) expect(m.gatilho.length, m.id).toBeGreaterThan(0);
   });
@@ -25,8 +25,8 @@ describe('marcos da carreira (T25c)', () => {
   });
 
   it('a estreia profissional dispara na primeira temporada no profissional, uma vez só', () => {
-    expect(fire({ proDebut: true })).toEqual(['estreia-profissional']);
-    expect(fire({ proDebut: true }, [milestoneKey('estreia-profissional')])).toEqual([]);
+    expect(fire({ proDebut: true })).toEqual(['estreia-profissional', 'mentalidade']); // v2.68: a mentalidade vem com a estreia
+    expect(fire({ proDebut: true }, [milestoneKey('estreia-profissional'), milestoneKey('mentalidade')])).toEqual([]);
   });
 
   it('o marco do clube é do clube: estreia em outro clube dispara de novo; no mesmo clube não', () => {
@@ -36,7 +36,7 @@ describe('marcos da carreira (T25c)', () => {
   });
 
   it('o marco de clube espelho de um de carreira fica de fora na mesma temporada (a estreia no 1º clube é a profissional)', () => {
-    expect(fire({ proDebut: true, clubDebut: true })).toEqual(['estreia-profissional']);
+    expect(fire({ proDebut: true, clubDebut: true })).toEqual(['estreia-profissional', 'mentalidade']);
   });
 
   it('no máximo 2 marcos por temporada, na ordem de prioridade dos dados; o resto espera a próxima', () => {

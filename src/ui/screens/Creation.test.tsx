@@ -29,7 +29,6 @@ const checkedIn = (k: string) => within(group(k)).getAllByRole('radio').filter((
 const fillIdentity = () => {
   fireEvent.change(field('nome'), { target: { value: 'Dudu Maestro' } });
   fireEvent.change(field('estado'), { target: { value: 'BA' } });
-  fireEvent.click(within(group('quemE.comemoracao')).getByRole('radio', { name: t('creation.celebration.aviaozinho') }));
 };
 
 describe('criação (T50, v2.30)', () => {
@@ -37,8 +36,9 @@ describe('criação (T50, v2.30)', () => {
     for (const step of CREATION_STEPS) expect(() => t(`ui.criacao.passos.${step}`)).not.toThrow();
   });
 
-  it('abre na tela 1 com os campos de identidade rotulados', () => {
+  it('abre na tela 1 com os campos de identidade rotulados (v2.68: sem comemoração, que vem do primeiro gol)', () => {
     setup();
+    expect(screen.queryByRole('radiogroup', { name: t('ui.criacao.quemE.comemoracao') })).toBeNull();
     expect(title('quemE')).toBeInTheDocument();
     expect(screen.getByText(t('ui.criacao.progresso', { passo: 1, total: CREATION_STEPS.length }))).toBeInTheDocument();
     expect(field('nome')).toHaveAttribute('autocomplete', 'off');
@@ -56,7 +56,6 @@ describe('criação (T50, v2.30)', () => {
       expect(field('nome')).toHaveAccessibleDescription(t('creation.error.name.empty'));
       expect(field('numero')).toHaveAccessibleDescription(t('creation.error.shirtNumber.invalid'));
       expect(field('estado')).toHaveAccessibleDescription(t('creation.error.state.invalid'));
-      expect(group('quemE.comemoracao')).toHaveAccessibleDescription(t('creation.error.celebration.invalid'));
       expect(field('nome')).toHaveFocus();
       expect(title('quemE')).toBeInTheDocument();
     });
@@ -205,7 +204,7 @@ describe('tela 2: em campo e cabeça (T50d, v2.30)', () => {
   const radio = (k: string, name: string | RegExp) => within(group(k)).getByRole('radio', { name });
   const height = () => screen.getByRole('slider', { name: t('ui.criacao.emCampo.altura') });
 
-  it('abre com posição, perna, compleição, temperamento e mentalidade como grupos; altura como controle deslizante', () => {
+  it('abre com posição, perna, compleição e temperamento como grupos; altura como controle deslizante (v2.68: sem mentalidade)', () => {
     toField();
     expect(title('emCampo')).toBeInTheDocument();
     const order = within(group('emCampo.posicao')).getAllByRole('radio').map((r) => (r as HTMLInputElement).value);
@@ -215,7 +214,7 @@ describe('tela 2: em campo e cabeça (T50d, v2.30)', () => {
     expect(within(group('emCampo.perna')).getAllByRole('radio')).toHaveLength(2);
     expect(within(group('emCampo.compleicao')).getAllByRole('radio')).toHaveLength(3);
     expect(within(group('emCampo.temperamento')).getAllByRole('radio')).toHaveLength(4);
-    expect(within(group('emCampo.mentalidade')).getAllByRole('radio')).toHaveLength(4);
+    expect(screen.queryByRole('radiogroup', { name: t('ui.criacao.emCampo.mentalidade') })).toBeNull();
     expect(height()).toBeInTheDocument();
   });
 
@@ -274,7 +273,7 @@ describe('tela 2: em campo e cabeça (T50d, v2.30)', () => {
     expect(title('emCampo')).toBeInTheDocument();
   });
 
-  it('completa, avança para o tipo de início; mentalidade é opcional; o Voltar mantém as escolhas', () => {
+  it('completa, avança para o tipo de início; o Voltar mantém as escolhas', () => {
     toField();
     fireEvent.click(radio('emCampo.posicao', t('positions.atacante')));
     fireEvent.click(radio('emCampo.estilo', t('archetypes.archetype.matador')));
@@ -326,7 +325,9 @@ describe('tela 3: tipo de início e fim da criação (T50e, v2.30)', () => {
     expect(onFinish).toHaveBeenCalledOnce();
     const { input, look } = onFinish.mock.calls[0]![0];
     expect(createPlayer(input, createPrng(1)).ok).toBe(true);
-    expect(input).toMatchObject({ name: 'Dudu Maestro', shirtNumber: 7, state: 'BA', heartClub: null, position: 'atacante', archetypeId: 'matador', temperament: 'frio', celebration: 'aviaozinho', origin: 'varzea' });
+    expect(input).toMatchObject({ name: 'Dudu Maestro', shirtNumber: 7, state: 'BA', heartClub: null, position: 'atacante', archetypeId: 'matador', temperament: 'frio', origin: 'varzea' });
+    expect(input).not.toHaveProperty('celebration');
+    expect(input).not.toHaveProperty('mentality');
     for (const k of Object.keys(look)) expect(input).not.toHaveProperty(k);
     expect(look).toHaveProperty('skin');
     const { visual } = onFinish.mock.calls[0]![0];

@@ -3,7 +3,7 @@ import type { CreationInput } from '../../engine/player';
 import type { Identity } from './Creation';
 import type { OnField } from './onField';
 
-// T50e (SPEC 6.1, v2.30): o que a criação entrega ao motor. O visual (look.ts) fica de fora: aparência nunca mexe no jogo.
+// T50e (SPEC 6.1, v2.30): o que a criação entrega ao motor. v2.68: sem comemoração e sem mentalidade (vêm dos marcos). O visual (look.ts) fica de fora: aparência nunca mexe no jogo.
 export function toCreationInput(identity: Identity, field: OnField, origin: string): CreationInput {
   return {
     name: identity.name.trim(),
@@ -14,10 +14,8 @@ export function toCreationInput(identity: Identity, field: OnField, origin: stri
     archetypeId: field.archetypeId!,
     biotype: { heightCm: field.heightCm, build: field.build as Build },
     temperament: field.temperament!,
-    celebration: identity.celebration!,
     origin,
     foot: field.foot,
     ...(field.side ? { side: field.side } : {}),
-    ...(field.mentality ? { mentality: field.mentality } : {}),
   };
 }

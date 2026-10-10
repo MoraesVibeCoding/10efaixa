@@ -43,7 +43,7 @@ describe('motor de eventos e dilemas (T25)', () => {
 
   it('marcos da carreira nunca entram no sorteio comum (só o motor de marcos os dispara)', () => {
     const marcos = (raw.eventos as { id: string; marco?: boolean }[]).filter((e) => e.marco).map((e) => e.id);
-    expect(marcos.length).toBe(21); // v2.63: a camisa 10
+    expect(marcos.length).toBe(22); // v2.63: a camisa 10; v2.68: a mentalidade
     for (const s of [ctx(), ctx({ moral: 1 }), ctx({ contratoAnosRestantes: 1 })]) {
       for (const id of marcos) expect(eligibleEvents(s)).not.toContain(id);
     }
@@ -86,10 +86,11 @@ describe('motor de eventos e dilemas (T25)', () => {
 
   it('três opções por decisão, cada uma com o seu jeito (SPEC v2.17); eventos só narrados têm uma opção', () => {
     for (const e of raw.eventos) {
-      expect([1, 3], e.id).toContain(e.opcoes.length);
+      // v2.68: o marco da mentalidade é a exceção aprovada, com as 4 mentalidades
+      expect(e.id === 'mentalidade' ? [4] : [1, 3], e.id).toContain(e.opcoes.length);
       const jeitos = (e.opcoes as { jeito?: string }[]).map((o) => o.jeito);
       if (e.opcoes.length === 1) { expect(jeitos, e.id).toEqual([undefined]); continue; }
-      expect(new Set(jeitos).size, e.id).toBe(3);
+      expect(new Set(jeitos).size, e.id).toBe(e.opcoes.length);
       for (const j of jeitos) expect(ALL_TEMPERAMENTS, e.id).toContain(j);
     }
   });

@@ -8,7 +8,7 @@ import { checkName } from '../../engine/nameFilter';
 import { createPrng } from '../../engine/prng';
 import { t } from '../../i18n';
 import { transition, type FlowState } from '../../state/flow';
-import { Choices, named } from './Choices';
+import { Choices } from './Choices';
 import { AvatarHeroi } from './AvatarHeroi';
 import { Figurinha } from './Figurinha';
 import { VISUAIS, lookOf, previewAvatar, randomVisual, visualOf, type Look } from './look';
@@ -23,7 +23,8 @@ import './Creation.css';
 // T50 (SPEC 6.1, v2.30; v2.35): criação em quatro telas, na ordem de flow.json e pela máquina da T48.
 // Tela 1 "quem é ele": identidade. Tela 2 "seu visual" (nada aqui mexe nos atributos). Tela 3 "em campo e cabeça": OnFieldStep.
 // Tela 4: tipo de início (origem). No computador, as telas 1 e 2 são uma página só (pages.ts).
-export interface Identity { name: string; number: string; state: string; heartClub: string; celebration: string | null }
+// v2.68: a comemoração saiu da criação (vem do marco do primeiro gol)
+export interface Identity { name: string; number: string; state: string; heartClub: string }
 /** O que a criação entrega: o motor recebe só o CreationInput; o visual vai à parte (aparência nunca mexe no jogo). */
 export interface CreationResult { input: CreationInput; look: Look; /** Id do visual escolhido (visuais.json): a arte pintada. `look` são as peças da arte provisória dele. */ visual: string }
 export interface CreationProps {
@@ -36,7 +37,7 @@ type Errors = Partial<Record<string, string>>;
 function byName(a: { nome: string }, b: { nome: string }) { return a.nome.localeCompare(b.nome, 'pt-BR'); }
 const BY_NAME = [...CLUBS].sort(byName);
 /** Ordem do foco quando há erro, por tela: o primeiro campo inválido recebe o foco. */
-const FIELD_ORDER: Record<string, readonly string[]> = { quemE: ['name', 'number', 'state', 'celebration'], visual: [], emCampo: FIELD_ERROR_ORDER, origem: ['origin'] };
+const FIELD_ORDER: Record<string, readonly string[]> = { quemE: ['name', 'number', 'state'], visual: [], emCampo: FIELD_ERROR_ORDER, origem: ['origin'] };
 const ORIGINS = Object.keys(creationData.origins);
 
 /** Erros da tela 1, como chaves de i18n de creation.error. */
@@ -48,7 +49,6 @@ function identityErrors(id: Identity): Errors {
   if (!/^\d{1,2}$/.test(id.number.trim()) || n < 1 || n > 99) errors.number = 'creation.error.shirtNumber.invalid';
   else if (shirtCfg.reservados.includes(n)) errors.number = 'creation.error.shirtNumber.reserved';
   if (!creationData.states.includes(id.state)) errors.state = 'creation.error.state.invalid';
-  if (!id.celebration) errors.celebration = 'creation.error.celebration.invalid';
   return errors;
 }
 
@@ -60,7 +60,7 @@ export function Creation({ onExit, onFinish, seed = Date.now() }: CreationProps)
   const rng = useRef(null as ReturnType<typeof createPrng> | null);
   rng.current ??= createPrng(seed);
   const [flow, setFlow] = useState({ screen: 'criacao', step: 0 } as FlowState);
-  const [identity, setIdentity] = useState({ name: '', number: '7', state: '', heartClub: '', celebration: null } as Identity);
+  const [identity, setIdentity] = useState({ name: '', number: '7', state: '', heartClub: '' } as Identity);
   const [visualId, setVisualId] = useState(() => { return randomVisual(rng.current!); });
   const [field, setField] = useState(DEFAULT_FIELD);
   const [origin, setOrigin] = useState(null as string | null);
@@ -232,9 +232,6 @@ function IdentityStep({ c }: { c: StepCtx }) {
           </Field>
         </div>
       </div>
-      <Choices id={`${ids}-comemoracao`} legend={t('ui.criacao.quemE.comemoracao')} name="celebration" value={id.celebration ?? ''}
-        options={named(creationData.celebrations, 'creation.celebration')} onChange={(v) => change('celebration', v)}
-        error={c.errors.celebration ? t(c.errors.celebration) : null} />
     </div>
   );
 }

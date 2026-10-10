@@ -49,7 +49,9 @@
    0,
    0.06
   ],
-  "cobrador": "bool"
+  "cobrador": "bool",
+  "comemoracao": "texto",
+  "mentalidade": "texto"
  },
  "eventos": [
   {
@@ -2027,6 +2029,11 @@
        "moral",
        "add",
        0.03
+      ],
+      [
+       "comemoracao",
+       "set",
+       "aviaozinho"
       ]
      ]
     },
@@ -2043,6 +2050,11 @@
        "relacaoTecnico",
        "add",
        -0.03
+      ],
+      [
+       "comemoracao",
+       "set",
+       "dancinha"
       ]
      ]
     },
@@ -2059,6 +2071,11 @@
        "moral",
        "add",
        -0.02
+      ],
+      [
+       "comemoracao",
+       "set",
+       "coracaoMaos"
       ]
      ]
     }
@@ -7026,6 +7043,84 @@
    "politica": {
     "padrao": "ficar-em-casa"
    }
+  },
+  {
+   "id": "mentalidade",
+   "importancia": 9,
+   "cena": "vestiario",
+   "peso": 10,
+   "todosOsJeitos": true,
+   "condicoes": [],
+   "opcoes": [
+    {
+     "id": "fominha",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "mentalidade",
+       "set",
+       "fominha"
+      ],
+      [
+       "moral",
+       "add",
+       0.02
+      ]
+     ]
+    },
+    {
+     "id": "capitao",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "mentalidade",
+       "set",
+       "capitao"
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       0.02
+      ]
+     ]
+    },
+    {
+     "id": "professor",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "mentalidade",
+       "set",
+       "professor"
+      ],
+      [
+       "moral",
+       "add",
+       0.01
+      ]
+     ]
+    },
+    {
+     "id": "maquina",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "mentalidade",
+       "set",
+       "maquina"
+      ],
+      [
+       "disciplina",
+       "add",
+       0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "maquina"
+   },
+   "marco": true
   }
  ]
 }

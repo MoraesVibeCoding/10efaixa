@@ -51,6 +51,7 @@ import { initialStates, simulateStates, type StateWorld } from './states';
 import { progressTraits, type TraitState } from './traits';
 import cfg from '../data/career.json';
 import clubLifeCfg from '../data/clubLife.json';
+import creationData from '../data/creation.json';
 import cups from '../data/cups.json';
 import europe from '../data/europe.json';
 
@@ -84,6 +85,8 @@ export interface CareerResult {
   /** T41: apelido dado pelo jogo, manchete séria e comentário com zoeira. */
   nickname: string; headline: string; comment: string;
   retirement: RetireReason; farewell: 'formador' | 'coracao' | null;
+  /** v2.68: a comemoração (do marco do primeiro gol, ou a padrão) e a mentalidade (do marco, ou null sem estreia profissional). */
+  celebration: string; mentality: string | null;
   cards: { yellows: number; reds: number }; finalTemperament: string; houseBought: boolean; discipline: number;
   /** `age` (v2.51): idade em que jogou a temporada (a de `evo.age` já avançou um ano ao registrar); para a linha do tempo. */
   /** T28e (v2.50): as vezes em que o empresário negociou uma proposta, e como terminou. */
@@ -250,11 +253,17 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   // T25c: marcos da carreira (primeiras vezes)
   const marcos: CareerResult['marcos'] = [];
   const doneMarcos = new Set<string>();
+  // v2.68: quem já trouxe a mentalidade da criação (save ou link antigo) não passa pelo marco dela
+  if (input.mentality !== undefined) doneMarcos.add('mentalidade');
   let proSeasons = 0;
   const goalsAtClub: Record<string, number> = {};
   const captainAt = new Set<string>();
   let cobradorClub: string | null = null;
   let marcoMental = 1;
+  // v2.68: comemoração e mentalidade vêm dos marcos; saves e links antigos ainda as trazem da criação
+  let celebration = input.celebration ?? creationData.comemoracaoPadrao;
+  let mentality: string | null = input.mentality ?? null;
+  let mentalityGrowth: Partial<Attributes> = {};
   let curYear = startYear;
   let curRole: Role = 'jovemPromessa';
   const meetings: DecisionView['meetings'] = [];
@@ -473,7 +482,9 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       relapseRisk = decayRelapse(relapseRisk);
       if (suspended > 0) { minutes *= 1 - Math.min(1, suspended); suspended = 0; }
       const leader = leaderEffects(temp, teamResult);
-      evo = { ...evo, growthBonus: { ...player.growthBonus, mental: (player.growthBonus.mental ?? 1) * leader.mentalBonus * fx.mentalBonus * marcoMental } };
+      const growth = { ...player.growthBonus };
+      for (const [a, f] of Object.entries(mentalityGrowth)) growth[a as keyof Attributes] = (growth[a as keyof Attributes] ?? 1) * f;
+      evo = { ...evo, growthBonus: { ...growth, mental: (growth.mental ?? 1) * leader.mentalBonus * fx.mentalBonus * marcoMental } };
       coachRelation = clamp(coachRelation + leader.relationDelta, 0, 1);
       const antes = evo.attributes;
       evo = evolveSemester(evo, { focus, staffQuality, minutes, morale }, yr);
@@ -727,7 +738,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       for (const k of silenced) doneMarcos.add(k);
       for (const m of fired) {
         doneMarcos.add(milestoneKey(m.id, m.escopo === 'clube' ? clubId : undefined));
-        const before = { moral: morale, idolatria: idol[clubId] ?? 0, relacaoTecnico: coachRelation, bonusMental: 0, cobrador: false } as Record<string, number | string | boolean>;
+        const before = { moral: morale, idolatria: idol[clubId] ?? 0, relacaoTecnico: coachRelation, bonusMental: 0, cobrador: false, comemoracao: '', mentalidade: '' } as Record<string, number | string | boolean>;
         const option = ask(m.id, before);
         const out = applyOption(before, m.id, option);
         morale = out.moral as number;
@@ -736,6 +747,15 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         marcoMental = Math.min(EFFECTS.bonusMentalMax, marcoMental + (out.bonusMental as number));
         if (out.cobrador) cobradorClub = clubId;
         if (m.id === 'camisa-10') { tenShirt = true; spells.at(-1)!.number = 10; }
+        // a comemoração escolhida na criação (save ou link antigo) continua valendo; sem ela, vale a do primeiro gol
+        if (out.comemoracao && input.celebration === undefined) celebration = out.comemoracao as string;
+        if (out.mentalidade) {
+          // v2.68: a mentalidade passa a pesar na evolução daqui em diante (crescimento, ruído e declínio)
+          mentality = out.mentalidade as string;
+          const fxM = mentalityEffects(mentality);
+          mentalityGrowth = fxM.growth;
+          evo = { ...evo, ...fxM.evo };
+        }
         marcos.push({ id: m.id, year, age: Math.floor(evo.age - 1), clubId, option });
         remember(m.id, clubId);
       }
@@ -886,10 +906,10 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   selection.esperouOBrasil = selection.dual === 'recusou' && selection.caps > 0;
   const result = {
     player, spells, titles, peakOverall, peakAge, peakAttributes, peakClubId: peakClubId ?? spells[0]?.clubId ?? '', endAge: evo.age, wearsTen: tenShirt, captain, idolatry: idol, negotiations, forcedExits,
-    wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, selection, stats, awards, retirement, farewell, cards, finalTemperament: temp, houseBought, discipline, seasons, earnedBRL: earned, decisiveDerbies, marcos, memorias,
+    celebration, mentality, wealthBRL: Math.max(0, wealth), agentProfile: agent.profile, contracts, injuries, finalPosition: position, positionChanges, selection, stats, awards, retirement, farewell, cards, finalTemperament: temp, houseBought, discipline, seasons, earnedBRL: earned, decisiveDerbies, marcos, memorias,
   };
   // Sorteios novos ficam por último para não alterar nenhum resultado anterior da mesma semente.
   const nickname = generateNickname(player, rng);
   const legacy = legacyOf(result);
-  return { ...result, honors: honorsOf(honorFacts(result)), nickname, legacy, ...headlineOf({ player, nickname, legacy }, rng) };
+  return { ...result, honors: honorsOf(honorFacts(result)), nickname, legacy, ...headlineOf({ player, nickname, legacy, celebration }, rng) };
 }

@@ -346,9 +346,9 @@
   "titulo": "O primeiro gol de verdade",
   "texto": "A bola sobra na entrada da área e você bate sem pensar. A rede balança, o estádio explode e você corre sem saber para onde. Lá do alto da arquibancada, alguém grita o seu nome pela primeira vez.",
   "opcoes": {
-   "correr-para-a-torcida": "Correr para a torcida de braços abertos",
-   "fazer-a-danca-ensaiada": "Fazer a dança que ensaiou no vestiário",
-   "abracar-quem-deu-o-passe": "Abraçar quem deu o passe e voltar ao jogo"
+   "correr-para-a-torcida": "Correr de aviãozinho para a torcida",
+   "fazer-a-danca-ensaiada": "Fazer a dancinha ensaiada no vestiário",
+   "abracar-quem-deu-o-passe": "Fazer coração com as mãos para quem deu o passe"
   }
  },
  "primeiro-gol-no-clube": {
@@ -1219,6 +1219,16 @@
    "ir-e-voltar-cedo": "Ir ao baile e prometer voltar cedo",
    "ficar-em-casa": "Ficar em casa e dormir cedo",
    "chamar-os-amigos-pro-jogo": "Chamar os amigos para ver o jogo no domingo"
+  }
+ },
+ "mentalidade": {
+  "titulo": "Que profissional você vai ser?",
+  "texto": "Agora é profissional: concentração, contracheque e um armário com o seu nome. O preparador chama cada estreante para a mesma conversa. A resposta muda o jeito de treinar daqui para a frente.",
+  "opcoes": {
+   "fominha": "Ser o fominha que quer a bola o tempo todo",
+   "capitao": "Ser o capitão que puxa o grupo",
+   "professor": "Ser o professor que joga de cabeça erguida",
+   "maquina": "Ser a máquina que nunca falta a um treino"
   }
  }
 }
