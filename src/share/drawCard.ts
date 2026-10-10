@@ -150,15 +150,18 @@ const H = CARD_SIZE.height;
 const THEME = tokens.temas.claro;
 // v2.66 (direção C): figurinha menor no campo verde, faixa de capitão com o veredito e o conteúdo num painel de papel sólido.
 // figurinha: moldura 1 : 1,22, respiro de 9% da largura, foto em 80% da largura
-const FW = 480;
-const FX = (W - FW) / 2;
 const FY = 36;
-const FH = Math.round(FW * 1.22);
-const EM = FW / 10;
-// faixa do veredito, logo abaixo da figurinha, e o painel de papel por baixo dela
-const BAND_Y = FY + FH + 34;
 const BAND_H = 84;
-const GY = BAND_Y + 22;
+/** Onde ficam a figurinha, a faixa e o painel. v2.79: no "Números" a figurinha é menor, para os números e as fichas caberem. */
+interface Geo { fw: number; fx: number; fh: number; em: number; bandY: number; gy: number }
+function geometry(fw: number): Geo {
+  const fh = Math.round(fw * 1.22);
+  // faixa do veredito, logo abaixo da figurinha, e o painel de papel por baixo dela
+  const bandY = FY + fh + 34;
+  return { fw, fx: (W - fw) / 2, fh, em: fw / 10, bandY, gy: bandY + 22 };
+}
+// v2.79: 470 (antes 480) devolve ao "História" os 12 px que o cabeçalho desceu para sair da ponta da faixa
+const GEO: Record<CardVersion, Geo> = { narrativa: geometry(470), estatistica: geometry(380) };
 const GX = 40;
 const GW = W - 2 * GX;
 /** Pé do painel: nenhum texto do cartão passa daqui (o rodapé fica no verde, embaixo). */
@@ -167,35 +170,35 @@ const PAD = 44;
 const BAND_TILT = -0.05;
 
 /** Fundo: verde de gramado liso, com o número da camisa gigante e apagado atrás da figurinha. */
-function backdrop(ctx: CanvasRenderingContext2D, m: CardModel) {
+function backdrop(ctx: CanvasRenderingContext2D, g: Geo, m: CardModel) {
   ctx.fillStyle = P.gramado;
   ctx.fillRect(0, 0, W, H);
   const num = String(m.numero);
   ctx.save();
   ctx.fillStyle = 'rgba(255, 255, 255, 0.14)';
   font(ctx, 820, TITLE, 900);
-  ctx.fillText(num, (W - ctx.measureText(num).width) / 2, FY + FH - 10);
+  ctx.fillText(num, (W - ctx.measureText(num).width) / 2, FY + g.fh - 10);
   ctx.restore();
 }
 
 /** A figurinha do álbum em tamanho grande: moldura de metal, foto com as faixas do clube, Over, tarja e emblema. */
-function figurinha(ctx: CanvasRenderingContext2D, m: CardModel, images: CardImages, kit: Kit) {
+function figurinha(ctx: CanvasRenderingContext2D, g: Geo, m: CardModel, images: CardImages, kit: Kit) {
   const medal = MEDALS[toBand(m.overall).key]!;
   ctx.save();
-  rr(ctx, FX, FY, FW, FH, FW * 0.08);
+  rr(ctx, g.fx, FY, g.fw, g.fh, g.fw * 0.08);
   ctx.clip();
-  const g = ctx.createLinearGradient(FX, FY, FX + FW, FY + FH);
-  g.addColorStop(0, medal.clara); g.addColorStop(1, medal.escura);
-  ctx.fillStyle = g; ctx.fillRect(FX, FY, FW, FH);
-  if (images.frame) ctx.drawImage(images.frame, FX, FY, FW, FH);
+  const grad = ctx.createLinearGradient(g.fx, FY, g.fx + g.fw, FY + g.fh);
+  grad.addColorStop(0, medal.clara); grad.addColorStop(1, medal.escura);
+  ctx.fillStyle = grad; ctx.fillRect(g.fx, FY, g.fw, g.fh);
+  if (images.frame) ctx.drawImage(images.frame, g.fx, FY, g.fw, g.fh);
   ctx.restore();
-  rr(ctx, FX + 1, FY + 1, FW - 2, FH - 2, FW * 0.08);
+  rr(ctx, g.fx + 1, FY + 1, g.fw - 2, g.fh - 2, g.fw * 0.08);
   ctx.strokeStyle = medal.aro; ctx.lineWidth = 3; ctx.stroke();
 
   // foto: papel em cima, as duas faixas do clube embaixo (60–80–100%)
-  const [px, py, pw, ph] = [FX + FW * 0.09, FY + FW * 0.09, FW * 0.82, FW * 0.8];
+  const [px, py, pw, ph] = [g.fx + g.fw * 0.09, FY + g.fw * 0.09, g.fw * 0.82, g.fw * 0.8];
   ctx.save();
-  rr(ctx, px, py, pw, ph, 0.4 * EM);
+  rr(ctx, px, py, pw, ph, 0.4 * g.em);
   ctx.clip();
   ctx.fillStyle = THEME.superficie; ctx.fillRect(px, py, pw, ph);
   ctx.fillStyle = kit.camisa[0]!; ctx.fillRect(px, py + ph * 0.6, pw, ph * 0.2);
@@ -204,16 +207,16 @@ function figurinha(ctx: CanvasRenderingContext2D, m: CardModel, images: CardImag
   ctx.restore();
 
   // Over na pastilha marinho, no canto de cima
-  font(ctx, 1.7 * EM, TITLE, 900);
-  const ow = ctx.measureText(String(m.overall)).width + 0.56 * EM;
+  font(ctx, 1.7 * g.em, TITLE, 900);
+  const ow = ctx.measureText(String(m.overall)).width + 0.56 * g.em;
   ctx.fillStyle = THEME.siglaContorno;
-  rr(ctx, px + 0.3 * EM, py + 0.3 * EM, ow, 1.86 * EM, 0.2 * EM); ctx.fill();
+  rr(ctx, px + 0.3 * g.em, py + 0.3 * g.em, ow, 1.86 * g.em, 0.2 * g.em); ctx.fill();
   ctx.fillStyle = THEME.siglaTexto;
-  ctx.fillText(String(m.overall), px + 0.58 * EM, py + 1.86 * EM);
+  ctx.fillText(String(m.overall), px + 0.58 * g.em, py + 1.86 * g.em);
 
   // emblema do clube do auge, no canto oposto
   if (images.emblem) {
-    const [ex, ey, es] = [px + pw - 1.9 * EM, py + 0.3 * EM, 1.6 * EM];
+    const [ex, ey, es] = [px + pw - 1.9 * g.em, py + 0.3 * g.em, 1.6 * g.em];
     ctx.drawImage(images.emblem, ex, ey, es, es);
     if (images.emblemSigla) {
       const ss = Math.max(es * 0.24, MIN);
@@ -226,32 +229,36 @@ function figurinha(ctx: CanvasRenderingContext2D, m: CardModel, images: CardImag
   }
 
   // tarja: nome e número
-  const [tx, ty, tw, th] = [FX + FW * 0.09, FY + FH * (1 - 0.07 - 0.17), FW * 0.82, FH * 0.17];
+  const [tx, ty, tw, th] = [g.fx + g.fw * 0.09, FY + g.fh * (1 - 0.07 - 0.17), g.fw * 0.82, g.fh * 0.17];
   ctx.fillStyle = THEME.siglaContorno;
-  rr(ctx, tx, ty, tw, th, 0.25 * EM); ctx.fill();
+  rr(ctx, tx, ty, tw, th, 0.25 * g.em); ctx.fill();
   ctx.fillStyle = THEME.siglaTexto;
   const num = String(m.numero);
-  font(ctx, 1.6 * EM, TITLE, 900);
+  font(ctx, 1.6 * g.em, TITLE, 900);
   const nw = ctx.measureText(num).width;
-  ctx.fillText(num, tx + tw - 0.6 * EM - nw, ty + th * 0.72);
-  fit(ctx, m.nome.toUpperCase(), TITLE, 900, 0.92 * EM, MIN, tw - nw - 1.8 * EM);
-  ctx.fillText(m.nome.toUpperCase(), tx + 0.6 * EM, ty + th * 0.66);
+  ctx.fillText(num, tx + tw - 0.6 * g.em - nw, ty + th * 0.72);
+  // v2.79: o nome nunca encolhe abaixo do mínimo; se nem assim cabe ao lado do número, vai só o primeiro nome
+  const room = tw - nw - 1.8 * g.em;
+  let nome = m.nome.toUpperCase();
+  fit(ctx, nome, TITLE, 900, 0.92 * g.em, MIN, room);
+  if (ctx.measureText(nome).width > room) { nome = nome.split(' ')[0]!; fit(ctx, nome, TITLE, 900, 0.92 * g.em, MIN, room); }
+  ctx.fillText(nome, tx + 0.6 * g.em, ty + th * 0.66);
 }
 
 /** Painel de papel sólido com sombra suave (o vidro fica para as telas com cena por trás). */
-function panel(ctx: CanvasRenderingContext2D) {
+function panel(ctx: CanvasRenderingContext2D, g: Geo) {
   ctx.save();
   ctx.shadowColor = 'rgba(9, 26, 17, 0.28)'; ctx.shadowBlur = 24; ctx.shadowOffsetY = 8;
-  rr(ctx, GX, GY, GW, GB - GY, 24);
+  rr(ctx, GX, g.gy, GW, GB - g.gy, 24);
   ctx.fillStyle = THEME.superficie; ctx.fill();
   ctx.restore();
 }
 
 /** A faixa de capitão (amarelo braçadeira), inclinada e passando das bordas, com o veredito. */
-function band(ctx: CanvasRenderingContext2D, m: CardModel) {
+function band(ctx: CanvasRenderingContext2D, g: Geo, m: CardModel) {
   const v = m.veredito.toUpperCase();
   ctx.save();
-  ctx.translate(W / 2, BAND_Y + BAND_H / 2);
+  ctx.translate(W / 2, g.bandY + BAND_H / 2);
   ctx.rotate(BAND_TILT);
   ctx.shadowColor = 'rgba(9, 26, 17, 0.3)'; ctx.shadowBlur = 16; ctx.shadowOffsetY = 6;
   ctx.fillStyle = P.amarelo;
@@ -264,9 +271,10 @@ function band(ctx: CanvasRenderingContext2D, m: CardModel) {
 }
 
 /** Rótulo, a linha "apelido · posição · clube" e onde virou ídolo. Devolve onde o conteúdo continua. */
-function header(ctx: CanvasRenderingContext2D, m: CardModel): number {
+function header(ctx: CanvasRenderingContext2D, g: Geo, m: CardModel): number {
   const x = GX + PAD; const width = GW - 2 * PAD;
-  let y = GY + 108;
+  // v2.79: a faixa é inclinada e desce do lado esquerdo; a primeira linha começa abaixo da ponta dela
+  let y = g.gy + 118;
   ctx.fillStyle = P.tinta;
   y = block(ctx, m.rotulo, TEXT, 700, 36, x, y, width);
   ctx.fillStyle = THEME.textoSuave;
@@ -316,62 +324,71 @@ function narrative(ctx: CanvasRenderingContext2D, m: CardModel, y0: number) {
   }
 }
 
-function statistics(ctx: CanvasRenderingContext2D, m: CardModel, y0: number) {
+/**
+ * v2.79: números da carreira em fichas (jogos, gols, assistências, títulos) e, por extenso numa linha, Seleção e patrimônio.
+ * Devolve onde o conteúdo continua.
+ */
+function numberTiles(ctx: CanvasRenderingContext2D, m: CardModel, y0: number): number {
   const x = GX + PAD; const width = GW - 2 * PAD;
-  // números da carreira numa linha
-  const col = width / m.numeros.length;
-  m.numeros.forEach((n, i) => {
+  const tiles = m.numeros.filter((n) => n.id !== 'selecao' && n.id !== 'patrimonio');
+  const gap = 12; const th = 100;
+  const tw = (width - gap * (tiles.length - 1)) / tiles.length;
+  tiles.forEach((n, i) => {
+    const tx = x + i * (tw + gap);
+    rr(ctx, tx, y0, tw, th, 16); ctx.fillStyle = 'rgba(0, 103, 49, 0.08)'; ctx.fill();
     ctx.fillStyle = P.tinta;
-    fit(ctx, n.valor, TITLE, 900, 52, MIN, col - 12);
-    ctx.fillText(n.valor, x + i * col, y0 + 14);
-    fit(ctx, n.nome.toUpperCase(), TITLE, 800, MIN, MIN, col - 12);
+    const vs = fit(ctx, n.valor, TITLE, 900, 54, MIN, tw - 20);
+    ctx.fillText(n.valor, tx + (tw - ctx.measureText(n.valor).width) / 2, y0 + 12 + vs * 0.85);
+    const label = n.nome.toUpperCase();
     ctx.fillStyle = THEME.textoSuave;
-    ctx.fillText(n.nome.toUpperCase(), x + i * col, y0 + 50);
+    fit(ctx, label, TITLE, 700, MIN, MIN, tw - 12);
+    ctx.fillText(label, tx + (tw - ctx.measureText(label).width) / 2, y0 + th - 14);
   });
-  // radar dos 10 atributos no auge, escala 0–100
-  // o rótulo de baixo fica a 1,14 do raio e mais 18 px: o raio é o maior que ainda cabe no painel
-  const r = Math.min(120, ((GB - (y0 + 84)) / 2 - 30) / 1.14);
-  const [cx, cy] = [W / 2, (y0 + 84 + GB) / 2];
-  const pt = (i: number, v: number) => {
-    const a = -Math.PI / 2 + (i * 2 * Math.PI) / m.radar.length;
-    return [cx + Math.cos(a) * r * v, cy + Math.sin(a) * r * v] as const;
-  };
-  ctx.strokeStyle = P.linha; ctx.lineWidth = 2;
-  for (const ring of [0.5, 1]) {
-    ctx.beginPath();
-    m.radar.forEach((_, i) => { const [px, py] = pt(i, ring); if (i) ctx.lineTo(px, py); else ctx.moveTo(px, py); });
-    ctx.closePath(); ctx.stroke();
-  }
-  ctx.beginPath();
-  m.radar.forEach((a, i) => { const [px, py] = pt(i, Math.min(1, a.valor / 100)); if (i) ctx.lineTo(px, py); else ctx.moveTo(px, py); });
-  ctx.closePath();
-  ctx.fillStyle = 'rgba(30, 123, 79, 0.35)'; ctx.fill();
-  ctx.strokeStyle = P.gramado; ctx.lineWidth = 4; ctx.stroke();
+  // Seleção e patrimônio por extenso: numa linha se couber; senão, uma em cada linha
+  const lines = m.numeros.filter((n) => n.id === 'selecao' || n.id === 'patrimonio').map((n) => t('ui.cartao.numeroLinha', { nome: n.nome, valor: n.valor }));
   ctx.fillStyle = P.tinta;
   font(ctx, MIN, TEXT, 700);
-  // rótulo alinhado pelo lado em que está, para nunca invadir o polígono
-  m.radar.forEach((a, i) => {
-    const ang = -Math.PI / 2 + (i * 2 * Math.PI) / m.radar.length;
-    const [px, py] = pt(i, 1.14);
-    const label = `${a.nome} ${a.valor}`;
-    const w = ctx.measureText(label).width;
-    const cos = Math.cos(ang);
-    const left = cos > 0.2 ? px + 4 : cos < -0.2 ? px - 4 - w : px - w / 2;
-    const dy = Math.sin(ang) > 0.5 ? 28 : Math.sin(ang) < -0.5 ? -8 : 10;
-    ctx.fillText(label, left, py + dy);
+  const one = lines.join('  ·  ');
+  const rows = ctx.measureText(one).width <= width ? [one] : lines;
+  let y = y0 + th + 42;
+  for (const l of rows) { ctx.fillText(l, x + (width - ctx.measureText(l).width) / 2, y); y += 38; }
+  return y - 8;
+}
+
+/** v2.79: os 10 atributos do auge em fichas de figurinha (número grande, nome embaixo), da maior para a menor; as 3 maiores em verde. */
+function attributeChips(ctx: CanvasRenderingContext2D, m: CardModel, y0: number) {
+  const x = GX + PAD; const width = GW - 2 * PAD;
+  const sorted = [...m.radar].sort((a, b) => b.valor - a.valor);
+  const gap = 12; const perRow = 5;
+  const cw = (width - gap * (perRow - 1)) / perRow;
+  const ch = Math.min(118, (GB - 24 - y0 - gap) / 2);
+  sorted.forEach((a, i) => {
+    const cx = x + (i % perRow) * (cw + gap); const cy = y0 + Math.floor(i / perRow) * (ch + gap);
+    const top = i < 3;
+    rr(ctx, cx, cy, cw, ch, 14);
+    if (top) { ctx.fillStyle = P.gramado; ctx.fill(); } else { ctx.strokeStyle = P.linha; ctx.lineWidth = 2; ctx.stroke(); }
+    ctx.fillStyle = top ? P.papel : P.tinta;
+    const v = String(a.valor);
+    fit(ctx, v, TITLE, 900, 50, MIN, cw - 16);
+    ctx.fillText(v, cx + (cw - ctx.measureText(v).width) / 2, cy + ch * 0.55);
+    const label = a.nome.toUpperCase();
+    fit(ctx, label, TITLE, 700, MIN, MIN, cw - 10);
+    ctx.fillStyle = top ? P.papel : THEME.textoSuave;
+    ctx.fillText(label, cx + (cw - ctx.measureText(label).width) / 2, cy + ch - 12);
   });
 }
 
 /** Desenha o cartão inteiro no contexto (1080×1350). Imagens opcionais: sem elas, ficam as cores (metal e clube). */
 export function drawCard(ctx: CanvasRenderingContext2D, m: CardModel, version: CardVersion, images: CardImages = {}) {
   ctx.textBaseline = 'alphabetic';
-  backdrop(ctx, m);
+  const g = GEO[version];
+  backdrop(ctx, g, m);
   // v2.62: a figurinha veste o último clube profissional
-  figurinha(ctx, m, images, kitOf(m.clubeFigurinha));
-  panel(ctx);
-  band(ctx, m);
-  const y = header(ctx, m);
-  if (version === 'narrativa') narrative(ctx, m, y); else statistics(ctx, m, y);
+  figurinha(ctx, g, m, images, kitOf(m.clubeFigurinha));
+  panel(ctx, g);
+  band(ctx, g, m);
+  const y = header(ctx, g, m);
+  if (version === 'narrativa') narrative(ctx, m, y); else attributeChips(ctx, m, numberTiles(ctx, m, y) + 6);
   // rodapé sobre o verde: código da carreira e a marca
   ctx.fillStyle = P.papel;
   font(ctx, MIN, TITLE, 800);

@@ -590,10 +590,11 @@
    "assistencias": "Assistências",
    "semSofrerGol": "Sem sofrer gol",
    "titulos": "Títulos",
-   "selecao": "Seleção (jogos/gols)",
+   "selecao": "Seleção",
    "patrimonio": "Patrimônio"
   },
-  "selecaoValor": "{jogos}/{gols}",
+  "selecaoValor": "{jogos} jogos, {gols} gols",
+  "numeroLinha": "{nome}: {valor}",
   "altNarrativa": "Cartão de carreira de {nome}, {apelido}. Veredito: {veredito}. Rótulo: {rotulo}. {manchete} {frases}.",
   "overMax": "Over máximo",
   "idoloCoracao": "Ídolo do clube de coração: {clube}",
