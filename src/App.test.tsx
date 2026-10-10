@@ -83,7 +83,8 @@ describe('App (T51b, T48): abertura → criação → revelação → ritmo → 
     expect(screen.getByText('Dudu Maestro', { selector: '.figurinha__tarja-nome' })).toBeInTheDocument();
     // a figurinha da decisão usa o retrato pintado do visual escolhido na criação
     expect(container.querySelector('.figurinha img.figurinha__retrato--pintado')).toHaveAttribute('src', expect.stringMatching(/visual-\d\d/));
-    expect(screen.getByRole('button', { name: t('ui.decisao.confirmar') })).toBeInTheDocument();
+    // sem "Confirmar escolha" (pedido do usuário): no Normal, a dica de tocar numa opção
+    expect(screen.getByText(t('ui.decisao.marque'))).toBeInTheDocument();
   });
 
   it('o ritmo escolhido chega à decisão: no Rápido não há "Confirmar escolha" (um toque decide)', () => {
@@ -92,7 +93,7 @@ describe('App (T51b, T48): abertura → criação → revelação → ritmo → 
     fireEvent.click(screen.getByRole('button', { name: t('ui.revelacao.seguir') }));
     fireEvent.click(screen.getByRole('radio', { name: t('ui.ritmo.rapido.nome') }));
     fireEvent.click(screen.getByRole('button', { name: t('ui.ritmo.comecar') }));
-    expect(screen.queryByRole('button', { name: t('ui.decisao.confirmar') })).not.toBeInTheDocument();
+    expect(screen.queryByText(t('ui.decisao.marque'))).not.toBeInTheDocument();
     expect(document.querySelector('.opcao__resumo')).not.toBeNull();
   });
 
@@ -123,7 +124,8 @@ describe('save no aparelho (T54, v2.39)', () => {
   const decideFirst = () => {
     passMeetings();
     fireEvent.click(document.querySelector('.opcao')!);
-    fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
+    // pedido do usuário (sem "Confirmar escolha"): tocar de novo na marcada decide na hora
+    fireEvent.click(document.querySelector('.opcao')!);
     fireEvent.click(screen.getByRole('button', { name: t('ui.resultado.seguir') }));
   };
 

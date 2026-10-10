@@ -64,7 +64,8 @@ describe('decisão como página do álbum (v2.81)', () => {
   it('o resultado carimba a foto da cena (inclinado, como carimbo de borracha) e separa "Você ganha" de "Em troca"', () => {
     show();
     fireEvent.click(screen.getByRole('button', { name: new RegExp(t('events.salario-atrasado.opcoes.ficar')) }));
-    fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
+    // pedido do usuário (sem "Confirmar escolha"): tocar de novo na marcada decide na hora
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(t('events.salario-atrasado.opcoes.ficar')) }));
     const carimbo = document.querySelector('.decisao__foto .decisao__carimbo') as HTMLElement;
     expect(carimbo).toHaveTextContent(t('ui.resultado.carimbo.misto'));
     expect(carimbo).toHaveAttribute('aria-hidden', 'true');

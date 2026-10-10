@@ -208,7 +208,8 @@
   padding: var(--espaco-1) var(--espaco-1) 0;
 }
 .decisao__titulo {
-  font-size: var(--tipo-titulo);
+  /* pedido do usuário: o texto encolhe (--texto-escala, de useCaber) para a página caber sem rolar */
+  font-size: calc(var(--tipo-titulo) * var(--texto-escala, 1));
   font-weight: 900;
   line-height: 1;
   text-transform: uppercase;
@@ -217,7 +218,7 @@
 /* T51b: o que mudou no semestre, numa linha no alto da faixa (só na primeira decisão depois dele) */
 .decisao__semestre { font-size: var(--tipo-apoio); line-height: 1.35; color: var(--cor-texto-suave); }
 .decisao__semestre strong { color: var(--cor-positivo); font-weight: 700; }
-.decisao__historia { font-size: var(--tipo-historia); line-height: 1.4; color: var(--cor-texto-suave); }
+.decisao__historia { font-size: max(0.875rem, calc(var(--tipo-historia) * var(--texto-escala, 1))); line-height: 1.4; color: var(--cor-texto-suave); }
 
 /* opções de uma linha: o texto e, à direita, o medidor de risco */
 .decisao__opcoes { display: grid; gap: var(--espaco-2); }
@@ -239,8 +240,34 @@
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
-.opcao__rotulo { font-size: var(--tipo-opcao); font-weight: 700; line-height: 1.2; }
+.opcao__rotulo { font-size: max(0.875rem, calc(var(--tipo-opcao) * var(--texto-escala, 1))); font-weight: 700; line-height: 1.2; }
 .opcao__texto { display: grid; gap: 2px; min-inline-size: 0; }
+/* a marcada vale sozinha em --decide-ms: uma barra fina corre no pé da opção (sem movimento, a barra fica cheia) */
+.opcao { position: relative; overflow: hidden; }
+.opcao__prazo {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 4px;
+  background: var(--paleta-amarelo);
+  transform-origin: 0 50%;
+  animation: opcao-prazo var(--decide-ms, 1000ms) linear both;
+}
+@keyframes opcao-prazo { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+/* a categoria da Seleção de base (Sub-17, Sub-20, olímpica) acima do título do evento */
+.decisao__categoria {
+  justify-self: start;
+  margin: 0;
+  padding: 2px var(--espaco-3);
+  border-radius: 999px;
+  background: var(--paleta-amarelo);
+  color: var(--paleta-tinta);
+  font-family: var(--fonte-titulo);
+  font-size: var(--tipo-miudo);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
 /* prévia curta do ritmo Rápido (v2.38): campo e setas numa linha, que quebra se precisar */
 .opcao__resumo { display: flex; flex-wrap: wrap; gap: 0 var(--espaco-3); font-size: var(--tipo-apoio); font-weight: 400; line-height: 1.3; color: var(--cor-texto-suave); }
 .opcao__resumo .previa--sobe .previa__setas { color: var(--cor-positivo); }
@@ -513,9 +540,9 @@
 /* v2.62: no celular (até 420 px) a história fica em 1rem (v2.73, decisão do usuário) e as opções e o detalhe descem um
    passo, para a foto da cena ficar com mais altura */
 @media (max-width: 26.25rem) {
-  .decisao__historia { font-size: 1rem; line-height: 1.45; }
+  .decisao__historia { font-size: max(0.875rem, calc(1rem * var(--texto-escala, 1))); line-height: 1.45; }
   .decisao__semestre { font-size: 0.875rem; }
-  .opcao__rotulo { font-size: 1.0625rem; }
+  .opcao__rotulo { font-size: max(0.875rem, calc(1.0625rem * var(--texto-escala, 1))); }
   .decisao__detalhe { font-size: 0.875rem; }
 }
 
