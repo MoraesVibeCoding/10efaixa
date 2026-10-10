@@ -10,7 +10,8 @@ export function storyText(b: StoryBeat): string {
   const id = b.n === 1 && SINGULAR.has(b.id) ? `${b.id}_um` : b.id;
   const club = b.clubId ? clubName(b.clubId) : { nome: '', prep: '' };
   return t(`legacy.historia.${id}`, {
-    idade: b.age, n: b.n ?? 0, clube: club.nome, prep: club.prep,
+    // a idade do motor vem por semestre (23.5): o texto mostra os anos completos
+    idade: Math.floor(b.age), n: b.n ?? 0, clube: club.nome, prep: club.prep,
     competicao: b.competition ? t(`ui.titulo.${b.competition}`) : '',
   });
 }
