@@ -79,3 +79,12 @@ describe('card do resumo da temporada (v2.61)', () => {
     expect(within(dialog()).getByText(t('ui.idolatria.selo', { faixa: t('ui.idolatria.faixa.querido') }))).toBeInTheDocument();
   });
 });
+
+// v2.67: o ano sem jogo como profissional (base, várzea) não mostra quadrinhos zerados; o card conta o ano em uma frase.
+describe('resumo de um ano sem jogos como profissional (v2.67)', () => {
+  it('sem partidas, some a lista de números e entra a frase do ano de formação', () => {
+    setup({ ...BASE, partidas: 0, gols: 0, assistencias: 0, titulos: [] });
+    expect(within(dialog()).queryByRole('list', { name: t('ui.resumoTemporada.numeros') })).toBeNull();
+    expect(within(dialog()).getByText(t('ui.resumoTemporada.semJogos'))).toBeInTheDocument();
+  });
+});

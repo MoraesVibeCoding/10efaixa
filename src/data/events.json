@@ -6617,6 +6617,415 @@
    "politica": {
     "padrao": "retribuir-o-elogio"
    }
+  },
+  {
+   "id": "primeiro-passo-varzea",
+   "importancia": 8,
+   "cena": "varzea",
+   "peso": 10,
+   "condicoes": [
+    [
+     "origem",
+     "==",
+     "varzea"
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "esperar-o-olheiro",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "disciplina",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "pedir-um-teste",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.05
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.04
+      ]
+     ]
+    },
+    {
+     "id": "virar-capitao-do-bairro",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.05
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "esperar-o-olheiro"
+   }
+  },
+  {
+   "id": "primeiro-passo-peneira",
+   "importancia": 8,
+   "cena": "peneira",
+   "peso": 10,
+   "condicoes": [
+    [
+     "origem",
+     "==",
+     "peneira"
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "treinar-dobrado",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "disciplina",
+       "add",
+       0.05
+      ],
+      [
+       "moral",
+       "add",
+       -0.04
+      ]
+     ]
+    },
+    {
+     "id": "puxar-a-resenha",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.05
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "prometer-voltar-com-contrato",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "bonusMental",
+       "add",
+       0.03
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "treinar-dobrado"
+   }
+  },
+  {
+   "id": "primeiro-passo-base",
+   "importancia": 8,
+   "cena": "treino",
+   "peso": 10,
+   "condicoes": [
+    [
+     "origem",
+     "==",
+     "baseGrande"
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "mostrar-no-treino",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "disciplina",
+       "add",
+       0.04
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       0.02
+      ],
+      [
+       "moral",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "cobrar-uma-chance",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.04
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.05
+      ]
+     ]
+    },
+    {
+     "id": "ganhar-o-grupo",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.03
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.03
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "mostrar-no-treino"
+   }
+  },
+  {
+   "id": "prova-ou-treino",
+   "importancia": 4,
+   "cena": "casa-familia",
+   "peso": 10,
+   "sorteio": true,
+   "condicoes": [
+    [
+     "iniciante",
+     "==",
+     true
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "fazer-a-prova",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "disciplina",
+       "add",
+       0.03
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.04
+      ]
+     ]
+    },
+    {
+     "id": "faltar-a-prova",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "remarcar-com-o-tecnico",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.02
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "fazer-a-prova"
+   }
+  },
+  {
+   "id": "treino-com-os-profissionais",
+   "importancia": 5,
+   "cena": "treino",
+   "peso": 10,
+   "sorteio": true,
+   "condicoes": [
+    [
+     "iniciante",
+     "==",
+     true
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "dar-caneta-no-zagueiro",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.05
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "jogar-simples",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.03
+      ],
+      [
+       "moral",
+       "add",
+       -0.02
+      ]
+     ]
+    },
+    {
+     "id": "conversar-com-o-zagueiro",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.03
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "jogar-simples"
+   }
+  },
+  {
+   "id": "baile-na-vespera",
+   "importancia": 4,
+   "cena": "rua-do-bairro",
+   "peso": 10,
+   "sorteio": true,
+   "condicoes": [
+    [
+     "iniciante",
+     "==",
+     true
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "ir-e-voltar-cedo",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.05
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.04
+      ]
+     ]
+    },
+    {
+     "id": "ficar-em-casa",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "disciplina",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.03
+      ]
+     ]
+    },
+    {
+     "id": "chamar-os-amigos-pro-jogo",
+     "jeito": "lider",
+     "efeitos": [
+      [
+       "moral",
+       "add",
+       0.02
+      ],
+      [
+       "relacaoTecnico",
+       "add",
+       0.01
+      ],
+      [
+       "disciplina",
+       "add",
+       -0.02
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "ficar-em-casa"
+   }
   }
  ]
 }

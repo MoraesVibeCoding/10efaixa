@@ -68,9 +68,9 @@ describe('save da carreira (T54)', () => {
     expect(validateSave({ ...SAVE, choices: ['opcao-que-nao-existe'] })).toEqual({ ok: false, reason: 'danificado' });
   });
 
-  it('v2.63–v2.65: saves das versões 1 a 5 viram carreira de outra versão (camisa 10, empréstimo e venda, gol pela Seleção mudaram a sequência de decisões)', () => {
-    expect(SAVE_VERSION).toBe(6);
-    for (const versao of [1, 2, 3, 4, 5]) expect(parseSave(JSON.stringify({ ...SAVE, versao }))).toEqual({ ok: false, reason: 'versao' });
+  it('v2.63–v2.67: saves das versões 1 a 6 viram carreira de outra versão (camisa 10, empréstimo e venda, gol pela Seleção mudaram a sequência de decisões)', () => {
+    expect(SAVE_VERSION).toBe(7);
+    for (const versao of [1, 2, 3, 4, 5, 6]) expect(parseSave(JSON.stringify({ ...SAVE, versao }))).toEqual({ ok: false, reason: 'versao' });
   });
 });
 

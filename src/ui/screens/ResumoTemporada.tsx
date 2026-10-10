@@ -29,11 +29,14 @@ export function ResumoTemporada({ resumo, torcida, onClose }: ResumoTemporadaPro
         <h2 id="resumo-titulo" className="resumo__titulo">{t('ui.resumoTemporada.titulo')}</h2>
         <p className="resumo__onde">{`${clubName(resumo.clubId).nome} · ${t('ui.resumoTemporada.idade', { n: resumo.age })}`}</p>
         {torcida && <p className="resumo__torcida">{t('ui.idolatria.selo', { faixa: t(`ui.idolatria.faixa.${torcida}`) })}</p>}
-        <ul className="resumo__numeros" aria-label={t('ui.resumoTemporada.numeros')}>
-          <li><span>{t('ui.resumoTemporada.partidas')}</span><strong>{resumo.partidas}</strong></li>
-          <li><span>{t('ui.resumoTemporada.gols')}</span><strong>{resumo.gols}</strong></li>
-          <li><span>{t('ui.resumoTemporada.assistencias')}</span><strong>{resumo.assistencias}</strong></li>
-        </ul>
+        {/* v2.67: ano sem jogo como profissional (base, várzea): uma frase no lugar dos quadrinhos zerados */}
+        {resumo.partidas > 0 ? (
+          <ul className="resumo__numeros" aria-label={t('ui.resumoTemporada.numeros')}>
+            <li><span>{t('ui.resumoTemporada.partidas')}</span><strong>{resumo.partidas}</strong></li>
+            <li><span>{t('ui.resumoTemporada.gols')}</span><strong>{resumo.gols}</strong></li>
+            <li><span>{t('ui.resumoTemporada.assistencias')}</span><strong>{resumo.assistencias}</strong></li>
+          </ul>
+        ) : <p className="resumo__formacao">{t('ui.resumoTemporada.semJogos')}</p>}
         <p className="resumo__over">
           <span>{t('ui.resumoTemporada.over', { de: resumo.overallDe, para: resumo.overallPara })}</span>
           <strong className="resumo__variacao" data-sentido={direction(resumo.pct)}>{variation(resumo.pct)}</strong>
