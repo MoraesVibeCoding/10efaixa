@@ -10,6 +10,8 @@ export interface TimelineRow {
   titles: string[];
   /** Jogos (v2.62), gols e assistências da temporada (0 nas categorias de base). */
   games: number; goals: number; assists: number;
+  /** Jogos sem sofrer gol (o goleiro vê este número no lugar de gols e assistências). */
+  cleanSheets: number;
   /** A primeira temporada de maior Over da carreira. */
   peak: boolean;
   /** Mudou de clube em relação à temporada anterior (a estreia não conta). */
@@ -22,7 +24,7 @@ export function timelineOf({ seasons, titles }: TimelineInput): TimelineRow[] {
   const best = seasons.reduce((max, s) => Math.max(max, s.overall), -Infinity);
   const peakIndex = seasons.findIndex((s) => s.overall === best);
   return seasons.map((s, i) => ({
-    year: s.year, age: s.age, clubId: s.clubId, division: s.division, overall: s.overall, games: s.games, goals: s.goals, assists: s.assists,
+    year: s.year, age: s.age, clubId: s.clubId, division: s.division, overall: s.overall, games: s.games, goals: s.goals, assists: s.assists, cleanSheets: s.cleanSheets,
     titles: titles.filter((t) => t.year === s.year).map((t) => t.competition),
     peak: i === peakIndex,
     newClub: i > 0 && seasons[i - 1]!.clubId !== s.clubId,

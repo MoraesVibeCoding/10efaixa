@@ -7,7 +7,7 @@ import { ResumoTemporada } from './ResumoTemporada';
 
 // v2.61 (SPEC 6.15): o card "Resumo da temporada" por cima da próxima tela, no Normal e no Completo.
 const BASE: SeasonSummary = {
-  year: 2030, age: 22, clubId: 'santos', division: 'BRA-A', partidas: 34, gols: 9, assistencias: 5, overallDe: 70, overallPara: 74, pct: 6,
+  year: 2030, age: 22, clubId: 'santos', division: 'BRA-A', partidas: 34, gols: 9, assistencias: 5, semSofrerGol: 0, goleiro: false, overallDe: 70, overallPara: 74, pct: 6,
   mudancas: [{ atributo: 'passe', sentido: 'sobe', forte: true }, { atributo: 'fisico', sentido: 'desce', forte: false }], titulos: ['estadual'],
   comentario: { evolucao: 'grande', minutos: 'muitos', destaque: 'passe', titulo: true },
 };
@@ -125,5 +125,16 @@ describe('resumo com o Over rolando (v2.71)', () => {
   it('CSS: a variação carimba depois do Over rolar', () => {
     const css = readFileSync(resolve(__dirname, 'ResumoTemporada.css'), 'utf8');
     expect(css).toMatch(/\.resumo__variacao\s*\{[^}]*animation:\s*resumo-carimbo/);
+  });
+});
+
+// Revisão das telas: o goleiro via "Gols 0" no resumo; agora vê os jogos sem sofrer gol no lugar de gols e assistências.
+describe('resumo do goleiro', () => {
+  it('troca gols e assistências por jogos sem sofrer gol', () => {
+    setup({ ...BASE, goleiro: true, gols: 0, assistencias: 0, semSofrerGol: 14 });
+    const nums = within(dialog()).getByRole('list', { name: t('ui.resumoTemporada.numeros') });
+    expect(nums).toHaveTextContent(`${t('ui.resumoTemporada.semSofrerGol')}14`);
+    expect(nums).not.toHaveTextContent(t('ui.resumoTemporada.gols'));
+    expect(nums).not.toHaveTextContent(t('ui.resumoTemporada.assistencias'));
   });
 });
