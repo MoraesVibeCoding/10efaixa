@@ -1,6 +1,6 @@
 # Contexto — decisões recentes (2026-10-01)
 
-> **Histórico.** O estado atual (2026-10-06) está em `docs/current-task.md`.
+> **Histórico.** O estado atual (2026-10-06) está em `docs/historico/current-task.md`.
 
 Resumo da retomada da sessão: T40 aprovada → T41 a T47 entregues, mentalidade adicionada e estilo da arte final em aberto. Estado do repositório: `main`, testes 608 passando, typecheck e build verdes.
 
