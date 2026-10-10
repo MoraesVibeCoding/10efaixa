@@ -1,3 +1,4 @@
+import tokens from '../ui/theme/tokens.json';
 import { simulateCareer } from '../engine/career';
 import { createPrng } from '../engine/prng';
 import { randomInput } from '../engine/simulation';
@@ -116,5 +117,25 @@ describe('cartão legível na prévia (v2.73)', () => {
     const { ctx, all } = sizesCtx();
     drawCard(ctx, longo, 'narrativa');
     expect(all()).toContain(longo.frases[0]);
+  });
+});
+
+// v2.77: a manchete é texto impresso, não fala: cara de jornal (Oswald, a fonte condensada dos títulos), nunca itálico.
+describe('manchete com cara de jornal (v2.77)', () => {
+  it('a manchete sai na fonte dos títulos, sem itálico', () => {
+    const fonts: { s: string; font: string }[] = [];
+    const base = fakeCtx();
+    const ctx = new Proxy(base.ctx as unknown as Record<string, unknown>, {
+      get(target, prop: string) {
+        if (prop === 'fillText') return (s: string) => { fonts.push({ s, font: String(target.font) }); };
+        return target[prop];
+      },
+      set(target, prop: string, v) { target[prop] = v; return true; },
+    });
+    drawCard(ctx as unknown as CanvasRenderingContext2D, m, 'narrativa');
+    // a 1ª linha da manchete é um começo dela com mais de uma palavra (o apelido sozinho também pode ser um começo)
+    const linha = fonts.find((f) => f.s.includes(' ') && m.manchete.startsWith(f.s));
+    expect(linha?.font).toContain(tokens.fontes.titulo);
+    expect(linha?.font).not.toMatch(/italic/);
   });
 });

@@ -43,3 +43,7 @@ h1[tabindex='-1']:focus { outline: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }
+
+/* v2.77: o que alguém diz (técnico, treinador, empresário, faixa da torcida) em itálico verdadeiro da Archivo, com aspas curvas */
+.fala { font-style: italic; }
+q.fala { quotes: '“' '”' '‘' '’'; }

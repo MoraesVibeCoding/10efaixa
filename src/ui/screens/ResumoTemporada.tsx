@@ -63,7 +63,7 @@ export function ResumoTemporada({ resumo, torcida, onClose }: ResumoTemporadaPro
         )}
         <section className="resumo__tecnico" aria-label={t('ui.resumoTemporada.tecnico')}>
           <h3>{t('ui.resumoTemporada.tecnico')}</h3>
-          <p data-testid="comentario">{fala.join(' ')}</p>
+          <p><q className="fala" data-testid="comentario">{fala.join(' ')}</q></p>
         </section>
         <button ref={close} type="button" className="resumo__continuar" onClick={fechar}>{t('ui.resumoTemporada.continuar')}</button>
       </div>

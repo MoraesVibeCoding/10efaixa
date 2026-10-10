@@ -284,8 +284,9 @@ function header(ctx: CanvasRenderingContext2D, m: CardModel): number {
 function narrative(ctx: CanvasRenderingContext2D, m: CardModel, y0: number) {
   const x = GX + PAD; const width = GW - 2 * PAD;
   ctx.fillStyle = P.tinta;
-  font(ctx, 34, TEXT, 700);
-  let y = paragraph(ctx, m.manchete, x, y0 + 10, width, 42, y0 + 52) + 6;
+  // v2.77: manchete é texto impresso, não fala: cara de jornal, na fonte condensada dos títulos (até 2 linhas)
+  font(ctx, 42, TITLE, 600);
+  let y = paragraph(ctx, m.manchete, x, y0 + 10, width, 48, y0 + 58) + 6;
   // v2.73: honrarias em pílulas de tamanho fixo (MIN), em quantas linhas precisarem, logo depois da manchete
   if (m.honrarias.length) {
     const size = MIN;
