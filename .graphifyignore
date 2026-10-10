@@ -1,8 +1,4 @@
 # Ferramentas de terceiros instaladas no repositório: não fazem parte do jogo e inflam o grafo
-.agents/
-.github/skills/
-.github/agents/
-.github/hooks/
 .claude/skills/impeccable/
 .claude/skills/baoyu-image-gen/
 .claude/skills/graphify/
