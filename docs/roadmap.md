@@ -1,6 +1,6 @@
 # Roadmap do 10eFaixa
 
-> Atualizado em 2026-10-10 (SPEC v2.73, `main` com os PRs #27 a #37 mesclados). Fonte da verdade: `SPEC.md` (seção 14 traz a lista completa de tarefas). Validação do usuário: `docs/validacao-final.md`.
+> Atualizado em 2026-10-10 (SPEC v2.80, `main` com os PRs #27 a #45 mesclados). Fonte da verdade: `SPEC.md` (seção 14 traz a lista completa de tarefas). Validação do usuário: `docs/validacao-final.md`.
 
 ## Já implementado
 
@@ -13,16 +13,18 @@
 | **5 — Avatar, cenas e arte** (T42–T47) | Skill de arte, avatar em camadas, compositor de cenas, catálogo de cenas, validador de entregas, arte provisória completa, cenas pintadas na decisão e na criação; **18 troféus criados pelo usuário** processados em WebP (selo, gaveta e linha do tempo) |
 | **6 — Produto** (T48–T57, T61 parcial) | **Resumo da temporada em card e reunião de balanço do fim do ano (T51c, v2.61)**, máquina de estados, tokens e tema, criação, decisão com cena, selo de momento e "isso vai pesar", **reunião em 3 ideias (v2.53) com a 1ª opção sempre aceita (v2.58)**, ritmos Rápido/Normal/Completo, save versionado, **reiniciar carreira em qualquer tela**, **"Sua carreira" ano a ano com gols, assistências e troféus (v2.60)**, cartão 1080×1350, compartilhamento, desafio do dia e link da carreira; ícone e manifesto (PWA parcial); link de teste na Vercel |
 | **Carreira e telas (v2.62–v2.73, PRs #27–#37)** | Empréstimo e venda com destino (v2.64), Seleção ano a ano (v2.65), fim de carreira com camisa do último clube e ídolos (v2.66), **início de carreira** com marco por origem e decisão aos 16 (v2.67), **criação em 3 passos** com comemoração e mentalidade em marcos (v2.68), telas iniciais revistas (v2.69), **enquadramento** da cena pelo ponto focal e caixa do topo compacta (v2.70), **10 momentos de elevação** (Over contando, palco do título, taça voando, cascata, cartão virando) e movimento por frequência pela skill web-animation-design (v2.71–v2.72), **tipografia** com mínimo de 14 px, botão principal único e cartão legível no WhatsApp (v2.73); goleiro com jogos sem sofrer gol; idade sem meio ano na história |
+| **Arremates, fonte e ordem das cenas (v2.74–v2.80, PRs #38–#45)** | Goleiro com "sem sofrer gol", reunião sem repetir e idade inteira na história (v2.74), **tema sempre claro** (v2.75), **fonte de texto Archivo** com o degrau `miudo` de 14 px (v2.76), **falas em itálico** e manchete com cara de jornal (v2.77), **cada cena no momento em que acontece**: chegada ao clube e ao exterior abrem a temporada, convocação e Copa na hora (v2.78), **cartão "Números" em fichas** sem nada sobreposto (v2.79), **primeiro título e primeiro gol no ano certo** com título e final na frente e limite 3 (v2.80); saves anteriores à versão 10 viram "carreira de outra versão" |
 | **Regras novas recentes** | Clubes de elite mundial (v2.59), 6 níveis de reputação com minutos decrescentes em clube maior (v2.54–55), troféu dentro do selo (v2.56) |
 
-Verificação em 2026-10-10: 1433 testes passando (5 pulados), typecheck e build OK, `verify` do CI verde.
+Verificação em 2026-10-10: 1448 testes passando (5 pulados), typecheck e build OK, `verify` do CI verde. `docs/simulacao-carreira.md` regerado na v2.80 (estava na v2.38); tempo médio de 56 ms por carreira, acima da meta de 50 ms.
 
 ## Em aberto para decidir
 | Item | Situação |
 |---|---|
-| **Ramos antigos** | 14 ramos já contidos no `main` podem ser apagados pela página de branches do GitHub (a sessão não consegue apagar); 8 têm commits fora do `main` pelo histórico (`marco-5-*`, `marco-6-*`, `feat/ajustes-v262`, `fix/reuniao-iphone`, `chore/skills-plugin`, `docs/proposta-inicio-de-carreira` e dois `claude/*`) e precisam de conferência antes |
+| **Ramos antigos** | Conferido em 2026-10-10: nenhum ramo antigo do GitHub tem conteúdo que falte no `main` (só cópias de skills em `.agents/`, que saíram do projeto). Podem ser apagados pela página de branches: os já mesclados (`chore/limpeza`, `fix/arremates`, `fix/tema-claro`, `feat/fonte-archivo`, `feat/falas-italico`, `fix/ordem-das-cenas`, `feat/cartao-fichas`, `fix/titulo-na-hora`) e os antigos (`marco-5-*`, `marco-6-*`, `feat/ajustes-v262`, `fix/reuniao-iphone`, `chore/skills-plugin`, `docs/proposta-inicio-de-carreira`, `claude/*`) |
 | **Cenas do goleiro** | Os números já são de goleiro; as cenas de evento ainda mostram jogador de linha (precisa de arte nova pela skill de arte) |
-| **Fonte Switzer** | Prévia de uma tela pedida; conferir a licença antes |
+| **Desempenho** | 56 ms por carreira na simulação (meta < 50 ms) |
+| **Mais falas diretas** | Só 3 eventos têm fala entre aspas (em itálico desde a v2.77); trocar falas indiretas por diretas é mudança de texto de evento e precisa de aprovação |
 
 ## A fazer (na ordem prevista)
 
