@@ -168,3 +168,11 @@ describe('"Sua carreira" contando (v2.71)', () => {
     expect(css).toMatch(/\.linha__faixa > span\s*\{[^}]*animation:\s*linha-cresce[^}]*var\(--i/);
   });
 });
+
+describe('placar contando no tamanho certo (v2.71, regressão)', () => {
+  it('CSS: o rótulo pequeno pega só o filho direto, não os números que contam dentro do <b>', () => {
+    const css = readFileSync(resolve(__dirname, 'LinhaDoTempo.css'), 'utf8');
+    expect(css).not.toMatch(/\.linha__placar-n span\s*\{/);
+    expect(css).toMatch(/\.linha__placar-n > span\s*\{[^}]*font-size:\s*0\.75rem/);
+  });
+});

@@ -320,8 +320,8 @@ function Result({ eventId, optionId, state, tags, auto, onDone }: { eventId: str
         {outcome.length === 0 && <p className="resultado__vazio">{t('ui.resultado.semEfeito')}</p>}
         {outcome.length > 0 && (
           <ul className="resultado__lista">
+            {/* v2.71 (momento 5): as linhas entram em cascata, na ordem */}
             {outcome.map((o, i) => (
-              // v2.71 (momento 5): as linhas entram em cascata, na ordem
               <li key={o.campo} className={o.delta > 0 ? 'resultado__ganho' : 'resultado__perda'} style={{ '--i': i } as React.CSSProperties}>
                 <span>{t(`preview.campo.${o.campo}`)}</span>
                 <strong>{outcomeText(o)}</strong>

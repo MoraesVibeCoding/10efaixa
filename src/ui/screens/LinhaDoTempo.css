@@ -19,7 +19,7 @@
 .linha__placar-nums { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--espaco-2); }
 .linha__placar-n { display: flex; flex-direction: column; min-inline-size: 0; }
 .linha__placar-n b { font-family: var(--fonte-titulo); font-size: 2rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
-.linha__placar-n span { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.linha__placar-n > span { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; }
 .linha__placar-n--auge b { color: #FFC21A; }
 .linha__lista { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; background: var(--cor-superficie); border: var(--forma-borda-fina) solid var(--cor-linha); border-radius: var(--forma-raio); overflow: hidden; margin-block-end: 4.5rem; }
 .linha__item {
