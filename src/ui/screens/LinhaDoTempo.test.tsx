@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import market from '../../data/market.json';
 import { simulateCareer } from '../../engine/career';
@@ -141,5 +143,28 @@ describe('"Sua carreira" na direção B (v2.66)', () => {
       expect(b).toHaveAttribute('aria-hidden', 'true');
       expect((b.firstElementChild as HTMLElement).style.inlineSize).toBe(`${timelineOf(result)[i]!.overall}%`);
     });
+  });
+});
+
+// v2.71 (momento 9): o placar conta do zero e as faixas do Over crescem uma a uma; o leitor de tela recebe o número final.
+describe('"Sua carreira" contando (v2.71)', () => {
+  afterEach(() => { vi.unstubAllGlobals(); });
+
+  it('com movimento, o placar começa no zero e o texto acessível já é o final', () => {
+    vi.stubGlobal('matchMedia', (q: string) => ({ matches: false, media: q }));
+    vi.stubGlobal('requestAnimationFrame', () => 0);
+    vi.stubGlobal('cancelAnimationFrame', () => {});
+    render(<LinhaDoTempo result={result} onContinue={() => {}} />);
+    const jogos = document.querySelector('.linha__placar-n b')!;
+    expect(jogos.querySelector('[aria-hidden="true"]')).toHaveTextContent(/^0$/);
+    expect(jogos.querySelector('.sr-only')).toHaveTextContent(result.stats.games.toLocaleString('pt-BR'));
+  });
+
+  it('as faixas crescem na ordem dos anos', () => {
+    render(<LinhaDoTempo result={result} onContinue={() => {}} />);
+    const faixas = [...document.querySelectorAll<HTMLElement>('.linha__faixa > span')];
+    expect(faixas[1]!.style.getPropertyValue('--i')).toBe('1');
+    const css = readFileSync(resolve(__dirname, 'LinhaDoTempo.css'), 'utf8');
+    expect(css).toMatch(/\.linha__faixa > span\s*\{[^}]*animation:\s*linha-cresce[^}]*var\(--i/);
   });
 });
