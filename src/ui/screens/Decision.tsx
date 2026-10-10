@@ -425,7 +425,9 @@ export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert, 
   const over = useRolling(player.overall, anterior?.overall);
   const idade = useRolling(age, anterior?.age);
   const valor = useRolling(player.marketValueEUR ?? 0, anterior?.marketValueEUR);
-  const medal = medalOf(player.overall);
+  // v2.71 (momento 3): o metal acompanha o número que rola; mudou de faixa, a medalha brilha na troca
+  const medal = medalOf(over);
+  const troca = anterior !== undefined && medalOf(anterior.overall).nome !== medalOf(player.overall).nome;
   // v2.70 (enquadramento): no celular a caixa fica numa linha; os dados abrem no botão e a escolha vale até fechar o jogo
   const [aberto, setAberto] = useState(topoAberto);
   const alternar = () => { topoAberto = !aberto; setAberto(topoAberto); };
@@ -455,7 +457,7 @@ export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert, 
       </ul>
       {/* v2.62: a medalha da faixa por trás do número, do bronze ao diamante, marca a evolução */}
       <div className="decisao__over">
-        <p className="decisao__over-medalha" aria-hidden="true" data-medalha={medal.nome} style={medal.art ? { backgroundImage: `url(${medal.art})` } : undefined}>
+        <p className={`decisao__over-medalha${troca ? ' decisao__over-medalha--troca' : ''}`} aria-hidden="true" data-medalha={medal.nome} style={medal.art ? { backgroundImage: `url(${medal.art})` } : undefined}>
           <span className="decisao__over-rotulo">{t('ui.figurinha.over')}</span>
           <span className="decisao__over-numero">{over}</span>
         </p>

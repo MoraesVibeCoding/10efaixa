@@ -89,6 +89,17 @@
   .revelacao__comecar { grid-area: comecar; align-self: end; }
 }
 
+/* v2.71 (momento 1): um reflexo passa pela figurinha quando o Over termina de contar */
+.revelacao__figurinha { position: relative; }
+.revelacao__figurinha::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.55) 50%, transparent 65%) 0 0 / 300% 100% no-repeat;
+  background-position: 120% 0; mix-blend-mode: soft-light;
+  animation: revelacao-reflexo 900ms ease-in-out 1100ms both;
+}
+@keyframes revelacao-reflexo { from { background-position: 120% 0; } to { background-position: -20% 0; } }
+
 @media (prefers-reduced-motion: reduce) {
   .revelacao__figurinha { animation: none; transform: rotate(-1deg); }
+  .revelacao__figurinha::after { display: none; }
 }

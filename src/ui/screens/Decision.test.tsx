@@ -736,3 +736,24 @@ describe('palco do título espera o card de cima (v2.71)', () => {
     expect(screen.getByRole('dialog', { name: t('ui.momento.titulo') })).toBeInTheDocument();
   });
 });
+
+// v2.71 (momento 3): quando o Over muda de faixa, a medalha da caixa do topo troca de metal no meio da rolagem e brilha.
+describe('mudança de faixa no topo (v2.71)', () => {
+  afterEach(() => { vi.unstubAllGlobals(); });
+  const show = (antes: number) => render(<Decision eventId={EVENT} age={17} progress={0.05} player={PLAYER} anterior={{ overall: antes, age: 17 }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+
+  it('com movimento, começa no metal de antes e marca a troca', () => {
+    vi.stubGlobal('matchMedia', (q: string) => ({ matches: false, media: q }));
+    vi.stubGlobal('requestAnimationFrame', () => 0);
+    vi.stubGlobal('cancelAnimationFrame', () => {});
+    show(70);
+    const m = document.querySelector('.decisao__over-medalha')!;
+    expect(m).toHaveAttribute('data-medalha', 'ouro');
+    expect(m).toHaveClass('decisao__over-medalha--troca');
+  });
+
+  it('na mesma faixa, sem a marca', () => {
+    show(76);
+    expect(document.querySelector('.decisao__over-medalha')).not.toHaveClass('decisao__over-medalha--troca');
+  });
+});

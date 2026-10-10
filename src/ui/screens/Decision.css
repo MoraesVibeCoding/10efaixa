@@ -114,6 +114,9 @@
   color: var(--medalha-texto);
 }
 .decisao__over-medalha .decisao__over-rotulo { color: inherit; opacity: 0.85; }
+/* v2.71 (momento 3): subiu (ou caiu) de faixa, a medalha pulsa no meio da rolagem, quando o metal troca */
+.decisao__over-medalha--troca { animation: medalha-troca 700ms ease-out 350ms both; }
+@keyframes medalha-troca { 0% { transform: none; box-shadow: 0 0 0 0 var(--paleta-ouro); } 40% { transform: scale(1.18); } 100% { transform: none; box-shadow: 0 0 0 14px transparent; } }
 .decisao__over-medalha[data-medalha='bronze'] .decisao__over-numero,
 .decisao__over-medalha[data-medalha='esmeralda'] .decisao__over-numero,
 .decisao__over-medalha[data-medalha='diamante'] .decisao__over-numero { text-shadow: var(--forma-contorno-numero); }

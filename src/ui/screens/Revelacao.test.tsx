@@ -120,3 +120,27 @@ describe('revelação do jogador (T49i)', () => {
     expect(css).toMatch(/::backdrop\s*\{[^}]*background:\s*var\(--vidro-scrim\)/);
   });
 });
+
+// v2.71 (momento 1): o Over conta até o valor sorteado e um reflexo passa pela figurinha; sem movimento, o valor final direto.
+describe('revelação com o Over contando (v2.71)', () => {
+  afterEach(() => { vi.unstubAllGlobals(); });
+
+  it('com movimento, o número começa baixo e conta até o Over', () => {
+    vi.stubGlobal('matchMedia', (q: string) => ({ matches: false, media: q }));
+    vi.stubGlobal('requestAnimationFrame', () => 0);
+    vi.stubGlobal('cancelAnimationFrame', () => {});
+    const { container } = render(<Revelacao name="Dudu Maestro" number={10} visual="visual-03" reveal={{ ...REVEAL, overall: 66 }} onContinue={() => {}} />);
+    expect(container.querySelector('.figurinha__over-grande')).toHaveTextContent('1');
+  });
+
+  it('sem movimento, o Over final direto', () => {
+    vi.stubGlobal('matchMedia', (q: string) => ({ matches: q.includes('reduce'), media: q }));
+    const { container } = render(<Revelacao name="Dudu Maestro" number={10} visual="visual-03" reveal={{ ...REVEAL, overall: 66 }} onContinue={() => {}} />);
+    expect(container.querySelector('.figurinha__over-grande')).toHaveTextContent('66');
+  });
+
+  it('CSS: o reflexo passa pela figurinha uma vez', () => {
+    const css = readFileSync(resolve(__dirname, 'Revelacao.css'), 'utf8');
+    expect(css).toMatch(/\.revelacao__figurinha::after\s*\{[^}]*animation:\s*revelacao-reflexo/);
+  });
+});
