@@ -8,7 +8,7 @@ import { Decision } from './Decision';
 // seguem especiais. Orçamento por frequência: resultado pronto em até ~400 ms, toque de 100 ms, cena repetida sem fade.
 const css = (f: string) => readFileSync(resolve(__dirname, f), 'utf8');
 const rule = (src: string, sel: string) => {
-  const i = src.lastIndexOf(`${sel} {`);
+  const i = src.lastIndexOf(`\n${sel} {`);
   expect(i, `regra ${sel}`).toBeGreaterThanOrEqual(0);
   return src.slice(i, src.indexOf('}', i));
 };
