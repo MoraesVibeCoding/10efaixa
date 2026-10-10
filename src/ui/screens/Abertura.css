@@ -6,7 +6,7 @@
   grid-template-rows: auto 1fr auto;
   min-block-size: 100dvh;
   overflow: hidden;
-  background: var(--paleta-marinho);
+  background: var(--paleta-noite);
   color: var(--cor-texto);
 }
 
@@ -61,7 +61,7 @@
   gap: var(--espaco-2);
   justify-items: center;
   padding-block: calc(var(--espaco-6) + env(safe-area-inset-top)) var(--espaco-7);
-  background: linear-gradient(var(--paleta-marinho) 55%, transparent);
+  background: linear-gradient(var(--paleta-noite) 55%, transparent);
   text-align: center;
 }
 .abertura__marca { font-size: 3rem; font-weight: 900; line-height: 1; letter-spacing: 0.01em; color: var(--paleta-amarelo); }
@@ -72,7 +72,7 @@
   display: grid;
   justify-items: center;
   padding-block: var(--espaco-7) calc(var(--espaco-6) + env(safe-area-inset-bottom));
-  background: linear-gradient(transparent, var(--paleta-marinho) 45%);
+  background: linear-gradient(transparent, var(--paleta-noite) 45%);
 }
 .abertura__botao {
   inline-size: min(100%, 20rem);
@@ -80,7 +80,7 @@
   border: 0;
   border-radius: 999px;
   background: var(--paleta-amarelo);
-  color: var(--paleta-marinho);
+  color: var(--paleta-noite);
   font-family: var(--fonte-titulo);
   font-size: var(--tipo-opcao);
   font-weight: 800;

@@ -139,14 +139,17 @@ export function Propostas({ propostas, atual, podeFicar, podeForcar = false, pod
   }
   return (
     <main className="decisao propostas" style={TRANSITION} data-tema="claro" data-evento={emprestimo ? 'emprestimo' : 'proposta-clube'}>
-      {scene.pintada
-        ? <CenaPintada {...scene.pintada} alt={scene.alt} inert={career} />
-        : <img className="decisao__cena" src={scene.src} alt={scene.alt} width={SCENE_SIZE[0]} height={SCENE_SIZE[1]} inert={career} />}
       <div inert={career} className="faixa" role="progressbar" aria-label={t('ui.decisao.progresso')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent} aria-valuetext={t('ui.decisao.idade', { idade: age })}>
         <span className="faixa__feito" style={{ inlineSize: `${percent}%` }} />
       </div>
       <PlayerBox player={player} age={age} anterior={anterior} open={career} opener={opener} onOpen={() => { setCareer(true); }} inert={career} />
-      <form className="decisao__painel vidro propostas__painel" onSubmit={submit} inert={career} noValidate>
+      {/* v2.81 (Álbum): a cena é uma foto colada na página, embaixo do card do jogador */}
+      <div className="decisao__foto">
+        {scene.pintada
+          ? <CenaPintada {...scene.pintada} alt={scene.alt} inert={career} foto />
+          : <img className="decisao__cena" src={scene.src} alt={scene.alt} width={SCENE_SIZE[0]} height={SCENE_SIZE[1]} inert={career} />}
+      </div>
+      <form className="decisao__painel propostas__painel" onSubmit={submit} inert={career} noValidate>
         <p className="propostas__sala">{t(`ui.${tela}.sala`)}</p>
         <h1 className="decisao__titulo" ref={title} tabIndex={-1}>{t(`ui.${tela}.titulo`)}</h1>
         <p className="propostas__apoio">{t(`ui.${tela}.apoio`)}</p>

@@ -47,8 +47,8 @@ describe('orçamento das animações da decisão (v2.71)', () => {
     expect(container.querySelector('.decisao')).toHaveAttribute('data-ritmo', 'rapido');
   });
 
-  it('o botão de detalhes do topo tem área de toque de 44 px', () => {
-    expect(d).toMatch(/\.jogador__detalhes::before \{[^}]*inset:\s*-8px 0/);
+  it('a etiqueta "Carreira ›" do card tem área de toque de 44 px (v2.81)', () => {
+    expect(d).toMatch(/\.card-jogador__carreira::before \{[^}]*inset:\s*-8px -4px/);
   });
 });
 

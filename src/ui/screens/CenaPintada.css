@@ -46,3 +46,15 @@
   opacity: 0.92;
   pointer-events: none;
 }
+
+/* v2.81 (Álbum): a cena como foto colada na página. O quadro (.decisao__foto) é o contêiner; a pintura cobre o quadro
+   (como object-fit: cover) e põe o ponto focal (--foco-y, cenaFoco.json) no meio da altura, sem sair das bordas. */
+.cena--foto {
+  --cena-largura: max(100cqw, calc(100cqh * var(--cena-razao)));
+  --cena-altura: calc(var(--cena-largura) / var(--cena-razao));
+  position: absolute;
+  z-index: auto;
+  inset-inline-start: calc((100cqw - var(--cena-largura)) / 2);
+  inset-block-start: clamp(calc(100cqh - var(--cena-altura)), calc(50cqh - var(--foco-y) * var(--cena-altura)), 0px);
+  transform-origin: 50% calc(var(--foco-y) * 100%);
+}
