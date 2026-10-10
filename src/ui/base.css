@@ -29,6 +29,8 @@ a { color: inherit; text-underline-offset: 0.2em; text-decoration-thickness: 0.0
 
 ::selection { background: var(--cor-destaque); color: var(--cor-sobre-destaque); }
 :focus-visible { outline: 3px solid var(--cor-foco); outline-offset: 2px; }
+/* v2.71: título que recebe o foco por código (tela nova, palco fechado) só guia o leitor de tela; não é controle, sem contorno */
+h1[tabindex='-1']:focus { outline: none; }
 
 .sr-only {
   position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;

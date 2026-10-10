@@ -1,4 +1,8 @@
 {
+ "palco": {
+  "seguir": "Seguir",
+  "vezes": "{n} vezes no ano"
+ },
  "decisao": {
   "maisDetalhes": "Mais detalhes: idade, salário, valor, papel e títulos",
   "progresso": "Progresso da carreira",

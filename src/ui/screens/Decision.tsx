@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import events from '../../data/events.json';
 import legacy from '../../data/legacy.json';
 import album from '../../data/album.json';
@@ -20,6 +20,7 @@ import { useRolling } from '../useRolling';
 import { MOTION } from '../motion';
 import { useLivreMeio } from '../useLivreMeio';
 import { Carimbo } from './Carimbo';
+import { Palco } from './Palco';
 import type { Moment } from './moments';
 import type { ProposalView } from '../../engine/proposals';
 import { proposalText } from './proposalText';
@@ -74,6 +75,8 @@ export interface DecisionProps {
   anterior?: Anterior;
   /** v2.47: o que aconteceu desde a decisão anterior (título, acesso, rebaixamento): vira carimbo por cima da tela. */
   momentos?: Moment[];
+  /** v2.71: um card está por cima (resumo da temporada, resposta da reunião); o palco do título espera */
+  pausado?: boolean;
   /** Situação atual do jogador (moral, torcida, patrimônio…): o resultado da escolha mostra o ganho e a perda reais sobre ela. */
   state?: Ctx;
   /** T51b: as frases do último semestre ("Seu passe melhorou."), só na primeira decisão depois dele. */
@@ -414,8 +417,10 @@ function Rolled({ final, shown }: { final: string; shown: string }) {
 /** v2.70: a caixa do topo aberta ou fechada (no celular), lembrada entre as decisões enquanto o jogo está aberto. */
 let topoAberto = false;
 
-export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert }: {
+export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert, novas = NO_TITLES }: {
   player: DecisionProps['player']; age: number; anterior?: Anterior; open: boolean; opener: React.RefObject<HTMLButtonElement | null>; onOpen: () => void; inert: boolean;
+  /** v2.71: competições com taça nova neste ano (ganham o pulo de chegada na estante) */
+  novas?: readonly string[];
 }) {
   const over = useRolling(player.overall, anterior?.overall);
   const idade = useRolling(age, anterior?.age);
@@ -425,7 +430,7 @@ export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert }
   const [aberto, setAberto] = useState(topoAberto);
   const alternar = () => { topoAberto = !aberto; setAberto(topoAberto); };
   return (
-    <header className={`decisao__topo${aberto ? ' decisao__topo--aberto' : ''} vidro`} inert={inert}>
+    <header className={`decisao__topo${aberto ? ' decisao__topo--aberto' : ''}${novas.length > 0 ? ' decisao__topo--taca-nova' : ''} vidro`} inert={inert}>
       <button ref={opener} type="button" className="jogador__abrir" aria-haspopup="dialog" aria-expanded={open} onClick={onOpen}>
         <Figurinha moldura tamanho="pequena" name={player.name} number={player.number} overall={player.overall} position={player.position} clubId={player.clubId} uniforme={player.uniforme} avatar={player.avatar} visual={player.visual} />
         <span className="jogador__quem">
@@ -465,7 +470,7 @@ export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert }
       {player.titles.length > 0 && (
         <ul className="tacas" aria-label={t('ui.decisao.titulosLinha')}>
           {trophyGroups(player.titles).map(({ id, n }) => (
-            <li key={id} className="taca">
+            <li key={id} className={novas.includes(id) ? 'taca taca--nova' : 'taca'}>
               <TrophyIcon id={id} size={26} />
               {n > 1 && <span className="taca__qtd" aria-hidden="true">{n}</span>}
               <span className="sr-only">{n > 1 ? t('ui.decisao.tacaQtd', { nome: t(`ui.titulo.${id}`), n }) : t(`ui.titulo.${id}`)}</span>
@@ -477,7 +482,7 @@ export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert }
   );
 }
 
-export function Decision({ eventId, age, progress, scene, player, anterior, momentos, state = {}, ritmo = 'normal', semestre, onChoose, onContinue }: DecisionProps) {
+export function Decision({ eventId, age, progress, scene, player, anterior, momentos, pausado = false, state = {}, ritmo = 'normal', semestre, onChoose, onContinue }: DecisionProps) {
   const [career, setCareer] = useState(false);
   // v2.70: a cena encaixa a cabeça do jogador no meio do espaço entre a caixa do topo e o painel
   const root = useRef(null as HTMLElement | null);
@@ -506,8 +511,24 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
   const percent = Math.round(Math.min(1, Math.max(0, progress)) * 100);
   const text = eventText(eventId, player.etiquetas ?? [], player.textoParams);
   const pressed = chosen ?? marked;
+  // v2.71 (momento 4): os títulos do ano têm palco antes da decisão; acesso e rebaixamento carimbam depois dele
+  const { titulos, carimbos } = useMemo(() => {
+    const lista = momentos ?? NONE;
+    return { titulos: lista.flatMap((m) => (m.kind === 'titulo' ? [m.competition] : [])), carimbos: lista.filter((m) => m.kind !== 'titulo') };
+  }, [momentos]);
+  const [palcoVisto, setPalcoVisto] = useState(titulos.length === 0);
+  // com um card por cima (resumo da temporada, resposta da reunião), o palco espera ele fechar
+  const palco = !palcoVisto && !pausado;
+  const [novas, setNovas] = useState(NO_TITLES);
+  const titulo = useRef(null as HTMLHeadingElement | null);
+  function fecharPalco() { setPalcoVisto(true); setNovas(titulos); }
+  const wasPalco = useRef(palco);
+  useEffect(() => {
+    if (wasPalco.current && !palco) titulo.current?.focus();
+    wasPalco.current = palco;
+  }, [palco]);
   // gaveta ou resultado abertos: o resto da tela fica inerte e o Esc vale de qualquer ponto (T49b)
-  const overlay = career || chosen !== null;
+  const overlay = career || chosen !== null || palco;
   // o foco volta para a caixa do jogador só depois que o painel deixou de ser inerte: o navegador recusa foco em inerte
   const wasOpen = useRef(false);
   useEffect(() => {
@@ -517,13 +538,13 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
   useEffect(() => {
     if (!overlay) return undefined;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key !== 'Escape') return;
+      if (e.key !== 'Escape' || palco) return;
       if (career) setCareer(false);
       else onDone();
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [overlay, career, onDone]);
+  }, [overlay, career, palco, onDone]);
 
   return (
     <main ref={root} className="decisao" style={TRANSITION} data-tema="claro" data-evento={eventId} data-resultado={chosen === null ? 'fechado' : 'aberto'}>
@@ -536,10 +557,10 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
       >
         <span className="faixa__feito" style={{ inlineSize: `${percent}%` }} />
       </div>
-      <PlayerBox player={player} age={age} anterior={anterior} open={career} opener={opener} onOpen={() => { setCareer(true); }} inert={overlay} />
+      <PlayerBox player={player} age={age} anterior={anterior} open={career} opener={opener} onOpen={() => { setCareer(true); }} inert={overlay} novas={novas} />
       <div className="decisao__painel vidro" inert={overlay}>
         {semestre && semestre.length > 0 ? <p className="decisao__semestre"><strong>{t('ui.evolucao.titulo')}:</strong> {semestre.join(' ')}</p> : null}
-        <h1 className="decisao__titulo">{t(`events.${eventId}.titulo`)}</h1>
+        <h1 ref={titulo} tabIndex={-1} className="decisao__titulo">{t(`events.${eventId}.titulo`)}</h1>
         {text && <p className="decisao__historia">{text}</p>}
         {player.comprador && <Comprador p={player.comprador} />}
         <div className="decisao__opcoes" role="group" aria-label={t('ui.decisao.opcoes')}>
@@ -570,7 +591,8 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
       </div>
       <Album titles={player.titles} milestones={player.milestones ?? []} marcos={player.marcos ?? []} />
       {career && <Career player={player} onClose={() => { setCareer(false); }} />}
-      <Carimbo momentos={momentos ?? NONE} />
+      {palco && <Palco titulos={titulos} onClose={fecharPalco} />}
+      <Carimbo momentos={palcoVisto ? carimbos : NONE} />
       {chosen !== null && <Result eventId={eventId} optionId={chosen} state={state} tags={player.etiquetas ?? []} auto={rapido} onDone={onDone} />}
     </main>
   );
@@ -600,6 +622,7 @@ function Comprador({ p }: { p: ProposalView }) {
 
 /** v2.47: a duração das transições vem dos dados (motion.json). */
 const NONE: Moment[] = [];
+const NO_TITLES: readonly string[] = [];
 export const TRANSITION = { '--transicao': `${MOTION.transicaoMs}ms` } as React.CSSProperties;
 
 /** O texto da situação em camadas (T25e): abertura, base e frases de contexto pelas etiquetas; sem texto (ou com parâmetro faltando), nada. */

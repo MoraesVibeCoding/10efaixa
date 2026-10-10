@@ -690,3 +690,49 @@ describe('caixa do topo compacta (v2.70)', () => {
     expect(topo).toHaveClass('decisao__topo--aberto');
   });
 });
+
+// v2.71 (momento 4): o título do ano tem palco; a decisão atrás fica inerte, e depois a taça nova "chega" na caixa do topo.
+// Acesso e rebaixamento seguem no carimbo, depois do palco.
+describe('palco do título na decisão (v2.71)', () => {
+  const comTitulo = () => render(
+    <Decision eventId={EVENT} age={24} progress={0.4} player={{ ...PLAYER, titles: ['estadual', 'serieA'] }} scene={{ src: 'c.webp', alt: 'cena' }}
+      momentos={[{ kind: 'titulo', competition: 'serieA' }, { kind: 'acesso' }]} />,
+  );
+
+  it('o palco abre com a decisão inerte; Seguir fecha, devolve o foco ao evento e solta o carimbo do acesso', () => {
+    comTitulo();
+    expect(screen.getByRole('dialog', { name: t('ui.momento.titulo') })).toBeInTheDocument();
+    expect(document.querySelector('.decisao__painel')).toHaveAttribute('inert');
+    expect(screen.getByRole('status')).not.toHaveTextContent(t('ui.momento.acesso'));
+    fireEvent.click(screen.getByRole('button', { name: t('ui.palco.seguir') }));
+    expect(screen.queryByRole('dialog', { name: t('ui.momento.titulo') })).toBeNull();
+    expect(document.querySelector('.decisao__painel')).not.toHaveAttribute('inert');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveFocus();
+    expect(screen.getByRole('status')).toHaveTextContent(t('ui.momento.acesso'));
+  });
+
+  it('a taça nova ganha destaque na caixa do topo', () => {
+    comTitulo();
+    fireEvent.click(screen.getByRole('button', { name: t('ui.palco.seguir') }));
+    const tacas = document.querySelectorAll('.taca');
+    expect(tacas[1]).toHaveClass('taca--nova');
+    expect(tacas[0]).not.toHaveClass('taca--nova');
+    // no celular, com a caixa fechada, o aviso fica no botão de detalhes
+    expect(document.querySelector('.decisao__topo')).toHaveClass('decisao__topo--taca-nova');
+  });
+
+  it('sem título, nenhum palco', () => {
+    setup();
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
+});
+
+describe('palco do título espera o card de cima (v2.71)', () => {
+  it('pausado (resumo da temporada aberto), o palco não abre; ao soltar, abre', () => {
+    const props = { eventId: EVENT, age: 24, progress: 0.4, player: PLAYER, scene: { src: 'c.webp', alt: 'cena' }, momentos: [{ kind: 'titulo' as const, competition: 'serieA' }] };
+    const { rerender } = render(<Decision {...props} pausado />);
+    expect(screen.queryByRole('dialog')).toBeNull();
+    rerender(<Decision {...props} pausado={false} />);
+    expect(screen.getByRole('dialog', { name: t('ui.momento.titulo') })).toBeInTheDocument();
+  });
+});

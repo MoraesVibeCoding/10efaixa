@@ -464,7 +464,15 @@
   .jogador__detalhes:focus-visible { outline: 3px solid var(--cor-foco); outline-offset: 1px; }
   /* a figurinha pequena sem a tarja (ficava uma faixa preta vazia) */
   .jogador__abrir .figurinha__tarja { display: none; }
+  /* v2.71: fechada, a caixa avisa a taça nova com um ponto dourado no botão (a taça está lá dentro) */
+  .jogador__detalhes { position: relative; }
+  .decisao__topo--taca-nova:not(.decisao__topo--aberto) .jogador__detalhes::after {
+    content: ''; position: absolute; inset-block-start: 0; inset-inline-end: 6px; inline-size: 10px; block-size: 10px; border-radius: 50%;
+    background: var(--paleta-ouro); box-shadow: 0 0 0 2px var(--cor-superficie);
+    animation: taca-ponto 900ms ease-out 3 both;
+  }
 }
+@keyframes taca-ponto { 0% { transform: scale(0.4); } 50% { transform: scale(1.4); } 100% { transform: scale(1); } }
 @media (min-width: 64rem) { .jogador__detalhes { display: none; } }
 /* v2.62: no celular (até 420 px), idade, salário e valor descem para uma linha embaixo do nome: entre o nome e o Over
    não cabem com nome, bandeira e clube compridos */
@@ -479,4 +487,12 @@
   .decisao__semestre { font-size: 0.8125rem; }
   .opcao__rotulo { font-size: 1.0625rem; }
   .decisao__detalhe { min-block-size: 2.2rem; font-size: 0.875rem; }
+}
+
+/* v2.71 (momento 4): a taça nova chega na estante da caixa do topo depois do palco; base.css zera com reduced motion */
+.taca--nova { animation: taca-chega 700ms cubic-bezier(0.2, 1.4, 0.4, 1) both; }
+@keyframes taca-chega {
+  0% { transform: translateY(40px) scale(2); opacity: 0; }
+  60% { transform: translateY(-4px) scale(1.15); opacity: 1; filter: drop-shadow(0 0 8px var(--paleta-ouro)); }
+  100% { transform: none; filter: none; }
 }
