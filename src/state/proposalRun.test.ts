@@ -1,5 +1,5 @@
 import { autoDecide, simulateCareer } from '../engine/career';
-import { PROPOSAL_EVENT, RAISE, RENEW, acceptChoice, STAY } from '../engine/proposals';
+import { PROPOSAL_EVENT, RAISE, RENEW, RETIRE, acceptChoice, homeChoice, STAY } from '../engine/proposals';
 import { createPrng } from '../engine/prng';
 import { randomInput } from '../engine/simulation';
 import { runUntilDecision, type Ritmo } from './careerRun';
@@ -16,11 +16,11 @@ const inputOf = (seed: number) => randomInput(createPrng(seed));
 function playAuto(seed: number, ritmo: Ritmo) {
   const input = inputOf(seed);
   const choices: string[] = [];
-  const proposals: { sugestao: string; propostas: { clubId: string }[] }[] = [];
+  const proposals: { sugestao: string; propostas: { clubId: string }[]; podeParar: boolean; casa: string | null }[] = [];
   for (let guard = 0; guard < 800; guard++) {
     const step = runUntilDecision(input, seed, choices, ritmo);
     if (step.kind === 'done') return { input, result: step.result, proposals, choices };
-    if (step.eventId === PROPOSAL_EVENT) proposals.push({ sugestao: String(step.view.state.sugestao), propostas: step.view.propostas ?? [] });
+    if (step.eventId === PROPOSAL_EVENT) proposals.push({ sugestao: String(step.view.state.sugestao), propostas: step.view.propostas ?? [], podeParar: step.view.state.podeParar === true, casa: step.view.casa?.clubId ?? null });
     choices.push(autoDecide(step.eventId, step.view.temperament, () => step.view));
   }
   throw new Error('carreira não terminou');
@@ -39,9 +39,11 @@ describe('proposta de clube como decisão (T28b)', () => {
       const shown = [1, 2, 3, 4].flatMap((seed) => playAuto(seed, ritmo).proposals);
       expect(shown.length).toBeGreaterThan(0);
       for (const p of shown) {
-        expect(p.propostas.length).toBeGreaterThanOrEqual(1);
-        expect(p.propostas.length).toBeLessThanOrEqual(3);
-        expect([STAY, RENEW, RAISE].includes(p.sugestao) || p.propostas.some((o) => acceptChoice(o.clubId) === p.sugestao)).toBe(true);
+        // v2.85: dos 34 em diante a tela abre mesmo sem proposta (no máximo 2), e a sugestão pode ser parar ou voltar para casa
+        expect(p.propostas.length).toBeGreaterThanOrEqual(p.podeParar ? 0 : 1);
+        expect(p.propostas.length).toBeLessThanOrEqual(p.podeParar ? 2 : 3);
+        const fim = p.podeParar && (p.sugestao === RETIRE || (p.casa !== null && p.sugestao === homeChoice(p.casa)));
+        expect(fim || [STAY, RENEW, RAISE].includes(p.sugestao) || p.propostas.some((o) => acceptChoice(o.clubId) === p.sugestao)).toBe(true);
       }
     }
   });

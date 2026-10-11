@@ -87,3 +87,10 @@ describe('card de fim de carreira (v2.81)', () => {
     expect(css).not.toMatch(/rotate\(|rotate:/);
   });
 });
+
+describe('o motivo na frente do card (v2.85)', () => {
+  it('a frente diz por que e com que idade ele parou', () => {
+    show();
+    expect(frente().querySelector('.fim__motivo')).toHaveTextContent(m.motivo);
+  });
+});

@@ -261,24 +261,6 @@
    "comemorar-a-fase": "Comemorar a fase com a família e os amigos"
   }
  },
- "retorno-formador": {
-  "titulo": "O clube que te revelou te quer de volta",
-  "texto": "O clube que te revelou quer você de volta para encerrar a carreira em casa. O salário é bem menor, mas o estádio onde você estreou ainda tem a sua foto na parede. Seus filhos nunca te viram jogar lá.",
-  "opcoes": {
-   "aceitar": "Voltar para casa e encerrar a carreira lá",
-   "recusar": "Agradecer e seguir onde está",
-   "pedir-mais-um-ano": "Recusar: ainda tem lenha para um clube grande"
-  }
- },
- "realizar-sonho": {
-  "titulo": "O clube do coração quer a sua despedida",
-  "texto": "O clube do seu coração quer que você encerre a carreira lá, com estádio cheio e camisa com o seu nome. É o sonho do menino da arquibancada. O corpo pede descanso; a cabeça ainda pede jogo.",
-  "opcoes": {
-   "aceitar": "Realizar o sonho",
-   "recusar": "Agradecer e seguir onde está",
-   "aceitar-pedindo-a-faixa": "Aceitar e pedir a faixa de capitão"
-  }
- },
  "copa-sacrificio": {
   "titulo": "No sacrifício pela Seleção",
   "texto": "A coxa ainda reclama do último jogo e o médico da Seleção fez cara feia. É jogo decisivo e o treinador espera a sua resposta. O país inteiro vai assistir.",

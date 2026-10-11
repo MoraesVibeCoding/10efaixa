@@ -69,6 +69,15 @@ export function ResumoTemporada({ resumo, torcida, onClose }: ResumoTemporadaPro
             {resumo.titulos.map((c, k) => <li key={`${c}-${k}`}><TrophyIcon id={c} size={32} />{t(`ui.titulo.${c}`)}</li>)}
           </ul>
         )}
+        {/* v2.85: os avisos do que está para acontecer (signals.ts), na ordem de urgência */}
+        {resumo.sinais.length > 0 && (
+          <section className="resumo__sinais">
+            <h3 id="resumo-sinais">{t('ui.resumoTemporada.sinais')}</h3>
+            <ul aria-labelledby="resumo-sinais">
+              {resumo.sinais.map((id) => <li key={id}>{t(`ui.resumoTemporada.sinal.${id}`)}</li>)}
+            </ul>
+          </section>
+        )}
         <section className="resumo__tecnico" aria-label={t('ui.resumoTemporada.tecnico')}>
           <h3>{t('ui.resumoTemporada.tecnico')}</h3>
           <p><q className="fala" data-testid="comentario">{fala.join(' ')}</q></p>

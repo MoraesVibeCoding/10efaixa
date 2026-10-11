@@ -31,21 +31,20 @@ describe('integração da carreira (T24b)', () => {
       expect(r.seasons[0]!.year).toBe(2026);
       expect(r.endAge).toBeLessThanOrEqual(retire.idadeLimite);
       expect(['decisao', 'fisico', 'overallInicial', 'idadeLimite']).toContain(r.retirement);
-      if (r.retirement === 'decisao') expect(r.endAge).toBeGreaterThanOrEqual(retire.decisao.idadeMin);
+      if (r.retirement === 'decisao') expect(r.endAge).toBeGreaterThanOrEqual(retire.fimDeCarreira.idadeMin);
       if (r.retirement === 'idadeLimite') expect(r.endAge).toBe(retire.idadeLimite);
     }
     expect(new Set(rs.map((r) => r.endAge)).size).toBeGreaterThan(3);
   });
 
-  it('despedida (T34): quem aceita encerra a carreira no clube de coração ou no formador, sem sair mais', () => {
-    const rs = Array.from({ length: 40 }, (_, seed) => simulateCareer(input({ temperament: 'lider', heartClub: 'santos' }), seed));
+  // v2.85: a despedida é o card "Voltar para casa" da janela dos 34 em diante (no automático, quem não recusa o clube de coração, na última temporada antes de parar)
+  it('despedida (T34, v2.85): quem volta para casa vai ao clube de coração ou ao formador a partir dos 34', () => {
+    const rs = Array.from({ length: 40 }, (_, seed) => simulateCareer(input({ temperament: 'resenha', heartClub: 'santos' }), seed));
     const back = rs.filter((r) => r.farewell !== null);
     expect(back.length).toBeGreaterThan(0);
     for (const r of back) {
-      const last = r.spells.at(-1)!;
-      expect(last.clubId).toBe(r.farewell === 'coracao' ? 'santos' : r.spells[0]!.clubId);
-      expect(last.fromAge).toBeGreaterThanOrEqual(retire.despedida.idadeMin);
-      expect(last.toAge).toBe(r.endAge);
+      const casaId = r.farewell === 'coracao' ? 'santos' : r.spells[0]!.clubId;
+      expect(r.spells.some((x) => x.clubId === casaId && x.fromAge >= retire.fimDeCarreira.idadeMin)).toBe(true);
     }
     expect(back.some((r) => r.farewell === 'coracao')).toBe(true);
   });

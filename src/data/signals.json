@@ -1,0 +1,19 @@
+{
+ "_nota": "v2.85 (SPEC 6.14, 6.15; pedido do usuário em 2026-10-11): sinais no resumo da temporada. Cada um sai de um dado do motor e só aparece quando ele existe. As paradas forçadas (ultimoAno, corpo, nivel) usam os gatilhos de retirement.json com uma margem, para avisar uma temporada antes. No máximo 'max' sinais, na ordem de 'ordem'. O texto mora em src/i18n/pt-BR/ui.json (resumoTemporada.sinal).",
+ "max": 2,
+ "ordem": ["ultimoAno", "corpo", "nivel", "semVaga", "salario", "tecnico", "noitadas", "dinheiro", "moral", "banco"],
+ "_soQuandoComeca": "os apertos da vida avisam quando começam, e não toda temporada (na simulação de 300 carreiras, a disciplina baixa ficava em mais de um terço dos resumos); os riscos de parar e o salário atrasado repetem enquanto valerem",
+ "soQuandoComeca": ["tecnico", "noitadas", "dinheiro", "moral", "banco"],
+ "corpo": {
+  "_obs": "uma lesão grave a menos que o gatilho, ou o físico até margemFisico (fração do auge) acima da fração que força a parada",
+  "gravesAntes": 1,
+  "margemFisico": 0.08
+ },
+ "nivel": { "_obs": "Over até margemOver acima do Over inicial da criação", "margemOver": 3 },
+ "salario": { "atrasos": 1 },
+ "tecnico": { "relacaoMax": 0.25 },
+ "noitadas": { "disciplinaMax": 0.3 },
+ "dinheiro": { "_obs": "o patrimônio caiu esta fração no ano (só para quem já tinha patrimonioMin em reais)", "quedaFracao": 0.2, "patrimonioMin": 100000 },
+ "moral": { "moralMax": 0.25 },
+ "banco": { "_obs": "fração dos minutos da temporada; antes de idadeMin, o banco é normal (base, primeiros anos)", "minutosMax": 0.25, "idadeMin": 20 }
+}

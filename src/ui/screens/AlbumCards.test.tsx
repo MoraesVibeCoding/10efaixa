@@ -17,7 +17,7 @@ afterEach(cleanup);
 const PLAYER = { name: 'Dudu', position: 'meia', clubId: 'santos', overall: 74, titles: [] as string[], role: 'titularRegular', monthlySalary: { amount: 180_000, currency: 'BRL' as const } };
 const RESUMO: SeasonSummary = {
   year: 2032, age: 24, clubId: 'santos', division: 'BRA-A', partidas: 34, gols: 9, assistencias: 5, semSofrerGol: 0, goleiro: false, overallDe: 72, overallPara: 76, pct: 6,
-  mudancas: [], titulos: [], comentario: { evolucao: 'grande', minutos: 'muitos', destaque: null, titulo: false },
+  mudancas: [], titulos: [], comentario: { evolucao: 'grande', minutos: 'muitos', destaque: null, titulo: false }, sinais: [],
 };
 const IDEIAS: MeetingOptions = {
   obvia: { proposal: { main: 'fisico', secondary: 'passe' }, agrado: 'muito' },

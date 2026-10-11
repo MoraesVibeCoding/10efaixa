@@ -134,7 +134,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
         <div className="carreira__tela" inert={resumoEl !== null}>
           <Propostas
             key={index} propostas={view.propostas ?? []} atual={view.atual} podeFicar={view.state.podeFicar === true} podeForcar={view.state.podeForcar === true}
-            podeRenovar={view.state.podeRenovar === true} emprestimo={eventId === LOAN_EVENT} player={contractPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} anterior={anterior} pagina={pagina}
+            podeRenovar={view.state.podeRenovar === true} emprestimo={eventId === LOAN_EVENT} casa={view.casa} podeParar={view.state.podeParar === true} player={contractPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} anterior={anterior} pagina={pagina}
             scene={sceneOfCena('assinatura-contrato', contractPlayer, visual, input.name, contractClub)} onChoose={decide}
           />
         </div>

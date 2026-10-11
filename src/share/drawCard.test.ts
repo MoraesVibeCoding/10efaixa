@@ -36,7 +36,11 @@ describe('desenho do cartão (T55d)', () => {
     drawCard(ctx, m, 'narrativa');
     const text = all();
     // v2.79: o nome longo que não cabe ao lado do número vira só o primeiro nome (o completo segue no texto alternativo)
-    for (const s of [m.nome.toUpperCase().split(' ')[0]!, m.apelido, m.veredito.toUpperCase(), m.rotulo, m.codigo, ...m.honrarias, ...m.frases]) expect(text, s).toContain(s);
+    for (const s of [m.nome.toUpperCase().split(' ')[0]!, m.apelido, m.veredito.toUpperCase(), m.rotulo, m.codigo, ...m.honrarias, m.frases[0]!]) expect(text, s).toContain(s);
+    // v2.73: só entram as frases que cabem inteiras, na ordem; a que não cabe sai toda (nunca pela metade)
+    const desenhadas = m.frases.filter((f) => text.includes(f));
+    expect(desenhadas).toEqual(m.frases.slice(0, desenhadas.length));
+    for (const f of m.frases.slice(desenhadas.length)) expect(text).not.toContain(f.split(' ').slice(0, 4).join(' '));
     expect(text).toContain(m.manchete.split(' ').slice(0, 3).join(' '));
   });
 
