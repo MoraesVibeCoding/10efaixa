@@ -18,6 +18,7 @@ import { Niveis } from './Niveis';
 import { CenaPintada } from './CenaPintada';
 import { useRolling } from '../useRolling';
 import { useSaida } from '../useSaida';
+import { SEGUIR_VARS, useSeguirSozinho } from '../useSeguirSozinho';
 import { MOTION, reducedMotion } from '../motion';
 import { Carimbo } from './Carimbo';
 import { Palco } from './Palco';
@@ -377,20 +378,17 @@ function outcomeGroups(outcome: Outcome[]) {
   return [['ganha', ganha, 'resultado__ganho', 0], ['emTroca', emTroca, 'resultado__perda', ganha.length]] as const;
 }
 
-/** O que a escolha rendeu de verdade, por cima da tela desfocada; fecha pelo botão ou Esc e, no ritmo Rápido, sozinho depois de um instante. */
-function Result({ eventId, optionId, outcome, verdict, auto, onDone }: { eventId: string; optionId: string; outcome: Outcome[]; verdict: string; auto: boolean; onDone: () => void }) {
-  const button = useRef<HTMLButtonElement>(null);
-  // v2.72: o card sai (150 ms) antes de seguir; Esc (na Decisão) segue na hora
+/** O que a escolha rendeu de verdade, por cima da tela desfocada. v2.88 (pedido do usuário): sem "Seguir", em todos os ritmos;
+ *  fecha sozinho em resultadoMs, dois toques passam na hora, Enter e Espaço também; Esc (na Decisão) segue na hora. */
+function Result({ eventId, optionId, outcome, verdict, onDone }: { eventId: string; optionId: string; outcome: Outcome[]; verdict: string; onDone: () => void }) {
+  const box = useRef<HTMLDivElement>(null);
+  // v2.72: o card sai (150 ms) antes de seguir
   const { saindo, fechar } = useSaida(onDone);
-  useEffect(() => {
-    button.current?.focus();
-    if (!auto) return undefined;
-    const timer = setTimeout(fechar, previewCfg.resultadoMs);
-    return () => clearTimeout(timer);
-  }, [fechar, auto]);
+  const seguir = useSeguirSozinho(fechar);
+  useEffect(() => { box.current?.focus(); }, []);
   return (
     <div className="resultado" data-saindo={saindo || undefined}>
-      <div className="resultado__caixa" role="dialog" aria-modal="true" aria-label={t(`ui.resultado.${verdict}`)}>
+      <div ref={box} tabIndex={-1} style={SEGUIR_VARS} className="resultado__caixa" role="dialog" aria-modal="true" aria-label={t(`ui.resultado.${verdict}`)} onClick={seguir.onClick} onKeyDown={seguir.onKeyDown}>
         {/* v2.81 (Álbum): o veredito é o carimbo na foto da cena; aqui fica o que você escolheu e o que rendeu */}
         <p className="resultado__rotulo">{t('ui.resultado.voceEscolheu')}</p>
         <p className="resultado__escolha">{t(`events.${eventId}.opcoes.${optionId}`)}</p>
@@ -409,7 +407,9 @@ function Result({ eventId, optionId, outcome, verdict, auto, onDone }: { eventId
             </ul>
           </section>
         ))}
-        <button ref={button} type="button" className="resultado__seguir" onClick={fechar}>{t('ui.resultado.seguir')}</button>
+        <p className="resultado__dica">{t('ui.resultado.dica')}</p>
+        {/* o tempo correndo até o resultado fechar sozinho */}
+        <span className="resultado__prazo" aria-hidden="true" />
       </div>
     </div>
   );
@@ -704,7 +704,7 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
       {career && <Career player={player} onClose={() => { setCareer(false); }} />}
       {palco && <Palco titulos={titulos} onClose={fecharPalco} />}
       <Carimbo momentos={palcoVisto ? carimbos : NONE} />
-      {chosen !== null && outcome !== null && verdict !== null && <Result eventId={eventId} optionId={chosen} outcome={outcome} verdict={verdict} auto={rapido} onDone={onDone} />}
+      {chosen !== null && outcome !== null && verdict !== null && <Result eventId={eventId} optionId={chosen} outcome={outcome} verdict={verdict} onDone={onDone} />}
     </main>
   );
 }

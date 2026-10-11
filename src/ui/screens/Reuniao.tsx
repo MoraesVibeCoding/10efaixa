@@ -4,6 +4,7 @@ import type { Agrado, Idea, MeetingOptions } from '../../engine/meetingOptions';
 import previewCfg from '../../data/preview.json';
 import { t } from '../../i18n';
 import { useSaida } from '../useSaida';
+import { SEGUIR_VARS, useSeguirSozinho } from '../useSeguirSozinho';
 import { Career as CareerDrawer, CenaFoto, PaginaCabecalho, PlayerBox, TRANSITION, type DecisionProps } from './Decision';
 import '../folha.css';
 import './Reuniao.css';
@@ -119,9 +120,6 @@ export function Reuniao({ ideias, player, age, progress, semestre, scene, anteri
 // v2.87: o tempo da barra da ideia marcada é o mesmo da decisão
 const REUNIAO_VARS = { ...TRANSITION, '--decide-ms': `${previewCfg.decideMs}ms` } as React.CSSProperties;
 
-// v2.88: o tempo da barra da resposta é o do fechamento automático
-const RESPOSTA_VARS = { '--resultado-ms': `${previewCfg.resultadoMs}ms` } as React.CSSProperties;
-
 export { focusName };
 
 export type ReuniaoRespostaProps = { resposta: Pick<MeetingResult, 'response' | 'reason' | 'focus'>; onDone: () => void };
@@ -133,7 +131,7 @@ export type ReuniaoRespostaProps = { resposta: Pick<MeetingResult, 'response' | 
 export function ReuniaoResposta({ resposta, onDone }: ReuniaoRespostaProps) {
   const sheet = useRef(null as HTMLDivElement | null);
   const done = useRef(false);
-  const lastTap = useRef(-Infinity);
+
   function finish() {
     if (done.current) return;
     done.current = true;
@@ -143,32 +141,23 @@ export function ReuniaoResposta({ resposta, onDone }: ReuniaoRespostaProps) {
   const { saindo, fechar } = useSaida(finish);
   // v2.81: a folha entra deslizando de baixo; o foco não rola a página até a posição de entrada dela
   useEffect(() => { sheet.current?.focus({ preventScroll: true }); }, []);
-  // v2.88: sem toque, a resposta fecha sozinha (o mesmo tempo do resultado da decisão no Rápido)
-  useEffect(() => {
-    const timer = setTimeout(fechar, previewCfg.resultadoMs);
-    return () => { clearTimeout(timer); };
-  }, [fechar]);
-  // dois toques (ou cliques) dentro de duploToqueMs passam na hora; um toque só não fecha (evita passar sem ler)
-  function onTap(e: React.MouseEvent) {
-    const now = e.timeStamp;
-    if (now - lastTap.current <= previewCfg.duploToqueMs) fechar();
-    lastTap.current = now;
-  }
+  // v2.88: sem "Seguir": fecha sozinha em resultadoMs, dois toques passam, Enter e Espaço também
+  const seguir = useSeguirSozinho(fechar);
   const { response, reason, focus } = resposta;
   const text = response === 'recusa'
     ? t(`ui.reuniao.resposta.recusa.${reason ?? 'score'}`)
     : t(`ui.reuniao.resposta.${response}.texto`, { principal: focusName(focus.main ?? ''), secundario: focusName(focus.secondary ?? '') });
   function onKey(e: React.KeyboardEvent) {
     if (e.key === 'Escape') { e.stopPropagation(); finish(); return; }
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fechar(); return; }
-    if (e.key === 'Tab') { e.preventDefault(); sheet.current?.focus(); }
+    if (e.key === 'Tab') { e.preventDefault(); sheet.current?.focus(); return; }
+    seguir.onKeyDown(e);
   }
   return (
     <div className="reuniao__resposta-fundo folha__fundo" data-saindo={saindo || undefined}>
-      <div ref={sheet} tabIndex={-1} style={RESPOSTA_VARS} className="reuniao__resposta folha" role="alertdialog" aria-modal="true" aria-labelledby="reuniao-resposta-titulo" onKeyDown={onKey} onClick={onTap}>
+      <div ref={sheet} tabIndex={-1} style={SEGUIR_VARS} className="reuniao__resposta folha" role="alertdialog" aria-modal="true" aria-labelledby="reuniao-resposta-titulo" onKeyDown={onKey} onClick={seguir.onClick}>
         <h2 id="reuniao-resposta-titulo">{t(`ui.reuniao.resposta.${response}.titulo`)}</h2>
         <p>{text}</p>
-        <p className="reuniao__resposta-dica">{t('ui.reuniao.resposta.dica')}</p>
+        <p className="reuniao__resposta-dica">{t('ui.resultado.dica')}</p>
         {/* o tempo correndo até a resposta fechar sozinha */}
         <span className="reuniao__resposta-prazo" aria-hidden="true" />
       </div>

@@ -56,7 +56,7 @@ describe('carreira na tela (T51b)', () => {
       fireEvent.click(document.querySelector(`[data-opcao-id="${choice}"]`)!);
       // pedido do usuário (sem "Confirmar escolha"): tocar de novo na marcada decide na hora
       fireEvent.click(document.querySelector(`[data-opcao-id="${choice}"]`)!);
-      fireEvent.click(screen.getByRole('button', { name: t('ui.resultado.seguir') }));
+      { const caixa = document.querySelector('.resultado__caixa')!; fireEvent.click(caixa); fireEvent.click(caixa); }
     }
     // T55b: "Sua história" antes do resumo
     fireEvent.click(screen.getByRole('button', { name: t('ui.linhaDoTempo.verCartao') }));
@@ -99,7 +99,7 @@ describe('carreira na tela (T51b)', () => {
       fireEvent.click(document.querySelector(`[data-opcao-id="${autoChoice(eventId, document.querySelector('[data-temperamento]')!.getAttribute('data-temperamento')!)}"]`)!);
       // pedido do usuário (sem "Confirmar escolha"): tocar de novo na marcada decide na hora
       fireEvent.click(document.querySelector(`[data-opcao-id="${autoChoice(eventId, document.querySelector('[data-temperamento]')!.getAttribute('data-temperamento')!)}"]`)!);
-      fireEvent.click(screen.getByRole('button', { name: t('ui.resultado.seguir') }));
+      { const caixa = document.querySelector('.resultado__caixa')!; fireEvent.click(caixa); fireEvent.click(caixa); }
     }
     expect(screen.getByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })).toBeInTheDocument();
     fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getAllByRole('radio')[0]!);
@@ -132,7 +132,7 @@ describe('carreira na tela (T51b)', () => {
       fireEvent.click(document.querySelector(`[data-opcao-id="${autoChoice(eventId, document.querySelector('[data-temperamento]')!.getAttribute('data-temperamento')!)}"]`)!);
       // pedido do usuário (sem "Confirmar escolha"): tocar de novo na marcada decide na hora
       fireEvent.click(document.querySelector(`[data-opcao-id="${autoChoice(eventId, document.querySelector('[data-temperamento]')!.getAttribute('data-temperamento')!)}"]`)!);
-      fireEvent.click(screen.getByRole('button', { name: t('ui.resultado.seguir') }));
+      { const caixa = document.querySelector('.resultado__caixa')!; fireEvent.click(caixa); fireEvent.click(caixa); }
     }
     expect(shownCount).toBeGreaterThan(3);
   });

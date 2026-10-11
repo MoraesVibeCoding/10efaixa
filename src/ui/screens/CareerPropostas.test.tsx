@@ -33,7 +33,7 @@ function playUntilProposals() {
     fireEvent.click(document.querySelector(`[data-opcao-id="${choice}"]`)!);
     // pedido do usuário (sem "Confirmar escolha"): tocar de novo na marcada decide na hora
     fireEvent.click(document.querySelector(`[data-opcao-id="${choice}"]`)!);
-    fireEvent.click(screen.getByRole('button', { name: t('ui.resultado.seguir') }));
+    { const caixa = document.querySelector('.resultado__caixa')!; fireEvent.click(caixa); fireEvent.click(caixa); }
   }
 }
 

@@ -70,6 +70,7 @@
   "composicao": "Composição de Elenco"
  },
  "resultado": {
+  "dica": "Toque duas vezes para seguir",
   "positivo": "Deu certo",
   "negativo": "Saiu caro",
   "misto": "Ganhou de um lado, perdeu de outro",
@@ -426,7 +427,6 @@
    "pernaRuim": "Perna ruim"
   },
   "resposta": {
-   "dica": "Toque duas vezes para seguir",
    "aceita": {
     "titulo": "A comissão topou",
     "texto": "Foco principal em {principal}, com {secundario} de apoio."

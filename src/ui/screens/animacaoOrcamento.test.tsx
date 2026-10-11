@@ -17,14 +17,15 @@ const ms = (s: string) => [...s.matchAll(/(\d+)ms/g)].map((m) => Number(m[1]));
 describe('orçamento das animações da decisão (v2.71)', () => {
   const d = css('Decision.css');
 
-  it('resultado: veredito sem rebote e em até 200 ms; linhas e botão prontos em até ~400 ms', () => {
+  // v2.88: o resultado não tem mais "Seguir"; a dica do toque duplo entra no lugar dele, no mesmo orçamento
+  it('resultado: veredito sem rebote e em até 200 ms; linhas e dica prontas em até ~400 ms', () => {
     const v = rule(d, '.resultado__veredito');
     expect(v).toMatch(/animation:\s*resultado-veredito 200ms ease-out/);
     expect(d).toMatch(/@keyframes resultado-veredito \{ from \{ opacity: 0; transform: scale\(1\.15\); \}/);
     const linha = rule(d, '.resultado__lista li');
     const [dur, atraso, passo] = ms(linha);
     expect(dur! + atraso! + 3 * passo!).toBeLessThanOrEqual(400);
-    const [bd, ba] = ms(rule(d, '.resultado__seguir'));
+    const [bd, ba] = ms(rule(d, '.resultado__dica'));
     expect(bd! + ba!).toBeLessThanOrEqual(400);
   });
 
@@ -76,10 +77,11 @@ describe('momentos raros e botões (v2.71)', () => {
 
   it('os botões principais afundam ao toque (0,97 em 100 ms), só com movimento', () => {
     const b = readFileSync(resolve(__dirname, '../base.css'), 'utf8');
-    for (const c of ['revelacao__comecar', 'criacao__botao--principal', 'decisao__confirmar', 'resultado__seguir', 'palco__seguir', 'resumo__continuar', 'cartao__principal', 'linha__cartao', 'abertura__botao']) {
+    // v2.88: o "Seguir" do resultado saiu; o do palco segue
+    for (const c of ['revelacao__comecar', 'criacao__botao--principal', 'decisao__confirmar', 'palco__seguir', 'resumo__continuar', 'cartao__principal', 'linha__cartao', 'abertura__botao']) {
       expect(b, c).toMatch(new RegExp(`\\.${c}[^{]*\\{[^}]*\\}`));
     }
-    expect(b).toMatch(/:is\([^)]*\.resultado__seguir[^)]*\):active \{ transform: scale\(0\.97\); \}/);
-    expect(b).toMatch(/:is\([^)]*\.resultado__seguir[^)]*\) \{ transition: transform 100ms ease-out/);
+    expect(b).toMatch(/:is\([^)]*\.palco__seguir[^)]*\):active \{ transform: scale\(0\.97\); \}/);
+    expect(b).toMatch(/:is\([^)]*\.palco__seguir[^)]*\) \{ transition: transform 100ms ease-out/);
   });
 });

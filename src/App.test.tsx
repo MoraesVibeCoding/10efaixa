@@ -126,7 +126,7 @@ describe('save no aparelho (T54, v2.39)', () => {
     fireEvent.click(document.querySelector('.opcao')!);
     // pedido do usuário (sem "Confirmar escolha"): tocar de novo na marcada decide na hora
     fireEvent.click(document.querySelector('.opcao')!);
-    fireEvent.click(screen.getByRole('button', { name: t('ui.resultado.seguir') }));
+    { const caixa = document.querySelector('.resultado__caixa')!; fireEvent.click(caixa); fireEvent.click(caixa); }
   };
 
   it('a carreira é salva ao começar e a cada decisão (criação, semente, ritmo e escolhas)', () => {

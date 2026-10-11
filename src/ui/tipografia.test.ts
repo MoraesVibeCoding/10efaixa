@@ -33,7 +33,7 @@ describe('tipografia (v2.73)', () => {
   });
 
   it.each([
-    ['Decision.css', '.decisao__confirmar'], ['Decision.css', '.resultado__seguir'], ['ResumoTemporada.css', '.resumo__continuar'],
+    ['Decision.css', '.decisao__confirmar'], ['ResumoTemporada.css', '.resumo__continuar'],
     ['LinhaDoTempo.css', '.linha__cartao'], ['Revelacao.css', '.revelacao__comecar'], ['Palco.css', '.palco__seguir'], ['Creation.css', '.criacao__botao--principal'],
   ])('botão principal único: %s %s', (f, sel) => {
     const r = rule(f, sel);

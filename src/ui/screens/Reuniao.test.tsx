@@ -152,7 +152,7 @@ describe('resposta da comissão (T52)', () => {
     it('não tem botão; mostra a dica do toque duplo e a barra do tempo', () => {
       const { dialog } = abrir();
       expect(within(dialog).queryByRole('button')).toBeNull();
-      expect(dialog).toHaveTextContent(t('ui.reuniao.resposta.dica'));
+      expect(dialog).toHaveTextContent(t('ui.resultado.dica'));
       expect(dialog.querySelector('.reuniao__resposta-prazo')).not.toBeNull();
     });
 
