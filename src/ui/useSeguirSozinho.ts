@@ -6,12 +6,12 @@ import previewCfg from '../data/preview.json';
  * Fecham sozinhas em `resultadoMs`; dois toques dentro de `duploToqueMs` passam na hora (um toque só não fecha, para
  * ninguém passar sem ler); pelo teclado, Enter ou Espaço passam (o Esc fica com cada tela). Devolve os manipuladores da folha.
  */
-export function useSeguirSozinho(fechar: () => void) {
+export function useSeguirSozinho(fechar: () => void, ms: number = previewCfg.resultadoMs) {
   const lastTap = useRef(-Infinity);
   useEffect(() => {
-    const timer = setTimeout(fechar, previewCfg.resultadoMs);
+    const timer = setTimeout(fechar, ms);
     return () => { clearTimeout(timer); };
-  }, [fechar]);
+  }, [fechar, ms]);
   function onClick(e: React.MouseEvent) {
     if (e.timeStamp - lastTap.current <= previewCfg.duploToqueMs) fechar();
     lastTap.current = e.timeStamp;
@@ -23,4 +23,5 @@ export function useSeguirSozinho(fechar: () => void) {
 }
 
 /** O tempo da barra que corre no pé da folha até ela fechar sozinha. */
-export const SEGUIR_VARS = { '--resultado-ms': `${previewCfg.resultadoMs}ms` } as React.CSSProperties;
+export const seguirVars = (ms: number = previewCfg.resultadoMs) => ({ '--resultado-ms': `${ms}ms` }) as React.CSSProperties;
+export const SEGUIR_VARS = seguirVars();

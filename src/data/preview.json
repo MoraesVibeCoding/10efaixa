@@ -29,6 +29,8 @@
  "resultadoMs": 2600,
  "_duploToqueMs": "v2.88 (pedido do usuário em 2026-10-11): na resposta da reunião, dois toques dentro deste intervalo passam na hora (sem botão Seguir); sem toque, ela fecha sozinha em resultadoMs",
  "duploToqueMs": 400,
+ "_respostaLongaMs": "v2.88 (decisão do usuário em 2026-10-11): a resposta da comissão fica mais tempo quando o plano muda (outra ideia ou recusa); quando aceita, resultadoMs",
+ "respostaLongaMs": 5000,
  "_decideMs": "pedido do usuário (2026-10-10): sem \"Confirmar escolha\"; a opção marcada vale sozinha depois deste tempo se ele não trocar (tocar de novo decide na hora)",
  "decideMs": 2000,
  "risco": {

@@ -427,6 +427,18 @@
    "pernaRuim": "Perna ruim"
   },
   "resposta": {
+   "rotulo": "Resposta da comissão",
+   "carimbo": { "topou": "Topou", "recusou": "Recusou" },
+   "plano": {
+    "titulo": "Plano de treino do semestre",
+    "treino": "Treino do semestre",
+    "pediu": "Você pediu",
+    "quer": "O técnico quer",
+    "segue": "O treino",
+    "normal": "Segue normal, sem foco extra",
+    "principal": "principal",
+    "apoio": "apoio"
+   },
    "aceita": {
     "titulo": "A comissão topou",
     "texto": "Foco principal em {principal}, com {secundario} de apoio."

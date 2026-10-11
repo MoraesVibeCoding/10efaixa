@@ -40,7 +40,7 @@ export interface CareerProps {
 export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal', initialChoices = [], onProgress, desafio }: CareerProps) {
   const [choices, setChoices] = useState(initialChoices);
   // T52: a reunião que o jogador acabou de fazer; a resposta dela aparece por cima da próxima tela
-  const [asked, setAsked] = useState(null as { year: number; semestre: number } | null);
+  const [asked, setAsked] = useState(null as { year: number; semestre: number; pedido: string } | null);
   // T51b: o semestre cujas frases o jogador já viu; a linha "Neste semestre" só aparece na primeira decisão depois dele
   const [seenSemester, setSeenSemester] = useState('');
   // v2.61: a temporada cujo resumo já foi visto (ou dispensado); o card abre uma vez por temporada, no Normal e no Completo
@@ -91,7 +91,16 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
   // v2.81 (Álbum): a página do álbum desta temporada (temporadas fechadas + 1)
   const pagina = { ano: view.year, numero: view.seasons.length + 1 };
   const resposta = answerOf(view.meetings, asked);
-  const respostaEl = resposta ? <ReuniaoResposta key={`${asked!.year}-${asked!.semestre}`} resposta={resposta} onDone={() => { closeCard(() => { setAsked(null); }); }} /> : null;
+  // v2.88: a resposta é uma página do álbum (o card do jogador e a foto da sala), com o que ele pediu e qual ideia era
+  const respostaPlayer = resposta ? toDecisionPlayer(view, input, look, visual, MEETING_EVENT) : null;
+  const respostaEl = resposta && respostaPlayer ? (
+    <ReuniaoResposta
+      key={`${asked!.year}-${asked!.semestre}`} resposta={resposta} ideia={resposta.ideia} pedido={pedidoOf(asked!.pedido)}
+      player={respostaPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} pagina={pagina}
+      scene={sceneOfCena('reuniao-comissao', respostaPlayer, visual, input.name, view.clubId ? clubName(view.clubId).nome : t('ui.varzea'))}
+      onDone={() => { closeCard(() => { setAsked(null); }); }}
+    />
+  ) : null;
   /** Fecha um card e devolve o foco: ao card que ainda estiver aberto ou ao título da tela. O flushSync tira o `inert` antes do foco. */
   function closeCard(update: () => void) {
     flushSync(update);
@@ -114,7 +123,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
             key={index} ideias={view.reuniao} player={meetingPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} semestre={Number(view.state.semestre) === 1 ? 1 : 2} anterior={anterior} pagina={pagina}
             scene={sceneOfCena('reuniao-comissao', meetingPlayer, visual, input.name, meetingClub)}
             onChoose={(choice) => {
-              setAsked({ year: view.year, semestre: Number(view.state.semestre) });
+              setAsked({ year: view.year, semestre: Number(view.state.semestre), pedido: choice });
               decide(choice);
             }}
           />}
@@ -177,6 +186,12 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
 function torcidaDe(idolatrias: Record<string, number>, clubId: string) {
   const v = idolatrias[clubId];
   return v === undefined ? undefined : idolBand(v);
+}
+
+/** v2.88: o pedido da reunião ("principal|secundário") em principal e apoio, para o "Você pediu" da resposta. */
+function pedidoOf(choice: string) {
+  const [main = '', secondary = ''] = choice.split('|');
+  return { main, secondary };
 }
 
 /** A resposta da reunião que o jogador acabou de fazer, no histórico de reuniões da carreira (T52). Função declarada:

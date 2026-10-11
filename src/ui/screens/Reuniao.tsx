@@ -4,7 +4,7 @@ import type { Agrado, Idea, MeetingOptions } from '../../engine/meetingOptions';
 import previewCfg from '../../data/preview.json';
 import { t } from '../../i18n';
 import { useSaida } from '../useSaida';
-import { SEGUIR_VARS, useSeguirSozinho } from '../useSeguirSozinho';
+import { seguirVars, useSeguirSozinho } from '../useSeguirSozinho';
 import { Career as CareerDrawer, CenaFoto, PaginaCabecalho, PlayerBox, TRANSITION, type DecisionProps } from './Decision';
 import '../folha.css';
 import './Reuniao.css';
@@ -122,41 +122,98 @@ const REUNIAO_VARS = { ...TRANSITION, '--decide-ms': `${previewCfg.decideMs}ms` 
 
 export { focusName };
 
-export type ReuniaoRespostaProps = { resposta: Pick<MeetingResult, 'response' | 'reason' | 'focus'>; onDone: () => void };
+type Foco = string | undefined;
+export type ReuniaoRespostaProps = {
+  resposta: Pick<MeetingResult, 'response' | 'reason' | 'focus'>;
+  /** v2.88: o que o jogador pediu (principal e apoio) e qual das 3 ideias era: decidem o carimbo e o "de → para". */
+  pedido: { main: string; secondary: string }; ideia?: Idea;
+  player: DecisionProps['player']; age: number; progress: number; pagina?: DecisionProps['pagina']; scene: DecisionProps['scene'];
+  onDone: () => void;
+};
 
-/** A resposta da comissão, por cima da próxima tela: aceita, contrapropõe (o clube precisa de outra coisa) ou recusa.
- *  É um `div role="alertdialog"` (não `<dialog>`: o modal nativo travou no Safari do iPhone e "Seguir" não fechava).
- *  v2.88 (pedido do usuário): sem botão "Seguir"; fecha sozinha em resultadoMs, e dois toques seguidos passam na hora.
- *  Abre com o foco na folha; Enter, Espaço e Esc passam; Tab fica na folha. */
-export function ReuniaoResposta({ resposta, onDone }: ReuniaoRespostaProps) {
-  const sheet = useRef(null as HTMLDivElement | null);
+/** Um foco do plano: o nome, o papel (principal ou apoio) e o jeito (fora: caiu do pedido; novo: o técnico trouxe; ok: combinado). */
+function Chip({ foco, papel, jeito }: { foco: Foco; papel?: 'principal' | 'apoio'; jeito?: 'fora' | 'novo' | 'ok' }) {
+  if (!foco) return null;
+  return (
+    <span className={jeito ? `plano__chip plano__chip--${jeito}` : 'plano__chip'}>
+      {focusName(foco)}
+      {papel && <small>{t(`ui.reuniao.resposta.plano.${papel}`)}</small>}
+    </span>
+  );
+}
+
+/** O quadro do plano: "Treino do semestre" quando aceita; "Você pediu" e "O técnico quer" na outra ideia; na recusa, o treino normal. */
+function Plano({ resposta, pedido }: Pick<ReuniaoRespostaProps, 'resposta' | 'pedido'>) {
+  const { response, focus } = resposta;
+  const ficou = new Set<string | undefined>([focus.main, focus.secondary]);
+  // o foco pedido que não ficou no plano sai riscado (na recusa, os dois)
+  function fora(f: string) { return response === 'recusa' || !ficou.has(f) ? 'fora' as const : undefined; }
+  return (
+    <ul className={`plano plano--${response}`} aria-label={t('ui.reuniao.resposta.plano.titulo')}>
+      {response === 'aceita' ? (
+        <li><span className="plano__rotulo">{t('ui.reuniao.resposta.plano.treino')}</span>
+          <span className="plano__chips"><Chip foco={focus.main} papel="principal" jeito="ok" /><Chip foco={focus.secondary} papel="apoio" jeito="ok" /></span></li>
+      ) : (
+        <>
+          <li><span className="plano__rotulo">{t('ui.reuniao.resposta.plano.pediu')}</span>
+            <span className="plano__chips"><Chip foco={pedido.main} jeito={fora(pedido.main)} /><Chip foco={pedido.secondary} jeito={fora(pedido.secondary)} /></span></li>
+          {response === 'contrapropoe' ? (
+            <li><span className="plano__rotulo">{t('ui.reuniao.resposta.plano.quer')}</span>
+              <span className="plano__chips"><Chip foco={focus.main} papel="principal" jeito="novo" /><Chip foco={focus.secondary} papel="apoio" /></span></li>
+          ) : (
+            <li><span className="plano__rotulo">{t('ui.reuniao.resposta.plano.segue')}</span>
+              <span className="plano__chips"><span className="plano__normal">{t('ui.reuniao.resposta.plano.normal')}</span></span></li>
+          )}
+        </>
+      )}
+    </ul>
+  );
+}
+
+/** A resposta da comissão. v2.88 (pedido do usuário: a folha pequena "ficava muito escondida"): uma página do álbum, como o
+ *  resultado da decisão: a linha da página, o card do jogador, a foto da sala com o carimbo e, no papel, o rótulo, o título,
+ *  o texto e o quadro do plano. Carimbo (decisão do usuário): "TOPOU" quando a comissão aceita a ideia 2 ou 3 (a 1 é o plano
+ *  do técnico); "RECUSOU" na recusa; nenhum na outra ideia. Sem "Seguir": fecha sozinha (resultadoMs quando aceita;
+ *  respostaLongaMs quando o plano muda), dois toques passam, Enter, Espaço e Esc também. É um `div role="alertdialog"` (o
+ *  `<dialog>` nativo travou no Safari do iPhone); o foco abre na página e o Tab fica nela. */
+export function ReuniaoResposta({ resposta, pedido, ideia, player, age, progress, pagina, scene, onDone }: ReuniaoRespostaProps) {
+  const page = useRef(null as HTMLDivElement | null);
   const done = useRef(false);
-
   function finish() {
     if (done.current) return;
     done.current = true;
     onDone();
   }
-  // v2.81: a folha desce (150 ms) antes de seguir pelo botão; Esc segue na hora
+  // a página sai (150 ms) antes de seguir; Esc segue na hora
   const { saindo, fechar } = useSaida(finish);
-  // v2.81: a folha entra deslizando de baixo; o foco não rola a página até a posição de entrada dela
-  useEffect(() => { sheet.current?.focus({ preventScroll: true }); }, []);
-  // v2.88: sem "Seguir": fecha sozinha em resultadoMs, dois toques passam, Enter e Espaço também
-  const seguir = useSeguirSozinho(fechar);
+  useEffect(() => { page.current?.focus({ preventScroll: true }); }, []);
   const { response, reason, focus } = resposta;
+  const ms = response === 'aceita' ? previewCfg.resultadoMs : previewCfg.respostaLongaMs;
+  const seguir = useSeguirSozinho(fechar, ms);
+  const carimbo = response === 'recusa' ? 'recusou' : response === 'aceita' && ideia !== undefined && ideia !== 'obvia' ? 'topou' : null;
   const text = response === 'recusa'
     ? t(`ui.reuniao.resposta.recusa.${reason ?? 'score'}`)
     : t(`ui.reuniao.resposta.${response}.texto`, { principal: focusName(focus.main ?? ''), secundario: focusName(focus.secondary ?? '') });
   function onKey(e: React.KeyboardEvent) {
     if (e.key === 'Escape') { e.stopPropagation(); finish(); return; }
-    if (e.key === 'Tab') { e.preventDefault(); sheet.current?.focus(); return; }
+    if (e.key === 'Tab') { e.preventDefault(); page.current?.focus(); return; }
     seguir.onKeyDown(e);
   }
   return (
-    <div className="reuniao__resposta-fundo folha__fundo" data-saindo={saindo || undefined}>
-      <div ref={sheet} tabIndex={-1} style={SEGUIR_VARS} className="reuniao__resposta folha" role="alertdialog" aria-modal="true" aria-labelledby="reuniao-resposta-titulo" onKeyDown={onKey} onClick={seguir.onClick}>
-        <h2 id="reuniao-resposta-titulo">{t(`ui.reuniao.resposta.${response}.titulo`)}</h2>
-        <p>{text}</p>
+    <div
+      ref={page} tabIndex={-1} style={seguirVars(ms)} className="decisao reuniao reuniao__resposta" data-tema="claro" data-resposta={response} data-saindo={saindo || undefined}
+      role="alertdialog" aria-modal="true" aria-labelledby="reuniao-resposta-titulo" onKeyDown={onKey} onClick={seguir.onClick}
+    >
+      <PaginaCabecalho pagina={pagina} progress={progress} age={age} inert />
+      <PlayerBox player={player} age={age} open={false} opener={{ current: null }} onOpen={() => {}} inert />
+      <CenaFoto scene={scene} inert={false}>
+        {carimbo && <span className={`decisao__carimbo resultado__veredito decisao__carimbo--${carimbo === 'topou' ? 'positivo' : 'negativo'}`} aria-hidden="true">{t(`ui.reuniao.resposta.carimbo.${carimbo}`)}</span>}
+      </CenaFoto>
+      <div className="decisao__painel reuniao__resposta-painel">
+        <p className="reuniao__sala">{t('ui.reuniao.resposta.rotulo')}</p>
+        <h2 id="reuniao-resposta-titulo" className="decisao__titulo">{t(`ui.reuniao.resposta.${response}.titulo`)}</h2>
+        <p className="reuniao__resposta-texto">{text}</p>
+        <Plano resposta={resposta} pedido={pedido} />
         <p className="reuniao__resposta-dica">{t('ui.resultado.dica')}</p>
         {/* o tempo correndo até a resposta fechar sozinha */}
         <span className="reuniao__resposta-prazo" aria-hidden="true" />

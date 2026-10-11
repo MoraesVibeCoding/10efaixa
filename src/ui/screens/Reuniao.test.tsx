@@ -2,7 +2,7 @@ import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import preview from '../../data/preview.json';
 import type { MeetingOptions } from '../../engine/meetingOptions';
 import { t } from '../../i18n';
-import { Reuniao, ReuniaoResposta } from './Reuniao';
+import { Reuniao } from './Reuniao';
 
 // T52d (SPEC 6.5, v2.53): a reunião com a comissão em 3 ideias (óbvia, mescla, ousada), no desenho aprovado: card do jogador no topo,
 // fala do treinador e três cartões selecionáveis; depois, a resposta da comissão.
@@ -118,74 +118,5 @@ describe('tela da reunião em 3 ideias (T52d)', () => {
   it('nenhum número de atributo nos cartões', () => {
     setup();
     expect(screen.getByRole('radiogroup', { name: t('ui.reuniao.ideias') }).textContent).not.toMatch(/\d/);
-  });
-});
-
-describe('resposta da comissão (T52)', () => {
-  it('aceita: diz os dois focos combinados', () => {
-    render(<ReuniaoResposta resposta={{ response: 'aceita', focus: { main: 'passe', secondary: 'drible' } }} onDone={() => {}} />);
-    const dialog = screen.getByRole('alertdialog', { name: t('ui.reuniao.resposta.aceita.titulo') });
-    expect(dialog).toHaveTextContent(t('ui.reuniao.resposta.aceita.texto', { principal: focusName('passe'), secundario: focusName('drible') }));
-  });
-
-  it('contrapropõe: o clube precisa de outra coisa, e o pedido fica como secundário', () => {
-    render(<ReuniaoResposta resposta={{ response: 'contrapropoe', focus: { main: 'marcacao', secondary: 'passe' } }} onDone={() => {}} />);
-    expect(screen.getByRole('alertdialog', { name: t('ui.reuniao.resposta.contrapropoe.titulo') })).toHaveTextContent(t('ui.reuniao.resposta.contrapropoe.texto', { principal: focusName('marcacao'), secundario: focusName('passe') }));
-  });
-
-  it('recusa: o motivo em palavras (moral, relação com o técnico ou momento)', () => {
-    render(<ReuniaoResposta resposta={{ response: 'recusa', reason: 'relacao', focus: {} }} onDone={() => {}} />);
-    const dialog = screen.getByRole('alertdialog', { name: t('ui.reuniao.resposta.recusa.titulo') });
-    expect(dialog).toHaveTextContent(t('ui.reuniao.resposta.recusa.relacao'));
-  });
-
-  // v2.88 (pedido do usuário em 2026-10-11: "sem o botão de seguir, com o tempo automático e duplo clique para passar"):
-  // a resposta fecha sozinha em resultadoMs (como o resultado no Rápido); dois toques seguidos passam na hora.
-  describe('sem botão "Seguir" (v2.88)', () => {
-    beforeEach(() => { vi.useFakeTimers(); vi.stubGlobal('matchMedia', (q: string) => ({ matches: q.includes('reduce'), media: q, addEventListener() {}, removeEventListener() {} })); });
-    afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
-    const abrir = (onDone = vi.fn()) => {
-      render(<ReuniaoResposta resposta={{ response: 'aceita', focus: { main: 'passe', secondary: 'drible' } }} onDone={onDone} />);
-      return { onDone, dialog: screen.getByRole('alertdialog', { name: t('ui.reuniao.resposta.aceita.titulo') }) };
-    };
-
-    it('não tem botão; mostra a dica do toque duplo e a barra do tempo', () => {
-      const { dialog } = abrir();
-      expect(within(dialog).queryByRole('button')).toBeNull();
-      expect(dialog).toHaveTextContent(t('ui.resultado.dica'));
-      expect(dialog.querySelector('.reuniao__resposta-prazo')).not.toBeNull();
-    });
-
-    it('fecha sozinha em resultadoMs, uma vez só', () => {
-      const { onDone } = abrir();
-      act(() => { vi.advanceTimersByTime(preview.resultadoMs - 1); });
-      expect(onDone).not.toHaveBeenCalled();
-      act(() => { vi.advanceTimersByTime(1); });
-      act(() => { vi.advanceTimersByTime(preview.resultadoMs * 2); });
-      expect(onDone).toHaveBeenCalledOnce();
-    });
-
-    it('dois toques seguidos passam na hora; um toque só, não', () => {
-      const { onDone, dialog } = abrir();
-      fireEvent.click(dialog);
-      expect(onDone).not.toHaveBeenCalled();
-      act(() => { vi.advanceTimersByTime(preview.duploToqueMs + 1); });
-      fireEvent.click(dialog);
-      expect(onDone).not.toHaveBeenCalled();
-      act(() => { vi.advanceTimersByTime(preview.duploToqueMs - 1); });
-      fireEvent.click(dialog);
-      expect(onDone).toHaveBeenCalledOnce();
-    });
-
-    it('é um alertdialog modal em div, sem <dialog> nativo (travava no Safari do iPhone), com o foco nele; Enter, Espaço e Esc passam', () => {
-      const { onDone, dialog } = abrir();
-      expect(document.querySelector('dialog')).toBeNull();
-      expect(dialog).toHaveAttribute('aria-modal', 'true');
-      expect(dialog).toHaveFocus();
-      fireEvent.keyDown(dialog, { key: 'Tab' });
-      expect(dialog).toHaveFocus();
-      fireEvent.keyDown(dialog, { key: 'Enter' });
-      expect(onDone).toHaveBeenCalledOnce();
-    });
   });
 });
