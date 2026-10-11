@@ -340,10 +340,14 @@ O jogo conta histórias com continuidade: o passado volta, o contexto muda o tex
 ### 6.14 Aposentadoria
 
 A carreira termina no primeiro destes gatilhos:
-1. O jogador **decide parar** (a partir dos 30).
+1. O jogador **decide parar** (a partir dos 34, v2.85: pelo card "Pendurar as chuteiras" da tela de propostas; antes da v2.85 era um sorteio a partir dos 30, que saiu).
 2. **Lesão ou queda física** força a aposentadoria.
 3. O **overall cai ao nível do overall inicial** da criação (decisão consciente: faz parte da história de cada origem).
 4. **40 anos** (limite absoluto).
+
+**Fim de carreira na tela de propostas (v2.85, pedido do usuário em 2026-10-11):** a partir dos 34, a janela de transferências abre toda temporada, mesmo sem proposta, com: o **clube atual** (ficar ou renovar), **no máximo 2 propostas** de clubes ("Ninguém ligou este ano" quando não há), **"Voltar para casa"** (o clube de coração; sem ele, o clube formador; só quando o jogador não está nele), com o salário do "jogar por amor", e **"Pendurar as chuteiras"** (a carreira termina no fim da temporada). Substitui o sorteio da despedida (6.18). No ritmo Rápido e na simulação, a escolha segue o temperamento e os minutos (números em `retirement.json`).
+
+**Sem parada sem aviso (v2.85):** os gatilhos forçados (2 a 4) dão um **sinal** no resumo da temporada anterior, e a tela final mostra o **motivo** ("Escolheu parar aos 35", "O corpo não aguentou mais", "O nível caiu", "Chegou aos 40"). O resumo da temporada também mostra sinais de outros apertos reais da carreira (banco, contrato sem propostas, técnico, disciplina, dinheiro, salário atrasado, moral), cada um ligado a um dado do motor e só quando ele existe.
 
 **O último jogo (v2.31):** antes do veredito, uma cena especial com a última partida (começar jogando, entrar no segundo tempo, usar a braçadeira, ficar no banco, anunciar a despedida depois do jogo), e depois a tela **"Obrigado por tudo"**. A escolha entra na história e na manchete.
 
@@ -456,7 +460,7 @@ Opcional, escolhido na criação entre os clubes brasileiros (Séries A–D). Qu
 | Proposta de um rival do clube de coração | Dilema de "traição": aceitar gera evento com a torcida do coração e pode tornar o jogador vilão dela |
 | Jogo contra o clube de coração | Decisão (ex.: comemorar ou não o gol), com efeito na idolatria dos dois lados |
 | Clássicos defendendo o clube de coração | Pesam o dobro na idolatria; temperamento Esquentado amplifica |
-| Fim de carreira | Gatilho "realizar o sonho": proposta de encerrar a carreira no clube de coração (como o retorno ao clube formador) |
+| Fim de carreira | v2.85: a partir dos 34, o card **"Voltar para casa"** na tela de propostas (salário do "jogar por amor"); sem clube de coração, vale o clube formador. Substitui o sorteio "realizar o sonho" (6.14) |
 | Cartão final | Rótulo "Torcedor que virou ídolo" se for ídolo no clube de coração |
 
 Zoeira só com o próprio jogador (ex.: "o fanático que foi parar no rival"), nunca com o clube ou a torcida.
