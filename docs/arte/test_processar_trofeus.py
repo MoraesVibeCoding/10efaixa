@@ -48,6 +48,18 @@ def test_vao_grande_preso_some_so_com_o_limite_do_trofeu():
     assert alfa(img)[100, 100] == 1        # padrão: vão grande fica (pode ser parte azul do desenho)
     assert alfa(img, 0.2)[100, 100] == 0   # limite do troféu: sai
 
+
+def test_base_cinza_escura_perto_do_azul_fica_opaca_com_o_matiz():
+    """Relato (2026-10-11, troféu da Liga Espanhola): a base cinza-escura fica a ~20 do azul do fundo e saía meio transparente.
+    Com o peso de matiz do troféu (MATIZ_POR_TROFEU), o azul a mais do fundo separa os dois e a base fica opaca."""
+    img = np.zeros((200, 200, 3), np.uint8)
+    img[:] = BG
+    img[60:140, 80:120] = (200, 205, 215)  # taça prateada
+    img[140:170, 70:130] = (27, 35, 44)    # base cinza-escura, perto do fundo em RGB
+    assert alfa(img)[155, 100] < 1         # padrão: a base vaza (o defeito)
+    a = alfa(img, matiz=3)
+    assert a[155, 100] == 1 and a[5, 5] == 0
+
 if __name__ == '__main__':
     test_fundo_transparente_e_base_escura_opaca()
     test_saida_quadrada_com_transparencia()
