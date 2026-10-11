@@ -422,7 +422,7 @@ describe('camadas (T49c)', () => {
 });
 
 describe('emblemas na tela (T49d)', () => {
-  const seasons = [{ age: 20, clubId: 'vasco', overall: 69 }, { age: 21, clubId: 'flamengo', overall: 72 }];
+  const seasons = [{ age: 20, clubId: 'guarani', overall: 69 }, { age: 21, clubId: 'flamengo', overall: 72 }];
   it('trajetória: cada temporada com o emblema do clube (simplificado, decorativo) ao lado do nome', () => {
     render(<Decision eventId={EVENT} age={22} progress={0.3} player={{ ...PLAYER, seasons }} scene={{ src: 'c.webp', alt: 'cena' }} />);
     fireEvent.click(screen.getByRole('button', { name: new RegExp(t('ui.carreira.titulo')) }));
