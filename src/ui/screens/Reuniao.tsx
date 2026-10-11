@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { MeetingResult } from '../../engine/meeting';
 import type { Agrado, Idea, MeetingOptions } from '../../engine/meetingOptions';
+import previewCfg from '../../data/preview.json';
 import { t } from '../../i18n';
 import { useSaida } from '../useSaida';
 import { Career as CareerDrawer, CenaFoto, PaginaCabecalho, PlayerBox, TRANSITION, type DecisionProps } from './Decision';
@@ -37,6 +38,27 @@ function agradoText(a: Agrado) { return t(`ui.reuniao.agrado.${a}`); }
 export function Reuniao({ ideias, player, age, progress, semestre, scene, anterior, pagina, onChoose }: ReuniaoProps) {
   const [picked, setPicked] = useState(null as Idea | null);
   const [career, setCareer] = useState(false);
+  // v2.87 (pedido do usuário em 2026-10-11, como a decisão na v2.82): tocar marca; a marcada vale sozinha em decideMs (2 s),
+  // tocar de novo nela decide na hora. O botão "Propor ao técnico" saiu. Com a gaveta aberta, o tempo espera.
+  const sent = useRef(false);
+  const [enviada, setEnviada] = useState(false);
+  function propor(id: Idea) {
+    if (sent.current) return;
+    sent.current = true;
+    setEnviada(true);
+    const { main, secondary } = ideias[id].proposal;
+    onChoose(`${main}|${secondary}`);
+  }
+  function tocar(id: Idea) {
+    if (picked === id) propor(id);
+    else if (!sent.current) setPicked(id);
+  }
+  useEffect(() => {
+    if (picked === null || enviada || career) return undefined;
+    const id = picked;
+    const timer = setTimeout(() => { propor(id); }, previewCfg.decideMs);
+    return () => { clearTimeout(timer); };
+  }, [picked, enviada, career]);
   const opener = useRef(null as HTMLButtonElement | null);
   const title = useRef(null as HTMLHeadingElement | null);
   useEffect(() => { title.current?.focus(); }, []);
@@ -52,19 +74,13 @@ export function Reuniao({ ideias, player, age, progress, semestre, scene, anteri
     document.addEventListener('keydown', onKey);
     return () => { document.removeEventListener('keydown', onKey); };
   }, [career]);
-  function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!picked) return;
-    const { main, secondary } = ideias[picked].proposal;
-    onChoose(`${main}|${secondary}`);
-  }
   return (
-    <main className="decisao reuniao" style={TRANSITION} data-tema="claro" data-evento="reuniao">
+    <main className="decisao reuniao" style={REUNIAO_VARS} data-tema="claro" data-evento="reuniao">
       <PaginaCabecalho pagina={pagina} progress={progress} age={age} inert={career} />
       <PlayerBox player={player} age={age} anterior={anterior} open={career} opener={opener} onOpen={() => { setCareer(true); }} inert={career} />
       {/* v2.81 (Álbum): a cena é uma foto colada na página, embaixo do card do jogador */}
       <CenaFoto scene={scene} inert={career} />
-      <form className="decisao__painel reuniao__painel" onSubmit={submit} inert={career} noValidate>
+      <form className="decisao__painel reuniao__painel" onSubmit={(e) => { e.preventDefault(); }} inert={career} noValidate>
         <p className="reuniao__sala">{t('ui.reuniao.sala')}</p>
         <h1 className="decisao__titulo" ref={title} tabIndex={-1}>{t('ui.reuniao.titulo')}</h1>
         <p className="reuniao__fala"><strong>{t('ui.reuniao.treinador')}</strong> <q className="fala">{t(`ui.reuniao.fala.${semestre}`, { nome: player.name })}</q></p>
@@ -76,7 +92,8 @@ export function Reuniao({ ideias, player, age, progress, semestre, scene, anteri
             const hint = id === 'obvia' ? null : agradoText(agrado);
             return (
               <label key={id} className={picked === id ? 'ideia ideia--marcada' : 'ideia'}>
-                <input type="radio" name="ideia" className="sr-only" checked={picked === id} onChange={() => { setPicked(id); }} />
+                {/* o clique (toque, espaço ou setas) marca; na já marcada, decide */}
+                <input type="radio" name="ideia" className="sr-only" checked={picked === id} disabled={enviada && picked !== id} onChange={() => {}} onClick={() => { tocar(id); }} />
                 <span className="ideia__icone" aria-hidden="true">
                   <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="2"><path d={ICON[id]} /></svg>
                   <span>{t(`ui.reuniao.ideia.${id}.nome`)}</span>
@@ -86,17 +103,21 @@ export function Reuniao({ ideias, player, age, progress, semestre, scene, anteri
                   <span className="ideia__descricao">{t(`ui.reuniao.ideia.${id}.texto`)}</span>
                   {hint && <span className={`ideia__dica ideia__dica--${agrado}`}>{hint}</span>}
                 </span>
+                {/* o tempo correndo até a marcada valer sozinha */}
+                {picked === id && !enviada && <span className="ideia__prazo" aria-hidden="true" />}
               </label>
             );
           })}
         </div>
         <p className="reuniao__toque">{t('ui.reuniao.toque')}</p>
-        <button type="submit" className="decisao__confirmar" disabled={picked === null}>{t('ui.reuniao.propor')}</button>
       </form>
       {career && <CareerDrawer player={player} onClose={() => { setCareer(false); }} />}
     </main>
   );
 }
+
+// v2.87: o tempo da barra da ideia marcada é o mesmo da decisão
+const REUNIAO_VARS = { ...TRANSITION, '--decide-ms': `${previewCfg.decideMs}ms` } as React.CSSProperties;
 
 export { focusName };
 

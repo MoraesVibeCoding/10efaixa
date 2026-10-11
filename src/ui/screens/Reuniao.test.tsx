@@ -1,4 +1,5 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import preview from '../../data/preview.json';
 import type { MeetingOptions } from '../../engine/meetingOptions';
 import { t } from '../../i18n';
 import { Reuniao, ReuniaoResposta } from './Reuniao';
@@ -54,17 +55,56 @@ describe('tela da reunião em 3 ideias (T52d)', () => {
     expect(screen.queryByText(/sugerido|óbvio|obvio/i)).toBeNull();
   });
 
-  it('"Propor ao técnico" só vale depois de escolher uma ideia e manda "principal|secundário" dela', () => {
-    const onChoose = setup();
-    const propor = screen.getByRole('button', { name: t('ui.reuniao.propor') });
-    expect(propor).toBeDisabled();
-    fireEvent.click(propor);
-    expect(onChoose).not.toHaveBeenCalled();
-    fireEvent.click(cards()[1]!);
-    expect(cards()[1]).toBeChecked();
-    expect(propor).toBeEnabled();
-    fireEvent.click(propor);
-    expect(onChoose).toHaveBeenCalledWith('fisico|drible');
+  // pedido do usuário (2026-10-11): a reunião sai do "Propor ao técnico", como a decisão (v2.82): tocar marca, a marcada
+  // vale sozinha em decideMs (2 s), tocar de novo decide na hora
+  describe('sem botão de confirmar (v2.87)', () => {
+    beforeEach(() => { vi.useFakeTimers(); });
+    afterEach(() => { vi.useRealTimers(); });
+
+    it('não há botão "Propor ao técnico"', () => {
+      setup();
+      expect(screen.queryByRole('button', { name: /propor|confirmar/i })).toBeNull();
+      expect(screen.getByText(t('ui.reuniao.toque'))).toBeInTheDocument();
+    });
+
+    it('a marcada vale sozinha em decideMs e manda "principal|secundário"; antes disso, nada', () => {
+      const onChoose = setup();
+      fireEvent.click(cards()[1]!);
+      expect(cards()[1]).toBeChecked();
+      act(() => { vi.advanceTimersByTime(preview.decideMs - 1); });
+      expect(onChoose).not.toHaveBeenCalled();
+      act(() => { vi.advanceTimersByTime(1); });
+      expect(onChoose).toHaveBeenCalledTimes(1);
+      expect(onChoose).toHaveBeenCalledWith('fisico|drible');
+    });
+
+    it('tocar de novo na marcada decide na hora, uma vez só', () => {
+      const onChoose = setup();
+      fireEvent.click(cards()[2]!);
+      fireEvent.click(cards()[2]!);
+      expect(onChoose).toHaveBeenCalledWith('drible|finalizacao');
+      act(() => { vi.advanceTimersByTime(preview.decideMs * 2); });
+      expect(onChoose).toHaveBeenCalledTimes(1);
+    });
+
+    it('trocar de ideia recomeça o tempo', () => {
+      const onChoose = setup();
+      fireEvent.click(cards()[0]!);
+      act(() => { vi.advanceTimersByTime(preview.decideMs - 100); });
+      fireEvent.click(cards()[1]!);
+      act(() => { vi.advanceTimersByTime(preview.decideMs - 100); });
+      expect(onChoose).not.toHaveBeenCalled();
+      act(() => { vi.advanceTimersByTime(100); });
+      expect(onChoose).toHaveBeenCalledWith('fisico|drible');
+    });
+
+    it('a barra do tempo corre só na marcada', () => {
+      setup();
+      expect(document.querySelector('.ideia__prazo')).toBeNull();
+      fireEvent.click(cards()[0]!);
+      expect(cards()[0]!.closest('label')!.querySelector('.ideia__prazo')).not.toBeNull();
+      expect(document.querySelectorAll('.ideia__prazo')).toHaveLength(1);
+    });
   });
 
   it('escolher outro cartão troca a marca (um só marcado)', () => {

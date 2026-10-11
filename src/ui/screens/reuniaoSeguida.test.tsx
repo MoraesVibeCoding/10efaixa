@@ -19,7 +19,8 @@ describe('resposta da reunião quando a próxima tela também é reunião', () =
     render(<Career input={INPUT} look={LOOK} seed={1} ritmo="completo" initialChoices={start} onRestart={() => {}} />);
     expect(screen.getByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })).toBeInTheDocument();
     fireEvent.click(screen.getAllByRole('radio')[0]!);
-    fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') }));
+    // v2.87: tocar de novo na ideia marcada propõe na hora
+    fireEvent.click(screen.getAllByRole('radio')[0]!);
     const resposta = document.querySelector('.reuniao__resposta')!;
     expect(resposta).not.toBeNull();
     expect(screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })).toBeNull();

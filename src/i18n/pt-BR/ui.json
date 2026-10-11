@@ -421,7 +421,6 @@
  },
  "reuniao": {
   "titulo": "Reunião com a comissão",
-  "propor": "Propor ao técnico",
   "foco": {
    "bolaParada": "Bola parada",
    "pernaRuim": "Perna ruim"
@@ -448,7 +447,7 @@
    "2": "{nome}, estamos na metade da temporada. Em que você quer evoluir neste semestre? Escolha uma das ideias."
   },
   "ideias": "Ideias de treino para o semestre",
-  "toque": "Toque numa ideia para definir o foco de treino do semestre.",
+  "toque": "Toque numa ideia para o foco do semestre: se não trocar, ela vale em 2 segundos.",
   "ideia": {
    "obvia": {
     "nome": "Treino",

@@ -49,7 +49,7 @@ describe('carreira na tela (T51b)', () => {
       // v2.71: o palco do título fecha antes de decidir, como o jogador faria
       const palco = document.querySelector('.palco button');
       if (palco) { fireEvent.click(palco); continue; }
-      if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') })); continue; }
+      if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getAllByRole('radio')[0]!); continue; }
       if (passProposals()) continue;
       const eventId = document.querySelector('[data-evento]')!.getAttribute('data-evento')!;
       const choice = autoChoice(eventId, document.querySelector('[data-temperamento]')!.getAttribute('data-temperamento')!);
@@ -102,7 +102,7 @@ describe('carreira na tela (T51b)', () => {
       fireEvent.click(screen.getByRole('button', { name: t('ui.resultado.seguir') }));
     }
     expect(screen.getByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })).toBeInTheDocument();
-    fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') }));
+    fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getAllByRole('radio')[0]!);
     const dialog = document.querySelector('.reuniao__resposta') as HTMLElement;
     expect(dialog).not.toBeNull();
     expect(dialog.querySelector('h2')!.textContent).toMatch(new RegExp([t('ui.reuniao.resposta.aceita.titulo'), t('ui.reuniao.resposta.contrapropoe.titulo'), t('ui.reuniao.resposta.recusa.titulo')].join('|')));
@@ -120,7 +120,7 @@ describe('carreira na tela (T51b)', () => {
       // v2.71: o palco do título fecha antes de decidir, como o jogador faria
       const palco = document.querySelector('.palco button');
       if (palco) { fireEvent.click(palco); continue; }
-      if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') })); continue; }
+      if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getAllByRole('radio')[0]!); continue; }
       if (passProposals()) continue;
       const key = document.querySelector('.carreira')!.getAttribute('data-semestre') ?? '';
       const line = document.querySelector('.decisao__semestre');
