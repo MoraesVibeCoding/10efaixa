@@ -26,7 +26,8 @@ describe('troféus em imagem (v2.56)', () => {
     expect(trophySrc('ligaNacional:ENG')).toContain('/trofeus/liga-inglaterra.webp');
     expect(trophySrc('ligaNacional:ESP')).toContain('/trofeus/liga-espanha.webp');
     expect(trophySrc('ligaNacional:ITA')).toContain('/trofeus/liga-italia.webp');
-    expect(trophySrc('ligaNacional:GER')).toContain('/trofeus/liga-europeia.webp');
+    expect(trophySrc('ligaNacional:GER')).toContain('/trofeus/liga-alemanha.webp');
+    expect(trophySrc('ligaNacional:FRA')).toContain('/trofeus/liga-europeia.webp');
     expect(trophySrc('copaNacional:ENG')).toContain('/trofeus/copa-inglaterra.webp');
     expect(trophySrc('copaNacional:ESP')).toContain('/trofeus/copa-espanha.webp');
     expect(trophySrc('copaNacional:ITA')).toContain('/trofeus/copa-do-brasil.webp');
