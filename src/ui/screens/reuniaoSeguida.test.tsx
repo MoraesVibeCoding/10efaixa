@@ -24,7 +24,7 @@ describe('resposta da reunião quando a próxima tela também é reunião', () =
     const resposta = document.querySelector('.reuniao__resposta')!;
     expect(resposta).not.toBeNull();
     expect(screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })).toBeNull();
-    fireEvent.click(resposta.querySelector('button')!);
+    fireEvent.click(resposta); fireEvent.click(resposta);
     expect(screen.getByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })).toBeInTheDocument();
   });
 });

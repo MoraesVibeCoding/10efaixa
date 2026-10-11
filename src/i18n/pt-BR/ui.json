@@ -426,6 +426,7 @@
    "pernaRuim": "Perna ruim"
   },
   "resposta": {
+   "dica": "Toque duas vezes para seguir",
    "aceita": {
     "titulo": "A comissão topou",
     "texto": "Foco principal em {principal}, com {secundario} de apoio."

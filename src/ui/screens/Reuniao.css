@@ -30,20 +30,13 @@
 .reuniao__resposta { display: grid; gap: var(--espaco-3); } /* v2.81: caixa, fundo e entrada da folha (folha.css) */
 .reuniao__resposta h2 { font-size: var(--tipo-nome); font-weight: 900; line-height: 1.05; }
 .reuniao__resposta p { line-height: 1.4; }
-.reuniao__resposta button {
-  /* v2.81: o botão principal do jogo (verde cheio, na largura da folha) */
-  min-block-size: var(--toque-compacto);
-  border: 0;
-  border-radius: 999px;
-  background: var(--cor-destaque);
-  color: var(--cor-sobre-destaque);
-  font-family: var(--fonte-titulo);
-  font-size: var(--tipo-opcao);
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  cursor: pointer;
-}
+/* v2.88: sem botão; a folha fecha sozinha em --resultado-ms (a barra amarela corre no pé) e passa com dois toques */
+.reuniao__resposta { position: relative; overflow: hidden; cursor: pointer; touch-action: manipulation; }
+.reuniao__resposta:focus { outline: none; }
+.reuniao__resposta:focus-visible { outline: 3px solid var(--cor-foco); outline-offset: -3px; }
+.reuniao__resposta .reuniao__resposta-dica { margin: 0; color: var(--cor-texto-suave); font-size: var(--tipo-miudo); text-align: center; }
+.reuniao__resposta-prazo { position: absolute; inset-inline: 0; inset-block-end: 0; block-size: 4px; background: var(--paleta-amarelo); transform-origin: 0 50%; animation: opcao-prazo var(--resultado-ms, 2600ms) linear both; }
+@media (prefers-reduced-motion: reduce) { .reuniao__resposta-prazo { animation: none; } }
 
 /* v2.87: a ideia marcada vale sozinha em --decide-ms: a mesma barra amarela da decisão corre no pé do cartão */
 .ideia { overflow: hidden; }

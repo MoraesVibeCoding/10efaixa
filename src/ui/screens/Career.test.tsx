@@ -45,7 +45,7 @@ describe('carreira na tela (T51b)', () => {
     for (let guard = 0; guard < 400 && !screen.queryByRole('heading', { level: 1, name: t('ui.linhaDoTempo.titulo') }); guard++) {
       // T52: resposta da comissão por cima da tela; reunião aceita a sugestão do preparador (o mesmo do automático)
       const resposta = document.querySelector('.reuniao__resposta');
-      if (resposta) { fireEvent.click(resposta.querySelector('button')!); continue; }
+      if (resposta) { fireEvent.click(resposta); fireEvent.click(resposta); continue; }
       // v2.71: o palco do título fecha antes de decidir, como o jogador faria
       const palco = document.querySelector('.palco button');
       if (palco) { fireEvent.click(palco); continue; }
@@ -106,7 +106,8 @@ describe('carreira na tela (T51b)', () => {
     const dialog = document.querySelector('.reuniao__resposta') as HTMLElement;
     expect(dialog).not.toBeNull();
     expect(dialog.querySelector('h2')!.textContent).toMatch(new RegExp([t('ui.reuniao.resposta.aceita.titulo'), t('ui.reuniao.resposta.contrapropoe.titulo'), t('ui.reuniao.resposta.recusa.titulo')].join('|')));
-    fireEvent.click(dialog.querySelector('button')!);
+    // v2.88: sem botão; dois toques passam
+    fireEvent.click(dialog); fireEvent.click(dialog);
     expect(document.querySelector('.reuniao__resposta')).toBeNull();
   });
 
@@ -116,7 +117,7 @@ describe('carreira na tela (T51b)', () => {
     let shownCount = 0;
     for (let guard = 0; guard < 120 && !screen.queryByRole('heading', { level: 1, name: t('ui.fim.titulo') }); guard++) {
       const resposta = document.querySelector('.reuniao__resposta');
-      if (resposta) { fireEvent.click(resposta.querySelector('button')!); continue; }
+      if (resposta) { fireEvent.click(resposta); fireEvent.click(resposta); continue; }
       // v2.71: o palco do título fecha antes de decidir, como o jogador faria
       const palco = document.querySelector('.palco button');
       if (palco) { fireEvent.click(palco); continue; }

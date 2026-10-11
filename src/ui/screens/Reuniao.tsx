@@ -119,16 +119,21 @@ export function Reuniao({ ideias, player, age, progress, semestre, scene, anteri
 // v2.87: o tempo da barra da ideia marcada é o mesmo da decisão
 const REUNIAO_VARS = { ...TRANSITION, '--decide-ms': `${previewCfg.decideMs}ms` } as React.CSSProperties;
 
+// v2.88: o tempo da barra da resposta é o do fechamento automático
+const RESPOSTA_VARS = { '--resultado-ms': `${previewCfg.resultadoMs}ms` } as React.CSSProperties;
+
 export { focusName };
 
 export type ReuniaoRespostaProps = { resposta: Pick<MeetingResult, 'response' | 'reason' | 'focus'>; onDone: () => void };
 
 /** A resposta da comissão, por cima da próxima tela: aceita, contrapropõe (o clube precisa de outra coisa) ou recusa.
  *  É um `div role="alertdialog"` (não `<dialog>`: o modal nativo travou no Safari do iPhone e "Seguir" não fechava).
- *  Abre com o foco em "Seguir"; Esc fecha; Tab fica preso no único botão. */
+ *  v2.88 (pedido do usuário): sem botão "Seguir"; fecha sozinha em resultadoMs, e dois toques seguidos passam na hora.
+ *  Abre com o foco na folha; Enter, Espaço e Esc passam; Tab fica na folha. */
 export function ReuniaoResposta({ resposta, onDone }: ReuniaoRespostaProps) {
-  const button = useRef(null as HTMLButtonElement | null);
+  const sheet = useRef(null as HTMLDivElement | null);
   const done = useRef(false);
+  const lastTap = useRef(-Infinity);
   function finish() {
     if (done.current) return;
     done.current = true;
@@ -137,21 +142,35 @@ export function ReuniaoResposta({ resposta, onDone }: ReuniaoRespostaProps) {
   // v2.81: a folha desce (150 ms) antes de seguir pelo botão; Esc segue na hora
   const { saindo, fechar } = useSaida(finish);
   // v2.81: a folha entra deslizando de baixo; o foco não rola a página até a posição de entrada dela
-  useEffect(() => { button.current?.focus({ preventScroll: true }); }, []);
+  useEffect(() => { sheet.current?.focus({ preventScroll: true }); }, []);
+  // v2.88: sem toque, a resposta fecha sozinha (o mesmo tempo do resultado da decisão no Rápido)
+  useEffect(() => {
+    const timer = setTimeout(fechar, previewCfg.resultadoMs);
+    return () => { clearTimeout(timer); };
+  }, [fechar]);
+  // dois toques (ou cliques) dentro de duploToqueMs passam na hora; um toque só não fecha (evita passar sem ler)
+  function onTap(e: React.MouseEvent) {
+    const now = e.timeStamp;
+    if (now - lastTap.current <= previewCfg.duploToqueMs) fechar();
+    lastTap.current = now;
+  }
   const { response, reason, focus } = resposta;
   const text = response === 'recusa'
     ? t(`ui.reuniao.resposta.recusa.${reason ?? 'score'}`)
     : t(`ui.reuniao.resposta.${response}.texto`, { principal: focusName(focus.main ?? ''), secundario: focusName(focus.secondary ?? '') });
   function onKey(e: React.KeyboardEvent) {
     if (e.key === 'Escape') { e.stopPropagation(); finish(); return; }
-    if (e.key === 'Tab') { e.preventDefault(); button.current?.focus(); }
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fechar(); return; }
+    if (e.key === 'Tab') { e.preventDefault(); sheet.current?.focus(); }
   }
   return (
     <div className="reuniao__resposta-fundo folha__fundo" data-saindo={saindo || undefined}>
-      <div className="reuniao__resposta folha" role="alertdialog" aria-modal="true" aria-labelledby="reuniao-resposta-titulo" onKeyDown={onKey}>
+      <div ref={sheet} tabIndex={-1} style={RESPOSTA_VARS} className="reuniao__resposta folha" role="alertdialog" aria-modal="true" aria-labelledby="reuniao-resposta-titulo" onKeyDown={onKey} onClick={onTap}>
         <h2 id="reuniao-resposta-titulo">{t(`ui.reuniao.resposta.${response}.titulo`)}</h2>
         <p>{text}</p>
-        <button ref={button} type="button" onClick={fechar}>{t('ui.resultado.seguir')}</button>
+        <p className="reuniao__resposta-dica">{t('ui.reuniao.resposta.dica')}</p>
+        {/* o tempo correndo até a resposta fechar sozinha */}
+        <span className="reuniao__resposta-prazo" aria-hidden="true" />
       </div>
     </div>
   );
