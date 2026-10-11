@@ -69,6 +69,8 @@ export interface DecisionProps {
     etiquetas?: string[];
     /** T51b: a faixa da torcida no clube atual (idolatria em palavras, idolatry.json). */
     torcida?: string;
+    /** Nos eventos da Seleção, a categoria de base em que ele está (a principal não leva selo). */
+    categoriaSelecao?: 'sub17' | 'sub20' | 'olimpica';
     /** v2.64: na venda fechada pelo empresário, a proposta do clube comprador (cartão antes das opções). */
     comprador?: ProposalView;
   };
@@ -554,7 +556,8 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
   const root = useRef(null as HTMLElement | null);
   // sem genérico aqui: a guarda de texto fora do i18n confunde o genérico com JSX
   const opener = useRef(null as HTMLButtonElement | null);
-  // v2.34: no Normal tocar marca e "Confirmar escolha" decide; no Rápido tocar já decide
+  // v2.34: no Rápido tocar já decide. Pedido do usuário (2026-10-10): no Normal e no Completo tocar marca e, sem trocar,
+  // a marcada vale sozinha em `decideMs` (2 s); tocar de novo nela decide na hora. O botão "Confirmar escolha" saiu.
   const [marked, setMarked] = useState(null as string | null);
   const [chosen, setChosen] = useState<string | null>(null);
   const rapido = ritmo === 'rapido';
@@ -571,6 +574,10 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
     if (chosen !== null) return;
     setChosen(id);
     onChoose?.(id);
+  }
+  function tocar(id: string) {
+    if (rapido || marked === id) { decide(id); return; }
+    if (chosen === null) setMarked(id);
   }
   const options = events.eventos.find((e) => e.id === eventId)?.opcoes ?? [];
   // o que a escolha rendeu: calculado uma vez, para o carimbo e para o resultado
@@ -618,6 +625,15 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
   }, [palco]);
   // gaveta ou resultado abertos: o resto da tela fica inerte e o Esc vale de qualquer ponto (T49b)
   const overlay = career || chosen !== null || palco;
+  // a marcada vale sozinha em decideMs; com a gaveta ou o palco por cima, o tempo espera
+  useEffect(() => {
+    if (rapido || marked === null || chosen !== null || career || palco) return undefined;
+    const id = marked;
+    const timer = setTimeout(() => { decide(id); }, previewCfg.decideMs);
+    return () => { clearTimeout(timer); };
+  }, [marked, chosen, rapido, career, palco]);
+  // pedido do usuário: texto longo encolhe (até 80%) para a página caber na tela, em vez de rolar
+  useCaber(root, `${eventId}|${chosen ?? ''}|${semestre?.length ?? 0}`);
   // o foco volta para a caixa do jogador só depois que o painel deixou de ser inerte: o navegador recusa foco em inerte
   const wasOpen = useRef(false);
   useEffect(() => {
@@ -636,7 +652,7 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
   }, [overlay, career, palco, onDone]);
 
   return (
-    <main ref={root} className="decisao" style={TRANSITION} data-tema="claro" data-ritmo={ritmo} data-evento={eventId} data-resultado={chosen === null ? 'fechado' : 'aberto'}>
+    <main ref={root} className="decisao" style={DECISAO_VARS} data-tema="claro" data-ritmo={ritmo} data-evento={eventId} data-resultado={chosen === null ? 'fechado' : 'aberto'}>
       <PaginaCabecalho pagina={pagina} progress={progress} age={age} inert={overlay} />
       <PlayerBox player={player} age={age} anterior={anterior} open={career} opener={opener} onOpen={() => { setCareer(true); }} inert={overlay} novas={novas} />
       {/* v2.81 (Álbum): a cena é uma foto colada na página; o resultado carimba a foto */}
@@ -645,6 +661,8 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
       </CenaFoto>
       <div className="decisao__painel" inert={overlay}>
         {semestre && semestre.length > 0 ? <p className="decisao__semestre"><strong>{t('ui.evolucao.titulo')}:</strong> {semestre.join(' ')}</p> : null}
+        {/* pedido do usuário: nos eventos da Seleção de base, a categoria (Sub-17, Sub-20, olímpica); na principal, nada */}
+        {player.categoriaSelecao && <p className="decisao__categoria">{t(`ui.linhaDoTempo.selecao.degrau.${player.categoriaSelecao}`)}</p>}
         <h1 ref={titulo} tabIndex={-1} className="decisao__titulo">{t(`events.${eventId}.titulo`)}</h1>
         {text && <p className="decisao__historia">{comFalas(text)}</p>}
         {player.comprador && <Comprador p={player.comprador} />}
@@ -654,7 +672,7 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
             return (
               <button
                 key={o.id} type="button" className="opcao" data-opcao-id={o.id} aria-pressed={pressed === o.id} disabled={chosen !== null && chosen !== o.id}
-                onClick={() => { if (rapido) { decide(o.id); } else if (chosen === null) { setMarked(o.id); } }}
+                onClick={() => { tocar(o.id); }}
               >
                 <span className="opcao__texto">
                   <span className="opcao__rotulo">{t(`events.${eventId}.opcoes.${o.id}`)}</span>
@@ -662,17 +680,14 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
                 </span>
                 <span className="sr-only">{optionSpeech(eventId, o.id)}</span>
                 {risk && <RiskMeter risk={risk} />}
+                {/* o tempo correndo até a marcada valer sozinha */}
+                {!rapido && chosen === null && marked === o.id && <span className="opcao__prazo" aria-hidden="true" />}
               </button>
             );
           })}
         </div>
         {!rapido && marked === null && <p className="decisao__detalhe decisao__detalhe--vazio">{t('ui.decisao.marque')}</p>}
         {!rapido && marked !== null && <Detail eventId={eventId} optionId={marked} />}
-        {!rapido && (
-          <button type="button" className="decisao__confirmar" disabled={marked === null || chosen !== null} onClick={() => { if (marked !== null) { decide(marked); } }}>
-            {t('ui.decisao.confirmar')}
-          </button>
-        )}
       </div>
       <Album titles={player.titles} milestones={player.milestones ?? []} marcos={player.marcos ?? []} />
       {career && <Career player={player} onClose={() => { setCareer(false); }} />}
@@ -709,6 +724,27 @@ function Comprador({ p }: { p: ProposalView }) {
 const NONE: Moment[] = [];
 const NO_TITLES: readonly string[] = [];
 export const TRANSITION = { '--transicao': `${MOTION.transicaoMs}ms` } as React.CSSProperties;
+const DECISAO_VARS = { ...TRANSITION, '--decide-ms': `${previewCfg.decideMs}ms` } as React.CSSProperties;
+
+/** Escalas do texto da página, da maior para a menor: a primeira com que a página cabe na tela (pedido do usuário: "a fonte
+ * deveria diminuir para não ser necessário rolar"). Na menor, se ainda não couber, a página rola (nunca corta). O CSS segura
+ * o piso de 14 px. Medido de novo quando o conteúdo muda (`chave`) ou a tela muda de tamanho. */
+const ESCALAS = [1, 0.95, 0.9, 0.85, 0.8];
+function useCaber(root: React.RefObject<HTMLElement | null>, chave: string) {
+  useLayoutEffect(() => {
+    const el = root.current;
+    if (!el) return undefined;
+    const ajustar = () => {
+      for (const e of ESCALAS) {
+        el.style.setProperty('--texto-escala', String(e));
+        if (document.documentElement.scrollHeight <= window.innerHeight) break;
+      }
+    };
+    ajustar();
+    window.addEventListener('resize', ajustar);
+    return () => { window.removeEventListener('resize', ajustar); };
+  }, [root, chave]);
+}
 
 /** O texto da situação em camadas (T25e): abertura, base e frases de contexto pelas etiquetas; sem texto (ou com parâmetro faltando), nada. */
 function eventText(eventId: string, tags: readonly string[], params?: Params): string | null {

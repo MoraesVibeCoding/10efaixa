@@ -31,7 +31,8 @@ function playUntilProposals() {
     if (!el) break;
     const choice = autoChoice(el.getAttribute('data-evento')!, document.querySelector('[data-temperamento]')!.getAttribute('data-temperamento')!);
     fireEvent.click(document.querySelector(`[data-opcao-id="${choice}"]`)!);
-    fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
+    // pedido do usuário (sem "Confirmar escolha"): tocar de novo na marcada decide na hora
+    fireEvent.click(document.querySelector(`[data-opcao-id="${choice}"]`)!);
     fireEvent.click(screen.getByRole('button', { name: t('ui.resultado.seguir') }));
   }
 }

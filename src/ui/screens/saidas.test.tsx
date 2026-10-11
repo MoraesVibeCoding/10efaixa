@@ -33,7 +33,8 @@ describe('saídas dos cards (v2.72)', () => {
     const onContinue = vi.fn();
     render(<Decision eventId={EVENT} age={20} progress={0.3} player={PLAYER} scene={{ src: 'c.webp', alt: 'cena' }} onContinue={onContinue} />);
     fireEvent.click(document.querySelector(`[data-opcao-id="${OPCAO}"]`)!);
-    fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
+    // pedido do usuário (sem "Confirmar escolha"): tocar de novo na marcada decide na hora
+    fireEvent.click(document.querySelector(`[data-opcao-id="${OPCAO}"]`)!);
     fireEvent.click(screen.getByRole('button', { name: t('ui.resultado.seguir') }));
     expect(document.querySelector('.resultado')).toHaveAttribute('data-saindo');
     expect(onContinue).not.toHaveBeenCalled();

@@ -30,7 +30,8 @@ describe('resultado da escolha (SPEC v2.20)', () => {
   const open = (onContinue = vi.fn()) => {
     render(<Decision eventId="salario-atrasado" age={24} progress={0.4} player={{ name: 'Zé', position: 'meia', clubId: 'flamengo', overall: 60, titles: [], role: 'composicao', monthlySalary: { amount: 4_000, currency: 'BRL' } }} state={STATE} scene={{ src: 'c.webp', alt: 'cena' }} onContinue={onContinue} />);
     fireEvent.click(screen.getByRole('button', { name: new RegExp(t('events.salario-atrasado.opcoes.ficar')) }));
-    fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
+    // pedido do usuário (sem "Confirmar escolha"): tocar de novo na marcada decide na hora
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(t('events.salario-atrasado.opcoes.ficar')) }));
     return onContinue;
   };
 
@@ -68,7 +69,8 @@ describe('resultado da escolha (SPEC v2.20)', () => {
   it('o bônus de Mental de um marco aparece em palavras, nunca em número (regra: nenhum número dos atributos)', () => {
     render(<Decision eventId="estreia-profissional" age={17} progress={0.2} player={{ name: 'Zé', position: 'meia', clubId: 'flamengo', overall: 60, titles: [], role: 'composicao', monthlySalary: { amount: 4_000, currency: 'BRL' } }} state={{ ...STATE, bonusMental: 0 }} scene={{ src: 'c.webp', alt: 'cena' }} onContinue={() => {}} />);
     fireEvent.click(screen.getByRole('button', { name: new RegExp(t('events.estreia-profissional.opcoes.respirar-e-jogar-simples')) }));
-    fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
+    // pedido do usuário (sem "Confirmar escolha"): tocar de novo na marcada decide na hora
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(t('events.estreia-profissional.opcoes.respirar-e-jogar-simples')) }));
     const dialog = screen.getByRole('dialog');
     expect(within(dialog).getByText(t('preview.campo.bonusMental'))).toBeInTheDocument();
     expect(within(dialog).getByText(t('ui.resultado.palavra', { sinal: '+' }))).toBeInTheDocument();
@@ -337,7 +339,7 @@ describe('tela de decisão (T49: amostra; T51 completa)', () => {
     fireEvent.click(first!);
     expect(first).toHaveAttribute('aria-pressed', 'true');
     expect(onChoose).not.toHaveBeenCalled();
-    fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
+    fireEvent.click(first!); // sem "Confirmar escolha": tocar de novo na marcada decide
     expect(onChoose).toHaveBeenCalledWith(def.opcoes[0]!.id);
   });
 });
@@ -443,7 +445,6 @@ describe('variação B (T51c, SPEC v2.34)', () => {
     return onChoose;
   };
   const option = (eventId: string, id: string) => screen.getByRole('button', { name: new RegExp(t(`events.${eventId}.opcoes.${id}`)) });
-  const confirm = () => screen.getByRole('button', { name: t('ui.decisao.confirmar') });
 
   it('a caixa do topo mostra a figurinha com moldura, o Over grande e a contagem de títulos', () => {
     show();
@@ -495,9 +496,9 @@ describe('variação B (T51c, SPEC v2.34)', () => {
     expect(medalha).toHaveTextContent('78');
   });
 
-  it('nada marcado: confirmar fica desligado e a caixa de detalhe convida a tocar numa opção', () => {
+  it('nada marcado: não há "Confirmar escolha" e a dica convida a tocar numa opção', () => {
     show();
-    expect(confirm()).toBeDisabled();
+    expect(screen.queryByRole('button', { name: /Confirmar escolha/i })).toBeNull();
     expect(screen.getByText(t('ui.decisao.marque'))).toBeInTheDocument();
   });
 
@@ -509,7 +510,7 @@ describe('variação B (T51c, SPEC v2.34)', () => {
     expect(a).toHaveAttribute('aria-pressed', 'false');
     expect(b).toHaveAttribute('aria-pressed', 'true');
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    fireEvent.click(confirm());
+    fireEvent.click(b!); // tocar de novo na marcada decide
     expect(onChoose).toHaveBeenCalledWith(def.opcoes[1]!.id);
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
@@ -524,7 +525,7 @@ describe('variação B (T51c, SPEC v2.34)', () => {
 
   it('no ritmo Rápido tocar já decide: sem confirmar e sem caixa de detalhe', () => {
     const onChoose = show(EVENT, { ritmo: 'rapido' });
-    expect(screen.queryByRole('button', { name: t('ui.decisao.confirmar') })).not.toBeInTheDocument();
+    expect(screen.queryByText(t('ui.decisao.marque'))).not.toBeInTheDocument();
     expect(screen.queryByText(t('ui.decisao.marque'))).not.toBeInTheDocument();
     fireEvent.click(option(EVENT, def.opcoes[0]!.id));
     expect(onChoose).toHaveBeenCalledWith(def.opcoes[0]!.id);
@@ -745,7 +746,8 @@ describe('ritmo da decisão (v2.71)', () => {
     vi.useFakeTimers();
     render(<Decision eventId={EVENT} age={17} progress={0.05} player={PLAYER} state={STATE} scene={{ src: 'c.webp', alt: 'cena' }} />);
     fireEvent.click(document.querySelector(`[data-opcao-id="${def.opcoes[0]!.id}"]`)!);
-    fireEvent.click(screen.getByRole('button', { name: t('ui.decisao.confirmar') }));
+    // pedido do usuário (sem "Confirmar escolha"): tocar de novo na marcada decide na hora
+    fireEvent.click(document.querySelector(`[data-opcao-id="${def.opcoes[0]!.id}"]`)!);
     const itens = [...document.querySelectorAll<HTMLElement>('.resultado__lista li')];
     itens.forEach((li, i) => { expect(li.style.getPropertyValue('--i')).toBe(String(i)); });
     expect(css).toMatch(/\.resultado__lista li\s*\{[^}]*animation:\s*resultado-linha[^}]*var\(--i/);

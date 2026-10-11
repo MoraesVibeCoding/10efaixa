@@ -27,8 +27,7 @@
   "seloCapitaoTexto": "Capitão do clube",
   "porMes": "{valor}/mês",
   "valor": "Valor {valor}",
-  "confirmar": "Confirmar escolha",
-  "marque": "Toque numa opção para ver o que você ganha e o que dá em troca.",
+  "marque": "Toque numa opção: se não trocar, ela vale em 2 segundos.",
   "titulosQtd": "{n} títulos",
   "tituloUm": "1 título",
   "semTitulos": "Sem títulos"
@@ -252,7 +251,37 @@
   "clubes": "Clubes",
   "titulos": "Títulos",
   "nenhumTitulo": "Nenhum título na carreira.",
-  "novaCarreira": "Nova carreira"
+  "novaCarreira": "Nova carreira",
+  "arco": {
+   "varzea": "Do terrão do bairro à despedida {prep} {clube}",
+   "peneira": "Da peneira à despedida {prep} {clube}",
+   "baseGrande": "Da base à despedida {prep} {clube}"
+  },
+  "selecaoLinha": "{jogos} jogos · {gols} gols · Copas: {copas}",
+  "topo": "Carreira completa",
+  "anos": "{de}–{ate}",
+  "auge": "Auge",
+  "aos": "Aos {idade} anos",
+  "metas": {
+   "titulo": "As metas do jogo",
+   "dez": "Vestiu a 10 da Seleção",
+   "semDez": "Faltou a 10",
+   "faixa": "Usou a faixa de capitão",
+   "semFaixa": "Faltou a faixa"
+  },
+  "verso": {
+   "arco": "De onde para onde",
+   "sonho": "O sonho",
+   "sonhoSim": "Realizado: vestiu a camisa {prep} {clube}",
+   "sonhoNao": "A camisa {prep} {clube} ficou no sonho",
+   "clubes": "Clubes",
+   "idolo": "ídolo",
+   "selecao": "Seleção",
+   "estante": "Estante",
+   "auge": "No auge",
+   "codigo": "Código {codigo}"
+  },
+  "virar": "Toque para virar"
  },
  "varzea": "time da várzea",
  "revelacao": {
