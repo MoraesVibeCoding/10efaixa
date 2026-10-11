@@ -38,7 +38,8 @@
  "momento": {
   "titulo": "Campeão",
   "acesso": "Acesso!",
-  "rebaixamento": "Rebaixamento"
+  "rebaixamento": "Rebaixamento",
+  "paraSerie": "Para a Série {serie}"
  },
  "titulo": {
   "copaDoMundo": "Mundial de Seleções",
@@ -93,6 +94,12 @@
   "colIdade": "Idade",
   "colClube": "Clube",
   "colOver": "OVR",
+  "linha": {
+   "jogos": "Jogos {n}",
+   "gols": "Gols {n}",
+   "assist": "Assist. {n}",
+   "sg": "Sem sofrer gol {n}"
+  },
   "atributos": "Atributos",
   "etiqueta": "Carreira",
   "numeros": "Números da carreira"
