@@ -1,6 +1,7 @@
 import type { CareerResult } from './career';
 import { CLUBS } from './clubs';
 import { EUROPE } from './europe';
+import { titleId } from './titleId';
 import europe from '../data/europe.json';
 import idolatry from '../data/idolatry.json';
 import cfg from '../data/story.json';
@@ -23,7 +24,7 @@ export function storyOf(r: StoryInput): StoryBeat[] {
   const beats: StoryBeat[] = [{ id: `inicio_${r.origin}`, age: startAge, clubId: r.spells[0]?.clubId }];
 
   const firstTitle = [...r.titles].sort((a, b) => a.year - b.year)[0];
-  if (firstTitle) beats.push({ id: 'primeiroTitulo', age: ageAt(firstTitle.year), competition: firstTitle.competition });
+  if (firstTitle) beats.push({ id: 'primeiroTitulo', age: ageAt(firstTitle.year), competition: titleId(firstTitle) });
   const abroad = r.spells.find((s) => !BRAZIL.has(s.clubId));
   if (abroad) beats.push({ id: EUROPEAN.has(abroad.clubId) ? 'europa' : 'exterior', age: abroad.fromAge, clubId: abroad.clubId });
   beats.push({ id: 'auge', age: r.peakAge, clubId: r.peakClubId });

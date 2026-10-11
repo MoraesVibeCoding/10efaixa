@@ -41,6 +41,9 @@ export function format(text: string, params: Params = {}): string {
   });
 }
 
+/** Se a chave existe como texto (para escolher entre chaves sem lançar erro). */
+export const hasText = (key: string) => typeof lookup(ptBR, key.split('.')) === 'string';
+
 /** Texto pt-BR pela chave "arquivo.caminho", com {parâmetros}. Chave ou parâmetro faltando lança erro. */
 export function t(key: string, params: Params = {}): string {
   const text = lookup(ptBR, key.split('.'));

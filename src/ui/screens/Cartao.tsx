@@ -12,6 +12,7 @@ import { TrophyIcon } from './TrophyIcon';
 import { clubName } from './clubText';
 import { MOTION, reducedMotion } from '../motion';
 import './Cartao.css';
+import { tituloNome } from './titleText';
 
 // T55d (SPEC 6.15, v2.42): o cartão final em Canvas 2D, versão narrativa primeiro; o texto alternativo descreve a versão à vista.
 // v2.81 (direção "Álbum", PR 4): a tela é a contracapa do álbum, em verde-noite, com o card grande de fim de carreira de
@@ -138,7 +139,7 @@ export function Cartao({ result, code, visual, desafio, link, onJogar, onRestart
               {model.tacas.length > 0 && (
                 <div><dt>{t('ui.fim.verso.estante')}</dt><dd>
                   <ul className="fim__estante">
-                    {model.tacas.map((x) => <li key={x.id}><TrophyIcon id={x.id} size={26} />{x.n > 1 && <span className="fim__taca-n" aria-hidden="true">{x.n}</span>}<span className="sr-only">{t(`ui.titulo.${x.id}`)}</span></li>)}
+                    {model.tacas.map((x) => <li key={x.id}><TrophyIcon id={x.id} size={26} />{x.n > 1 && <span className="fim__taca-n" aria-hidden="true">{x.n}</span>}<span className="sr-only">{tituloNome(x.id)}</span></li>)}
                   </ul>
                 </dd></div>
               )}

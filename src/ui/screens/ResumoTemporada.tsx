@@ -10,6 +10,7 @@ import { useRolling } from '../useRolling';
 import { useSaida } from '../useSaida';
 import '../folha.css';
 import './ResumoTemporada.css';
+import { tituloNome } from './titleText';
 
 // v2.61 (SPEC 6.15): o resumo da temporada, num card por cima da próxima tela (Normal e Completo). v2.81 (Álbum): o card é a
 // folha que sobe do pé por cima da página (folha.css). Os números do ano são jogos, gols e
@@ -66,7 +67,7 @@ export function ResumoTemporada({ resumo, torcida, onClose }: ResumoTemporadaPro
         )}
         {resumo.titulos.length > 0 && (
           <ul className="resumo__titulos" aria-label={t('ui.resumoTemporada.titulos')}>
-            {resumo.titulos.map((c, k) => <li key={`${c}-${k}`}><TrophyIcon id={c} size={32} />{t(`ui.titulo.${c}`)}</li>)}
+            {resumo.titulos.map((c, k) => <li key={`${c}-${k}`}><TrophyIcon id={c} size={32} />{tituloNome(c)}</li>)}
           </ul>
         )}
         {/* v2.85: os avisos do que está para acontecer (signals.ts), na ordem de urgência */}

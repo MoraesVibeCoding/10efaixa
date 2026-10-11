@@ -21,4 +21,10 @@ describe('troféus em imagem (v2.56)', () => {
   it('as peças são os troféus criados pelo usuário (src/assets/trofeus), não as provisórias (v2.60)', () => {
     for (const [id, piece] of Object.entries(trophyArt.pecas)) expect(trophySrc(id), id).toContain(`/trofeus/${piece}.webp`);
   });
+
+  it('liga e copa nacional (v2.90): a peça do país quando existe; sem ela, a peça genérica da competição', () => {
+    expect(trophySrc('ligaNacional:ENG')).toContain('/trofeus/liga-inglaterra.webp');
+    expect(trophySrc('ligaNacional:ESP')).toContain('/trofeus/liga-europeia.webp');
+    expect(trophySrc('copaNacional:ENG')).toContain('/trofeus/copa-do-brasil.webp');
+  });
 });

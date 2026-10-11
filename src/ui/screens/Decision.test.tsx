@@ -462,6 +462,14 @@ describe('variação B (T51c, SPEC v2.34)', () => {
     expect(itens[1]!.querySelector('.taca__qtd')).toBeNull();
   });
 
+  it('liga nacional com o país (v2.90): cada país é uma taça, com o nome dele', () => {
+    render(<Decision eventId={EVENT} age={24} progress={0.4} player={{ ...PLAYER, titles: ['ligaNacional:ENG', 'ligaNacional:ESP', 'ligaNacional:ENG'] }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    const itens = within(screen.getByRole('list', { name: t('ui.decisao.titulosLinha') })).getAllByRole('listitem');
+    expect(itens).toHaveLength(2);
+    expect(itens[0]).toHaveTextContent(t('ui.decisao.tacaQtd', { nome: 'Liga Inglesa', n: 2 }));
+    expect(itens[1]).toHaveTextContent('Liga Espanhola');
+  });
+
   it('sem títulos, nem taças nem "Sem títulos" (v2.62)', () => {
     render(<Decision eventId={EVENT} age={24} progress={0.4} player={{ ...PLAYER, titles: [] }} scene={{ src: 'c.webp', alt: 'cena' }} />);
     expect(screen.queryByRole('list', { name: t('ui.decisao.titulosLinha') })).not.toBeInTheDocument();

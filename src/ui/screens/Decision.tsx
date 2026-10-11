@@ -28,6 +28,8 @@ import { proposalText } from './proposalText';
 import { comFalas } from '../falas';
 import './Propostas.css';
 import './Decision.css';
+import { tituloNome } from './titleText';
+import { titleBase } from '../../engine/titleId';
 
 // T49 (amostra aprovada) e T51: uma decisão por tela, com a cena ao fundo. Só faixas e setas, nunca números de atributo.
 export interface DecisionProps {
@@ -124,7 +126,7 @@ const money = (amount: number, currency: string) =>
 function rankTitles(titles: string[]) {
   const counts: Record<string, number> = {};
   for (const id of titles) counts[id] = (counts[id] ?? 0) + 1;
-  return Object.entries(counts).sort((a, b) => (TITLE_WEIGHT[b[0]] ?? 0) - (TITLE_WEIGHT[a[0]] ?? 0));
+  return Object.entries(counts).sort((a, b) => (TITLE_WEIGHT[titleBase(b[0])] ?? 0) - (TITLE_WEIGHT[titleBase(a[0])] ?? 0));
 }
 
 /** Uma etiqueta por competição vencida, com o nome; o ×N só aparece quando há mais de um título dela. */
@@ -134,7 +136,7 @@ function Trophies({ titles }: { titles: string[] }) {
       {rankTitles(titles).map(([id, n]) => (
         <li key={id} className="trofeu">
           <TrophyIcon id={id} />
-          <span>{t(`ui.titulo.${id}`)}</span>
+          <span>{tituloNome(id)}</span>
           {n > 1 && <strong>{t('ui.decisao.vezes', { n })}</strong>}
         </li>
       ))}
@@ -152,7 +154,7 @@ const GOALS = album.metas as { id: string; titulo?: string; marco?: string }[];
 /** Metas do álbum ainda não alcançadas: nem o título conquistado, nem o marco da carreira. */
 function missingGoals(titles: string[], milestones: string[]) {
   return GOALS.filter((g) => {
-    const won = g.titulo ? titles.includes(g.titulo) : false;
+    const won = g.titulo ? titles.some((x) => titleBase(x) === g.titulo) : false;
     const reached = g.marco ? milestones.includes(g.marco) : false;
     return !won && !reached;
   });
@@ -168,7 +170,7 @@ function Album({ titles, milestones, marcos }: { titles: string[]; milestones: s
         {rankTitles(titles).map(([id, n]) => (
           <li key={id} className="album__cromo">
             <TrophyIcon id={id} />
-            <span>{t(`ui.titulo.${id}`)}</span>
+            <span>{tituloNome(id)}</span>
             {n > 1 && <strong>{t('ui.decisao.vezes', { n })}</strong>}
           </li>
         ))}
@@ -542,7 +544,7 @@ export function PlayerBox({ player, age, anterior, open, opener, onOpen, inert, 
                 <li key={id} className={novas.includes(id) ? 'taca taca--nova' : 'taca'} data-taca={id}>
                   <TrophyIcon id={id} size={22} />
                   {n > 1 && <span className="taca__qtd" aria-hidden="true">{n}</span>}
-                  <span className="sr-only">{n > 1 ? t('ui.decisao.tacaQtd', { nome: t(`ui.titulo.${id}`), n }) : t(`ui.titulo.${id}`)}</span>
+                  <span className="sr-only">{n > 1 ? t('ui.decisao.tacaQtd', { nome: tituloNome(id), n }) : tituloNome(id)}</span>
                 </li>
               ))}
             </ul>

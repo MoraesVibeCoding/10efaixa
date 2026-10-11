@@ -1,6 +1,7 @@
 import type { StoryBeat } from '../../engine/story';
 import { t } from '../../i18n';
 import { clubName } from './clubText';
+import { tituloNome } from './titleText';
 
 // T55b: texto de uma frase de "Sua história" (tela e cartão narrativo).
 const SINGULAR = new Set(['selecao', 'idolo', 'lesoes']);
@@ -12,6 +13,6 @@ export function storyText(b: StoryBeat): string {
   return t(`legacy.historia.${id}`, {
     // a idade do motor vem por semestre (23.5): o texto mostra os anos completos
     idade: Math.floor(b.age), n: b.n ?? 0, clube: club.nome, prep: club.prep,
-    competicao: b.competition ? t(`ui.titulo.${b.competition}`) : '',
+    competicao: b.competition ? tituloNome(b.competition) : '',
   });
 }

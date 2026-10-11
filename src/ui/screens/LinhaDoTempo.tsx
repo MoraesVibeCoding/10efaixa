@@ -8,6 +8,7 @@ import { TrophyIcon } from './TrophyIcon';
 import { MOTION } from '../motion';
 import { useRolling } from '../useRolling';
 import './LinhaDoTempo.css';
+import { tituloNome } from './titleText';
 
 // T55h (SPEC 6.15, v2.51): "Sua carreira", antes do cartão final: uma linha por temporada com idade, clube e divisão,
 // Over (número: exceção do overall, SPEC v2.51) e os títulos do ano. As frases antigas seguem no cartão narrativo.
@@ -98,7 +99,7 @@ export function LinhaDoTempo({ result, onContinue }: { result: CareerResult; onC
             {r.titles.length > 0 && (
               <span className="linha__titulos">
                 {r.titles.map((c, k) => (
-                  <span key={`${c}-${k}`} className="linha__taca"><TrophyIcon id={c} size={28} />{t(`ui.titulo.${c}`)}</span>
+                  <span key={`${c}-${k}`} className="linha__taca"><TrophyIcon id={c} size={28} />{tituloNome(c)}</span>
                 ))}
               </span>
             )}

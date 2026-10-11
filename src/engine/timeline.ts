@@ -1,5 +1,6 @@
 import type { CareerResult } from './career';
 import type { NationalYear } from './nationalYear';
+import { titleId } from './titleId';
 
 // T55g (SPEC 6.15, v2.51): modelo da tela "Sua carreira": uma linha por temporada, em ordem de idade. Puro: o texto
 // (nome do clube, divisão, título) é montado na tela, em pt-BR; aqui só ids e números.
@@ -25,7 +26,7 @@ export function timelineOf({ seasons, titles }: TimelineInput): TimelineRow[] {
   const peakIndex = seasons.findIndex((s) => s.overall === best);
   return seasons.map((s, i) => ({
     year: s.year, age: s.age, clubId: s.clubId, division: s.division, overall: s.overall, games: s.games, goals: s.goals, assists: s.assists, cleanSheets: s.cleanSheets,
-    titles: titles.filter((t) => t.year === s.year).map((t) => t.competition),
+    titles: titles.filter((t) => t.year === s.year).map(titleId),
     peak: i === peakIndex,
     newClub: i > 0 && seasons[i - 1]!.clubId !== s.clubId,
     ...(s.selecao ? { selecao: s.selecao } : {}),

@@ -19,7 +19,7 @@ describe('linha do tempo por idade (T55g)', () => {
 
   it('títulos entram na linha do ano em que foram conquistados, e só nela', () => {
     const rows = timelineOf(input({ titles: [{ year: 2028, competition: 'estadual', clubId: 'santos' }, { year: 2028, competition: 'copaDoBrasil', clubId: 'santos' }, { year: 2030, competition: 'ligaNacional', clubId: 'benfica' }] }));
-    expect(rows.map((r) => r.titles)).toEqual([[], [], ['estadual', 'copaDoBrasil'], [], ['ligaNacional']]);
+    expect(rows.map((r) => r.titles)).toEqual([[], [], ['estadual', 'copaDoBrasil'], [], ['ligaNacional:POR']]);
   });
 
   it('marca como auge só a primeira temporada de maior Over', () => {

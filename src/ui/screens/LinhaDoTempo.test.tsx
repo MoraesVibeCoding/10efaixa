@@ -9,6 +9,7 @@ import { timelineOf } from '../../engine/timeline';
 import { t } from '../../i18n';
 import { LinhaDoTempo, divisionLabel } from './LinhaDoTempo';
 import { storyText } from './storyText';
+import { tituloNome } from './titleText';
 
 // T55h (SPEC 6.15, v2.51): tela "Sua carreira", antes do cartão final: uma linha por temporada.
 const result = simulateCareer(randomInput(createPrng(3)), 3);
@@ -31,7 +32,7 @@ describe('"Sua carreira" (T55h)', () => {
       const text = items[i]!.textContent ?? '';
       expect(text).toContain(`${r.age} anos`);
       expect(text).toContain(`Over ${r.overall}`);
-      for (const c of r.titles) expect(text).toContain(t(`ui.titulo.${c}`));
+      for (const c of r.titles) expect(text).toContain(tituloNome(c));
       expect(text.includes(t('ui.linhaDoTempo.auge'))).toBe(r.peak);
     });
     expect(screen.getAllByText(t('ui.linhaDoTempo.auge'))).toHaveLength(1);
