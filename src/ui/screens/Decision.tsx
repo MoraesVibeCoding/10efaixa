@@ -197,6 +197,14 @@ function careerNumbers(seasons: Season[], position: string): { id: string; n: nu
   return position === 'goleiro' ? [jogos, { id: 'semSofrerGol', n: sum('cleanSheets') }] : [jogos, { id: 'gols', n: sum('goals') }, { id: 'assistencias', n: sum('assists') }];
 }
 
+/** v2.83: os números de uma temporada na linha da trajetória (goleiro: jogos e sem sofrer gol); cada par fica inteiro. */
+function seasonLine(s: Season, position: string) {
+  const pares: [string, number][] = position === 'goleiro'
+    ? [['jogos', s.games ?? 0], ['sg', s.cleanSheets ?? 0]]
+    : [['jogos', s.games ?? 0], ['gols', s.goals ?? 0], ['assist', s.assists ?? 0]];
+  return pares.map(([id, n]) => <span key={id}>{t(`ui.carreira.linha.${id}`, { n })}</span>);
+}
+
 function recentFirst(seasons: Season[]) {
   return [...seasons].reverse();
 }
@@ -236,15 +244,6 @@ export function Career({ player, onClose }: { player: DecisionProps['player']; o
           {player.titles.length ? <Trophies titles={player.titles} /> : <p className="gaveta__vazio">{t('ui.decisao.nenhumTitulo')}</p>}
         </section>
         <section className="gaveta__bloco">
-          <h3>{t('ui.carreira.marcos')}</h3>
-          {(player.marcos ?? []).length === 0 && <p className="gaveta__vazio">{t('ui.carreira.semMarcos')}</p>}
-          {(player.marcos ?? []).length > 0 && (
-            <ul className="album__cromos">
-              {(player.marcos ?? []).map((m) => <li key={`${m.id}@${m.clubId}`} className="album__cromo"><span>{marcoLabel(m)}</span></li>)}
-            </ul>
-          )}
-        </section>
-        <section className="gaveta__bloco">
           <h3 id="gaveta-trajetoria">{t('ui.carreira.trajetoria')}</h3>
           {seasons.length === 0 && <p className="gaveta__vazio">{t('ui.carreira.semTrajetoria')}</p>}
           {seasons.length > 0 && (
@@ -261,13 +260,25 @@ export function Career({ player, onClose }: { player: DecisionProps['player']; o
                 {seasons.map((s) => (
                   <tr key={s.age}>
                     <td>{s.age}</td>
-                    <td><span className="trajetoria__clube"><Emblema clubId={s.clubId} size={20} />{clubName(s.clubId).nome}</span></td>
+                    <td>
+                      <span className="trajetoria__clube"><Emblema clubId={s.clubId} size={20} />{clubName(s.clubId).nome}</span>
+                      <span className="trajetoria__numeros">{seasonLine(s, player.position)}</span>
+                    </td>
                     <td>{s.torcida ? t(`ui.idolatria.faixa.${s.torcida}`) : null}</td>
                     <td>{s.overall}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
+          )}
+        </section>
+        <section className="gaveta__bloco">
+          <h3>{t('ui.carreira.marcos')}</h3>
+          {(player.marcos ?? []).length === 0 && <p className="gaveta__vazio">{t('ui.carreira.semMarcos')}</p>}
+          {(player.marcos ?? []).length > 0 && (
+            <ul className="gaveta__marcos">
+              {(player.marcos ?? []).map((m) => <li key={`${m.id}@${m.clubId}`} className="gaveta__marco">{marcoLabel(m)}</li>)}
+            </ul>
           )}
         </section>
       </div>

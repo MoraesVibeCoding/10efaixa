@@ -48,7 +48,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
   // T55b: no fim, "Sua história" vem antes do cartão
   const [showCard, setShowCard] = useState(false);
   // v2.47: os números da última decisão; na próxima, o overall, a idade e o valor rolam deles
-  const [anterior, setAnterior] = useState(undefined as (Anterior & Pick<DecisionView, 'titles' | 'seasons'>) | undefined);
+  const [anterior, setAnterior] = useState(undefined as (Anterior & Pick<DecisionView, 'titles' | 'seasons' | 'year' | 'clubId' | 'divisao'>) | undefined);
   const step = useMemo(() => runUntilDecision(input, seed, choices, ritmo), [input, seed, choices, ritmo]);
   const done = step.kind === 'done';
   // v2.47: título, acesso e rebaixamento desde a última decisão viram carimbo
@@ -134,7 +134,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
         <div className="carreira__tela" inert={resumoEl !== null}>
           <Propostas
             key={index} propostas={view.propostas ?? []} atual={view.atual} podeFicar={view.state.podeFicar === true} podeForcar={view.state.podeForcar === true}
-            podeRenovar={view.state.podeRenovar === true} emprestimo={eventId === LOAN_EVENT} player={contractPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} anterior={anterior} pagina={pagina}
+            podeRenovar={view.state.podeRenovar === true} emprestimo={eventId === LOAN_EVENT} casa={view.casa} podeParar={view.state.podeParar === true} player={contractPlayer} age={Math.floor(view.age)} progress={careerProgress(view.age)} anterior={anterior} pagina={pagina}
             scene={sceneOfCena('assinatura-contrato', contractPlayer, visual, input.name, contractClub)} onChoose={decide}
           />
         </div>
@@ -162,7 +162,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
           pagina={pagina}
           pausado={respostaEl !== null || resumoEl !== null}
           onContinue={(choice) => {
-            setAnterior({ overall: player.overall, age: Math.floor(view.age), marketValueEUR: player.marketValueEUR, titles: view.titles, seasons: view.seasons, cromos: view.titles.length + view.marcos.length });
+            setAnterior({ overall: player.overall, age: Math.floor(view.age), marketValueEUR: player.marketValueEUR, titles: view.titles, seasons: view.seasons, year: view.year, clubId: view.clubId, divisao: view.divisao, cromos: view.titles.length + view.marcos.length });
             decide(choice);
           }}
         />

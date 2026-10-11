@@ -40,3 +40,7 @@
   background: var(--cor-destaque); color: var(--cor-sobre-destaque); /* v2.73: botão principal único */ font-family: var(--fonte-titulo); font-size: var(--tipo-opcao); font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer;
 }
 .resumo__continuar:focus-visible { outline: 3px solid var(--cor-foco); outline-offset: 3px; }
+/* v2.85: "Fique de olho": os avisos do que está para acontecer, num bloco de papel com o fio amarelo de alerta à esquerda */
+.resumo__sinais { display: grid; gap: var(--espaco-1); padding: var(--espaco-2) var(--espaco-3); border-inline-start: 4px solid var(--paleta-amarelo); border-radius: var(--forma-raio); background: var(--cor-trilho); }
+.resumo__sinais h3 { margin: 0; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.resumo__sinais ul { display: grid; gap: var(--espaco-1); margin: 0; padding-inline-start: 1.1em; line-height: 1.4; }

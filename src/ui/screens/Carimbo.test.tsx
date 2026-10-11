@@ -9,7 +9,7 @@ describe('Carimbo (v2.47)', () => {
   afterEach(() => { vi.useRealTimers(); });
 
   it('mostra um momento por vez e some no fim', () => {
-    render(<Carimbo momentos={[{ kind: 'titulo', competition: 'serieA' }, { kind: 'acesso' }]} />);
+    render(<Carimbo momentos={[{ kind: 'titulo', competition: 'serieA' }, { kind: 'acesso', serie: 'A' }]} />);
     const status = screen.getByRole('status');
     expect(status).toHaveTextContent(t('ui.momento.titulo'));
     expect(status).toHaveTextContent(t('ui.titulo.serieA'));
@@ -29,8 +29,16 @@ describe('Carimbo (v2.47)', () => {
     expect(trofeu.querySelector('img')?.getAttribute('alt') ?? '').toBe('');
     expect(selo).toHaveTextContent(t('ui.titulo.serieA'));
     unmount();
-    render(<Carimbo momentos={[{ kind: 'acesso' }]} />);
+    render(<Carimbo momentos={[{ kind: 'acesso', serie: 'A' }]} />);
     expect(screen.getByRole('status').querySelector('.carimbo__trofeu')).toBeNull();
+  });
+
+  // v2.84: o carimbo diz para qual série o clube foi, para não confundir com a competição do título
+  it('acesso e rebaixamento dizem a série nova', () => {
+    render(<Carimbo momentos={[{ kind: 'rebaixamento', serie: 'B' }]} />);
+    const status = screen.getByRole('status');
+    expect(status).toHaveTextContent(t('ui.momento.rebaixamento'));
+    expect(status.querySelector('.carimbo__sub')).toHaveTextContent(t('ui.momento.paraSerie', { serie: 'B' }));
   });
 
   it('sem momentos, só a região viva vazia', () => {

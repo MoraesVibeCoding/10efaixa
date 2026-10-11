@@ -113,7 +113,7 @@ function decider(run: Run, probe?: { year: number; found: string[] }): Decider {
     const meetingOk = () => { const p = parseProposal(choice); return p !== null && (!v.reuniao || ideaOf(v.reuniao, p.main, p.secondary) !== null); };
     const valid = eventId === MEETING_EVENT ? meetingOk()
       : eventId === LOAN_EVENT ? isLoanChoice(choice, v.propostas ?? [])
-      : eventId === PROPOSAL_EVENT ? parseProposalChoice(choice, v.propostas ?? [], v.state.podeFicar === true, (o) => o.marca === 'coracao', v.state.podeForcar === true, v.state.podeRenovar === true) !== null
+      : eventId === PROPOSAL_EVENT ? parseProposalChoice(choice, v.propostas ?? [], v.state.podeFicar === true, (o) => o.marca === 'coracao', v.state.podeForcar === true, v.state.podeRenovar === true, { casa: v.casa?.clubId ?? null, podeParar: v.state.podeParar === true }) !== null
       : OPTIONS.get(eventId)?.has(choice);
     if (!valid) throw new RangeError(`escolha inválida "${choice}" para ${eventId} (decisão ${i})`);
     return choice;

@@ -43,3 +43,16 @@ describe('modelo do card de fim de carreira (v2.81)', () => {
     expect(m.selecaoLinha).toBe(esperado);
   });
 });
+
+// v2.85 (pedido do usuário em 2026-10-11: "quando eu me aposentar deve aparecer o motivo"): o card diz por que parou e com que idade.
+describe('o motivo da aposentadoria (v2.85)', () => {
+  it('cada motivo vira uma frase com a idade; quem voltou para casa e parou ali ganha a frase de casa', () => {
+    for (const motivo of ['decisao', 'fisico', 'overallInicial', 'idadeLimite'] as const) {
+      const x = cardModel({ ...r, retirement: motivo, farewell: null }, 'C');
+      expect(x.motivo).toBe(t(`ui.fim.motivo.${motivo}`, { idade: Math.floor(r.endAge) }));
+    }
+    const casa = cardModel({ ...r, retirement: 'decisao', farewell: 'coracao' }, 'C');
+    const ultimo = clubName(r.spells.at(-1)!.clubId);
+    expect(casa.motivo).toBe(t('ui.fim.motivo.decisaoCasa', { idade: Math.floor(r.endAge), prep: ultimo.prep, clube: ultimo.nome }));
+  });
+});

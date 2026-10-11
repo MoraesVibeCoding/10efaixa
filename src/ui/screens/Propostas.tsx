@@ -1,15 +1,20 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
-import { STAY, RAISE, RENEW, acceptChoice, forceChoice, loveChoice, negotiateChoice, type CurrentClubView, type ProposalView } from '../../engine/proposals';
+import { STAY, RAISE, RENEW, RETIRE, acceptChoice, forceChoice, homeChoice, loveChoice, negotiateChoice, type CurrentClubView, type HomeCardView, type ProposalView } from '../../engine/proposals';
 import { t } from '../../i18n';
 import { Career as CareerDrawer, CenaFoto, PaginaCabecalho, PlayerBox, TRANSITION, type DecisionProps } from './Decision';
 import '../folha.css';
 import { Emblema } from './Emblema';
-import { currentText, money, proposalText, type ChangeText } from './proposalText';
+import { changeText, currentText, money, proposalText, type ChangeText } from './proposalText';
+import { clubName } from './clubText';
+import { divisionLabel } from './LinhaDoTempo';
 import './Propostas.css';
 
 // T28k (SPEC 6.12, v2.54): tela de contratos no desenho aprovado: o card do jogador (o de sempre), cartões selecionáveis (o clube atual
 // primeiro: "Renovação" com o contrato no fim, "Seu time atual" fora disso) e "Confirmar escolha". Salário por mês com %, valor projetado
 const ATUAL = 'atual';
+// v2.85: os dois cards do fim de carreira (dos 34 em diante)
+const CASA = 'casa';
+const PARAR = 'parar';
 type Modo = 'aceitar' | 'negociar' | 'forcar' | 'amor' | 'renovar' | 'aumento' | 'naoRenovar';
 
 export interface PropostasProps {
@@ -18,6 +23,8 @@ export interface PropostasProps {
   /** v2.64: a decisão de empréstimo: o cartão do destino só se aceita ("ir emprestado"); o atual é "ficar e brigar por espaço". */
   emprestimo?: boolean;
   player: DecisionProps['player']; age: number; progress: number; scene: DecisionProps['scene']; anterior?: DecisionProps['anterior'];
+  /** v2.85: dos 34 em diante, "Voltar para casa" (quando o jogador não está nela) e "Pendurar as chuteiras". */
+  casa?: HomeCardView; podeParar?: boolean;
   /** v2.81 (Álbum): a linha da página, como na decisão. */
   pagina?: DecisionProps['pagina'];
   onChoose: (choice: string) => void;
@@ -36,7 +43,7 @@ function Estrelas({ n, nivel }: { n: number; nivel: string }) {
   );
 }
 
-export function Propostas({ propostas, atual, podeFicar, podeForcar = false, podeRenovar = false, emprestimo = false, player, age, progress, scene, anterior, pagina, onChoose }: PropostasProps) {
+export function Propostas({ propostas, atual, podeFicar, podeForcar = false, podeRenovar = false, emprestimo = false, casa, podeParar = false, player, age, progress, scene, anterior, pagina, onChoose }: PropostasProps) {
   const [picked, setPicked] = useState(null as string | null);
   const [modo, setModo] = useState(null as Modo | null);
   const [career, setCareer] = useState(false);
@@ -65,7 +72,7 @@ export function Propostas({ propostas, atual, podeFicar, podeForcar = false, pod
 
   function choose(id: string) {
     setPicked(id);
-    setModo(id === ATUAL ? (podeRenovar ? 'renovar' : null) : 'aceitar');
+    setModo(id === ATUAL ? (podeRenovar ? 'renovar' : null) : id === CASA || id === PARAR ? null : 'aceitar');
   }
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -74,6 +81,8 @@ export function Propostas({ propostas, atual, podeFicar, podeForcar = false, pod
       onChoose(modo === 'renovar' ? RENEW : modo === 'aumento' ? RAISE : STAY);
       return;
     }
+    if (picked === PARAR) { onChoose(RETIRE); return; }
+    if (picked === CASA && casa) { onChoose(homeChoice(casa.clubId)); return; }
     const id = picked;
     onChoose(modo === 'negociar' ? negotiateChoice(id) : modo === 'forcar' ? forceChoice(id) : modo === 'amor' ? loveChoice(id) : acceptChoice(id));
   }
@@ -133,6 +142,8 @@ export function Propostas({ propostas, atual, podeFicar, podeForcar = false, pod
                 </div>
               </>
             )}
+            {picked === CASA && casa && <p>{t(`ui.proposta.casa.detalhe.${casa.kind}`)}</p>}
+            {picked === PARAR && <p>{t('ui.proposta.parar.detalhe')}</p>}
             {dica && <p className="propostas__dica">{dica}</p>}
           </section>
     );
@@ -198,6 +209,33 @@ export function Propostas({ propostas, atual, podeFicar, podeForcar = false, pod
               </Fragment>
             );
           })}
+          {podeParar && propostas.length === 0 && <p className="propostas__ninguem">{t('ui.proposta.ninguem')}</p>}
+          {podeParar && casa && (
+            <>
+              <label className={picked === CASA ? 'propostas__item propostas__item--casa propostas__item--marcado' : 'propostas__item propostas__item--casa'}>
+                <input type="radio" name="cartao" className="sr-only" checked={picked === CASA} onChange={() => { choose(CASA); }} />
+                <span className="propostas__marca">{t('ui.proposta.casa.titulo')}</span>
+                <span className="propostas__topo">
+                  <Emblema clubId={casa.clubId} size={28} />
+                  <span className="propostas__nome"><strong className="propostas__clube">{clubName(casa.clubId).nome}</strong><span className="propostas__liga">{divisionLabel(casa.league)}</span></span>
+                  <span className="propostas__selo">{t(`ui.proposta.casa.selo.${casa.kind}`)}</span>
+                </span>
+                <span className="propostas__financeiro">
+                  <span>{t('ui.proposta.salarioMes', { valor: money(casa.salarioMensal, casa.currency) })} <Variacao c={changeText(casa.salarioPct)} /></span>
+                </span>
+              </label>
+              {picked === CASA && detail()}
+            </>
+          )}
+          {podeParar && (
+            <>
+              <label className={picked === PARAR ? 'propostas__item propostas__item--parar propostas__item--marcado' : 'propostas__item propostas__item--parar'}>
+                <input type="radio" name="cartao" className="sr-only" checked={picked === PARAR} onChange={() => { choose(PARAR); }} />
+                <span className="propostas__nome"><strong className="propostas__clube">{t('ui.proposta.parar.titulo')}</strong><span className="propostas__liga">{t('ui.proposta.parar.sub')}</span></span>
+              </label>
+              {picked === PARAR && detail()}
+            </>
+          )}
         </div>
         <button type="submit" className="decisao__confirmar propostas__confirmar" disabled={picked === null}>{t('ui.proposta.confirmar')}</button>
       </form>

@@ -9,7 +9,7 @@ import { ResumoTemporada } from './ResumoTemporada';
 const BASE: SeasonSummary = {
   year: 2030, age: 22, clubId: 'santos', division: 'BRA-A', partidas: 34, gols: 9, assistencias: 5, semSofrerGol: 0, goleiro: false, overallDe: 70, overallPara: 74, pct: 6,
   mudancas: [{ atributo: 'passe', sentido: 'sobe', forte: true }, { atributo: 'fisico', sentido: 'desce', forte: false }], titulos: ['estadual'],
-  comentario: { evolucao: 'grande', minutos: 'muitos', destaque: 'passe', titulo: true },
+  comentario: { evolucao: 'grande', minutos: 'muitos', destaque: 'passe', titulo: true }, sinais: [],
 };
 const setup = (resumo: SeasonSummary = BASE, onClose = vi.fn()) => { render(<ResumoTemporada resumo={resumo} onClose={onClose} />); return onClose; };
 const dialog = () => screen.getByRole('alertdialog', { name: t('ui.resumoTemporada.titulo') });
@@ -136,5 +136,25 @@ describe('resumo do goleiro', () => {
     expect(nums).toHaveTextContent(`${t('ui.resumoTemporada.semSofrerGol')}14`);
     expect(nums).not.toHaveTextContent(t('ui.resumoTemporada.gols'));
     expect(nums).not.toHaveTextContent(t('ui.resumoTemporada.assistencias'));
+  });
+});
+
+// v2.85 (pedido do usuário em 2026-10-11): o resumo avisa o que está para acontecer ("Fique de olho"), na ordem de urgência.
+describe('sinais no resumo (v2.85)', () => {
+  it('mostra os sinais da temporada numa lista "Fique de olho"', () => {
+    setup({ ...BASE, sinais: ['corpo', 'semVaga'] });
+    const lista = within(dialog()).getByRole('list', { name: t('ui.resumoTemporada.sinais') });
+    const itens = within(lista).getAllByRole('listitem');
+    expect(itens.map((li) => li.textContent)).toEqual([t('ui.resumoTemporada.sinal.corpo'), t('ui.resumoTemporada.sinal.semVaga')]);
+  });
+
+  it('sem sinal, nada de lista', () => {
+    setup({ ...BASE, sinais: [] });
+    expect(within(dialog()).queryByRole('list', { name: t('ui.resumoTemporada.sinais') })).toBeNull();
+  });
+
+  it('todo sinal do motor tem texto', async () => {
+    const { default: cfg } = await import('../../data/signals.json');
+    for (const id of cfg.ordem) expect(t(`ui.resumoTemporada.sinal.${id}`).length).toBeGreaterThan(10);
   });
 });

@@ -677,7 +677,7 @@ describe('venda pelo empresário com o clube à vista (v2.64)', () => {
 describe('palco do título na decisão (v2.71)', () => {
   const comTitulo = () => render(
     <Decision eventId={EVENT} age={24} progress={0.4} player={{ ...PLAYER, titles: ['estadual', 'serieA'] }} scene={{ src: 'c.webp', alt: 'cena' }}
-      momentos={[{ kind: 'titulo', competition: 'serieA' }, { kind: 'acesso' }]} />,
+      momentos={[{ kind: 'titulo', competition: 'serieA' }, { kind: 'acesso', serie: 'A' }]} />,
   );
 
   it('o palco abre com a decisão inerte; Seguir fecha, devolve o foco ao evento e solta o carimbo do acesso', () => {
