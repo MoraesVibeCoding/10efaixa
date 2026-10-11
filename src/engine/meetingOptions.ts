@@ -33,19 +33,27 @@ function agradoOf(position: Position, main: Attribute, score: number, need: Attr
   return chance >= cfg.agrado.muito ? 'muito' : chance >= cfg.agrado.possivel ? 'possivel' : 'pouco';
 }
 
+/** v2.89: o atributo ainda cresce (abaixo do teto do jogador, que nunca passa de 99); treinar um que já está no teto não rende nada. */
+const grows = (attrs: Attributes, caps: Attributes, a: Attribute) => attrs[a] < caps[a];
+
 export function meetingOptions({ position, attrs, caps, age, score, need }: MeetingOptionsInput): MeetingOptions {
   const w = weightsOf(position);
   // v2.58: a proposta do técnico = o que o clube quer (principal) + o melhor complemento do preparador (secundário); escolhê-la é sempre aceito
   const auto = autoProposal(attrs, caps, position, age);
-  const obvia: Proposal = { main: need, secondary: auto.main !== need ? auto.main : auto.secondary };
-  const taken = new Set([unorderedKey(obvia)]);
   // mais forte primeiro; empate, o de teto maior; depois a ordem fixa dos atributos
-  const strongest = [...ATTRIBUTES].sort((a, b) => attrs[b] - attrs[a] || caps[b] - caps[a] || ATTRIBUTES.indexOf(a) - ATTRIBUTES.indexOf(b));
+  const byStrength = [...ATTRIBUTES].sort((a, b) => attrs[b] - attrs[a] || caps[b] - caps[a] || ATTRIBUTES.indexOf(a) - ATTRIBUTES.indexOf(b));
+  // v2.89 (pedido do usuário): os focos que ainda crescem vêm antes; os que já estão no teto só completam as ideias quando
+  // sobram poucos (o jogador no auge), na ordem do que a posição mais pede (o que segura o nível)
+  const atCap = ATTRIBUTES.filter((a) => !grows(attrs, caps, a)).sort((a, b) => w[b] - w[a] || ATTRIBUTES.indexOf(a) - ATTRIBUTES.indexOf(b));
+  const strongest = [...byStrength.filter((a) => grows(attrs, caps, a)), ...atCap];
+  const secondaryOf = [auto.main, auto.secondary].find((a) => a !== need && grows(attrs, caps, a)) ?? strongest.find((a) => a !== need)!;
+  const obvia: Proposal = { main: need, secondary: secondaryOf };
+  const taken = new Set([unorderedKey(obvia)]);
 
   // mescla: o principal óbvio + o diferencial do jogador (o mais forte entre os que a posição pede menos: peso até a mediana)
   const sortedW = ATTRIBUTES.map((a) => w[a]).sort((a, b) => a - b);
   const median = sortedW[Math.floor(sortedW.length / 2)]!;
-  const differential = strongest.find((a) => w[a] <= median && a !== obvia.main && a !== obvia.secondary)
+  const differential = strongest.find((a) => w[a] <= median && grows(attrs, caps, a) && a !== obvia.main && a !== obvia.secondary)
     ?? strongest.find((a) => a !== obvia.main && a !== obvia.secondary)!;
   const mescla: Proposal = { main: obvia.main, secondary: differential };
   taken.add(unorderedKey(mescla));
@@ -60,8 +68,14 @@ export function meetingOptions({ position, attrs, caps, age, score, need }: Meet
   return { obvia: card(obvia), mescla: card(mescla), ousada: card(ousada) };
 }
 
-/** T52c: a necessidade do clube neste semestre, sorteada pelos pesos da posição (uma só chamada ao sorteio, como antes). */
-export const drawClubNeed = (position: Position, rng: Prng): Attribute => pickWeighted(rng, weightsOf(position));
+/** T52c: a necessidade do clube neste semestre, sorteada pelos pesos da posição (uma só chamada ao sorteio, como antes).
+ *  v2.89: com os atributos e os tetos, só entre os que ainda crescem; se nenhum cresce, entre todos. */
+export function drawClubNeed(position: Position, rng: Prng, attrs?: Attributes, caps?: Attributes): Attribute {
+  const w = weightsOf(position);
+  if (!attrs || !caps) return pickWeighted(rng, w);
+  const open = Object.fromEntries(ATTRIBUTES.map((a) => [a, grows(attrs, caps, a) ? w[a] : 0])) as Record<Attribute, number>;
+  return pickWeighted(rng, ATTRIBUTES.some((a) => open[a] > 0) ? open : w);
+}
 
 export type Idea = 'obvia' | 'mescla' | 'ousada';
 /** Qual das 3 ideias é esta proposta ("principal|secundário" na ordem do cartão); null se não é nenhuma. */

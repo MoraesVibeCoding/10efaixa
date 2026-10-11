@@ -506,7 +506,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       if (varzeaLeft === 0 && !inYouth) minutes = clamp(minutes + fx.clubMinutes, 0, 1);
       morale = updateMorale(morale, minutes, role, teamResult);
       // T52c: com as 3 ideias, o clube precisa do que a posição pede (mesma quantidade de sorteios); antes, de qualquer um dos 10
-      const clubNeed = MEETING_IDEAS ? drawClubNeed(position, yr) : ATTRIBUTES[yr.int(0, ATTRIBUTES.length - 1)]!;
+      const clubNeed = MEETING_IDEAS ? drawClubNeed(position, yr, evo.attributes, evo.caps) : ATTRIBUTES[yr.int(0, ATTRIBUTES.length - 1)]!;
       // T52: com clube, a reunião passa por quem decide (tela ou automática); a sugestão é a proposta automática
       const ideas = MEETING_IDEAS && clubId
         ? meetingOptions({ position, attrs: evo.attributes, caps: evo.caps, age: evo.age, score: meetingScore({ morale, coachRelation, nationalTeamStatus: fx.meetingStatus }), need: clubNeed })
