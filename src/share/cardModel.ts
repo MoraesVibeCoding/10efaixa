@@ -3,6 +3,7 @@ import type { CareerResult } from '../engine/career';
 import { HONORS_ON_CARD } from '../engine/honors';
 import { status } from '../engine/idolatry';
 import { storyHighlights, storyOf } from '../engine/story';
+import { titleId } from '../engine/titleId';
 import { t } from '../i18n';
 import { clubName } from '../ui/screens/clubText';
 import { storyText } from '../ui/screens/storyText';
@@ -78,9 +79,9 @@ export function cardModel(r: CareerResult, codigo: string): CardModel {
   };
   const ultimo = clubName(r.spells.at(-1)?.clubId ?? r.peakClubId);
   const tacas: CardModel['tacas'] = [];
-  for (const x of r.titles) {
-    const g = tacas.find((y) => y.id === x.competition);
-    if (g) g.n++; else tacas.push({ id: x.competition, n: 1 });
+  for (const x of r.titles.map(titleId)) {
+    const g = tacas.find((y) => y.id === x);
+    if (g) g.n++; else tacas.push({ id: x, n: 1 });
   }
   const copas = new Set(r.selection.tournaments.filter((x) => x.tournament === 'copaDoMundo').map((x) => x.year)).size;
   const fim = {

@@ -1,9 +1,12 @@
 import trophyArt from '../../data/trophyArt.json';
+import { titleBase } from '../../engine/titleId';
 
 // troféu de cada competição: os que o usuário criou (v2.60); sem peça, o ícone genérico abaixo
 const TROPHY_FILES = import.meta.glob('../../assets/trofeus/*.webp', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
 export const trophySrc = (id: string) => {
-  const piece = (trophyArt.pecas as Record<string, string>)[id];
+  const pecas = trophyArt.pecas as Record<string, string>;
+  // v2.90: "ligaNacional:ENG" usa a peça do país; sem ela, a da competição
+  const piece = pecas[id] ?? pecas[titleBase(id)];
   return piece ? TROPHY_FILES[`../../assets/trofeus/${piece}.webp`] : undefined;
 };
 

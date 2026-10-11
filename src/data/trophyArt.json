@@ -1,5 +1,5 @@
 {
- "_nota": "v2.60: peça de troféu de cada título (ids de legacy.json → src/assets/trofeus/<peça>.webp), os troféus criados pelo usuário (docs/arte/trofeus), com fundo transparente por docs/arte/processar_trofeus.py. Todo título tem uma peça (o ícone genérico só vale para id desconhecido): a Liga Europa usa a peça da segunda copa continental e a copa nacional europeia usa a peça de copa nacional, até haver peças próprias.",
+ "_nota": "v2.60: peça de troféu de cada título (ids de legacy.json → src/assets/trofeus/<peça>.webp), os troféus criados pelo usuário (docs/arte/trofeus), com fundo transparente por docs/arte/processar_trofeus.py. Todo título tem uma peça (o ícone genérico só vale para id desconhecido): a copa nacional europeia usa a peça de copa nacional, até haver peças próprias. v2.90: liga e copa nacional têm peça por país ('ligaNacional:ENG'), enviadas pelo usuário; país sem peça usa a da competição. A Copa Europeia 2 tem peça própria (copa-europeia-2).",
  "pecas": {
   "copaDoMundo": "copa-do-mundo",
   "champions": "copa-europeia",
@@ -14,8 +14,20 @@
   "ligaNacional": "liga-europeia",
   "copaDoBrasil": "copa-do-brasil",
   "copaDoNordeste": "copa-do-nordeste",
-  "europaLeague": "continental-secundaria",
+  "europaLeague": "copa-europeia-2",
   "copaNacional": "copa-do-brasil",
-  "estadual": "estadual"
+  "estadual": "estadual",
+  "ligaNacional:ENG": "liga-inglaterra",
+  "ligaNacional:ESP": "liga-espanha",
+  "ligaNacional:ITA": "liga-italia",
+  "ligaNacional:GER": "liga-alemanha",
+  "ligaNacional:POR": "liga-portugal",
+  "ligaNacional:FRA": "liga-franca",
+  "copaNacional:ENG": "copa-inglaterra",
+  "copaNacional:ESP": "copa-espanha",
+  "copaNacional:GER": "copa-alemanha",
+  "copaNacional:FRA": "copa-franca",
+  "copaNacional:POR": "copa-portugal",
+  "copaNacional:ITA": "copa-italia"
  }
 }

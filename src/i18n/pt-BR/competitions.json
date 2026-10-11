@@ -1,5 +1,5 @@
 {
- "_nota": "Nomes das competições no jogo (v2.32, docs/competicoes-nomes.md): descritivos, sem marcas nem imitação. Os dados citam a competição real só como referência.",
+ "_nota": "Nomes das competições no jogo (v2.32, docs/competicoes-nomes.md): descritivos, sem marcas nem imitação. Os dados citam a competição real só como referência. v2.90: o título de liga e de copa nacional mostra o país do clube (europa.liga, foraDoEixo, outrasLigas; europa.copa).",
  "brasil": {
   "serieA": "Nacional · Série A",
   "serieB": "Nacional · Série B",
@@ -46,5 +46,35 @@
   "JPN": "Liga Japonesa",
   "QAT": "Liga do Catar",
   "CHN": "Liga Chinesa"
+ },
+ "outrasLigas": {
+  "ARG": "Liga Argentina",
+  "URU": "Liga Uruguaia",
+  "COL": "Liga Colombiana",
+  "CHI": "Liga Chilena",
+  "ECU": "Liga Equatoriana",
+  "PAR": "Liga Paraguaia",
+  "PER": "Liga Peruana",
+  "BOL": "Liga Boliviana",
+  "VEN": "Liga Venezuelana",
+  "NED": "Liga Holandesa",
+  "BEL": "Liga Belga",
+  "NOR": "Liga Norueguesa",
+  "TUR": "Liga Turca",
+  "CZE": "Liga Tcheca",
+  "GRE": "Liga Grega",
+  "AUT": "Liga Austríaca",
+  "POL": "Liga Polonesa",
+  "UKR": "Liga Ucraniana",
+  "SVK": "Liga Eslovaca",
+  "AZE": "Liga do Azerbaijão",
+  "HUN": "Liga Húngara",
+  "CRO": "Liga Croata",
+  "SCO": "Liga Escocesa",
+  "SVN": "Liga Eslovena",
+  "CYP": "Liga Cipriota",
+  "ISR": "Liga Israelense",
+  "BUL": "Liga Búlgara",
+  "ARM": "Liga Armênia"
  }
 }

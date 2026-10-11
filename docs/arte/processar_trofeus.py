@@ -20,7 +20,9 @@ TOL_LO, TOL_HI = 22.0, 46.0   # distância ao fundo em que a transparência é t
 VAO_MAX = 0.02                # vão de fundo (fração da imagem) que ainda conta como fundo
 # troféus com vãos de fundo grandes, presos dentro do desenho (entre as alças e a taça; entre o anel e a bola): ali o vão maior
 # também sai (relato do usuário em 2026-10-11: "alguns troféus ficaram com uma parte do fundo em azul")
-VAO_MAX_POR_TROFEU = {'copa-europeia': 0.2, 'premio-melhor-jogador': 0.2}
+# peso do matiz por troféu: o "azul a mais" (B - max(R, G)) separa do fundo azul uma peça escura e cinza que fica perto dele em RGB
+MATIZ_POR_TROFEU = {'copa-espanha': 3, 'liga-espanha': 3, 'liga-italia': 3}
+VAO_MAX_POR_TROFEU = {'copa-espanha': 0.2, 'copa-europeia': 0.2, 'copa-franca': 0.2, 'copa-inglaterra': 0.2, 'copa-portugal': 0.2, 'liga-espanha': 0.2, 'liga-franca': 0.2, 'liga-inglaterra': 0.2, 'liga-portugal': 0.2, 'premio-melhor-jogador': 0.2}
 MARGEM = 0.06                 # margem em volta do troféu, fração do lado
 
 
@@ -31,10 +33,14 @@ def fundo(img):
     return np.mean([p.reshape(-1, 3).mean(0) for p in patches], axis=0)
 
 
-def alfa(img, vao_max=VAO_MAX):
+def alfa(img, vao_max=VAO_MAX, matiz=0):
     """Alfa 0..1: transparente no fundo ligado às bordas; o resto, opaco."""
     h, w, _ = img.shape
-    dist = np.linalg.norm(img.astype(float) - fundo(img), axis=2)
+    bg = fundo(img)
+    dist = np.linalg.norm(img.astype(float) - bg, axis=2)
+    if matiz:
+        azul = lambda c: c[..., 2] - np.maximum(c[..., 0], c[..., 1])
+        dist = np.maximum(dist, matiz * np.abs(azul(img.astype(float)) - azul(bg)))
     perto = dist < TOL_HI
     ligado = np.zeros((h, w), bool)
     fila = deque((y, x) for y in range(h) for x in (0, w - 1) if perto[y, x])
@@ -70,9 +76,9 @@ def alfa(img, vao_max=VAO_MAX):
     return np.where(ligado, rampa, 1.0)
 
 
-def processa(caminho, tamanho, vao_max=VAO_MAX):
+def processa(caminho, tamanho, vao_max=VAO_MAX, matiz=0):
     img = np.array(Image.open(caminho).convert('RGB'))
-    a = alfa(img, vao_max)
+    a = alfa(img, vao_max, matiz)
     ys, xs = np.where(a > 0.5)
     y0, y1, x0, x1 = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
     lado = int(max(y1 - y0, x1 - x0) * (1 + 2 * MARGEM))
@@ -95,7 +101,7 @@ def main():
             print('sem imagem:', pasta)
             continue
         nome = os.path.basename(pasta.rstrip('/'))
-        processa(fontes[0], args.tamanho, VAO_MAX_POR_TROFEU.get(nome, VAO_MAX)).save(os.path.join(args.saida, nome + '.webp'), quality=90, method=6)
+        processa(fontes[0], args.tamanho, VAO_MAX_POR_TROFEU.get(nome, VAO_MAX), MATIZ_POR_TROFEU.get(nome, 0)).save(os.path.join(args.saida, nome + '.webp'), quality=90, method=6)
         print('ok', nome)
 
 

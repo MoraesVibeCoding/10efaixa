@@ -21,4 +21,25 @@ describe('troféus em imagem (v2.56)', () => {
   it('as peças são os troféus criados pelo usuário (src/assets/trofeus), não as provisórias (v2.60)', () => {
     for (const [id, piece] of Object.entries(trophyArt.pecas)) expect(trophySrc(id), id).toContain(`/trofeus/${piece}.webp`);
   });
+
+  it('liga e copa nacional (v2.90): a peça do país quando existe; sem ela, a peça genérica da competição', () => {
+    expect(trophySrc('ligaNacional:ENG')).toContain('/trofeus/liga-inglaterra.webp');
+    expect(trophySrc('ligaNacional:ESP')).toContain('/trofeus/liga-espanha.webp');
+    expect(trophySrc('ligaNacional:ITA')).toContain('/trofeus/liga-italia.webp');
+    expect(trophySrc('ligaNacional:GER')).toContain('/trofeus/liga-alemanha.webp');
+    expect(trophySrc('ligaNacional:POR')).toContain('/trofeus/liga-portugal.webp');
+    expect(trophySrc('ligaNacional:FRA')).toContain('/trofeus/liga-franca.webp');
+    expect(trophySrc('ligaNacional:NED')).toContain('/trofeus/liga-europeia.webp');
+    expect(trophySrc('copaNacional:ENG')).toContain('/trofeus/copa-inglaterra.webp');
+    expect(trophySrc('copaNacional:ESP')).toContain('/trofeus/copa-espanha.webp');
+    expect(trophySrc('copaNacional:GER')).toContain('/trofeus/copa-alemanha.webp');
+    expect(trophySrc('copaNacional:FRA')).toContain('/trofeus/copa-franca.webp');
+    expect(trophySrc('copaNacional:POR')).toContain('/trofeus/copa-portugal.webp');
+    expect(trophySrc('copaNacional:ITA')).toContain('/trofeus/copa-italia.webp');
+    expect(trophySrc('copaNacional')).toContain('/trofeus/copa-do-brasil.webp');
+  });
+
+  it('Copa Europeia 2 com a peça própria enviada pelo usuário (v2.90)', () => {
+    expect(trophySrc('europaLeague')).toContain('/trofeus/copa-europeia-2.webp');
+  });
 });

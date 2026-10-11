@@ -4,6 +4,7 @@ import { reducedMotion } from '../motion';
 import { useSaida } from '../useSaida';
 import { TrophyIcon } from './TrophyIcon';
 import './Palco.css';
+import { tituloNome } from './titleText';
 
 /** Peças do confete: posição, atraso e cor fixos (nada de sorteio na tela). */
 const CONFETE = Array.from({ length: 18 }, (_, i) => ({ x: (i * 37) % 100, atraso: (i * 83) % 600, cor: i % 3 }));
@@ -39,7 +40,7 @@ export function Palco({ titulos, onClose }: { titulos: string[]; onClose: () => 
           {grupos.map(({ id, n }) => (
             <li key={id} className="palco__taca" data-taca={id}>
               <TrophyIcon id={id} size={96} />
-              <span className="palco__nome">{t(`ui.titulo.${id}`)}</span>
+              <span className="palco__nome">{tituloNome(id)}</span>
               {n > 1 && <span className="palco__vezes">{t('ui.palco.vezes', { n })}</span>}
             </li>
           ))}

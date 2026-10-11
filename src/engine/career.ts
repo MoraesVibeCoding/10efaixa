@@ -9,6 +9,7 @@ import { brazilQualifiers, copaDoBrasil, copaDoBrasilEntrants, copaDoNordeste, f
 import { EUROPE, areEuroRivals, effectiveRep } from './europe';
 import { initialEuroTables, simulateEuropeSeason, type EuroTables } from './europeSeason';
 import { applyOption, autoChoice } from './events';
+import { titleId } from './titleId';
 import { callUp, coachFor, isPrincipal, selectionEffect, updatePrestige, visibility, type CallUp, type Rung } from './nationalTeam';
 import { evolveSemester, type EvoState, type Focus } from './evolution';
 import { projectValue, salaryChange, valueChange } from './contractCard';
@@ -789,7 +790,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       };
       ultimaTemporada = summarizeSeason({
         year, age: evo.age - 1, clubId: seasonClub, division: league, games: seasonGames, goals: seasonGoals, assists: seasonAssists, cleanSheets: seasonCleanSheets, goleiro: position === 'goleiro', minutes: avgMinutes,
-        overallBefore: ovStart, overallAfter: ov(evo), attrsBefore: attrsStart, attrsAfter: evo.attributes, titles: titles.filter((t) => t.year === year).map((t) => t.competition),
+        overallBefore: ovStart, overallAfter: ov(evo), attrsBefore: attrsStart, attrsAfter: evo.attributes, titles: titles.filter((t) => t.year === year).map(titleId),
         // v2.85: os avisos (a próxima checagem de aposentadoria é no fim da temporada que vem)
         sinais: seasonSignals(signalsNow),
       });

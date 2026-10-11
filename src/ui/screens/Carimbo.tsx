@@ -4,6 +4,7 @@ import { MOTION } from '../motion';
 import type { Moment } from './moments';
 import { TrophyIcon } from './TrophyIcon';
 import './Carimbo.css';
+import { tituloNome } from './titleText';
 
 // v2.47: o carimbo do momento (título, acesso, rebaixamento) por cima da decisão, um por vez, e some sozinho.
 // Não bloqueia a tela (sem foco, sem clique); o leitor de tela ouve o texto pela região viva.
@@ -23,7 +24,7 @@ export function Carimbo({ momentos }: { momentos: Moment[] }) {
         <p key={i} className="carimbo__selo" data-momento={atual.kind}>
           {atual.kind === 'titulo' ? <span className="carimbo__trofeu"><TrophyIcon id={atual.competition} size={96} /></span> : null}
           {t(`ui.momento.${atual.kind}`)}{' '}
-          <span className="carimbo__sub">{atual.kind === 'titulo' ? t(`ui.titulo.${atual.competition}`) : t('ui.momento.paraSerie', { serie: atual.serie })}</span>
+          <span className="carimbo__sub">{atual.kind === 'titulo' ? tituloNome(atual.competition) : t('ui.momento.paraSerie', { serie: atual.serie })}</span>
         </p>
       ) : null}
     </div>

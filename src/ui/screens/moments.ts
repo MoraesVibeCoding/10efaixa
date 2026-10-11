@@ -1,9 +1,10 @@
+import { titleId } from '../../engine/titleId';
 // v2.47: o que aconteceu desde a decisão anterior e merece carimbo (título, acesso, rebaixamento).
 export type Moment = { kind: 'titulo'; competition: string } | { kind: 'acesso' | 'rebaixamento'; serie: string };
 
 /** O retrato de uma decisão: as temporadas fechadas e, v2.84, o ano, o clube e a divisão de agora. */
 interface Snapshot {
-  titles: { competition: string }[];
+  titles: { competition: string; clubId?: string }[];
   seasons: { year: number; clubId: string; division: string | null }[];
   year: number; clubId: string | null; divisao: string | null;
 }
@@ -20,7 +21,7 @@ function linha(s: Snapshot) {
 
 export function momentsBetween(antes: Snapshot | undefined, agora: Snapshot): Moment[] {
   if (!antes) return [];
-  const out: Moment[] = agora.titles.slice(antes.titles.length).map((x) => ({ kind: 'titulo' as const, competition: x.competition }));
+  const out: Moment[] = agora.titles.slice(antes.titles.length).map((x) => ({ kind: 'titulo' as const, competition: titleId(x) }));
   const anos = linha(agora);
   for (let i = 1; i < anos.length; i++) {
     const prev = anos[i - 1]!;
