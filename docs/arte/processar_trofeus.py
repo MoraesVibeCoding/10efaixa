@@ -21,7 +21,7 @@ VAO_MAX = 0.02                # vão de fundo (fração da imagem) que ainda con
 # troféus com vãos de fundo grandes, presos dentro do desenho (entre as alças e a taça; entre o anel e a bola): ali o vão maior
 # também sai (relato do usuário em 2026-10-11: "alguns troféus ficaram com uma parte do fundo em azul")
 # peso do matiz por troféu: o "azul a mais" (B - max(R, G)) separa do fundo azul uma peça escura e cinza que fica perto dele em RGB
-MATIZ_POR_TROFEU = {'copa-espanha': 3, 'liga-espanha': 3}
+MATIZ_POR_TROFEU = {'copa-espanha': 3, 'liga-espanha': 3, 'liga-italia': 3}
 VAO_MAX_POR_TROFEU = {'copa-espanha': 0.2, 'copa-europeia': 0.2, 'copa-inglaterra': 0.2, 'liga-espanha': 0.2, 'liga-inglaterra': 0.2, 'premio-melhor-jogador': 0.2}
 MARGEM = 0.06                 # margem em volta do troféu, fração do lado
 
