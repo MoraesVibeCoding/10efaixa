@@ -30,7 +30,7 @@ function passMeetings() {
   for (let guard = 0; guard < 6; guard++) {
     const resposta = document.querySelector('.reuniao__resposta');
     if (resposta) { fireEvent.click(resposta.querySelector('button')!); continue; }
-    if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getByRole('button', { name: t('ui.reuniao.propor') })); continue; }
+    if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getAllByRole('radio')[0]!); continue; }
     // T28k: tela de contratos (primeiro cartão: fica ou renova; sem clube, aceita a primeira)
     if (screen.queryByRole('heading', { level: 1, name: t('ui.proposta.titulo') })) { fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getByRole('button', { name: t('ui.proposta.confirmar') })); continue; }
     return;

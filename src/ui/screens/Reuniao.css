@@ -44,3 +44,9 @@
   text-transform: uppercase;
   cursor: pointer;
 }
+
+/* v2.87: a ideia marcada vale sozinha em --decide-ms: a mesma barra amarela da decisão corre no pé do cartão */
+.ideia { overflow: hidden; }
+.ideia__prazo { position: absolute; inset-inline: 0; inset-block-end: 0; block-size: 4px; background: var(--paleta-amarelo); transform-origin: 0 50%; animation: opcao-prazo var(--decide-ms, 2000ms) linear both; }
+@keyframes opcao-prazo { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .ideia__prazo { animation: none; } }
