@@ -23,7 +23,7 @@ const onProposalScreen = () => screen.queryByRole('heading', { level: 1, name: t
 function playUntilProposals() {
   for (let guard = 0; guard < 400 && !onProposalScreen(); guard++) {
     const resposta = document.querySelector('.reuniao__resposta');
-    if (resposta) { fireEvent.click(resposta.querySelector('button')!); continue; }
+    if (resposta) { fireEvent.click(resposta); fireEvent.click(resposta); continue; }
     if (screen.queryByRole('heading', { level: 1, name: t('ui.reuniao.titulo') })) { fireEvent.click(screen.getAllByRole('radio')[0]!); fireEvent.click(screen.getAllByRole('radio')[0]!); continue; }
     // v2.64: o empréstimo usa a tela de cartões; aqui ele fica (o primeiro cartão é o clube atual)
     if (screen.queryByRole('heading', { level: 1, name: t('ui.emprestimo.titulo') })) { fireEvent.click(screen.getAllByRole('radio', { name: /./ })[0]!); fireEvent.click(screen.getByRole('button', { name: t('ui.proposta.confirmar') })); continue; }
@@ -33,7 +33,7 @@ function playUntilProposals() {
     fireEvent.click(document.querySelector(`[data-opcao-id="${choice}"]`)!);
     // pedido do usuário (sem "Confirmar escolha"): tocar de novo na marcada decide na hora
     fireEvent.click(document.querySelector(`[data-opcao-id="${choice}"]`)!);
-    fireEvent.click(screen.getByRole('button', { name: t('ui.resultado.seguir') }));
+    { const caixa = document.querySelector('.resultado__caixa')!; fireEvent.click(caixa); fireEvent.click(caixa); }
   }
 }
 

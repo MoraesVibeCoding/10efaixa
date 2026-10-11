@@ -338,7 +338,7 @@
 .decisao__confirmar:disabled { cursor: default; background: var(--cor-trilho); color: var(--cor-texto-suave); }
 
 /* ---------- o que a escolha rendeu (v2.81, Álbum): o veredito carimba a foto; no lugar do painel, no papel, fica o que
-   você escolheu, "Você ganha" e "Em troca" em caixas com o fio da cor, e "Seguir". O resto da página fica inerte. */
+   você escolheu, "Você ganha" e "Em troca" em caixas com o fio da cor (v2.88: sem "Seguir"; fecha sozinho). O resto da página fica inerte. */
 .decisao[data-resultado='aberto'] .decisao__painel { display: none; }
 .resultado { flex: none; display: grid; }
 .resultado__caixa { display: grid; gap: var(--espaco-2); padding: var(--espaco-1) var(--espaco-1) 0; }
@@ -369,24 +369,14 @@
 .resultado__lista strong { flex: none; font-family: var(--fonte-titulo); font-size: var(--tipo-opcao); font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .resultado__ganho strong { color: var(--cor-positivo); }
 .resultado__perda strong { color: var(--cor-negativo); }
-.resultado__seguir {
-  margin-block-start: var(--espaco-1);
-  min-block-size: var(--toque-compacto);
-  padding: 0 var(--espaco-5);
-  border: 0;
-  border-radius: 999px; /* v2.73: botão principal único */
-  background: var(--cor-destaque);
-  color: var(--cor-sobre-destaque);
-  font-family: var(--fonte-titulo);
-  font-size: var(--tipo-opcao);
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  cursor: pointer;
-  touch-action: manipulation;
-}
+/* v2.88: sem "Seguir": a caixa fecha sozinha em --resultado-ms (a barra amarela corre no pé) e passa com dois toques */
+.resultado__caixa { position: relative; padding-block-end: var(--espaco-3); cursor: pointer; touch-action: manipulation; }
+.resultado__caixa:focus { outline: none; }
+.resultado__caixa:focus-visible { outline: 3px solid var(--cor-foco); outline-offset: 2px; }
+.resultado__dica { margin: 0; color: var(--cor-texto-suave); font-size: var(--tipo-miudo); text-align: center; }
+.resultado__prazo { position: absolute; inset-inline: 0; inset-block-end: 0; block-size: 4px; border-radius: 2px; background: var(--paleta-amarelo); transform-origin: 0 50%; animation: opcao-prazo var(--resultado-ms, 2600ms) linear both; }
+@media (prefers-reduced-motion: reduce) { .resultado__prazo { animation: none; } }
 @media (hover: hover) {
-  .resultado__seguir:hover { background: color-mix(in srgb, var(--cor-destaque) 80%, black); }
   .gaveta__fechar:hover { background: var(--cor-fundo); }
 }
 
@@ -529,8 +519,8 @@
 .resultado__escolha { animation: decisao-entra 160ms ease-out 60ms both; }
 .resultado__lista li { animation: resultado-linha 160ms ease-out calc(100ms + var(--i, 0) * 40ms) both; }
 /* backwards: depois de entrar, a animação solta o transform e o toque (base.css) funciona */
-.resultado__seguir { animation: decisao-entra 160ms ease-out 180ms backwards; }
-.decisao[data-ritmo='rapido'] :is(.resultado__veredito, .resultado__escolha, .resultado__lista li, .resultado__seguir) { animation: none; }
+.resultado__dica { animation: decisao-entra 160ms ease-out 180ms backwards; }
+.decisao[data-ritmo='rapido'] :is(.resultado__veredito, .resultado__escolha, .resultado__lista li, .resultado__dica) { animation: none; }
 .decisao[data-ritmo='rapido'] .cena { animation: none; }
 @keyframes resultado-veredito { from { opacity: 0; transform: scale(1.15); } to { opacity: 1; transform: none; } }
 @keyframes resultado-linha { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: none; } }

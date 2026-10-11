@@ -40,11 +40,15 @@ describe('cards sobre a história (v2.81)', () => {
     expect(dialog.parentElement).toHaveClass('folha__fundo');
   });
 
-  it('resposta da reunião: a mesma folha', () => {
-    render(<ReuniaoResposta resposta={{ response: 'aceita', focus: { main: 'passe', secondary: 'drible' } }} onDone={() => {}} />);
-    const dialog = screen.getByRole('alertdialog');
-    expect(dialog).toHaveClass('folha');
-    expect(dialog.parentElement).toHaveClass('folha__fundo');
+  // v2.88 (pedido do usuário: "muito escondida apenas uma pequena tela saindo de baixo"): a resposta da reunião deixa a folha e
+  // vira uma página do álbum, com a foto da sala e o quadro do plano no papel
+  it('resposta da reunião: uma página do álbum, não uma folha', () => {
+    render(<ReuniaoResposta resposta={{ response: 'aceita', focus: { main: 'passe', secondary: 'drible' } }} pedido={{ main: 'passe', secondary: 'drible' }} ideia="obvia"
+      player={PLAYER} age={24} progress={0.4} pagina={PAGINA} scene={scene} onDone={() => {}} />);
+    const pagina = screen.getByRole('alertdialog');
+    expect(pagina).not.toHaveClass('folha');
+    expect(pagina.querySelector('.decisao__foto')).not.toBeNull();
+    expect(pagina.querySelector('.pagina__topo')).not.toBeNull();
   });
 
   it('propostas: os cartões sobem numa folha por cima da página; a cena fica atrás, escurecida', () => {

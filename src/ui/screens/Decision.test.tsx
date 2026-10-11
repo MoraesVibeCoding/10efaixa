@@ -79,10 +79,11 @@ describe('resultado da escolha (SPEC v2.20)', () => {
   });
 
   // T49b: no ritmo normal o resultado só fecha pelo botão ou Esc (WCAG 2.2.1); sozinho, só no ritmo Rápido
-  it('no ritmo normal o resultado espera o jogador: não fecha sozinho', () => {
+  // v2.88 (decisão do usuário em 2026-10-11, "igual em tudo"): no Normal o resultado também segue sozinho, uma vez só
+  it('no ritmo normal o resultado também segue sozinho, uma única vez', () => {
     const onContinue = open();
     act(() => { vi.advanceTimersByTime(10_000); });
-    expect(onContinue).not.toHaveBeenCalled();
+    expect(onContinue).toHaveBeenCalledTimes(1);
   });
 
   it('no ritmo Rápido segue sozinho depois de um instante, uma única vez', () => {
@@ -108,9 +109,9 @@ describe('resultado da escolha (SPEC v2.20)', () => {
     expect(screen.getByRole('dialog')).not.toHaveAttribute('inert');
   });
 
-  it('quem não quer esperar segue pelo botão', () => {
+  it('quem não quer esperar segue com dois toques (v2.88: sem botão)', () => {
     const onContinue = open();
-    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: t('ui.resultado.seguir') }));
+    { const caixa = document.querySelector('.resultado__caixa')!; fireEvent.click(caixa); fireEvent.click(caixa); }
     expect(onContinue).toHaveBeenCalledTimes(1);
     act(() => { vi.advanceTimersByTime(10_000); });
     expect(onContinue).toHaveBeenCalledTimes(1);

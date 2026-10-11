@@ -27,23 +27,44 @@
 .ideia__dica--muito { color: var(--cor-positivo); }
 .reuniao__toque { margin: 0; text-align: center; font-size: 0.875rem; opacity: 0.85; }
 /* resposta da comissão: a folha por cima da página (div, não <dialog>: Safari do iPhone) */
-.reuniao__resposta { display: grid; gap: var(--espaco-3); } /* v2.81: caixa, fundo e entrada da folha (folha.css) */
-.reuniao__resposta h2 { font-size: var(--tipo-nome); font-weight: 900; line-height: 1.05; }
-.reuniao__resposta p { line-height: 1.4; }
-.reuniao__resposta button {
-  /* v2.81: o botão principal do jogo (verde cheio, na largura da folha) */
-  min-block-size: var(--toque-compacto);
-  border: 0;
-  border-radius: 999px;
-  background: var(--cor-destaque);
-  color: var(--cor-sobre-destaque);
-  font-family: var(--fonte-titulo);
-  font-size: var(--tipo-opcao);
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+/* v2.88 (pedido do usuário: a folha pequena "ficava muito escondida"): a resposta da comissão é uma página do álbum por cima
+   da próxima tela, como o resultado da decisão: foto da sala com o carimbo e, no papel, o quadro do plano. Sem "Seguir": fecha
+   sozinha em --resultado-ms (a barra amarela corre no pé) e passa com dois toques. */
+.reuniao__resposta {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  overflow-y: auto;
+  background: var(--cor-fundo);
   cursor: pointer;
+  touch-action: manipulation;
+  animation: resposta-entra 200ms ease-out both;
 }
+.reuniao__resposta[data-saindo] { animation: resposta-sai 150ms ease-in both; }
+@keyframes resposta-entra { from { opacity: 0; } to { opacity: 1; } }
+@keyframes resposta-sai { to { opacity: 0; } }
+.reuniao__resposta:focus { outline: none; }
+.reuniao__resposta:focus-visible { outline: 3px solid var(--cor-foco); outline-offset: -3px; }
+.reuniao__resposta-painel { position: relative; gap: var(--espaco-2); padding-block-end: var(--espaco-3); }
+.reuniao__resposta-texto { margin: 0; line-height: 1.4; }
+.reuniao__resposta-dica { margin: 0; color: var(--cor-texto-suave); font-size: var(--tipo-miudo); text-align: center; }
+.reuniao__resposta-prazo { position: absolute; inset-inline: 0; inset-block-end: 0; block-size: 4px; border-radius: 2px; background: var(--paleta-amarelo); transform-origin: 0 50%; animation: opcao-prazo var(--resultado-ms, 2600ms) linear both; }
+/* o quadro do plano: o fio da cor da resposta à esquerda (verde topou, amarelo outra ideia, vermelho recusou) */
+.plano { display: grid; gap: 6px; margin: 0; padding: var(--espaco-2) var(--espaco-3); list-style: none; border-inline-start: 4px solid var(--cor-positivo); border-radius: var(--forma-raio); background: var(--cor-superficie); box-shadow: var(--forma-sombra-suave); }
+.plano--contrapropoe { border-inline-start-color: var(--paleta-amarelo); }
+.plano--recusa { border-inline-start-color: var(--cor-negativo); }
+.plano li { display: grid; grid-template-columns: 6.75rem minmax(0, 1fr); align-items: center; gap: var(--espaco-2); }
+.plano__rotulo { font-family: var(--fonte-titulo); font-size: var(--tipo-miudo); font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: var(--cor-texto-suave); }
+.plano__chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.plano__chip { display: inline-flex; align-items: baseline; gap: 6px; padding: 3px 10px; border: 1.5px solid var(--cor-linha); border-radius: 999px; font-weight: 700; }
+.plano__chip small { font-size: var(--tipo-miudo); font-weight: 600; color: var(--cor-texto-suave); }
+.plano__chip--fora { border-style: dashed; color: var(--cor-texto-suave); text-decoration: line-through; text-decoration-thickness: 2px; }
+.plano__chip--novo { border-color: var(--paleta-amarelo); background: var(--paleta-amarelo); color: var(--paleta-tinta); }
+.plano__chip--novo small { color: var(--paleta-tinta); }
+.plano__chip--ok { border-color: var(--cor-destaque); background: var(--cor-destaque); color: var(--cor-sobre-destaque); }
+.plano__chip--ok small { color: var(--cor-sobre-destaque); }
+.plano__normal { font-weight: 700; }
+@media (prefers-reduced-motion: reduce) { .reuniao__resposta, .reuniao__resposta[data-saindo], .reuniao__resposta-prazo { animation: none; } }
 
 /* v2.87: a ideia marcada vale sozinha em --decide-ms: a mesma barra amarela da decisão corre no pé do cartão */
 .ideia { overflow: hidden; }
