@@ -1,4 +1,5 @@
-/* T55d: o cartão ocupa a largura da coluna e mantém 1080×1350 (4:5) em qualquer tela. */
+/* T55d: o cartão ocupa a largura da coluna e mantém 1080×1350 (4:5) em qualquer tela. v2.81 (Álbum): a tela é a contracapa
+   (verde-noite com faixas de grama) e mostra o card de fim de carreira em HTML; o Canvas gera a imagem fora da vista. */
 .cartao {
   display: flex;
   flex-direction: column;
@@ -12,30 +13,8 @@
   color: var(--cor-texto);
 }
 .cartao__titulo { margin: 0; font-family: var(--fonte-titulo); font-size: var(--tipo-titulo); text-transform: uppercase; }
-.cartao__versoes { display: flex; gap: var(--espaco-2); }
-.cartao__versoes button {
-  flex: 1;
-  min-block-size: var(--toque-compacto);
-  border: var(--forma-borda-fina) solid var(--cor-linha);
-  border-radius: 999px;
-  background: var(--cor-superficie);
-  color: var(--cor-texto);
-  font-family: var(--fonte-titulo);
-  font-size: var(--tipo-opcao);
-  font-weight: 700;
-  cursor: pointer;
-}
-.cartao__versoes button[aria-pressed='true'] { background: var(--cor-texto); color: var(--cor-fundo); border-color: var(--cor-texto); }
-.cartao__imagem {
-  inline-size: 100%; block-size: auto; aspect-ratio: 4 / 5; border-radius: var(--forma-raio); box-shadow: var(--forma-sombra-suave);
-  /* v2.71 (momento 10): o cartão entra virando, como figurinha tirada do pacote; base.css zera com reduced motion */
-  animation: cartao-vira 800ms cubic-bezier(0.2, 0.9, 0.3, 1.1) both;
-}
-@keyframes cartao-vira {
-  from { opacity: 0; transform: perspective(1200px) rotateY(-100deg) scale(0.9); }
-  60% { opacity: 1; }
-  to { transform: perspective(1200px) rotateY(0) scale(1); }
-}
+
+.cartao__imagem { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }
 .cartao__aviso { margin: 0; font-size: var(--tipo-pequeno, 0.875rem); text-align: center; }
 .cartao__selo { align-self: flex-start; margin: 0; padding: 4px 12px; border-radius: 999px; font-weight: 600; box-shadow: inset 0 0 0 2px currentColor; }
 .cartao__nova {
@@ -70,3 +49,104 @@
 .cartao__acoes .cartao__principal { flex-basis: 100%; border-color: var(--cor-destaque); background: var(--cor-destaque); color: var(--cor-sobre-destaque); font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
 .cartao__acoes button:disabled { opacity: 0.6; cursor: progress; }
 .cartao__status { min-block-size: 1.4em; margin: 0; font-size: var(--tipo-apoio); }
+
+/* ---------- v2.81 (Álbum): a contracapa e o card de fim de carreira, de frente e verso */
+.cartao--contracapa {
+  max-inline-size: none;
+  background: repeating-linear-gradient(180deg, var(--paleta-noite) 0 4.5rem, var(--paleta-noite-faixa) 4.5rem 9rem);
+  color: var(--paleta-papel);
+}
+.cartao--contracapa > * { inline-size: min(100%, 26rem); margin-inline: auto; }
+.cartao__topo { display: flex; justify-content: space-between; margin: 0; font-family: var(--fonte-titulo); font-size: var(--tipo-miudo); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--paleta-amarelo); }
+.cartao--contracapa .cartao__status, .cartao--contracapa .cartao__aviso { color: var(--paleta-papel); }
+.cartao--contracapa .cartao__acoes button { border-color: var(--paleta-papel); background: transparent; color: var(--paleta-papel); }
+.cartao--contracapa .cartao__acoes .cartao__principal { border-color: var(--paleta-amarelo); background: var(--paleta-amarelo); color: var(--paleta-tinta); }
+.cartao--contracapa .cartao__nova { border-color: var(--paleta-papel); color: var(--paleta-papel); }
+.cartao--contracapa button:focus-visible { outline-color: var(--paleta-amarelo); }
+
+.fim { display: grid; justify-items: center; gap: var(--espaco-2); perspective: 1400px; }
+.fim__card {
+  display: grid;
+  inline-size: 100%;
+  transform-style: preserve-3d;
+  transition: transform 700ms cubic-bezier(0.645, 0.045, 0.355, 1);
+  animation: fim-cola 600ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+.fim[data-lado='verso'] .fim__card { transform: rotateY(180deg); }
+.fim__face {
+  grid-area: 1 / 1;
+  display: grid;
+  align-content: start;
+  gap: var(--espaco-2);
+  box-sizing: border-box;
+  padding: var(--espaco-3);
+  border: 6px solid var(--paleta-ouro-moldura);
+  border-radius: 1rem;
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  box-shadow: 0 14px 30px color-mix(in srgb, black 40%, transparent);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.fim__verso { transform: rotateY(180deg); }
+
+/* frente */
+.fim__foto { position: relative; justify-self: center; inline-size: min(12.5rem, 30dvh); }
+/* o nome inteiro na figurinha grande: quebra em até duas linhas em vez de cortar (igual à revelação) */
+.fim__foto .figurinha__tarja-nome { white-space: normal; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.05; }
+.fim__aos { position: absolute; inset-block-start: 0.6rem; inset-inline-end: -0.6rem; padding: 3px 10px; border: 2px solid var(--cor-texto); border-radius: 999px; background: var(--cor-fundo); font-family: var(--fonte-titulo); font-size: var(--tipo-miudo); font-weight: 700; white-space: nowrap; }
+.fim__veredito { margin: 0 calc(-1 * var(--espaco-3)); padding: var(--espaco-2) var(--espaco-3); background: var(--paleta-amarelo); color: var(--paleta-tinta); font-family: var(--fonte-titulo); font-size: 1.75rem; font-weight: 900; line-height: 1; text-align: center; text-transform: uppercase; }
+.fim__quem { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--espaco-2); margin: 0; }
+.fim__quem strong { font-family: var(--fonte-titulo); font-size: var(--tipo-nome); font-weight: 900; line-height: 1; text-transform: uppercase; }
+.fim__quem span { color: var(--cor-texto-suave); }
+.fim__metas { display: grid; grid-template-columns: 1fr 1fr; gap: var(--espaco-2); margin: 0; padding: 0; list-style: none; }
+.fim__metas li {
+  display: flex; align-items: center; gap: var(--espaco-2); min-block-size: 3.25rem; padding: 0 var(--espaco-2);
+  border-radius: var(--forma-raio-cartao); font-family: var(--fonte-titulo); font-size: var(--tipo-miudo); font-weight: 700; line-height: 1.15; text-transform: uppercase;
+  animation: meta-preenche 400ms ease-out both;
+}
+.fim__metas li:nth-child(1) { animation-delay: 900ms; }
+.fim__metas li:nth-child(2) { animation-delay: 1200ms; }
+/* meta feita: preenchida em ouro; a que faltou continua tracejada */
+.fim__metas li[data-feita='true'] { border: 2.5px solid var(--paleta-ouro-moldura); background: linear-gradient(135deg, color-mix(in srgb, var(--paleta-amarelo) 25%, white), color-mix(in srgb, var(--paleta-amarelo) 60%, white)); color: var(--cor-texto); }
+.fim__metas li[data-feita='false'] { border: 2.5px dashed color-mix(in srgb, var(--cor-texto) 35%, transparent); color: var(--cor-texto-suave); }
+.fim__meta-marca { flex: none; font-size: 1.6rem; font-weight: 900; line-height: 1; }
+.fim__meta-marca--faixa { inline-size: 1.6rem; block-size: 0.85rem; border: 2.5px solid currentColor; border-radius: 3px; }
+.fim__metas li[data-feita='false'] .fim__meta-marca--faixa { border-style: dashed; }
+.fim__numeros { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: var(--espaco-2); margin: 0; padding: 0; list-style: none; }
+.fim__numeros li { display: grid; justify-items: center; padding: var(--espaco-1) 0; border-radius: var(--forma-raio); background: color-mix(in srgb, var(--cor-destaque) 8%, transparent); }
+.fim__numeros strong { font-family: var(--fonte-titulo); font-size: 1.5rem; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
+.fim__numeros span { font-family: var(--fonte-titulo); font-size: var(--tipo-miudo); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--cor-texto-suave); }
+
+/* verso */
+.fim__manchete { margin: 0; font-family: var(--fonte-titulo); font-size: 1.25rem; font-weight: 700; line-height: 1.1; }
+.fim__ficha { display: grid; margin: 0; }
+.fim__ficha div { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: var(--espaco-2); align-items: center; padding-block: var(--espaco-1); border-block-end: 1px solid var(--cor-trilho); }
+.fim__ficha dt, .fim__rotulo { margin: 0; font-family: var(--fonte-titulo); font-size: var(--tipo-miudo); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cor-texto-suave); }
+.fim__ficha dd { margin: 0; font-size: var(--tipo-miudo); line-height: 1.3; }
+.fim__sonho { display: flex; align-items: center; gap: var(--espaco-2); font-weight: 700; }
+.fim__sonho[data-realizado='true'] { color: var(--cor-positivo); }
+.fim__clubes { display: flex; flex-wrap: wrap; gap: var(--espaco-2); }
+.fim__clube { position: relative; display: inline-grid; }
+/* ídolo: uma estrela de ouro no canto do emblema */
+.fim__clube--idolo::after { content: '★'; position: absolute; inset-block-start: -0.55rem; inset-inline-end: -0.45rem; color: var(--paleta-ouro-moldura); font-size: 0.875rem; }
+.fim__estante { display: flex; flex-wrap: wrap; gap: 6px var(--espaco-4); margin: 0; padding: 4px 6px 0 0; list-style: none; }
+.fim__estante li { position: relative; display: grid; place-items: center; }
+.fim__taca-n { position: absolute; inset-block-start: -4px; inset-inline-end: -6px; min-inline-size: 1rem; block-size: 1rem; padding: 0 3px; box-sizing: border-box; display: grid; place-items: center; border-radius: 999px; background: var(--cor-texto); color: var(--cor-superficie); font-size: 0.875rem; font-weight: 800; line-height: 1; }
+/* os 10 atributos do auge em duas colunas: nome à esquerda, número à direita (os nomes inteiros cabem) */
+.fim__chips { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.fim__chip { display: flex; flex-direction: row-reverse; justify-content: space-between; align-items: center; gap: var(--espaco-2); padding: 3px var(--espaco-2); border: 1.5px solid var(--cor-trilho); border-radius: var(--forma-raio); }
+.fim__chip strong { font-family: var(--fonte-titulo); font-size: 1.25rem; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
+.fim__chip span { font-family: var(--fonte-titulo); font-size: 0.875rem; font-weight: 700; line-height: 1.1; color: var(--cor-texto-suave); }
+.fim__chip--top { border-color: var(--cor-destaque); background: var(--cor-destaque); color: var(--cor-sobre-destaque); }
+.fim__chip--top span { color: var(--cor-sobre-destaque); }
+.fim__codigo { margin: 0; font-family: var(--fonte-titulo); font-size: var(--tipo-miudo); font-weight: 700; letter-spacing: 0.06em; color: var(--cor-texto-suave); text-align: end; }
+
+.fim__virar { min-block-size: 2.75rem; padding: 0 var(--espaco-3); border: 0; background: none; color: var(--paleta-papel); font-family: var(--fonte-titulo); font-size: var(--tipo-apoio); font-weight: 700; letter-spacing: 0.04em; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+/* a figurinha do fim cola na contracapa (reta); as metas se preenchem uma a uma */
+@keyframes fim-cola { from { opacity: 0; transform: translateY(-1.5rem) scale(1.06); } to { opacity: 1; transform: none; } }
+@keyframes meta-preenche { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .fim__card, .fim__metas li { animation: none; }
+}

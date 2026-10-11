@@ -88,10 +88,11 @@ describe('fim da carreira com compartilhar em primeiro (v2.71)', () => {
     expect(screen.getByRole('button', { name: t('ui.compartilhar.baixar') })).toHaveClass('cartao__principal');
   });
 
-  it('CSS: o cartão entra virando; o botão principal é o verde do jogo e "Nova carreira" é contorno', () => {
+  it('CSS: o card cola na contracapa; o botão principal é o amarelo e "Nova carreira" é contorno', () => {
     const css = readFileSync(resolve(__dirname, 'Cartao.css'), 'utf8');
-    expect(css).toMatch(/\.cartao__imagem\s*\{[^}]*animation:\s*cartao-vira/);
-    expect(css).toMatch(/\.cartao__acoes \.cartao__principal\s*\{[^}]*background:\s*var\(--cor-destaque\)/);
+    // v2.81 (Álbum): o card de fim cola na contracapa; o botão principal é o amarelo da contracapa
+    expect(css).toMatch(/\.fim__card\s*\{[^}]*animation:\s*fim-cola/);
+    expect(css).toMatch(/\.cartao--contracapa \.cartao__acoes \.cartao__principal\s*\{[^}]*background:\s*var\(--paleta-amarelo\)/);
     expect(css).toMatch(/\.cartao__nova\s*\{[^}]*background:\s*transparent/);
   });
 });

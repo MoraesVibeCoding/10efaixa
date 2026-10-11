@@ -237,7 +237,8 @@ describe('App: rever carreira por link (T57d)', () => {
     render(<App hash={hash} />);
     expect(screen.getByRole('heading', { level: 1, name: t('ui.cartao.titulo') })).toBeInTheDocument();
     expect(screen.getByText(t('ui.rever.aviso'))).toBeInTheDocument();
-    expect(screen.getByRole('img', { name: new RegExp(t('ui.rever.nomeGenerico')) })).toBeInTheDocument();
+    // v2.81: o card de fim de carreira (HTML) mostra o nome; a imagem do Canvas fica fora da vista
+    expect(document.querySelector('.fim__quem')).toHaveTextContent(t('ui.rever.nomeGenerico'));
     expect(localStorage.getItem(SAVE_KEY)).toBeNull();
   });
 

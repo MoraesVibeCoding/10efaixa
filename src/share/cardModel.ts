@@ -19,6 +19,18 @@ export interface CardModel {
   numeros: { id: 'jogos' | 'gols' | 'assistencias' | 'semSofrerGol' | 'titulos' | 'selecao' | 'patrimonio'; nome: string; valor: string }[];
   radar: { id: Attribute; nome: string; valor: number }[];
   codigo: string; alt: { narrativa: string; estatistica: string };
+  /** v2.81 (Álbum, card de fim de carreira): o auge com a idade em que veio. */
+  auge: { overall: number; idade: number };
+  /** As duas metas do jogo respondidas: vestiu a 10 da Seleção, usou a faixa de capitão dela. */
+  metas: { dez: boolean; faixa: boolean };
+  /** "Do terrão do bairro à despedida no Santos": da origem ao último clube. */
+  arco: string;
+  /** O sonho do clube de coração: realizado se jogou nele; sem clube de coração, null. */
+  sonho: { clubId: string; realizado: boolean } | null;
+  /** A estante: um troféu por competição, com quantas vezes, na ordem em que vieram. */
+  tacas: { id: string; n: number }[];
+  /** A Seleção numa linha (jogos, gols e Copas do Mundo), só para quem jogou por ela. */
+  selecaoLinha: string | null;
 }
 
 const brl = (v: number) =>
@@ -62,7 +74,23 @@ export function cardModel(r: CareerResult, codigo: string): CardModel {
       atributos: radar.map((a) => `${a.nome} ${a.valor}`).join(', '),
     }),
   };
-  return { ...base, frases, clubes, numeros, radar, codigo, alt };
+  const ultimo = clubName(r.spells.at(-1)?.clubId ?? r.peakClubId);
+  const tacas: CardModel['tacas'] = [];
+  for (const x of r.titles) {
+    const g = tacas.find((y) => y.id === x.competition);
+    if (g) g.n++; else tacas.push({ id: x.competition, n: 1 });
+  }
+  const copas = new Set(r.selection.tournaments.filter((x) => x.tournament === 'copaDoMundo').map((x) => x.year)).size;
+  const fim = {
+    // a idade do auge em anos inteiros (o motor conta em meio ano)
+    auge: { overall: r.peakOverall, idade: Math.floor(r.peakAge) },
+    metas: { dez: r.selection.ten > 0, faixa: r.selection.captain > 0 },
+    arco: t(`ui.fim.arco.${r.player.origin}`, { prep: ultimo.prep, clube: ultimo.nome }),
+    sonho: heart ? { clubId: heart, realizado: r.spells.some((s) => s.clubId === heart) } : null,
+    tacas,
+    selecaoLinha: r.selection.games > 0 ? t('ui.fim.selecaoLinha', { jogos: r.selection.games, gols: r.selection.goals, copas }) : null,
+  };
+  return { ...base, frases, clubes, numeros, radar, codigo, alt, ...fim };
 }
 
 /** v2.62: o clube da figurinha do cartão: o da última temporada profissional (sem nenhuma, o do auge). */

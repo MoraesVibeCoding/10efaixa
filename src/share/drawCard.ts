@@ -167,7 +167,6 @@ const GW = W - 2 * GX;
 /** Pé do painel: nenhum texto do cartão passa daqui (o rodapé fica no verde, embaixo). */
 const GB = H - 70;
 const PAD = 44;
-const BAND_TILT = -0.05;
 
 /** Fundo: verde de gramado liso, com o número da camisa gigante e apagado atrás da figurinha. */
 function backdrop(ctx: CanvasRenderingContext2D, g: Geo, m: CardModel) {
@@ -254,12 +253,11 @@ function panel(ctx: CanvasRenderingContext2D, g: Geo) {
   ctx.restore();
 }
 
-/** A faixa de capitão (amarelo braçadeira), inclinada e passando das bordas, com o veredito. */
+/** A faixa de capitão (amarelo braçadeira), reta (v2.81: nada inclinado) e passando das bordas, com o veredito. */
 function band(ctx: CanvasRenderingContext2D, g: Geo, m: CardModel) {
   const v = m.veredito.toUpperCase();
   ctx.save();
   ctx.translate(W / 2, g.bandY + BAND_H / 2);
-  ctx.rotate(BAND_TILT);
   ctx.shadowColor = 'rgba(9, 26, 17, 0.3)'; ctx.shadowBlur = 16; ctx.shadowOffsetY = 6;
   ctx.fillStyle = P.amarelo;
   ctx.fillRect(-W / 2 - 40, -BAND_H / 2, W + 80, BAND_H);
