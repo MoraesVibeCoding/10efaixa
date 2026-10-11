@@ -35,7 +35,8 @@ describe('troféus em imagem (v2.56)', () => {
     expect(trophySrc('copaNacional:GER')).toContain('/trofeus/copa-alemanha.webp');
     expect(trophySrc('copaNacional:FRA')).toContain('/trofeus/copa-franca.webp');
     expect(trophySrc('copaNacional:POR')).toContain('/trofeus/copa-portugal.webp');
-    expect(trophySrc('copaNacional:ITA')).toContain('/trofeus/copa-do-brasil.webp');
+    expect(trophySrc('copaNacional:ITA')).toContain('/trofeus/copa-italia.webp');
+    expect(trophySrc('copaNacional')).toContain('/trofeus/copa-do-brasil.webp');
   });
 
   it('Copa Europeia 2 com a peça própria enviada pelo usuário (v2.90)', () => {
