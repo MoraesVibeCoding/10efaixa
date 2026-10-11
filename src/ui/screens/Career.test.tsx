@@ -64,14 +64,12 @@ describe('carreira na tela (T51b)', () => {
     const played = runUntilDecision(INPUT, 11, onProgress.mock.calls.at(-1)![0] as string[], 'normal');
     if (played.kind !== 'done') throw new Error('a carreira devia ter terminado');
     const result = played.result;
-    // T55d: o cartão (canvas) com o texto alternativo da versão narrativa, que abre primeiro
+    // v2.81 (Álbum): o card de fim de carreira, de frente (o veredito) e verso (a manchete); a frente abre primeiro
     expect(screen.getByRole('heading', { level: 1, name: t('ui.cartao.titulo') })).toBeInTheDocument();
-    const card = screen.getByRole('img', { name: /Cartão de carreira/ });
-    expect(card.getAttribute('aria-label')).toContain(t(`legacy.veredito.${result.legacy.verdict}`));
-    expect(card.getAttribute('aria-label')).toContain(result.headline);
-    fireEvent.click(screen.getByRole('button', { name: t('ui.cartao.estatistica') }));
-    expect(screen.getByRole('button', { name: t('ui.cartao.estatistica') })).toHaveAttribute('aria-pressed', 'true');
-    expect(screen.getByRole('img', { name: /em números/ })).toBeInTheDocument();
+    expect(document.querySelector('.fim__frente')).toHaveTextContent(t(`legacy.veredito.${result.legacy.verdict}`));
+    fireEvent.click(screen.getByRole('button', { name: t('ui.fim.virar') }));
+    expect(document.querySelector('.fim')).toHaveAttribute('data-lado', 'verso');
+    expect(document.querySelector('.fim__verso')).toHaveTextContent(result.headline);
     // T57e: o link copiado refaz esta mesma carreira (sem o nome) e o código é o do cartão
     const writeText = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
