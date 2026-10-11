@@ -1,17 +1,19 @@
 {
- "_nota": "Aposentadoria e despedida (SPEC 6.14, 6.18; T34). Ordem dos gatilhos: limite de idade, físico, overall inicial, decisão.",
+ "_nota": "Aposentadoria (SPEC 6.14, 6.18; T34; v2.85). Gatilhos forçados, nesta ordem: limite de idade, físico, overall inicial. Parar por decisão é escolha na tela de propostas (fimDeCarreira).",
  "idadeLimite": 40,
- "decisao": {
-  "idadeMin": 30,
-  "chanceBase": 0.03,
-  "porAno": 0.04,
-  "minutosBaixos": 0.25,
-  "bonusMinutosBaixos": 0.15,
-  "temperamento": {
-   "frio": 1.0,
-   "lider": 0.8,
-   "esquentado": 1.2,
-   "resenha": 1.3
+ "fimDeCarreira": {
+  "_obs": "v2.85 (pedido do usuário em 2026-10-11): a partir de idadeMin a janela de transferências abre toda temporada com o clube atual, no máximo maxPropostas propostas, 'Voltar para casa' (clube de coração; sem ele, o formador) e 'Pendurar as chuteiras'. O sorteio de 'decidiu parar' (a partir dos 30) e o da despedida saíram. pararAuto: a sugestão do automático (simulação, ritmo Rápido sem tocar): para a partir da idade do temperamento, um ano antes com poucos minutos (minutosBaixos, fração dos minutos da temporada). casa: o salário e os efeitos são os do 'jogar por amor' (events.json proposta-coracao).",
+  "idadeMin": 34,
+  "maxPropostas": 2,
+  "pararAuto": {
+   "idade": {
+    "frio": 35,
+    "lider": 36,
+    "esquentado": 35,
+    "resenha": 34
+   },
+   "minutosBaixos": 0.25,
+   "anosAntesComMinutosBaixos": 1
   }
  },
  "fisico": {
@@ -23,9 +25,5 @@
  "overallInicial": {
   "_obs": "só vale depois do auge (evita encerrar a carreira de quem ainda não evoluiu)",
   "idadeMin": 26
- },
- "despedida": {
-  "idadeMin": 33,
-  "chance": 0.35
  }
 }

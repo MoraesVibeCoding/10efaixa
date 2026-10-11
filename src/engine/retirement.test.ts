@@ -1,9 +1,9 @@
 import { createPrng } from './prng';
-import { canDecideToRetire, farewellOffer, retirementCheck, type RetireInput } from './retirement';
+import { canDecideToRetire, retirementCheck, suggestsRetiring, type RetireInput } from './retirement';
 import cfg from '../data/retirement.json';
 
 const s = (over: Partial<RetireInput> = {}): RetireInput =>
-  ({ age: 28, overall: 82, startingOverall: 55, physical: 80, peakPhysical: 84, graveInjuries: 0, minutes: 0.7, temperament: 'frio', ...over });
+  ({ age: 28, overall: 82, startingOverall: 55, physical: 80, peakPhysical: 84, graveInjuries: 0, ...over });
 const many = (i: RetireInput, n = 400) => Array.from({ length: n }, (_, seed) => retirementCheck(i, createPrng(seed)));
 
 describe('aposentadoria (T34, SPEC 6.14)', () => {
@@ -12,19 +12,19 @@ describe('aposentadoria (T34, SPEC 6.14)', () => {
     expect(cfg.idadeLimite).toBe(40);
   });
 
-  it('gatilho 1: decidir parar só a partir dos 30; chance cresce com a idade', () => {
-    expect(canDecideToRetire(29)).toBe(false);
-    expect(canDecideToRetire(30)).toBe(true);
-    expect(many(s({ age: 29 })).every((r) => r === null)).toBe(true);
-    const n = (age: number) => many(s({ age })).filter((r) => r === 'decisao').length;
-    expect(n(30)).toBeGreaterThan(0);
-    expect(n(37)).toBeGreaterThan(n(31));
+  // v2.85: parar por decisão é escolha na tela de propostas, dos 34 em diante; a checagem de fim de temporada só tem os gatilhos forçados
+  it('gatilho 1: sem sorteio de "decidiu parar"; o card de parar só a partir dos 34', () => {
+    expect(canDecideToRetire(cfg.fimDeCarreira.idadeMin - 1)).toBe(false);
+    expect(canDecideToRetire(cfg.fimDeCarreira.idadeMin)).toBe(true);
+    for (const age of [30, 33, 35, 38]) expect(many(s({ age })).every((r) => r === null)).toBe(true);
   });
 
-  it('gatilho 1: poucos minutos e temperamento pesam na decisão', () => {
-    const n = (o: Partial<RetireInput>) => many(s({ age: 34, ...o })).filter((r) => r === 'decisao').length;
-    expect(n({ minutes: 0.1 })).toBeGreaterThan(n({ minutes: 0.7 }));
-    expect(n({ temperament: 'resenha' })).toBeGreaterThan(n({ temperament: 'lider' }));
+  it('gatilho 1 no automático: a sugestão de parar segue a idade do temperamento, um ano antes com poucos minutos', () => {
+    const a = cfg.fimDeCarreira.pararAuto;
+    expect(suggestsRetiring({ age: 33, minutes: 0.05, temperament: 'resenha' })).toBe(false);
+    expect(suggestsRetiring({ age: a.idade.lider - 1, minutes: 0.7, temperament: 'lider' })).toBe(false);
+    expect(suggestsRetiring({ age: a.idade.lider, minutes: 0.7, temperament: 'lider' })).toBe(true);
+    expect(suggestsRetiring({ age: a.idade.lider - a.anosAntesComMinutosBaixos, minutes: a.minutosBaixos / 2, temperament: 'lider' })).toBe(true);
   });
 
   it('gatilho 2: lesões graves acumuladas ou queda física forçam (a partir da idade mínima)', () => {
@@ -45,24 +45,5 @@ describe('aposentadoria (T34, SPEC 6.14)', () => {
       retirementCheck(i, a); b.next();
       expect(a.next()).toBe(b.next());
     }
-  });
-});
-
-describe('despedida: retorno ao clube formador e realizar o sonho (T34, SPEC 6.18)', () => {
-  const f = { age: 34, clubId: 'real-madrid', formativeClub: 'santos', heartClub: null as string | null, done: false };
-  const many2 = (i: typeof f) => Array.from({ length: 300 }, (_, seed) => farewellOffer(i, createPrng(seed)));
-
-  it('só no fim de carreira e só uma vez', () => {
-    expect(many2({ ...f, age: cfg.despedida.idadeMin - 1 }).every((r) => r === null)).toBe(true);
-    expect(many2({ ...f, done: true }).every((r) => r === null)).toBe(true);
-    expect(many2(f).some((r) => r?.kind === 'formador' && r.clubId === 'santos')).toBe(true);
-  });
-
-  it('clube de coração tem prioridade sobre o formador; nunca propõe o clube atual', () => {
-    const rs = many2({ ...f, heartClub: 'palmeiras' }).filter((r) => r !== null);
-    expect(rs.length).toBeGreaterThan(0);
-    expect(rs.every((r) => r!.kind === 'coracao' && r!.clubId === 'palmeiras')).toBe(true);
-    expect(many2({ ...f, clubId: 'santos' }).every((r) => r === null)).toBe(true);
-    expect(many2({ ...f, clubId: 'palmeiras', heartClub: 'palmeiras' }).filter((r) => r !== null).every((r) => r!.kind === 'formador')).toBe(true);
   });
 });

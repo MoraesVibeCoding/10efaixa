@@ -198,3 +198,15 @@ describe('propostas na tela (T28b)', () => {
     expect(rankOffers(player(), [], cur)).toEqual({ shown: [], pick: null });
   });
 });
+
+// Regressão (2026-10-11): a proposta "fora do eixo" podia ser do próprio clube do jogador (o empresário "vendia" o jogador
+// do Inter Miami para o Inter Miami). Nenhuma proposta, de janela nenhuma, é do clube atual.
+describe('nenhuma proposta do próprio clube', () => {
+  it('jogador num clube fora do eixo não recebe proposta dele mesmo', () => {
+    const off = cfg.propostas.foraDoEixo;
+    const p = player({ clubId: 'inter-miami', age: off.idadeMin + 2, overall: Math.max(off.overallMin, 84) });
+    const os = offers(p, 'europa', 600, big);
+    expect(os.some((o) => o.offAxis)).toBe(true);
+    expect(os.filter((o) => o.clubId === 'inter-miami')).toEqual([]);
+  });
+});

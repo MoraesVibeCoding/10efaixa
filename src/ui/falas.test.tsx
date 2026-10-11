@@ -48,7 +48,7 @@ describe('falas em itálico (v2.77)', () => {
   });
 
   it('resumo da temporada: o comentário do técnico é fala', () => {
-    render(<ResumoTemporada resumo={{ year: 2030, age: 22, clubId: 'santos', division: 'BRA-A', partidas: 34, gols: 9, assistencias: 5, semSofrerGol: 0, goleiro: false, overallDe: 70, overallPara: 74, pct: 6, mudancas: [], titulos: [], comentario: { evolucao: 'grande', minutos: 'muitos', destaque: null, titulo: false } }} onClose={() => {}} />);
+    render(<ResumoTemporada resumo={{ year: 2030, age: 22, clubId: 'santos', division: 'BRA-A', partidas: 34, gols: 9, assistencias: 5, semSofrerGol: 0, goleiro: false, overallDe: 70, overallPara: 74, pct: 6, mudancas: [], titulos: [], comentario: { evolucao: 'grande', minutos: 'muitos', destaque: null, titulo: false }, sinais: [] }} onClose={() => {}} />);
     const fala = screen.getByTestId('comentario');
     expect(fala.tagName).toBe('Q');
     expect(fala).toHaveClass('fala');

@@ -25,6 +25,8 @@ export interface CardModel {
   metas: { dez: boolean; faixa: boolean };
   /** "Do terrão do bairro à despedida no Santos": da origem ao último clube. */
   arco: string;
+  /** v2.85: por que e com que idade ele parou (a escolha, o corpo, o nível ou os 40; a escolha em casa tem frase própria). */
+  motivo: string;
   /** O sonho do clube de coração: realizado se jogou nele; sem clube de coração, null. */
   sonho: { clubId: string; realizado: boolean } | null;
   /** A estante: um troféu por competição, com quantas vezes, na ordem em que vieram. */
@@ -86,6 +88,9 @@ export function cardModel(r: CareerResult, codigo: string): CardModel {
     auge: { overall: r.peakOverall, idade: Math.floor(r.peakAge) },
     metas: { dez: r.selection.ten > 0, faixa: r.selection.captain > 0 },
     arco: t(`ui.fim.arco.${r.player.origin}`, { prep: ultimo.prep, clube: ultimo.nome }),
+    motivo: r.retirement === 'decisao' && r.farewell
+      ? t('ui.fim.motivo.decisaoCasa', { idade: Math.floor(r.endAge), prep: ultimo.prep, clube: ultimo.nome })
+      : t(`ui.fim.motivo.${r.retirement}`, { idade: Math.floor(r.endAge) }),
     sonho: heart ? { clubId: heart, realizado: r.spells.some((s) => s.clubId === heart) } : null,
     tacas,
     selecaoLinha: r.selection.games > 0 ? t('ui.fim.selecaoLinha', { jogos: r.selection.games, gols: r.selection.goals, copas }) : null,

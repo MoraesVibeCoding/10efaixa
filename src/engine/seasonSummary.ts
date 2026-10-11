@@ -2,6 +2,7 @@ import cfg from '../data/seasonSummary.json';
 import minutesCfg from '../data/minutes.json';
 import { ATTRIBUTES, type Attribute, type Attributes } from './attributes';
 import type { Feedback } from './feedback';
+import type { Signal } from './signals';
 
 // v2.61 (SPEC 6.15): resumo da temporada, mostrado num card por cima da próxima tela no Normal e no Completo. Puro e determinístico:
 // só números do ano (jogos, gols, assistências, Over de-para com variação em %), os atributos que mais mudaram em direção e força
@@ -17,6 +18,8 @@ export interface SeasonSummaryInput {
   attrsBefore: Attributes; attrsAfter: Attributes;
   /** Ids das competições ganhas no ano. */
   titles: string[];
+  /** v2.85: os sinais do que está para acontecer (signals.ts), na ordem de urgência. */
+  sinais?: Signal[];
 }
 export type Evolucao = 'grande' | 'boa' | 'estavel' | 'queda';
 export type MinutosFaixa = 'muitos' | 'rodizio' | 'poucos';
@@ -32,6 +35,8 @@ export interface SeasonSummary {
   titulos: string[];
   /** O comentário do técnico é montado na tela a partir destas chaves. */
   comentario: { evolucao: Evolucao; minutos: MinutosFaixa; destaque: Attribute | null; titulo: boolean };
+  /** v2.85: avisos de corpo, nível, último ano, contrato sem propostas e apertos da vida (texto em resumoTemporada.sinal). */
+  sinais: Signal[];
 }
 
 const evolucaoOf = (pct: number): Evolucao => (pct >= cfg.pct.grande ? 'grande' : pct >= cfg.pct.boa ? 'boa' : pct > cfg.pct.queda ? 'estavel' : 'queda');
@@ -60,5 +65,6 @@ export function summarizeSeason(i: SeasonSummaryInput): SeasonSummary {
     partidas: i.games, gols: i.goals, assistencias: i.assists, semSofrerGol: i.cleanSheets ?? 0, goleiro: i.goleiro ?? false,
     overallDe: i.overallBefore, overallPara: i.overallAfter, pct, mudancas, titulos: [...i.titles],
     comentario: { evolucao: evolucaoOf(pct), minutos: minutosOf(i.minutes), destaque: subiu?.atributo ?? null, titulo: i.titles.length > 0 },
+    sinais: [...(i.sinais ?? [])],
   };
 }

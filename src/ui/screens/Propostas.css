@@ -43,3 +43,11 @@
 .propostas__tag--menos { border-color: var(--cor-negativo); color: var(--cor-negativo); font-weight: 800; }
 /* T25e: a frase de contexto da situação (etiqueta mais forte), logo abaixo do apoio */
 .propostas__contexto { margin: 0; font-size: 0.875rem; font-weight: 700; line-height: 1.3; }
+
+/* v2.85: o fim de carreira (dos 34 em diante): "Voltar para casa" com o fio do ouro da moldura e "Pendurar as chuteiras" em
+   papel tracejado, por último; sem proposta, a linha de "ninguém ligou" fica no lugar dos cartões */
+.propostas__item--casa { border-color: var(--paleta-ouro-moldura); }
+.propostas__item--casa .propostas__marca { color: var(--cor-texto); }
+.propostas__item--parar { border-style: dashed; }
+.propostas__item--parar .propostas__clube { font-size: var(--tipo-opcao); text-transform: uppercase; }
+.propostas__ninguem { margin: 0; padding: var(--espaco-2) var(--espaco-3); border-radius: var(--forma-raio); background: var(--cor-trilho); color: var(--cor-texto); font-weight: 700; }

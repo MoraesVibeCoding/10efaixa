@@ -42,8 +42,10 @@ import { headlineOf } from './headline';
 import { legacyOf, type Legacy } from './legacy';
 import { honorFacts, honorsOf } from './honors';
 import { generateNickname } from './nickname';
-import { LOAN_EVENT, PROPOSAL_EVENT, RAISE, RENEW, STAY, acceptChoice, loveChoice, parseProposalChoice, proposalViewOf, type CardContext, type CurrentClubView, type ProposalView } from './proposals';
-import { farewellOffer, retirementCheck, type RetireReason } from './retirement';
+import { LOAN_EVENT, PROPOSAL_EVENT, RAISE, RENEW, RETIRE, STAY, acceptChoice, homeChoice, loveChoice, parseProposalChoice, proposalViewOf, type CardContext, type CurrentClubView, type HomeCardView, type ProposalView } from './proposals';
+import { canDecideToRetire, retirementCheck, suggestsRetiring, type RetireReason } from './retirement';
+import { activeSignals, seasonSignals, type Signal, type SignalsInput } from './signals';
+import retireCfg from '../data/retirement.json';
 import { simulateSeason, type ClubInfo, type Div, type Divisions, type Row } from './season';
 import { assignNumber, canGetArmband, canGetTen, rosterNumbers } from './shirt';
 import { baseOffers, copinha, promotion, runPeneira, runVarzea } from './start';
@@ -133,6 +135,8 @@ export interface DecisionView {
   propostas?: ProposalView[];
   /** T28j (v2.54): o clube atual como primeiro cartão da tela de propostas, com a renovação quando o contrato acaba. */
   atual?: CurrentClubView;
+  /** v2.85: dos 34 em diante, o card "Voltar para casa" (clube de coração ou formador), quando o jogador não está nele. */
+  casa?: HomeCardView;
   /** Seleção que o jogador defende agora ("brasil" ou o país da dupla nacionalidade aceita): a camisa nos eventos da Seleção (v2.37). */
   nationality: string;
   /** Degrau da Seleção agora (sub17, sub20, olimpica, lista, reserva, titular ou nenhum): a tela diz a categoria nos eventos da Seleção de base. */
@@ -145,6 +149,9 @@ export type Decider = (eventId: string, temperament: string, view: () => Decisio
 /** Decisão automática (simulação e eventos fora da tela): na reunião, a sugestão do preparador; nos eventos, o temperamento. */
 export const autoDecide: Decider = (eventId, temperament, view) => (eventId === MEETING_EVENT || eventId === PROPOSAL_EVENT || eventId === LOAN_EVENT ? String(view().state.sugestao) : autoChoice(eventId, temperament));
 const AUTO = autoDecide;
+/** v2.85: a janela dos 34 em diante mostra no máximo estas propostas; o card de casa paga o salário do "jogar por amor". */
+const FIM_MAX_OFFERS = retireCfg.fimDeCarreira.maxPropostas;
+const HOME_SALARY = applyOption({ salarioFator: 1 }, 'proposta-coracao', 'aceitar-por-amor').salarioFator as number;
 /** v2.64: o empréstimo como decisão (aceite pelo temperamento no automático, custo de recusar) e a venda fechada pelo empresário. */
 const LOAN = clubLifeCfg.emprestimo;
 const SALE_EVENT = 'empresario-forca-venda';
@@ -221,7 +228,12 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let peakPhysical = physical(evo);
   let retirement: RetireReason = 'idadeLimite';
   let farewell: CareerResult['farewell'] = null;
-  let farewellAsked = false;
+  // v2.85: o jogador escolheu "Pendurar as chuteiras" na janela: a carreira termina no fim desta temporada
+  let retireChosen = false;
+  // v2.85: a última janela de transferências não trouxe proposta nenhuma (sinal "sem vaga" com o contrato acabando)
+  let noOffersLastWindow = false;
+  // v2.85: os sinais ativos no resumo anterior (os apertos da vida avisam só quando começam)
+  let prevSignals: Signal[] = [];
   let sel: CallUp = { rung: 'nenhum', ten: false, captain: false };
   let prestige = 0;
   const selection: CareerResult['selection'] = { callUps: { sub17: 0, sub20: 0, olimpica: 0, lista: 0, reserva: 0, titular: 0 }, caps: 0, ten: 0, captain: 0, games: 0, goals: 0, assists: 0, mainGames: 0, tournaments: [], nationality: 'brasil', dual: null, oriundoCampeao: false, esperouOBrasil: false };
@@ -275,7 +287,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let ultimoSemestre: DecisionView['ultimoSemestre'];
   let ultimaTemporada: DecisionView['ultimaTemporada'];
   /** Toda decisão passa por aqui (T51): o padrão é a escolha do temperamento, como antes. */
-  const ask = (eventId: string, state: Record<string, number | string | boolean> = {}, who = temp, extra: Pick<DecisionView, 'propostas' | 'reuniao' | 'atual'> = {}) => decide(eventId, who, () => ({
+  const ask = (eventId: string, state: Record<string, number | string | boolean> = {}, who = temp, extra: Pick<DecisionView, 'propostas' | 'reuniao' | 'atual' | 'casa'> = {}) => decide(eventId, who, () => ({
     ...extra,
     year: curYear, age: evo.age, clubId, position, overall: ov(evo), role: curRole, temperament: who,
     marketValueEUR: Math.round(marketValue(ov(evo), evo.age) * selectionEffect(prestige, sel, sel.rung).marketMultiplier),
@@ -471,6 +483,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     const natRng = createPrng(((seed >>> 0) ^ Math.imul(year, 0x2c1b3c6d) ^ 0x5e1ec4) >>> 0);
     // v2.61: o começo do ano, para o resumo da temporada comparar o Over e os atributos
     const ovStart = ov(evo);
+    const wealthStart = wealth;
     const attrsStart = { ...evo.attributes };
 
     for (let sem = 0; sem < 2; sem++) {
@@ -769,10 +782,18 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       selection.games += natYear.games; selection.goals += natYear.goals; selection.assists += natYear.assists; selection.mainGames += natYear.mainGames;
     }
     if (clubId && !inYouth) {
+      const signalsNow: SignalsInput = {
+        ageNext: evo.age + 1, graves: injuries.grave, physical: physical(evo), peakPhysical, overall: ov(evo), startingOverall: player.startingOverall,
+        minutes: avgMinutes, contratoAcabando: !!contract && (contract as Contract).years - 1 <= 1, semPropostasNaUltimaJanela: noOffersLastWindow,
+        salaryDelays, coachRelation, discipline, wealthStart, wealthEnd: wealth, morale, anteriores: prevSignals,
+      };
       ultimaTemporada = summarizeSeason({
         year, age: evo.age - 1, clubId: seasonClub, division: league, games: seasonGames, goals: seasonGoals, assists: seasonAssists, cleanSheets: seasonCleanSheets, goleiro: position === 'goleiro', minutes: avgMinutes,
         overallBefore: ovStart, overallAfter: ov(evo), attrsBefore: attrsStart, attrsAfter: evo.attributes, titles: titles.filter((t) => t.year === year).map((t) => t.competition),
+        // v2.85: os avisos (a próxima checagem de aposentadoria é no fim da temporada que vem)
+        sinais: seasonSignals(signalsNow),
       });
+      prevSignals = activeSignals(signalsNow);
     }
 
     // Camisa 10 e faixa do clube por evento.
@@ -832,25 +853,22 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       const market = selectionEffect(prestige, sel, sel.rung);
       const me = { overall: ov(evo), age: evo.age, clubId, heartClub: input.heartClub, temperament: temp, valueMultiplier: market.marketMultiplier, extraOffers: market.extraOffers };
       const offers = [...generateOffers(me, 'brasil', agent, yr, divOf), ...generateOffers(me, 'europa', agent, yr, divOf)];
+      noOffersLastWindow = offers.length === 0;
       const c = contract as Contract | null;
       const current = wantsOut || !c ? null : { annualSalaryBRL: toBRL(c.annualSalary, c.currency), role: roleFor(me.overall, effectiveRep(clubId), evo.age) };
-      // Despedida (6.14/6.18): proposta única de encerrar a carreira no clube de coração ou no formador.
-      const fw = farewellOffer({ age: evo.age, clubId, formativeClub: spells[0]?.clubId ?? null, heartClub: input.heartClub, done: farewellAsked }, yr);
+      // v2.85: dos 34 em diante a janela abre toda temporada, com no máximo 2 propostas, "Voltar para casa" (clube de coração;
+      // sem ele, o formador; só se o jogador não está nele) e "Pendurar as chuteiras". Substitui o sorteio da despedida.
+      const late = canDecideToRetire(evo.age);
+      const formador = spells[0]?.clubId ?? null;
+      const casaId = late ? (input.heartClub ?? formador) : null;
+      const casa = casaId && casaId !== clubId ? casaId : null;
+      const lateOpts = { casa, podeParar: late };
+      const casaCard = (): HomeCardView | undefined => {
+        if (!casa) return undefined;
+        const annual = salaryFor(marketValue(ov(evo), evo.age), leagueOf(casa, divOf)) * HOME_SALARY;
+        return { clubId: casa, kind: input.heartClub ? 'coracao' : 'formador', league: leagueOf(casa, divOf), currency: 'BRL', salarioMensal: Math.round(annual / 12), salarioPct: current ? salaryChange(annual, current.annualSalaryBRL) : null };
+      };
       let goingHome = false;
-      if (fw) {
-        farewellAsked = true;
-        const event = fw.kind === 'coracao' ? 'realizar-sonho' : 'retorno-formador';
-        const out = applyOption({ moral: morale, idolatria: idol[fw.clubId] ?? 0, despedida: false }, event, ask(event));
-        morale = out.moral as number;
-        if (out.despedida) {
-          goingHome = true;
-          farewell = fw.kind;
-          join(fw.clubId, false, yr);
-          idol = { ...idol, [fw.clubId]: out.idolatria as number };
-          salaryDelays = 0;
-        }
-      }
-      // Em despedida, o jogador não sai mais: só renova.
       // "Ficar" sempre existe aqui (há clube): quem pediu para sair (current null) só sai se aceitar uma proposta; sem proposta aceita, fica.
       // T28b (v2.50): com propostas na janela, o jogador escolhe (ou o automático, que sugere a que vence "ficar" pela margem).
       let pick: Offer | null = null;
@@ -862,21 +880,40 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       const due = !!c && c.years - 1 <= 1;
       const atualCard = (): CurrentClubView => currentCard(c!, due);
       let renewChoice: string | null = null; // saída forçada só com contrato por mais de um ano
-      if (!goingHome && !farewell && !transferAsked) {
-        const { shown, pick: auto } = rankOffers(me, offers, current);
+      if (!transferAsked) {
+        // em casa (ou com o card de casa), a proposta do próprio clube de casa não aparece de novo como proposta
+        const { shown, pick: auto } = rankOffers(me, late ? offers.filter((o) => o.clubId !== casaId) : offers, current, late ? FIM_MAX_OFFERS : undefined);
         pick = auto;
-        if (shown.length > 0) {
+        if (shown.length > 0 || late) {
           // a sugestão é a escolha automática; no clube de coração, "por amor" quando o jeito do jogador escolheria assim (events.json)
           const staying = due ? autoChoice('renovacao', temp) : null;
           const stayChoice = staying === 'renovar' ? RENEW : staying === 'pedir-aumento' ? RAISE : STAY;
-          const sugestao = !auto ? stayChoice : auto.heartClub && autoChoice('proposta-coracao', temp) === 'aceitar-por-amor' ? loveChoice(auto.clubId) : acceptChoice(auto.clubId);
-          const said = ask(PROPOSAL_EVENT, { sugestao, podeFicar: true, podeForcar: canForce, podeRenovar: due }, temp, { propostas: shown.map((o) => proposalViewOf(o, me.overall, cardContext(o))), ...(c ? { atual: atualCard() } : {}) });
-          const chosen = parseProposalChoice(said, shown, true, (o) => o.heartClub, canForce, due);
+          const offerChoice = !auto ? stayChoice : auto.heartClub && autoChoice('proposta-coracao', temp) === 'aceitar-por-amor' ? loveChoice(auto.clubId) : acceptChoice(auto.clubId);
+          // v2.85: no automático, para pela idade do temperamento (e minutos); quem não recusa o clube de coração volta para casa
+          // na última temporada antes de parar, para encerrar a carreira lá
+          const parar = (age: number) => suggestsRetiring({ age, minutes: avgMinutes, temperament: temp });
+          const sugestao = late && parar(evo.age) ? RETIRE
+            : casa && autoChoice('proposta-coracao', temp) !== 'recusar' && parar(evo.age + 1) ? homeChoice(casa) : offerChoice;
+          const home = casaCard();
+          const said = ask(PROPOSAL_EVENT, { sugestao, podeFicar: true, podeForcar: canForce, podeRenovar: due, ...(late ? { podeParar: true } : {}) }, temp, { propostas: shown.map((o) => proposalViewOf(o, me.overall, cardContext(o))), ...(c ? { atual: atualCard() } : {}), ...(home ? { casa: home } : {}) });
+          const chosen = parseProposalChoice(said, shown, true, (o) => o.heartClub, canForce, due, lateOpts);
           if (!chosen) throw new RangeError(`proposta inválida: "${said}"`);
+          if (chosen.kind === 'pendurar') retireChosen = true;
+          if (chosen.kind === 'casa') {
+            // a volta para casa: contrato novo com o salário do "jogar por amor", e os efeitos dele (events.json proposta-coracao)
+            const out = applyOption({ salarioFator: 1, moral: morale, idolatriaCoracao: idol[chosen.clubId] ?? 0 }, 'proposta-coracao', 'aceitar-por-amor');
+            join(chosen.clubId, false, yr);
+            contract = { ...contract!, annualSalary: Math.round(contract!.annualSalary * (out.salarioFator as number)) };
+            morale = out.moral as number;
+            idol = { ...idol, [chosen.clubId]: out.idolatriaCoracao as number };
+            salaryDelays = 0;
+            goingHome = true;
+            farewell = input.heartClub ? 'coracao' : 'formador';
+          }
           if (chosen.kind === 'renovar') renewChoice = 'renovar';
           else if (chosen.kind === 'aumento') renewChoice = 'pedir-aumento';
           else if (chosen.kind === 'ficar' && due) renewChoice = 'nao-renovar';
-          pick = chosen.kind === 'ficar' || chosen.kind === 'renovar' || chosen.kind === 'aumento' ? null : chosen.offer;
+          pick = 'offer' in chosen ? chosen.offer : null;
           byLove = chosen.kind === 'amor';
           forced = chosen.kind === 'forcar';
           if (chosen.kind === 'negociar') {
@@ -928,9 +965,10 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     // Aposentadoria (6.14): o primeiro gatilho que valer encerra a carreira.
     const reason = retirementCheck({
       age: evo.age, overall: ov(evo), startingOverall: player.startingOverall, physical: physical(evo), peakPhysical,
-      graveInjuries: injuries.grave, minutes: avgMinutes, temperament: temp,
+      graveInjuries: injuries.grave,
     }, yr);
     if (reason) { retirement = reason; break; }
+    if (retireChosen) { retirement = 'decisao'; break; }
 
     // Mundo do ano seguinte.
     prevTable = season.phases.A[0]!.groups![0]!.map((r) => r.id);

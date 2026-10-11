@@ -16,6 +16,10 @@ const FORCE = 'forcar:';
 /** T28j (v2.54): com o contrato no fim, a renovação é o primeiro cartão da tela: renovar, ou renovar pedindo aumento. */
 export const RENEW = 'renovar';
 export const RAISE = 'aumento';
+/** v2.85: a partir dos 34, "Pendurar as chuteiras" (a carreira termina no fim da temporada) e "Voltar para casa" (clube de coração ou formador). */
+export const RETIRE = 'pendurar';
+const HOME = 'casa:';
+export const homeChoice = (clubId: string): string => `${HOME}${clubId}`;
 
 export const acceptChoice = (clubId: string): string => `${ACCEPT}${clubId}`;
 /** Forçar a saída para a proposta daquele clube antes do fim do contrato (custa multa, idolatria, moral e relação). */
@@ -46,6 +50,11 @@ export interface CurrentClubView {
   renovacao: RenewalView | null; aumento: RenewalView | null;
 }
 export interface RenewalView { salarioMensal: number; salarioPct: Change | null; anos: number }
+/** v2.85: o card "Voltar para casa": o clube (de coração ou, sem ele, o formador) e o salário do "jogar por amor". */
+export interface HomeCardView { clubId: string; kind: 'coracao' | 'formador'; league: string; currency: Offer['currency']; salarioMensal: number; salarioPct: Change | null }
+/** v2.85: o que a janela dos 34 em diante acrescenta: o clube de volta (se o jogador não está nele) e o card de parar. */
+export interface LateCareer { casa: string | null; podeParar: boolean }
+const NO_LATE: LateCareer = { casa: null, podeParar: false };
 
 /** O que só o motor da carreira sabe: contrato atual, valor de hoje e valor projetado naquele clube. */
 export interface CardContext { currentAnnualSalaryBRL: number | null; todayValueEUR: number; projectedValueEUR: number; currentExpectedMinutes: number | null }
@@ -64,15 +73,17 @@ export const proposalViewOf = (o: Offer, overall: number, card?: CardContext): P
 });
 
 export type ProposalChoice<T extends { clubId: string } = Offer> =
-  { kind: 'ficar' } | { kind: 'renovar' } | { kind: 'aumento' } | { kind: 'aceitar'; offer: T } | { kind: 'amor'; offer: T } | { kind: 'negociar'; offer: T } | { kind: 'forcar'; offer: T };
+  { kind: 'ficar' } | { kind: 'renovar' } | { kind: 'aumento' } | { kind: 'pendurar' } | { kind: 'casa'; clubId: string } | { kind: 'aceitar'; offer: T } | { kind: 'amor'; offer: T } | { kind: 'negociar'; offer: T } | { kind: 'forcar'; offer: T };
 
 /**
- * "ficar" (se há clube para ficar), "renovar" e "aumento" (só com `canRenew`: contrato no fim), "aceitar:<clube>", "negociar:<clube>", "forcar:<clube>" (só com `canForce`, contrato longo) ou "amor:<clube>" (só quando `isHeart` diz que a proposta é a do clube de
+ * v2.85: "pendurar" e "casa:<clube>" só com `late` (dos 34 em diante). "ficar" (se há clube para ficar), "renovar" e "aumento" (só com `canRenew`: contrato no fim), "aceitar:<clube>", "negociar:<clube>", "forcar:<clube>" (só com `canForce`, contrato longo) ou "amor:<clube>" (só quando `isHeart` diz que a proposta é a do clube de
  * coração) de uma das propostas mostradas; qualquer outra coisa é null.
  */
 export function parseProposalChoice<T extends { clubId: string }>(
-  choice: string, shown: readonly T[], canStay: boolean, isHeart: (o: T) => boolean = () => false, canForce = false, canRenew = false,
+  choice: string, shown: readonly T[], canStay: boolean, isHeart: (o: T) => boolean = () => false, canForce = false, canRenew = false, late: LateCareer = NO_LATE,
 ): ProposalChoice<T> | null {
+  if (choice === RETIRE) return late.podeParar ? { kind: 'pendurar' } : null;
+  if (choice.startsWith(HOME)) return late.casa && choice === homeChoice(late.casa) ? { kind: 'casa', clubId: late.casa } : null;
   if (choice === STAY) return canStay ? { kind: 'ficar' } : null;
   if (choice === RENEW || choice === RAISE) return canRenew ? { kind: choice === RENEW ? 'renovar' : 'aumento' } : null;
   if (choice.startsWith(ACCEPT)) {

@@ -288,6 +288,13 @@
    "auge": "No auge",
    "codigo": "Código {codigo}"
   },
+  "motivo": {
+   "decisao": "Parou aos {idade}: escolheu a hora de sair.",
+   "decisaoCasa": "Parou aos {idade}, em casa: encerrou a carreira vestindo a camisa {prep} {clube}.",
+   "fisico": "Parou aos {idade}: o corpo não aguentou mais.",
+   "overallInicial": "Parou aos {idade}: o nível caiu e a bola parou de obedecer.",
+   "idadeLimite": "Parou aos {idade}: jogou até o último ano possível."
+  },
   "virar": "Toque para virar"
  },
  "varzea": "time da várzea",
@@ -325,6 +332,19 @@
  "resumoTemporada": {
   "semJogos": "Ano de formação: nenhum jogo como profissional ainda, mas cada treino contou.",
   "titulo": "Resumo da temporada",
+  "sinais": "Fique de olho",
+  "sinal": {
+   "ultimoAno": "Os 40 estão chegando: a próxima temporada é a última. Aproveite cada jogo.",
+   "corpo": "O joelho incha depois de cada jogo. O fisioterapeuta já fala em \"administrar\".",
+   "nivel": "Os garotos da base já chegam antes de você na bola. O nível está caindo.",
+   "semVaga": "O contrato acaba e ninguém ligou na última janela. O empresário pede paciência.",
+   "salario": "O salário atrasou de novo. O elenco já fala em cruzar os braços.",
+   "tecnico": "O técnico mal te cumprimenta no treino.",
+   "noitadas": "A diretoria anda contando as suas noites fora.",
+   "dinheiro": "As contas não fecham: o patrimônio encolheu neste ano.",
+   "moral": "Você chega ao CT e não lembra por que gostava disso.",
+   "banco": "Você terminou o ano mais no banco que em campo. Assim o telefone não toca."
+  },
   "idade": "{n} anos",
   "numeros": "Números do ano",
   "partidas": "Jogos",
@@ -545,6 +565,20 @@
   "detalhe": "Detalhes do cartão escolhido",
   "confirmar": "Confirmar escolha",
   "selo": { "renovacao": "Renovação", "atual": "Seu time atual", "nova": "Nova proposta" },
+  "ninguem": "Ninguém ligou este ano. O empresário pede paciência.",
+  "casa": {
+   "titulo": "Voltar para casa",
+   "selo": { "coracao": "Clube do coração", "formador": "Clube formador" },
+   "detalhe": {
+    "coracao": "A camisa que você vestia na arquibancada. O salário é o de quem joga por amor; a torcida já prepara a festa.",
+    "formador": "O clube que te revelou abre a porta de novo. O salário é o de quem joga por amor; a molecada da base vai te ver passar."
+   }
+  },
+  "parar": {
+   "titulo": "Pendurar as chuteiras",
+   "sub": "A carreira termina no fim desta temporada",
+   "detalhe": "Último jogo, festa da torcida e a contracapa do álbum. Não tem volta."
+  },
   "salarioMes": "{valor} por mês",
   "valorProjetado": "Valor projetado: {valor}",
   "minutosVs": { "mais": "Jogará mais que hoje", "parecido": "Jogará parecido com hoje", "menos": "Jogará menos que hoje" },

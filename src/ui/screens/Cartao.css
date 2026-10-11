@@ -99,6 +99,8 @@
 .fim__quem { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--espaco-2); margin: 0; }
 .fim__quem strong { font-family: var(--fonte-titulo); font-size: var(--tipo-nome); font-weight: 900; line-height: 1; text-transform: uppercase; }
 .fim__quem span { color: var(--cor-texto-suave); }
+/* v2.85: o motivo da aposentadoria, logo abaixo do nome */
+.fim__motivo { margin: 0; color: var(--cor-texto-suave); font-size: var(--tipo-miudo); line-height: 1.3; }
 .fim__metas { display: grid; grid-template-columns: 1fr 1fr; gap: var(--espaco-2); margin: 0; padding: 0; list-style: none; }
 .fim__metas li {
   display: flex; align-items: center; gap: var(--espaco-2); min-block-size: 3.25rem; padding: 0 var(--espaco-2);

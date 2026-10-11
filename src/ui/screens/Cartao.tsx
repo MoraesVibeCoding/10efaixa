@@ -107,6 +107,7 @@ export function Cartao({ result, code, visual, desafio, link, onJogar, onRestart
             </div>
             <p className="fim__veredito">{model.veredito}</p>
             <p className="fim__quem"><strong>{model.nome}</strong> <span>{model.posicao}</span></p>
+            <p className="fim__motivo">{model.motivo}</p>
             <ul className="fim__metas" aria-label={t('ui.fim.metas.titulo')}>
               <li data-feita={String(model.metas.dez)}><span className="fim__meta-marca" aria-hidden="true">10</span>{t(model.metas.dez ? 'ui.fim.metas.dez' : 'ui.fim.metas.semDez')}</li>
               <li data-feita={String(model.metas.faixa)}><span className="fim__meta-marca fim__meta-marca--faixa" aria-hidden="true" />{t(model.metas.faixa ? 'ui.fim.metas.faixa' : 'ui.fim.metas.semFaixa')}</li>
