@@ -109,7 +109,9 @@ export function generateOffers(p: MarketPlayer, window: 'brasil' | 'europa', age
   }
   const off = pr.foraDoEixo;
   if (window === 'europa' && p.age >= off.idadeMin && p.overall >= off.overallMin && rng.next() < off.chance) {
-    offers.push(makeOffer(p, OFF_IDS[rng.int(0, OFF_IDS.length - 1)]!, agent, rng, div, true));
+    // nunca do próprio clube (regressão: o empresário "vendia" o jogador do Inter Miami para o Inter Miami); o mesmo sorteio
+    const ids = OFF_IDS.filter((id) => id !== p.clubId);
+    offers.push(makeOffer(p, ids[rng.int(0, ids.length - 1)]!, agent, rng, div, true));
   }
   return offers;
 }
@@ -136,7 +138,7 @@ export const MAX_SHOWN_OFFERS = 3;
  * `pick`: a escolha automática, que só considera as que o temperamento aceita e vence "ficar" pela margem (null = fica no clube
  * atual); sempre está entre as mostradas. Sem clube atual, não há "ficar": a melhor vence.
  */
-export function rankOffers(p: MarketPlayer, offers: Offer[], current: { annualSalaryBRL: number; role: Role } | null): { shown: Offer[]; pick: Offer | null } {
+export function rankOffers(p: MarketPlayer, offers: Offer[], current: { annualSalaryBRL: number; role: Role } | null, max = MAX_SHOWN_OFFERS): { shown: Offer[]; pick: Offer | null } {
   const all = cfg.politica as unknown as Record<string, { nivel: number; salario: number; papel: number; ficar: number }>;
   const w = all[p.temperament] ?? all.padrao!;
   const score = (rep: number, salaryBRL: number, role: Role, club?: string) =>
@@ -152,7 +154,7 @@ export function rankOffers(p: MarketPlayer, offers: Offer[], current: { annualSa
     ? score(effectiveRep(p.clubId), current.annualSalaryBRL, current.role, p.clubId) + w.ficar * 0.3 + cfg.propostas.margemParaSair : -Infinity;
   const best = ranked.find((x) => accepts(x.o));
   const pick = best && best.s > stay ? best.o : null;
-  const shown = ranked.slice(0, MAX_SHOWN_OFFERS).map((x) => x.o);
+  const shown = ranked.slice(0, max).map((x) => x.o);
   if (pick && !shown.includes(pick)) shown[shown.length - 1] = pick;
   return { shown, pick };
 }
