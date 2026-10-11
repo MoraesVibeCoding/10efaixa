@@ -1,6 +1,6 @@
 import { ATTRIBUTES } from './attributes';
 import { autoProposal } from './meeting';
-import { meetingOptions, needProbability } from './meetingOptions';
+import { drawClubNeed, meetingOptions, needProbability } from './meetingOptions';
 import { createPlayer } from './player';
 import { POSITIONS } from './overall';
 import { createPrng } from './prng';
@@ -100,6 +100,51 @@ describe('três ideias da reunião (T52b)', () => {
       for (const c of [alto.obvia, alto.mescla, alto.ousada]) expect(c.agrado).toBe('muito');
       const baixo = opts(p, i, 0.4);
       for (const c of [baixo.obvia, baixo.mescla, baixo.ousada]) expect(['muito', 'possivel', 'pouco']).toContain(c.agrado);
+    });
+  });
+});
+
+// v2.89 (pedido do usuário em 2026-10-11: "a partir do momento que uma habilidade sua está 100% alcançada, ela não deveria
+// aparecer mais entre as propostas"): nenhuma ideia traz um foco que já não cresce (no teto do jogador, o que inclui o 99),
+// enquanto houver alternativa; o foco do clube é sorteado só entre os que crescem, com um sorteio só.
+describe('ideias sem foco no teto (v2.89)', () => {
+  /** o perfil com os `n` atributos mais fortes já no teto */
+  const capped = (p: (typeof PROFILES)[number], n: number) => {
+    const order = [...ATTRIBUTES].sort((a, b) => p.attrs[b] - p.attrs[a]);
+    const attrs = { ...p.attrs };
+    for (const a of order.slice(0, n)) attrs[a] = p.caps[a];
+    return { ...p, attrs, full: new Set(order.slice(0, n)) };
+  };
+  const focos = (o: ReturnType<typeof meetingOptions>) => (['obvia', 'mescla', 'ousada'] as const).flatMap((k) => [o[k].proposal.main, o[k].proposal.secondary]);
+
+  it('com os 3 mais fortes no teto, nenhuma das 3 ideias usa um deles (o foco do clube vem de fora do teto)', () => {
+    PROFILES.forEach((p, i) => {
+      const c = capped(p, 3);
+      const need = drawClubNeed(p.position, createPrng(i + 1), c.attrs, c.caps);
+      expect(c.full.has(need)).toBe(false);
+      const o = meetingOptions({ ...c, score: 0.5, need });
+      for (const f of focos(o)) expect(c.full.has(f), `${p.position} ${f}`).toBe(false);
+    });
+  });
+
+  it('o sorteio do foco do clube gasta um número só, como antes (não muda o resto da carreira)', () => {
+    const p = capped(PROFILES[0]!, 3);
+    const [a, b] = [createPrng(9), createPrng(9)];
+    drawClubNeed(p.position, a, p.attrs, p.caps); b.next();
+    expect(a.next()).toBe(b.next());
+  });
+
+  it('com quase tudo no teto (auge), a reunião ainda traz 3 ideias diferentes, completando com os que seguram o nível', () => {
+    PROFILES.forEach((p, i) => {
+      const c = capped(p, 9);
+      const need = drawClubNeed(p.position, createPrng(i + 1), c.attrs, c.caps);
+      const o = meetingOptions({ ...c, score: 0.5, need });
+      const cards = [o.obvia.proposal, o.mescla.proposal, o.ousada.proposal];
+      for (const x of cards) expect(x.main).not.toBe(x.secondary);
+      expect(sameSet(cards[0]!, cards[1]!) || sameSet(cards[0]!, cards[2]!) || sameSet(cards[1]!, cards[2]!)).toBe(false);
+      // o único que ainda cresce está em alguma ideia
+      const livre = ATTRIBUTES.find((a) => !c.full.has(a))!;
+      expect(focos(o)).toContain(livre);
     });
   });
 });
