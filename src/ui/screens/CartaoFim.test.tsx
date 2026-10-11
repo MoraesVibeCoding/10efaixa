@@ -94,3 +94,15 @@ describe('o motivo na frente do card (v2.85)', () => {
     expect(frente().querySelector('.fim__motivo')).toHaveTextContent(m.motivo);
   });
 });
+
+// Regressão (relato do usuário em 2026-10-11: "o botão virar no card final não está virando"): a animação de colar do card
+// ficava com `both` e prendia `transform: none` depois de acabar, por cima do rotateY do verso. A animação de entrada só
+// pode valer antes e durante (backwards), nunca depois.
+describe('o card vira de verdade (regressão)', () => {
+  it('a animação de entrada do card não prende o transform depois de acabar', () => {
+    const regra = css.match(/\n\.fim__card \{[^}]*\}/)![0];
+    expect(regra).toMatch(/animation:[^;]*fim-cola/);
+    expect(regra).not.toMatch(/animation:[^;]*\b(both|forwards)\b/);
+    expect(css).toMatch(/\.fim\[data-lado='verso'\] \.fim__card \{[^}]*rotateY\(180deg\)/);
+  });
+});

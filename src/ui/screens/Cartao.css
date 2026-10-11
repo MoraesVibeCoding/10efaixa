@@ -70,7 +70,8 @@
   inline-size: 100%;
   transform-style: preserve-3d;
   transition: transform 700ms cubic-bezier(0.645, 0.045, 0.355, 1);
-  animation: fim-cola 600ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+  /* backwards, nunca both: depois de colar, o transform volta a ser o do lado (com both ficava preso em none e o card não virava) */
+  animation: fim-cola 600ms cubic-bezier(0.2, 0.9, 0.3, 1) backwards;
 }
 .fim[data-lado='verso'] .fim__card { transform: rotateY(180deg); }
 .fim__face {
