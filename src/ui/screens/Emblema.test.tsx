@@ -44,7 +44,7 @@ describe('emblema do clube (T49d, SPEC v2.26)', () => {
 // v2.86 (usuário em 2026-10-11: "utilize os que arquivei"; as pastas vazias ficam como estão): os emblemas enviados em
 // docs/arte/emblemas/<clube>/ entram no jogo como imagem recortada (src/assets/emblemas/<clube>.webp), em qualquer tamanho.
 describe('emblemas enviados pelo usuário (v2.86)', () => {
-  const ENVIADOS = ['athletico-pr', 'atletico-mg', 'bahia', 'botafogo', 'chapecoense', 'corinthians', 'coritiba', 'cruzeiro', 'flamengo', 'fluminense', 'internacional', 'palmeiras', 'santos', 'sao-paulo', 'vasco', 'bragantino', 'mirassol'];
+  const ENVIADOS = ['athletico-pr', 'atletico-mg', 'bahia', 'botafogo', 'chapecoense', 'corinthians', 'coritiba', 'cruzeiro', 'flamengo', 'fluminense', 'internacional', 'palmeiras', 'santos', 'sao-paulo', 'vasco', 'bragantino', 'mirassol', 'gremio'];
   it.each(ENVIADOS)('%s usa a imagem enviada, sem sigla por cima', (clubId) => {
     for (const size of [20, 56]) {
       const { container, unmount } = render(<Emblema clubId={clubId} size={size} />);
@@ -58,8 +58,8 @@ describe('emblemas enviados pelo usuário (v2.86)', () => {
   });
 
   it('as pastas vazias ficam como estão (o escudo genérico)', () => {
-    const { container, rerender } = render(<Emblema clubId="gremio" size={56} />);
-    for (const clubId of ['gremio', 'ponte-preta', 'guarani']) {
+    const { container, rerender } = render(<Emblema clubId="america-mg" size={56} />);
+    for (const clubId of ['america-mg', 'ponte-preta', 'guarani']) {
       rerender(<Emblema clubId={clubId} size={56} />);
       expect(container.firstElementChild).toHaveAttribute('data-emblema', 'generico');
     }
