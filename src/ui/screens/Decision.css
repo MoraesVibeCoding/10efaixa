@@ -464,6 +464,12 @@
 .trajetoria :is(th, td):last-child { inline-size: 3rem; padding-inline-end: 0; text-align: end; }
 .trajetoria td:last-child { font-family: var(--fonte-titulo); font-size: var(--tipo-opcao); font-weight: 900; }
 .trajetoria__clube { display: flex; align-items: center; gap: var(--espaco-2); font-weight: 700; }
+/* v2.83: jogos, gols e assistências da temporada, em linha miúda embaixo do clube (a tabela não ganha colunas e cabe em 360 px) */
+.trajetoria__numeros { display: flex; flex-wrap: wrap; gap: 0 var(--espaco-2); margin-block-start: 2px; color: var(--cor-texto-suave); font-size: var(--tipo-miudo); font-variant-numeric: tabular-nums; }
+.trajetoria__numeros span { white-space: nowrap; }
+/* v2.83: os marcos da gaveta em pílulas pequenas (as figurinhas grandes ficam no álbum do computador) */
+.gaveta__marcos { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.gaveta__marco { padding: 4px 10px; border: var(--forma-borda-fina) solid var(--cor-linha); border-radius: 999px; background: var(--cor-superficie); font-size: var(--tipo-miudo); font-weight: 700; line-height: 1.2; }
 
 .trofeu__arte { flex: none; inline-size: 32px; block-size: 32px; }
 

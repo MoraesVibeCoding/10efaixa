@@ -93,6 +93,12 @@
   "colIdade": "Idade",
   "colClube": "Clube",
   "colOver": "OVR",
+  "linha": {
+   "jogos": "Jogos {n}",
+   "gols": "Gols {n}",
+   "assist": "Assist. {n}",
+   "sg": "Sem sofrer gol {n}"
+  },
   "atributos": "Atributos",
   "etiqueta": "Carreira",
   "numeros": "Números da carreira"

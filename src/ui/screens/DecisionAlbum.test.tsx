@@ -113,3 +113,46 @@ describe('foto maior: dica e detalhe sobre a foto (v2.81)', () => {
     expect(css).not.toMatch(/\n\.decisao__detalhe \{[^}]*min-block-size/);
   });
 });
+
+// v2.83 (pedido do usuário em 2026-10-11): em "Minha carreira", cada linha da trajetória traz jogos, gols e assistências
+// (goleiro: jogos e sem sofrer gol); a trajetória vem antes dos marcos, e os marcos viram pílulas menores.
+describe('"Minha carreira": trajetória com os números de cada temporada (v2.83)', () => {
+  const seasons = [
+    { age: 17, clubId: 'bahia', overall: 58, games: 18, goals: 3, assists: 2, cleanSheets: 0 },
+    { age: 18, clubId: 'bahia', overall: 63, games: 40, goals: 9, assists: 7, cleanSheets: 1 },
+  ];
+  const marcos = [{ id: 'estreia-profissional', ano: 2027, clubId: 'bahia' }];
+  const abrir = (position = 'meia') => {
+    render(<Decision eventId="salario-atrasado" age={19} progress={0.2} player={{ ...PLAYER, position, seasons, marcos }} scene={{ src: 'c.webp', alt: 'cena' }} />);
+    fireEvent.click(screen.getByRole('button', { name: t('ui.carreira.titulo') }));
+    return screen.getByRole('dialog', { name: t('ui.carreira.titulo') });
+  };
+
+  it('cada linha mostra jogos, gols e assistências daquela temporada (cada par inteiro, sem quebrar no meio)', () => {
+    expect(css).toMatch(/\.trajetoria__numeros span \{[^}]*white-space:\s*nowrap/);
+    const tabela = within(abrir()).getByRole('table', { name: t('ui.carreira.trajetoria') });
+    const linhas = within(tabela).getAllByRole('row').slice(1);
+    for (const [i, [j, g, a]] of [[40, 9, 7], [18, 3, 2]].entries()) {
+      const nums = linhas[i]!.querySelector('.trajetoria__numeros') as HTMLElement;
+      expect(within(nums).getByText(t('ui.carreira.linha.jogos', { n: j! }))).toBeInTheDocument();
+      expect(within(nums).getByText(t('ui.carreira.linha.gols', { n: g! }))).toBeInTheDocument();
+      expect(within(nums).getByText(t('ui.carreira.linha.assist', { n: a! }))).toBeInTheDocument();
+    }
+  });
+
+  it('goleiro: jogos e sem sofrer gol na linha', () => {
+    const tabela = within(abrir('goleiro')).getByRole('table', { name: t('ui.carreira.trajetoria') });
+    const nums = within(tabela).getAllByRole('row')[1]!.querySelector('.trajetoria__numeros') as HTMLElement;
+    expect(nums).toHaveTextContent(t('ui.carreira.linha.jogos', { n: 40 }) + t('ui.carreira.linha.sg', { n: 1 }));
+    expect(within(nums).queryByText(/Gols/)).toBeNull();
+  });
+
+  it('a trajetória vem antes dos marcos, e os marcos são pílulas pequenas', () => {
+    const d = abrir();
+    const tabela = within(d).getByRole('table', { name: t('ui.carreira.trajetoria') });
+    const marcosTitulo = within(d).getByRole('heading', { name: t('ui.carreira.marcos') });
+    expect(tabela.compareDocumentPosition(marcosTitulo) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(d.querySelector('.gaveta__marcos .gaveta__marco')).not.toBeNull();
+    expect(css).toMatch(/\.gaveta__marco \{[^}]*border-radius:\s*999px/);
+  });
+});
