@@ -28,4 +28,8 @@ describe('troféus em imagem (v2.56)', () => {
     expect(trophySrc('copaNacional:ENG')).toContain('/trofeus/copa-inglaterra.webp');
     expect(trophySrc('copaNacional:ESP')).toContain('/trofeus/copa-do-brasil.webp');
   });
+
+  it('Copa Europeia 2 com a peça própria enviada pelo usuário (v2.90)', () => {
+    expect(trophySrc('europaLeague')).toContain('/trofeus/copa-europeia-2.webp');
+  });
 });
