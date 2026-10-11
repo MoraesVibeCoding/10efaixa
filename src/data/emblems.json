@@ -1,5 +1,6 @@
 {
  "_nota": "Emblemas originais dos clubes (SPEC v2.26, seção 11): evocam o nome ou a cidade, nunca o escudo oficial nem elemento, forma ou disposição dele, monograma, mascote oficial, estrelas ou ano de fundação. Peças em src/assets/art/provisoria/emblema/ (geradas) com as cores-chave do uniforme, trocadas pelas do clube (kits.json). Clube sem emblema próprio usa o escudo genérico. Abaixo de 'simplesAbaixoDePx' entra a versão simplificada. Conceitos do usuário (2026-10-02); revisão jurídica antes do lançamento.",
+ "_imagens": "v2.86 (usuário em 2026-10-11: 'utilize os que arquivei'): os emblemas enviados pelo usuário em docs/arte/emblemas/<clube>/ (2026-10-09) entram como imagem recortada em src/assets/emblemas/<clube>.webp (python3 docs/arte/emblemas/recortar.py), em qualquer tamanho e já nas cores do clube; valem sobre a peça desenhada. Pastas vazias ficam como estão. Vários repetem elementos de escudos oficiais ou mascotes: o usuário assumiu o risco (SPEC v2.86) e a revisão jurídica é obrigatória antes do lançamento público.",
  "simplesAbaixoDePx": 40,
  "clubes": {
   "flamengo": { "simbolo": "chama", "forma": "escudo" },

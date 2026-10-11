@@ -2,6 +2,10 @@
 
 Emblemas **originais** que evocam o nome ou a cidade de cada clube da Série A. Gerados com `python3 docs/arte/gerar-emblemas.py`; um prompt por pasta.
 
+## Imagens enviadas pelo usuário (SPEC v2.86)
+
+As imagens que o usuário colocou nas pastas dos clubes (2026-10-09) entram no jogo: `python3 docs/arte/emblemas/recortar.py` recorta o fundo verde e grava `src/assets/emblemas/<clube>.webp`. Pasta sem imagem fica com o emblema que já existia (desenho ou genérico). Por decisão do usuário (risco assumido por ele), estas imagens entram mesmo repetindo elementos de escudos oficiais ou mascotes; **nenhuma vai ao lançamento público sem revisão jurídica**.
+
 ## Regras (CLAUDE.md e SPEC, seção 11)
 
 - Nunca o escudo oficial nem elemento, forma ou disposição dele, monograma, mascote oficial, estrelas ou ano de fundação.

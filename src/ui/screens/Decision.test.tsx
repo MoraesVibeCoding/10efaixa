@@ -421,14 +421,15 @@ describe('camadas (T49c)', () => {
 });
 
 describe('emblemas na tela (T49d)', () => {
-  const seasons = [{ age: 20, clubId: 'bahia', overall: 69 }, { age: 21, clubId: 'flamengo', overall: 72 }];
+  const seasons = [{ age: 20, clubId: 'vasco', overall: 69 }, { age: 21, clubId: 'flamengo', overall: 72 }];
   it('trajetória: cada temporada com o emblema do clube (simplificado, decorativo) ao lado do nome', () => {
     render(<Decision eventId={EVENT} age={22} progress={0.3} player={{ ...PLAYER, seasons }} scene={{ src: 'c.webp', alt: 'cena' }} />);
     fireEvent.click(screen.getByRole('button', { name: new RegExp(t('ui.carreira.titulo')) }));
     const rows = within(screen.getByRole('table')).getAllByRole('row').slice(1);
     expect(rows[0]!.querySelector('.emblema')).toHaveAttribute('data-emblema', 'flamengo');
     expect(rows[1]!.querySelector('.emblema')).toHaveAttribute('data-emblema', 'generico');
-    expect(rows[0]!.querySelector('.emblema')).toHaveAttribute('data-versao', 'simples');
+    // v2.86: o Flamengo usa a imagem enviada pelo usuário em qualquer tamanho (não há versão simplificada)
+    expect(rows[0]!.querySelector('.emblema')).toHaveAttribute('data-versao', 'imagem');
   });
 
   it('a caixa do jogador traz o emblema do clube ao lado da linha "meia do Flamengo" (v2.34)', () => {
