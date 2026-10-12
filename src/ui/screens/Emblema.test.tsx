@@ -44,7 +44,7 @@ describe('emblema do clube (T49d, SPEC v2.26)', () => {
 // v2.86 (usuário em 2026-10-11: "utilize os que arquivei"; as pastas vazias ficam como estão): os emblemas enviados em
 // docs/arte/emblemas/<clube>/ entram no jogo como imagem recortada (src/assets/emblemas/<clube>.webp), em qualquer tamanho.
 describe('emblemas enviados pelo usuário (v2.86)', () => {
-  const ENVIADOS = ['athletico-pr', 'atletico-mg', 'bahia', 'botafogo', 'chapecoense', 'corinthians', 'coritiba', 'cruzeiro', 'flamengo', 'fluminense', 'internacional', 'palmeiras', 'santos', 'sao-paulo', 'vasco', 'bragantino', 'mirassol', 'gremio', 'vitoria', 'remo'];
+  const ENVIADOS = ['athletico-pr', 'atletico-mg', 'bahia', 'botafogo', 'chapecoense', 'corinthians', 'coritiba', 'cruzeiro', 'flamengo', 'fluminense', 'internacional', 'palmeiras', 'santos', 'sao-paulo', 'vasco', 'bragantino', 'mirassol', 'gremio', 'vitoria', 'remo', 'azuriz', 'cianorte', 'cascavel', 'foz-do-iguacu', 'londrina', 'maringa', 'operario-pr', 'parana-clube', 'paranavai', 'sao-joseense'];
   it.each(ENVIADOS)('%s usa a imagem enviada, sem sigla por cima', (clubId) => {
     for (const size of [20, 56]) {
       const { container, unmount } = render(<Emblema clubId={clubId} size={size} />);
