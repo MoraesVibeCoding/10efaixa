@@ -272,7 +272,7 @@
   "aos": "Aos {idade} anos",
   "metas": {
    "titulo": "As metas do jogo",
-   "dez": "Vestiu a 10 da Seleção",
+   "dez": "Vestiu a camisa 10",
    "semDez": "Faltou a 10",
    "faixa": "Usou a faixa de capitão",
    "semFaixa": "Faltou a faixa"
@@ -312,7 +312,7 @@
   "seguir": "Escolher o ritmo",
   "origem": { "varzea": "Do terrão do bairro", "peneira": "Um entre trezentos na peneira", "baseGrande": "Criado na base do clube" },
   "linha": "{posicao} · {estado} · {idade} anos",
-  "metas": { "titulo": "Metas do álbum", "dez": "Vestir a 10 da Seleção", "faixa": "Usar a faixa de capitão" },
+  "metas": { "titulo": "Metas do álbum", "dez": "Vestir a camisa 10", "faixa": "Usar a faixa de capitão" },
   "virar": "Virar o card",
   "ficha": {
    "titulo": "Ficha do jogador",

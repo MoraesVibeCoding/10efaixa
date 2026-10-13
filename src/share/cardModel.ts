@@ -22,7 +22,7 @@ export interface CardModel {
   codigo: string; alt: { narrativa: string; estatistica: string };
   /** v2.81 (Álbum, card de fim de carreira): o auge com a idade em que veio. */
   auge: { overall: number; idade: number };
-  /** As duas metas do jogo respondidas: vestiu a 10 da Seleção, usou a faixa de capitão dela. */
+  /** As duas metas do jogo respondidas (v2.92): vestiu a 10, usou a faixa de capitão, no clube ou na Seleção. */
   metas: { dez: boolean; faixa: boolean };
   /** "Do terrão do bairro à despedida no Santos": da origem ao último clube. */
   arco: string;
@@ -87,7 +87,7 @@ export function cardModel(r: CareerResult, codigo: string): CardModel {
   const fim = {
     // a idade do auge em anos inteiros (o motor conta em meio ano)
     auge: { overall: r.peakOverall, idade: Math.floor(r.peakAge) },
-    metas: { dez: r.selection.ten > 0, faixa: r.selection.captain > 0 },
+    metas: { dez: r.wearsTen || r.selection.ten > 0, faixa: r.captain || r.selection.captain > 0 },
     arco: t(`ui.fim.arco.${r.player.origin}`, { prep: ultimo.prep, clube: ultimo.nome }),
     motivo: r.retirement === 'decisao' && r.farewell
       ? t('ui.fim.motivo.decisaoCasa', { idade: Math.floor(r.endAge), prep: ultimo.prep, clube: ultimo.nome })

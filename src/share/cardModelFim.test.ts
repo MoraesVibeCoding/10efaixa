@@ -14,7 +14,24 @@ const m = cardModel(r, 'X');
 describe('modelo do card de fim de carreira (v2.81)', () => {
   it('auge com a idade e as metas do jogo', () => {
     expect(m.auge).toEqual({ overall: r.peakOverall, idade: Math.floor(r.peakAge) });
-    expect(m.metas).toEqual({ dez: r.selection.ten > 0, faixa: r.selection.captain > 0 });
+    expect(m.metas).toEqual({ dez: r.wearsTen || r.selection.ten > 0, faixa: r.captain || r.selection.captain > 0 });
+  });
+
+  // v2.92 (pedido do usuário em 2026-10-13: a 10 e a faixa conquistadas não preenchiam o card final): vale a conquista no
+  // clube (`wearsTen`, `captain`) ou na Seleção.
+  it('as metas marcam pela 10 e pela faixa do clube, mesmo sem a Seleção', () => {
+    const semSelecao = { ...r.selection, ten: 0, captain: 0 };
+    const nada = cardModel({ ...r, wearsTen: false, captain: false, selection: semSelecao }, 'X');
+    expect(nada.metas).toEqual({ dez: false, faixa: false });
+    const clube = cardModel({ ...r, wearsTen: true, captain: true, selection: semSelecao }, 'X');
+    expect(clube.metas).toEqual({ dez: true, faixa: true });
+    const soDez = cardModel({ ...r, wearsTen: true, captain: false, selection: semSelecao }, 'X');
+    expect(soDez.metas).toEqual({ dez: true, faixa: false });
+  });
+
+  it('as metas marcam pela Seleção, mesmo sem a 10 e a faixa do clube', () => {
+    const selecao = { ...r.selection, ten: 2, captain: 1 };
+    expect(cardModel({ ...r, wearsTen: false, captain: false, selection: selecao }, 'X').metas).toEqual({ dez: true, faixa: true });
   });
 
   it('o arco vai da origem à despedida no último clube', () => {
