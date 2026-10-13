@@ -1,97 +1,108 @@
-# Proposta: mais visuais de jogador (2026-10-13)
+# Visuais de jogador: definição dos 20 (2026-10-13)
 
-Pedido do usuário: "hoje a gente está limitado com 10 visuais"; aumentar, com visuais que "pareçam alguns jogadores famosos", mas sem rosto específico.
+Pedido do usuário: chegar a **no máximo 20 visuais** (ideal entre 15 e 20), cobrindo pele branca, parda e negra e cabelo curto, médio e longo, com estilos que lembrem os de jogadores reais, sem rosto específico. Depois, as cenas genéricas por visual, o uniforme por código como hoje e as ligas em ordem: Série A, depois B a D, depois as grandes ligas.
 
-**Estado:** proposta, aguardando o "DE ACORDO" do usuário. Nada foi implementado nem registrado no SPEC.
+**Estado:** definição proposta, aguardando o "DE ACORDO" do usuário na tabela da seção 3. Nada foi implementado nem registrado no SPEC.
 
 ## 1. Como é hoje
 
 Fonte: `src/data/visuais.json`, `src/data/avatar.json`, SPEC 6.17.
 
-- **10 visuais prontos**, sem nome ("Visual 1" a "Visual 10"), cada um com pele, cabelo, cor do cabelo, barba, faixa de cabelo e chuteira. A imagem do busto é `src/assets/visuais/visual-NN.webp` mais a máscara da camisa (`visual-NN-camisa.webp`).
-- **Peças que já existem** (arte provisória em SVG e recolor): **10 tons de pele** (`t1` a `t10`), **8 estilos de cabelo** (raspado, curto, cacheado, crespo, black power, dread, moicano, longo), **8 cores de cabelo** (preto, castanho escuro, castanho, castanho claro, loiro escuro, loiro, ruivo, descolorido), **4 barbas** (rala, cavanhaque, bigode, cheia), **faixas de cabelo** e **6 cores de chuteira**.
-- **O que os 10 visuais usam:** cada tom de pele uma vez; só **3 das 8 cores de cabelo** (preto 6, castanho escuro 3, castanho 1); o estilo **moicano nunca**; **nenhuma faixa de cabelo** e **só chuteira preta**.
-- As cenas ainda são escolhidas pelo **corte de cabelo** (6 cortes, `cutForVisual`) e pintadas com **pele marrom fixa**. A cena não acompanha a pele do visual.
+- **10 visuais prontos**, sem nome, com pele, cabelo, cor do cabelo, barba, faixa e chuteira. Arte do busto em `src/assets/visuais/visual-NN.webp` mais máscara da camisa; os prompts ficam em `docs/arte/visuais/visual-NN/prompt.md`, o processamento em `docs/arte/processar_visuais.py` e a conferência em `docs/arte/conferir-visuais.py`.
+- **Peças que já existem:** 10 tons de pele, 8 estilos de cabelo (raspado, curto, cacheado, crespo, black power, dread, moicano, longo), 8 cores de cabelo (preto, castanho escuro, castanho, castanho claro, loiro escuro, loiro, ruivo, descolorido), 4 barbas, faixas de cabelo e 6 cores de chuteira.
+- **Grupos de pele dos 10 atuais:** branca 3 (`t1` a `t3`), parda 4 (`t4` a `t7`), negra 3 (`t8` a `t10`). Cada tom aparece uma vez.
+- **Comprimento dos 10 atuais:** curto 7, médio 3, **longo 0**.
+- **Cor de cabelo dos 10 atuais:** só preto, castanho escuro e castanho. Nenhum usa faixa nem outra chuteira que não a preta.
 
-**Conclusão:** dá para criar bastante variedade **sem nenhuma peça nova**, só combinando melhor o que já existe.
+## 2. Regra de estilo (SPEC 6.17 e CLAUDE.md)
 
-## 2. A regra que limita "parecer jogador famoso"
+"Avatar original, nunca imitando o rosto ou o visual característico de pessoas reais." O usuário autorizou estilos parecidos com os de jogadores reais, sem trazer referência. Para ficar dentro da regra:
 
-SPEC 6.17: "Avatar **original**, nunca imitando o rosto ou o **visual característico** de pessoas reais". CLAUDE.md (regras que nunca podem ser quebradas): "Nunca imagem, rosto ou visual característico de pessoa real"; lendas só como texto descritivo no campo `inspiracao`, atrás da flag `inspiracaoLendas`.
+1. Cada visual é uma **família de estilo** que o futebol popularizou (degradê alto, platinado de comemoração, moicano descolorido, rastas, tranças, cabelo preso), nunca a combinação-assinatura de uma pessoa (corte, cor, barba e acessório que a identificam juntos).
+2. **Nenhum nome de jogador** em prompt, texto ou arquivo do projeto.
+3. A conferência de cada retrato inclui a pergunta "isso lembra uma pessoa específica?"; se sim, muda.
+4. **Revisão jurídica** dos visuais antes do lançamento público, como os emblemas (v2.86). No Brasil, o uso da imagem de atleta em videogame sem cessão já foi considerado ilícito (art. 20 do Código Civil); isto não é parecer jurídico (fontes na seção 8).
 
-- **Fora da regra:** um visual montado para lembrar uma pessoa específica (a combinação de corte, cor, barba, tatuagem e acessório que a identifica), mesmo sem rosto.
-- **Dentro da regra:** visuais baseados em **famílias de estilo** que o futebol popularizou (um degradê alto, um platinado de comemoração, rastas curtas), sem reproduzir a combinação-assinatura de ninguém.
-- **Risco jurídico real:** no Brasil, o uso da imagem de atleta em videogame sem cessão do próprio atleta já foi considerado ilícito (art. 20 do Código Civil), e os jogos grandes usam nomes e imagens genéricos para os brasileiros (fontes na seção 7). "Parecer" em nível de visual característico pode ser lido como uso de imagem.
+## 3. Os 20 visuais
 
-**Recomendação:** seguir as famílias de estilo (seção 3), **sem citar nome de jogador em lugar nenhum dos visuais** (nem no prompt, nem no texto, nem no arquivo). Se o usuário quiser mesmo "inspirado em fulano", isso é mudança de regra do SPEC, com risco assumido por ele e revisão jurídica antes do lançamento, como foi com os emblemas (v2.86). Eu não recomendo.
+Os 10 primeiros **não mudam** (ids, saves e retratos ficam como estão). Os 10 novos entram como `visual-11` a `visual-20`.
 
-## 3. Proposta: 20 visuais novos, em dois lotes
+| Visual | Grupo de pele | Pele | Comprimento | Estilo | Cor | Barba | Faixa | Chuteira | Família de estilo | Peça nova |
+|--:|---|---|---|---|---|---|---|---|---|---|
+| 01 | branca | t3 | curto | curto | castanho | nenhuma | nenhuma | preta | curto clássico | não |
+| 02 | parda | t5 | curto | cacheado | preto | rala | nenhuma | preta | cacheado curto | não |
+| 03 | parda | t6 | curto | raspado | preto | cavanhaque | nenhuma | preta | careca com cavanhaque | não |
+| 04 | negra | t8 | curto | crespo | preto | nenhuma | nenhuma | preta | crespo curto | não |
+| 05 | negra | t10 | médio | black power | preto | cheia | nenhuma | preta | black power | não |
+| 06 | branca | t1 | médio | longo | castanho escuro | nenhuma | nenhuma | preta | liso até a mandíbula | não |
+| 07 | parda | t4 | médio | cacheado | castanho escuro | bigode | nenhuma | preta | cacheado médio | não |
+| 08 | parda | t7 | curto | dread | preto | cheia | nenhuma | preta | rastas curtas | não |
+| 09 | negra | t9 | curto | curto | preto | cavanhaque | nenhuma | preta | laterais baixas | não |
+| 10 | branca | t2 | curto | curto | castanho escuro | cheia | nenhuma | preta | curto com barba, traços maduros | não |
+| **11** | branca | t2 | médio | moicano | loiro | nenhuma | branca | amarela | moicano descolorido | não |
+| **12** | negra | t9 | curto | crespo | descolorido | nenhuma | nenhuma | preta | platinado de comemoração | não |
+| **13** | parda | t5 | longo | longo | castanho claro | cheia | nenhuma | preta | cabelo solto e barba cheia | não |
+| **14** | parda | t7 | curto | **degradê alto** | preto | rala | preta | branca | degradê alto | **sim** |
+| **15** | branca | t1 | longo | **rabo de cavalo ou coque** | loiro escuro | nenhuma | nenhuma | preta | cabelo preso | **sim** |
+| **16** | negra | t10 | longo | **tranças** | preto | nenhuma | nenhuma | amarela | tranças longas | **sim** |
+| **17** | parda | t4 | médio | cacheado | castanho | rala | branca | azul | cacheado claro com faixa | não |
+| **18** | negra | t8 | longo | dread | preto | cavanhaque | preta | vermelha | rastas longas com faixa | não |
+| **19** | parda | t6 | curto | **degradê alto** | castanho escuro | cheia | nenhuma | preta | degradê alto com barba cheia | usa a peça do 14 |
+| **20** | branca | t3 | médio | cacheado | ruivo | bigode | nenhuma | branca | cacheado ruivo | não |
 
-### Lote A, visuais 11 a 20: **só com peças que já existem** (sem SVG novo)
+**Cobertura do conjunto:** pele branca 6, parda 8, negra 6; cabelo curto 10, médio 6, **longo 4**; as 8 cores de cabelo aparecem; 4 visuais usam faixa e 6 usam chuteira que não é preta.
 
-Usa as cores de cabelo, as faixas, as chuteiras e o moicano que hoje ninguém usa. Cada tom de pele aparece de novo uma vez.
+**Peças novas (3):** degradê alto, rabo de cavalo ou coque, tranças. Cada uma pede uma peça em SVG na arte provisória e entra no retrato.
 
-| Visual | Pele | Cabelo | Cor | Barba | Faixa | Chuteira | Família de estilo |
-|--:|---|---|---|---|---|---|---|
-| 11 | t3 | moicano | loiro | nenhuma | branca | amarela | moicano descolorido de torcida |
-| 12 | t8 | crespo | descolorido | nenhuma | nenhuma | preta | platinado de comemoração de título |
-| 13 | t5 | longo | castanho claro | cheia | nenhuma | preta | cabelo solto e barba cheia |
-| 14 | t10 | curto | preto | rala | preta | branca | curto com faixa |
-| 15 | t1 | cacheado | ruivo | bigode | nenhuma | preta | ruivo clássico |
-| 16 | t6 | dread | castanho escuro | cavanhaque | nenhuma | laranja | rastas com cavanhaque |
-| 17 | t9 | black power | preto | nenhuma | nenhuma | vermelha | black power volumoso |
-| 18 | t4 | raspado | (sem cabelo) | cheia | nenhuma | preta | careca com barba cheia |
-| 19 | t7 | cacheado | loiro escuro | rala | branca | azul | cacheado claro com faixa |
-| 20 | t2 | curto | castanho claro | nenhuma | nenhuma | branca | curto clássico, pele clara |
+## 4. Riscos técnicos a testar antes de gerar os 10
 
-### Lote B, visuais 21 a 30: **precisa de peças novas**
+1. **Plano de cor dos retratos.** Os prompts atuais dizem "cabelo só em preto e tons de castanho" e "nenhum amarelo, dourado, laranja ou vermelho na pessoa" (cores-chave do recolor). Loiro, loiro escuro, ruivo e descolorido (visuais 11, 12, 15 e 20, e o castanho claro do 13) vão contra isso. **Teste:** gerar só o Visual 12 (platinado) e passar por `processar_visuais.py` e `conferir-visuais.py`; se a máscara da camisa e o fundo verde saírem limpos, a regra se ajusta; se não, os visuais de cabelo claro usam o tom mais claro de castanho que passar.
+2. **Olhos:** continuam castanho-escuros (outras cores conflitam com as cores-chave).
+3. **Peças novas em SVG** (degradê alto, coque, tranças) precisam passar no validador da arte (`npm run art:check`).
 
-Estilos que aparecem nas matérias sobre cortes do futebol e ainda não existem como peça. Cada estilo novo pede **uma peça em SVG** (arte provisória) e entra no portrait.
+## 5. Cenas genéricas por visual (a decisão do usuário)
 
-| Estilo novo | Descrição curta (genérica) |
-|---|---|
-| Degradê alto (high fade) | laterais raspadas bem altas, topo curto texturizado |
-| Degradê cacheado | laterais em degradê baixo, topo cacheado volumoso |
-| Repartido (side part) | corte social, risca de lado, laterais curtas |
-| Tranças | tranças rentes à cabeça (fonte não encontrada; descrever à mão) |
-| Rabo de cavalo ou coque | cabelo longo preso |
+O usuário decidiu: as cenas são feitas **por padrão de jogador**, com o uniforme genérico (camisa magenta, calção e meiões ciano), e o jogo aplica o uniforme do clube **por código, como hoje**.
 
-Os 10 visuais do lote B combinam esses 5 estilos com tons de pele ainda pouco usados, cores de cabelo e barbas diferentes. A tabela completa sai depois do lote A aprovado.
+| O quê | Conta com 20 visuais |
+|---|--:|
+| As 21 cenas atuais, uma por visual | 21 × 20 = **420 imagens** |
+| As 18 cenas novas (13 previstas + 5 do lote 7), uma por visual | 18 × 20 = **360 imagens** |
+| Total de cenas genéricas | **780 imagens** |
+| Retratos dos 10 visuais novos | 10 imagens |
 
-**Total possível:** 30 visuais. A tela "seu visual" (hoje 10 deslizando de lado) vira rolagem longa com 30; proposta de **agrupar por estilo** ou **mostrar 10 sorteados com botão "ver outros"**, mantendo teclado, foco visível e leitor de tela (WCAG 2.1 AA).
+Isto substitui o recorte por cabelo (6 cortes) de hoje: a cena passa a ser escolhida pelo visual, não pelo corte (`cutForVisual` em `src/ui/screens/cenaArte.ts`). Os prompts das cenas (lotes 3 a 7) precisam descrever o jogador por pele, cabelo, cor e barba do visual, não por corte. **Ordem sugerida:** as 5 cenas mais usadas primeiro (treino, estádio, vestiário, casa da família, gol), com os 20 visuais; depois as demais.
 
-## 4. O que cada visual novo custa
+A cena genérica de cada visual **não é regenerada por clube**: o uniforme do clube continua por código. A melhoria da pintura por código (nº de listras, direção, cores de manga) está na auditoria das cenas e entra clube a clube.
 
-- **Retrato do busto** (`visual-NN.webp`) mais máscara da camisa: 1 imagem por visual (gerada por IA e processada pelo script que já existe).
-- **Cenas:** aqui está o custo grande.
+## 6. Roteiro por liga (uniforme por código)
 
-| Caminho | Como funciona | 20 visuais novos (30 no total) |
-|---|---|--:|
-| **A. Uma cena por visual** | cada cena de cada visual é uma imagem (pele, cabelo e cor certos), o uniforme continua por código | **21 × 30 = 630 imagens** (420 a mais que as 210 de hoje com 10 visuais) |
-| **B. Cena por silhueta de cabelo, com pele e cor de cabelo recoloridas por código** | 8 silhuetas (os 6 cortes de hoje mais 2); a pele e a cor do cabelo viram máscaras como o uniforme | **8 × 21 = 168 imagens**, mais as máscaras; cresce de graça com novos visuais |
+Contagens de `src/data/clubs.json`, `europe.json` e `foreignClubs.json`.
 
-O B exige regenerar as cenas com pele e cabelo em cinza neutro (como a camisa hoje) e criar as máscaras de pele e cabelo; o A não exige código novo na pintura, mas cresce a cada visual.
+| Fase | Liga | Clubes | Situação hoje |
+|--:|---|--:|---|
+| 1 | Brasileirão Série A | 20 | padrão e cores em `kits.json`, a melhorar |
+| 2 | Série B | 20 | camisa lisa nas cores do escudo |
+| 3 | Série C | 20 | idem |
+| 4 | Série D | 96 | idem |
+| 5 | Grandes ligas europeias (ING, ESP, ITA, ALE, FRA, POR) | 114 | idem |
+| 6 | América do Sul (9 países) | 77 | idem |
+| 7 | Demais (clubes sem divisão no Brasil, outros europeus, fora do eixo) | 177 | idem |
 
-**Recomendação:** começar pelo **lote A** (sem peça nova, sem SVG novo) e testar o caminho B numa cena só (treino). Se o B funcionar, adotar; se não, adotar o A só para as 5 cenas mais usadas (62% das decisões) e deixar as outras com a silhueta mais próxima.
+Cada fase: descrever padrão e cores de cada clube em `kits.json` **com fonte e data** (CLAUDE.md), conferir pelo teste de dados e ver numa cena. Sem escudo, patrocínio ou marca de fornecedor.
 
-## 5. Passos, se aprovado (um por vez, cada um com teste)
+## 7. Passos, se aprovado (um por vez, cada um com teste)
 
-1. Registrar no SPEC (v2.95) a decisão e a regra de estilo (sem nome de jogador).
-2. Lote A em `visuais.json` (dados e teste de integridade), `visual-11` a `visual-20` retratos, prompts por visual.
-3. Teste do caminho B na cena de treino.
-4. Decidir A ou B e gerar as cenas dos 20 novos.
-5. Lote B: estilos novos como peças em SVG, depois os 10 visuais e os retratos.
-6. Revisão jurídica dos visuais antes do lançamento público.
+1. Registrar no SPEC (v2.95): 20 visuais, a tabela da seção 3, a regra de estilo, a cena por visual e o roteiro por liga.
+2. Teste do plano de cor com o Visual 12 (seção 4).
+3. Prompts dos retratos 11 a 20 em `docs/arte/visuais/visual-11` a `visual-20` (mesmo formato dos atuais) e o usuário gera.
+4. Dados dos 10 novos em `visuais.json` **só depois** dos retratos existirem (sem retrato a tela de criação quebra).
+5. Peças em SVG de degradê alto, rabo de cavalo ou coque e tranças.
+6. Cenas genéricas por visual, as 5 mais usadas primeiro.
+7. Troca da escolha da cena de "corte" para "visual" no código.
+8. Série A (melhorar `kits.json`), depois B a D e as outras ligas.
 
-## 6. Decisões que preciso do usuário
+## 8. Fontes
 
-1. **DE ACORDO** com a regra: famílias de estilo, sem citar nem imitar jogador real.
-2. Começar pelo **lote A** (10 visuais com peças existentes)?
-3. Cenas: caminho **A** (uma por visual) ou testar o **B** (recolor por máscara) antes?
-4. Meta final: **30 visuais** ou outro número (o código aceita crescer)?
-
-## 7. Fontes
-
-- Estilos de corte no futebol (famílias, não pessoas): [Beleza na Web](https://www.belezanaweb.com.br/loucas-por-beleza/cortes-de-cabelo-de-jogadores-os-estilos-masculinos-que-sao-tendencia-no-mundial), [Observador (Rússia 2018)](https://observador.pt/2018/06/28/com-o-mundial-pelos-cabelos-os-melhores-penteados-do-russia-2018/), [Lance!](https://www.lance.com.br/fora-de-campo/barbeiros-da-selecao-elegem-jogador-mais-resenha-e-revelam-possivel-corte-do-hexa.html).
-- Direito de imagem em jogos e figurinhas: [Conjur, indenização por uso de imagem em videogame](https://www.conjur.com.br/2021-jun-30/empresa-indenizar-ex-atleta-uso-imagem-videogame//?print=1), [Jus.com.br, FIFA 20 e direito de imagem](https://jus.com.br/artigos/80158/fifa-20-electronic-arts-e-o-licenciamento-dos-jogadores-dos-times-brasileiros-uma-analise-sobre-o-direito-de-imagem-dos-atletas-no-brasil), [TRT-3, imagem em álbum de figurinhas](https://portal.trt3.jus.br/internet/conheca-o-trt/comunicacao/noticias-juridicas/importadas-2015-2016/ex-jogador-que-teve-imagem-divulgada-em-album-de-figurinhas-sem-autorizacao-sera-indenizado-06-05-2015-06-00-acs).
-- Resumos de decisões, não os acórdãos: para um caso concreto, consultar advogado.
+- Famílias de estilo de corte no futebol (famílias, não pessoas): [Beleza na Web](https://www.belezanaweb.com.br/loucas-por-beleza/cortes-de-cabelo-de-jogadores-os-estilos-masculinos-que-sao-tendencia-no-mundial), [Observador (Rússia 2018)](https://observador.pt/2018/06/28/com-o-mundial-pelos-cabelos-os-melhores-penteados-do-russia-2018/), [Lance!](https://www.lance.com.br/fora-de-campo/barbeiros-da-selecao-elegem-jogador-mais-resenha-e-revelam-possivel-corte-do-hexa.html). Não achei fonte para tranças; o estilo está descrito à mão.
+- Direito de imagem em jogos e figurinhas: [Conjur, indenização por uso de imagem em videogame](https://www.conjur.com.br/2021-jun-30/empresa-indenizar-ex-atleta-uso-imagem-videogame//?print=1), [Jus.com.br, FIFA 20 e direito de imagem](https://jus.com.br/artigos/80158/fifa-20-electronic-arts-e-o-licenciamento-dos-jogadores-dos-times-brasileiros-uma-analise-sobre-o-direito-de-imagem-dos-atletas-no-brasil), [TRT-3, imagem em álbum de figurinhas](https://portal.trt3.jus.br/internet/conheca-o-trt/comunicacao/noticias-juridicas/importadas-2015-2016/ex-jogador-que-teve-imagem-divulgada-em-album-de-figurinhas-sem-autorizacao-sera-indenizado-06-05-2015-06-00-acs). São resumos de decisões, não os acórdãos; para um caso concreto, consultar advogado.
