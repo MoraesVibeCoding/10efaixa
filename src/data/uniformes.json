@@ -1,0 +1,67 @@
+{
+  "_nota": "Texturas dos uniformes da Série A (SPEC v2.98): camisa de costas e calção, recortados das imagens planas que o usuário gerou (docs/arte/uniformes-serie-a). Reproduzem o desenho das camisas dos clubes, sem escudo, patrocínio ou texto; decisão do usuário em 2026-10-14, risco assumido por ele; nenhum vai ao lançamento público sem revisão jurídica.",
+  "fonte": "imagens geradas pelo usuário em 2026-10-14 (Série A.zip)",
+  "conferidoEm": "2026-10-14",
+  "clubes": {
+    "athletico-pr": {
+      "calcaoPrincipal": "#1E1F1D"
+    },
+    "atletico-mg": {
+      "calcaoPrincipal": "#1D1F1E"
+    },
+    "bahia": {
+      "calcaoPrincipal": "#265895"
+    },
+    "botafogo": {
+      "calcaoPrincipal": "#1E1E1D"
+    },
+    "chapecoense": {
+      "calcaoPrincipal": "#FFFFFF"
+    },
+    "corinthians": {
+      "calcaoPrincipal": "#242421"
+    },
+    "coritiba": {
+      "calcaoPrincipal": "#1E201F"
+    },
+    "cruzeiro": {
+      "calcaoPrincipal": "#FEFEFE"
+    },
+    "flamengo": {
+      "calcaoPrincipal": "#FFFFFF"
+    },
+    "fluminense": {
+      "calcaoPrincipal": "#FFFFFF"
+    },
+    "gremio": {
+      "calcaoPrincipal": "#242422"
+    },
+    "internacional": {
+      "calcaoPrincipal": "#CD2C31"
+    },
+    "mirassol": {
+      "calcaoPrincipal": "#EAD12E"
+    },
+    "palmeiras": {
+      "calcaoPrincipal": "#1D7153"
+    },
+    "bragantino": {
+      "calcaoPrincipal": "#E12435"
+    },
+    "remo": {
+      "calcaoPrincipal": "#E9EEF1"
+    },
+    "santos": {
+      "calcaoPrincipal": "#FFFFFE"
+    },
+    "sao-paulo": {
+      "calcaoPrincipal": "#F9FBF9"
+    },
+    "vasco": {
+      "calcaoPrincipal": "#FFFFFF"
+    },
+    "vitoria": {
+      "calcaoPrincipal": "#212121"
+    }
+  }
+}
