@@ -10,6 +10,27 @@ Compare a cena montada com `docs/arte/cenas/08-casa-familia/curto`. Nota de 1 (p
 | Uniforme de 4 clubes sem vazamento nem emenda | | | |
 | Cena conta a história (tem todos os elementos) | | | |
 
-**Esforço:** quantas gerações foram precisas para aprovar todas as camadas? ______ (meta: no máximo 7).
+## Esforço e custo (registre uma linha por camada)
+
+| Camada | Tentativas | Minutos de intervenção humana | Custo (R$ ou US$) | Motivo de rejeição (das tentativas descartadas) |
+|---|--:|--:|--:|---|
+| `01-cenario` | | | | |
+| `02-fixo-sofa-com-a-familia` | | | | |
+| `04-jogador-no-banquinho-curto` | | | | |
+| `04-jogador-no-banquinho-coque` | | | | |
+
+Meta de esforço: no máximo 7 tentativas no total para aprovar todas as camadas.
+
+## Verificações objetivas (marque depois de rodar o compositor)
+- [ ] Pixels idênticos fora da região editada (no arquivo de trabalho, antes do WebP com perdas).
+- [ ] Máscaras sem vazamento em céu, torcida ou adversários.
+- [ ] Calção e meiões independentes.
+- [ ] Padrão do uniforme aplicado só nas regiões previstas.
+- [ ] Dimensões e canais iguais ao contrato (`docs/arte/contrato-de-dimensoes.md`).
+- [ ] Alerta de OCR ou de logotipo: nenhum (filtro de risco, não certificação).
+
+## Leitura a 360 px (largura de celular)
+- [ ] O cabelo é distinguível. - [ ] A camisa preta conserva volume. - [ ] A pele clara conserva contorno. - [ ] O jogador sentado ou parado está integrado ao objeto.
+
 **Melhoria real?** Sim, se as camadas empatam ou ganham em 4 dos 5 critérios e nenhum cai abaixo de 3.
 **Observações:**

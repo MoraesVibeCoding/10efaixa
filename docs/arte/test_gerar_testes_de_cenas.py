@@ -99,6 +99,13 @@ def test_montagem_json_valido_e_aponta_para_camadas_que_existem():
         assert sum(1 for k in m['camadas'] if k['papel'] == 'jogador') == 2
 
 
+def test_avaliacao_registra_esforco_custo_e_motivo_de_rejeicao():
+    for c in CENAS:
+        t = lido(os.path.join(SAIDA, c, 'avaliacao.md'))
+        for termo in ('Tentativas', 'Minutos de intervenção humana', 'Custo', 'Motivo de rejeição', '360 px', 'Pixels idênticos fora da região editada'):
+            assert termo in t, (c, termo)
+
+
 def test_readme_geral_lista_as_25_camadas_e_o_protocolo():
     t = lido(os.path.join(SAIDA, 'README.md'))
     assert '25' in t and 'avaliacao.md' in t and 'curto' in t and 'coque' in t
