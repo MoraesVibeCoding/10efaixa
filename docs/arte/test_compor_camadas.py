@@ -63,6 +63,14 @@ def test_sombra_de_contato_fica_sob_os_pes_e_escurece():
     assert ys.min() >= 135 and ys.max() <= 175               # perto da base (150), não no corpo
 
 
+def test_sombra_com_elemento_largo_nao_quebra_o_desfoque():
+    # regressão: com largura > 50 px o raio do desfoque virava np.float64 e o Pillow recusava
+    al = np.zeros((400, 300), np.float32)
+    al[50:350, 80:230] = 1
+    sombra = c.sombra_de_contato(al)
+    assert sombra.shape == al.shape and sombra.max() > 0.1
+
+
 def test_contrato_de_dimensoes():
     assert c.confere_dimensoes((2304, 1856)) == []
     assert c.confere_dimensoes((1152, 928)) == []                       # metade (testes provisórios)

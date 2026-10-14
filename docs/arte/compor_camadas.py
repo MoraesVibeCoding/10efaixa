@@ -72,14 +72,14 @@ def sombra_de_contato(alfa, forca=0.45, deriva=0.35):
     ys, xs = np.where(alfa > 0.5)
     if not len(ys):
         return np.zeros_like(alfa)
-    base, x0, x1 = ys.max(), xs.min(), xs.max() + 1
+    base, x0, x1 = int(ys.max()), int(xs.min()), int(xs.max()) + 1   # int do Python: o Pillow recusa raio em numpy
     larg = x1 - x0
     sh = Image.new('L', (W, H), 0)
     from PIL import ImageDraw
     d = ImageDraw.Draw(sh)
     d.ellipse([x0 - larg * 0.05, base - max(3, larg * 0.05), x1 + larg * 0.2, base + max(6, larg * 0.14)], fill=255)
     d.polygon([(x0 + larg * 0.25, base - 2), (x0 + larg * 0.75, base - 2), (x1 + larg * deriva, base + larg * 0.1), (x0 + larg * 0.9, base + larg * 0.16)], fill=170)
-    sh = sh.filter(ImageFilter.GaussianBlur(max(2, larg * 0.04)))
+    sh = sh.filter(ImageFilter.GaussianBlur(float(max(2, larg * 0.04))))
     sombra = np.asarray(sh, np.float32) / 255 * forca
     return np.minimum(sombra, forca).astype(np.float32)
 
