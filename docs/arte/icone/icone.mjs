@@ -37,6 +37,22 @@ export function iconSvg({ rounded = false, scale = 1 } = {}) {
 
 const out = (f) => resolve(import.meta.dirname, '../../../public', f);
 
+/** v2.99: favicon.ico com PNGs dentro (formato aceito desde o Windows Vista e por todos os navegadores atuais).
+ *  Cabeçalho ICONDIR (6 bytes) + uma ICONDIRENTRY (16 bytes) por tamanho + os PNGs. Tamanho 256 vira 0 no byte. */
+export function icoFromPngs(entries) {
+  const head = Buffer.alloc(6 + 16 * entries.length);
+  head.writeUInt16LE(0, 0); head.writeUInt16LE(1, 2); head.writeUInt16LE(entries.length, 4);
+  let offset = head.length;
+  entries.forEach(({ size, png }, i) => {
+    const e = 6 + i * 16;
+    head[e] = size % 256; head[e + 1] = size % 256; head[e + 2] = 0; head[e + 3] = 0;
+    head.writeUInt16LE(1, e + 4); head.writeUInt16LE(32, e + 6);
+    head.writeUInt32LE(png.length, e + 8); head.writeUInt32LE(offset, e + 12);
+    offset += png.length;
+  });
+  return Buffer.concat([head, ...entries.map((x) => x.png)]);
+}
+
 if (process.argv[1] && process.argv[1].endsWith('icone.mjs')) {
   const { chromium } = await import(process.env.PLAYWRIGHT_CORE ?? '/opt/node-tools/node_modules/playwright-core/index.mjs');
   writeFileSync(out('icon.svg'), iconSvg({ rounded: true }));
@@ -45,7 +61,7 @@ if (process.argv[1] && process.argv[1].endsWith('icone.mjs')) {
   const png = async (file, size, opts) => {
     await page.setViewportSize({ width: size, height: size });
     await page.setContent(`<html><body style="margin:0">${iconSvg(opts).replace('<svg ', `<svg width="${size}" height="${size}" `)}</body></html>`);
-    await page.screenshot({ path: out(file), clip: { x: 0, y: 0, width: size, height: size } });
+    return page.screenshot({ path: file ? out(file) : undefined, clip: { x: 0, y: 0, width: size, height: size } });
   };
   // quadrado: a captura não tem transparência e o canto arredondado saía branco na aba escura
   await png('favicon-32.png', 32, {});
@@ -53,6 +69,11 @@ if (process.argv[1] && process.argv[1].endsWith('icone.mjs')) {
   await png('icon-192.png', 192, {});
   await png('icon-512.png', 512, {});
   await png('icon-maskable-512.png', 512, { scale: 0.8 });
+  // v2.99: o iOS pede este nome na raiz antes de ler o <link>; e o favicon.ico, que vários navegadores pedem sozinhos
+  await png('apple-touch-icon-precomposed.png', 180, {});
+  const ico = [];
+  for (const size of [16, 32, 48]) ico.push({ size, png: await png(null, size, {}) });
+  writeFileSync(out('favicon.ico'), icoFromPngs(ico));
   await browser.close();
   console.log('ícones gerados em public/');
 }
