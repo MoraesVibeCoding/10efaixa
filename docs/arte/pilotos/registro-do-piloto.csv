@@ -1,1 +1,4 @@
 braco,cena,cabelo,pele,uniforme,tentativa,minutos_de_intervencao,custo,resultado_360px,resultado_resolucao_de_trabalho,aprovada,motivo_da_rejeicao,arquivo,observacoes
+A,gol,degrade-alto,t5 (base da pintura),magenta/ciano (por código depois),1,,,,,,,docs/arte/pilotos/resultados/piloto-a/gol/degrade-alto/final.jpeg,"Gemini alterou 0.59% dos pixels fora da caixa (diff>30); após recompor, fora_diferentes=0; caixa [0.332, 0.115, 0.672, 0.385]"
+A,gol,trancas,t5 (base da pintura),magenta/ciano (por código depois),1,,,,,,,docs/arte/pilotos/resultados/piloto-a/gol/trancas/final.jpeg,"Gemini alterou 0.56% dos pixels fora da caixa (diff>30); após recompor, fora_diferentes=0; caixa [0.332, 0.115, 0.672, 0.385]"
+A,gol,coque,t5 (base da pintura),magenta/ciano (por código depois),1,,,,,,,docs/arte/pilotos/resultados/piloto-a/gol/coque/final.jpeg,"Gemini alterou 0.55% dos pixels fora da caixa (diff>30); após recompor, fora_diferentes=0; caixa [0.332, 0.115, 0.672, 0.385]"
