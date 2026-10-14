@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { kitOf, shirtPaint } from '../../art/kits';
+import { clubsIn } from '../../engine/clubs';
 import avatar from '../../data/avatar.json';
 import events from '../../data/events.json';
 import { CenaPintada, CUTS, cutForVisual, numberColor, sceneArt } from './CenaPintada';
@@ -24,6 +25,23 @@ describe('cenas pintadas (T60a)', () => {
     expect(camisa.style.getPropertyValue('--camisa-desenho')).toBe(shirtPaint(kitOf('flamengo')));
     expect(container.querySelector('.cena__calcao')).not.toBeNull();
     expect(container.querySelector('.cena__numero')).toHaveTextContent('9');
+  });
+
+  it('v2.98: clube da Série A veste a textura do uniforme; clube sem textura segue no desenho em CSS', () => {
+    const { container } = render(<CenaPintada scene="treino" cut="curto" clubId="flamengo" alt="x" />);
+    expect(container.querySelector('.cena')).toHaveAttribute('data-uniforme', 'textura');
+    expect(container.querySelector('.cena__camisa')).toHaveAttribute('data-textura');
+    expect(container.querySelector('.cena__calcao')).toHaveAttribute('data-textura');
+    const fora = clubsIn('B')[0]!.id;
+    const css = render(<CenaPintada scene="treino" cut="curto" clubId={fora} alt="y" />).container;
+    expect(css.querySelector('.cena')).not.toHaveAttribute('data-uniforme');
+    expect(css.querySelector('.cena__camisa')).not.toHaveAttribute('data-textura');
+  });
+
+  it('v2.98: cena sem calção (roupa civil) veste só a camisa', () => {
+    const { container } = render(<CenaPintada scene="casa-familia" cut="curto" clubId="santos" alt="x" />);
+    expect(container.querySelector('.cena__camisa')).toHaveAttribute('data-textura');
+    expect(container.querySelector('.cena__calcao')).toBeNull();
   });
 
   it('v2.62: o número nas costas fica desligado por padrão (lista numeroNasCenas vazia em cortes.json)', () => {

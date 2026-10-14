@@ -2,12 +2,13 @@ import type { Kit } from '../../art/kits';
 import cfg from '../../data/cortes.json';
 import arte from '../../data/cenasArte.json';
 import visuais from '../../data/visuais.json';
+import type { Partes } from '../../art/uniformes';
 import cenasCriacao from '../../data/cenasCriacao.json';
 
 // T60a: as cenas pintadas (docs/arte/processar_cenas.py): a pintura com o uniforme em cinza, as máscaras da camisa e
 // do calção e onde fica o número nas costas. Cada arquivo só é baixado quando a cena aparece.
 const FILES = import.meta.glob('../../assets/cenas/*/*.webp', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
-const DATA = arte.cenas as Record<string, { largura: number; altura: number; cortes: Record<string, { numero: number[] | null; calcao: boolean }> }>;
+const DATA = arte.cenas as unknown as Record<string, { largura: number; altura: number; cortes: Record<string, { numero: number[] | null; calcao: boolean; partes?: Partes }> }>;
 const BY_HAIR = cfg.porCabelo as Record<string, string>;
 const HAIR_OF = new Map(visuais.visuais.map((v) => [v.id, v.look.hairStyle]));
 
@@ -19,7 +20,7 @@ export function cutForVisual(visual: string | undefined, hairStyle?: string): st
   return (hair && BY_HAIR[hair]) || cfg.padrao;
 }
 
-export interface SceneArt { src: string; camisa: string; calcao: string | null; numero: [number, number, number] | null; largura: number; altura: number }
+export interface SceneArt { src: string; camisa: string; calcao: string | null; numero: [number, number, number] | null; largura: number; altura: number; partes: Partes | null }
 
 /** Arquivos e medidas de uma cena num corte; null se a cena não foi gerada. */
 export function sceneArt(scene: string, cut: string): SceneArt | null {
@@ -29,7 +30,7 @@ export function sceneArt(scene: string, cut: string): SceneArt | null {
   if (!d || !c || !file('')) return null;
   return {
     src: file('')!, camisa: file('-camisa')!, calcao: c.calcao ? file('-calcao') ?? null : null,
-    numero: c.numero ? [c.numero[0]!, c.numero[1]!, c.numero[2]!] : null, largura: d.largura, altura: d.altura,
+    numero: c.numero ? [c.numero[0]!, c.numero[1]!, c.numero[2]!] : null, largura: d.largura, altura: d.altura, partes: c.partes ?? null,
   };
 }
 

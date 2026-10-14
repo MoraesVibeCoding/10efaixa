@@ -1,4 +1,5 @@
 import { kitOf, shirtPaint } from '../../art/kits';
+import { camadasUniforme, uniformeTextura } from '../../art/uniformes';
 import cortes from '../../data/cortes.json';
 import foco from '../../data/cenaFoco.json';
 import { useEffect, useState } from 'react';
@@ -34,11 +35,16 @@ export function CenaPintada({ scene, cut, clubId, number, alt, inert, decorativa
     '--cena-proporcao': `${art.largura} / ${art.altura}`, '--cena-razao': razao, '--foco-y': FOCO[scene] ?? foco.padrao,
   } as React.CSSProperties;
   const camisa = { '--camisa-cor': kit.camisa[0], '--camisa-desenho': shirtPaint(kit), '--mascara': `url(${art.camisa})` } as React.CSSProperties;
+  // v2.98: clube da Série A (com textura e partes medidas na cena) veste o uniforme das imagens do usuário; o resto, o desenho em CSS
+  const tex = uniformeTextura(clubId);
+  const camadas = tex && art.partes ? camadasUniforme(art.partes, tex, kit) : null;
+  const camisaTex = camadas ? { backgroundImage: camadas.camisa.image, backgroundSize: camadas.camisa.size, backgroundPosition: camadas.camisa.position, backgroundRepeat: 'no-repeat' } as React.CSSProperties : null;
+  const calcaoTex = camadas ? { backgroundImage: camadas.calcao.image, backgroundSize: camadas.calcao.size, backgroundPosition: camadas.calcao.position, backgroundRepeat: 'no-repeat', backgroundColor: 'transparent' } as React.CSSProperties : null;
   return (
-    <div className={foto ? 'cena cena--foto' : 'cena'} data-cena={scene} data-repete={repete || undefined} role={decorativa ? undefined : 'img'} aria-label={decorativa ? undefined : alt} aria-hidden={decorativa || undefined} style={frame} inert={inert}>
+    <div className={foto ? 'cena cena--foto' : 'cena'} data-cena={scene} data-uniforme={camadas ? 'textura' : undefined} data-repete={repete || undefined} role={decorativa ? undefined : 'img'} aria-label={decorativa ? undefined : alt} aria-hidden={decorativa || undefined} style={frame} inert={inert}>
       <img className="cena__pintura" src={art.src} alt="" width={art.largura} height={art.altura} fetchPriority="high" />
-      <span className="cena__camisa" style={camisa} aria-hidden="true" />
-      {art.calcao && <span className="cena__calcao" style={{ '--calcao-cor': kit.calcao, '--mascara': `url(${art.calcao})` } as React.CSSProperties} aria-hidden="true" />}
+      <span className="cena__camisa" data-textura={camisaTex ? '' : undefined} style={camisaTex ? { ...camisa, ...camisaTex } : camisa} aria-hidden="true" />
+      {art.calcao && <span className="cena__calcao" data-textura={calcaoTex ? '' : undefined} style={{ '--calcao-cor': kit.calcao, '--mascara': `url(${art.calcao})`, ...calcaoTex } as React.CSSProperties} aria-hidden="true" />}
       {art.numero && number !== undefined && numeroNasCenas.includes(scene) && (
         <span
           className="cena__numero" aria-hidden="true"
