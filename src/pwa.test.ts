@@ -30,14 +30,27 @@ describe('ícone e manifesto do app', () => {
     expect(pngSize('apple-touch-icon.png')).toEqual([180, 180]);
   });
 
-  it('index.html liga o ícone SVG, o PNG de reserva, o do iPhone e o manifesto', () => {
+  // v2.99: os links levam ?v=<versão do ícone> para furar o cache (o iPhone guardava o ícone antigo, da T61).
+  it('index.html liga o ícone SVG, o PNG de reserva, o do iPhone e o manifesto, versionados', () => {
     const html = readFileSync(resolve(root, 'index.html'), 'utf8');
-    expect(html).toContain('<link rel="icon" href="/icon.svg" type="image/svg+xml" />');
-    expect(html).toContain('<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />');
-    expect(html).toContain('<link rel="apple-touch-icon" href="/apple-touch-icon.png" />');
-    expect(html).toContain('<link rel="manifest" href="/manifest.webmanifest" />');
+    expect(html).toContain('<link rel="icon" href="/icon.svg?v=281" type="image/svg+xml" />');
+    expect(html).toContain('<link rel="icon" href="/favicon-32.png?v=281" sizes="32x32" type="image/png" />');
+    expect(html).toContain('<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=281" />');
+    expect(html).toContain('<link rel="manifest" href="/manifest.webmanifest?v=281" />');
     expect(existsSync(pub('icon.svg'))).toBe(true);
     expect(pngSize('favicon-32.png')).toEqual([32, 32]);
+  });
+
+  // v2.99: o iOS e vários navegadores pedem esses dois na raiz antes de ler o <link>; sem eles, ícone genérico.
+  it('raiz tem favicon.ico (16, 32 e 48 em PNG) e apple-touch-icon-precomposed.png de 180', () => {
+    const ico = readFileSync(pub('favicon.ico'));
+    expect([...ico.subarray(0, 4)]).toEqual([0, 0, 1, 0]);
+    const n = ico.readUInt16LE(4);
+    const sizes = Array.from({ length: n }, (_, i) => ico[6 + i * 16]);
+    expect(sizes).toEqual([16, 32, 48]);
+    const first = ico.readUInt32LE(6 + 12);
+    expect(ico.subarray(first + 1, first + 4).toString('ascii')).toBe('PNG');
+    expect(pngSize('apple-touch-icon-precomposed.png')).toEqual([180, 180]);
   });
 });
 
