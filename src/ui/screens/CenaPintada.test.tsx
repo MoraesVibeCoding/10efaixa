@@ -3,7 +3,7 @@ import { kitOf, shirtPaint } from '../../art/kits';
 import { clubsIn } from '../../engine/clubs';
 import avatar from '../../data/avatar.json';
 import events from '../../data/events.json';
-import { CenaPintada, CUTS, cutForVisual, numberColor, sceneArt } from './CenaPintada';
+import { CenaPintada, CUTS, cutForVisual, numberColor, pilotoArte, sceneArt } from './CenaPintada';
 
 // T60a: as cenas pintadas na decisão, com a camisa e o calção do clube e o número nas costas quando há uniforme.
 describe('cenas pintadas (T60a)', () => {
@@ -25,6 +25,21 @@ describe('cenas pintadas (T60a)', () => {
     expect(camisa.style.getPropertyValue('--camisa-desenho')).toBe(shirtPaint(kitOf('flamengo')));
     expect(container.querySelector('.cena__calcao')).not.toBeNull();
     expect(container.querySelector('.cena__numero')).toHaveTextContent('9');
+  });
+
+  // v3.00 (piloto aprovado em 2026-10-14): Athletico-PR com os visuais 1 e 5 usa a cena gerada inteira pela API, com o
+  // uniforme pintado; qualquer outro clube, visual ou cena segue nas camadas de antes.
+  it('v3.00: piloto troca a cena pela imagem pintada só no clube, visual e cena do piloto', () => {
+    expect(pilotoArte('gol', 'visual-01', 'athletico-pr')).not.toBeNull();
+    expect(pilotoArte('cabecada', 'visual-05', 'athletico-pr')).not.toBeNull();
+    expect(pilotoArte('gol', 'visual-02', 'athletico-pr')).toBeNull();
+    expect(pilotoArte('gol', 'visual-01', 'flamengo')).toBeNull();
+    const { container } = render(<CenaPintada scene="gol" cut="curto" visual="visual-01" clubId="athletico-pr" alt="Zé comemora" />);
+    expect(container.querySelector('.cena')).toHaveAttribute('data-uniforme', 'piloto');
+    expect(container.querySelector('.cena__camisa')).toBeNull();
+    expect(screen.getByRole('img', { name: 'Zé comemora' })).toBeInTheDocument();
+    const fora = render(<CenaPintada scene="gol" cut="curto" visual="visual-01" clubId="flamengo" alt="y" />).container;
+    expect(fora.querySelector('.cena')).not.toHaveAttribute('data-uniforme', 'piloto');
   });
 
   it('v2.98: clube da Série A veste a textura do uniforme; clube sem textura segue no desenho em CSS', () => {

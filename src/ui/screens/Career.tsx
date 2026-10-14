@@ -210,6 +210,6 @@ function sceneFor(eventId: string, player: ReturnType<typeof toDecisionPlayer>, 
 function sceneOfCena(cena: string, player: ReturnType<typeof toDecisionPlayer>, visual: string | undefined, nome: string, clube: string) {
   return {
     alt: t(`scenes.alt.${cena}`, { nome, clube }),
-    pintada: { scene: cena, cut: cutForVisual(visual), clubId: player.uniforme ?? player.clubId, number: player.number },
+    pintada: { scene: cena, cut: cutForVisual(visual), visual, clubId: player.uniforme ?? player.clubId, number: player.number },
   };
 }

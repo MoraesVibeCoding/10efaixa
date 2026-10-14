@@ -38,7 +38,7 @@ export interface DecisionProps {
   /** Fração da carreira já vivida, de 0 a 1. */
   progress: number;
   /** T60a: com `pintada`, a cena é a pintura em camadas (uniforme do clube e número); sem ela, a imagem `src`. */
-  scene: { src?: string; alt: string; pintada?: { scene: string; cut: string; clubId: string; number?: number } };
+  scene: { src?: string; alt: string; pintada?: { scene: string; cut: string; visual?: string; clubId: string; number?: number } };
   /** Quem decide. O overall aparece em número (SPEC v2.16); os atributos, um a um, seguem só em faixas e estrelas. */
   player: {
     name: string; position: string; clubId: string; overall: number; titles: string[];

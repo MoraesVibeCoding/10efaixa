@@ -1,0 +1,6 @@
+{
+  "_nota": "Piloto de cenas pela API (SPEC v3.00, aprovado pelo usuário em 2026-10-14): com `ativo`, a cena da decisão do clube e do visual do piloto vem pintada inteira (src/assets/piloto/<cena>/<clube>/<visual>.webp, gerada por docs/arte/piloto/piloto.py e conferida); o resto segue nas camadas da v2.98. Desligar volta tudo ao que era.",
+  "ativo": true,
+  "largura": 1024,
+  "altura": 1280
+}

@@ -4,9 +4,11 @@ import cortes from '../../data/cortes.json';
 import foco from '../../data/cenaFoco.json';
 import { useEffect, useState } from 'react';
 import { numberColor, sceneArt } from './cenaArte';
+import { pilotoArte } from './cenaPiloto';
 import './CenaPintada.css';
 
 export { CUTS, creationScene, cutForVisual, numberColor, sceneArt } from './cenaArte';
+export { pilotoArte } from './cenaPiloto';
 
 // T60a (SPEC v2.12, arte final): a cena pintada ao fundo da decisão, em camadas como a figurinha: a pintura com o
 // uniforme em cinza, a camisa no padrão e nas cores do clube e o calção (multiplicados pelo cinza, recortados pelas
@@ -23,10 +25,22 @@ let ultimaCena = '';
 
 /** `foto` (v2.81, Álbum): a cena vira uma foto dentro do quadro que a contém (`.decisao__foto`), cobrindo-o com o ponto
  * focal no meio da altura, por CSS (unidades de contêiner); sem medir a tela. */
-export function CenaPintada({ scene, cut, clubId, number, alt, inert, decorativa = false, numeroNasCenas = NUMERO_NAS_CENAS, foto = false }: { scene: string; cut: string; clubId: string; number?: number; alt: string; inert?: boolean; decorativa?: boolean; numeroNasCenas?: readonly string[]; foto?: boolean }) {
+export function CenaPintada({ scene, cut, visual, clubId, number, alt, inert, decorativa = false, numeroNasCenas = NUMERO_NAS_CENAS, foto = false }: { scene: string; cut: string; visual?: string; clubId: string; number?: number; alt: string; inert?: boolean; decorativa?: boolean; numeroNasCenas?: readonly string[]; foto?: boolean }) {
   const chave = `${scene}|${cut}|${clubId}`;
   const [repete] = useState(() => chave === ultimaCena);
   useEffect(() => { ultimaCena = chave; }, [chave]);
+  // v3.00: no piloto, a cena vem pintada inteira (visual e uniforme do clube na própria pintura), sem camadas
+  const piloto = pilotoArte(scene, visual, clubId);
+  if (piloto) {
+    const quadro = {
+      '--cena-proporcao': `${piloto.largura} / ${piloto.altura}`, '--cena-razao': piloto.largura / piloto.altura, '--foco-y': FOCO[scene] ?? foco.padrao,
+    } as React.CSSProperties;
+    return (
+      <div className={foto ? 'cena cena--foto' : 'cena'} data-cena={scene} data-uniforme="piloto" data-repete={repete || undefined} role={decorativa ? undefined : 'img'} aria-label={decorativa ? undefined : alt} aria-hidden={decorativa || undefined} style={quadro} inert={inert}>
+        <img className="cena__pintura" src={piloto.src} alt="" width={piloto.largura} height={piloto.altura} fetchPriority="high" />
+      </div>
+    );
+  }
   const art = sceneArt(scene, cut);
   if (!art) return null;
   const kit = kitOf(clubId);
