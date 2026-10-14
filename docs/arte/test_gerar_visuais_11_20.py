@@ -63,8 +63,9 @@ def test_cabelo_claro_ajusta_o_plano_de_cor_e_o_escuro_mantem():
             assert 'only black, dark-brown or brown tones' in plano and 'Apart from the hair colour' not in plano, n
 
 
-def test_faixa_de_cabelo_so_nos_visuais_que_tem():
-    com = {11, 14, 17, 18}
+def test_nenhum_visual_usa_faixa_de_cabelo():
+    # SPEC v2.96: o conjunto de visuais não tem acessórios (a faixa saiu da ficha dos visuais 11, 14, 17 e 18)
+    com = set()
     for n, t in gerados().items():
         person = fatia(t, 'CHARACTER (this image only)', 'BODY AND POSE')
         assert ('plain' in person and 'headband' in person and 'no headband' not in person) == (n in com), n

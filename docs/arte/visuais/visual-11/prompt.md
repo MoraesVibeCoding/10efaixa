@@ -32,7 +32,7 @@ CHARACTER (this image only)
 - Hair: a medium-length mohawk: the sides and back are cropped very short, and a central strip about 6 cm tall runs from the forehead to the nape, styled upright, dyed a golden blond (about #D9B568). The cropped sides show the natural dark-brown scalp tone.
 - Facial hair: clean-shaven: no beard, no moustache, no stubble.
 - Expression: calm and confident, mouth closed, with a very slight smile. Not laughing, not serious, not angry.
-- He wears a plain white fabric headband across the forehead, with no logo, no text and no stripes. No glasses, no earrings, no necklace, no cap.
+- No glasses, no earrings, no necklace, no headband, no cap, no hair accessories.
 - Both ears fully visible (hair never covers them).
 
 BODY AND POSE
@@ -71,7 +71,7 @@ COMPOSITION (strict; measured on a 1856 x 2304 canvas)
 - [ ] Faixa verde livre acima da cabeça (8% a 12% da altura). Olhos entre 26% e 34%.
 - [ ] Olhos castanho-escuros. Nenhum verde, azul, cinza, mel ou amarelo.
 - [ ] Camisa magenta lisa, sem nada estampado. Mãos fora do quadro.
-- [ ] Orelhas visíveis. Sem óculos, brinco, colar nem boné; a faixa de cabelo é a da ficha (lisa, sem logo nem texto).
+- [ ] Orelhas visíveis. Sem óculos, brinco, colar, boné ou faixa.
 - [ ] Combina com a ficha deste visual (idade, pele, cabelo, barba).
 - [ ] Nenhum observador apontaria uma pessoa real: se alguém "reconhecer" alguém, descarte e gere de novo com outra variação.
 - [ ] Cabelo claro: a camisa continua magenta lisa e o fundo verde, sem mancha nem tom de pele ou cabelo vazando para o fundo.

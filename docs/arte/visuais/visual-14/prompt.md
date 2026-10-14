@@ -32,7 +32,7 @@ CHARACTER (this image only)
 - Hair: a short HIGH FADE: the sides and back are skin-faded up high, almost to the temples, and the top is short and textured, about 3 cm, black. Clean natural hairline. Ears visible.
 - Facial hair: light, even stubble beard on the cheeks and chin, about 3 mm long; no moustache styling.
 - Expression: calm and confident, mouth closed, with a very slight smile. Not laughing, not serious, not angry.
-- He wears a plain black fabric headband across the forehead, with no logo, no text and no stripes. No glasses, no earrings, no necklace, no cap.
+- No glasses, no earrings, no necklace, no headband, no cap, no hair accessories.
 - Both ears fully visible (hair never covers them).
 
 BODY AND POSE
@@ -71,6 +71,6 @@ COMPOSITION (strict; measured on a 1856 x 2304 canvas)
 - [ ] Faixa verde livre acima da cabeça (8% a 12% da altura). Olhos entre 26% e 34%.
 - [ ] Olhos castanho-escuros. Nenhum verde, azul, cinza, mel ou amarelo.
 - [ ] Camisa magenta lisa, sem nada estampado. Mãos fora do quadro.
-- [ ] Orelhas visíveis. Sem óculos, brinco, colar nem boné; a faixa de cabelo é a da ficha (lisa, sem logo nem texto).
+- [ ] Orelhas visíveis. Sem óculos, brinco, colar, boné ou faixa.
 - [ ] Combina com a ficha deste visual (idade, pele, cabelo, barba).
 - [ ] Nenhum observador apontaria uma pessoa real: se alguém "reconhecer" alguém, descarte e gere de novo com outra variação.

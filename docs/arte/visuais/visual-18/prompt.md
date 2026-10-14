@@ -32,7 +32,7 @@ CHARACTER (this image only)
 - Hair: long black locs (dreadlocks), neatly formed, pulled back off the face and falling BEHIND the shoulders, never in front of the chest; the hairline is clean and both ears are fully visible.
 - Facial hair: a short goatee on the chin with a thin moustache joined to it; cheeks clean-shaven.
 - Expression: calm and confident, mouth closed, with a very slight smile. Not laughing, not serious, not angry.
-- He wears a plain black fabric headband across the forehead, with no logo, no text and no stripes. No glasses, no earrings, no necklace, no cap.
+- No glasses, no earrings, no necklace, no headband, no cap, no hair accessories.
 - Both ears fully visible (hair never covers them).
 
 BODY AND POSE
@@ -71,6 +71,6 @@ COMPOSITION (strict; measured on a 1856 x 2304 canvas)
 - [ ] Faixa verde livre acima da cabeça (8% a 12% da altura). Olhos entre 26% e 34%.
 - [ ] Olhos castanho-escuros. Nenhum verde, azul, cinza, mel ou amarelo.
 - [ ] Camisa magenta lisa, sem nada estampado. Mãos fora do quadro.
-- [ ] Orelhas visíveis. Sem óculos, brinco, colar nem boné; a faixa de cabelo é a da ficha (lisa, sem logo nem texto).
+- [ ] Orelhas visíveis. Sem óculos, brinco, colar, boné ou faixa.
 - [ ] Combina com a ficha deste visual (idade, pele, cabelo, barba).
 - [ ] Nenhum observador apontaria uma pessoa real: se alguém "reconhecer" alguém, descarte e gere de novo com outra variação.

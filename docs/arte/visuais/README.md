@@ -61,14 +61,14 @@ Os personagens são **famílias de estilo** que o futebol popularizou, originais
 
 | Visual | Características | Idade aparente |
 |---|---|---|
-| Visual 11 | pele clara de fundo pêssego; rosto oval; moicano médio descolorido (loiro dourado); sem barba; faixa de cabelo branca | 22 anos |
+| Visual 11 | pele clara de fundo pêssego; rosto oval; moicano médio descolorido (loiro dourado); sem barba | 22 anos |
 | Visual 12 | pele muito escura; rosto oval alongado; cabelo crespo curto descolorido (platinado); sem barba | 24 anos |
 | Visual 13 | pele média-morena; rosto quadrado; cabelo longo ondulado castanho claro, solto, atrás das orelhas; barba cheia e curta | 26 anos |
-| Visual 14 | pele dourada escura; rosto triangular; degradê alto com topo curto preto; barba rala; faixa de cabelo preta | 23 anos |
+| Visual 14 | pele dourada escura; rosto triangular; degradê alto com topo curto preto; barba rala | 23 anos |
 | Visual 15 | pele muito clara; rosto oval; cabelo longo loiro escuro preso em coque no alto; sem barba | 21 anos |
 | Visual 16 | pele muito escura (a mais escura do conjunto); rosto oval; tranças pretas longas presas atrás; sem barba | 25 anos |
-| Visual 17 | pele morena clara; rosto redondo; cabelo cacheado médio castanho com volume; barba rala; faixa de cabelo branca | 22 anos |
-| Visual 18 | pele escura; rosto alongado; rastas pretas longas para trás; cavanhaque; faixa de cabelo preta | 27 anos |
+| Visual 17 | pele morena clara; rosto redondo; cabelo cacheado médio castanho com volume; barba rala | 22 anos |
+| Visual 18 | pele escura; rosto alongado; rastas pretas longas para trás; cavanhaque | 27 anos |
 | Visual 19 | pele parda; rosto quadrado, traços maduros; degradê alto com topo curto castanho-escuro; barba cheia e curta | 28 anos |
 | Visual 20 | pele clara oliva; rosto triangular; cabelo cacheado médio ruivo acobreado; bigode fino | 20 anos |
 
