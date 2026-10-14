@@ -1,0 +1,78 @@
+{
+ "cena": "01-treino",
+ "comparacao": "docs/arte/cenas/11-treino",
+ "tela": [
+  1856,
+  2304
+ ],
+ "nota": "alvo = caixa [x0, y0, x1, y1] em frações da tela onde o elemento deve ficar (o código ajusta escala e posição a ela); null = tela inteira. z = ordem de baixo para cima.",
+ "camadas": [
+  {
+   "pasta": "01-cenario",
+   "papel": "cenario",
+   "z": 0,
+   "fundo": "cena",
+   "alvo": null
+  },
+  {
+   "pasta": "03-companheiros",
+   "papel": "figurantes",
+   "z": 20,
+   "fundo": "verde #00B140",
+   "alvo": [
+    0.06,
+    0.38,
+    0.34,
+    0.52
+   ]
+  },
+  {
+   "pasta": "03-tecnico",
+   "papel": "figurantes",
+   "z": 20,
+   "fundo": "verde #00B140",
+   "alvo": [
+    0.7,
+    0.36,
+    0.8,
+    0.56
+   ]
+  },
+  {
+   "pasta": "04-jogador-correndo-curto",
+   "papel": "jogador",
+   "z": 30,
+   "fundo": "verde #00B140",
+   "alvo": [
+    0.32,
+    0.12,
+    0.68,
+    0.75
+   ]
+  },
+  {
+   "pasta": "04-jogador-correndo-coque",
+   "papel": "jogador",
+   "z": 30,
+   "fundo": "verde #00B140",
+   "alvo": [
+    0.32,
+    0.12,
+    0.68,
+    0.75
+   ]
+  },
+  {
+   "pasta": "05-bola",
+   "papel": "objeto",
+   "z": 40,
+   "fundo": "verde #00B140",
+   "alvo": [
+    0.58,
+    0.66,
+    0.68,
+    0.76
+   ]
+  }
+ ]
+}

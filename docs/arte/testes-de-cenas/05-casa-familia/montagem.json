@@ -1,0 +1,54 @@
+{
+ "cena": "05-casa-familia",
+ "comparacao": "docs/arte/cenas/08-casa-familia",
+ "tela": [
+  1856,
+  2304
+ ],
+ "nota": "alvo = caixa [x0, y0, x1, y1] em frações da tela onde o elemento deve ficar (o código ajusta escala e posição a ela); null = tela inteira. z = ordem de baixo para cima.",
+ "camadas": [
+  {
+   "pasta": "01-cenario",
+   "papel": "cenario",
+   "z": 0,
+   "fundo": "cena",
+   "alvo": null
+  },
+  {
+   "pasta": "02-fixo-sofa-com-a-familia",
+   "papel": "fixo",
+   "z": 10,
+   "fundo": "verde #00B140",
+   "alvo": [
+    0.14,
+    0.26,
+    0.86,
+    0.54
+   ]
+  },
+  {
+   "pasta": "04-jogador-no-banquinho-curto",
+   "papel": "jogador",
+   "z": 30,
+   "fundo": "verde #00B140",
+   "alvo": [
+    0.34,
+    0.28,
+    0.66,
+    0.7
+   ]
+  },
+  {
+   "pasta": "04-jogador-no-banquinho-coque",
+   "papel": "jogador",
+   "z": 30,
+   "fundo": "verde #00B140",
+   "alvo": [
+    0.34,
+    0.28,
+    0.66,
+    0.7
+   ]
+  }
+ ]
+}
