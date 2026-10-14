@@ -14,8 +14,8 @@ Ideias de duas opiniões externas (uma delas aponta a tolerância de 1856×2304 
 | **C. 3D como fonte de geometria** | Um personagem 3D original só para gerar silhueta, máscaras e mapas; a IA dá o acabamento. | **Só se A e B falharem** em consistência do corpo ou no mapeamento da roupa |
 
 ## Cenas do piloto (casos difíceis)
-- **Estádio:** movimento, torcida, sobreposição de personagens. A: pintura de `docs/arte/cenas/21-estadio`; B: `testes-de-cenas/02-estadio`.
-- **Gol:** braços abertos, mangas em posições difíceis. A: `docs/arte/cenas/12-gol` (B ainda não tem camadas).
+- **Gol (comece por esta no braço A):** braços abertos, mangas em posições difíceis. A: `docs/arte/cenas/12-gol/curto/imagem.jpeg` (**1856×2304**, alta resolução); B ainda não tem camadas.
+- **Estádio:** movimento, torcida, sobreposição de personagens. A: `docs/arte/cenas/21-estadio/curto/imagem.jpeg`, mas esta imagem tem só **825×1024** (provisória); B: `testes-de-cenas/02-estadio`.
 - **Vestiário:** jogador **sentado**, sem camisa; só o braço B tem camadas (`testes-de-cenas/03-vestiario`); A usa `docs/arte/cenas/02-vestiario`. Ainda não testado com uniforme.
 
 Cenas já em camadas além dessas: treino, pênalti e casa da família.
@@ -28,7 +28,7 @@ Cenas já em camadas além dessas: treino, pênalti e casa da família.
 
 ## Braço A, passo a passo
 1. Escolha a pintura atual e a caixa de edição (tabela abaixo; vale para o corte `curto`; para cabelo longo, coque ou tranças a caixa **inclui** o ombro e o espaço acima da cabeça).
-2. Peça à IA a variante (cabeça e cabelo), anexando a pintura original e uma referência do penteado.
+2. Peça à IA a variante usando o prompt pronto de `docs/arte/pilotos/prompt-edicao-cabelo.md`, anexando a pintura original.
 3. Salve a imagem editada e rode:
    `python3 docs/arte/recompor_regiao.py original.png editada.png final.png x0,y0,x1,y1 4`
    O relatório deve dar `fora_diferentes: 0`.
