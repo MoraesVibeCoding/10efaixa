@@ -1,5 +1,5 @@
 {
- "_nota": "Uniformes para a arte (SPEC 6.17). Só padrão genérico e cores: nenhum escudo, patrocinador, marca de fornecedor ou desenho exclusivo. Clube sem cadastro usa camisa lisa nas cores de clubs.json.",
+ "_nota": "Uniformes para a arte (SPEC 6.17). Só padrão genérico e cores: nenhum escudo, patrocinador, marca de fornecedor ou desenho exclusivo. v2.98: os 20 clubes da Série A passam a vestir nas cenas as texturas de src/data/uniformes.json (imagens do usuário); este cadastro segue valendo como fallback e para os meiões (campo meiao). Clube sem cadastro usa camisa lisa nas cores de clubs.json.",
  "fonte": "Imagem de referência fornecida pelo usuário com as camisas dos 20 clubes da Série A (docs/referencias/camisas-serie-a-2026-10-01.jpg); cores conferidas com clubs.json",
  "conferidoEm": "2026-10-01",
  "padroes": ["lisa", "listras-verticais", "listras-finas", "faixas-horizontais", "listras-diagonais", "faixa-diagonal", "faixa-no-peito"],
