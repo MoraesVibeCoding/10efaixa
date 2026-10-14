@@ -6,7 +6,7 @@ import sys
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(__file__))
-from piloto import conferir, extrai_bloco, montar_prompt, recorta_4x5, tracos_visual  # noqa: E402
+from piloto import conferir, destino_no_jogo, extrai_bloco, montar_prompt, recorta_4x5, tracos_visual  # noqa: E402
 
 CENA_MD = """# Cena
 ## Prompt
@@ -90,3 +90,8 @@ def test_recorte_4x5_mantem_o_topo():
     out = recorta_4x5(img)
     assert out.shape[:2] == (1280, 1024)
     assert out[0, 0, 0] == 255
+
+
+def test_destino_no_jogo_tira_o_numero_da_cena():
+    assert destino_no_jogo('12-gol', 1, 'athletico-pr') == 'gol/athletico-pr/visual-01.webp'
+    assert destino_no_jogo('22-cabecada', 5, 'athletico-pr') == 'cabecada/athletico-pr/visual-05.webp'

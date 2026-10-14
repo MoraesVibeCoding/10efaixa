@@ -9,6 +9,7 @@ O prompt de hoje é reaproveitado: magenta e ciano (as cores-chave do recolor) v
 cabeçalho diz o que é o kit do clube e quem é o jogador. A conferência reprova sobra de magenta ou ciano e faixa de baixo
 clara (os painéis do jogo ficam ali); escudo, texto e camisa fora do time ficam para a sua revisão.
 Uso:       OPENAI_API_KEY=... uv run --with pillow --with numpy --with openai python docs/arte/piloto/piloto.py
+           depois de revisar: ... piloto.py publicar  (copia as aprovadas para src/assets/piloto)
 Autoteste: uv run --with pillow --with numpy --with pytest python -m pytest docs/arte/piloto
 """
 import base64
@@ -90,6 +91,27 @@ def recorta_4x5(img):
     return img[:min(h, round(w * 5 / 4))]
 
 
+def destino_no_jogo(cena, visual, clube):
+    """Caminho em src/assets/piloto: a cena sem o número da pasta de arte, o clube e o id do visual."""
+    return f"{cena.split('-', 1)[1]}/{clube}/visual-{visual:02d}.webp"
+
+
+def publicar():
+    """Copia as cenas aprovadas (relatório sem motivos) para src/assets/piloto, onde o jogo as encontra."""
+    import shutil
+    cfg = json.load(open(os.path.join(AQUI, 'piloto.json')))
+    relatorio = json.load(open(os.path.join(AQUI, 'saida', 'relatorio.json')))
+    for cena in cfg['cenas']:
+        for v in cfg['visuais']:
+            nome = f"{cena}-v{v:02d}"
+            if relatorio.get(nome, {}).get('motivos') != []:
+                continue
+            alvo = os.path.join(RAIZ, 'src/assets/piloto', destino_no_jogo(cena, v, cfg['clube']))
+            os.makedirs(os.path.dirname(alvo), exist_ok=True)
+            shutil.copyfile(os.path.join(AQUI, 'saida', nome + '.webp'), alvo)
+            print('publicada', alvo)
+
+
 def _gerar(cliente, prompt, imagens, saida):
     arquivos = [open(p, 'rb') for p in imagens]
     try:
@@ -144,4 +166,4 @@ def main():
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    sys.exit(publicar() if sys.argv[1:] == ['publicar'] else main())
