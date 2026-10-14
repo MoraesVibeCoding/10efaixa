@@ -1,0 +1,18 @@
+{
+  "_nota": "Piloto de cenas pela API (SPEC v3.00, aprovado pelo usuário em 2026-10-14): Athletico-PR, visuais 1 e 5, 6 cenas, até 30 chamadas. Kit: imagens planas que o usuário gerou em 2026-10-14 (costas nova, lado, calção de lado, meião).",
+  "clube": "athletico-pr",
+  "cenas": ["12-gol", "22-cabecada", "24-classico", "25-vaia", "04-penalti", "14-festa"],
+  "visuais": [1, 5],
+  "estilo": "src/assets/cenas/gol/curto.webp",
+  "kit": {
+    "pasta": "kit-athletico-pr",
+    "imagens": ["costas.jpeg", "lado.jpeg", "calcao-lado.jpeg", "meiao.jpeg"],
+    "texto": {
+      "camisa": "black body with red shoulders and red sleeves, black-and-red collar and cuff trims, red diagonal stripes across the lower back (image 3 back view, image 4 side view)",
+      "calcao": "black with a red side panel along the outer seam (image 5)",
+      "meiao": "black with red horizontal stripes below a black folded cuff (image 6)"
+    }
+  },
+  "tentativasPorImagem": 3,
+  "limiteDeChamadas": 30
+}
