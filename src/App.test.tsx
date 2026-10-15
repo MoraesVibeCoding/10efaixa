@@ -87,14 +87,15 @@ describe('App (T51b, T48): abertura → criação → revelação → ritmo → 
     expect(screen.getByText(t('ui.decisao.marque'))).toBeInTheDocument();
   });
 
-  it('o ritmo escolhido chega à decisão: no Rápido não há "Confirmar escolha" (um toque decide)', () => {
+  // v3.06: a tela de decisão é a mesma nos três ritmos (antes, no Rápido, um toque decidia)
+  it('o ritmo Rápido chega à decisão com a mesma tela do Normal', () => {
     render(<App seed={11} />);
     createPlayer();
     fireEvent.click(screen.getByRole('button', { name: t('ui.revelacao.seguir') }));
     fireEvent.click(screen.getByRole('radio', { name: t('ui.ritmo.rapido.nome') }));
     fireEvent.click(screen.getByRole('button', { name: t('ui.ritmo.comecar') }));
-    expect(screen.queryByText(t('ui.decisao.marque'))).not.toBeInTheDocument();
-    expect(document.querySelector('.opcao__resumo')).not.toBeNull();
+    expect(screen.getByText(t('ui.decisao.marque'))).toBeInTheDocument();
+    expect(document.querySelector('.opcao__resumo')).toBeNull();
   });
 
   it('"Voltar" no ritmo volta para a revelação do mesmo jogador', () => {

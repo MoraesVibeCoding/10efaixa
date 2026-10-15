@@ -17,8 +17,9 @@ function decidir(ritmo: 'normal' | 'completo' | 'rapido' = 'normal') {
   const onContinue = vi.fn();
   render(<Decision eventId="salario-atrasado" age={24} progress={0.4} player={PLAYER} state={STATE} ritmo={ritmo} scene={{ src: 'c.webp', alt: 'cena' }} onChoose={() => {}} onContinue={onContinue} />);
   const opcao = screen.getByRole('button', { name: new RegExp(t('events.salario-atrasado.opcoes.ficar')) });
+  // v3.06: em todos os ritmos tocar marca e o segundo toque decide
   fireEvent.click(opcao);
-  if (ritmo !== 'rapido') fireEvent.click(opcao);
+  fireEvent.click(opcao);
   return { onContinue, caixa: screen.getByRole('dialog') };
 }
 

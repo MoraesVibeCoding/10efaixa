@@ -167,13 +167,13 @@ describe('resumo da temporada na tela (v2.61)', () => {
     expect(document.querySelector('h1')).toHaveFocus();
   });
 
-  it('no Completo também; no Rápido nunca', { timeout: 60_000 }, () => {
+  it('no Completo também; no Rápido também (v3.06: mesma tela em todos os ritmos)', { timeout: 60_000 }, () => {
     const completo = choicesToFirstSummary(11, 'completo');
     const { unmount } = render(<Career input={INPUT} look={LOOK} seed={11} ritmo="completo" initialChoices={completo} onRestart={() => {}} />);
     expect(screen.getByRole('alertdialog', { name: t('ui.resumoTemporada.titulo') })).toBeInTheDocument();
     unmount();
     const rapido = choicesToFirstSummary(11, 'rapido');
     render(<Career input={INPUT} look={LOOK} seed={11} ritmo="rapido" initialChoices={rapido} onRestart={() => {}} />);
-    expect(screen.queryByRole('alertdialog', { name: t('ui.resumoTemporada.titulo') })).toBeNull();
+    expect(screen.getByRole('alertdialog', { name: t('ui.resumoTemporada.titulo') })).toBeInTheDocument();
   });
 });
