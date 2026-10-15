@@ -49,3 +49,12 @@ describe('valor final com o teto de mercado (v3.07)', () => {
     expect(motorValue({ overall: 80, age: 24, overDelta: 0, clubId: 'qualquer', league: 'POR' })).toBe(Math.round(base * 1.2));
   });
 });
+
+describe('multiplicador extra no valor (v3.07: elite e seleção)', () => {
+  it('entra antes do teto', () => {
+    const base = Math.round(marketValue(80, 24) * 1.2);
+    expect(motorValue({ overall: 80, age: 24, overDelta: 0, clubId: 'qualquer', league: 'POR', mult: 1.25 })).toBe(Math.round(marketValue(80, 24) * 1.2 * 1.25));
+    expect(motorValue({ overall: 80, age: 24, overDelta: 0, clubId: 'qualquer', league: 'POR' })).toBe(base);
+    expect(motorValue({ overall: 95, age: 24, overDelta: 0, clubId: 'qualquer', league: 'POR', mult: 3 })).toBe(market.curva.tetoEUR);
+  });
+});

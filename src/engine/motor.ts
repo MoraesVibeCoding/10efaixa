@@ -53,7 +53,7 @@ export function valueFactor(s: { overDelta: number; clubId: string; league: stri
   return Math.min(v.fatorMax, growth * league);
 }
 
-/** Valor de mercado do motor: valor base × fator, com o teto da curva (market.json, tetoEUR) sobre o valor final. */
-export function motorValue(s: { overall: number; age: number; overDelta: number; clubId: string; league: string }): number {
-  return Math.round(Math.min(market.curva.tetoEUR, marketValue(s.overall, s.age) * valueFactor(s)));
+/** Valor de mercado do motor: valor base × fator × mult (elite, seleção), com o teto da curva (market.json, tetoEUR) sobre o valor final. */
+export function motorValue(s: { overall: number; age: number; overDelta: number; clubId: string; league: string; mult?: number }): number {
+  return Math.round(Math.min(market.curva.tetoEUR, marketValue(s.overall, s.age) * valueFactor(s) * (s.mult ?? 1)));
 }

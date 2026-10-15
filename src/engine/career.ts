@@ -3,7 +3,7 @@ import { agentSemester, changeAgent, createAgent, type Agent } from './agent';
 import { ARCHETYPES } from './archetypes';
 import { CLUBS, clubsIn, rivalsOf } from './clubs';
 import { semesterClubLife } from './clubLife';
-import { capStep, cardsByDiscipline, declineByDiscipline, growthFactors, lineupBonus, moraleRecovery, motorOn } from './motor';
+import { capStep, cardsByDiscipline, motorValue, declineByDiscipline, growthFactors, lineupBonus, moraleRecovery, motorOn } from './motor';
 import { investmentReturn, leaderEffects, matureTemperament, offFieldFlags, semesterCards } from './discipline';
 import { addToWealth, makeContract, renew, seasonEarnings, toBRL, type Contract } from './contracts';
 import { brazilQualifiers, copaDoBrasil, copaDoBrasilEntrants, copaDoNordeste, foreignQualifiers, libertadores, nordesteGroups, sulAmericana } from './cups';
@@ -288,11 +288,15 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   const meetings: DecisionView['meetings'] = [];
   let ultimoSemestre: DecisionView['ultimoSemestre'];
   let ultimaTemporada: DecisionView['ultimaTemporada'];
+  /** v3.07 (motor.json): valor com liga, crescimento do over no último ano e clube; sem o motor, a curva de hoje × mult. */
+  const valueAt = (o: number, age: number, club: string | null, mult = 1) => MOTOR && club
+    ? motorValue({ overall: o, age, overDelta: o - (seasons.at(-1)?.overall ?? o), clubId: club, league: leagueOf(club, divOf), mult })
+    : marketValue(o, age) * mult;
   /** Toda decisão passa por aqui (T51): o padrão é a escolha do temperamento, como antes. */
   const ask = (eventId: string, state: Record<string, number | string | boolean> = {}, who = temp, extra: Pick<DecisionView, 'propostas' | 'reuniao' | 'atual' | 'casa'> = {}) => decide(eventId, who, () => ({
     ...extra,
     year: curYear, age: evo.age, clubId, position, overall: ov(evo), role: curRole, temperament: who,
-    marketValueEUR: Math.round(marketValue(ov(evo), evo.age) * selectionEffect(prestige, sel, sel.rung).marketMultiplier),
+    marketValueEUR: Math.round(valueAt(ov(evo), evo.age, clubId, selectionEffect(prestige, sel, sel.rung).marketMultiplier)),
     monthlySalary: contract ? { amount: Math.round(contract.annualSalary / 12), currency: contract.currency } : { amount: 0, currency: 'BRL' },
     number: spells.at(-1)?.number ?? input.shirtNumber, attributes: { ...evo.attributes },
     state: {
@@ -334,27 +338,31 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     else sign(id, salaryFor(marketValue(ov(evo), evo.age), leagueOf(id, divOf)), 2);
   };
 
+  /** Valor projetado no clube: hoje, curva × elite; com o motor (v3.07), liga e crescimento até a projeção, × elite, com teto. */
+  const projectedValue = (p: { overall: number; age: number; valueEUR: number }, club: string) => MOTOR
+    ? motorValue({ overall: p.overall, age: p.age, overDelta: p.overall - ov(evo), clubId: club, league: leagueOf(club, divOf), mult: eliteValueFactor(club) })
+    : p.valueEUR * eliteValueFactor(club);
   // v2.64: os cartões da tela de propostas, também usados no empréstimo e na venda pelo empresário (o clube à vista)
   const cardContextOf = (o: Offer, currentAnnualSalaryBRL: number | null): CardContext => ({
-    currentAnnualSalaryBRL, todayValueEUR: marketValue(ov(evo), evo.age),
+    currentAnnualSalaryBRL, todayValueEUR: valueAt(ov(evo), evo.age, clubId),
     currentExpectedMinutes: clubId ? expectedMinutes(ov(evo), effectiveRep(clubId), roleFor(ov(evo), effectiveRep(clubId), evo.age)) : null,
-    projectedValueEUR: projectValue({
+    projectedValueEUR: projectedValue(projectValue({
       evo, position, bonus: position === input.position ? arch.overallWeightBonus : undefined, clubRep: effectiveRep(o.clubId),
       role: o.role, staffQuality: o.staffQuality, morale,
-    }).valueEUR * eliteValueFactor(o.clubId),
+    }), o.clubId),
   });
   /** T28j (v2.54): o clube atual como primeiro cartão; com o contrato no fim (`due`), a renovação (e o pedido de aumento) saem dele. */
   const currentCard = (k: Contract, due: boolean): CurrentClubView => {
     const rep = effectiveRep(clubId!);
     const role = roleFor(ov(evo), rep, evo.age);
-    const projected = projectValue({ evo, position, bonus: position === input.position ? arch.overallWeightBonus : undefined, clubRep: rep, role, staffQuality: clamp(0.8 + (rep / 100) * 0.4, 0.8, 1.2), morale }).valueEUR * eliteValueFactor(clubId!);
+    const projected = projectedValue(projectValue({ evo, position, bonus: position === input.position ? arch.overallWeightBonus : undefined, clubRep: rep, role, staffQuality: clamp(0.8 + (rep / 100) * 0.4, 0.8, 1.2), morale }), clubId!);
     const renewalOf = (raise: boolean) => {
       const r = renew(k, ov(evo) - contractOverall, raise);
       return { salarioMensal: Math.round(r.annualSalary / 12), salarioPct: salaryChange(r.annualSalary, k.annualSalary), anos: r.years };
     };
     return {
       clubId: clubId!, league: leagueOf(clubId!, divOf), currency: k.currency, salarioMensal: Math.round(k.annualSalary / 12), anosRestantes: Math.max(0, k.years - 1),
-      role, nivelClube: clubLevelOf(clubId!, rep), valorProjetadoEUR: projected, valorPct: valueChange(projected, marketValue(ov(evo), evo.age)),
+      role, nivelClube: clubLevelOf(clubId!, rep), valorProjetadoEUR: projected, valorPct: valueChange(projected, valueAt(ov(evo), evo.age, clubId)),
       renovacao: due ? renewalOf(false) : null, aumento: due ? renewalOf(true) : null,
     };
   };
