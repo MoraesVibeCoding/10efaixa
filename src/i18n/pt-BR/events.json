@@ -769,7 +769,7 @@
  },
  "tecnico-pede-sacrificio": {
   "titulo": "Um favor para o time",
-  "texto": "O técnico te chama depois do treino. O time precisa de alguém para fechar a faixa do campo e correr por dois. Não é a função que te deixou conhecido, mas ele diz que a vaga é sua se aceitar.",
+  "texto": "O técnico te chama depois do treino. Não é posição nova: é a mesma, só que marcando mais e aparecendo menos, fechando o lado do campo e correndo por dois. Ele diz que a vaga é sua se aceitar.",
   "opcoes": {
    "aceitar-a-funcao": "Aceitar a função e dar o sangue",
    "pedir-a-funcao-de-sempre": "Pedir para seguir na função de sempre",

@@ -1,3 +1,5 @@
+import events from '../data/events.json';
+import ptEvents from '../i18n/pt-BR/events.json';
 import { autoDecide, simulateCareer, type DecisionView } from './career';
 import { overall } from './overall';
 import { createPrng } from './prng';
@@ -74,5 +76,14 @@ describe('posição no clube novo (v3.10)', () => {
       const accepted = overall(s.at.attributes, o.de) - overall(s.at.attributes, o.para) <= 3 || rel >= 0.7;
       expect(s.next!.position, JSON.stringify({ o, rel })).toBe(accepted ? o.para : o.de);
     }
+  });
+});
+
+// v3.10: "Um favor para o time" não troca a posição; o texto deixa isso claro (pedido do usuário, aprovado em 2026-10-15).
+describe('"Um favor para o time" não é troca de posição (v3.10)', () => {
+  it('o texto diz que a posição é a mesma, e nenhuma opção muda a posição', () => {
+    expect(ptEvents['tecnico-pede-sacrificio'].texto).toMatch(/Não é posição nova/);
+    const ev = events.eventos.find((e) => e.id === 'tecnico-pede-sacrificio')!;
+    for (const o of ev.opcoes) expect(JSON.stringify(o.efeitos)).not.toMatch(/mudarPosicao/);
   });
 });
