@@ -41,12 +41,12 @@ export const moraleRecovery = (): number => cfg.evolucao.recuperacaoMoral;
 export const declineByDiscipline = (d: number): number => { const x = cfg.evolucao.declinioDisciplina; return x.disciplina0 + (x.disciplina1 - x.disciplina0) * clamp(d, 0, 1); };
 export const cardsByDiscipline = (d: number): number => cfg.evolucao.cartoesDisciplina.base - clamp(d, 0, 1);
 
-/** Fator do valor de mercado: crescimento do over no último ano, liga (com o clube de exceção) e Brasil por divisão. */
+/** Fator do valor de mercado: crescimento do over no último ano, liga (com o clube de exceção) e Brasil por divisão, até fatorMax. */
 export function valueFactor(s: { overDelta: number; clubId: string; league: string }): number {
   const v = cfg.valor;
   const growth = clamp(1 + v.crescimentoPorPonto * s.overDelta, v.crescimento.min, v.crescimento.max);
   const tier = leagueTier(s.clubId, s.league);
   const br = (cfg.ligas.valorBrasil as Record<string, number>)[s.league];
   const league = tier === '7' && br !== undefined && !(cfg.ligas.clubes as Record<string, string>)[s.clubId] ? br : tierOf(tier).valor;
-  return growth * league;
+  return Math.min(v.fatorMax, growth * league);
 }

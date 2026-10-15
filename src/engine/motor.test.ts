@@ -1,4 +1,4 @@
-import { capStep } from './motor';
+import { capStep, valueFactor } from './motor';
 import cfg from '../data/motor.json';
 
 // v3.07, opção A (decisão do usuário em 2026-10-15): o produto das decisões desloca o teto dos atributos.
@@ -21,5 +21,16 @@ describe('passo do teto pelas decisões (v3.07, opção A)', () => {
     expect(capStep(neutro - amplitude / 2)).toBeCloseTo(-passo / 2);
     expect(capStep(neutro + 3 * amplitude)).toBeCloseTo(passo);
     expect(capStep(neutro - 3 * amplitude)).toBeCloseTo(-passo);
+  });
+});
+
+// v3.07 (usuário, 2026-10-15): liga × crescimento × clube limitado a valor.fatorMax (o "bom" passava de € 240 mi aos 24).
+describe('fator do valor de mercado limitado (v3.07)', () => {
+  it('liga de nível 1 com crescimento máximo não passa do fator máximo', () => {
+    expect(valueFactor({ overDelta: 20, clubId: 'qualquer', league: 'ENG' })).toBeCloseTo(cfg.valor.fatorMax);
+  });
+
+  it('abaixo do limite, o fator segue liga × crescimento', () => {
+    expect(valueFactor({ overDelta: 0, clubId: 'qualquer', league: 'POR' })).toBeCloseTo(1.2);
   });
 });

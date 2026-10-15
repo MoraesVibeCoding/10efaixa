@@ -13,7 +13,7 @@
   "cartoesDisciplina": { "base": 1.6 }
  },
  "teto": { "_nota": "Opção A (usuário, 2026-10-15): o produto das decisões desloca o teto dos atributos, passo = passoMax × (produto − neutro) ÷ amplitude, limitado a ±passoMax por semestre e ±limiteCarreira no total. neutro = produto típico da carreira automática (300 carreiras, 2026-10-15: auto 1,25, bom 1,42, ruim 1,20).", "neutro": 1.26, "amplitude": 0.25, "passoMax": 0.5, "limiteCarreira": 6 },
- "valor": { "crescimentoPorPonto": 0.05, "crescimento": { "min": 0.8, "max": 1.3 } },
+ "valor": { "_nota": "fatorMax: teto de liga × crescimento × clube (usuário, 2026-10-15; sem ele o \"bom\" passava de € 240 mi aos 24).", "fatorMax": 2, "crescimentoPorPonto": 0.05, "crescimento": { "min": 0.8, "max": 1.3 } },
  "ligas": {
   "_nota": "Ranking definido pelo usuário em 2026-10-15. valor e evolucao relativos ao Brasileirão Série A (= 1).",
   "niveis": {

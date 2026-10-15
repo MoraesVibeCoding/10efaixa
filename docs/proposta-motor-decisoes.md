@@ -189,3 +189,9 @@ Pontos de atenção:
   a curva de valor de hoje. Proposta: limitar o produto liga × crescimento × clube a ×2,0, ou baixar o nível 1 para ×1,6.
 - **Auto com pico ≥ 90 passou de 11% para 35%**, com a média quase igual: a dispersão aumentou (quem decide bem chega
   mais longe, quem decide mal fica abaixo).
+
+### 8.1 Limite do fator de valor (×2,0), 2026-10-15
+
+Escolhido pelo usuário e implementado (`valor.fatorMax`), mas **não muda a mediana do "bom"** (€ 240 mi, igual). A causa
+é a curva de valor base: +1 ponto de over = ×1,30, e over 90 aos 24 já vale € 120 mi antes de liga e clube. O "bom"
+chega a 90,2 aos 24 (72% com pico ≥ 90, contra 11% hoje).
