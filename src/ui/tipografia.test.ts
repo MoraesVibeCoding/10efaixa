@@ -1,5 +1,6 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
+import tokens from './theme/tokens.json';
 
 // v2.73 (revisão /impeccable, tipografia, aprovada pelo usuário em 2026-10-09): nenhum texto da interface abaixo de 14 px,
 // um só botão principal (verde, Oswald em caixa alta, pílula) e a história da decisão em 1rem no celular.
@@ -44,9 +45,14 @@ describe('tipografia (v2.73)', () => {
     expect(r).toMatch(/border-radius:\s*999px/);
   });
 
-  it('história da decisão em 1rem no celular, com linha arejada', () => {
-    // pedido do usuário (2026-10-10): 1rem, que encolhe com a página (--texto-escala) até o piso de 14 px para não rolar
-    expect(css['Decision.css']).toMatch(/\.decisao__historia \{ font-size: max\(0\.875rem, calc\(1rem \* var\(--texto-escala, 1\)\)\); line-height: 1\.45;/);
+  it('história da decisão no piso de 14 px no celular, com linha arejada (v3.09)', () => {
+    // pedido do usuário (2026-10-10): 1rem; v3.09 (2026-10-15, "diminuir ainda mais ... e aumentar o tamanho das imagens"):
+    // desce ao piso de 14 px (v2.73), e a foto da cena, que ocupa a sobra de altura, cresce
+    expect(css['Decision.css']).toMatch(/\.decisao__historia \{ font-size: 0\.875rem; line-height: 1\.45;/);
+  });
+
+  it('história da decisão em 1rem no computador (v3.09; era 1.125rem)', () => {
+    expect(tokens.tipo.historia).toBe('1rem');
   });
 
   it('o comentário do técnico sem a barra lateral colorida', () => {
