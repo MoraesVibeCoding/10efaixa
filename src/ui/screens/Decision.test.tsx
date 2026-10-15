@@ -86,11 +86,13 @@ describe('resultado da escolha (SPEC v2.20)', () => {
     expect(onContinue).toHaveBeenCalledTimes(1);
   });
 
+  // v3.06: no Rápido o toque marca como nos outros ritmos; a marcada vale sozinha e o resultado segue sozinho
   it('no ritmo Rápido segue sozinho depois de um instante, uma única vez', () => {
     const onContinue = vi.fn();
     render(<Decision eventId="salario-atrasado" age={24} progress={0.4} ritmo="rapido" player={{ name: 'Zé', position: 'meia', clubId: 'flamengo', overall: 60, titles: [], role: 'composicao', monthlySalary: { amount: 4_000, currency: 'BRL' } }} state={STATE} scene={{ src: 'c.webp', alt: 'cena' }} onContinue={onContinue} />);
     fireEvent.click(screen.getByRole('button', { name: new RegExp(t('events.salario-atrasado.opcoes.ficar')) }));
     expect(onContinue).not.toHaveBeenCalled();
+    act(() => { vi.advanceTimersByTime(10_000); });
     act(() => { vi.advanceTimersByTime(10_000); });
     expect(onContinue).toHaveBeenCalledTimes(1);
     expect(onContinue).toHaveBeenCalledWith('ficar', expect.objectContaining({ moral: 0.5, idolatria: 45 }));
@@ -533,10 +535,13 @@ describe('variação B (T51c, SPEC v2.34)', () => {
     expect(detail).toHaveTextContent(t('ui.fora.ano'));
   });
 
-  it('no ritmo Rápido tocar já decide: sem confirmar e sem caixa de detalhe', () => {
+  // v3.06 (pedido do usuário em 2026-10-15): a tela de decisão é a mesma nos três ritmos; o Rápido só tem menos decisões
+  it('no ritmo Rápido tocar marca e abre o detalhe, como no Normal', () => {
     const onChoose = show(EVENT, { ritmo: 'rapido' });
-    expect(screen.queryByText(t('ui.decisao.marque'))).not.toBeInTheDocument();
-    expect(screen.queryByText(t('ui.decisao.marque'))).not.toBeInTheDocument();
+    expect(screen.getByText(t('ui.decisao.marque'))).toBeInTheDocument();
+    fireEvent.click(option(EVENT, def.opcoes[0]!.id));
+    expect(onChoose).not.toHaveBeenCalled();
+    expect(screen.getByRole('region', { name: t(`events.${EVENT}.opcoes.${def.opcoes[0]!.id}`) })).toBeInTheDocument();
     fireEvent.click(option(EVENT, def.opcoes[0]!.id));
     expect(onChoose).toHaveBeenCalledWith(def.opcoes[0]!.id);
   });
@@ -575,33 +580,14 @@ describe('tela pequena (T49j): nada fica cortado', () => {
   });
 });
 
-describe('prévia curta no ritmo Rápido (SPEC v2.38)', () => {
-  const show = (ritmo: 'normal' | 'rapido', eventId = EVENT) => render(<Decision eventId={eventId} age={24} progress={0.4} ritmo={ritmo} player={PLAYER} scene={{ src: 'c.webp', alt: 'cena' }} />);
-  const option = (id: string, eventId = EVENT) => screen.getByRole('button', { name: new RegExp(t(`events.${eventId}.opcoes.${id}`)) });
-
-  it('no Rápido, cada opção mostra numa linha o campo e as setas: ganho em verde, custo em vermelho', () => {
-    show('rapido');
-    const resumo = option('ficar').querySelector('.opcao__resumo') as HTMLElement;
-    expect(resumo).not.toBeNull();
-    expect(resumo).toHaveAttribute('aria-hidden', 'true');
-    expect(resumo.querySelector('.previa--sobe')).toHaveTextContent(t('preview.campo.idolatria'));
-    expect(resumo.querySelector('.previa--desce')).toHaveTextContent(t('preview.campo.moral'));
-    expect(resumo.querySelectorAll('.previa__setas svg').length).toBeGreaterThan(0);
-  });
-
-  it('no Rápido, toda opção dos 25 eventos tem a linha preenchida; no Normal não há linha (o detalhe da marcada faz esse papel)', () => {
-    for (const e of events.eventos) {
-      show('rapido', e.id);
-      for (const o of e.opcoes) expect(option(o.id, e.id).querySelector('.opcao__resumo')?.textContent, `${e.id}/${o.id}`).toMatch(/\p{L}{3,}/u);
+// v3.06: a prévia curta do Rápido (v2.38) saiu; o detalhe da marcada vale em todos os ritmos
+describe('mesma tela em todos os ritmos (v3.06)', () => {
+  it('nenhum ritmo mostra a linha curta embaixo das opções', () => {
+    for (const ritmo of ['rapido', 'normal', 'completo'] as const) {
+      render(<Decision eventId={EVENT} age={24} progress={0.4} ritmo={ritmo} player={PLAYER} scene={{ src: 'c.webp', alt: 'cena' }} />);
+      expect(document.querySelector('.opcao__resumo'), ritmo).toBeNull();
       cleanup();
     }
-    show('normal');
-    expect(document.querySelector('.opcao__resumo')).toBeNull();
-  });
-
-  it('no Rápido, o tempo fora aparece na linha da opção (o risco já está no medidor)', () => {
-    show('rapido', 'lesao-grave');
-    expect(option('operar', 'lesao-grave').querySelector('.opcao__resumo')).toHaveTextContent(t('ui.fora.ano'));
   });
 });
 

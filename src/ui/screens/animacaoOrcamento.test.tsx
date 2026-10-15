@@ -2,7 +2,6 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { render } from '@testing-library/react';
 import { CenaPintada } from './CenaPintada';
-import { Decision } from './Decision';
 
 // v2.71 (revisão pela skill web-animation-design): o que o jogador vê a cada decisão é rápido e sem rebote; os momentos raros
 // seguem especiais. Orçamento por frequência: resultado pronto em até ~400 ms, toque de 100 ms, cena repetida sem fade.
@@ -40,12 +39,9 @@ describe('orçamento das animações da decisão (v2.71)', () => {
     expect(rule(d, '.jogador__novas')).toMatch(/animation:\s*novas-chega \d+ms ease-out/);
   });
 
-  it('ritmo Rápido: sem cascata no resultado e sem a cena "respirando"', () => {
-    expect(d).toMatch(/\.decisao\[data-ritmo='rapido'\] :is\([^)]*\.resultado__lista li[^)]*\) \{ animation: none; \}/);
-    expect(d).toMatch(/\.decisao\[data-ritmo='rapido'\] \.cena \{ animation: none; \}/);
-    const { container } = render(<Decision eventId="salario-atrasado" age={20} progress={0.3} ritmo="rapido" scene={{ src: 'c.webp', alt: 'cena' }}
-      player={{ name: 'Zé', position: 'meia', clubId: 'flamengo', overall: 70, titles: [], role: 'titularRegular', monthlySalary: { amount: 1, currency: 'BRL' } }} />);
-    expect(container.querySelector('.decisao')).toHaveAttribute('data-ritmo', 'rapido');
+  // v3.06: o Rápido tem as mesmas animações dos outros ritmos (mesma tela)
+  it('nenhuma regra de CSS só para o ritmo Rápido', () => {
+    expect(d).not.toContain("data-ritmo='rapido'");
   });
 
   it('a etiqueta "Carreira ›" do card tem área de toque de 44 px (v2.81)', () => {

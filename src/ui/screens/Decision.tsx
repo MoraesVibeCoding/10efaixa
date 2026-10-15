@@ -469,25 +469,6 @@ function Detail({ eventId, optionId }: { eventId: string; optionId: string }) {
   );
 }
 
-/** Prévia curta (v2.38): no ritmo Rápido tocar já decide, então cada opção mostra numa linha o campo com as setas e o
- * tempo fora. Oculta ao leitor de tela, que já ouve tudo isso no nome do botão. */
-function ShortPreview({ eventId, optionId }: { eventId: string; optionId: string }) {
-  const out = timeOutOf(eventId, optionId);
-  const preview = previewOf(eventId, optionId);
-  return (
-    <span className="opcao__resumo" aria-hidden="true">
-      {preview.length === 0 && out === null && <span>{t('ui.decisao.semPrevia')}</span>}
-      {preview.map((p) => (
-        <span key={p.campo} className={`previa previa--${p.sentido}`}>
-          {t(`preview.campo.${p.campo}`)}
-          <Arrows sentido={p.sentido} intensidade={p.intensidade} />
-        </span>
-      ))}
-      {out !== null && <span className="opcao__fora">{timeOutText(out)}</span>}
-    </span>
-  );
-}
-
 /** Caixa do jogador no topo (v2.34, variação B): figurinha pequena com moldura (abre "Minha carreira"), o Over grande e a ficha. */
 function ageText(idade: number) { return t('ui.decisao.idade', { idade }); }
 function valueText(valor: number) { return t('ui.decisao.valor', { valor: money(valor, 'EUR') }); }
@@ -569,11 +550,11 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
   const root = useRef(null as HTMLElement | null);
   // sem genérico aqui: a guarda de texto fora do i18n confunde o genérico com JSX
   const opener = useRef(null as HTMLButtonElement | null);
-  // v2.34: no Rápido tocar já decide. Pedido do usuário (2026-10-10): no Normal e no Completo tocar marca e, sem trocar,
-  // a marcada vale sozinha em `decideMs` (2 s); tocar de novo nela decide na hora. O botão "Confirmar escolha" saiu.
+  // Pedido do usuário (2026-10-10): tocar marca e, sem trocar, a marcada vale sozinha em `decideMs` (2 s); tocar de novo
+  // nela decide na hora. O botão "Confirmar escolha" saiu. v3.06 (pedido do usuário em 2026-10-15): vale nos três ritmos;
+  // antes, no Rápido (v2.34), tocar já decidia e cada opção tinha a prévia curta (v2.38).
   const [marked, setMarked] = useState(null as string | null);
   const [chosen, setChosen] = useState<string | null>(null);
-  const rapido = ritmo === 'rapido';
   // o resultado fecha uma vez só, venha do tempo ou do botão
   const done = useRef(false);
   const finish = useRef(() => {});
@@ -589,7 +570,7 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
     onChoose?.(id);
   }
   function tocar(id: string) {
-    if (rapido || marked === id) { decide(id); return; }
+    if (marked === id) { decide(id); return; }
     if (chosen === null) setMarked(id);
   }
   const options = events.eventos.find((e) => e.id === eventId)?.opcoes ?? [];
@@ -640,11 +621,11 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
   const overlay = career || chosen !== null || palco;
   // a marcada vale sozinha em decideMs; com a gaveta ou o palco por cima, o tempo espera
   useEffect(() => {
-    if (rapido || marked === null || chosen !== null || career || palco) return undefined;
+    if (marked === null || chosen !== null || career || palco) return undefined;
     const id = marked;
     const timer = setTimeout(() => { decide(id); }, previewCfg.decideMs);
     return () => { clearTimeout(timer); };
-  }, [marked, chosen, rapido, career, palco]);
+  }, [marked, chosen, career, palco]);
   // pedido do usuário: texto longo encolhe (até 80%) para a página caber na tela, em vez de rolar
   useCaber(root, `${eventId}|${chosen ?? ''}|${semestre?.length ?? 0}`);
   // o foco volta para a caixa do jogador só depois que o painel deixou de ser inerte: o navegador recusa foco em inerte
@@ -689,18 +670,17 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
               >
                 <span className="opcao__texto">
                   <span className="opcao__rotulo">{t(`events.${eventId}.opcoes.${o.id}`)}</span>
-                  {rapido ? <ShortPreview eventId={eventId} optionId={o.id} /> : null}
                 </span>
                 <span className="sr-only">{optionSpeech(eventId, o.id)}</span>
                 {risk && <RiskMeter risk={risk} />}
                 {/* o tempo correndo até a marcada valer sozinha */}
-                {!rapido && chosen === null && marked === o.id && <span className="opcao__prazo" aria-hidden="true" />}
+                {chosen === null && marked === o.id && <span className="opcao__prazo" aria-hidden="true" />}
               </button>
             );
           })}
         </div>
-        {!rapido && marked === null && <p className="decisao__detalhe decisao__detalhe--vazio">{t('ui.decisao.marque')}</p>}
-        {!rapido && marked !== null && <Detail eventId={eventId} optionId={marked} />}
+        {marked === null && <p className="decisao__detalhe decisao__detalhe--vazio">{t('ui.decisao.marque')}</p>}
+        {marked !== null && <Detail eventId={eventId} optionId={marked} />}
       </div>
       <Album titles={player.titles} milestones={player.milestones ?? []} marcos={player.marcos ?? []} />
       {career && <Career player={player} onClose={() => { setCareer(false); }} />}

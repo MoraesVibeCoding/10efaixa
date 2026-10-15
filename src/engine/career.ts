@@ -43,7 +43,7 @@ import { headlineOf } from './headline';
 import { legacyOf, type Legacy } from './legacy';
 import { honorFacts, honorsOf } from './honors';
 import { generateNickname } from './nickname';
-import { LOAN_EVENT, PROPOSAL_EVENT, RAISE, RENEW, RETIRE, STAY, acceptChoice, homeChoice, loveChoice, parseProposalChoice, proposalViewOf, type CardContext, type CurrentClubView, type HomeCardView, type ProposalView } from './proposals';
+import { LOAN_EVENT, PROPOSAL_EVENT, SALE_EVENT, RAISE, RENEW, RETIRE, STAY, acceptChoice, homeChoice, loveChoice, parseProposalChoice, proposalViewOf, type CardContext, type CurrentClubView, type HomeCardView, type ProposalView } from './proposals';
 import { canDecideToRetire, retirementCheck, suggestsRetiring, type RetireReason } from './retirement';
 import { activeSignals, seasonSignals, type Signal, type SignalsInput } from './signals';
 import retireCfg from '../data/retirement.json';
@@ -155,7 +155,6 @@ const FIM_MAX_OFFERS = retireCfg.fimDeCarreira.maxPropostas;
 const HOME_SALARY = applyOption({ salarioFator: 1 }, 'proposta-coracao', 'aceitar-por-amor').salarioFator as number;
 /** v2.64: o empréstimo como decisão (aceite pelo temperamento no automático, custo de recusar) e a venda fechada pelo empresário. */
 const LOAN = clubLifeCfg.emprestimo;
-const SALE_EVENT = 'empresario-forca-venda';
 /** v2.67: o "Primeiro passo" de cada origem, a primeira decisão da carreira. */
 const START_EVENT: Record<string, string> = { varzea: 'primeiro-passo-varzea', peneira: 'primeiro-passo-peneira', baseGrande: 'primeiro-passo-base' };
 

@@ -16,6 +16,11 @@ describe('tela de ritmo (T53a)', () => {
     }
   });
 
+  // v3.06: a tela de decisão é a mesma nos três ritmos; a frase do Rápido não promete mais "um toque decide"
+  it('o Rápido se diferencia só pela quantidade de decisões', () => {
+    expect(t('ui.ritmo.rapido.detalhe')).not.toMatch(/toque/i);
+  });
+
   it('Normal vem marcado; trocar e começar entrega o ritmo escolhido', () => {
     const onChoose = vi.fn();
     render(<Ritmo onChoose={onChoose} onBack={() => {}} />);

@@ -8,6 +8,8 @@ import { expectedMinutes, minutesBand, type ClubLevelBand, type MinutesBand } fr
 export const PROPOSAL_EVENT = 'proposta-clube';
 /** v2.64: o empréstimo como decisão na mesma tela: o cartão do clube de destino e o do clube atual; a escolha é "aceitar:<destino>" ou "ficar". */
 export const LOAN_EVENT = 'emprestimo';
+/** v2.64: venda forçada pelo empresário (uma decisão de transferência, como a proposta e o empréstimo). */
+export const SALE_EVENT = 'empresario-forca-venda';
 export const STAY = 'ficar';
 const ACCEPT = 'aceitar:';
 const LOVE = 'amor:';

@@ -80,7 +80,8 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
   const semKey = view.ultimoSemestre ? `${view.ultimoSemestre.year}-${view.ultimoSemestre.semestre}` : '';
   const semestre = semKey !== seenSemester && view.ultimoSemestre ? semesterLines(view.ultimoSemestre.frases) : undefined;
   const seasonKey = view.ultimaTemporada ? `${view.ultimaTemporada.year}` : '';
-  const resumoEl = ritmo !== 'rapido' && view.ultimaTemporada && seasonKey !== seenSeason
+  // v3.06: o resumo da temporada aparece em todos os ritmos (antes o Rápido pulava)
+  const resumoEl = view.ultimaTemporada && seasonKey !== seenSeason
     ? <ResumoTemporada key={seasonKey} resumo={view.ultimaTemporada} torcida={torcidaDe(view.idolatrias, view.ultimaTemporada.clubId)} onClose={() => { closeCard(() => { setSeenSeason(seasonKey); }); }} />
     : null;
   function decide(choice: string) {

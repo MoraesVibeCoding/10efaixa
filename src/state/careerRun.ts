@@ -5,7 +5,7 @@ import { autoChoice } from '../engine/events';
 import { MEETING_EVENT, parseProposal } from '../engine/meeting';
 import { MILESTONES } from '../engine/milestones';
 import { ideaOf } from '../engine/meetingOptions';
-import { LOAN_EVENT, PROPOSAL_EVENT, isLoanChoice, parseProposalChoice } from '../engine/proposals';
+import { LOAN_EVENT, PROPOSAL_EVENT, SALE_EVENT, isLoanChoice, parseProposalChoice } from '../engine/proposals';
 import type { CreationInput } from '../engine/player';
 
 // T51 (a): carreira jogada pela tela. O motor é determinístico, então continuar = refazer do começo com as escolhas
@@ -31,6 +31,8 @@ const CLUB_MILESTONES = new Set(MILESTONES.filter((m) => m.escopo === 'clube').m
 /** T28b (v2.50): em quais ritmos a proposta de clube chega à tela (desligado até a tela da T28d). */
 const PROPOSALS = flow.propostasNaTela as Record<Ritmo, boolean>;
 const LOANS = flow.emprestimoNaTela as Record<Ritmo, boolean>;
+/** v3.05: a venda pelo empresário vai à tela como o empréstimo (fora da conta de decisões); no Rápido, o temperamento decide. */
+const SALES = flow.vendaNaTela as Record<Ritmo, boolean>;
 
 /** Interrupção da simulação: chegou numa decisão que o jogador ainda não tomou. */
 class Pending {
@@ -78,6 +80,10 @@ function decider(run: Run, probe?: { year: number; found: string[] }): Decider {
     if (eventId === LOAN_EVENT) {
       // v2.64: o empréstimo vai à tela como as propostas (fora da conta de decisões); no Rápido, o temperamento decide
       if (!LOANS[run.ritmo] || (probe && v.year === probe.year)) return autoDecide(eventId, temperament, () => v);
+      return take(eventId, v);
+    }
+    if (eventId === SALE_EVENT) {
+      if (!SALES[run.ritmo] || (probe && v.year === probe.year)) return autoChoice(eventId, temperament);
       return take(eventId, v);
     }
     if (eventId === PROPOSAL_EVENT) {
