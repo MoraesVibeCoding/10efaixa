@@ -162,3 +162,30 @@ atributos: acima de 1, o teto sobe até +0,5 ponto por semestre; abaixo de 1, de
 carreira. Assim, carreira bem cuidada vira pico maior, e não só pico mais cedo.
 
 Opção B: manter o teto e aceitar que as decisões mudam minutos, títulos e valor, mas não o pico.
+
+**Escolhida: opção A** (usuário, 2026-10-15).
+
+## 8. Resultado da opção A (300 carreiras × 3 jeitos, 2026-10-15)
+
+Calibragem: o passo do teto é `0,5 × (produto − 1,26) ÷ 0,25`, limitado a ±0,5 por semestre e ±6 na carreira
+(`motor.json`, `teto`). O neutro não é 1: o produto médio por semestre medido foi auto 1,25, bom 1,42, ruim 1,20. Com
+neutro 1 (primeira rodada), o teto subia para todos (auto 90,6, bom 91,9, ruim 90,1) e falhava os critérios 1 e 3.
+
+| | Hoje: auto | Opção A: auto | Opção A: bom | Opção A: ruim |
+|---|---|---|---|---|
+| Over de pico | 86,9 | 87,6 | **91,2** | **86,1** |
+| Minutos (média) | 67,4% | 72,2% | **81,6%** | **60,9%** |
+| Over aos 24 | 86,7 | 86,7 | 90,2 | 85,4 |
+| Valor aos 24 (mediana) | € 55,2 mi | € 80,8 mi | € 240,1 mi | € 55,2 mi |
+| Títulos na carreira | 7,6 | 9,0 | 12,8 | 6,8 |
+| Pico ≥ 85 / ≥ 90 | 75% / 11% | 74% / 35% | 97% / 72% | 65% / 15% |
+
+Critérios da seção 3:
+1. Bom vs. ruim: **5,1 pontos** de pico (meta 4 a 8) ✓ e **20,7 pp** de minutos (meta 15 a 30) ✓.
+3. Automática: 87,6 vs. 86,9 hoje (meta ±2) ✓.
+
+Pontos de atenção:
+- **Valor do "bom" aos 24: € 240 mi de mediana.** Over 90+ na liga de nível 1 (×1,9) com crescimento (até ×1,3) sobre
+  a curva de valor de hoje. Proposta: limitar o produto liga × crescimento × clube a ×2,0, ou baixar o nível 1 para ×1,6.
+- **Auto com pico ≥ 90 passou de 11% para 35%**, com a média quase igual: a dispersão aumentou (quem decide bem chega
+  mais longe, quem decide mal fica abaixo).

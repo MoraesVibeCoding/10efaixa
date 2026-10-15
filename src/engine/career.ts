@@ -3,7 +3,7 @@ import { agentSemester, changeAgent, createAgent, type Agent } from './agent';
 import { ARCHETYPES } from './archetypes';
 import { CLUBS, clubsIn, rivalsOf } from './clubs';
 import { semesterClubLife } from './clubLife';
-import { cardsByDiscipline, declineByDiscipline, growthFactors, lineupBonus, moraleRecovery, motorOn } from './motor';
+import { capStep, cardsByDiscipline, declineByDiscipline, growthFactors, lineupBonus, moraleRecovery, motorOn } from './motor';
 import { investmentReturn, leaderEffects, matureTemperament, offFieldFlags, semesterCards } from './discipline';
 import { addToWealth, makeContract, renew, seasonEarnings, toBRL, type Contract } from './contracts';
 import { brazilQualifiers, copaDoBrasil, copaDoBrasilEntrants, copaDoNordeste, foreignQualifiers, libertadores, nordesteGroups, sulAmericana } from './cups';
@@ -558,9 +558,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       evo = { ...evo, growthBonus: { ...growth, mental: (growth.mental ?? 1) * leader.mentalBonus * fx.mentalBonus * marcoMental } };
       coachRelation = clamp(coachRelation + leader.relationDelta, 0, 1);
       const antes = evo.attributes;
-      const motorCtx = MOTOR
-        ? { ...growthFactors({ minutes, morale, coachRelation, discipline, clubId, league: clubId ? leagueOf(clubId, divOf) : null }), decline: declineByDiscipline(discipline) }
-        : undefined;
+      const gf = MOTOR ? growthFactors({ minutes, morale, coachRelation, discipline, clubId, league: clubId ? leagueOf(clubId, divOf) : null }) : null;
+      const motorCtx = gf ? { ...gf, decline: declineByDiscipline(discipline), capStep: capStep(gf.decisions) } : undefined;
       evo = evolveSemester(evo, { focus, staffQuality, minutes, morale, ...(motorCtx && { motor: motorCtx }) }, yr);
       ultimoSemestre = { year: curYear, semestre: (sem + 1) as 1 | 2, frases: semesterFeedback(antes, evo.attributes) };
       const tr = progressTraits(traits, focus);

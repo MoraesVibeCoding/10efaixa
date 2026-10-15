@@ -30,6 +30,13 @@ export function growthFactors(s: { minutes: number; morale: number; coachRelatio
   return { minutes, decisions, league };
 }
 
+/** Deslocamento do teto no semestre: proporcional ao produto das decisões em torno do neutro, até ±passoMax. */
+export function capStep(decisions: number): number {
+  const t = cfg.teto;
+  return t.passoMax * clamp((decisions - t.neutro) / t.amplitude, -1, 1);
+}
+export const capShiftLimit = (): number => cfg.teto.limiteCarreira;
+
 export const moraleRecovery = (): number => cfg.evolucao.recuperacaoMoral;
 export const declineByDiscipline = (d: number): number => { const x = cfg.evolucao.declinioDisciplina; return x.disciplina0 + (x.disciplina1 - x.disciplina0) * clamp(d, 0, 1); };
 export const cardsByDiscipline = (d: number): number => cfg.evolucao.cartoesDisciplina.base - clamp(d, 0, 1);
