@@ -104,6 +104,8 @@ export interface CareerResult {
 /** T51: o momento de uma decisão, para a tela mostrar o jogador como ele está ali. */
 export interface DecisionView {
   year: number; age: number; clubId: string | null; position: Position; overall: number; role: Role; temperament: string;
+  /** v3.10: na proposta de mudança de posição (e na escolha depois da transferência), as duas posições e o over em cada uma. */
+  posicaoOferecida?: { de: Position; para: Position; overDe: number; overPara: number };
   /** Valor de mercado em € (v2.33): a regra do mercado, com o efeito Seleção. */
   marketValueEUR: number;
   /** Salário do mês pelo contrato atual (sem contrato, na várzea: zero). */
@@ -179,6 +181,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let positionChanges = 0;
   // O bônus de peso do arquétipo só vale na posição de origem (6.6: depois vira "estilo de origem").
   const ov = (s: EvoState) => overall(s.attributes, position, position === input.position ? arch.overallWeightBonus : undefined);
+  /** v3.10: o over numa posição qualquer (o bônus do arquétipo só na posição de origem, como em `ov`). */
+  const ovAt = (s: EvoState, pos: Position) => overall(s.attributes, pos, pos === input.position ? arch.overallWeightBonus : undefined);
 
   // Mundo
   let divs: Divisions = { A: clubsIn('A').map((c) => c.id), B: clubsIn('B').map((c) => c.id), C: clubsIn('C').map((c) => c.id), D: clubsIn('D').map((c) => c.id) };
@@ -293,7 +297,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     ? motorValue({ overall: o, age, overDelta: o - (seasons.at(-1)?.overall ?? o), clubId: club, league: leagueOf(club, divOf), mult })
     : marketValue(o, age) * mult;
   /** Toda decisão passa por aqui (T51): o padrão é a escolha do temperamento, como antes. */
-  const ask = (eventId: string, state: Record<string, number | string | boolean> = {}, who = temp, extra: Pick<DecisionView, 'propostas' | 'reuniao' | 'atual' | 'casa'> = {}) => decide(eventId, who, () => ({
+  const ask = (eventId: string, state: Record<string, number | string | boolean> = {}, who = temp, extra: Pick<DecisionView, 'propostas' | 'reuniao' | 'atual' | 'casa' | 'posicaoOferecida'> = {}) => decide(eventId, who, () => ({
     ...extra,
     year: curYear, age: evo.age, clubId, position, overall: ov(evo), role: curRole, temperament: who,
     marketValueEUR: Math.round(valueAt(ov(evo), evo.age, clubId, selectionEffect(prestige, sel, sel.rung).marketMultiplier)),
@@ -842,7 +846,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     // Mudança de posição proposta pelo técnico (6.6), decidida pela política do temperamento.
     if (clubId && !inYouth) {
       const target = coachProposal({ position, age: evo.age, attributes: evo.attributes });
-      if (target && ask('mudanca-posicao') !== 'recusar') {
+      const offer = target ? { posicaoOferecida: { de: position, para: target, overDe: ov(evo), overPara: ovAt(evo, target) } } : {};
+      if (target && ask('mudanca-posicao', {}, temp, offer) !== 'recusar') {
         position = target;
         positionChanges++;
         traits = { ...traits, position };

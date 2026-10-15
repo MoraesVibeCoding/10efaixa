@@ -216,6 +216,7 @@
   text-wrap: balance;
 }
 /* T51b: o que mudou no semestre, numa linha no alto da faixa (só na primeira decisão depois dele) */
+.decisao__posicoes { margin: 0; font-size: var(--tipo-miudo); font-weight: 700; font-variant-numeric: tabular-nums; }
 .decisao__semestre { font-size: var(--tipo-apoio); line-height: 1.35; color: var(--cor-texto-suave); }
 .decisao__semestre strong { color: var(--cor-positivo); font-weight: 700; }
 .decisao__historia { font-size: max(0.875rem, calc(var(--tipo-historia) * var(--texto-escala, 1))); line-height: 1.4; color: var(--cor-texto-suave); }

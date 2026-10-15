@@ -168,11 +168,11 @@
  },
  "mudanca-posicao": {
   "titulo": "O técnico quer você em outra posição",
-  "texto": "O técnico te chamou no canto do campo com a prancheta na mão. Falta gente na outra posição e ele acha que você rende lá. Pode ser o caminho para jogar mais, ou para virar quebra-galho.",
+  "texto": "O técnico te chamou no canto do campo com a prancheta na mão. Falta gente para jogar como {posicao} e ele acha que você rende lá. Pode ser o caminho para jogar mais, ou para virar quebra-galho.",
   "opcoes": {
-   "aceitar": "Topar e aprender a nova função",
-   "recusar": "Recusar: seu lugar é onde sempre jogou",
-   "aceitar-com-garantia": "Topar, mas pedir sequência na nova posição"
+   "aceitar": "Topar e jogar como {posicao}",
+   "recusar": "Recusar: seu lugar é como {posicaoAtual}",
+   "aceitar-com-garantia": "Topar, mas pedir sequência como {posicao}"
   }
  },
  "festa": {

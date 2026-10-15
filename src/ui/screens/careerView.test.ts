@@ -141,6 +141,19 @@ describe('uniforme da figurinha (T50k, SPEC v2.37)', () => {
   });
 });
 
+describe('posição oferecida (v3.10)', () => {
+  it('a proposta de mudança de posição leva as duas posições ao texto, em minúsculas, e o over de cada uma à tela', () => {
+    const v = { ...viewAt(3), position: 'meia' as const, posicaoOferecida: { de: 'meia' as const, para: 'volante' as const, overDe: 82, overPara: 84 } };
+    const p = toDecisionPlayer(v, INPUT, LOOK, undefined, 'mudanca-posicao');
+    expect(p.textoParams).toMatchObject({ posicao: 'volante', posicaoAtual: 'meia' });
+    expect(p.posicaoOferecida).toEqual(v.posicaoOferecida);
+  });
+
+  it('sem proposta, nada de posição no texto', () => {
+    expect(toDecisionPlayer(viewAt(3), INPUT, LOOK).posicaoOferecida).toBeUndefined();
+  });
+});
+
 describe('evolução e idolatria para a tela (T51b)', () => {
   it('frases do semestre em palavras, com o possessivo certo e sem número', () => {
     expect(semesterLines([{ atributo: 'passe', sentido: 'sobe', forte: true }, { atributo: 'velocidade', sentido: 'desce', forte: false }])).toEqual([
