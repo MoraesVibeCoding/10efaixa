@@ -983,6 +983,72 @@
    }
   },
   {
+   "id": "posicao-novo-clube",
+   "importancia": 6,
+   "cena": "reuniao-comissao",
+   "peso": 6,
+   "condicoes": [
+    [
+     "posicaoNovoClube",
+     "!=",
+     ""
+    ]
+   ],
+   "opcoes": [
+    {
+     "id": "seguir",
+     "jeito": "frio",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.04
+      ],
+      [
+       "moral",
+       "add",
+       -0.01
+      ]
+     ]
+    },
+    {
+     "id": "voltar",
+     "jeito": "esquentado",
+     "efeitos": [
+      [
+       "mudarPosicao",
+       "set",
+       true
+      ],
+      [
+       "moral",
+       "add",
+       0.05
+      ]
+     ]
+    },
+    {
+     "id": "tecnico-decide",
+     "jeito": "resenha",
+     "efeitos": [
+      [
+       "relacaoTecnico",
+       "add",
+       0.06
+      ],
+      [
+       "moral",
+       "add",
+       -0.03
+      ]
+     ]
+    }
+   ],
+   "politica": {
+    "padrao": "tecnico-decide"
+   }
+  },
+  {
    "id": "mudanca-posicao",
    "importancia": 7,
    "cena": "reuniao-comissao",

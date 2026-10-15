@@ -29,7 +29,7 @@ import { MEETING_EVENT, autoProposal, encodeProposal, meetingScore, parseProposa
 import { MEETING_IDEAS, TRUST, drawClubNeed, ideaOf, meetingOptions, type Idea, type MeetingOptions } from './meetingOptions';
 import { ROLES, expectedMinutes, minutesShare, roleFor, squadLevel, updateForm, updateMorale, type Role } from './minutes';
 import { overall, type Position } from './overall';
-import { coachProposal } from './positionChange';
+import { coachProposal, playerRequest } from './positionChange';
 import { createPlayer, type CreationInput, type Player } from './player';
 import { createPrng, type Prng } from './prng';
 import { TOURNAMENTS, eligible, playTournament, type NTournament } from './tournaments';
@@ -104,6 +104,8 @@ export interface CareerResult {
 /** T51: o momento de uma decisão, para a tela mostrar o jogador como ele está ali. */
 export interface DecisionView {
   year: number; age: number; clubId: string | null; position: Position; overall: number; role: Role; temperament: string;
+  /** v3.10: na proposta de mudança de posição (e na escolha depois da transferência), as duas posições e o over em cada uma. */
+  posicaoOferecida?: { de: Position; para: Position; overDe: number; overPara: number };
   /** Valor de mercado em € (v2.33): a regra do mercado, com o efeito Seleção. */
   marketValueEUR: number;
   /** Salário do mês pelo contrato atual (sem contrato, na várzea: zero). */
@@ -154,6 +156,8 @@ const AUTO = autoDecide;
 const MOTOR = motorOn();
 /** v2.85: a janela dos 34 em diante mostra no máximo estas propostas; o card de casa paga o salário do "jogar por amor". */
 const FIM_MAX_OFFERS = retireCfg.fimDeCarreira.maxPropostas;
+/** v3.10: a escolha da posição no clube novo. */
+const POSITION_AT_NEW_CLUB = 'posicao-novo-clube';
 const HOME_SALARY = applyOption({ salarioFator: 1 }, 'proposta-coracao', 'aceitar-por-amor').salarioFator as number;
 /** v2.64: o empréstimo como decisão (aceite pelo temperamento no automático, custo de recusar) e a venda fechada pelo empresário. */
 const LOAN = clubLifeCfg.emprestimo;
@@ -179,6 +183,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   let positionChanges = 0;
   // O bônus de peso do arquétipo só vale na posição de origem (6.6: depois vira "estilo de origem").
   const ov = (s: EvoState) => overall(s.attributes, position, position === input.position ? arch.overallWeightBonus : undefined);
+  /** v3.10: o over numa posição qualquer (o bônus do arquétipo só na posição de origem, como em `ov`). */
+  const ovAt = (s: EvoState, pos: Position) => overall(s.attributes, pos, pos === input.position ? arch.overallWeightBonus : undefined);
 
   // Mundo
   let divs: Divisions = { A: clubsIn('A').map((c) => c.id), B: clubsIn('B').map((c) => c.id), C: clubsIn('C').map((c) => c.id), D: clubsIn('D').map((c) => c.id) };
@@ -293,7 +299,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     ? motorValue({ overall: o, age, overDelta: o - (seasons.at(-1)?.overall ?? o), clubId: club, league: leagueOf(club, divOf), mult })
     : marketValue(o, age) * mult;
   /** Toda decisão passa por aqui (T51): o padrão é a escolha do temperamento, como antes. */
-  const ask = (eventId: string, state: Record<string, number | string | boolean> = {}, who = temp, extra: Pick<DecisionView, 'propostas' | 'reuniao' | 'atual' | 'casa'> = {}) => decide(eventId, who, () => ({
+  const ask = (eventId: string, state: Record<string, number | string | boolean> = {}, who = temp, extra: Pick<DecisionView, 'propostas' | 'reuniao' | 'atual' | 'casa' | 'posicaoOferecida'> = {}) => decide(eventId, who, () => ({
     ...extra,
     year: curYear, age: evo.age, clubId, position, overall: ov(evo), role: curRole, temperament: who,
     marketValueEUR: Math.round(valueAt(ov(evo), evo.age, clubId, selectionEffect(prestige, sel, sel.rung).marketMultiplier)),
@@ -325,6 +331,20 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     contracts++;
     earn(contract.signingBonus, contract.currency);
   };
+  const setPosition = (p: Position) => { position = p; positionChanges++; traits = { ...traits, position }; };
+  /** v3.10: a escolha da posição depois da transferência. Pedir para voltar segue a regra 6.6 (`playerRequest`). */
+  const positionAtNewClub = () => {
+    const back = input.position;
+    const c = ask(POSITION_AT_NEW_CLUB, {}, temp, { posicaoOferecida: { de: position, para: back, overDe: ov(evo), overPara: ovAt(evo, back) } });
+    const out = applyOption({ moral: morale, relacaoTecnico: coachRelation }, POSITION_AT_NEW_CLUB, c);
+    morale = out.moral as number;
+    coachRelation = out.relacaoTecnico as number;
+    if (c === 'voltar') {
+      const r = playerRequest({ position, target: back, attributes: evo.attributes, coachRelation });
+      if (r.accepted) setPosition(back);
+      else { morale = clamp(morale + r.moraleDelta, 0, 1); coachRelation = clamp(coachRelation + r.relationDelta, 0, 1); }
+    } else if (c === 'tecnico-decide' && ovAt(evo, back) > ov(evo)) setPosition(back);
+  };
   const join = (id: string, loan: boolean, r: Prng, offer?: Offer) => {
     const from = clubId;
     clubId = id;
@@ -336,6 +356,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     if (loan) return;
     if (offer) sign(id, offer.annualSalary, offer.years);
     else sign(id, salaryFor(marketValue(ov(evo), evo.age), leagueOf(id, divOf)), 2);
+    // v3.10: no clube novo, quem está fora da posição de origem escolhe onde jogar (seguir, pedir para voltar ou deixar o técnico)
+    if (from && position !== input.position) positionAtNewClub();
   };
 
   /** Valor projetado no clube: hoje, curva × elite; com o motor (v3.07), liga e crescimento até a projeção, × elite, com teto. */
@@ -842,7 +864,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     // Mudança de posição proposta pelo técnico (6.6), decidida pela política do temperamento.
     if (clubId && !inYouth) {
       const target = coachProposal({ position, age: evo.age, attributes: evo.attributes });
-      if (target && ask('mudanca-posicao') !== 'recusar') {
+      const offer = target ? { posicaoOferecida: { de: position, para: target, overDe: ov(evo), overPara: ovAt(evo, target) } } : {};
+      if (target && ask('mudanca-posicao', {}, temp, offer) !== 'recusar') {
         position = target;
         positionChanges++;
         traits = { ...traits, position };

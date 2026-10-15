@@ -4,6 +4,7 @@
   "vezes": "{n} vezes no ano"
  },
  "decisao": {
+  "posicaoOferecida": "Como {de}: {overDe} · Como {para}: {overPara}",
   "progresso": "Progresso da carreira",
   "idade": "{idade} anos",
   "anos": "anos",

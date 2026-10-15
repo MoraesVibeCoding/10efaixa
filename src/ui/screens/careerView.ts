@@ -44,14 +44,21 @@ export function toDecisionPlayer(view: DecisionView, input: CreationInput, look:
     ...(view.marcos.some((m) => m.id === 'estreia-selecao') ? { selecao: view.nationality } : {}),
     marcos: view.marcos.map((m) => ({ id: m.id, ano: m.year, clubId: m.clubId })),
     // v2.64: na venda pelo empresário, o clube comprador vira cartão e nome no texto
-    textoParams: { ...memoryTextParams(view.memorias, view.year), ...(sale ? { comprador: clubName(sale.clubId).nome } : {}) }, etiquetas: view.etiquetas,
+    textoParams: { ...memoryTextParams(view.memorias, view.year), ...(sale ? { comprador: clubName(sale.clubId).nome } : {}), ...positionParams(view.posicaoOferecida) }, etiquetas: view.etiquetas,
     ...(sale ? { comprador: sale } : {}),
+    // v3.10: a posição oferecida e o over em cada uma
+    ...(view.posicaoOferecida ? { posicaoOferecida: view.posicaoOferecida } : {}),
     monthlySalary: view.monthlySalary, marketValueEUR: view.marketValueEUR, number: view.number, attributes: view.attributes,
     seasons: view.seasons.map((s) => ({ age: s.year - START_YEAR + START_AGE, clubId: s.clubId, overall: s.overall, games: s.games, goals: s.goals, assists: s.assists, cleanSheets: s.cleanSheets, ...torcidaOf(view.idolatrias, s.clubId) })),
     ...(view.clubId ? torcidaOf(view.idolatrias, view.clubId) : {}),
     // Aparência é só visual; altura e compleição vêm da criação (as únicas que pesam no jogo).
     avatar: { ...previewAvatar(look), heightCm: input.biotype.heightCm, build: input.biotype.build, age: Math.floor(view.age) },
   };
+}
+
+/** v3.10: as duas posições da proposta, em minúsculas, para o texto do evento ("jogar como volante"). */
+function positionParams(o: DecisionView['posicaoOferecida']): Record<string, string> {
+  return o ? { posicao: t(`positions.${o.para}`).toLowerCase(), posicaoAtual: t(`positions.${o.de}`).toLowerCase() } : {};
 }
 
 /** A faixa da torcida (T51b) de um clube, se o jogador já tem idolatria nele. */

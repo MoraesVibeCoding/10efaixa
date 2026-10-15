@@ -166,13 +166,22 @@
    "noClubeDeCoracao": "Logo no clube que você sempre sonhou defender, e agora você assiste de fora."
   }
  },
+ "posicao-novo-clube": {
+  "titulo": "Onde você vai jogar aqui?",
+  "texto": "Primeiro treino no clube novo e o técnico chama você: chegou jogando como {posicaoAtual}, mas se formou como {posicao}. Ele quer saber onde você rende mais. O empresário diz que a posição nova te valoriza; seu pai só fala da antiga.",
+  "opcoes": {
+   "seguir": "Seguir como {posicaoAtual}",
+   "voltar": "Pedir para voltar a ser {posicao}",
+   "tecnico-decide": "Deixar o técnico escolher onde você rende"
+  }
+ },
  "mudanca-posicao": {
   "titulo": "O técnico quer você em outra posição",
-  "texto": "O técnico te chamou no canto do campo com a prancheta na mão. Falta gente na outra posição e ele acha que você rende lá. Pode ser o caminho para jogar mais, ou para virar quebra-galho.",
+  "texto": "O técnico te chamou no canto do campo com a prancheta na mão. Falta gente para jogar como {posicao} e ele acha que você rende lá. Pode ser o caminho para jogar mais, ou para virar quebra-galho.",
   "opcoes": {
-   "aceitar": "Topar e aprender a nova função",
-   "recusar": "Recusar: seu lugar é onde sempre jogou",
-   "aceitar-com-garantia": "Topar, mas pedir sequência na nova posição"
+   "aceitar": "Topar e jogar como {posicao}",
+   "recusar": "Recusar: seu lugar é como {posicaoAtual}",
+   "aceitar-com-garantia": "Topar, mas pedir sequência como {posicao}"
   }
  },
  "festa": {
@@ -760,7 +769,7 @@
  },
  "tecnico-pede-sacrificio": {
   "titulo": "Um favor para o time",
-  "texto": "O técnico te chama depois do treino. O time precisa de alguém para fechar a faixa do campo e correr por dois. Não é a função que te deixou conhecido, mas ele diz que a vaga é sua se aceitar.",
+  "texto": "O técnico te chama depois do treino. Não é posição nova: é a mesma, só que marcando mais e aparecendo menos, fechando o lado do campo e correndo por dois. Ele diz que a vaga é sua se aceitar.",
   "opcoes": {
    "aceitar-a-funcao": "Aceitar a função e dar o sangue",
    "pedir-a-funcao-de-sempre": "Pedir para seguir na função de sempre",

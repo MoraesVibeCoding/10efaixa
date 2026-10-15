@@ -76,6 +76,8 @@ export interface DecisionProps {
     categoriaSelecao?: 'sub17' | 'sub20' | 'olimpica';
     /** v2.64: na venda fechada pelo empresário, a proposta do clube comprador (cartão antes das opções). */
     comprador?: ProposalView;
+    /** v3.10: na proposta de mudança de posição, as duas posições e o over em cada uma (o overall pode ir em número aqui, v2.16). */
+    posicaoOferecida?: { de: string; para: string; overDe: number; overPara: number };
   };
   /** v2.47: os números da decisão anterior; o overall, a idade e o valor rolam deles até os de agora. */
   anterior?: Anterior;
@@ -382,7 +384,7 @@ function outcomeGroups(outcome: Outcome[]) {
 
 /** O que a escolha rendeu de verdade, por cima da tela desfocada. v2.88 (pedido do usuário): sem "Seguir", em todos os ritmos;
  *  fecha sozinho em resultadoMs, dois toques passam na hora, Enter e Espaço também; Esc (na Decisão) segue na hora. */
-function Result({ eventId, optionId, outcome, verdict, onDone }: { eventId: string; optionId: string; outcome: Outcome[]; verdict: string; onDone: () => void }) {
+function Result({ eventId, optionId, outcome, verdict, onDone, params }: { eventId: string; optionId: string; outcome: Outcome[]; verdict: string; onDone: () => void; params?: Params }) {
   const box = useRef<HTMLDivElement>(null);
   // v2.72: o card sai (150 ms) antes de seguir
   const { saindo, fechar } = useSaida(onDone);
@@ -393,7 +395,7 @@ function Result({ eventId, optionId, outcome, verdict, onDone }: { eventId: stri
       <div ref={box} tabIndex={-1} style={SEGUIR_VARS} className="resultado__caixa" role="dialog" aria-modal="true" aria-label={t(`ui.resultado.${verdict}`)} onClick={seguir.onClick} onKeyDown={seguir.onKeyDown}>
         {/* v2.81 (Álbum): o veredito é o carimbo na foto da cena; aqui fica o que você escolheu e o que rendeu */}
         <p className="resultado__rotulo">{t('ui.resultado.voceEscolheu')}</p>
-        <p className="resultado__escolha">{t(`events.${eventId}.opcoes.${optionId}`)}</p>
+        <p className="resultado__escolha">{t(`events.${eventId}.opcoes.${optionId}`, params)}</p>
         {outcome.length === 0 && <p className="resultado__vazio">{t('ui.resultado.semEfeito')}</p>}
         {/* v2.71 (momento 5): as linhas entram em cascata, na ordem */}
         {outcomeGroups(outcome).map(([rotulo, itens, classe, antes]) => itens.length > 0 && (
@@ -439,12 +441,12 @@ function optionSpeech(eventId: string, optionId: string): string {
 }
 
 /** Detalhe da opção marcada (v2.34): risco e tempo fora por escrito, depois "Você ganha / Em troca" com as setas. */
-function Detail({ eventId, optionId }: { eventId: string; optionId: string }) {
+function Detail({ eventId, optionId, params }: { eventId: string; optionId: string; params?: Params }) {
   const preview = previewOf(eventId, optionId);
   const risk = riskOf(eventId, optionId);
   const out = timeOutOf(eventId, optionId);
   return (
-    <section className="decisao__detalhe" aria-label={t(`events.${eventId}.opcoes.${optionId}`)}>
+    <section className="decisao__detalhe" aria-label={t(`events.${eventId}.opcoes.${optionId}`, params)}>
       {(risk || out !== null) && (
         <p className="detalhe__risco">
           {risk && <span>{riskText(risk)}</span>}
@@ -659,6 +661,13 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
         {player.categoriaSelecao && <p className="decisao__categoria">{t(`ui.linhaDoTempo.selecao.degrau.${player.categoriaSelecao}`)}</p>}
         <h1 ref={titulo} tabIndex={-1} className="decisao__titulo">{t(`events.${eventId}.titulo`)}</h1>
         {text && <p className="decisao__historia">{comFalas(text)}</p>}
+        {/* v3.10: na proposta de posição, o over em cada uma (o overall pode ir em número aqui, v2.16) */}
+        {player.posicaoOferecida && (
+          <p className="decisao__posicoes">{t('ui.decisao.posicaoOferecida', {
+            de: t(`positions.${player.posicaoOferecida.de}`), overDe: player.posicaoOferecida.overDe,
+            para: t(`positions.${player.posicaoOferecida.para}`), overPara: player.posicaoOferecida.overPara,
+          })}</p>
+        )}
         {player.comprador && <Comprador p={player.comprador} />}
         <div className="decisao__opcoes" role="group" aria-label={t('ui.decisao.opcoes')}>
           {options.map((o) => {
@@ -669,7 +678,7 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
                 onClick={() => { tocar(o.id); }}
               >
                 <span className="opcao__texto">
-                  <span className="opcao__rotulo">{t(`events.${eventId}.opcoes.${o.id}`)}</span>
+                  <span className="opcao__rotulo">{t(`events.${eventId}.opcoes.${o.id}`, player.textoParams)}</span>
                 </span>
                 <span className="sr-only">{optionSpeech(eventId, o.id)}</span>
                 {risk && <RiskMeter risk={risk} />}
@@ -680,13 +689,13 @@ export function Decision({ eventId, age, progress, scene, player, anterior, mome
           })}
         </div>
         {marked === null && <p className="decisao__detalhe decisao__detalhe--vazio">{t('ui.decisao.marque')}</p>}
-        {marked !== null && <Detail eventId={eventId} optionId={marked} />}
+        {marked !== null && <Detail eventId={eventId} optionId={marked} params={player.textoParams} />}
       </div>
       <Album titles={player.titles} milestones={player.milestones ?? []} marcos={player.marcos ?? []} />
       {career && <Career player={player} onClose={() => { setCareer(false); }} />}
       {palco && <Palco titulos={titulos} onClose={fecharPalco} />}
       <Carimbo momentos={palcoVisto ? carimbos : NONE} />
-      {chosen !== null && outcome !== null && verdict !== null && <Result eventId={eventId} optionId={chosen} outcome={outcome} verdict={verdict} onDone={onDone} />}
+      {chosen !== null && outcome !== null && verdict !== null && <Result eventId={eventId} optionId={chosen} outcome={outcome} verdict={verdict} onDone={onDone} params={player.textoParams} />}
     </main>
   );
 }
