@@ -1,4 +1,6 @@
-import { capStep, valueFactor } from './motor';
+import { capStep, motorValue, valueFactor } from './motor';
+import { marketValue } from './market';
+import market from '../data/market.json';
 import cfg from '../data/motor.json';
 
 // v3.07, opção A (decisão do usuário em 2026-10-15): o produto das decisões desloca o teto dos atributos.
@@ -32,5 +34,18 @@ describe('fator do valor de mercado limitado (v3.07)', () => {
 
   it('abaixo do limite, o fator segue liga × crescimento', () => {
     expect(valueFactor({ overDelta: 0, clubId: 'qualquer', league: 'POR' })).toBeCloseTo(1.2);
+  });
+});
+
+// v3.07 (usuário, 2026-10-15, opção 1): o teto da curva de valor (market.json, tetoEUR) vale sobre o valor final, depois
+// de liga, crescimento e clube. Antes ele só limitava o valor base.
+describe('valor final com o teto de mercado (v3.07)', () => {
+  it('jogador de elite em liga de nível 1 para no teto', () => {
+    expect(motorValue({ overall: 95, age: 24, overDelta: 2, clubId: 'qualquer', league: 'ENG' })).toBe(market.curva.tetoEUR);
+  });
+
+  it('abaixo do teto, é o valor base vezes o fator', () => {
+    const base = marketValue(80, 24);
+    expect(motorValue({ overall: 80, age: 24, overDelta: 0, clubId: 'qualquer', league: 'POR' })).toBe(Math.round(base * 1.2));
   });
 });

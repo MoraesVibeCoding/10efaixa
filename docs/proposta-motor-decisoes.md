@@ -195,3 +195,15 @@ Pontos de atenção:
 Escolhido pelo usuário e implementado (`valor.fatorMax`), mas **não muda a mediana do "bom"** (€ 240 mi, igual). A causa
 é a curva de valor base: +1 ponto de over = ×1,30, e over 90 aos 24 já vale € 120 mi antes de liga e clube. O "bom"
 chega a 90,2 aos 24 (72% com pico ≥ 90, contra 11% hoje).
+
+### 8.2 Teto de € 180 mi sobre o valor final (opção 1), 2026-10-15
+
+`motorValue`: o `tetoEUR` da curva (`market.json`) passa a valer depois de liga, crescimento e clube.
+
+| | Hoje | Auto | Bom | Ruim |
+|---|---|---|---|---|
+| Valor aos 24 (mediana) | € 55,2 mi | € 80,8 mi | € 180 mi | € 55,2 mi |
+| No teto de € 180 mi aos 24 | 8% | 27% | **59%** | 10% |
+
+Pico, minutos e títulos não mudam (8). O valor ficou realista no máximo, mas o "bom" satura no teto: 72% dele passa de
+90 de pico. Se a saturação incomodar, a alavanca é a subida do teto de atributos (`teto.limiteCarreira`), não o valor.

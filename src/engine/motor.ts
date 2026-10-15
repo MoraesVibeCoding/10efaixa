@@ -1,4 +1,6 @@
 import cfg from '../data/motor.json';
+import market from '../data/market.json';
+import { marketValue } from './market';
 
 // v3.07 (proposta, docs/proposta-motor-decisoes.md): decisões, liga e clube pesam em tempo de jogo, evolução e valor.
 // Tudo em src/data/motor.json; desligado (ligado: false) até a aprovação do usuário.
@@ -49,4 +51,9 @@ export function valueFactor(s: { overDelta: number; clubId: string; league: stri
   const br = (cfg.ligas.valorBrasil as Record<string, number>)[s.league];
   const league = tier === '7' && br !== undefined && !(cfg.ligas.clubes as Record<string, string>)[s.clubId] ? br : tierOf(tier).valor;
   return Math.min(v.fatorMax, growth * league);
+}
+
+/** Valor de mercado do motor: valor base × fator, com o teto da curva (market.json, tetoEUR) sobre o valor final. */
+export function motorValue(s: { overall: number; age: number; overDelta: number; clubId: string; league: string }): number {
+  return Math.round(Math.min(market.curva.tetoEUR, marketValue(s.overall, s.age) * valueFactor(s)));
 }
