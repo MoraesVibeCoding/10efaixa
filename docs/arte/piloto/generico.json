@@ -1,0 +1,7 @@
+{
+  "_nota": "v3.01 (pedido do usuário em 2026-10-15): todas as cenas de docs/arte/cenas com o visual 1 e o uniforme genérico magenta e ciano (como as cenas de hoje), para o usuário aplicar o uniforme do clube em outro provedor. O retrato do visual é a primeira referência, para o personagem bater com o visual.",
+  "visual": 1,
+  "estilo": "docs/arte/cenas/12-gol/curto/imagem.jpeg",
+  "tentativasPorImagem": 2,
+  "limiteDeChamadas": 50
+}
