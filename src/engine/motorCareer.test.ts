@@ -29,4 +29,16 @@ describe('valor de mercado na carreira com o motor (v3.07)', () => {
     }
     expect(tier1).toBeGreaterThan(0);
   });
+
+  it('o resumo do semestre avisa quando a confiança do técnico mudou o papel', { timeout: 120_000 }, () => {
+    const seen = new Set<string>();
+    for (let seed = 1; seed <= 12; seed++) {
+      simulateCareer(randomInput(createPrng(seed)), seed, 2026, (e, t, v) => {
+        const c = v().ultimoSemestre?.confianca;
+        if (c) seen.add(c);
+        return autoDecide(e, t, v);
+      });
+    }
+    expect([...seen].sort()).toEqual(['desce', 'sobe']);
+  });
 });

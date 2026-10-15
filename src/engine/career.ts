@@ -27,7 +27,7 @@ import { ONCE, memoryCtx, type Memory } from './memory';
 import { EFFECTS, FACTS, fireMilestones, milestoneKey, type MilestoneFacts, type MilestoneMoment } from './milestones';
 import { MEETING_EVENT, autoProposal, encodeProposal, meetingScore, parseProposal, staffMeeting, type MeetingResult } from './meeting';
 import { MEETING_IDEAS, TRUST, drawClubNeed, ideaOf, meetingOptions, type Idea, type MeetingOptions } from './meetingOptions';
-import { expectedMinutes, minutesShare, roleFor, squadLevel, updateForm, updateMorale, type Role } from './minutes';
+import { ROLES, expectedMinutes, minutesShare, roleFor, squadLevel, updateForm, updateMorale, type Role } from './minutes';
 import { overall, type Position } from './overall';
 import { coachProposal } from './positionChange';
 import { createPlayer, type CreationInput, type Player } from './player';
@@ -120,7 +120,7 @@ export interface DecisionView {
   /** T52c (v2.53): na decisão da reunião, as 3 ideias (óbvia, mescla, ousada); a escolha é uma delas. */
   reuniao?: MeetingOptions;
   /** T51b: o último semestre fechado e o que mais mudou nele (até 2 frases, sem número). */
-  ultimoSemestre?: { year: number; semestre: 1 | 2; frases: Feedback[] };
+  ultimoSemestre?: { year: number; semestre: 1 | 2; frases: Feedback[]; /** v3.07: o papel mudou pela confiança do técnico (over de escalação ≠ over). */ confianca?: 'sobe' | 'desce' };
   /** v2.61: o resumo da última temporada profissional fechada (a tela mostra num card no Normal e no Completo). */
   ultimaTemporada?: SeasonSummary;
   /** v2.63: capitão do clube atual (a faixa do clube); a tela mostra o selo "C". */
@@ -499,6 +499,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     for (let sem = 0; sem < 2; sem++) {
       let minutes: number;
       let role: Role = 'jovemPromessa';
+      let confianca: 'sobe' | 'desce' | undefined;
       let staffQuality = 0.8;
       if (varzeaLeft > 0) {
         minutes = cfg.minutosBase;
@@ -508,6 +509,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         // v3.07 (motor.json): escala pelo over somado à confiança do técnico, moral, disciplina e torcida
         const ovLineup = ov(evo) + (MOTOR ? lineupBonus({ coachRelation, morale, discipline, idolatry: idol[clubId!] ?? 0 }) : 0);
         role = roleFor(ovLineup, rep, evo.age);
+        const plain = roleFor(ov(evo), rep, evo.age);
+        confianca = role === plain ? undefined : ROLES.indexOf(role) < ROLES.indexOf(plain) ? 'sobe' : 'desce';
         curRole = role;
         minutes = inYouth ? cfg.minutosBase : minutesShare({ overall: ovLineup, clubRep: rep, role, form }, yr);
         form = updateForm(form, ov(evo), rep, yr);
@@ -569,7 +572,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       const gf = MOTOR ? growthFactors({ minutes, morale, coachRelation, discipline, clubId, league: clubId ? leagueOf(clubId, divOf) : null }) : null;
       const motorCtx = gf ? { ...gf, decline: declineByDiscipline(discipline), capStep: capStep(gf.decisions) } : undefined;
       evo = evolveSemester(evo, { focus, staffQuality, minutes, morale, ...(motorCtx && { motor: motorCtx }) }, yr);
-      ultimoSemestre = { year: curYear, semestre: (sem + 1) as 1 | 2, frases: semesterFeedback(antes, evo.attributes) };
+      ultimoSemestre = { year: curYear, semestre: (sem + 1) as 1 | 2, frases: semesterFeedback(antes, evo.attributes), ...(confianca && { confianca }) };
       const tr = progressTraits(traits, focus);
       traits = { position: tr.position, traits: tr.traits, latentTrait: tr.latentTrait, progress: tr.progress };
 
