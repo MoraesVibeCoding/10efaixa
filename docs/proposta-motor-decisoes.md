@@ -132,3 +132,33 @@ como identificadores de dados, como hoje.
 5. Valor de mercado com crescimento, liga e clube (2.3).
 6. Recalibrar até cumprir a seção 3; save v13; linha v3.07 no SPEC.
 7. Frase do resumo do semestre (i18n).
+
+## 6. Resultado da simulação (300 carreiras × 3 jeitos, 2026-10-15)
+
+Protótipo atrás da chave `src/data/motor.json` (`ligado: false`). Mesmas 300 sementes com a chave desligada (hoje) e ligada.
+
+| | Hoje: bom | Hoje: ruim | Proposta: auto | Proposta: bom | Proposta: ruim |
+|---|---|---|---|---|---|
+| Minutos (média) | 67,9% | 68,1% | 73,6% | **79,8%** | **65,2%** |
+| Over de pico | 86,9 | 86,8 | 87,0 | 87,1 | 86,9 |
+| Over aos 24 | 86,7 | 86,7 | 86,8 | 87,0 | 86,8 |
+| Valor aos 24 (mediana) | € 55,2 mi | € 55,2 mi | € 74,5 mi | € 80,8 mi | € 71,6 mi |
+| Títulos na carreira | 7,6 | 8,6 | 8,8 | 9,5 | 8,1 |
+| Pico ≥ 85 | 76% | 75% | 76% | 76% | 75% |
+
+Leitura:
+- **Tempo de jogo:** bom vs. ruim passou de −0,2 para **+14,6 pp** (meta 15 a 30): quase lá.
+- **Over de pico:** **não mudou** (87,1 vs. 86,9; meta 4 a 8). A evolução mais rápida só antecipa o pico: o teto de cada
+  atributo (o potencial sorteado na criação) é o limite, e quase todo jogador chega nele. Para a decisão pesar no pico,
+  ela precisa mexer no teto (ver 7).
+- **Equilíbrio:** a carreira automática ficou no mesmo pico (87,0 vs. 86,9) ✓; joga mais (73,6% vs. 67,4%) e ganha mais
+  títulos (8,8 vs. 7,6).
+- **Valor:** sobe com a liga (mediana aos 24: € 55 mi → € 74 mi) e separa bom de ruim (€ 81 mi vs. € 72 mi).
+
+## 7. Ajuste proposto depois da simulação: as decisões mexem no teto
+
+Opção A (recomendada): a cada semestre, o produto das decisões (moral × técnico × disciplina) desloca o teto dos
+atributos: acima de 1, o teto sobe até +0,5 ponto por semestre; abaixo de 1, desce até −0,5; limite de ±6 pontos na
+carreira. Assim, carreira bem cuidada vira pico maior, e não só pico mais cedo.
+
+Opção B: manter o teto e aceitar que as decisões mudam minutos, títulos e valor, mas não o pico.
