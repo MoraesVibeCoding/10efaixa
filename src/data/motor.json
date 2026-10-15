@@ -1,6 +1,6 @@
 {
- "_nota": "v3.07 (proposta em docs/proposta-motor-decisoes.md, aguardando aprovação): decisões, liga e clube pesam em tempo de jogo, evolução e valor. Desligado até o DE ACORDO.",
- "ligado": false,
+ "_nota": "v3.07 (proposta em docs/proposta-motor-decisoes.md, DE ACORDO do usuário em 2026-10-15): decisões, liga e clube pesam em tempo de jogo, evolução e valor. ligado: false volta ao motor de antes (rollback).",
+ "ligado": true,
  "escalacao": { "pontosMax": 8, "pesos": { "tecnico": 0.4, "moral": 0.3, "disciplina": 0.2, "torcida": 0.1 } },
  "evolucao": {
   "minutos": { "min": 0.25, "max": 1.15 },

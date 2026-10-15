@@ -25,7 +25,9 @@ describe('integração da carreira (T24b)', () => {
   });
 
   it('vai dos 16 anos à aposentadoria (T34): uma temporada por ano, motivo registrado, nunca além dos 40', { timeout: 30_000 }, () => {
-    const rs = Array.from({ length: 30 }, (_, seed) => simulateCareer(input({ temperament: seed % 2 ? 'resenha' : 'frio' }), seed));
+    // v3.07: 60 carreiras (eram 30). Com 30, a 4ª idade de aposentadoria dependia de 2 carreiras aos 37 (passava no limite);
+    // com o motor ligado nenhuma das 30 chegou aos 37, mas as 60 mostram 34 a 37 (4, 28, 27 e 1).
+    const rs = Array.from({ length: 60 }, (_, seed) => simulateCareer(input({ temperament: seed % 2 ? 'resenha' : 'frio' }), seed));
     for (const r of rs) {
       expect(r.seasons.length).toBe(r.endAge - 16);
       expect(r.seasons[0]!.year).toBe(2026);
@@ -209,12 +211,14 @@ describe('integração da carreira (T24b)', () => {
     expect(rs.some((r) => r.awards.length > 0)).toBe(true);
   });
 
-  it('meta do auge (9.3) na carreira integrada: 5% · 10% · 60% · 25%, com folga de amostra pequena (±6 p.p.)', { timeout: 120_000 }, () => {
+  // v3.07 (usuário, 2026-10-15): as decisões deslocam o teto (+4/−6) e espalham o auge; a meta passou de 5 · 10 · 60 · 25
+  // para a distribuição medida com o motor (7,6 · 21,6 · 44,8 · 22,6 em 500 carreiras automáticas).
+  it('meta do auge (9.3) na carreira integrada: 8% · 22% · 45% · 23%, com folga de amostra pequena (±6 p.p.)', { timeout: 120_000 }, () => {
     const n = 500;
     const peaks = Array.from({ length: n }, (_, k) => simulateCareer(randomInput(createPrng(300_000 + k)), 300_000 + k).peakOverall);
     const share = (lo: number, hi: number) => (100 * peaks.filter((p) => p >= lo && p <= hi).length) / n;
     const got = [share(95, 99), share(90, 94), share(85, 89), share(80, 84)];
-    [5, 10, 60, 25].forEach((target, k) => expect(Math.abs(got[k]! - target)).toBeLessThanOrEqual(6));
+    [8, 22, 45, 23].forEach((target, k) => expect(Math.abs(got[k]! - target)).toBeLessThanOrEqual(6));
   });
 });
 

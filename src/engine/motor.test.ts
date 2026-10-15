@@ -58,3 +58,9 @@ describe('multiplicador extra no valor (v3.07: elite e seleção)', () => {
     expect(motorValue({ overall: 95, age: 24, overDelta: 0, clubId: 'qualquer', league: 'POR', mult: 3 })).toBe(market.curva.tetoEUR);
   });
 });
+
+describe('chave do motor (v3.07)', () => {
+  it('ligada depois do DE ACORDO do usuário (2026-10-15)', () => {
+    expect(cfg.ligado).toBe(true);
+  });
+});

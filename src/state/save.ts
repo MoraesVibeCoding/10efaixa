@@ -6,7 +6,7 @@ import { runUntilDecision } from './careerRun';
 // criação + semente + ritmo + escolhas; continuar = refazer a carreira até a próxima decisão (careerRun).
 // Fica só no aparelho (localStorage): nada vai para servidor, analytics ou URL. Uma carreira ativa por vez.
 export const SAVE_KEY = '10efaixa:carreira';
-export const SAVE_VERSION = 12;
+export const SAVE_VERSION = 13;
 const RITMOS = ['rapido', 'normal', 'completo'] as const;
 
 export interface SaveData {
