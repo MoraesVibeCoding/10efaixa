@@ -4,6 +4,7 @@ import { applyBiotype } from './biotype';
 import { evolveSemester, type EvoState, type SemesterContext } from './evolution';
 import { createPrng } from './prng';
 import cfg from '../data/evolution.json';
+import motorCfg from '../data/motor.json';
 
 const flat = (v: number): Attributes =>
   Object.fromEntries(ATTRIBUTES.map((a) => [a, v])) as Attributes;
@@ -161,5 +162,39 @@ describe('evolução por semestre', () => {
     ['secundário desconhecido', { focus: { main: 'passe' as const, secondary: 'raça' as never } }],
   ])('recusa contexto inválido: %s', (_, over) => {
     expect(() => evolveSemester(state(), ctx(over), createPrng(1))).toThrow(RangeError);
+  });
+});
+
+// v3.07, opção A (motor.json): as decisões deslocam o teto; o deslocamento acumula, até +limiteSubida e −limiteQueda.
+describe('deslocamento do teto pelas decisões (v3.07)', () => {
+  const motor = (capStep: number) => ({ minutes: 1, decisions: 1, league: 1, decline: 1, capStep });
+
+  it('acumula o passo e sobe os tetos efetivos', () => {
+    const s = state();
+    const n = evolveSemester(evolveSemester(s, ctx({ motor: motor(0.5) }), createPrng(1)), ctx({ motor: motor(0.5) }), createPrng(2));
+    expect(n.capShift).toBeCloseTo(1);
+    for (const a of ATTRIBUTES) expect(n.caps[a]).toBe(s.caps[a] + 1);
+  });
+
+  it('desce os tetos quando o passo é negativo', () => {
+    const s = state();
+    const n = evolveSemester(state({ capShift: -2.5 }), ctx({ motor: motor(-0.5) }), createPrng(1));
+    expect(n.capShift).toBeCloseTo(-3);
+    for (const a of ATTRIBUTES) expect(n.caps[a]).toBe(s.caps[a] - 3);
+  });
+
+  it('nunca passa dos limites da carreira: subida e queda separadas (usuário, 2026-10-15)', () => {
+    const { limiteSubida: up, limiteQueda: down } = motorCfg.teto;
+    expect(evolveSemester(state({ capShift: up - 0.1 }), ctx({ motor: motor(0.5) }), createPrng(1)).capShift).toBe(up);
+    expect(evolveSemester(state({ capShift: -down + 0.1 }), ctx({ motor: motor(-0.5) }), createPrng(1)).capShift).toBe(-down);
+    expect(up).toBe(4);
+    expect(down).toBe(6);
+  });
+
+  it('sem o motor, o teto não se desloca', () => {
+    const s = state();
+    const n = evolveSemester(s, ctx(), createPrng(1));
+    expect(n.capShift ?? 0).toBe(0);
+    expect(n.caps).toEqual(s.caps);
   });
 });

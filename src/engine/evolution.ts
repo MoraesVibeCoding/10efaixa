@@ -3,6 +3,7 @@ import { ageCurve } from './ageCurves';
 import { applyBiotype, heightAt, type Build, type Growth } from './biotype';
 import type { Prng } from './prng';
 import cfg from '../data/evolution.json';
+import { capShiftLimits } from './motor';
 
 // Seção 6.4. Ordem fixa por semestre: compleição → altura e tetos → atributos → idade.
 export type Focus = Attribute | 'bolaParada' | 'pernaRuim';
@@ -25,6 +26,8 @@ export interface EvoState {
   /** Mentalidade: multiplicadores do ruído do crescimento e da perda por idade; ausente = 1. */
   noiseFactor?: number;
   declineFactor?: number;
+  /** v3.07 (motor.json): pontos somados aos tetos pelas decisões, acumulados na carreira (+limiteSubida, −limiteQueda); ausente = 0. */
+  capShift?: number;
 }
 
 export interface SemesterContext {
@@ -32,6 +35,8 @@ export interface SemesterContext {
   staffQuality: number;
   minutes: number;
   morale: number;
+  /** v3.07 (motor.json, desligado até aprovação): fatores já calculados de minutos, decisões e liga, e o do declínio. */
+  motor?: { minutes: number; decisions: number; league: number; decline: number; capStep?: number };
 }
 
 const inRange = (x: number, lo: number, hi: number) => Number.isFinite(x) && x >= lo && x <= hi;
@@ -69,13 +74,16 @@ export function evolveSemester(state: EvoState, ctx: SemesterContext, rng: Prng)
   validate(ctx);
   const { main, secondary } = ctx.focus;
   const build = nextBuild(state, main);
-  const caps = applyBiotype(state.baseCaps, {
+  const lim = capShiftLimits();
+  const capShift = Math.max(-lim.down, Math.min(lim.up, (state.capShift ?? 0) + (ctx.motor?.capStep ?? 0)));
+  const shifted = capShift === 0 ? state.baseCaps : Object.fromEntries(ATTRIBUTES.map((a) => [a, state.baseCaps[a] + capShift])) as Attributes;
+  const caps = applyBiotype(shifted, {
     heightCm: heightAt(state.predictedHeightCm, state.growth, state.age),
     build: build.build,
   });
 
-  const minutes = cfg.minMinutesFactor + (1 - cfg.minMinutesFactor) * ctx.minutes;
-  const morale = cfg.morale.min + cfg.morale.span * ctx.morale;
+  const minutes = ctx.motor ? ctx.motor.minutes : cfg.minMinutesFactor + (1 - cfg.minMinutesFactor) * ctx.minutes;
+  const morale = ctx.motor ? ctx.motor.decisions * ctx.motor.league : cfg.morale.min + cfg.morale.span * ctx.morale;
   const attributes = { ...state.attributes };
   for (const a of ATTRIBUTES) {
     const role = a === main ? 'main' : a === secondary ? 'secondary' : 'none';
@@ -85,11 +93,11 @@ export function evolveSemester(state: EvoState, ctx: SemesterContext, rng: Prng)
     const delta = c > 0
       ? cfg.basePerSemester * c * cfg.focusGrow[role] * ctx.staffQuality * minutes * morale
         * Math.max(0, 1 - (cur / caps[a]) ** cfg.k) * noise * (state.growthBonus?.[a] ?? 1)
-      : cfg.basePerSemester * c * cfg.focusDecline[role] * (state.declineFactor ?? 1);
+      : cfg.basePerSemester * c * cfg.focusDecline[role] * (state.declineFactor ?? 1) * (ctx.motor?.decline ?? 1);
     const whole = Math.floor(delta);
     const step = whole + (rng.next() < delta - whole ? 1 : 0);
     attributes[a] = Math.max(1, Math.min(caps[a], cur + step));
   }
 
-  return { ...state, ...build, caps, attributes, age: state.age + 0.5 };
+  return { ...state, ...build, caps, attributes, age: state.age + 0.5, ...(capShift !== 0 && { capShift }) };
 }

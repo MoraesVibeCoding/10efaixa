@@ -61,9 +61,18 @@ describe('marcos dentro da carreira (T25c)', () => {
   it('a opção com bônus de Mental rende mais Mental que a sem bônus (mesma carreira, só a escolha muda), medido aos ~22 anos, antes de o Mental bater no teto', () => {
     // O bônus é +4% no crescimento de Mental; no auge da carreira quase todo mundo já está no teto e a diferença some (medido: 3 melhores e 2 piores em 30).
     // Aos ~22 anos o efeito aparece (medido: melhor em 13 de 40, pior em 3).
+    // v3.07: a outra opção dá +0,07 de moral, que agora acelera todos os atributos; medimos o Mental acima da média dos outros 9,
+    // que isola o bônus (só no Mental) do efeito da moral (em todos). Comparando o Mental puro, a moral passou o bônus (3377 × 3385).
     const at22 = (opt: string, seed: number) => {
       let mental = NaN;
-      run(seed, (id, t, view) => { const v = view(); if (Number.isNaN(mental) && v.age >= 21.5) mental = v.attributes.mental; return id === 'estreia-profissional' ? opt : autoDecide(id, t, view); });
+      run(seed, (id, t, view) => {
+        const v = view();
+        if (Number.isNaN(mental) && v.age >= 21.5) {
+          const others = Object.entries(v.attributes).filter(([a]) => a !== 'mental').map(([, x]) => x);
+          mental = v.attributes.mental - others.reduce((a, b) => a + b, 0) / others.length;
+        }
+        return id === 'estreia-profissional' ? opt : autoDecide(id, t, view);
+      });
       return mental;
     };
     let com = 0; let sem = 0; let better = 0; let worse = 0;

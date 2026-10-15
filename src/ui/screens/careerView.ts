@@ -61,6 +61,7 @@ function torcidaOf(idolatrias: Record<string, number>, clubId: string) {
 }
 
 /** As frases do semestre (T51b) em palavras: "Seu passe melhorou bastante." Nunca número. */
-export function semesterLines(frases: Feedback[]): string[] {
-  return frases.map((f) => t(`ui.evolucao.${f.sentido}${f.forte ? 'Forte' : ''}`, { atributo: t(`ui.evolucao.atributo.${f.atributo}`) }));
+export function semesterLines(frases: Feedback[], confianca?: 'sobe' | 'desce'): string[] {
+  // v3.07: a mudança de papel pela confiança do técnico vem primeiro
+  return [...(confianca ? [t(`ui.evolucao.confianca.${confianca}`)] : []), ...frases.map((f) => t(`ui.evolucao.${f.sentido}${f.forte ? 'Forte' : ''}`, { atributo: t(`ui.evolucao.atributo.${f.atributo}`) }))];
 }

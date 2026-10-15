@@ -78,7 +78,7 @@ export function Career({ input, look, visual, seed, onRestart, ritmo = 'normal',
   }
   const { view, eventId, index } = step;
   const semKey = view.ultimoSemestre ? `${view.ultimoSemestre.year}-${view.ultimoSemestre.semestre}` : '';
-  const semestre = semKey !== seenSemester && view.ultimoSemestre ? semesterLines(view.ultimoSemestre.frases) : undefined;
+  const semestre = semKey !== seenSemester && view.ultimoSemestre ? semesterLines(view.ultimoSemestre.frases, view.ultimoSemestre.confianca) : undefined;
   const seasonKey = view.ultimaTemporada ? `${view.ultimaTemporada.year}` : '';
   // v3.06: o resumo da temporada aparece em todos os ritmos (antes o Rápido pulava)
   const resumoEl = view.ultimaTemporada && seasonKey !== seenSeason

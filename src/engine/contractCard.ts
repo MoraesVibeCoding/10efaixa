@@ -41,12 +41,12 @@ export interface ProjectionInput {
  * Overall e valor de mercado depois de uma temporada no clube: as mesmas regras de evolução, com minutos do papel (forma neutra),
  * qualidade da comissão do clube e sorteio neutro. Não altera o estado.
  */
-export function projectValue(i: ProjectionInput): { overall: number; valueEUR: number } {
+export function projectValue(i: ProjectionInput): { overall: number; age: number; valueEUR: number } {
   let s = i.evo;
   for (let k = 0; k < cfg.semestresProjecao; k++) {
     const minutes = expectedMinutes(overallOf(s.attributes, i.position, i.bonus), i.clubRep, i.role);
     s = evolveSemester(s, { focus: {}, staffQuality: i.staffQuality, minutes, morale: i.morale }, NEUTRAL);
   }
   const overall = overallOf(s.attributes, i.position, i.bonus);
-  return { overall, valueEUR: marketValue(overall, s.age) };
+  return { overall, age: s.age, valueEUR: marketValue(overall, s.age) };
 }

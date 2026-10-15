@@ -491,6 +491,10 @@
   "sobeForte": "{atributo} melhorou bastante.",
   "desce": "{atributo} caiu.",
   "desceForte": "{atributo} caiu bastante.",
+  "confianca": {
+   "sobe": "O técnico passou a confiar mais em você e te deu mais espaço.",
+   "desce": "O técnico anda desconfiado e te deu menos espaço."
+  },
   "atributo": {
    "finalizacao": "Sua finalização",
    "passe": "Seu passe",

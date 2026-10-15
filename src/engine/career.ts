@@ -3,6 +3,7 @@ import { agentSemester, changeAgent, createAgent, type Agent } from './agent';
 import { ARCHETYPES } from './archetypes';
 import { CLUBS, clubsIn, rivalsOf } from './clubs';
 import { semesterClubLife } from './clubLife';
+import { capStep, cardsByDiscipline, motorValue, declineByDiscipline, growthFactors, lineupBonus, moraleRecovery, motorOn } from './motor';
 import { investmentReturn, leaderEffects, matureTemperament, offFieldFlags, semesterCards } from './discipline';
 import { addToWealth, makeContract, renew, seasonEarnings, toBRL, type Contract } from './contracts';
 import { brazilQualifiers, copaDoBrasil, copaDoBrasilEntrants, copaDoNordeste, foreignQualifiers, libertadores, nordesteGroups, sulAmericana } from './cups';
@@ -26,7 +27,7 @@ import { ONCE, memoryCtx, type Memory } from './memory';
 import { EFFECTS, FACTS, fireMilestones, milestoneKey, type MilestoneFacts, type MilestoneMoment } from './milestones';
 import { MEETING_EVENT, autoProposal, encodeProposal, meetingScore, parseProposal, staffMeeting, type MeetingResult } from './meeting';
 import { MEETING_IDEAS, TRUST, drawClubNeed, ideaOf, meetingOptions, type Idea, type MeetingOptions } from './meetingOptions';
-import { expectedMinutes, minutesShare, roleFor, squadLevel, updateForm, updateMorale, type Role } from './minutes';
+import { ROLES, expectedMinutes, minutesShare, roleFor, squadLevel, updateForm, updateMorale, type Role } from './minutes';
 import { overall, type Position } from './overall';
 import { coachProposal } from './positionChange';
 import { createPlayer, type CreationInput, type Player } from './player';
@@ -119,7 +120,7 @@ export interface DecisionView {
   /** T52c (v2.53): na decisão da reunião, as 3 ideias (óbvia, mescla, ousada); a escolha é uma delas. */
   reuniao?: MeetingOptions;
   /** T51b: o último semestre fechado e o que mais mudou nele (até 2 frases, sem número). */
-  ultimoSemestre?: { year: number; semestre: 1 | 2; frases: Feedback[] };
+  ultimoSemestre?: { year: number; semestre: 1 | 2; frases: Feedback[]; /** v3.07: o papel mudou pela confiança do técnico (over de escalação ≠ over). */ confianca?: 'sobe' | 'desce' };
   /** v2.61: o resumo da última temporada profissional fechada (a tela mostra num card no Normal e no Completo). */
   ultimaTemporada?: SeasonSummary;
   /** v2.63: capitão do clube atual (a faixa do clube); a tela mostra o selo "C". */
@@ -150,6 +151,7 @@ export type Decider = (eventId: string, temperament: string, view: () => Decisio
 /** Decisão automática (simulação e eventos fora da tela): na reunião, a sugestão do preparador; nos eventos, o temperamento. */
 export const autoDecide: Decider = (eventId, temperament, view) => (eventId === MEETING_EVENT || eventId === PROPOSAL_EVENT || eventId === LOAN_EVENT ? String(view().state.sugestao) : autoChoice(eventId, temperament));
 const AUTO = autoDecide;
+const MOTOR = motorOn();
 /** v2.85: a janela dos 34 em diante mostra no máximo estas propostas; o card de casa paga o salário do "jogar por amor". */
 const FIM_MAX_OFFERS = retireCfg.fimDeCarreira.maxPropostas;
 const HOME_SALARY = applyOption({ salarioFator: 1 }, 'proposta-coracao', 'aceitar-por-amor').salarioFator as number;
@@ -286,11 +288,15 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
   const meetings: DecisionView['meetings'] = [];
   let ultimoSemestre: DecisionView['ultimoSemestre'];
   let ultimaTemporada: DecisionView['ultimaTemporada'];
+  /** v3.07 (motor.json): valor com liga, crescimento do over no último ano e clube; sem o motor, a curva de hoje × mult. */
+  const valueAt = (o: number, age: number, club: string | null, mult = 1) => MOTOR && club
+    ? motorValue({ overall: o, age, overDelta: o - (seasons.at(-1)?.overall ?? o), clubId: club, league: leagueOf(club, divOf), mult })
+    : marketValue(o, age) * mult;
   /** Toda decisão passa por aqui (T51): o padrão é a escolha do temperamento, como antes. */
   const ask = (eventId: string, state: Record<string, number | string | boolean> = {}, who = temp, extra: Pick<DecisionView, 'propostas' | 'reuniao' | 'atual' | 'casa'> = {}) => decide(eventId, who, () => ({
     ...extra,
     year: curYear, age: evo.age, clubId, position, overall: ov(evo), role: curRole, temperament: who,
-    marketValueEUR: Math.round(marketValue(ov(evo), evo.age) * selectionEffect(prestige, sel, sel.rung).marketMultiplier),
+    marketValueEUR: Math.round(valueAt(ov(evo), evo.age, clubId, selectionEffect(prestige, sel, sel.rung).marketMultiplier)),
     monthlySalary: contract ? { amount: Math.round(contract.annualSalary / 12), currency: contract.currency } : { amount: 0, currency: 'BRL' },
     number: spells.at(-1)?.number ?? input.shirtNumber, attributes: { ...evo.attributes },
     state: {
@@ -332,27 +338,31 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     else sign(id, salaryFor(marketValue(ov(evo), evo.age), leagueOf(id, divOf)), 2);
   };
 
+  /** Valor projetado no clube: hoje, curva × elite; com o motor (v3.07), liga e crescimento até a projeção, × elite, com teto. */
+  const projectedValue = (p: { overall: number; age: number; valueEUR: number }, club: string) => MOTOR
+    ? motorValue({ overall: p.overall, age: p.age, overDelta: p.overall - ov(evo), clubId: club, league: leagueOf(club, divOf), mult: eliteValueFactor(club) })
+    : p.valueEUR * eliteValueFactor(club);
   // v2.64: os cartões da tela de propostas, também usados no empréstimo e na venda pelo empresário (o clube à vista)
   const cardContextOf = (o: Offer, currentAnnualSalaryBRL: number | null): CardContext => ({
-    currentAnnualSalaryBRL, todayValueEUR: marketValue(ov(evo), evo.age),
+    currentAnnualSalaryBRL, todayValueEUR: valueAt(ov(evo), evo.age, clubId),
     currentExpectedMinutes: clubId ? expectedMinutes(ov(evo), effectiveRep(clubId), roleFor(ov(evo), effectiveRep(clubId), evo.age)) : null,
-    projectedValueEUR: projectValue({
+    projectedValueEUR: projectedValue(projectValue({
       evo, position, bonus: position === input.position ? arch.overallWeightBonus : undefined, clubRep: effectiveRep(o.clubId),
       role: o.role, staffQuality: o.staffQuality, morale,
-    }).valueEUR * eliteValueFactor(o.clubId),
+    }), o.clubId),
   });
   /** T28j (v2.54): o clube atual como primeiro cartão; com o contrato no fim (`due`), a renovação (e o pedido de aumento) saem dele. */
   const currentCard = (k: Contract, due: boolean): CurrentClubView => {
     const rep = effectiveRep(clubId!);
     const role = roleFor(ov(evo), rep, evo.age);
-    const projected = projectValue({ evo, position, bonus: position === input.position ? arch.overallWeightBonus : undefined, clubRep: rep, role, staffQuality: clamp(0.8 + (rep / 100) * 0.4, 0.8, 1.2), morale }).valueEUR * eliteValueFactor(clubId!);
+    const projected = projectedValue(projectValue({ evo, position, bonus: position === input.position ? arch.overallWeightBonus : undefined, clubRep: rep, role, staffQuality: clamp(0.8 + (rep / 100) * 0.4, 0.8, 1.2), morale }), clubId!);
     const renewalOf = (raise: boolean) => {
       const r = renew(k, ov(evo) - contractOverall, raise);
       return { salarioMensal: Math.round(r.annualSalary / 12), salarioPct: salaryChange(r.annualSalary, k.annualSalary), anos: r.years };
     };
     return {
       clubId: clubId!, league: leagueOf(clubId!, divOf), currency: k.currency, salarioMensal: Math.round(k.annualSalary / 12), anosRestantes: Math.max(0, k.years - 1),
-      role, nivelClube: clubLevelOf(clubId!, rep), valorProjetadoEUR: projected, valorPct: valueChange(projected, marketValue(ov(evo), evo.age)),
+      role, nivelClube: clubLevelOf(clubId!, rep), valorProjetadoEUR: projected, valorPct: valueChange(projected, valueAt(ov(evo), evo.age, clubId)),
       renovacao: due ? renewalOf(false) : null, aumento: due ? renewalOf(true) : null,
     };
   };
@@ -489,21 +499,26 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     for (let sem = 0; sem < 2; sem++) {
       let minutes: number;
       let role: Role = 'jovemPromessa';
+      let confianca: 'sobe' | 'desce' | undefined;
       let staffQuality = 0.8;
       if (varzeaLeft > 0) {
         minutes = cfg.minutosBase;
       } else {
         const rep = effectiveRep(clubId!);
         staffQuality = clamp(0.8 + (rep / 100) * 0.4, 0.8, 1.2);
-        role = roleFor(ov(evo), rep, evo.age);
+        // v3.07 (motor.json): escala pelo over somado à confiança do técnico, moral, disciplina e torcida
+        const ovLineup = ov(evo) + (MOTOR ? lineupBonus({ coachRelation, morale, discipline, idolatry: idol[clubId!] ?? 0 }) : 0);
+        role = roleFor(ovLineup, rep, evo.age);
+        const plain = roleFor(ov(evo), rep, evo.age);
+        confianca = role === plain ? undefined : ROLES.indexOf(role) < ROLES.indexOf(plain) ? 'sobe' : 'desce';
         curRole = role;
-        minutes = inYouth ? cfg.minutosBase : minutesShare({ overall: ov(evo), clubRep: rep, role, form }, yr);
+        minutes = inYouth ? cfg.minutosBase : minutesShare({ overall: ovLineup, clubRep: rep, role, form }, yr);
         form = updateForm(form, ov(evo), rep, yr);
       }
       // Efeito Seleção (6.11): prestígio dá minutos, peso na reunião e Mental; convocação ativa desgasta.
       const fx = selectionEffect(prestige, sel, sel.rung);
       if (varzeaLeft === 0 && !inYouth) minutes = clamp(minutes + fx.clubMinutes, 0, 1);
-      morale = updateMorale(morale, minutes, role, teamResult);
+      morale = updateMorale(morale, minutes, role, teamResult, MOTOR ? moraleRecovery() : 1);
       // T52c: com as 3 ideias, o clube precisa do que a posição pede (mesma quantidade de sorteios); antes, de qualquer um dos 10
       const clubNeed = MEETING_IDEAS ? drawClubNeed(position, yr, evo.attributes, evo.caps) : ATTRIBUTES[yr.int(0, ATTRIBUTES.length - 1)]!;
       // T52: com clube, a reunião passa por quem decide (tela ou automática); a sugestão é a proposta automática
@@ -554,8 +569,10 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
       evo = { ...evo, growthBonus: { ...growth, mental: (growth.mental ?? 1) * leader.mentalBonus * fx.mentalBonus * marcoMental } };
       coachRelation = clamp(coachRelation + leader.relationDelta, 0, 1);
       const antes = evo.attributes;
-      evo = evolveSemester(evo, { focus, staffQuality, minutes, morale }, yr);
-      ultimoSemestre = { year: curYear, semestre: (sem + 1) as 1 | 2, frases: semesterFeedback(antes, evo.attributes) };
+      const gf = MOTOR ? growthFactors({ minutes, morale, coachRelation, discipline, clubId, league: clubId ? leagueOf(clubId, divOf) : null }) : null;
+      const motorCtx = gf ? { ...gf, decline: declineByDiscipline(discipline), capStep: capStep(gf.decisions) } : undefined;
+      evo = evolveSemester(evo, { focus, staffQuality, minutes, morale, ...(motorCtx && { motor: motorCtx }) }, yr);
+      ultimoSemestre = { year: curYear, semestre: (sem + 1) as 1 | 2, frases: semesterFeedback(antes, evo.attributes), ...(confianca && { confianca }) };
       const tr = progressTraits(traits, focus);
       traits = { position: tr.position, traits: tr.traits, latentTrait: tr.latentTrait, progress: tr.progress };
 
@@ -601,7 +618,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
 
         // Disciplina: cartões pelo temperamento; suspensão tira minutos do próximo semestre.
         lastMinutes = minutes;
-        const cd = semesterCards({ temperament: temp, minutes }, yr);
+        const cd = semesterCards({ temperament: temp, minutes, ...(MOTOR && { disciplineFactor: cardsByDiscipline(discipline) }) }, yr);
         cards.yellows += cd.yellows;
         cards.reds += cd.reds;
         suspended = cd.minutesLost;

@@ -122,7 +122,16 @@ describe('proposta do clube de coração (T28e)', () => {
     const normal = finish(acceptChoice('bahia'));
     const amor = finish(`amor:bahia`);
     expect(amor.idolatry.bahia ?? 0).toBeGreaterThan(normal.idolatry.bahia ?? 0);
-    expect(amor.earnedBRL).toBeLessThan(normal.earnedBRL);
+    // v3.07: o "menos dinheiro" é o contrato assinado por amor (salário menor na decisão seguinte). Antes media o total da
+    // carreira, mas com o motor a escolha mexe em moral e idolatria, e o resto da carreira toma outro rumo (€ 555 mi × € 349 mi).
+    const salary = (choice: string) => {
+      const step = runUntilDecision(f.input, f.seed, [...f.choices, choice], 'completo');
+      if (step.kind === 'done') throw new Error('sem decisão seguinte');
+      return step.view.monthlySalary;
+    };
+    const [sa, sn] = [salary('amor:bahia'), salary(acceptChoice('bahia'))];
+    expect(sa.currency).toBe(sn.currency);
+    expect(sa.amount).toBeLessThan(sn.amount);
     // "amor:" para um clube que não é o do coração é recusado pelo motor
     const other = f.view.propostas!.find((p) => p.marca !== 'coracao');
     if (other) expect(() => runUntilDecision(f.input, f.seed, [...f.choices, `amor:${other.clubId}`], 'completo')).toThrow(/escolha inválida/);
@@ -213,7 +222,14 @@ describe('forçar saída (T28e)', () => {
     expect(forced.forcedExits[0]).toMatchObject({ fromClubId: from, toClubId: target });
     expect(normal.forcedExits).toEqual([]);
     expect(forced.idolatry[from] ?? 0).toBeLessThan(normal.idolatry[from] ?? 0);
-    expect(forced.wealthBRL).toBeLessThan(normal.wealthBRL + 1);
+    // v3.07: a multa aparece no patrimônio da decisão seguinte. Antes media o patrimônio no fim da carreira, mas com o motor
+    // a saída forçada (moral e técnico) muda o resto da carreira e o total final deixou de refletir a multa.
+    const wealth = (choice: string) => {
+      const step = runUntilDecision(f!.input, f!.seed, [...f!.choices, choice], 'completo');
+      if (step.kind === 'done') throw new Error('sem decisão seguinte');
+      return step.view.state.patrimonio as number;
+    };
+    expect(wealth(`forcar:${target}`)).toBeLessThan(wealth(acceptChoice(target)));
   });
 
   it('sem contrato longo "forcar:" é recusado pelo motor', { timeout: 300_000 }, () => {

@@ -150,6 +150,15 @@ describe('evolução e idolatria para a tela (T51b)', () => {
     expect(semesterLines([{ atributo: 'velocidade', sentido: 'desce', forte: false }])[0]).toMatch(/^Sua velocidade/);
   });
 
+  it('v3.07: a mudança de papel pela confiança do técnico abre as frases do semestre', () => {
+    const f = [{ atributo: 'passe' as const, sentido: 'sobe' as const, forte: false }];
+    expect(semesterLines(f, 'sobe')[0]).toBe(t('ui.evolucao.confianca.sobe'));
+    expect(semesterLines(f, 'desce')[0]).toBe(t('ui.evolucao.confianca.desce'));
+    expect(semesterLines(f, 'sobe')).toHaveLength(2);
+    expect(semesterLines(f)).toHaveLength(1);
+    expect(t('ui.evolucao.confianca.sobe')).not.toMatch(/\d/);
+  });
+
   it('o jogador leva a faixa da torcida do clube atual, e cada temporada a faixa daquele clube', () => {
     const v = { ...viewAt(3), clubId: 'flamengo', idolatrias: { flamengo: 60, bahia: 80 }, seasons: [{ ...viewAt(3).seasons[0]!, clubId: 'bahia' }] };
     const p = toDecisionPlayer(v, INPUT, LOOK);

@@ -46,8 +46,8 @@ export function updateForm(form: number, overall: number, clubRep: number, rng: 
 }
 
 /** Moral (0–1): minutos acima/abaixo do prometido e resultado do time (−1 a 1). */
-export function updateMorale(morale: number, minutes: number, role: Role, teamResult: number): number {
-  return clamp01(morale + (minutes - MINUTES_OF[role]) * cfg.moral.pesoMinutos + teamResult * cfg.moral.pesoResultado);
+export function updateMorale(morale: number, minutes: number, role: Role, teamResult: number, scale = 1): number {
+  return clamp01(morale + ((minutes - MINUTES_OF[role]) * cfg.moral.pesoMinutos + teamResult * cfg.moral.pesoResultado) * scale);
 }
 
 // T28c (SPEC 6.12, v2.28/v2.50): a proposta mostra os minutos previstos e o nível do clube em faixa de texto, sem número.
