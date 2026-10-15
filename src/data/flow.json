@@ -7,6 +7,8 @@
  "propostasNaTela": { "rapido": true, "normal": true, "completo": true },
  "_emprestimoNaTela": "v2.64: a decisão de empréstimo (clube de destino à vista) vai à tela no Normal e no Completo; no Rápido, o temperamento decide.",
  "emprestimoNaTela": { "rapido": false, "normal": true, "completo": true },
+ "_vendaNaTela": "v3.05: a venda pelo empresário (v2.64) é decisão de transferência: vai à tela no Normal e no Completo, fora da conta de decisões por temporada; no Rápido, o temperamento decide.",
+ "vendaNaTela": { "rapido": false, "normal": true, "completo": true },
  "passosCriacao": ["quemE", "visual", "emCampo", "origem"],
  "telas": {
   "abertura": { "NOVA_CARREIRA": "criacao", "CONTINUAR": "temporada", "SAVE_INVALIDO": "saveInvalido" },

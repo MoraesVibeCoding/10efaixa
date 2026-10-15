@@ -3,6 +3,7 @@ import { memoryTextParams } from './memoryText';
 import events from '../../data/events.json';
 import { NATIONAL_PREFIX } from '../../art/kits';
 import type { DecisionView } from '../../engine/career';
+import { SALE_EVENT } from '../../engine/proposals';
 import { idolBand, type Feedback } from '../../engine/feedback';
 import { titleId } from '../../engine/titleId';
 import { t } from '../../i18n';
@@ -11,7 +12,6 @@ import type { DecisionProps } from './Decision';
 import { previewAvatar, type Look } from './look';
 
 /** v2.64: a venda fechada pelo empresário traz o clube comprador. */
-const SALE_EVENT = 'empresario-forca-venda';
 
 // T51 (b): o que o motor sabe na hora da decisão vira a ficha da tela. A carreira começa aos 16 anos, em 2026.
 /** A carreira começa aos 16 anos, em 2026 (página 1 do álbum). */

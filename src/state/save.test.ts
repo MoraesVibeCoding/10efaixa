@@ -69,10 +69,11 @@ describe('save da carreira (T54)', () => {
     expect(validateSave({ ...SAVE, choices: ['opcao-que-nao-existe'] })).toEqual({ ok: false, reason: 'danificado' });
   });
 
-  // v2.85 (fim de carreira na janela de propostas) e v2.89 (ideias da reunião sem foco no teto) mudaram as decisões que aparecem
-  it('v2.63–v2.89: saves das versões 1 a 10 viram carreira de outra versão (camisa 10, empréstimo e venda, gol pela Seleção, ordem das cenas, fim de carreira e ideias da reunião mudaram a sequência de decisões)', () => {
-    expect(SAVE_VERSION).toBe(11);
-    for (const versao of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) expect(parseSave(JSON.stringify({ ...SAVE, versao }))).toEqual({ ok: false, reason: 'versao' });
+  // v2.85 (fim de carreira na janela de propostas) e v2.89 (ideias da reunião sem foco no teto) mudaram as decisões que aparecem;
+  // v3.05: a venda pelo empresário na tela do Normal também
+  it('v2.63–v3.05: saves das versões 1 a 11 viram carreira de outra versão (camisa 10, empréstimo e venda, gol pela Seleção, ordem das cenas, fim de carreira, ideias da reunião e venda na tela do Normal mudaram a sequência de decisões)', () => {
+    expect(SAVE_VERSION).toBe(12);
+    for (const versao of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]) expect(parseSave(JSON.stringify({ ...SAVE, versao }))).toEqual({ ok: false, reason: 'versao' });
   });
 });
 
