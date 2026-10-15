@@ -114,3 +114,38 @@ def test_conferir_generico_aceita_magenta_e_ciano():
     img = fundo()
     img[10:30, 10:30] = (230, 20, 220)
     assert conferir(img, generico=True) == []
+
+
+def test_recolorir_troca_magenta_e_ciano_mantendo_a_sombra():
+    from piloto import recolorir
+    img = fundo()
+    img[10:20, 10:30] = (230, 20, 220)   # magenta claro
+    img[20:30, 10:30] = (115, 10, 110)   # magenta na sombra
+    img[40:50, 10:30] = (20, 220, 230)   # ciano
+    out = recolorir(img, magenta=(200, 16, 46), ciano=(20, 20, 22))
+    claro, sombra, ciano = out[15, 20].astype(int), out[25, 20].astype(int), out[45, 20].astype(int)
+    assert claro[0] > 150 and claro[1] < 60 and claro[2] < 80      # vermelho
+    assert sombra[0] < claro[0]                                      # sombra preservada
+    assert ciano.max() < 60                                          # ciano virou escuro
+    assert (out[60:, :] == img[60:, :]).all()                        # resto da cena intacto
+
+
+def test_recolorir_ignora_pontos_soltos_da_cor_no_fundo():
+    from piloto import recolorir
+    img = fundo(200, 160)
+    img[100:160, 40:100] = (20, 220, 230)   # calção ciano
+    img[10:13, 120:123] = (30, 140, 200)    # pontinho azulado da janela
+    out = recolorir(img, ciano=(20, 20, 22))
+    assert out[130, 70].max() < 60
+    assert (out[10:13, 120:123] == img[10:13, 120:123]).all()
+
+
+def test_recolorir_pega_a_luz_de_borda_colada_e_poupa_o_fundo_laranja():
+    from piloto import recolorir
+    img = fundo(200, 160)
+    img[60:140, 40:100] = (230, 20, 220)    # camisa magenta
+    img[60:140, 34:40] = (240, 120, 125)    # luz de borda salmão, colada na camisa (6 px)
+    img[60:140, 100:106] = (247, 180, 88)   # céu laranja do pôr do sol, colado do outro lado
+    out = recolorir(img, magenta=(22, 22, 24))
+    assert out[100, 35].max() < 120                                   # filete trocado
+    assert (out[60:140, 100:106] == img[60:140, 100:106]).all()       # céu intacto
