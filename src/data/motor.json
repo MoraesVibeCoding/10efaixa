@@ -1,0 +1,28 @@
+{
+ "_nota": "v3.07 (proposta em docs/proposta-motor-decisoes.md, aguardando aprovação): decisões, liga e clube pesam em tempo de jogo, evolução e valor. Desligado até o DE ACORDO.",
+ "ligado": false,
+ "escalacao": { "pontosMax": 8, "pesos": { "tecnico": 0.4, "moral": 0.3, "disciplina": 0.2, "torcida": 0.1 } },
+ "evolucao": {
+  "minutos": { "min": 0.25, "max": 1.15 },
+  "moral": { "min": 0.65, "max": 1.35 },
+  "tecnico": { "min": 0.92, "max": 1.08 },
+  "disciplina": { "min": 0.94, "max": 1.06 },
+  "produtoDecisoes": { "min": 0.5, "max": 1.6 },
+  "recuperacaoMoral": 0.6,
+  "declinioDisciplina": { "disciplina1": 0.85, "disciplina0": 1.15 },
+  "cartoesDisciplina": { "base": 1.6 }
+ },
+ "valor": { "crescimentoPorPonto": 0.05, "crescimento": { "min": 0.8, "max": 1.3 } },
+ "ligas": {
+  "_nota": "Ranking definido pelo usuário em 2026-10-15. valor e evolucao relativos ao Brasileirão Série A (= 1).",
+  "niveis": {
+   "1": { "valor": 1.9, "evolucao": 1.10 }, "2": { "valor": 1.6, "evolucao": 1.08 }, "3": { "valor": 1.45, "evolucao": 1.06 },
+   "4": { "valor": 1.35, "evolucao": 1.05 }, "5": { "valor": 1.2, "evolucao": 1.03 }, "6": { "valor": 1.1, "evolucao": 1.02 },
+   "7": { "valor": 1.0, "evolucao": 1.0 }, "8": { "valor": 0.85, "evolucao": 0.97 }
+  },
+  "porLiga": { "ENG": "1", "ESP": "1", "GER": "2", "FRA": "3", "ITA": "4", "POR": "5", "OUTROS": "6", "BRA-A": "7" },
+  "valorBrasil": { "BRA-A": 1.0, "BRA-B": 0.8, "BRA-C": 0.7, "BRA-D": 0.7, "BRA-E": 0.7 },
+  "padrao": "8",
+  "clubes": { "bayern": "1", "psg": "1", "inter": "2" }
+ }
+}

@@ -32,6 +32,8 @@ export interface SemesterContext {
   staffQuality: number;
   minutes: number;
   morale: number;
+  /** v3.07 (motor.json, desligado até aprovação): fatores já calculados de minutos, decisões e liga, e o do declínio. */
+  motor?: { minutes: number; decisions: number; league: number; decline: number };
 }
 
 const inRange = (x: number, lo: number, hi: number) => Number.isFinite(x) && x >= lo && x <= hi;
@@ -74,8 +76,8 @@ export function evolveSemester(state: EvoState, ctx: SemesterContext, rng: Prng)
     build: build.build,
   });
 
-  const minutes = cfg.minMinutesFactor + (1 - cfg.minMinutesFactor) * ctx.minutes;
-  const morale = cfg.morale.min + cfg.morale.span * ctx.morale;
+  const minutes = ctx.motor ? ctx.motor.minutes : cfg.minMinutesFactor + (1 - cfg.minMinutesFactor) * ctx.minutes;
+  const morale = ctx.motor ? ctx.motor.decisions * ctx.motor.league : cfg.morale.min + cfg.morale.span * ctx.morale;
   const attributes = { ...state.attributes };
   for (const a of ATTRIBUTES) {
     const role = a === main ? 'main' : a === secondary ? 'secondary' : 'none';
@@ -85,7 +87,7 @@ export function evolveSemester(state: EvoState, ctx: SemesterContext, rng: Prng)
     const delta = c > 0
       ? cfg.basePerSemester * c * cfg.focusGrow[role] * ctx.staffQuality * minutes * morale
         * Math.max(0, 1 - (cur / caps[a]) ** cfg.k) * noise * (state.growthBonus?.[a] ?? 1)
-      : cfg.basePerSemester * c * cfg.focusDecline[role] * (state.declineFactor ?? 1);
+      : cfg.basePerSemester * c * cfg.focusDecline[role] * (state.declineFactor ?? 1) * (ctx.motor?.decline ?? 1);
     const whole = Math.floor(delta);
     const step = whole + (rng.next() < delta - whole ? 1 : 0);
     attributes[a] = Math.max(1, Math.min(caps[a], cur + step));

@@ -7,11 +7,11 @@ type Temp = keyof typeof cfg.cartoes.temperamento;
 const factor = (t: string) => cfg.cartoes.temperamento[t as Temp] ?? 1;
 
 /** Cartões do semestre (sempre 3 sorteios). Vermelhos e suspensão longa custam minutos do semestre seguinte. */
-export function semesterCards(p: { temperament: string; minutes: number }, rng: Prng): DisciplineSemester {
+export function semesterCards(p: { temperament: string; minutes: number; disciplineFactor?: number }, rng: Prng): DisciplineSemester {
   const c = cfg.cartoes;
   const [u1, u2, u3] = [rng.next(), rng.next(), rng.next()];
   if (p.minutes <= 0) return { yellows: 0, reds: 0, longSuspension: false, minutesLost: 0 };
-  const k = factor(p.temperament) * p.minutes;
+  const k = factor(p.temperament) * p.minutes * (p.disciplineFactor ?? 1);
   const yellows = Math.round(c.amarelosPorSemestre * k * (0.5 + u1));
   const pRed = c.vermelhosPorSemestre * k;
   const reds = u2 < pRed * pRed ? 2 : u2 < pRed ? 1 : 0;
