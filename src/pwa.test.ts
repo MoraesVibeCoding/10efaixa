@@ -37,8 +37,10 @@ describe('ícone e manifesto do app', () => {
     const html = readFileSync(resolve(root, 'index.html'), 'utf8');
     expect(html).toContain('<link rel="icon" href="/icon.svg?v=281" type="image/svg+xml" />');
     expect(html).toContain('<link rel="icon" href="/favicon-32.png?v=281" sizes="32x32" type="image/png" />');
-    // v3.02: o iOS lê esta tag exatamente assim (PNG 180, sem parâmetro na URL); o ?v= da v2.99 saiu daqui
-    expect(html).toContain('<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />');
+    // v3.03: nome novo do arquivo (o iPhone guardava a falha do nome antigo e mostrava a letra "1")
+    expect(html).toContain('<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-281.png" />');
+    expect(pngSize('apple-touch-icon-281.png')).toEqual([180, 180]);
+    expect(readFileSync(pub('apple-touch-icon-281.png'))[25]).toBe(2);
     expect(html).toContain('<link rel="manifest" href="/manifest.webmanifest?v=281" />');
     expect(existsSync(pub('icon.svg'))).toBe(true);
     expect(pngSize('favicon-32.png')).toEqual([32, 32]);

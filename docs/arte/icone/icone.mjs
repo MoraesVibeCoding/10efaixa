@@ -71,6 +71,8 @@ if (process.argv[1] && process.argv[1].endsWith('icone.mjs')) {
   await png('icon-maskable-512.png', 512, { scale: 0.8 });
   // v2.99: o iOS pede este nome na raiz antes de ler o <link>; e o favicon.ico, que vários navegadores pedem sozinhos
   await png('apple-touch-icon-precomposed.png', 180, {});
+  // v3.03: o mesmo ícone com nome novo, ligado no index.html (o iPhone guardava a falha do nome antigo)
+  await png('apple-touch-icon-281.png', 180, {});
   const ico = [];
   for (const size of [16, 32, 48]) ico.push({ size, png: await png(null, size, {}) });
   writeFileSync(out('favicon.ico'), icoFromPngs(ico));
