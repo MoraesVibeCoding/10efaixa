@@ -166,6 +166,15 @@
    "noClubeDeCoracao": "Logo no clube que você sempre sonhou defender, e agora você assiste de fora."
   }
  },
+ "posicao-novo-clube": {
+  "titulo": "Onde você vai jogar aqui?",
+  "texto": "Primeiro treino no clube novo e o técnico chama você: chegou jogando como {posicaoAtual}, mas se formou como {posicao}. Ele quer saber onde você rende mais. O empresário diz que a posição nova te valoriza; seu pai só fala da antiga.",
+  "opcoes": {
+   "seguir": "Seguir como {posicaoAtual}",
+   "voltar": "Pedir para voltar a ser {posicao}",
+   "tecnico-decide": "Deixar o técnico escolher onde você rende"
+  }
+ },
  "mudanca-posicao": {
   "titulo": "O técnico quer você em outra posição",
   "texto": "O técnico te chamou no canto do campo com a prancheta na mão. Falta gente para jogar como {posicao} e ele acha que você rende lá. Pode ser o caminho para jogar mais, ou para virar quebra-galho.",
