@@ -332,6 +332,21 @@
   }
  },
  "resumoTemporada": {
+  "estado": {
+   "titulo": "Como você terminou o ano",
+   "rotulo": { "tecnico": "Técnico", "moral": "Moral", "disciplina": "Disciplina", "torcida": "Torcida" },
+   "faixa": {
+    "tecnico": { "baixa": "Desconfiado de você", "media": "Ainda te observa", "alta": "Confia em você" },
+    "moral": { "baixa": "Lá embaixo", "media": "Normal", "alta": "Lá em cima" },
+    "disciplina": { "baixa": "Solta demais", "media": "Regular", "alta": "Exemplar" }
+   },
+   "sentido": { "sobe": "subiu", "desce": "caiu", "igual": "igual" },
+   "causa": {
+    "poucosMinutos": "Jogou pouco, e a moral sentiu.",
+    "jogouMuito": "Jogou quase tudo: o técnico passou a contar com você.",
+    "disciplina": "A disciplina escorregou neste ano."
+   }
+  },
   "semJogos": "Ano de formação: nenhum jogo como profissional ainda, mas cada treino contou.",
   "titulo": "Resumo da temporada",
   "sinais": "Fique de olho",

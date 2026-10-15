@@ -517,6 +517,8 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
     const ovStart = ov(evo);
     const wealthStart = wealth;
     const attrsStart = { ...evo.attributes };
+    // v3.12: técnico, moral, disciplina e torcida no começo do ano, para o "Como você terminou o ano"
+    const estadoStart = { tecnico: coachRelation, moral: morale, disciplina: discipline, torcida: idol[seasonClub] ?? 0 };
 
     for (let sem = 0; sem < 2; sem++) {
       let minutes: number;
@@ -831,6 +833,7 @@ export function simulateCareer(input: CreationInput, seed: number, startYear = 2
         overallBefore: ovStart, overallAfter: ov(evo), attrsBefore: attrsStart, attrsAfter: evo.attributes, titles: titles.filter((t) => t.year === year).map(titleId),
         // v2.85: os avisos (a próxima checagem de aposentadoria é no fim da temporada que vem)
         sinais: seasonSignals(signalsNow),
+        estado: { antes: estadoStart, depois: { tecnico: coachRelation, moral: morale, disciplina: discipline, torcida: idol[seasonClub] ?? 0 } },
       });
       prevSignals = activeSignals(signalsNow);
     }

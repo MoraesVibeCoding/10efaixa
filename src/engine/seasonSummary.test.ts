@@ -56,3 +56,56 @@ describe('resumo da temporada (v2.61)', () => {
     expect(seen.some((u) => u.partidas > 0)).toBe(true);
   });
 });
+
+// v3.12 (opção 1, escolhida pelo usuário em 2026-10-15): "Como você terminou o ano": técnico, moral, disciplina e torcida
+// em faixa de palavras e sentido do ano, na ordem de peso do motor (v3.07); sem número; uma causa curta quando houver.
+describe('como você terminou o ano (v3.12)', () => {
+  const estado = (antes: Partial<Record<'tecnico' | 'moral' | 'disciplina' | 'torcida', number>>, depois: typeof antes) => ({
+    antes: { tecnico: 0.5, moral: 0.5, disciplina: 0.5, torcida: 20, ...antes }, depois: { tecnico: 0.5, moral: 0.5, disciplina: 0.5, torcida: 20, ...depois },
+  });
+
+  it('os 4 itens na ordem do motor, com faixa e sentido', () => {
+    const s = summarizeSeason({ ...base, estado: estado({ tecnico: 0.5, moral: 0.6 }, { tecnico: 0.8, moral: 0.3, torcida: 60 }) });
+    expect(s.estado.map((e) => e.id)).toEqual(['tecnico', 'moral', 'disciplina', 'torcida']);
+    expect(s.estado[0]).toEqual({ id: 'tecnico', faixa: 'alta', sentido: 'sobe' });
+    expect(s.estado[1]).toEqual({ id: 'moral', faixa: 'baixa', sentido: 'desce' });
+    expect(s.estado[2]).toEqual({ id: 'disciplina', faixa: 'media', sentido: 'igual' });
+    expect(s.estado[3]).toEqual({ id: 'torcida', faixa: 'querido', sentido: 'sobe' });
+  });
+
+  it('variação pequena conta como igual', () => {
+    const s = summarizeSeason({ ...base, estado: estado({ moral: 0.5 }, { moral: 0.51 }) });
+    expect(s.estado[1]!.sentido).toBe('igual');
+  });
+
+  it('a causa: poucos minutos com moral em queda; muitos minutos com técnico subindo; disciplina em queda', () => {
+    expect(summarizeSeason({ ...base, minutes: 0.2, estado: estado({ moral: 0.6 }, { moral: 0.4 }) }).causa).toBe('poucosMinutos');
+    expect(summarizeSeason({ ...base, minutes: 0.9, estado: estado({ tecnico: 0.5 }, { tecnico: 0.7 }) }).causa).toBe('jogouMuito');
+    expect(summarizeSeason({ ...base, estado: estado({ disciplina: 0.7 }, { disciplina: 0.5 }) }).causa).toBe('disciplina');
+    expect(summarizeSeason({ ...base, estado: estado({}, {}) }).causa).toBeNull();
+  });
+
+  it('sem estado (várzea, base), a lista vem vazia', () => {
+    expect(summarizeSeason(base).estado).toEqual([]);
+  });
+});
+
+describe('como você terminou o ano na carreira (v3.12)', () => {
+  it('a última temporada profissional traz os 4 itens; a torcida bate com a faixa do clube da temporada', { timeout: 120_000 }, () => {
+    let checked = 0;
+    const sentidos = new Set<string>();
+    for (const seed of [1, 2, 3]) {
+      simulateCareer(randomInput(createPrng(seed)), seed, 2026, (e, t, view) => {
+        const u = view().ultimaTemporada;
+        if (u) {
+          expect(u.estado.map((x) => x.id)).toEqual(['tecnico', 'moral', 'disciplina', 'torcida']);
+          for (const x of u.estado) sentidos.add(x.sentido);
+          checked++;
+        }
+        return autoDecide(e, t, view);
+      });
+    }
+    expect(checked).toBeGreaterThan(10);
+    expect([...sentidos].sort()).toEqual(['desce', 'igual', 'sobe']);
+  });
+});

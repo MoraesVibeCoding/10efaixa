@@ -1,7 +1,7 @@
 import cfg from '../data/seasonSummary.json';
 import minutesCfg from '../data/minutes.json';
 import { ATTRIBUTES, type Attribute, type Attributes } from './attributes';
-import type { Feedback } from './feedback';
+import { idolBand, type Feedback } from './feedback';
 import type { Signal } from './signals';
 
 // v2.61 (SPEC 6.15): resumo da temporada, mostrado num card por cima da próxima tela no Normal e no Completo. Puro e determinístico:
@@ -20,7 +20,15 @@ export interface SeasonSummaryInput {
   titles: string[];
   /** v2.85: os sinais do que está para acontecer (signals.ts), na ordem de urgência. */
   sinais?: Signal[];
+  /** v3.12: técnico, moral, disciplina (0–1) e torcida (idolatria no clube) no começo e no fim do ano. */
+  estado?: { antes: EstadoValores; depois: EstadoValores };
 }
+export interface EstadoValores { tecnico: number; moral: number; disciplina: number; torcida: number }
+export type EstadoId = keyof EstadoValores;
+export type Sentido = 'sobe' | 'desce' | 'igual';
+/** v3.12: a faixa (baixa, media, alta; a torcida em faixa de idolatria) e o sentido do ano, sem número. */
+export interface EstadoItem { id: EstadoId; faixa: string; sentido: Sentido }
+export type Causa = 'poucosMinutos' | 'jogouMuito' | 'disciplina';
 export type Evolucao = 'grande' | 'boa' | 'estavel' | 'queda';
 export type MinutosFaixa = 'muitos' | 'rodizio' | 'poucos';
 export interface SeasonSummary {
@@ -37,6 +45,28 @@ export interface SeasonSummary {
   comentario: { evolucao: Evolucao; minutos: MinutosFaixa; destaque: Attribute | null; titulo: boolean };
   /** v2.85: avisos de corpo, nível, último ano, contrato sem propostas e apertos da vida (texto em resumoTemporada.sinal). */
   sinais: Signal[];
+  /** v3.12: "Como você terminou o ano", na ordem de peso do motor; vazio sem estado. */
+  estado: EstadoItem[];
+  causa: Causa | null;
+}
+
+const ESTADO_ORDEM: EstadoId[] = ['tecnico', 'moral', 'disciplina', 'torcida'];
+function estadoOf(e: NonNullable<SeasonSummaryInput['estado']>): EstadoItem[] {
+  const c = cfg.estado;
+  return ESTADO_ORDEM.map((id) => {
+    const de = e.antes[id], para = e.depois[id];
+    const min = id === 'torcida' ? c.torcidaMuda : c.mudaMin;
+    const sentido: Sentido = para - de >= min ? 'sobe' : de - para >= min ? 'desce' : 'igual';
+    const faixa = id === 'torcida' ? idolBand(para) : para <= c.baixaAte ? 'baixa' : para >= c.altaDesde ? 'alta' : 'media';
+    return { id, faixa, sentido };
+  });
+}
+function causaOf(estado: EstadoItem[], minutos: MinutosFaixa): Causa | null {
+  const s = (id: EstadoId) => estado.find((e) => e.id === id)?.sentido;
+  if (minutos === 'poucos' && s('moral') === 'desce') return 'poucosMinutos';
+  if (minutos === 'muitos' && s('tecnico') === 'sobe') return 'jogouMuito';
+  if (s('disciplina') === 'desce') return 'disciplina';
+  return null;
 }
 
 const evolucaoOf = (pct: number): Evolucao => (pct >= cfg.pct.grande ? 'grande' : pct >= cfg.pct.boa ? 'boa' : pct > cfg.pct.queda ? 'estavel' : 'queda');
@@ -60,11 +90,13 @@ export function summarizeSeason(i: SeasonSummaryInput): SeasonSummary {
   const pct = Math.round(((i.overallAfter - i.overallBefore) / i.overallBefore) * 100);
   const mudancas = yearChanges(i.attrsBefore, i.attrsAfter);
   const subiu = mudancas.find((m) => m.sentido === 'sobe');
+  const estado = i.estado ? estadoOf(i.estado) : [];
   return {
     year: i.year, age: i.age, clubId: i.clubId, division: i.division,
     partidas: i.games, gols: i.goals, assistencias: i.assists, semSofrerGol: i.cleanSheets ?? 0, goleiro: i.goleiro ?? false,
     overallDe: i.overallBefore, overallPara: i.overallAfter, pct, mudancas, titulos: [...i.titles],
     comentario: { evolucao: evolucaoOf(pct), minutos: minutosOf(i.minutes), destaque: subiu?.atributo ?? null, titulo: i.titles.length > 0 },
     sinais: [...(i.sinais ?? [])],
+    estado, causa: i.estado ? causaOf(estado, minutosOf(i.minutes)) : null,
   };
 }
