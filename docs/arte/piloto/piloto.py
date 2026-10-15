@@ -91,6 +91,11 @@ def recorta_4x5(img):
     return img[:min(h, round(w * 5 / 4))]
 
 
+def custo_estimado(imagens, por_imagem):
+    """Custo em US$ de um lote, pelo valor por imagem entregue de piloto.json (as falhas já estão no valor)."""
+    return round(imagens * por_imagem, 2)
+
+
 def destino_no_jogo(cena, visual, clube):
     """Caminho em src/assets/piloto: a cena sem o número da pasta de arte, o clube e o id do visual."""
     return f"{cena.split('-', 1)[1]}/{clube}/visual-{visual:02d}.webp"
@@ -162,7 +167,9 @@ def main():
                 Image.fromarray(img).save(os.path.join(saida, nome + '.webp'), quality=82)
             relatorio[nome] = item
             json.dump(relatorio, open(rel_path, 'w'), indent=1, ensure_ascii=False)
-    print('chamadas:', chamadas)
+    entregues = sum(1 for x in relatorio.values() if x['motivos'] == [])
+    print('chamadas:', chamadas, '| entregues:', entregues,
+          '| custo estimado: US$', custo_estimado(entregues, cfg['custo']['porImagemUSD']))
 
 
 if __name__ == '__main__':
