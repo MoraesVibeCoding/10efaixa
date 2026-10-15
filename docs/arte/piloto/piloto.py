@@ -95,6 +95,57 @@ def conferir(img, generico=False):
     return motivos
 
 
+def _peso_cor(a, chave):
+    """Quanto cada pixel é da cor-chave (0..1) pelo matiz (magenta ~300°, ciano ~185°) e pela saturação, com borda
+    suave para o contorno antialiasado e as áreas de sombra e reflexo."""
+    r, g, b = a[..., 0] / 255, a[..., 1] / 255, a[..., 2] / 255
+    mx, mn = np.maximum(np.maximum(r, g), b), np.minimum(np.minimum(r, g), b)
+    d = mx - mn + 1e-6
+    h = np.where(mx == r, ((g - b) / d) % 6, np.where(mx == g, (b - r) / d + 2, (r - g) / d + 4)) * 60
+    sat = d / (mx + 1e-6)
+    centro, largura = (305, 50) if chave == 'magenta' else (187, 28)
+    dist = np.abs((h - centro + 180) % 360 - 180)
+    w_h = np.clip((largura - dist) / 12, 0, 1)
+    w_s = np.clip((sat - 0.18) / 0.17, 0, 1) * (mx > 0.12)
+    w = w_h * w_s
+    # contorno: a luz de borda deixa um filete rosado em volta da peça; até 4 px fora dela, ainda no tom, também troca
+    from scipy import ndimage as ndi
+    # só as peças de roupa: pontos soltos no tom (céu, janela, sombra azulada) ficam como estão
+    rot, n = ndi.label(w > 0.5)
+    if n:
+        tam = ndi.sum(np.ones_like(w), rot, range(1, n + 1))
+        grandes = np.isin(rot, 1 + np.nonzero(tam >= max(50, 0.05 * tam.max()))[0])
+    else:
+        grandes = np.zeros_like(w, bool)
+    w = w * ndi.binary_dilation(grandes, iterations=2)
+    # a borda cresce a partir da peça só por vizinhos no tom (até 8 px): pega a luz salmão do contorno e para no
+    # fundo (céu laranja, sombra marrom), que não encosta no tom
+    tom = (dist < largura + 15) * (sat > 0.2) * (mx > 0.15)
+    borda = ndi.binary_dilation(grandes, iterations=8, mask=tom | grandes)
+    return np.maximum(w, borda.astype(float))
+
+
+def recolorir(img, magenta=None, ciano=None):
+    """v3.04: troca magenta e ciano por cores lisas (RGB), mantendo a luz e a sombra da pintura; o resto fica igual.
+    A sombra vem do brilho de cada pixel em relação ao mais claro da peça."""
+    a = img.astype(float)
+    out = a.copy()
+    for chave, cor in (('magenta', magenta), ('ciano', ciano)):
+        if cor is None:
+            continue
+        w = _peso_cor(a, chave)
+        if not w.any():
+            continue
+        brilho = a.max(axis=-1)
+        ref = np.percentile(brilho[w > 0.5], 95) if (w > 0.5).any() else 255
+        luz = np.clip(brilho / max(ref, 1), 0, 1.15)[..., None]
+        alvo = np.array(cor, float)
+        # cor escura: sobe um pouco com a luz para o tecido não virar uma mancha chapada
+        pintado = alvo * luz + (np.clip(luz - 0.6, 0, None) * 60 if alvo.max() < 60 else 0)
+        out = out * (1 - w[..., None]) + np.clip(pintado, 0, 255) * w[..., None]
+    return out.round().astype(np.uint8)
+
+
 def recorta_4x5(img):
     """De 2:3 para 4:5 cortando embaixo (a ação fica nos 60% de cima; a faixa de baixo é escura)."""
     h, w = img.shape[:2]
