@@ -1,7 +1,14 @@
-# Proposta: as decisões pesam em tempo de jogo e evolução (v3.07, motor)
+# Proposta: decisões, liga e clube pesam em tempo de jogo, evolução e valor (v3.07, motor)
 
-Pedido do usuário em 2026-10-15: "principalmente em tempo de jogo e curva de evolução isso deve interferir mais".
-Status: **aguardando DE ACORDO**. Nada entra no código antes.
+Pedidos do usuário em 2026-10-15:
+1. "principalmente em tempo de jogo e curva de evolução isso deve interferir mais";
+2. tempo de jogo pelos fatores, nesta ordem de importância: **confiança do técnico, moral, disciplina, apoio da torcida**;
+3. na evolução, o **tempo de jogo e a moral** devem pesar mais;
+4. o valor de mercado deve considerar o **crescimento do over** e a **relevância do time e da liga**;
+5. as ligas ganham peso no valor e no over, num ranking definido pelo usuário (seção 2.4).
+
+Status: **aguardando DE ACORDO**. Nada entra no código antes. Todos os números abaixo são o ponto de partida da
+calibragem; ficam em `src/data` (nunca fixos no código) e nenhum número de atributo aparece ao jogador.
 
 ## 1. O problema, medido
 
@@ -14,80 +21,114 @@ moral + relação com o técnico + disciplina ("bom"); sempre a que mais desce (
 | Bom | 87,0 | 65,8% | 86,7 | € 63,6 mi |
 | Ruim | 86,9 | 65,0% | 86,8 | € 63,7 mi |
 
-Escolher bem ou mal dá **0,1 ponto de over e 0,8 ponto percentual de minutos**. Por que:
+Escolher bem ou mal dá **0,1 ponto de over e 0,8 ponto percentual de minutos**. Hoje:
 
-- **Tempo de jogo** vem só do over comparado ao nível do elenco (`minutes.json`, curva). Moral, relação e disciplina não entram.
-- **Evolução**: a moral multiplica o crescimento de 0,8× a 1,2×, mas a moral se recupera sozinha com os minutos e o
-  resultado do time (`updateMorale`), então a escolha some em um ou dois semestres.
-- **Relação com o técnico** só pesa na reunião (40% da nota). **Disciplina** quase não faz nada (cartões vêm do temperamento).
-- **Valor de mercado** é só over e idade; ele acompanha o over e herda o mesmo efeito quase nulo.
+- **Tempo de jogo** vem só do over comparado ao nível do elenco (`minutes.json`). Os quatro fatores não entram.
+- **Evolução**: minutos multiplicam de 0,4× a 1,0×, moral de 0,8× a 1,2×, estrutura do clube de 0,8× a 1,2×. A moral
+  se recupera sozinha em um ou dois semestres, então a escolha some.
+- **Valor de mercado** é só over e idade (`marketValue`). Liga e clube entram só no salário e, para 7 clubes de elite
+  (×1,25), no valor projetado das propostas.
 
 ## 2. A mudança proposta
 
-Tudo em números de configuração (`minutes.json`, `evolution.json`, `discipline.json`), nunca fixo no código, e nenhum
-número mostrado ao jogador (só palavras e faixas, como hoje).
+### 2.1 Tempo de jogo: a confiança para escalar, semestre a semestre
 
-### 2.1 Tempo de jogo: a "confiança para escalar"
+O papel e os minutos passam a vir de um **over de escalação**, recalculado a cada semestre da temporada:
 
-O motor passa a calcular o tempo de jogo por um over de escalação:
+`over de escalação = over + bônus`, com `bônus = 8 × (0,40·T + 0,30·M + 0,20·D + 0,10·I)`
 
-`over de escalação = over + bônus da relação + bônus da forma + desconto da disciplina` (limitado a ±6 pontos)
+Cada fator vai de −1 a +1:
 
-| Parte | Regra | Faixa |
-|---|---|---|
-| Relação com o técnico | (relação − 0,5) × 8 | −4 a +4 pontos |
-| Forma (moral) | (moral − 0,5) × 4 | −2 a +2 pontos |
-| Disciplina baixa | abaixo de 0,4: −(0,4 − disciplina) × 10 | 0 a −4 pontos |
+| Ordem | Fator | Normalização | Peso | Faixa em pontos de over |
+|---|---|---|---|---|
+| 1 | Confiança do técnico (relação) | (relação − 0,5) × 2 | 40% | −3,2 a +3,2 |
+| 2 | Moral | (moral − 0,5) × 2 | 30% | −2,4 a +2,4 |
+| 3 | Disciplina | (disciplina − 0,5) × 2 | 20% | −1,6 a +1,6 |
+| 4 | Apoio da torcida (idolatria no clube) | idolatria ÷ 100 | 10% | −0,8 a +0,8 |
+| | **Total** | | | **−8 a +8** |
 
-Na zona de disputa da curva, cada ponto vale cerca de 9 pontos percentuais de minutos. Um técnico que confia
-(relação 0,9) dá +3,2 pontos, cerca de **+28 pp de minutos**; um técnico que desconfia (0,2) tira 2,4 pontos, cerca de
-**−22 pp**. O papel na tela (titular, disputa, reserva) passa a seguir o over de escalação, então o jogador vê o efeito.
+Na zona de disputa da curva de minutos, cada ponto vale cerca de 9 pontos percentuais. Exemplos:
+- técnico confiando (0,9), moral boa (0,8): +2,6 + 1,4 = +4 pontos, cerca de **+35 pp de minutos**;
+- técnico desconfiado (0,2), moral baixa (0,3): −1,9 − 1,2 = −3,1 pontos, cerca de **−28 pp**.
 
-### 2.2 Curva de evolução
+O papel mostrado na tela (titular, disputa, reserva) segue o over de escalação, então o jogador vê o efeito.
 
-O crescimento do semestre ganha dois fatores novos, e a moral fica mais forte:
+### 2.2 Curva de evolução: tempo de jogo e moral pesam mais
 
 | Fator | Hoje | Proposta |
 |---|---|---|
-| Moral | 0,8× a 1,2× | 0,7× a 1,3× |
-| Relação com o técnico (atenção no treino) | — | 0,9× a 1,1× |
-| Disciplina (cuidado com o corpo) | — | 0,85× a 1,1× |
-| Produto dos três | 0,8× a 1,2× | limitado a 0,6× a 1,45× |
+| **Tempo de jogo** | 0,4× (sem jogar) a 1,0× | **0,25× a 1,15×** (quem joga muito cresce mais) |
+| **Moral** | 0,8× a 1,2× | **0,65× a 1,35×** |
+| Confiança do técnico (atenção no treino) | — | 0,92× a 1,08× |
+| Disciplina (cuidado com o corpo) | — | 0,94× a 1,06× |
+| Apoio da torcida | — | não entra (fica só no tempo de jogo) |
+| Nível da liga (2.4) | — | 0,97× a 1,10× |
+| Estrutura do clube | 0,8× a 1,2× | igual |
+| **Produto dos fatores de decisão** | 0,8× a 1,2× | limitado a **0,5× a 1,6×** |
 
-Somado ao efeito dos minutos (que já multiplicam a evolução de 0,4× a 1,0×), a diferença entre uma carreira bem e
-mal cuidada vira alguns pontos de over no pico, não décimos.
+Além disso:
+- **A moral não esquece tão rápido:** a recuperação natural fica 40% mais lenta (`pesoMinutos` e `pesoResultado` × 0,6).
+- **Veterano disciplinado dura mais:** o declínio vai de 0,85× (disciplina 1) a 1,15× (disciplina 0).
+- **Cartões:** a taxa passa a ser temperamento × (1,6 − disciplina), de 0,6× a 1,6×. Mais cartões já tiram minutos.
 
-### 2.3 Disciplina no fim da carreira e nos cartões
+### 2.3 Valor de mercado: over, idade, crescimento, clube e liga
 
-- **Declínio:** disciplina alta retarda a queda do veterano. O fator de declínio vai de 0,85× (disciplina 1) a 1,15× (disciplina 0).
-- **Cartões:** a taxa passa a ser temperamento × (1,6 − disciplina), ou seja, de 0,6× a 1,6×. Mais cartões tiram minutos (regra que já existe).
+`valor = valor base (over, idade) × fator do crescimento × fator da liga × fator do clube`
 
-### 2.4 A moral não "esquece" tão rápido
+| Parte | Regra | Faixa |
+|---|---|---|
+| Valor base | a curva de hoje (over e idade) | igual |
+| Crescimento do over | variação do over no último ano: +1 ponto = +5%, −1 ponto = −5% | 0,8× a 1,3× |
+| Liga | o nível da liga onde joga (2.4) | 0,7× a 1,9× |
+| Clube | os clubes de exceção da 2.4 sobem um nível; a elite de hoje (×1,25) passa a valer também no valor atual, não só na projeção | 1,0× a 1,25× |
 
-Hoje a moral volta ao normal com os minutos em um ou dois semestres. Proposta: a recuperação natural fica 40% mais lenta
-(`pesoMinutos` e `pesoResultado` × 0,6), para a escolha ainda valer no semestre seguinte.
+O valor aparece na tela como hoje (faixas e o valor em euros, regra v2.33).
 
-## 3. Critérios de aceitação (medidos com a mesma simulação de 60 carreiras)
+### 2.4 Ranking das ligas (definido pelo usuário)
 
-1. **Bom vs. ruim:** diferença de **4 a 8 pontos** no over de pico e de **15 a 30 pp** nos minutos médios.
-2. **Equilíbrio geral:** a carreira automática fica a no máximo **±2 pontos** do over de pico de hoje (87,0), recalibrando se precisar.
-3. **Valor de mercado aos 24:** a diferença bom vs. ruim fica entre **2× e 4×** (consequência do over e da idade).
-4. Determinístico (PRNG com semente), todos os números em `src/data`, nenhum número de atributo na tela.
-5. Testes unitários para cada regra nova, a simulação como teste de integração, e 100% dos testes, o typecheck e o build passando.
+Valores relativos ao Brasileirão Série A (= 1,0), que é a referência da curva de valor de hoje.
+
+| Nível | Ligas e clubes | Valor | Evolução |
+|---|---|---|---|
+| 1 | Inglesa, Espanhola; **Bayern** e **PSG** | 1,9× | 1,10× |
+| 2 | Alemã; **Inter** | 1,6× | 1,08× |
+| 3 | Francesa | 1,45× | 1,06× |
+| 4 | Italiana | 1,35× | 1,05× |
+| 5 | Portuguesa | 1,2× | 1,03× |
+| 6 | Demais ligas europeias (`OUTROS`) | 1,1× | 1,02× |
+| 7 | Brasileira: Série A / B / C / D | 1,0 / 0,8 / 0,7 / 0,7× | 1,0× |
+| 8 | Demais ligas (América do Sul, Arábia, EUA, Japão, Catar, China) | 0,85× | 0,97× |
+
+Os nomes das ligas na tela seguem descritivos (regra de nomes, `competitions.json`). Bayern, PSG e Inter só aparecem
+como identificadores de dados, como hoje.
+
+## 3. Critérios de aceitação (60 carreiras, mesma simulação)
+
+1. **Bom vs. ruim:** de **4 a 8 pontos** de diferença no over de pico e de **15 a 30 pp** nos minutos médios.
+2. **Ordem dos pesos respeitada:** ligar só a confiança do técnico mexe mais nos minutos do que ligar só a moral, que
+   mexe mais que só a disciplina, que mexe mais que só a torcida (teste automático).
+3. **Equilíbrio:** a carreira automática fica a no máximo **±2 pontos** do over de pico de hoje (87,0).
+4. **Liga:** o mesmo jogador (mesmo over e idade) vale mais na Inglaterra que na Alemanha, que na França, e assim por
+   diante, na ordem da tabela 2.4; Bayern, PSG e Inter acima das suas ligas.
+5. **Crescimento:** dois jogadores com o mesmo over, um subindo e outro caindo, têm valores diferentes.
+6. Determinístico, números em `src/data`, nenhum número de atributo na tela, testes de cada regra, e 100% dos testes,
+   typecheck e build passando.
 
 ## 4. Efeitos colaterais
 
-- **Saves:** a carreira muda para as mesmas escolhas, então o save sobe para a v13 (saves v12 viram "carreira de outra versão").
-- **Texto:** o resultado da decisão já mostra "Relação com o técnico ↑"; ganhamos uma frase curta no resumo do semestre
-  quando o papel muda por causa da confiança do técnico (ex.: "O técnico passou a confiar mais em você."), em `src/i18n/pt-BR`.
-- **Escolha automática:** não muda (segue o temperamento), mas os resultados dela mudam com as novas regras.
+- **Saves:** a mesma escolha dá outra carreira, então o save sobe para a v13 (saves v12 viram "carreira de outra versão").
+- **Propostas e salários:** o salário já é % do valor; com o fator de liga, salários na Europa sobem. Confiro o
+  equilíbrio com a medição (critério 3) e ajusto `salarioPct` se precisar.
+- **Texto novo (i18n):** frase curta no resumo do semestre quando o papel muda por confiança do técnico (ex.: "O técnico
+  passou a confiar mais em você.").
+- **Escolha automática:** continua seguindo o temperamento; só os resultados mudam.
 
-## 5. Tarefas (uma por vez, cada uma com teste antes)
+## 5. Tarefas (uma por vez, teste antes de cada uma)
 
-1. Script de medição fixo (`npm run sim`): os três jeitos e a tabela acima, como base.
-2. Over de escalação nos minutos e no papel (2.1).
-3. Fatores de evolução (2.2).
-4. Disciplina no declínio e nos cartões (2.3).
-5. Recuperação da moral mais lenta (2.4).
-6. Recalibrar até cumprir os critérios da seção 3; save v13; linha v3.07 no SPEC.
+1. Medição fixa (`npm run sim`): os três jeitos e as tabelas acima, como base.
+2. Over de escalação com os 4 fatores ponderados (2.1).
+3. Fatores de evolução, moral mais lenta, declínio e cartões (2.2).
+4. Ranking de ligas e clubes de exceção em dados (2.4).
+5. Valor de mercado com crescimento, liga e clube (2.3).
+6. Recalibrar até cumprir a seção 3; save v13; linha v3.07 no SPEC.
 7. Frase do resumo do semestre (i18n).
