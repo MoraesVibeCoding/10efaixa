@@ -3,7 +3,7 @@ import { ageCurve } from './ageCurves';
 import { applyBiotype, heightAt, type Build, type Growth } from './biotype';
 import type { Prng } from './prng';
 import cfg from '../data/evolution.json';
-import { capShiftLimit } from './motor';
+import { capShiftLimits } from './motor';
 
 // Seção 6.4. Ordem fixa por semestre: compleição → altura e tetos → atributos → idade.
 export type Focus = Attribute | 'bolaParada' | 'pernaRuim';
@@ -26,7 +26,7 @@ export interface EvoState {
   /** Mentalidade: multiplicadores do ruído do crescimento e da perda por idade; ausente = 1. */
   noiseFactor?: number;
   declineFactor?: number;
-  /** v3.07 (motor.json): pontos somados aos tetos pelas decisões, acumulados na carreira; ausente = 0. */
+  /** v3.07 (motor.json): pontos somados aos tetos pelas decisões, acumulados na carreira (+limiteSubida, −limiteQueda); ausente = 0. */
   capShift?: number;
 }
 
@@ -74,8 +74,8 @@ export function evolveSemester(state: EvoState, ctx: SemesterContext, rng: Prng)
   validate(ctx);
   const { main, secondary } = ctx.focus;
   const build = nextBuild(state, main);
-  const lim = capShiftLimit();
-  const capShift = Math.max(-lim, Math.min(lim, (state.capShift ?? 0) + (ctx.motor?.capStep ?? 0)));
+  const lim = capShiftLimits();
+  const capShift = Math.max(-lim.down, Math.min(lim.up, (state.capShift ?? 0) + (ctx.motor?.capStep ?? 0)));
   const shifted = capShift === 0 ? state.baseCaps : Object.fromEntries(ATTRIBUTES.map((a) => [a, state.baseCaps[a] + capShift])) as Attributes;
   const caps = applyBiotype(shifted, {
     heightCm: heightAt(state.predictedHeightCm, state.growth, state.age),

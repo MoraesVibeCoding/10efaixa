@@ -37,7 +37,7 @@ export function capStep(decisions: number): number {
   const t = cfg.teto;
   return t.passoMax * clamp((decisions - t.neutro) / t.amplitude, -1, 1);
 }
-export const capShiftLimit = (): number => cfg.teto.limiteCarreira;
+export const capShiftLimits = (): { up: number; down: number } => ({ up: cfg.teto.limiteSubida, down: cfg.teto.limiteQueda });
 
 export const moraleRecovery = (): number => cfg.evolucao.recuperacaoMoral;
 export const declineByDiscipline = (d: number): number => { const x = cfg.evolucao.declinioDisciplina; return x.disciplina0 + (x.disciplina1 - x.disciplina0) * clamp(d, 0, 1); };

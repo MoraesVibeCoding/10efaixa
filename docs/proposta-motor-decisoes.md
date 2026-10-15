@@ -207,3 +207,15 @@ chega a 90,2 aos 24 (72% com pico ≥ 90, contra 11% hoje).
 
 Pico, minutos e títulos não mudam (8). O valor ficou realista no máximo, mas o "bom" satura no teto: 72% dele passa de
 90 de pico. Se a saturação incomodar, a alavanca é a subida do teto de atributos (`teto.limiteCarreira`), não o valor.
+
+### 8.3 Subida máxima do teto em +4 (queda em −6), 2026-10-15
+
+Pedido do usuário: a diferença estava grande. `teto.limiteSubida` 4, `teto.limiteQueda` 6.
+
+| Subida máx. | Pico auto | Pico bom | Pico ruim | Bom − ruim | Minutos bom − ruim | Bom no teto de valor aos 24 | 9.3 (95–99 / 90–94 / 85–89 / 80–84) |
+|---|---|---|---|---|---|---|---|
+| +6 | 87,6 | 91,2 | 86,1 | 5,1 | 20,7 pp | 59% | 7,6 / 23,6 / 43,2 / 22,2 |
+| +5 | 87,5 | 90,8 | 86,1 | 4,7 | 20,1 pp | 58% | 7,6 / 22,8 / 44,0 / 22,2 |
+| **+4** | **87,4** | **90,2** | **86,1** | **4,1** | **19,6 pp** | **56%** | **7,6 / 21,6 / 44,8 / 22,6** |
+
+A meta 9.3 do SPEC (5 / 10 / 60 / 25, ±6 pp) continua fora em 90–94 e 85–89 com qualquer subida que mantenha bom − ruim ≥ 4.
