@@ -28,6 +28,8 @@ describe('ícone e manifesto do app', () => {
       expect(pngSize(i.src).join('x'), i.src).toBe(i.sizes);
     }
     expect(pngSize('apple-touch-icon.png')).toEqual([180, 180]);
+    // v3.02: sem canal alfa (tipo de cor 2 no cabeçalho PNG): com transparência o iOS preenche de preto
+    expect(readFileSync(pub('apple-touch-icon.png'))[25]).toBe(2);
   });
 
   // v2.99: os links levam ?v=<versão do ícone> para furar o cache (o iPhone guardava o ícone antigo, da T61).
@@ -35,7 +37,8 @@ describe('ícone e manifesto do app', () => {
     const html = readFileSync(resolve(root, 'index.html'), 'utf8');
     expect(html).toContain('<link rel="icon" href="/icon.svg?v=281" type="image/svg+xml" />');
     expect(html).toContain('<link rel="icon" href="/favicon-32.png?v=281" sizes="32x32" type="image/png" />');
-    expect(html).toContain('<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=281" />');
+    // v3.02: o iOS lê esta tag exatamente assim (PNG 180, sem parâmetro na URL); o ?v= da v2.99 saiu daqui
+    expect(html).toContain('<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />');
     expect(html).toContain('<link rel="manifest" href="/manifest.webmanifest?v=281" />');
     expect(existsSync(pub('icon.svg'))).toBe(true);
     expect(pngSize('favicon-32.png')).toEqual([32, 32]);

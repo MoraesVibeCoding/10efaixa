@@ -101,3 +101,16 @@ def test_custo_estimado_usa_o_valor_por_imagem_entregue():
     # US$ 2,53 no painel da OpenAI por 29 imagens entregues em 2026-10-14 (as falhas já entram no valor)
     assert custo_estimado(29, 0.087) == 2.52
     assert custo_estimado(8700, 0.087) == 756.9
+
+
+def test_modo_generico_mantem_magenta_e_ciano_e_troca_so_o_jogador():
+    p = montar_prompt(extrai_bloco(CENA_MD), tracos_visual(VISUAL_MD), None)
+    assert 'magenta' in p and 'cyan' in p and 'COLOUR PLAN' in p
+    assert 'very dark brown skin' in p and 'Image 1' in p
+    assert 'club' not in p.lower()
+
+
+def test_conferir_generico_aceita_magenta_e_ciano():
+    img = fundo()
+    img[10:30, 10:30] = (230, 20, 220)
+    assert conferir(img, generico=True) == []

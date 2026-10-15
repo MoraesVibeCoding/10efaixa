@@ -10,6 +10,7 @@ cabeçalho diz o que é o kit do clube e quem é o jogador. A conferência repro
 clara (os painéis do jogo ficam ali); escudo, texto e camisa fora do time ficam para a sua revisão.
 Uso:       OPENAI_API_KEY=... uv run --with pillow --with numpy --with openai python docs/arte/piloto/piloto.py
            depois de revisar: ... piloto.py publicar  (copia as aprovadas para src/assets/piloto)
+           v3.01: ... piloto.py generico  (todas as cenas, visual de generico.json, uniforme magenta e ciano)
 Autoteste: uv run --with pillow --with numpy --with pytest python -m pytest docs/arte/piloto
 """
 import base64
@@ -47,7 +48,15 @@ def tracos_visual(md):
 
 
 def montar_prompt(cena, visual, kit):
-    """Prompt da cena com o kit do clube no lugar de magenta e ciano e o jogador do visual."""
+    """Prompt da cena com o kit do clube no lugar de magenta e ciano e o jogador do visual.
+    Sem kit (modo genérico, v3.01): magenta e ciano ficam, para o uniforme ser aplicado depois; só o jogador muda."""
+    if kit is None:
+        return ('REFERENCE IMAGES\n'
+                '- Image 1: the main character. Match this exact person: same skin tone, same hair (colour, length, '
+                f"texture and cut) and same facial hair. Skin: {visual['pele']}. Hair: {visual['cabelo']}. "
+                f"Facial hair: {visual['barba']}. This overrides any other description of his skin or hair below.\n"
+                '- Image 2: painting style, palette and level of detail only (ignore its people and clothes).\n\n'
+                + cena.strip())
     texto = re.sub(r'COLOUR PLAN.*?(?=\n[A-Z][A-Z ,\-]{3,}\n|\Z)', '', cena, flags=re.S)
     texto = re.sub(r'(plain )?(bright )?magenta-and-cyan', 'club', texto, flags=re.I)
     # costas lisas eram para o recolor; com o kit pintado, as costas mostram o desenho do clube (o número segue livre)
@@ -67,16 +76,17 @@ def montar_prompt(cena, visual, kit):
     return cabecalho + texto.strip()
 
 
-def conferir(img):
-    """Motivos de reprovação de uma cena (HxWx3 uint8); lista vazia quando passa."""
+def conferir(img, generico=False):
+    """Motivos de reprovação de uma cena (HxWx3 uint8); lista vazia quando passa. No modo genérico, magenta e ciano
+    são o uniforme esperado e não reprovam."""
     a = img.astype(int)
     r, g, b = a[..., 0], a[..., 1], a[..., 2]
     motivos = []
     magenta = (r > 150) & (b > 150) & (g < 0.5 * np.minimum(r, b))
     ciano = (g > 150) & (b > 150) & (r < 0.5 * np.minimum(g, b))
-    if magenta.mean() > SOBRA_MAX:
+    if not generico and magenta.mean() > SOBRA_MAX:
         motivos.append('magenta')
-    if ciano.mean() > SOBRA_MAX:
+    if not generico and ciano.mean() > SOBRA_MAX:
         motivos.append('ciano')
     baixo = a[int(a.shape[0] * (1 - FAIXA_DE_BAIXO)):]
     luz = (0.2126 * baixo[..., 0] + 0.7152 * baixo[..., 1] + 0.0722 * baixo[..., 2]).mean()
@@ -172,5 +182,46 @@ def main():
           '| custo estimado: US$', custo_estimado(entregues, cfg['custo']['porImagemUSD']))
 
 
+def main_generico():
+    """v3.01: todas as cenas com o visual de generico.json e o uniforme magenta e ciano, para o kit entrar depois."""
+    from openai import OpenAI
+    from PIL import Image
+    cfg = json.load(open(os.path.join(AQUI, 'generico.json')))
+    saida = os.path.join(AQUI, 'saida-generico')
+    os.makedirs(saida, exist_ok=True)
+    rel_path = os.path.join(saida, 'relatorio.json')
+    relatorio = json.load(open(rel_path)) if os.path.exists(rel_path) else {}
+    chamadas = sum(x['tentativas'] for x in relatorio.values())
+    v = cfg['visual']
+    vdir = os.path.join(RAIZ, f'docs/arte/visuais/visual-{v:02d}')
+    visual = tracos_visual(open(os.path.join(vdir, 'prompt.md')).read())
+    imagens = [os.path.join(vdir, 'Image.jpeg'), os.path.join(RAIZ, cfg['estilo'])]
+    cliente = OpenAI()
+    cenas = sorted(d for d in os.listdir(os.path.join(RAIZ, 'docs/arte/cenas')) if d[:2].isdigit())
+    for cena in cenas:
+        nome = f"{cena}-v{v:02d}"
+        item = relatorio.get(nome, {'tentativas': 0, 'motivos': None})
+        prompt = montar_prompt(extrai_bloco(open(os.path.join(RAIZ, 'docs/arte/cenas', cena, 'curto/prompt.md')).read()),
+                               visual, None)
+        while item['tentativas'] < cfg['tentativasPorImagem'] and item['motivos'] != []:
+            if chamadas >= cfg['limiteDeChamadas']:
+                print('limite de chamadas atingido'); break
+            png = os.path.join(saida, nome + '.png')
+            try:
+                _gerar(cliente, prompt, imagens, png)
+                item['motivos'] = conferir(np.asarray(Image.open(png).convert('RGB')), generico=True)
+            except Exception as e:  # erro da API conta como tentativa e fica no relatório
+                item['motivos'] = [f'erro: {type(e).__name__}: {e}'[:200]]
+            item['tentativas'] += 1
+            chamadas += 1
+            print(nome, item, flush=True)
+        relatorio[nome] = item
+        json.dump(relatorio, open(rel_path, 'w'), indent=1, ensure_ascii=False)
+    entregues = sum(1 for x in relatorio.values() if x['motivos'] == [])
+    print('chamadas:', chamadas, '| entregues:', entregues,
+          '| custo estimado: US$', custo_estimado(entregues, json.load(open(os.path.join(AQUI, 'piloto.json')))['custo']['porImagemUSD']))
+
+
 if __name__ == '__main__':
-    sys.exit(publicar() if sys.argv[1:] == ['publicar'] else main())
+    acao = sys.argv[1:]
+    sys.exit(publicar() if acao == ['publicar'] else main_generico() if acao == ['generico'] else main())
