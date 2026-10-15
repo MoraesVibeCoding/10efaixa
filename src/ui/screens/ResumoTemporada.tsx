@@ -20,6 +20,9 @@ import { tituloNome } from './titleText';
 /** v2.62: `torcida` = faixa da idolatria no clube da temporada (o que a torcida vê em você), em palavras. */
 export interface ResumoTemporadaProps { resumo: SeasonSummary; torcida?: string; onClose: () => void }
 
+/** v3.12: a seta do sentido, só visual (o leitor de tela lê a palavra). */
+const SETA = { sobe: '▲', desce: '▼', igual: '●' } as const;
+
 export function ResumoTemporada({ resumo, torcida, onClose }: ResumoTemporadaProps) {
   const close = useRef(null as HTMLButtonElement | null);
   // v2.72: o card sai (150 ms) antes de fechar; Esc fecha na hora (ação de teclado não anima)
@@ -64,6 +67,22 @@ export function ResumoTemporada({ resumo, torcida, onClose }: ResumoTemporadaPro
           <ul className="resumo__atributos" aria-label={t('ui.resumoTemporada.atributos')}>
             {linhas.map((l) => <li key={l}>{l}</li>)}
           </ul>
+        )}
+        {/* v3.12: técnico, moral, disciplina e torcida em faixa de palavras e sentido do ano (sem número), na ordem do motor */}
+        {resumo.estado.length > 0 && (
+          <section className="resumo__estado" aria-labelledby="resumo-estado">
+            <h3 id="resumo-estado">{t('ui.resumoTemporada.estado.titulo')}</h3>
+            <ul>
+              {resumo.estado.map((e) => (
+                <li key={e.id}>
+                  <b>{t(`ui.resumoTemporada.estado.rotulo.${e.id}`)}</b>
+                  <span>{e.id === 'torcida' ? t(`ui.idolatria.faixa.${e.faixa}`) : t(`ui.resumoTemporada.estado.faixa.${e.id}.${e.faixa}`)}</span>
+                  <span className="resumo__estado-sentido" data-sentido={e.sentido}><span aria-hidden="true">{SETA[e.sentido]} </span>{t(`ui.resumoTemporada.estado.sentido.${e.sentido}`)}</span>
+                </li>
+              ))}
+            </ul>
+            {resumo.causa && <p className="resumo__estado-causa">{t(`ui.resumoTemporada.estado.causa.${resumo.causa}`)}</p>}
+          </section>
         )}
         {resumo.titulos.length > 0 && (
           <ul className="resumo__titulos" aria-label={t('ui.resumoTemporada.titulos')}>

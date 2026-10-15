@@ -9,7 +9,7 @@ import { ResumoTemporada } from './ResumoTemporada';
 const BASE: SeasonSummary = {
   year: 2030, age: 22, clubId: 'santos', division: 'BRA-A', partidas: 34, gols: 9, assistencias: 5, semSofrerGol: 0, goleiro: false, overallDe: 70, overallPara: 74, pct: 6,
   mudancas: [{ atributo: 'passe', sentido: 'sobe', forte: true }, { atributo: 'fisico', sentido: 'desce', forte: false }], titulos: ['estadual'],
-  comentario: { evolucao: 'grande', minutos: 'muitos', destaque: 'passe', titulo: true }, sinais: [],
+  comentario: { evolucao: 'grande', minutos: 'muitos', destaque: 'passe', titulo: true }, sinais: [], estado: [], causa: null,
 };
 const setup = (resumo: SeasonSummary = BASE, onClose = vi.fn()) => { render(<ResumoTemporada resumo={resumo} onClose={onClose} />); return onClose; };
 const dialog = () => screen.getByRole('alertdialog', { name: t('ui.resumoTemporada.titulo') });
@@ -156,5 +156,32 @@ describe('sinais no resumo (v2.85)', () => {
   it('todo sinal do motor tem texto', async () => {
     const { default: cfg } = await import('../../data/signals.json');
     for (const id of cfg.ordem) expect(t(`ui.resumoTemporada.sinal.${id}`).length).toBeGreaterThan(10);
+  });
+});
+
+// v3.12 (opção 1, escolhida pelo usuário em 2026-10-15): "Como você terminou o ano" em faixa de palavras e sentido, sem número.
+describe('como você terminou o ano (v3.12)', () => {
+  const ESTADO = [
+    { id: 'tecnico', faixa: 'alta', sentido: 'sobe' }, { id: 'moral', faixa: 'media', sentido: 'igual' },
+    { id: 'disciplina', faixa: 'baixa', sentido: 'desce' }, { id: 'torcida', faixa: 'querido', sentido: 'sobe' },
+  ] as const;
+
+  it('mostra os 4 itens com faixa e sentido em palavras, e a causa', () => {
+    setup({ ...BASE, estado: [...ESTADO], causa: 'jogouMuito' });
+    const bloco = screen.getByRole('region', { name: t('ui.resumoTemporada.estado.titulo') });
+    const itens = within(bloco).getAllByRole('listitem');
+    expect(itens).toHaveLength(4);
+    expect(itens[0]).toHaveTextContent(t('ui.resumoTemporada.estado.rotulo.tecnico'));
+    expect(itens[0]).toHaveTextContent(t('ui.resumoTemporada.estado.faixa.tecnico.alta'));
+    expect(itens[0]).toHaveTextContent(t('ui.resumoTemporada.estado.sentido.sobe'));
+    expect(itens[2]).toHaveTextContent(t('ui.resumoTemporada.estado.sentido.desce'));
+    expect(itens[3]).toHaveTextContent(t('ui.idolatria.faixa.querido'));
+    expect(within(bloco).getByText(t('ui.resumoTemporada.estado.causa.jogouMuito'))).toBeInTheDocument();
+    expect(bloco.textContent).not.toMatch(/\d/);
+  });
+
+  it('sem estado, o bloco não aparece', () => {
+    setup({ ...BASE, estado: [], causa: null });
+    expect(screen.queryByRole('region', { name: t('ui.resumoTemporada.estado.titulo') })).not.toBeInTheDocument();
   });
 });

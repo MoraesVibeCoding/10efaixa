@@ -51,6 +51,12 @@ describe('tipografia (v2.73)', () => {
     expect(css['Decision.css']).toMatch(/\.decisao__historia \{ font-size: 0\.875rem; line-height: 1\.45;/);
   });
 
+  it('título da decisão em 1,375rem no celular, com o piso de 14 px (v3.11: a foto da cena ganha a altura)', () => {
+    // pedido do usuário (2026-10-15, "aumentar o tamanho das imagens"): medido em 390×844, a foto vai de 334 para 368 px
+    const mobile = css['Decision.css']!.split('@media (max-width: 26.25rem) {')[1]!.split('\n}')[0]!;
+    expect(mobile).toContain('.decisao__titulo { font-size: max(0.875rem, calc(1.375rem * var(--texto-escala, 1))); }');
+  });
+
   it('história da decisão em 1rem no computador (v3.09; era 1.125rem)', () => {
     expect(tokens.tipo.historia).toBe('1rem');
   });

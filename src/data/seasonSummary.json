@@ -3,5 +3,16 @@
  "mudaAno": 3,
  "forteAno": 8,
  "maxAtributos": 3,
- "pct": { "grande": 5, "boa": 2, "queda": -2 }
+ "pct": {
+  "grande": 5,
+  "boa": 2,
+  "queda": -2
+ },
+ "estado": {
+  "_nota": "v3.12: \"Como você terminou o ano\". Técnico, moral e disciplina (0–1) em faixas: baixa até baixaAte, alta a partir de altaDesde, média no meio; sentido do ano igual se a variação for menor que mudaMin (torcida: torcidaMuda pontos de idolatria). A torcida usa as faixas de idolatry.json.",
+  "baixaAte": 0.35,
+  "altaDesde": 0.65,
+  "mudaMin": 0.03,
+  "torcidaMuda": 3
+ }
 }

@@ -44,3 +44,13 @@
 .resumo__sinais { display: grid; gap: var(--espaco-1); padding: var(--espaco-2) var(--espaco-3); border-inline-start: 4px solid var(--paleta-amarelo); border-radius: var(--forma-raio); background: var(--cor-trilho); }
 .resumo__sinais h3 { margin: 0; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.06em; }
 .resumo__sinais ul { display: grid; gap: var(--espaco-1); margin: 0; padding-inline-start: 1.1em; line-height: 1.4; }
+/* v3.12: "Como você terminou o ano": quatro linhas rótulo · faixa · sentido, no papel, sem número */
+.resumo__estado { display: grid; gap: var(--espaco-1); padding: var(--espaco-2) var(--espaco-3); border: var(--forma-borda-fina) solid var(--cor-linha); border-radius: var(--forma-raio); }
+.resumo__estado h3 { margin: 0; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.resumo__estado ul { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.resumo__estado li { display: grid; grid-template-columns: 6.5rem 1fr auto; align-items: baseline; gap: var(--espaco-2); }
+.resumo__estado-sentido { font-family: var(--fonte-titulo); font-weight: 700; white-space: nowrap; }
+.resumo__estado-sentido[data-sentido='sobe'] { color: var(--cor-positivo); }
+.resumo__estado-sentido[data-sentido='desce'] { color: var(--cor-negativo); }
+.resumo__estado-sentido[data-sentido='igual'] { color: var(--cor-texto-suave); }
+.resumo__estado-causa { margin: 0; line-height: 1.35; color: var(--cor-texto-suave); }
